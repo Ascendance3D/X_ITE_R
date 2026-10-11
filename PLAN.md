@@ -176,6 +176,13 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   WALK gravity step; text itself is fine).
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
+## Automation (later, not on this workstation)
+
+When both ports are 1:1 with X_ITE and CodeMirror: a nightly VM on Ryan's Proxmox VE runs
+the build + every oracle check (draft: `tools/nightly.sh`, not installed anywhere), and a
+weekly job catches up with the newest upstream X_ITE release. Everything stays local.
+The viewer and editor should become drop-in parts for WRL Forge (Tauri + Rust).
+
 ## Suggested order
 
 1. X0 + C0 (both oracles) in parallel.
