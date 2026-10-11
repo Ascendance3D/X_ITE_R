@@ -1,0 +1,105 @@
+{
+ "shapes": [
+  {
+   "zone": "PAINT",
+   "verts": 1072,
+   "tris": 1670
+  },
+  {
+   "zone": "ROOF",
+   "verts": 51,
+   "tris": 74
+  },
+  {
+   "zone": "WINGPLATE",
+   "verts": 305,
+   "tris": 424
+  },
+  {
+   "zone": "WINDOWTRIM",
+   "verts": 861,
+   "tris": 486
+  },
+  {
+   "zone": "TRIM",
+   "verts": 706,
+   "tris": 976
+  },
+  {
+   "zone": "UNDER",
+   "verts": 269,
+   "tris": 308
+  },
+  {
+   "zone": "GLASS",
+   "verts": 293,
+   "tris": 396
+  },
+  {
+   "zone": "MIRRORGLASS",
+   "verts": 12,
+   "tris": 8
+  },
+  {
+   "zone": "HEADLAMP",
+   "verts": 16,
+   "tris": 12
+  },
+  {
+   "zone": "RED",
+   "verts": 18,
+   "tris": 14
+  },
+  {
+   "zone": "TYRE",
+   "verts": 192,
+   "tris": 384,
+   "instances": 4
+  },
+  {
+   "zone": "RIM",
+   "verts": 334,
+   "tris": 580,
+   "instances": 4
+  },
+  {
+   "zone": "RIMDARK",
+   "verts": 238,
+   "tris": 416,
+   "instances": 4
+  }
+ ],
+ "stored_tris": 5748,
+ "runtime_tris": 9888,
+ "runtime_shapes": 22,
+ "bounds": {
+  "x": [
+   -1.205,
+   1.205
+  ],
+  "y": [
+   -1.75,
+   -0.4985
+  ],
+  "z": [
+   -4.054,
+   0.999
+  ]
+ },
+ "wheel": {
+  "style": "b-turbofan",
+  "canonical": "tooling/wheel-families/wheels/b-turbofan.wrl",
+  "verified": "generator == b-turbofan.wrl, 996 points",
+  "placed_radius_front": 0.3608,
+  "placed_radius_rear": 0.3767
+ },
+ "root_translation": [
+  0.0,
+  -1.70948,
+  -1.69
+ ],
+ "encoder": "pigz -11 -I 50 (Zopfli)",
+ "raw_bytes": 266906,
+ "gzip_bytes": 63759,
+ "sha256_wrl": "5692d5bca3299f293dd08492956160b74cd666699a8e558673886a18c5cce8cf"
+}

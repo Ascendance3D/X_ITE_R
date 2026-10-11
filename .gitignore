@@ -19,3 +19,7 @@
 /oracle/render-msaa4-x8-baseline/
 /oracle/render-msaa8-items-baseline/
 /oracle/render-msaa8-x8-baseline/
+# corpus-items2 answer keys (primary item set). Regenerable; sha256 in oracle/README.md.
+/oracle/items2-baseline.json
+/oracle/render-items2-baseline/
+/oracle/render-msaa4-items2-baseline/

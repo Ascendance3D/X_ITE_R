@@ -1,0 +1,2418 @@
+{
+ "source": "/home/ryan/Projects/cybertown/new-items/item-categories",
+ "head": "cb1ad41cb3303836f263d6828b005501757d5d58",
+ "dirty_paths_in_item_categories": 63,
+ "no_edit": true,
+ "files": [
+  {
+   "rel": "antiques/aeon-cipher-desk/aeon-cipher-desk.wrl",
+   "sha256": "3d2fffcb38f955616d61afe85896567769c0177a94ba90509c23cb90b9425c50",
+   "size": 75379
+  },
+  {
+   "rel": "antiques/chronos-orrery/chronos-orrery.wrl",
+   "sha256": "b0bd3de4bdf01c9c782c9693d6a8c35da204d6e0f0cee904fa17fe299b055095",
+   "size": 9215
+  },
+  {
+   "rel": "antiques/chronos-orrery-v2/chronos-orrery-v2.wrl",
+   "sha256": "ff78eaff026ade866a7c58a54123a4925315a279756ba76979ea5ce9650cc4c3",
+   "size": 18613
+  },
+  {
+   "rel": "antiques/chronos-orrery-v3/chronos-orrery-v3.wrl",
+   "sha256": "bbb7d7cc0fcc1388048fafe491b89028d5ce66d282897ef29d46d7162b7f6821",
+   "size": 10268
+  },
+  {
+   "rel": "antiques/echo-cabinet/echo-cabinet.wrl",
+   "sha256": "64f1aad86c97e1fbe809c3547fd6501d642c279edd4959b4190faad4ed82f751",
+   "size": 75011
+  },
+  {
+   "rel": "antiques/lumen-memory-globe/lumen-memory-globe.wrl",
+   "sha256": "3bfa4be4d58f36b1f18a81c7c21a473d480afcdd0054ecaffc9e92738ee07bc9",
+   "size": 26647
+  },
+  {
+   "rel": "antiques/lumen-memory-globe/archive-failed-script-build/lumen-memory-globe.wrl",
+   "sha256": "35b0c0773cfc623af602875040994091f314e0c9f77568236b5daa296a79cc90",
+   "size": 136838
+  },
+  {
+   "rel": "antiques/meridian-time-chest/meridian-time-chest.wrl",
+   "sha256": "a615ea654ad0af3ebcbf0b83ecd677b776376cbb2b1d256d1ae9b8fde16628ee",
+   "size": 47476
+  },
+  {
+   "rel": "antiques/starlight-zoetrope/starlight-zoetrope.wrl",
+   "sha256": "d4f17d5cb3647cf430dbcbb7a377b3be5a342e423c8fdbae795370b532e6198c",
+   "size": 17574
+  },
+  {
+   "rel": "antiques/storm-terrarium/storm-terrarium.wrl",
+   "sha256": "4fe2ca275dfcb4422608919a78e9f5018cea1ffd8de1e11f2beb578a93dc1a78",
+   "size": 9683
+  },
+  {
+   "rel": "appliances/autochef-cooking-station/autochef-cooking-station.wrl",
+   "sha256": "317508ef2c4c69ffa5c68d26f23336c85ed1a33809c0ddbd9cd9be68e280d578",
+   "size": 45430
+  },
+  {
+   "rel": "appliances/orbitcool-smart-refrigerator/orbitcool-smart-refrigerator.wrl",
+   "sha256": "4c28c88227cabab36429b17f0294e01322fe4012ca6060921b48e01dc29ce855",
+   "size": 15588
+  },
+  {
+   "rel": "appliances/orbitspin-dryer/orbitspin-dryer.wrl",
+   "sha256": "8614516f45553306f6dea1ee8fb88f4ae08c002057273432b47c64583b8ef396",
+   "size": 14730
+  },
+  {
+   "rel": "appliances/orbitwash-washer/orbitwash-washer.wrl",
+   "sha256": "efce644b61b2fca138730e7061458cb50ede402330e0eee883a7330055513992",
+   "size": 14585
+  },
+  {
+   "rel": "appliances/patiochef-e-grill/patiochef-e-grill.wrl",
+   "sha256": "4dfa373fa337cee6ad0dfe1e971c79d8ded9caa84bcc92f0e4643c1c5241fd7d",
+   "size": 36900
+  },
+  {
+   "rel": "art/agora-of-tomorrow/agora-of-tomorrow.wrl",
+   "sha256": "f904939d5c9a1f8655668a36228af1199297ef9bef7d36b5f19c600b72846588",
+   "size": 2538
+  },
+  {
+   "rel": "art/art-blanks/1x1.wrl",
+   "sha256": "750c639d92e6027a7cccdf205998b15fe320c59f6cdc970c6ea1193d32c953b7",
+   "size": 2073
+  },
+  {
+   "rel": "art/art-blanks/2x3.wrl",
+   "sha256": "0b775c59bf0127f8351f5bb23ad1520cafbac0e5074a297722caae9724115a09",
+   "size": 2075
+  },
+  {
+   "rel": "art/art-blanks/3x4.wrl",
+   "sha256": "c494eccf308106ae1b06c8ac19ff19bfd0295efdf2723773a3a3102c2898ce6e",
+   "size": 2076
+  },
+  {
+   "rel": "art/art-blanks/4x3.wrl",
+   "sha256": "37e35624b39e31246815f3033dd44881cd33eea4aa437e2cdd1954101ddb5536",
+   "size": 2075
+  },
+  {
+   "rel": "art/beam-station-morning/beam-station-morning.wrl",
+   "sha256": "f145fdcef678ae5d533a720011dd82710a1090e62ae0bef9fb9891a36a81549e",
+   "size": 2520
+  },
+  {
+   "rel": "art/build-tomorrow/build-tomorrow.wrl",
+   "sha256": "ff10d0518e2d2621b0402cbd7ada3e7823cc38a3560965413170bd3f31fc8796",
+   "size": 3248
+  },
+  {
+   "rel": "art/by-the-sea/by-the-sea.wrl",
+   "sha256": "0afe0ca113a8371762f4de97c6d2fb0b1a50e1ad02b3e395e2507632bdab433d",
+   "size": 2038
+  },
+  {
+   "rel": "art/city-hall-sunset/city-hall-sunset.wrl",
+   "sha256": "c7720cf5f726c98033a42d78cfd0987ed8e31abed0206a9430bedb4658c10ebb",
+   "size": 2459
+  },
+  {
+   "rel": "art/college-living/college-living.wrl",
+   "sha256": "7f1a35a5fd87728eb142dced4c88f7b32ae61ecc8a6ca5846188ad51994ed794",
+   "size": 2523
+  },
+  {
+   "rel": "art/community-commons/community-commons.wrl",
+   "sha256": "ea6f3850da979618b01179069bc79f1ad93f86163fe5f8574225435d8908a54a",
+   "size": 2529
+  },
+  {
+   "rel": "art/crystal-henge/crystal-henge.wrl",
+   "sha256": "246a190c1e5ccfef41bd7fcca5531f7e3e509b86acc50a13e0ace8558c509e38",
+   "size": 2502
+  },
+  {
+   "rel": "art/djascendance-live/djascendance-live.wrl",
+   "sha256": "d9b0e5246f4613dc9378cf0f27145247972c65669074660ca83d5e7e419a9c4e",
+   "size": 2443
+  },
+  {
+   "rel": "art/event-horizon/event-horizon.wrl",
+   "sha256": "bb5f7f4bcd32efc19ced340242d7951d1bf06bcc4bcc3859301eceaa5ebfdff9",
+   "size": 2448
+  },
+  {
+   "rel": "art/glass-cathedral/glass-cathedral.wrl",
+   "sha256": "b99e3032ad265f6e7c0b50c640452ef0dbf283215cee224826829fbc31d8fb77",
+   "size": 2533
+  },
+  {
+   "rel": "art/golden-meridian/golden-meridian.wrl",
+   "sha256": "6e80789b4aabe753f23253519d987173a858b63714143b711118beb6f3cec16e",
+   "size": 2532
+  },
+  {
+   "rel": "art/its-art/4x3.wrl",
+   "sha256": "37e35624b39e31246815f3033dd44881cd33eea4aa437e2cdd1954101ddb5536",
+   "size": 2075
+  },
+  {
+   "rel": "art/its-art/humanity-reshaped.wrl",
+   "sha256": "eb32fa079e3468edd3f3e13ba9abb329f56359051c232ebac8fffd4b7011da30",
+   "size": 1909
+  },
+  {
+   "rel": "art/lakeside-henge/lakeside-henge.wrl",
+   "sha256": "b7b058eaf2cf463ab0fda25fadb040d940271b733f0e950fb3a1e0c7d30c20c3",
+   "size": 2498
+  },
+  {
+   "rel": "art/mall-promenade/mall-promenade.wrl",
+   "sha256": "582d936121210887bba4b824313ccba2fd835d8daa0ea4c2ef60a1f06d21a25b",
+   "size": 2543
+  },
+  {
+   "rel": "art/overgrown-tomorrow/overgrown-tomorrow.wrl",
+   "sha256": "e2f4b13638faa5fd51536b76c14863cc1c0da3e4bd365f52455a167120ffebc3",
+   "size": 2457
+  },
+  {
+   "rel": "art/rainbow-room/rainbow-room.wrl",
+   "sha256": "afdbf2aae7cb9334b36bbf4808e20da0b358fa797d84585f62ee4f96aaa8e5c1",
+   "size": 2040
+  },
+  {
+   "rel": "art/red-roof-pasture/red-roof-pasture.wrl",
+   "sha256": "f1a783fb1dc6a711b0f751c097bbef1886da2b3fc6ec4b44408236afa94adb0f",
+   "size": 2426
+  },
+  {
+   "rel": "art/score/16x9.wrl",
+   "sha256": "7ee8fe8d2928eeacc46937d06ad791db5e760c000bec45625c56adb9ffe6ca52",
+   "size": 2077
+  },
+  {
+   "rel": "art/score/score.wrl",
+   "sha256": "815f76ca307ee694dd6e8a550f936c1cdca2241448f59dc28583d272cebe1773",
+   "size": 2495
+  },
+  {
+   "rel": "art/the-castle-art/16x9.wrl",
+   "sha256": "32e8f356663d3fe10eddef97462153f7b4537047691a775e0cc6df401b55a099",
+   "size": 2058
+  },
+  {
+   "rel": "art/the-castle-art/4x3.wrl",
+   "sha256": "d16c4baa282a7452c93cfd761e9cb551fff58b1aa4bcd3d17f48cb18452d76e5",
+   "size": 2755
+  },
+  {
+   "rel": "art/the-castle-art/the-castle.wrl",
+   "sha256": "301ff951c503e20dc38e93918363b7ec23b49d65985cca61d9586a61bb3086f8",
+   "size": 2729
+  },
+  {
+   "rel": "art/theface-art/3x4.wrl",
+   "sha256": "c494eccf308106ae1b06c8ac19ff19bfd0295efdf2723773a3a3102c2898ce6e",
+   "size": 2076
+  },
+  {
+   "rel": "art/upscale-living/upscale-living.wrl",
+   "sha256": "f36445dcd68fbea075e62f518745f59bf5fc2c5d0a0ee3ffaeb9ab927de65a8d",
+   "size": 3087
+  },
+  {
+   "rel": "celebration/zero-g-party-fountain/zero-g-party-fountain.wrl",
+   "sha256": "2b93abc43d1b32023e4cf05017283574c819a439df6a3fe9b0da2ec80d4265d4",
+   "size": 30176
+  },
+  {
+   "rel": "decorative/aurora-kinetic-art/aurora-kinetic-art.wrl",
+   "sha256": "78b98b24d7457ba64ff78d33e0a0f125c0c4b4ac8a3616f2020d21f2daa735ed",
+   "size": 33174
+  },
+  {
+   "rel": "decorative/crypt-bloom-mirror/crypt-bloom-mirror.wrl",
+   "sha256": "e288dc3397db25eb9ac667e397939d901ad1ee258c844d8e3e0ced31ee4e2e7d",
+   "size": 50007
+  },
+  {
+   "rel": "decorative/crypt-bloom-mirror/work/crypt-bloom-mirror-body.wrl",
+   "sha256": "95d18e1ab7b60b7c722a21861584c02e04fc0ac8f3c741aede6dfc1dbe780edd",
+   "size": 99212
+  },
+  {
+   "rel": "decorative/kinetic-aurora-art/kinetic-aurora-art.wrl",
+   "sha256": "23f619cafc4fda078b62e398fe4bc4368903639a08bb143436c0e296f29ede7d",
+   "size": 19360
+  },
+  {
+   "rel": "decorative/lantern-stag/lantern-stag.wrl",
+   "sha256": "ad26ad832e63675494d7b35fa98d07e82774cefe3dd566dae68a7a55d091b0f0",
+   "size": 48667
+  },
+  {
+   "rel": "decorative/lantern-stag/work/lantern-stag-body.wrl",
+   "sha256": "fc366a1353e8d8975aa18c32eacc28cb0a61e6f047411296bff8d571a1735b4f",
+   "size": 141613
+  },
+  {
+   "rel": "decorative/mourning-dial/mourning-dial.wrl",
+   "sha256": "b3142f13b821ee1b53d399b2b28c30684615d63fd05d2077999dd369c42a1263",
+   "size": 72765
+  },
+  {
+   "rel": "decorative/mourning-dial/work/mourning-dial-body.wrl",
+   "sha256": "cacb9976b0a85828e89ba598ed61bcad246f000074885471334455d92a701787",
+   "size": 140598
+  },
+  {
+   "rel": "decorative/velvet-thornwing/velvet-thornwing.wrl",
+   "sha256": "9a260675ada2086d3e377e61154238b65e2a652b37cb913a27c72a0a5a991e27",
+   "size": 29855
+  },
+  {
+   "rel": "electronics/flux-tape-deck/flux-tape-deck.wrl",
+   "sha256": "e54de37790a068cbcfd474322d28ecb0743ee8b865074daeadb5acbf0c0400a5",
+   "size": 12858
+  },
+  {
+   "rel": "electronics/ion-garden-speaker/ion-garden-speaker.wrl",
+   "sha256": "7b63b97adcddaf59c3b8badc835ba2a78eb246c7685f798a3ee938c7340d8178",
+   "size": 13649
+  },
+  {
+   "rel": "electronics/lantern-leviathan/lantern-leviathan.wrl",
+   "sha256": "dba36d4ebe4aa7260840dfd92adbdfc8a60b75eb7bd74a36feec066501097eaf",
+   "size": 75832
+  },
+  {
+   "rel": "electronics/orbit-cam-array/orbit-cam-array.wrl",
+   "sha256": "7018ef0609b513624da68fd5b5e3a07bd2d4b25091d2f6bc72bcd6032b74b0f5",
+   "size": 9921
+  },
+  {
+   "rel": "electronics/pixel-forge-printer/pixel-forge-printer.wrl",
+   "sha256": "f858990c7085a3319eafb02aac12d21b76d7e672dfb83a6e95b0704bb50950ab",
+   "size": 46900
+  },
+  {
+   "rel": "electronics/plasma-disc-player/plasma-disc-player.wrl",
+   "sha256": "22361abe0bec2b53f986e934432271d4c0234988abfe1d3602b532f2a820f521",
+   "size": 11308
+  },
+  {
+   "rel": "electronics/pocket-drone-port/pocket-drone-port.wrl",
+   "sha256": "dcf18cbe428089c6c527fafab79d3e49c6b95b20afdc8d7cdcf0bde866e2fe11",
+   "size": 10959
+  },
+  {
+   "rel": "electronics/pocket-drone-port-ii/pocket-drone-port-ii.wrl",
+   "sha256": "90d6cfa74094b14810304668fb426ad8073b4bbf1de2ee802349abac5d5eb819",
+   "size": 13098
+  },
+  {
+   "rel": "electronics/pulse-prism-console/pulse-prism-console.wrl",
+   "sha256": "71203c1fdf8c6736f6e852545a888558ad890ed2475192ca4e2b3b69266a5a5d",
+   "size": 14306
+  },
+  {
+   "rel": "electronics/signal-storm-globe/signal-storm-globe.wrl",
+   "sha256": "60ae4bc28508e4353da6506445e6dde7eec3196cfb5397414a5454957fb1c246",
+   "size": 23703
+  },
+  {
+   "rel": "furniture/advenbed1/advenbed1.wrl",
+   "sha256": "4545a0a87a2e21f762b20b6c17fae0cb52a6b490462903a98c3f7651b51c4d96",
+   "size": 3153
+  },
+  {
+   "rel": "furniture/advenbed2/advenbed1-original-reference.wrl",
+   "sha256": "4545a0a87a2e21f762b20b6c17fae0cb52a6b490462903a98c3f7651b51c4d96",
+   "size": 3153
+  },
+  {
+   "rel": "furniture/advenbed2/advenbed2.wrl",
+   "sha256": "b5eaf7a7383e8c577abdcd28c38097710f6ff708e3b68fbc35738c4a4671278b",
+   "size": 14668
+  },
+  {
+   "rel": "furniture/portta-pottee/portta-pottee.wrl",
+   "sha256": "7410b216dcfcad6e7ba8b11320f539029367e9518c9681788caffe9ad4c97a13",
+   "size": 30863
+  },
+  {
+   "rel": "furniture/velvet-maw/velvet-maw.wrl",
+   "sha256": "0118bd01c79c56c10db30b33bb95c5d7f8b0ee1a150c4eb518588f2cac014da4",
+   "size": 33603
+  },
+  {
+   "rel": "garden/sunflower-planter/sunflower-planter.wrl",
+   "sha256": "a2cc2919b08cdfc6dafb81135a95aeef4c4f736e86e48c6945bde9513baa9698",
+   "size": 62534
+  },
+  {
+   "rel": "jewelry/aether-crown-display/aether-crown-display.wrl",
+   "sha256": "ae584e399af29434ce41fc4d72106dc4a2289a53f335987ac24a95751c316a01",
+   "size": 16071
+  },
+  {
+   "rel": "jewelry/cipher-heart-locket/cipher-heart-locket.wrl",
+   "sha256": "ca124aa387d3c94c7ce3c924af75975fc9fb811c863e186b07925dce905ede52",
+   "size": 22550
+  },
+  {
+   "rel": "kitchens/chefzone-l-kitchen/chefzone-l-kitchen.src.wrl",
+   "sha256": "ba95f6484669a7fe39071a60444de2f6160bd8bfe36b3a44d839828786f1e936",
+   "size": 60651
+  },
+  {
+   "rel": "kitchens/chefzone-l-kitchen/chefzone-l-kitchen.wrl",
+   "sha256": "f5af8376f8da5c7667ba971423eaaef7cd2f3a44fca6c1a708e81249dfd8c676",
+   "size": 8387
+  },
+  {
+   "rel": "kitchens/cyberchef-corner-kitchen/cyberchef-corner-kitchen.wrl",
+   "sha256": "cc7c5269afb76472cafbb8f8ef4ccf8daa193226cf7656bb608fe4382fac0bee",
+   "size": 14628
+  },
+  {
+   "rel": "kitchens/galactic-prep-island/galactic-prep-island.wrl",
+   "sha256": "a629e9a25645375d982430873490ca01d9bcf5267d079915d9bba7a1d089a761",
+   "size": 17961
+  },
+  {
+   "rel": "seasonal-items/bloomskull-marker/bloomskull-marker.wrl",
+   "sha256": "ec8cd9406a87590592420210410e1a742b7a9d5cf5992a60be8b3b3580a14acb",
+   "size": 75501
+  },
+  {
+   "rel": "seasonal-items/cyber-autumn-lantern/cyber-autumn-lantern.wrl",
+   "sha256": "376e6ac866ce52654f59c1d5827798fa301d5a4646021adf5106144c25a36d08",
+   "size": 42034
+  },
+  {
+   "rel": "seasonal-items/halloween-largeitems/fogbound-gathering/fogbound-gathering.wrl",
+   "sha256": "8c2bb64e1392ffddaab660020bf4af5dc6c878e77fbb3b48b356e0631966155e",
+   "size": 62788
+  },
+  {
+   "rel": "seasonal-items/halloween-largeitems/glowpath-cemetery/glowpath-cemetery.wrl",
+   "sha256": "bec71c180df986bd5a5e73d5bc806d257bba013aa52a52a6c29a5fdbbd01fd7d",
+   "size": 76192
+  },
+  {
+   "rel": "seasonal-items/halloween-largeitems/neon-boneyard/neon-boneyard.wrl",
+   "sha256": "ad15751c392dcc91451a6c8c84acdc0a6bb3ac4fbd8a8ddaec9ab23cb0d52e75",
+   "size": 69064
+  },
+  {
+   "rel": "seasonal-items/halloween-largeitems/undertaker-shift/undertaker-shift.wrl",
+   "sha256": "6d4dd01ff8b2ba23984e242ec9eb9567ee1ad62650c7a400248ff53a0415a386",
+   "size": 78287
+  },
+  {
+   "rel": "seasonal-items/hexroot-headstone/hexroot-headstone.wrl",
+   "sha256": "74f1d233b42a7ca82738b95c25bf5e1671a93585ee6e6e5120709f03614154bd",
+   "size": 36958
+  },
+  {
+   "rel": "seasonal-items/moonveil-memorial/moonveil-memorial.wrl",
+   "sha256": "6711a796af46ddaa750b548ecd6174a1c46638cd8e8eb00453ad1d36aa946665",
+   "size": 17886
+  },
+  {
+   "rel": "seasonal-items/static-rest-marker/static-rest-marker.wrl",
+   "sha256": "9eaa0cdac6e25c9ae8d09191209ebf6ae1a46e9b617d45e6c1c1ca26a0e04da9",
+   "size": 14438
+  },
+  {
+   "rel": "toys/atomic-quads/atomic-quads-cyan.wrl",
+   "sha256": "4842160932b9974437302dd1caffe0d61b71cca6c97d9c1e96935c2d3d6b14fb",
+   "size": 50782
+  },
+  {
+   "rel": "toys/atomic-quads/atomic-quads-lime.wrl",
+   "sha256": "9fc904c45e8de3d19632b29302372013fe0e2959adffdf2ec682eea37c4b6755",
+   "size": 50779
+  },
+  {
+   "rel": "toys/atomic-quads/atomic-quads-magenta.wrl",
+   "sha256": "bca7d4d70debe97fa7911abadc0082806232a06b11a045a7934b5909b9bf65aa",
+   "size": 50798
+  },
+  {
+   "rel": "toys/comet-crown-spin-top/preserved/pre-art-polish-2026-08-31/comet-crown-spin-top.wrl",
+   "sha256": "34068e9de8f3d596b34fd03fa4f714f102fe0587468592dbb96bde780520d14f",
+   "size": 12757
+  },
+  {
+   "rel": "toys/glen-waterwheel-mill/glen-waterwheel-mill.wrl",
+   "sha256": "417f7411add549ccd3ba371b5b630a1ef473797b9926d39f88df628a557be372",
+   "size": 34498
+  },
+  {
+   "rel": "toys/glen-waterwheel-mill/work/scene.json",
+   "sha256": "e2718f3a34716cf2085b57b8797aefc5d3f04c597620b255e3971c7280f49732",
+   "size": 143320
+  },
+  {
+   "rel": "toys/mini-blazing-monster/mini-blazing-monster.wrl",
+   "sha256": "d329040392831035e61431e4647e63134b75764d9d37acd9208a03b7c78b9432",
+   "size": 28235
+  },
+  {
+   "rel": "toys/mini-blue-beauty/mini-blue-beauty.wrl",
+   "sha256": "18c1d99a47a6399bd812be884e978c77ca26f78f1dfcafbf4d1259a9250abed6",
+   "size": 24319
+  },
+  {
+   "rel": "toys/mini-wedged-racer/mini-wedged-racer.wrl",
+   "sha256": "37da2e4d0912aab2341b5a655f3d352d30d1744e4da767647162caf3726b9025",
+   "size": 10878
+  },
+  {
+   "rel": "toys/morphing-hauler/morphing-hauler.src.wrl",
+   "sha256": "3f3e93929411611a8ec7f7c37b5912e8f7917bf86c3dc739db39bd9524b6dade",
+   "size": 165386
+  },
+  {
+   "rel": "toys/morphing-hauler/morphing-hauler.wrl",
+   "sha256": "4f65b16626b618fbcf4564d9f3bdfbd5cb7649a9d6aef2c1c65aac65d072824c",
+   "size": 26202
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/decal-uv.json",
+   "sha256": "5f610cdb17f08b524bb7d21612172787a971a9313a5383651c92ba46de7408aa",
+   "size": 1407
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-closed.src.wrl",
+   "sha256": "aef824e7d84858ce6b346b49d2b5f49fde03f0d8052cb4f8b290693faf4dd8ce",
+   "size": 113493
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-closed.wrl",
+   "sha256": "929db9d8b7e1b03f7117ef37b0936a087b15712603bcb031ce30956d9763b824",
+   "size": 17088
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-item.src.wrl",
+   "sha256": "0b0ecb823047c2f9ad8bf11e7cf928fa18949b5b248c2c1b7f1b5fc91de835b3",
+   "size": 165200
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-opened.src.wrl",
+   "sha256": "cef543e0c870f9f17e0a63213193388cdc001e267349b82344ee8f391108adcc",
+   "size": 83880
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-opened.wrl",
+   "sha256": "6736234e4a90321a449908e034078c1ced2029818ece86ec9dbff34108470ec4",
+   "size": 13426
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at00.src.wrl",
+   "sha256": "defcc141c5e50611a9c67db0d0e8700fb0b933ae4aa8f9994e3478ba55bd7d85",
+   "size": 143877
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at00.wrl",
+   "sha256": "d2a3e0fd5dbdd52ccdc59c2ca2e3d84bd8be8de5fe8697d26c756a4cfefa1c06",
+   "size": 23070
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at06.src.wrl",
+   "sha256": "36cec36777238a71c3a612903b02f7f0e0306376a87830089d5cfb105e874e39",
+   "size": 143883
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at06.wrl",
+   "sha256": "db8f59a3e31b05fb8fd18d7c14b81b10a59735b2b01eaea6ce3414997925e98e",
+   "size": 23126
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at07.src.wrl",
+   "sha256": "01bbe75275a83e781f6f98ef31f92e49deedb2d70b0cc64728a8bd5e3812df87",
+   "size": 143883
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at07.wrl",
+   "sha256": "2a9c675c0c939324d507d0cfaa72db3c5624f1904443a9d72d31d6640a386635",
+   "size": 23130
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at08.src.wrl",
+   "sha256": "e8d8d4f1df4c7fdf75f596d9995cf1cb2e634af8f334152113503cd232f6f118",
+   "size": 143883
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at08.wrl",
+   "sha256": "3b29f937f26bda03334cc53b3ea710d38490c3a91028c4f45ecf768764430f90",
+   "size": 23131
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at09.src.wrl",
+   "sha256": "0b214e54a47dcb157d296a952e248120fda187402fd0ac9b947fa9957e47e020",
+   "size": 143886
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at09.wrl",
+   "sha256": "47f43a41ed8e935b9d99aa86aa27f5e77f7249742d1b12ef918b267c3e9c6e93",
+   "size": 23148
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at10.src.wrl",
+   "sha256": "eeccc0dd1776c8449b1dd9ecdc4cb067c7867f49c40690eee6cfdb3675d57f59",
+   "size": 143886
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at10.wrl",
+   "sha256": "1292a603f44035cffc662b198e860aadb95cf1d9d2550ec9f4d187f6d2bc1341",
+   "size": 23150
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at100.src.wrl",
+   "sha256": "c813baa3b291cacddb1fc41fbea2782e0f2fc2c27e6edf89d3aa2a8fa81d297c",
+   "size": 143889
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at100.wrl",
+   "sha256": "e753e71f147d5abb789ce397d5201426ecffa60e066474883fa7003470996866",
+   "size": 23194
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at17.src.wrl",
+   "sha256": "a1a7f6108142140b994fd34daa9a2824a347475ea41f196deaa754abe0d85b39",
+   "size": 143885
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at17.wrl",
+   "sha256": "3b9415976a665dc6930b38f608b8c563ce948149058f72ac6d899f25b0ac7e8a",
+   "size": 23162
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at25.src.wrl",
+   "sha256": "57100ffc3303ed40240dcd1978d6a51560716b354f4c15e6066d9fe7b00a5928",
+   "size": 143888
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at25.wrl",
+   "sha256": "fbf7e43282c99e492506c45f18e158240badead6c3c07ab65de068b982a77915",
+   "size": 23189
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at40.src.wrl",
+   "sha256": "80d62310ff3a07d43f05a11c6563ec7ae80c18d90c0880130208ab36b84e522d",
+   "size": 143888
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at40.wrl",
+   "sha256": "116b44553d36721f2b4a35ec4b7e8884cbc10168b2ac067849a6d3144d364d04",
+   "size": 23232
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at45.src.wrl",
+   "sha256": "9605e547c7c343ca72d29bebf735a954560b3ac16b0d08cc97940ed57b4072c2",
+   "size": 147875
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at45.wrl",
+   "sha256": "3acb8dfc8ce2e6774c831d925d2d88557c85d81d49f1efa2ac3be0d94b3419eb",
+   "size": 23715
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at50.src.wrl",
+   "sha256": "8498ebdbc087033d223c785605391eed0d821fd353ff6e7a9dfd457abc5d495e",
+   "size": 143888
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at50.wrl",
+   "sha256": "225f33d0a3690b262d6620798fcf0d02f7a7eedc94bab2ea8e87e56238dcc0a7",
+   "size": 23230
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at60.src.wrl",
+   "sha256": "417f2517f04629278e49fdb85f984a803222d345afd6a0e302c76c011b9424bd",
+   "size": 143888
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at60.wrl",
+   "sha256": "1a8a599b16597da84e226025db2669473a2c00c6dc4b381ee556c109a3b5d4f1",
+   "size": 23230
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at75.src.wrl",
+   "sha256": "b8f0a86295cf9bc73d083f4d9db0c316b49bf456f93bad849d671d918a664579",
+   "size": 143888
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at75.wrl",
+   "sha256": "b228c3a248b06e863034acb7dfed559d7616f6d7d5e3e87a102404f271bc590e",
+   "size": 23233
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at90.src.wrl",
+   "sha256": "5b0334f8272b08d41bdeec46ff1e558f54311a6cf77238f2bd18bf011a2dad55",
+   "size": 143888
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-at90.wrl",
+   "sha256": "10233d31550bfe911ed20c92f142397a060ceecc8ec8ef38275168ed1078d470",
+   "size": 23233
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-closed.src.wrl",
+   "sha256": "1da86d4e8ab1edaa753d0caaaa422e7f82a5527cb63a91976f0286e19747bb42",
+   "size": 152324
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-closed.wrl",
+   "sha256": "94b6c859743be85694fad1e349dbf298aaf8318d66ee3456d7b3046e590c25f6",
+   "size": 24036
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-opened.src.wrl",
+   "sha256": "a2447b2adc0b9e1b4f9bc6ed97ee0432648aaf7a4571a7c8cf26de868c61caf2",
+   "size": 152335
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/graybox-v2-opened.wrl",
+   "sha256": "060fed30546d18b9767b030ead9e86dfe56fb6359726b8653c8d748528dbc71b",
+   "size": 24158
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/pre-polish-2026-08-04/morphing-hauler.src.wrl",
+   "sha256": "0b0ecb823047c2f9ad8bf11e7cf928fa18949b5b248c2c1b7f1b5fc91de835b3",
+   "size": 165200
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/pre-polish-2026-08-04/morphing-hauler.wrl",
+   "sha256": "8647bf8686e434c849105b713334e6d07c631fb09385859baa11cf3041d5b1d4",
+   "size": 26156
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/prototype-v1-weather-rig/morph-rig-cyclone-hauler.src.wrl",
+   "sha256": "dce797fd27058f0ec62302de53bc741206df8f39f7733af465cc9b62f8be038e",
+   "size": 22778
+  },
+  {
+   "rel": "toys/morphing-hauler/morph-fails/prototype-v1-weather-rig/morph-rig-cyclone-hauler.wrl",
+   "sha256": "3f34ec1c6a25b16393bc7caf52ccf8f65f72cc3533d3915fbf76264faeda02ed",
+   "size": 3364
+  },
+  {
+   "rel": "toys/pocket-dino-dig/pocket-dino-dig.wrl",
+   "sha256": "20b4ed5b3606d117c27a789ac4211fd99297bf3a64a6776578103d71dcfcb1f4",
+   "size": 53169
+  },
+  {
+   "rel": "toys/pocket-mars-outpost/pocket-mars-outpost.wrl",
+   "sha256": "3db06538ef300f78d13a642e33fc0098e5c57e6d8c46e13cf91fd3a77394eba6",
+   "size": 28470
+  },
+  {
+   "rel": "toys/pocket-moon-playset/pocket-moon-playset.wrl",
+   "sha256": "f98f99e8cecd65f51914029979553684516701490441b891fdce0e04741bbde7",
+   "size": 23002
+  },
+  {
+   "rel": "toys/pocket-ocean-dome/pocket-ocean-dome.wrl",
+   "sha256": "682dab1d04b1c10bcc8af531778a6a86b8edb98e8e9196267341258f67256516",
+   "size": 33876
+  },
+  {
+   "rel": "toys/pocket-star-carnival/pocket-star-carnival.wrl",
+   "sha256": "d4942cbe2086a0083e0a7e2260eb80013452cf993b730498ea66c8e0678ce310",
+   "size": 48465
+  },
+  {
+   "rel": "vehicles/alfalfa-greenero/preserved/alfalfa-greenero.exported.wrl",
+   "sha256": "23d532e7627089c64f1db89e5c0e62b12dc7b9d31a67adb65432601ef11ab8ad",
+   "size": 362509
+  },
+  {
+   "rel": "vehicles/alfalfa-greenero/work/ag-exported.wrl",
+   "sha256": "4cc8d05f984b72fefaccdfb5a490b5b8fcd74a531c207cd85406010152e0decd",
+   "size": 237799
+  },
+  {
+   "rel": "vehicles/ascended-coupe/ascended-coupe-v2.wrl",
+   "sha256": "48ef1ad8fcde03f7a9be65ebb7ab2e763b19da98cafa622f7d6f4906a455439d",
+   "size": 28622
+  },
+  {
+   "rel": "vehicles/ascended-coupe/ascended-coupe.wrl",
+   "sha256": "460e82e5ff2006b684ea3e6c76cac344017f71abcaae2d1f8b9beb81248e8da4",
+   "size": 21062
+  },
+  {
+   "rel": "vehicles/blazing-monster/blazing-monster-blender.wrl",
+   "sha256": "c825ab3e355bd919cf19a10ba0a9700bd30c661842ccb0d8c67f9b18f1cd19c0",
+   "size": 320712
+  },
+  {
+   "rel": "vehicles/blazing-monster/blazing-monster-blender1.wrl",
+   "sha256": "9054cb0ed21f573f7f7f02882193b018677ffbe56f77ed06d359027ab5ce8d80",
+   "size": 321080
+  },
+  {
+   "rel": "vehicles/blazing-monster/blazing-monster.wrl",
+   "sha256": "07a03af971d13ad5dc144234db2848ff6b3034b6c871f05b160efe5a660ba4dc",
+   "size": 28098
+  },
+  {
+   "rel": "vehicles/blazing-monster/meshlabblazing-monster.wrl",
+   "sha256": "48d3a00842575aa4c41189278326209d6a1a47232b4f2819f261117d677d1486",
+   "size": 345181
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/blue-beauty.wrl",
+   "sha256": "ea6a0a74d0719d3dd13305747a8e935b193c4975d56ce954ffc13cbe99f868ae",
+   "size": 24114
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-FAILED-r2-20260806-154219.wrl",
+   "sha256": "41ef69d4cc401815eeac22f90b7f21882763bf1da84b46ae458cd020be25e92a",
+   "size": 88676
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-pre-r2-20260806-150235.wrl",
+   "sha256": "f15d13fe209553a262feb4461d903947bf699915cd906d3a7548f16925f54d6b",
+   "size": 90693
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-r3-fix2.wrl",
+   "sha256": "1fe9c2a92026fdcd2c0e7f8ef079698b965d2ef2a8cc6f8f5ef393c91725d10c",
+   "size": 97933
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase1-handles.wrl",
+   "sha256": "d2455a50ce91f82901f6e9e537975ae2a06cb73379ec85cc775be0584f4b37f2",
+   "size": 90730
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase2-scoop.wrl",
+   "sha256": "f26ec54f3680c01512f4719a27e3293347b326f9a80322c3b873d8dd0915528d",
+   "size": 90982
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase3-louvers.wrl",
+   "sha256": "5617a53f578c0c2e363cb9163e74dee7998f274c41e696bf751d1b0f4aaefe2d",
+   "size": 96401
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase5-underbody.wrl",
+   "sha256": "bd5375d610669416bf26b346a1b699cb59e95f9bf3fedb4c0e3194d8f7838544",
+   "size": 97035
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/backups/blue-beauty-retry-start-20260806-154219.wrl",
+   "sha256": "f15d13fe209553a262feb4461d903947bf699915cd906d3a7548f16925f54d6b",
+   "size": 90693
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/old/blue-beauty-gz.wrl",
+   "sha256": "1095dc5139eaf9f6039ac7575f22b4384c4c31ebd36ec3daf16b8c92cb047fe0",
+   "size": 22820
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/old/red-sport-coupe (copy).wrl",
+   "sha256": "1eca224aaec138a02cdbb2c1669899669118ccec52d5300e8ba76e923348e80f",
+   "size": 81959
+  },
+  {
+   "rel": "vehicles/blue-beauty-car/old/red-sport-coupe.v97.wrl",
+   "sha256": "1c97075974d5161c6c8c075fcaff270772fc553dbabe020ba8e91f7072d6bf67",
+   "size": 116396
+  },
+  {
+   "rel": "vehicles/buswagon-van/buswagon-van-ylw.wrl",
+   "sha256": "14f6838d0183afcf2a39d8f4d2ad0bd1d58c8a6ec363320c68cbf9951b0e4583",
+   "size": 70243
+  },
+  {
+   "rel": "vehicles/buswagon-van/buswagon-van.wrl",
+   "sha256": "42d1a91e5c5427f316e23808cb6c13083d12f6b47a8090dc0b3effacbaa3adb7",
+   "size": 726232
+  },
+  {
+   "rel": "vehicles/buswagon-van/buswagon-van2.wrl",
+   "sha256": "8b38080fe3d092a73baa2e0cd83ae6f7180af52d53a0272184ccce3fddde634c",
+   "size": 692196
+  },
+  {
+   "rel": "vehicles/buswagon-van/pass1/buswagon-van-ylw.pass1.wrl",
+   "sha256": "dba6765ab6fa03ec5e67daee9588abffaddd9ceb941425ff9c42b08f3948763c",
+   "size": 56433
+  },
+  {
+   "rel": "vehicles/buswagon-van/pass2/buswagon-van-ylw.pass2.wrl",
+   "sha256": "7c2f99b9990559e9820b7434745917ec5727605cb7745f400aa5b47cf21cfbe9",
+   "size": 58407
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/base-audit.json",
+   "sha256": "20c518d303a46fb275eb7cb3203368c719822a5d1f77eb3004cebffc48f96655",
+   "size": 3875
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/build-summary.json",
+   "sha256": "9ebe41a8837ca0be0eba1f0176cd4bed63c5bb0f503e05fa4e0ca63539b327d4",
+   "size": 406
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/mesh-audit.json",
+   "sha256": "4f90194247f0bcbad47803b6eaa6614d0b281bc877944ee070ca266a7a355559",
+   "size": 4737
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/pass2-build.json",
+   "sha256": "10db8b354c569067a5c74dd9e11c8940f08172111e826a58b70918aa8e7c1a84",
+   "size": 8971
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/pre-build-audit.json",
+   "sha256": "47a9b3f8ddc8f0861d079c0ef8cecdc572d89b8c37bd80af8a054e0a0eaa275f",
+   "size": 553
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/raw-export.wrl",
+   "sha256": "53b13cf53fe527472ed762f3e44f749e8bd0fbd3dba4c797ff30880231c7c421",
+   "size": 193425
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/wheel-monoblock.json",
+   "sha256": "e9ae24d6c871abf0a4010624aec56d81c425175ab5da236df5bb8efc0b42a30e",
+   "size": 51448
+  },
+  {
+   "rel": "vehicles/buswagon-van/work/wheels.json",
+   "sha256": "6d97ac838d6cda13909b8cfb81b048334b4f874d2b89bca9e7d658195e63b826",
+   "size": 327
+  },
+  {
+   "rel": "vehicles/buswagon-van-beach/buswagon-van-beach.wrl",
+   "sha256": "bb97d53ca926026583faa02baa8713f9c2d3b1da634e41988c1f07e3124c09e2",
+   "size": 79759
+  },
+  {
+   "rel": "vehicles/buswagon-van-beach/work/beach-build.json",
+   "sha256": "a921413200d28ebdd54240bf2e640840719434cf7bf0e6da555ce79bb364c8ec",
+   "size": 9910
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/crabalac-rtv-x-champagne.wrl",
+   "sha256": "e915c6b94d23fb3be470990406e9dbd7cd2a2fa9d15c13f4e71d28c7403b48c4",
+   "size": 72365
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/crabalac-rtv-x-claret.wrl",
+   "sha256": "fac5da748b052c158716c890af20e38b6d70914e0e623de1d98dc5471ee93a0d",
+   "size": 70432
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/crabalac-rtv-x-obsidian.wrl",
+   "sha256": "20cf3476200ef15cb9df593a4245119e662fb098425148ea9b8bb9e4ad0d9a60",
+   "size": 70064
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/crabalac-rtv-x-pearl.wrl",
+   "sha256": "f3f3ddf80cbd857c3885cdc6c12ef022a887afb745566b209f2c1918262f660f",
+   "size": 70606
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/cand-dp3.wrl",
+   "sha256": "70c1af4c593669d67d701ac52366c0112fc417c7ffe954970a0676d2ac0d7899",
+   "size": 259715
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/cand-dp4.wrl",
+   "sha256": "211f09aff0cec4818d9eae78fa5825ec0e1dfada34b1f103db83e6246e52e05c",
+   "size": 268985
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/cand-dp6.wrl",
+   "sha256": "f832adcf6c589a8df98b214905922db80f2a092ea65887ea20cabe094d8545e3",
+   "size": 294670
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/export-raw-champagne.wrl",
+   "sha256": "a758c88dd35ec407aac53e73ca045da5bd0de0a7b9005c9f9af32282a364659c",
+   "size": 273392
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/export-raw-claret.wrl",
+   "sha256": "1efedbe6466a1a2f6d882c7f940fbc25932a2a3d1574cef587c3afedd5ac1936",
+   "size": 266721
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/export-raw-obsidian.wrl",
+   "sha256": "30292a8071ec46238e73efc2e9b42367f0cb52b8374b1fc803866aa97ca49065",
+   "size": 264946
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/export-raw-pearl.wrl",
+   "sha256": "c429970506165ac819c385a7bf264b0e4e2dacbb6baa549502befd9806509cf6",
+   "size": 267797
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/export-raw.wrl",
+   "sha256": "8f17f1493fbe9f3450096d34fd5d10428cf116b5240f0a90869eb176a78c1f53",
+   "size": 267791
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/materials-champagne.json",
+   "sha256": "30bacb6ab4e7d1407fa7627c935ce2756c58b1ef2dd8c4c8b9accbe22d104e16",
+   "size": 2415
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/materials-claret.json",
+   "sha256": "5fcc2cea8e82a62bc593d462f867f9b421f0a267b3d65cf3551585c42e4078fb",
+   "size": 2420
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/materials-obsidian.json",
+   "sha256": "c398baeb0e0187a38660b49b0799fbd234534dc3da0bdc912d78daa31a8d600a",
+   "size": 2411
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/materials-pearl.json",
+   "sha256": "7c84609ac5c534b441f6d2f853045f2d1fa894470a3eaa0fa981029aa8c1f708",
+   "size": 2413
+  },
+  {
+   "rel": "vehicles/crabalac-rtv-x/work/materials.json",
+   "sha256": "f1193b1cfea2f630a08592b07fe2d39389ba539b63a60389d64193166e0ded0d",
+   "size": 2605
+  },
+  {
+   "rel": "vehicles/ct-civic/bass-civic-ct-antique-bronze.wrl",
+   "sha256": "81648619709a7f6dcfed9ca836adec78e165bcafddf53ae2541ca8de5ac3d84d",
+   "size": 34048
+  },
+  {
+   "rel": "vehicles/ct-civic/bass-civic-ct-deep-purple-fern.wrl",
+   "sha256": "8f43aa14f78cf8b334a33bddc7f21730f2bc0f29feb502a8885b41292469d341",
+   "size": 34150
+  },
+  {
+   "rel": "vehicles/ct-civic/bass-civic-ct-satin-steel.wrl",
+   "sha256": "df4e2c9b6de57e848c2c489ca754a8b89209231b46e6d728bf4365bec2283839",
+   "size": 34473
+  },
+  {
+   "rel": "vehicles/ct-civic/bass-civic-ct.wrl",
+   "sha256": "09dfecc502d2f810468db2cc5bbc991d9b53722d138ece9067f8267240c93ace",
+   "size": 41588
+  },
+  {
+   "rel": "vehicles/ct-civic/civic.wrl",
+   "sha256": "e1f8b69fcd1330e5902e44a1e7d52fbe73d140d3912f5806cae5db1c73162837",
+   "size": 284481
+  },
+  {
+   "rel": "vehicles/ct-civic/civic_funpark_auction.wrl",
+   "sha256": "8428c8b9e8530f2c03fada6a90d6f1307fafadd3e59a31aa93b8721f50728093",
+   "size": 152805
+  },
+  {
+   "rel": "vehicles/ct-civic/cthonda.wrl",
+   "sha256": "d23f6f7ff98453222b14c2575a38854b5828320caffe128f1b105a74cf21dd40",
+   "size": 162605
+  },
+  {
+   "rel": "vehicles/ct-civic/og-rim.json",
+   "sha256": "b11728dda97624cdc7bd1883195a8e0e477f4c9c74f7a700cf24141f5c7331b0",
+   "size": 33940
+  },
+  {
+   "rel": "vehicles/ct-civic/gzipped/civic.wrl",
+   "sha256": "15719821d8355362687a47341499cf3949b9ae42b2c8f6424bfd9c58c808a629",
+   "size": 42028
+  },
+  {
+   "rel": "vehicles/ct-civic/gzipped/civic_funpark_auction.wrl",
+   "sha256": "56c96e5c1ec3e05f9616f0985ad3a3411dacfd14488d5bcb79e987937d8f76e0",
+   "size": 35442
+  },
+  {
+   "rel": "vehicles/ct-civic/gzipped/cthonda.wrl",
+   "sha256": "37733eb51ff87b3cfd4f8f9090e20050d8a9271b448200f0c4eeff2d76112f25",
+   "size": 34693
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/redora-iv.wrl",
+   "sha256": "371449923233e246045c82a232fbe7b059ecbd4593ff204fb8f37e1a4db48926",
+   "size": 51481
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/base-stats.json",
+   "sha256": "443355b4a22f883e3d15735fb2c11f394ac4ccfd4d0377c8ebd93eac261966b9",
+   "size": 3648
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/canopy.json",
+   "sha256": "55296cb51cccafc26664d997a181132355bc71a7684f3a29fa0edc341279fb4a",
+   "size": 628
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/close-holes.json",
+   "sha256": "1142a580ff9a9b370830f7031c2390fcc32e57c8adc9af9d51a09d6d26336baf",
+   "size": 5313
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/export.json",
+   "sha256": "45899ba72527b13e7faeb5284f4356feda849d676a1e3f6810a9b62b64ff3978",
+   "size": 10411
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/fascia-uv.json",
+   "sha256": "cd9855d68a23cc8cb7319a7b3e8438f95e7cf2a71ae4e0bec4df985190f0efa2",
+   "size": 166127
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/headlamps.json",
+   "sha256": "275a084b30c9d6d4b99df990bf4f18a46f70bfc60b8acd97bdcdd5dbfdbac541",
+   "size": 762
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/hole-classify.json",
+   "sha256": "b5db5370aaf074feee83cd244584122e4dd8ca4ad61cfdbf9045d8a6ccc78423",
+   "size": 5591
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/hole-scan-before-bulkhead.json",
+   "sha256": "2606b34a2936936f51f77c5f6514da49b9ef9cdd5e61f7c24c96bda005245e6e",
+   "size": 5033
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/hole-scan.json",
+   "sha256": "1615e32b45af53e6c5843a7734c22115937619276a27791e3c5a05c3d7873f65",
+   "size": 4481
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/identity-break.json",
+   "sha256": "5de7f6bee024b9d0c621cc525a355f06d2e6afa14f2b2ad98ad4b2b51c2c3291",
+   "size": 577
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/lamp-texture.json",
+   "sha256": "411a756729d47869c10aca02c785fe8edf44fe9a672904f6051bb96d38482906",
+   "size": 765
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/lamps.json",
+   "sha256": "a7b5b645daf39a8feab14339efad0260d132c9014c6e3f1350d146a7200e6939",
+   "size": 863
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/lights.json",
+   "sha256": "0a8649c863b9667b2d4e0714c1005de53c89f383e84cc6c2f53cb9ad1d7a6be4",
+   "size": 482
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/nose-uv.json",
+   "sha256": "98b332fb6a21dc15a004b0bfdf6ec0655c6e85256df2c43d01e537cbcaf16c8e",
+   "size": 30769
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/rd-exported.wrl",
+   "sha256": "cfee09123c85a76860bd1cf8f6b9328e6621fd549bf168656300b5ae3301ed46",
+   "size": 130451
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/recesses.json",
+   "sha256": "92c436aa61520df298e7bd385f1cd5a74b7725e50dd528d5c621ecc22b782d22",
+   "size": 3095
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/redora-design.json",
+   "sha256": "b3955defea0d90c4cd530acfee09508025687d61535007e85e2fb11106d62f99",
+   "size": 1225
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/redora-iv-final-candidate.wrl",
+   "sha256": "371449923233e246045c82a232fbe7b059ecbd4593ff204fb8f37e1a4db48926",
+   "size": 51481
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/redora-iv-production-candidate.wrl",
+   "sha256": "f2f40b4ae5a006ce0f0ceb05131cfe2352d2543b277644bba4c3a05166b4dd42",
+   "size": 49072
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/redora-qa.wrl",
+   "sha256": "de2aa3a688c677dffdc1dd8406714a059b03b3b7b718c895299741e8e391e536",
+   "size": 61811
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/strip-interior.json",
+   "sha256": "9c4e3c4603d7983e84b87280e58c66e253146bd64a28fc87c82aba66ddee7135",
+   "size": 852
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/wheel-cage.json",
+   "sha256": "dfd8883f000482c9966af38e6228d3f61a4b9413db6681e27908d03e1ba4b413",
+   "size": 47778
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/wheel-monoblock.json",
+   "sha256": "07e35d1d66db050b4e4d764a3a0100e86745f0c525ea9b8e3dc19ec3f68a6cec",
+   "size": 39899
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/wheel-slotmag.json",
+   "sha256": "1234981807864355edd70b51b9e75dd9c946e59e90bdb8927ab0ddfc696eac2a",
+   "size": 36307
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/wheel-turbofan.json",
+   "sha256": "a2d1e245374596f461233a0aa61dfae990254dddb82bfa4072e3c6fed81d85f5",
+   "size": 36434
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/x-amb0.wrl",
+   "sha256": "35c86267d80a3d622576066ff7098ac09e01f85bd875c792cdd2ddebde54654f",
+   "size": 180950
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/x-ambfix.wrl",
+   "sha256": "1d348ccd49c49b891c749be604e6cb0302ecf453ef57caa0197150978a133e10",
+   "size": 180941
+  },
+  {
+   "rel": "vehicles/ctw-redora-iv/work/x-notex.wrl",
+   "sha256": "a21df659d7ac70e7469c17945a8be363f76129b815a8607ab92ceba6d9df4255",
+   "size": 180899
+  },
+  {
+   "rel": "vehicles/cyclone/cyclone-black-pearl.wrl",
+   "sha256": "13f1b55111c3d5c496a4dd7fa53d7f9007c705883bf761b0fa43ccc589317cd1",
+   "size": 62769
+  },
+  {
+   "rel": "vehicles/cyclone/cyclone-sport-black-cherry.wrl",
+   "sha256": "a07e03ec2ba378a4a031354a3be9702ada2d90dbca9f1dd56e734a800bee5e0f",
+   "size": 62985
+  },
+  {
+   "rel": "vehicles/cyclone/cyclone-street-silver.wrl",
+   "sha256": "bd94e63ef061cd0dd82620f777b18e9561d08a3d1ac6aea21701006b5accb486",
+   "size": 62381
+  },
+  {
+   "rel": "vehicles/cyclone/cyclone-touring-blue.wrl",
+   "sha256": "ea959312c95a3ce091cf0878f0ee9b7b437e10f4be5a7128f471594569a608e7",
+   "size": 64693
+  },
+  {
+   "rel": "vehicles/cyclone/cyclone-vivid-purple.wrl",
+   "sha256": "faeeb2d75939167002fc5f6953b2ab90e382588e317d90f021fb0127feb0708b",
+   "size": 65597
+  },
+  {
+   "rel": "vehicles/cyclone/cyclone-voltage-violet.wrl",
+   "sha256": "0ff623aaa2c590243c0075c3da251bf7701307c31d49428eabb049998aa7faf8",
+   "size": 64700
+  },
+  {
+   "rel": "vehicles/cyclone/cyclone.wrl",
+   "sha256": "74064b3f241772fbfa865eede7680cb13adaba233500e23704cf883fde38c841",
+   "size": 331928
+  },
+  {
+   "rel": "vehicles/cyclone/failed-baseline-2026-08-18/cyclone-sport-black-cherry.wrl",
+   "sha256": "30cd5150164bdb23408e1160e9924bf56d12b402ea6b9b5566aa521763b382f0",
+   "size": 43603
+  },
+  {
+   "rel": "vehicles/cyclone/failed-baseline-2026-08-18/cyclone-street-silver.wrl",
+   "sha256": "ecec9c50c62d784ef1f8776d9ba15ee058a020b8012ba7af7123ce829ad4e6d8",
+   "size": 42938
+  },
+  {
+   "rel": "vehicles/cyclone/failed-baseline-2026-08-18/cyclone-touring-blue.wrl",
+   "sha256": "8dde22fe92120a1b2c224467f754035bbb7c60c6b11b5c899d4497963ab4519d",
+   "size": 44641
+  },
+  {
+   "rel": "vehicles/cyclone/preserved/cyclone.wrl",
+   "sha256": "74064b3f241772fbfa865eede7680cb13adaba233500e23704cf883fde38c841",
+   "size": 331928
+  },
+  {
+   "rel": "vehicles/cytoda-ascend/cytoda-ascend-opal.wrl",
+   "sha256": "af02daa32c9995af2d9f823adf2a0d9068f0c0b4cd3d5a3e807e1f1abc479527",
+   "size": 37672
+  },
+  {
+   "rel": "vehicles/cytoda-ascend/cytoda-ascend-petrol.wrl",
+   "sha256": "ee2f5da9be42259662d7abbfffeb40caf62cf91eb52f9ee361a91c5db25bfe37",
+   "size": 45031
+  },
+  {
+   "rel": "vehicles/cytoda-ascend/cytoda-ascend.wrl",
+   "sha256": "7f0aab25db6a208b34d0c71d831b5aa3b75e4d0e91a9626798488b976cf4a931",
+   "size": 35145
+  },
+  {
+   "rel": "vehicles/cytoda-ascend/work/scene.json",
+   "sha256": "4284eb3fb092964786a0fa61aae8fccb41e0bac6fe47fbc74be852938ab419f6",
+   "size": 165863
+  },
+  {
+   "rel": "vehicles/cytoda-ascend/work/wheel-finemesh.json",
+   "sha256": "679e7900d3446f709956912c6c8e1cec2bc901c44e46aea3ae6accc77ef48a94",
+   "size": 48825
+  },
+  {
+   "rel": "vehicles/cytoda-ascend/work/wheel-sevenspoke.json",
+   "sha256": "9c80b6e04126d12a9903b3b19b36454e21df7c97ce699e8f4585a02fff31affb",
+   "size": 54479
+  },
+  {
+   "rel": "vehicles/cytoda-ascend/work/wheels.json",
+   "sha256": "71ed03a9ae8a1f221f8926bdffc6ac1d8f8fdc37c4d0f315328b692f9c02f783",
+   "size": 44214
+  },
+  {
+   "rel": "vehicles/cytoda-super/cytoda-super-v6.wrl",
+   "sha256": "3884b14130b40dbb7aa84431202917c8c6793b7e4b837f3ce451a281906e45c5",
+   "size": 41458
+  },
+  {
+   "rel": "vehicles/cytoda-super/cytoda-super.wrl",
+   "sha256": "06d6a71bf211ba91014ad41762d80a516e5aef44473e926a5e15958417908698",
+   "size": 41733
+  },
+  {
+   "rel": "vehicles/cytoda-super/cytoda-super-v12/civic-rim.json",
+   "sha256": "9c06ecc385e0ec22b292ace3fb0e610bfbb94c685d28dcde1fe463fd140da56d",
+   "size": 33922
+  },
+  {
+   "rel": "vehicles/cytoda-super/cytoda-super-v12/cytoda-super-v12.wrl",
+   "sha256": "39089f97a6d69a10437e5e83e8078f167bcc3c365ff3dcb13f7ea9f6ab1e3b32",
+   "size": 52439
+  },
+  {
+   "rel": "vehicles/dondha-r3000/dondha-r3000-dx.wrl",
+   "sha256": "5ff57f4b0ac8ca5dfe0f79cf8f84fe1d632cf517eb3b335e4c97e5df3c4625e0",
+   "size": 36818
+  },
+  {
+   "rel": "vehicles/dondha-r3000/dondha-r3000-rsi.wrl",
+   "sha256": "c25fbd41ffbe5c588e0d99e8cf64cc0462c06125232319463a9610452d215c9a",
+   "size": 36607
+  },
+  {
+   "rel": "vehicles/dondha-r3000/dondha-r3000.wrl",
+   "sha256": "ac7660d257f3d3533ee8067bd067bdb6c5966aa2de07d87f91e5e311683e3cc9",
+   "size": 35386
+  },
+  {
+   "rel": "vehicles/dondha-r3000/work/scene-dx.json",
+   "sha256": "d89b53d41351d0b54d1d360ffc7fab6df1e3ea56fda05648bb2533aeb5f91c05",
+   "size": 229778
+  },
+  {
+   "rel": "vehicles/dondha-r3000/work/scene-rsi.json",
+   "sha256": "2ce49b795b31dbe0db538dc73afa5b0983e92422fc5f22e3e8df704d05d6cd0b",
+   "size": 228871
+  },
+  {
+   "rel": "vehicles/dondha-r3000/work/scene.json",
+   "sha256": "822e81f22c01cdaf6599bfa68669412432feff4487d67ad711b1f5e6a8848cff",
+   "size": 224693
+  },
+  {
+   "rel": "vehicles/dondha-traylude/dondha-traylude.wrl",
+   "sha256": "dc6774e0adfbb5e5833e2a2bc26117303c164d5fd4f3bdf8bf266402181b554d",
+   "size": 72501
+  },
+  {
+   "rel": "vehicles/dondha-traylude/work/scene.json",
+   "sha256": "d9245e2bc1f6a3db81649d19b2542406046cd53da0f8e70bc66b6c5fa0bbe218",
+   "size": 297359
+  },
+  {
+   "rel": "vehicles/dondha-traylude/work/wheel-concave10.json",
+   "sha256": "2063fd6611d5f5ed6154cacf312fd00c7d3b4d5321e93a0879fe8d5bb0b7c15e",
+   "size": 47605
+  },
+  {
+   "rel": "vehicles/emerald-serpent/emerald-serpent.wrl",
+   "sha256": "f7665bbbc4eb09ace287e59b9158b67d4bbfe97fb3d267f56bc3aa587078b6b8",
+   "size": 26462
+  },
+  {
+   "rel": "vehicles/fiat-panda/squish-da.wrl",
+   "sha256": "eda630dbc74af1706cb1ee9d312432a3c45abbb4d302556b14cf6fe72e662ba2",
+   "size": 49568
+  },
+  {
+   "rel": "vehicles/fiat-panda/work/shells.json",
+   "sha256": "1af7ede588db10f38d89b6174657c1f09f0a7d8026e0a7090a8ae3f725ebfb4c",
+   "size": 978
+  },
+  {
+   "rel": "vehicles/fiat-panda/work/squishyy-raw.wrl",
+   "sha256": "3ad9e491632546aa38d910903e9f7f1598d778276fa7f7666b32ce5675626111",
+   "size": 186176
+  },
+  {
+   "rel": "vehicles/jeef-denim/jeef-beach-rider.wrl",
+   "sha256": "2e886799eb286907bf8c84dec9423b4e238f08923c426135c59925c159ae3fca",
+   "size": 38973
+  },
+  {
+   "rel": "vehicles/jeef-denim/jeef-denim-cherry.wrl",
+   "sha256": "e681496e1edfb041f0f953091d01cf4ce248b11ffd97ba81ec3a756db9f8c82c",
+   "size": 49081
+  },
+  {
+   "rel": "vehicles/jeef-denim/jeef-denim-trail.wrl",
+   "sha256": "a155159b7efe639d8460a4fb6dc25d03be2e585a733610c092064146afb5f158",
+   "size": 48816
+  },
+  {
+   "rel": "vehicles/jeef-denim/work/base-stats.json",
+   "sha256": "7be1973941094cafc6f70a5468eb75fc13df1ffc764e1834fa6b6230a333ff43",
+   "size": 3340
+  },
+  {
+   "rel": "vehicles/jeef-denim/work/wheel-five.json",
+   "sha256": "f3db831558c11345ebfbb19c0c353d8bbfcaec1b1bfed2805da0044485bfc953",
+   "size": 33472
+  },
+  {
+   "rel": "vehicles/jeef-denim/work/wheel-splitdish.json",
+   "sha256": "47f879cb3bbf1d7fd9ff16376c5f48208e70deca6c2ab8629164c788cd639ab1",
+   "size": 37281
+  },
+  {
+   "rel": "vehicles/jeef-denim/work/wheel-turbine.json",
+   "sha256": "88e503c3f53481ab71e749352406d6872a7864eabf55b31d8f5422ef4d1509a9",
+   "size": 35618
+  },
+  {
+   "rel": "vehicles/ragnum-red/ragnum-red.wrl",
+   "sha256": "bf5f7704d154f15f69bf223521c0582ddc9d3c18b095a2ca15c52dcbaefa45a2",
+   "size": 72820
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/clean.json",
+   "sha256": "8b1b0351fc3e97cc1358388699aef523f0ce9209ba0d1ecb765b97a254ea5a13",
+   "size": 7529
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/cull.json",
+   "sha256": "120e1365b06189d61503d351d75d4f0fe5cdd759be9ff6f5fa8e56e7576c947d",
+   "size": 1892
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/cull2.json",
+   "sha256": "432eab2e1b9c8fd0c2fb3c03e2b157281af70276fe4cb3bef96d1fe5b1458b15",
+   "size": 3442
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/cull_probe.json",
+   "sha256": "44dfbf6160479f3ded524b47d533c2b836a503d386dd4e11800e3b760b4b0008",
+   "size": 1887
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/emit.json",
+   "sha256": "29806e091a992adf5c3f8e650b9a3330eb12727f8a87b6e9ae511fd61f83bf7c",
+   "size": 3048
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/gates.json",
+   "sha256": "229652ed6f8b00958eab2eb5ac725eeed58387dcc2e1dc9acd139eae7630d638",
+   "size": 4525
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/lamps.json",
+   "sha256": "de98d9f2d564a771a36c8bf7f5122c5c1aa7c244996985247f9ae2b0d035d087",
+   "size": 2582
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/materials-plan.json",
+   "sha256": "85c182ffb053ec1a613a5d65f7012e2c1ec9bece135ce0d3fcea5d20f86ee7a4",
+   "size": 4865
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/scene.json",
+   "sha256": "f80c55bb9d5ae97eb3ef3643c3aaeaf37e1902b02dc3b172ed9ebbf6963322d7",
+   "size": 482859
+  },
+  {
+   "rel": "vehicles/ragnum-red/work/wheels.json",
+   "sha256": "0a30660e19ccc06df3d5ae7cecea1f7fe89afaecd79103e7b20d8b54ffe3066b",
+   "size": 2329
+  },
+  {
+   "rel": "vehicles/rambo-rt/rambo-rt-1/rambo-rt-1.wrl",
+   "sha256": "4673d699ef9fb94b6d3de77cc83aab55868f89e2d8242e3c17a1d81eeb5458ac",
+   "size": 65172
+  },
+  {
+   "rel": "vehicles/rambo-rt/rambo-rt-2/rambo-rt-2.wrl",
+   "sha256": "058093febc7887b6f616a72cceb1c1123bc0c7c98fc7ebc4b7317de818ad4dbe",
+   "size": 63709
+  },
+  {
+   "rel": "vehicles/rambo-rt/rambo-rt-3/rambo-rt-3.wrl",
+   "sha256": "5692d5bca3299f293dd08492956160b74cd666699a8e558673886a18c5cce8cf",
+   "size": 63759
+  },
+  {
+   "rel": "vehicles/rambo-rt/rambo-rt-4/rambo-rt-4.wrl",
+   "sha256": "ff68168bcfc37a0a65736fe9e0e1d5f06f45a9409161dbdfd18bff1972798246",
+   "size": 64385
+  },
+  {
+   "rel": "vehicles/rambo-rt/rambo-rt-5/rambo-rt-5.wrl",
+   "sha256": "6767d75c5a48491377f86bbab0adf601b166d675bb18cc126e253f0add70aa90",
+   "size": 64105
+  },
+  {
+   "rel": "vehicles/rambo-rt/rambo-rt-6/rambo-rt-6.wrl",
+   "sha256": "0b1909cd7bff7123377ef3adb7a1b6696df641fac44c314eddd0525a74246559",
+   "size": 63049
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/donor.json",
+   "sha256": "7b53e97e02ae7f40057e0d22b22454e614f4d4c2e0b141ee38d43a4c488c914a",
+   "size": 445694
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/wrlforge-validate.js",
+   "sha256": "31c2aae68af75dcb83c9ed5eec625ff5ce141423fee261c4445487de2b88f933",
+   "size": 2391
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/emit/rambo-rt-1.json",
+   "sha256": "4e56743cb3951c3186f8e11556c9c9ae49f1a5a7c01829bd1c188ddf1d16264d",
+   "size": 1563
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/emit/rambo-rt-2.json",
+   "sha256": "8432de9eda120682c4449b7cfaf0af4e41dd73faa2296cc9c1324e1df9bb1279",
+   "size": 1559
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/emit/rambo-rt-3.json",
+   "sha256": "462575b74df869148141b806f7e56405ae4ad7f5694c282933c904483287f5dd",
+   "size": 1506
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/emit/rambo-rt-4.json",
+   "sha256": "898959a1930206076cf6e6c9bf71f0e3429833a86f7b038bfb71030497d03aab",
+   "size": 1572
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/emit/rambo-rt-5.json",
+   "sha256": "c327d6842911f9ff79155e8a626c7918d38b6dfae8f1dd45ea48b3cd3e1f386b",
+   "size": 1453
+  },
+  {
+   "rel": "vehicles/rambo-rt/work/emit/rambo-rt-6.json",
+   "sha256": "bb867e91ff4ca4cc1d43defacafbc723363d765624b0551dfebbe8398c33487e",
+   "size": 1489
+  },
+  {
+   "rel": "vehicles/rocket-bus/rocket-bus-classic.wrl",
+   "sha256": "e6d103e84b2fdef4b32285d4bd4f31c712b47cc306c0094983361d02f6cc51c3",
+   "size": 21489
+  },
+  {
+   "rel": "vehicles/rocket-bus/rocket-bus-cosmic.wrl",
+   "sha256": "11c5e9ec0f48bf14890a0a6519ea087e4a2184ea528aacb042fec6ef450a0fbf",
+   "size": 22295
+  },
+  {
+   "rel": "vehicles/rocket-bus/rocket-bus-lime.wrl",
+   "sha256": "232cdd87bfbc5c950445aef61a4eeef4625063b2e6195fdb8289d2cc82520a11",
+   "size": 21936
+  },
+  {
+   "rel": "vehicles/rocket-bus/rocket-bus-midnight.wrl",
+   "sha256": "7ed0add6f5e1c75c3c386ef67e5ed6587e589ab7007393e3f287e946cee1960d",
+   "size": 21612
+  },
+  {
+   "rel": "vehicles/rocket-bus/rocket-bus-red.wrl",
+   "sha256": "0e566506693d1ee5144bc2aefaee305a7a7544dd56c0c7ed32a75dbb240899dc",
+   "size": 21210
+  },
+  {
+   "rel": "vehicles/rocket-bus/rocket-bus-retro.wrl",
+   "sha256": "3a9409e6ed14f59d499a74e772243b169ed32d2075e15f8e39588dd1b4f0308c",
+   "size": 20841
+  },
+  {
+   "rel": "vehicles/rocket-bus/work/donor.json",
+   "sha256": "24691ed31b0f264465598722bd4fd0da34b2ec402862764d753da8f5162efb29",
+   "size": 83882
+  },
+  {
+   "rel": "vehicles/rocket-bus/work/emit/classic.json",
+   "sha256": "c8f9d15b3845daf74cf5288bb07a73a6adcbb10da5368a802caed063af0a8dc0",
+   "size": 1361
+  },
+  {
+   "rel": "vehicles/rocket-bus/work/emit/cosmic.json",
+   "sha256": "425048f47c84c968c9ce5bd73fa738df354920c8e34215d860c00f56f52e1aa6",
+   "size": 1368
+  },
+  {
+   "rel": "vehicles/rocket-bus/work/emit/lime.json",
+   "sha256": "cea93e552cbf6de5c5df44d4b7b107c1f177230e19135571ebc4d2990e747464",
+   "size": 1366
+  },
+  {
+   "rel": "vehicles/rocket-bus/work/emit/midnight.json",
+   "sha256": "610bdc76c352cb658431df16aad10a576369a46d51fb4d3cb2eca277ab779447",
+   "size": 1307
+  },
+  {
+   "rel": "vehicles/rocket-bus/work/emit/red.json",
+   "sha256": "ee67ac686d0080080b83140b28abf054a2531a342da70e6fdcf9e0c77669f2cb",
+   "size": 1363
+  },
+  {
+   "rel": "vehicles/rocket-bus/work/emit/retro.json",
+   "sha256": "d3f5565e3634c214362c72a81d4eb4f2989cafc4061f5ea65605dd0b1abb9aba",
+   "size": 1421
+  },
+  {
+   "rel": "vehicles/rubric-cxs/rubric-cxs.wrl",
+   "sha256": "d391a8459951dd63925b8db6bc3cc19fd102d7333758459e77bb3467d10eae5b",
+   "size": 41498
+  },
+  {
+   "rel": "vehicles/rubric-cxs/preserved/rubric-cxs.exported-original.wrl",
+   "sha256": "b6a427a334f24775e4d1331f08b0818493b1cf04e33fc57137509f6b013c5636",
+   "size": 151649
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/base-stats.json",
+   "sha256": "21291c24a71f53d441dc3eb093459582afe9a52824ee687c2e6ee7d79414d618",
+   "size": 1930
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/geometry-qa.json",
+   "sha256": "308813c91da6da365f4bde93fe2e280fd6e0ea376903ef4551b3644f4520c400",
+   "size": 4756
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/materials.json",
+   "sha256": "ebfeaa7bda977c14f47bfc22f8be98cf3aa7a9ef645b86c0abf2b364cc758f7b",
+   "size": 3650
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/pipeline.json",
+   "sha256": "89dc423a080ba65cc51da1128e8ad105d3b8c75b7dfa7b304294e34220bfd672",
+   "size": 20612
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/rx-exported-jade.wrl",
+   "sha256": "b1422694caea73aac4e187a722ac9fb5455f45d13f369887541b63eb9766fde4",
+   "size": 141915
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/rx-exported-red.wrl",
+   "sha256": "8c1608a2c7396ff3c29eaf2967b9f2de4ebaecebb9a05302514b2e3bb9b885e9",
+   "size": 149832
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/rx-exported-sandstorm.wrl",
+   "sha256": "46f88a3e11a4ae0d7249de658f8dfae40a1d34ac2f1c307b448b9c8a26913ab0",
+   "size": 144493
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/rx-exported-voltage.wrl",
+   "sha256": "147100aba702b0b2f722cc11c50505272ff782a35ddcc6e6bb87d7876b5683e6",
+   "size": 143580
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/rx-exported.wrl",
+   "sha256": "e826cf65f5084738fd839ff2467959abd1e9f8498d6b9b5462540fe903c0cc03",
+   "size": 149404
+  },
+  {
+   "rel": "vehicles/rubric-cxs/work/wheel-finemesh.json",
+   "sha256": "6d45568854d3212b0e6b03490ae8dbb175658c771cf2a6d14b31741e71de9e72",
+   "size": 59282
+  },
+  {
+   "rel": "vehicles/sinsan-32r-clearsky/work/export-raw.wrl",
+   "sha256": "1f09e100b393bf90fe672a4166b87b9b93970bad45651499c5bc0805b58811f1",
+   "size": 275387
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/clearsky-34r-azure.wrl",
+   "sha256": "73b0f9930f3b49b6a018f1a1b9c70f53b49ccaaf9cd058713d39f7d1c01b8ee5",
+   "size": 59357
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/clearsky-34r-citron.wrl",
+   "sha256": "dbaf2f5e93da9ceac266760b90d70ba5b9ed672169800e06dd4a5231779adc41",
+   "size": 67632
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/clearsky-34r-frost.wrl",
+   "sha256": "a9fba1e4647db0969ce99989aecc1a3887ec7cd52ce8b277bcfbf3724dc45df4",
+   "size": 61367
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/clearsky-34r-scarlet.wrl",
+   "sha256": "a5c9a22f45a3ecbb9472cece3b673bc01b2b886985f516f3aa1f8697cf3c00c1",
+   "size": 62967
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/export-raw-azure.wrl",
+   "sha256": "4d9adf0042df17c25002516f055fa61f94f6338d352f10ca4abb177f4487ac8e",
+   "size": 210971
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/export-raw-citron.wrl",
+   "sha256": "2bfddcd48b7104772e6210e23373460815b8e244d173e4f49759233908eae1c5",
+   "size": 236342
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/export-raw-frost.wrl",
+   "sha256": "37ea4fbe78c4460c5ff73cc751f8f2ed4656ebe7e88a9001e8eec4eaf50f6dc5",
+   "size": 218716
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/export-raw-scarlet.wrl",
+   "sha256": "26bd0387456376f709f6c121952f4c8b2a7ca91ecfe22bc03f8b2c54478ef0ba",
+   "size": 224410
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/fitment.json",
+   "sha256": "78d36913ec2599d9f5c51e92cd09d2c6299b60b2390f85ab2ae74419a8ccf9bc",
+   "size": 744
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/materials-azure.json",
+   "sha256": "e7737f9d9ccd63d42fcc4ec07eadae7f3c9f20b95fe69e02eca9dd6bdcde1948",
+   "size": 2080
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/materials-citron.json",
+   "sha256": "dcffaf6fa403b4b1a3fef0f312a2c30926d71ff834cd4b98bd5a171200b2b214",
+   "size": 2050
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/materials-frost.json",
+   "sha256": "8e86679f8c1a3d732bc3f03c2c0f0164e9d5960eb1ea2df841d47e5376f1f2e4",
+   "size": 2025
+  },
+  {
+   "rel": "vehicles/sinsan-34r-clearsky/work/materials-scarlet.json",
+   "sha256": "23d3ee37ac8725a06bff56e71b75b42362c9b65af593508d39f0053f662ea79c",
+   "size": 2071
+  },
+  {
+   "rel": "vehicles/smally-grouper/smally-grouper-blue.wrl",
+   "sha256": "1fc27754fd8f458e97d84bf0ce14be97c92308175630d92a6efa223498268d9d",
+   "size": 33742
+  },
+  {
+   "rel": "vehicles/smally-grouper/smally-grouper-chameleon.wrl",
+   "sha256": "aeb4842b8cdab5d2ea3f08846a249d3a423d21bfb3258640cbd5b212a83f1f56",
+   "size": 35434
+  },
+  {
+   "rel": "vehicles/smally-grouper/smally-grouper-citron.wrl",
+   "sha256": "53eb0631a0cbe6fffde780fa16647fe15d7fa4dce1ec67cc51633947a3b5b570",
+   "size": 33981
+  },
+  {
+   "rel": "vehicles/smally-grouper/smally-grouper-mint.wrl",
+   "sha256": "407fb74ca3a26a9088a3e9fc9d6383ffde7f46f0be588f7dafe29865656aadd9",
+   "size": 35242
+  },
+  {
+   "rel": "vehicles/smally-grouper/smally-grouper-red.wrl",
+   "sha256": "e0825f1dfa36a646c929bd2b6dba04c6051ee6cd55151c198a676a0b847b9567",
+   "size": 34272
+  },
+  {
+   "rel": "vehicles/smally-grouper/smally-grouper-tangerine.wrl",
+   "sha256": "105ef1b170222d23604493b8028079b2be5bbf7a35953583dd289bfa50a6131e",
+   "size": 35197
+  },
+  {
+   "rel": "vehicles/smally-grouper/work/donor.json",
+   "sha256": "c3616f48ffeda2f378ccf3921959bcf2f0d7ab87a4a54f2ea10dcb6b10f0ef7b",
+   "size": 199160
+  },
+  {
+   "rel": "vehicles/smally-grouper/work/emit/blue.json",
+   "sha256": "a4584bccce10e0fbcfbdaa20ac935a7d43ffd40c434c1207db351200b6eb9c57",
+   "size": 1384
+  },
+  {
+   "rel": "vehicles/smally-grouper/work/emit/chameleon.json",
+   "sha256": "12f643316e503e8dd81b222ca4eab5f8fb637d170c0eed141ef3a515467be562",
+   "size": 1335
+  },
+  {
+   "rel": "vehicles/smally-grouper/work/emit/citron.json",
+   "sha256": "5e00967679c9ac10de1d2e2ddffd8597537142e231cf87f363b8e3456a9f189d",
+   "size": 1393
+  },
+  {
+   "rel": "vehicles/smally-grouper/work/emit/mint.json",
+   "sha256": "20e0d7709e48f6a90b72278b9122b85a09a9f5930a6de40aceca9dc5dec12558",
+   "size": 1388
+  },
+  {
+   "rel": "vehicles/smally-grouper/work/emit/red.json",
+   "sha256": "048292c575513d4b0d497557b9769ea3e268c0cccb091e39fba048db48629e82",
+   "size": 1391
+  },
+  {
+   "rel": "vehicles/smally-grouper/work/emit/tangerine.json",
+   "sha256": "114fd80d0c2ef0f24bc32ec4e11267b2da25a8bac7f3f80e567671868c93b1c7",
+   "size": 1452
+  },
+  {
+   "rel": "vehicles/smartcar/smartcar-lite.wrl",
+   "sha256": "0efd3eadc8e1913dada381765d71ba1fb242c1d29d7b97298e1db4d741f4cc4a",
+   "size": 17675
+  },
+  {
+   "rel": "vehicles/squishyy/preserved/pass1-rejected/squishyy-pass1.wrl",
+   "sha256": "0f892d9f131e8ecc3d636843e9d0978374cf679f1972ce751f48670bec056195",
+   "size": 6848
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/sundat-cloudy.wrl",
+   "sha256": "0f36168d47ca9c67edc14550faa96c685ee2857113dea84f1f2398a7cf7a46be",
+   "size": 61556
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/baseline.json",
+   "sha256": "9362f9e5a240cab093030d976fa470f9c2e3442ad8c26ffcc5cb535d3af0a661",
+   "size": 4372
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/explode.json",
+   "sha256": "1f95ec4250567c14676949afe48ae04c05c49558f2d1eec29746055924f99728",
+   "size": 1275
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/export.json",
+   "sha256": "de22555edf7d33c52d1f5f6ca16b97d9c07418a92008cb96c26ebf5325ea4326",
+   "size": 2796
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/gates.json",
+   "sha256": "ed35eab721b0f1127651896032428704528afdb4a0e8f8b3626c673935c801c4",
+   "size": 6303
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/geometry.json",
+   "sha256": "2a8b276f525284f4ea2da6b65f95dbab4553a9897249c8517866f17622dec89b",
+   "size": 344015
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/islands.json",
+   "sha256": "593441da62a6d436604e68f64d0b9cc524fec109ed131fe114975b19463d6181",
+   "size": 20988
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/materials.json",
+   "sha256": "6d14e44dcd28c125f50bc4144663fdcad942f06c48098e906c4a879afd90df3a",
+   "size": 6608
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/plate.json",
+   "sha256": "29d43df0d93ef3c4dd47f516a31f56c30580269e101cd1739f66cbe715f59e60",
+   "size": 1651
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/shading.json",
+   "sha256": "828ee07b681d90f82d7805071460f28dbf4d9b40da030ece7ffd9550da347bcb",
+   "size": 25993
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/spare.json",
+   "sha256": "ac75e7b492e3c24b44d9ae6e9e66d3fa587b65b2875cef26e430932c4c22701a",
+   "size": 1097
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/stripe.json",
+   "sha256": "10a067ecfd4b518045a998acf8570a877d27ecfd9f498631a83b856cf941c175",
+   "size": 781
+  },
+  {
+   "rel": "vehicles/sundat-cloudy/work/wheels.json",
+   "sha256": "81788a0360234ecec53a3350dff578039a08349c46661e8069a772f0a8a0bedb",
+   "size": 5152
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-burnt-orange/sundat-cloudy-burnt-orange.wrl",
+   "sha256": "652703d434abaf6122584627786088020ce9c8fe075a5b9c732386d5f95e28d9",
+   "size": 61006
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-burnt-orange/work/build-sundat-cloudy-burnt-orange.json",
+   "sha256": "822bb5f028d8a006dcbe70d95c487536eb0460c3f105037ea620c8151def0ea6",
+   "size": 6294
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-burnt-orange/work/export.json",
+   "sha256": "697e8aa4da2c26ae609333b90a880e5652f31b2327b1ce50fefc4aef6f1cd32d",
+   "size": 2795
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-burnt-orange/work/geometry.json",
+   "sha256": "0ab3ae040cb1291b68d4053c76468d32a23a1b88920acfb56012413065ca926a",
+   "size": 326249
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-burnt-orange/work/materials.json",
+   "sha256": "fa9e8b7f6f5435d826053bbb36c2231029e56ce6422515a63dfed8d600c31d52",
+   "size": 6639
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-burnt-orange/work/variant-gates.json",
+   "sha256": "0e83ef79487b8708491d000ac5d7fb997400dbb3ba3adaf49297502277a33dcf",
+   "size": 7465
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-ice-blue/sundat-cloudy-ice-blue.wrl",
+   "sha256": "8007f1617cfb6e2be0fa73a392a3411fc4d4747bf1fed5edcdce29aa97d182d2",
+   "size": 60446
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-ice-blue/work/build-sundat-cloudy-ice-blue.json",
+   "sha256": "176780cf898b62464d5246330796b2a3c3aea0dfb13206f5850b4319e881636f",
+   "size": 6226
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-ice-blue/work/export.json",
+   "sha256": "2e4cbc99f3c4e8225c42c9c8ce47cc335ad1f7591bbe73b2e2e0c2615ca5b61e",
+   "size": 2795
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-ice-blue/work/geometry.json",
+   "sha256": "1139c639bff033f070d1ff05b67e07bd5169e85b6503d4fd130c29034b766200",
+   "size": 316539
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-ice-blue/work/materials.json",
+   "sha256": "ef17fb0a3fa21bf04c866602f4a40b3227634fc1659958a1d5780c056e77fc56",
+   "size": 6645
+  },
+  {
+   "rel": "vehicles/sundat-cloudy-ice-blue/work/variant-gates.json",
+   "sha256": "93fc788b0b7ec467e15395d200cd1b6d5fce88c061d14b9c79188c191e2f3a54",
+   "size": 7454
+  },
+  {
+   "rel": "vehicles/the-206/the-206.wrl",
+   "sha256": "7fd3d0cb5e84e8bae76ef04ac84fe3f244d16f528c53ca5399ccc065d1a3ae7f",
+   "size": 55842
+  },
+  {
+   "rel": "vehicles/the-206/work/baseline.json",
+   "sha256": "ce00771dd05980ecad1dbe2cb8b98d2864229df5f55c3e4af1d1b912f2486978",
+   "size": 6222
+  },
+  {
+   "rel": "vehicles/the-206/work/build-c30.json",
+   "sha256": "151257fa383dc1cc8dbd3d8bf0f17a81b998f15b86ed490dddee2cca6fc04bae",
+   "size": 1500
+  },
+  {
+   "rel": "vehicles/the-206/work/build-c40.json",
+   "sha256": "cefb655215be65ff205a858389a88302197d0deb326bd5f37853909d1a3db205",
+   "size": 1500
+  },
+  {
+   "rel": "vehicles/the-206/work/explode.json",
+   "sha256": "b47640f8f7133e4f7e2418f97fa530a21da98814f019835a7d11c0028432461a",
+   "size": 6752
+  },
+  {
+   "rel": "vehicles/the-206/work/export-raw-c30.wrl",
+   "sha256": "8fa5a4049d91acb3b440c1469481be21a99486b747b911ab6957d9a2cce86a1f",
+   "size": 200842
+  },
+  {
+   "rel": "vehicles/the-206/work/export-raw-c40.wrl",
+   "sha256": "5e33d6e594d359717fc0c439a7911af37c36f2f27874ba138f4fb5d49160ff13",
+   "size": 197320
+  },
+  {
+   "rel": "vehicles/the-206/work/export-raw-c50.wrl",
+   "sha256": "d178b278948a0af42e88779fc5151c1dfd1ddb1928f4985d2c57ad4f39674d7d",
+   "size": 192245
+  },
+  {
+   "rel": "vehicles/the-206/work/export-raw-c60.wrl",
+   "sha256": "43c7e09e15c53ddd91be12c4949c964224795ad2eca03504a77d50a76266c5ea",
+   "size": 190053
+  },
+  {
+   "rel": "vehicles/the-206/work/export-raw-norm.wrl",
+   "sha256": "294f6bc920fc5c97845527a83319a955ec49363aa1df1f54c17e348d6f1e6750",
+   "size": 259357
+  },
+  {
+   "rel": "vehicles/the-206/work/export-raw-normals.wrl",
+   "sha256": "294f6bc920fc5c97845527a83319a955ec49363aa1df1f54c17e348d6f1e6750",
+   "size": 259357
+  },
+  {
+   "rel": "vehicles/the-206/work/finish-c30.json",
+   "sha256": "67e24333687f347f8c81f2fb3bb3cfb5c86e0fa147df3ac6ef4a49c44bb78b65",
+   "size": 1685
+  },
+  {
+   "rel": "vehicles/the-206/work/finish-c40.json",
+   "sha256": "5b17f8eb28b56c993928ac466fcdfbb8b79230085b81d00a51d5c56283af26a7",
+   "size": 1685
+  },
+  {
+   "rel": "vehicles/the-206/work/finish-primary.json",
+   "sha256": "427ac49eefa294fa8cff6ccfade70e61cfe9674165a20f63fc22f33d057c88c5",
+   "size": 1677
+  },
+  {
+   "rel": "vehicles/the-206/work/gates.json",
+   "sha256": "9f7a9a50cc79d9c44e0df1ab118d46a5bd56c036a9b59ab5c0e1d38422fce9dc",
+   "size": 4139
+  },
+  {
+   "rel": "vehicles/the-206/work/islands.json",
+   "sha256": "2fd8320a53ee78762cc43940ebd02f97d8e92dec5f2594425c0ae9d75bbf4a6a",
+   "size": 17481
+  },
+  {
+   "rel": "vehicles/the-206/work/materials-c30.json",
+   "sha256": "ef41c7dbdcd70d501c1e98aca7612e780f82cf17b9352bcf296528e4ab271ef2",
+   "size": 2652
+  },
+  {
+   "rel": "vehicles/the-206/work/materials-c40.json",
+   "sha256": "ef41c7dbdcd70d501c1e98aca7612e780f82cf17b9352bcf296528e4ab271ef2",
+   "size": 2652
+  },
+  {
+   "rel": "vehicles/the-206/work/materials-c50.json",
+   "sha256": "ef41c7dbdcd70d501c1e98aca7612e780f82cf17b9352bcf296528e4ab271ef2",
+   "size": 2652
+  },
+  {
+   "rel": "vehicles/the-206/work/materials-c60.json",
+   "sha256": "ef41c7dbdcd70d501c1e98aca7612e780f82cf17b9352bcf296528e4ab271ef2",
+   "size": 2652
+  },
+  {
+   "rel": "vehicles/the-206/work/materials-norm.json",
+   "sha256": "ef41c7dbdcd70d501c1e98aca7612e780f82cf17b9352bcf296528e4ab271ef2",
+   "size": 2652
+  },
+  {
+   "rel": "vehicles/the-206/work/root-c30.json",
+   "sha256": "5a3d5a1d51eeebf0e82985d7322ff3cf8675cf22b1283776e24715a349eb4964",
+   "size": 712
+  },
+  {
+   "rel": "vehicles/the-206/work/root-c40.json",
+   "sha256": "5a3d5a1d51eeebf0e82985d7322ff3cf8675cf22b1283776e24715a349eb4964",
+   "size": 712
+  },
+  {
+   "rel": "vehicles/the-206/work/root-c50.json",
+   "sha256": "5a3d5a1d51eeebf0e82985d7322ff3cf8675cf22b1283776e24715a349eb4964",
+   "size": 712
+  },
+  {
+   "rel": "vehicles/the-206/work/root-c60.json",
+   "sha256": "5a3d5a1d51eeebf0e82985d7322ff3cf8675cf22b1283776e24715a349eb4964",
+   "size": 712
+  },
+  {
+   "rel": "vehicles/the-206/work/root-norm.json",
+   "sha256": "5a3d5a1d51eeebf0e82985d7322ff3cf8675cf22b1283776e24715a349eb4964",
+   "size": 712
+  },
+  {
+   "rel": "vehicles/the-206/work/weld-c30.json",
+   "sha256": "ac02de3e8e8850fb54fd4b5b55a14cf4869e276de7c8a3df5b824f0a1c315022",
+   "size": 8624
+  },
+  {
+   "rel": "vehicles/the-206/work/weld-c40.json",
+   "sha256": "8028cb91bc32487417d692cb5cd1f4ba6e17c8ee2e4a0c49f1510fb977bfebac",
+   "size": 8623
+  },
+  {
+   "rel": "vehicles/the-206/work/weld-c50.json",
+   "sha256": "d071567ccf435fd1816c3e26cecdb6eee33b4f2c5c3a8d06d90905a5a273c336",
+   "size": 8152
+  },
+  {
+   "rel": "vehicles/the-206/work/weld-c60.json",
+   "sha256": "a5bc058f1791fd412b84be039bf26e7ac80db03a06907b048aa870d89c592a63",
+   "size": 8150
+  },
+  {
+   "rel": "vehicles/the-206/work/weld-norm.json",
+   "sha256": "5dced40b6ae1ac9c40062f8307b8080b9256f9c90aa6d33d37e67bfbd8b01aca",
+   "size": 8623
+  },
+  {
+   "rel": "vehicles/the-206/work/wheels.json",
+   "sha256": "3ccc7b413fd2e5e06f440a47ebf9bb66a4eba7c22ef90dcebe2d8c45f89c0cfe",
+   "size": 6675
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/the-206-royal-violet.wrl",
+   "sha256": "b28014275a0b5f8ffd17c8767f89ab48d1ccb32d9396d79fd6b6e0194d536a41",
+   "size": 54615
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/build-the-206-royal-violet.json",
+   "sha256": "ff3de49eb0b9e4244ea1afeb0022d93af6cabe6503ed04ed8a0bcee8b1a405a8",
+   "size": 4465
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/explode.json",
+   "sha256": "b47640f8f7133e4f7e2418f97fa530a21da98814f019835a7d11c0028432461a",
+   "size": 6752
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/export-raw.wrl",
+   "sha256": "11515976d6c2b0a60d236f3f1d8fbd3d5d2b00f1193f5a33932693e390dd9a1e",
+   "size": 195548
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/geometry.json",
+   "sha256": "f0618306481112c9b05a9258a3313dc654321dc2eaac5a49710f8d41448a30c5",
+   "size": 342242
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/islands.json",
+   "sha256": "2fd8320a53ee78762cc43940ebd02f97d8e92dec5f2594425c0ae9d75bbf4a6a",
+   "size": 17481
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/materials.json",
+   "sha256": "c9e153dd4a4585943e7ec7234d9368a56c10b5d5d2159d2b71bbfa4e277ca0b3",
+   "size": 2646
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/root.json",
+   "sha256": "66d7f36a282974bd122f87bacdb25b6082545c4762c51737317d0cba4fa44866",
+   "size": 723
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/variant-gates.json",
+   "sha256": "ab79af2cde3e9ecf36b303b8ce1abdc06ddda17347a23a265e05964152ac4bc4",
+   "size": 7565
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/weld.json",
+   "sha256": "fc1054570a08225ab2ab4ef31f50a0399e80d87b6037bd448c0eda567e4c5b71",
+   "size": 8641
+  },
+  {
+   "rel": "vehicles/the-206-royal-violet/work/wheels.json",
+   "sha256": "399e0771ae0138d844e4bcdb00254284e0410f7eb2cb507750e8d25fd7b86c90",
+   "size": 6678
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/the-206-white-pearl.wrl",
+   "sha256": "bcca4feec0019c878bde87668c4f09d1f68d162fdf7c2551c427b9a84f54f53c",
+   "size": 55891
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/build-the-206-white-pearl.json",
+   "sha256": "d9d96c0b32720d435ddb7ec064af80d3c268ba0461e8d51cc38893462c81706b",
+   "size": 4420
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/explode.json",
+   "sha256": "b47640f8f7133e4f7e2418f97fa530a21da98814f019835a7d11c0028432461a",
+   "size": 6752
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/export-raw.wrl",
+   "sha256": "c3317c8a2f8e036611c79e4de6a7588a4e3174aba9c59114900c50a86ccd86d8",
+   "size": 200068
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/geometry.json",
+   "sha256": "630fb3c0c01f046502c74c4d6708ce8cf182aecc69dbfbc670e890507535396f",
+   "size": 362591
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/islands.json",
+   "sha256": "2fd8320a53ee78762cc43940ebd02f97d8e92dec5f2594425c0ae9d75bbf4a6a",
+   "size": 17481
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/materials.json",
+   "sha256": "97b77408d9932f439fe51608f8423758e8ec40560c4443257ef223090da8a4ac",
+   "size": 2633
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/root.json",
+   "sha256": "ba5755c59a6ad2080ea2cc0e901b86d173c862782013fde54e51d74cd5397248",
+   "size": 722
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/variant-gates.json",
+   "sha256": "6aaedf2ef53f4651ef667e4aa22116122fbd7b11929ac5fd6dbf772efcb96923",
+   "size": 7543
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/weld.json",
+   "sha256": "0b3f540af335e03706c1d989a8b50f4f598379ef387b964834dca7560e761b72",
+   "size": 8622
+  },
+  {
+   "rel": "vehicles/the-206-white-pearl/work/wheels.json",
+   "sha256": "caef39377f4b9079fd853f9d758719bdb202621bc6bfa060e9e41ae34da04d1e",
+   "size": 6626
+  },
+  {
+   "rel": "vehicles/the-revolution/the-revolution-clover.wrl",
+   "sha256": "64f148ed4ea67639a40f8c0167e2147a5535e662273fb36129515449404bb4ea",
+   "size": 35910
+  },
+  {
+   "rel": "vehicles/the-revolution/the-revolution-garnet.wrl",
+   "sha256": "485631669f4fc6054998f4e685ad41bac72a7d2f77d3c9c26dc776d6a1f6e9d7",
+   "size": 37235
+  },
+  {
+   "rel": "vehicles/the-revolution/the-revolution-vivid.wrl",
+   "sha256": "a21a85466f305d3d17501b8b34bcbd41a0c9dbbf7b3e88ef16ef3f71be2156e6",
+   "size": 36682
+  },
+  {
+   "rel": "vehicles/the-revolution/work/baseline.json",
+   "sha256": "488a1faccdcf08dc14a15ff46b4260537c11943f3f691236b75a8f9e0642af0f",
+   "size": 15617
+  },
+  {
+   "rel": "vehicles/the-revolution/work/common.json",
+   "sha256": "dec6dbaaf103a67204ba269fb29c0f9968a9051ef7dd81a5c8d58a11cb2a0bf0",
+   "size": 139001
+  },
+  {
+   "rel": "vehicles/the-revolution/work/donor_body.json",
+   "sha256": "b1fd3edc5a0ca986b0ee3f55d6000de7d9fca9d4f03464c92cdd5f627ec98b96",
+   "size": 268755
+  },
+  {
+   "rel": "vehicles/the-revolution/work/fitment.json",
+   "sha256": "c5dc83d7e249c10ee939d8903007b01f35098125f5c0eaeebfb74a1187f1119b",
+   "size": 6088
+  },
+  {
+   "rel": "vehicles/the-revolution/work/clover/blend-report.json",
+   "sha256": "4ea509b46d77efb5fed81036b7dda3285097afd6bd02559499e6311ab295b1cc",
+   "size": 2612
+  },
+  {
+   "rel": "vehicles/the-revolution/work/clover/common.json",
+   "sha256": "dec6dbaaf103a67204ba269fb29c0f9968a9051ef7dd81a5c8d58a11cb2a0bf0",
+   "size": 139001
+  },
+  {
+   "rel": "vehicles/the-revolution/work/clover/emit.json",
+   "sha256": "ebd73f54ca3801bfe5350d0fcfa1b6523814ee8b66acb67c46c5241bf3e0dd96",
+   "size": 2190
+  },
+  {
+   "rel": "vehicles/the-revolution/work/clover/gates.json",
+   "sha256": "8134ef8e2050dd3cf19546d244f4eec21bad27c676afc5f9bae9ea0afad05310",
+   "size": 9122
+  },
+  {
+   "rel": "vehicles/the-revolution/work/clover/scene.json",
+   "sha256": "5913889f70b551485ba3658971133b46b51be89a8b06564ce8d97099e0071b1d",
+   "size": 249635
+  },
+  {
+   "rel": "vehicles/the-revolution/work/garnet/blend-report.json",
+   "sha256": "9f1b07a94c8c68ff694ef69741baba990abb31e4d303d40f9162c9d5c0c6b8e5",
+   "size": 4125
+  },
+  {
+   "rel": "vehicles/the-revolution/work/garnet/common.json",
+   "sha256": "dec6dbaaf103a67204ba269fb29c0f9968a9051ef7dd81a5c8d58a11cb2a0bf0",
+   "size": 139001
+  },
+  {
+   "rel": "vehicles/the-revolution/work/garnet/emit.json",
+   "sha256": "e448254418d2254d941dd224976c8f30552e72f2167bcaee527e538a7e571d66",
+   "size": 2267
+  },
+  {
+   "rel": "vehicles/the-revolution/work/garnet/gates.json",
+   "sha256": "f49246a2c4812427ae712bfcf24908a2cb695dbdbb5b7624e89c727024e1048f",
+   "size": 10646
+  },
+  {
+   "rel": "vehicles/the-revolution/work/garnet/scene.json",
+   "sha256": "0ccceff873a7f869b537b66453929cfdf15ae13fc1dc85ce4ccffb01f68af398",
+   "size": 257585
+  },
+  {
+   "rel": "vehicles/the-revolution/work/vivid/blend-report.json",
+   "sha256": "d042eccfd2c26729877430a4de70edb7f8ff22168cfc8a54e4ebad7497c331f5",
+   "size": 3194
+  },
+  {
+   "rel": "vehicles/the-revolution/work/vivid/common.json",
+   "sha256": "dec6dbaaf103a67204ba269fb29c0f9968a9051ef7dd81a5c8d58a11cb2a0bf0",
+   "size": 139001
+  },
+  {
+   "rel": "vehicles/the-revolution/work/vivid/emit.json",
+   "sha256": "da6ec9bfc1e19bec301df24dec56fd66145b950823f0c7404764ed04c70260b1",
+   "size": 2213
+  },
+  {
+   "rel": "vehicles/the-revolution/work/vivid/gates.json",
+   "sha256": "9c2fda0c8153c8f4f1e0b24efecbc3975aa96dcb00e3d7421533a8ca76dc1f89",
+   "size": 9709
+  },
+  {
+   "rel": "vehicles/the-revolution/work/vivid/scene.json",
+   "sha256": "0e0a0a3ea9e96a4071498a4bae56d0c8c938e1a7f3e1771bd5602472b6dc02d2",
+   "size": 255518
+  },
+  {
+   "rel": "vehicles/topinac-labomba/topinac-la-bomba.wrl",
+   "sha256": "c14d48e3317910934a36d2a81e221050d2d00709e9187182ac82e4da3976dfc5",
+   "size": 52649
+  },
+  {
+   "rel": "vehicles/topinac-labomba/preserved/topinac-la-bomba.exported-original.wrl",
+   "sha256": "13380af1541aa77ac6558499fde39f3f8eef9c312f7d58392c5790a85fd89906",
+   "size": 313912
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/base-stats.json",
+   "sha256": "f4882e1ed649c2eb16110e3e3e1b2f5be3a8b2fc502c65b492339ca3510f1740",
+   "size": 2607
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/baseline-export.wrl",
+   "sha256": "617ec4c190628e330669b6a2529c39df731256f7522617cad69253076d00bba5",
+   "size": 251231
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/exhaust.json",
+   "sha256": "2993486edddafc41e1edddc7bf0ba5e1d71bfc670a63a25922e52f0a335c6917",
+   "size": 647
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/geometry-qa.json",
+   "sha256": "2ea99e9ec07b32f742e8e3c8fe2527b218c5411b93dc09d9d6bed67fbb5954cc",
+   "size": 4517
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/lamps.json",
+   "sha256": "0e9790db4ceba01b822c5c7eccd15783ec77f4865b768e0f5b3f1f27336109cd",
+   "size": 780
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/lb-exported.wrl",
+   "sha256": "b28cb021311a2100551b0c6b439bb69e090b858c5ee944b942474d25423eb7f3",
+   "size": 220582
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/materials.json",
+   "sha256": "668412cc433b7f0cb42ac45519f1c15ffe1e8054671261214b1fbb2af06c4f25",
+   "size": 3902
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/trial-export.wrl",
+   "sha256": "dbdc079f9ca75d4bd1a593cc136036a05c9fc3eacc9c817da2b85b73d6880cba",
+   "size": 224325
+  },
+  {
+   "rel": "vehicles/topinac-labomba/work/wheel-slotmag.json",
+   "sha256": "abd89d6ce49e558c6cde195a345d5d43b102c484d57f8204548f2f4c26063b93",
+   "size": 45854
+  },
+  {
+   "rel": "vehicles/transam/transam.wrl",
+   "sha256": "b6e263a56e8c2b5081093db47b4e5953d958aac388a0f57106236f5e23f34f6a",
+   "size": 31456
+  },
+  {
+   "rel": "vehicles/traylude-deep-rose/traylude-deep-rose.wrl",
+   "sha256": "509486398694ba54429bafce2f2aa03ede85ee757d5b060b2e566b8be428a168",
+   "size": 78585
+  },
+  {
+   "rel": "vehicles/traylude-deep-rose/work/wheel-sevenspoke.json",
+   "sha256": "9c80b6e04126d12a9903b3b19b36454e21df7c97ce699e8f4585a02fff31affb",
+   "size": 54479
+  },
+  {
+   "rel": "vehicles/traylude-neon-yellow/traylude-neon-yellow.wrl",
+   "sha256": "d654831875d18fa6e1aab5b54256fc45aa5ebc5c1b78273c597ce666fa595cf9",
+   "size": 74227
+  },
+  {
+   "rel": "vehicles/traylude-neon-yellow/work/wheel-finemesh.json",
+   "sha256": "f0c68c9eb5b5ba63e176027b86d0412ad8c08a32c4a96e4a553a33d3d459ded7",
+   "size": 56877
+  },
+  {
+   "rel": "vehicles/vette-blue/corvette-study/corvette-study.wrl",
+   "sha256": "b2d20c6e3c8d7220440a50d8c3d357829d72af634fdd56dfc0ca3f5112fd6195",
+   "size": 20969
+  },
+  {
+   "rel": "vehicles/vette-blue/corvette-study/corvette-study2.wrl",
+   "sha256": "b73edfbf3b2b3e3a2cf1b5a5c2e97b47d3ae8ba62455a36816021f804fbee591",
+   "size": 4156
+  },
+  {
+   "rel": "vehicles/vette-red/corvette-study/corvette-study.wrl",
+   "sha256": "4d86a6c6fe6fec81c6431baed78b0287420a627abcca2b83b9c5fa80e7886e4a",
+   "size": 17448
+  },
+  {
+   "rel": "vehicles/wedged-racer/wedged-racer.wrl",
+   "sha256": "f55ee2e5d33f5031e215c802de1cc91d7954797e5871740c5a0cfdb0f4bd7941",
+   "size": 62679
+  },
+  {
+   "rel": "weapons-display/nightreaver/nightreaver.wrl",
+   "sha256": "ef9bf0b07fee50ca3e88d7353d9d75ae9cde2ba7a5e3098c250e9aa1fd6fa3ab",
+   "size": 19029
+  },
+  {
+   "rel": "weapons-display/sunshard/sunshard.wrl",
+   "sha256": "c6de67de34628d28feba4e059bfb967ec9460881ba9a385c07899791b8c2a876",
+   "size": 13375
+  }
+ ]
+}

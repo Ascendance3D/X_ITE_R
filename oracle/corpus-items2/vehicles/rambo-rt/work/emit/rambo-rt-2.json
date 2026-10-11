@@ -1,0 +1,110 @@
+{
+ "shapes": [
+  {
+   "zone": "PAINT",
+   "verts": 1104,
+   "tris": 1698
+  },
+  {
+   "zone": "ROOF",
+   "verts": 51,
+   "tris": 74
+  },
+  {
+   "zone": "WING",
+   "verts": 259,
+   "tris": 386
+  },
+  {
+   "zone": "INTAKE",
+   "verts": 14,
+   "tris": 10
+  },
+  {
+   "zone": "WINDOWTRIM",
+   "verts": 861,
+   "tris": 486
+  },
+  {
+   "zone": "TRIM",
+   "verts": 706,
+   "tris": 976
+  },
+  {
+   "zone": "UNDER",
+   "verts": 269,
+   "tris": 308
+  },
+  {
+   "zone": "GLASS",
+   "verts": 293,
+   "tris": 396
+  },
+  {
+   "zone": "MIRRORGLASS",
+   "verts": 12,
+   "tris": 8
+  },
+  {
+   "zone": "HEADLAMP",
+   "verts": 16,
+   "tris": 12
+  },
+  {
+   "zone": "RED",
+   "verts": 18,
+   "tris": 14
+  },
+  {
+   "zone": "TYRE",
+   "verts": 192,
+   "tris": 384,
+   "instances": 4
+  },
+  {
+   "zone": "RIM",
+   "verts": 274,
+   "tris": 476,
+   "instances": 4
+  },
+  {
+   "zone": "RIMDARK",
+   "verts": 288,
+   "tris": 512,
+   "instances": 4
+  }
+ ],
+ "stored_tris": 5740,
+ "runtime_tris": 9856,
+ "runtime_shapes": 23,
+ "bounds": {
+  "x": [
+   -1.205,
+   1.205
+  ],
+  "y": [
+   -1.75,
+   -0.4985
+  ],
+  "z": [
+   -4.054,
+   0.999
+  ]
+ },
+ "wheel": {
+  "style": "b-slotmag",
+  "canonical": "tooling/wheel-families/wheels/b-slotmag.wrl",
+  "verified": "generator == b-slotmag.wrl, 1032 points",
+  "placed_radius_front": 0.3608,
+  "placed_radius_rear": 0.3767
+ },
+ "root_translation": [
+  0.0,
+  -1.70948,
+  -1.69
+ ],
+ "encoder": "pigz -11 -I 50 (Zopfli)",
+ "raw_bytes": 267230,
+ "gzip_bytes": 63709,
+ "sha256_wrl": "058093febc7887b6f616a72cceb1c1123bc0c7c98fc7ebc4b7317de818ad4dbe"
+}
