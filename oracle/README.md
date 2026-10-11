@@ -346,3 +346,18 @@ x3d-shot batch oracle/render-items2 out4 --msaa 4 --gl-samples && x3d-shot compa
 Rust results: scene text 296/296 exact and 296/296 logs; pictures 294/296 at 0x and at 4x
 `--gl-samples`; the two misses are `art/rainbow-room` (2.5% over) and `art/djascendance-live`
 (1.8%), the same non-power-of-two texture cause as before.
+
+**Known differences, accepted 2026-10-11 (not 296/296 parity).** The 2 misses are kept as known
+NVIDIA NPOT mipmap differences. Do not change the mipmap algorithm or the threshold for them.
+
+| item | MSAA off: max / over | MSAA 4x: max / over | GPU-shifted mip levels |
+| --- | --- | --- | --- |
+| `art/rainbow-room` (`art.jpg` 800×450) | 82 / 2.539% | 82 / 2.545% | 400×225, 25×14, 12×7 |
+| `art/djascendance-live` (509×339) | 94 / 1.847% | 94 / 1.842% | 254×169, 127×84, 63×42, 15×10 |
+
+Oracle: NVIDIA GeForce RTX 3060 Ti, driver 595.91.07, Chrome 155.0.8059.39 with
+`--use-gl=angle --use-angle=gl` (renderer `ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060
+Ti/PCIe/SSE2, OpenGL 4.5.0)`), X_ITE pin `34cdf9f97`, Rust `e0f613e`. Threshold: RGB delta > 8 on
+at most 0.5% of pixels. For some even × odd level sizes the driver's `generateMipmap` uses a box
+shifted by one texel on the even side; which sizes is closed-driver behavior (2,048 measured
+pairs, no formula found). Full record and scripts: `evidence/npot-mipmaps-2026-10-11/README.md`.

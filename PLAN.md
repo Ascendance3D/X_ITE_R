@@ -206,7 +206,16 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   `Chaser::activated_at` + sorted tick in `nav.rs` `Examine::prepare`. New `x10-scripts/rotate-*.json`
   (8 cases, `tools/gen_x10_rotate_zoom.py`) agree with X_ITE to 0.0 pose delta; clip suite 48/0, all
   other x10 scripts and `cargo test --release` pass. Details: `oracle/README.md` "Zoom/rotate drift".
-- Test inputs: Ryan's Mall items, **`oracle/corpus-items2/` (296 `.wrl`, live tree without `.edit.wrl`, qa folders and tmp/bak files; keys `oracle/items2-baseline.json`, `render-items2-baseline`, `render-msaa4-items2-baseline`) is the primary test set** (2026-10-11: scene text 296/296 exact, pictures 294/296 at 0x and 4x; details in `oracle/README.md`). The older `oracle/corpus-items/` (606 files, frozen earlier) is secondary and keeps its baselines.
+- 2026-10-11: **NPOT mipmaps: 2 known picture differences, accepted (Ryan's decision).** corpus-items2
+  pictures stay **294/296** (MSAA off and 4x); this is not 296/296 parity. Misses: `art/rainbow-room`
+  (800×450 JPEG, max 82, 2.54% over) and `art/djascendance-live` (509×339 JPEG, max 94, 1.85% over);
+  threshold unchanged (RGB delta > 8 on ≤ 0.5%). Cause: on NVIDIA RTX 3060 Ti, driver 595.91.07,
+  Chrome 155.0.8059.39 (ANGLE on OpenGL 4.5), X_ITE pin `34cdf9f97`, `gl.generateMipmap` shifts the
+  even side of some mixed-parity (even × odd) levels by one texel. The filter shapes are proven; the
+  size rule is closed-driver math with no found formula. Shifted levels here: 400×225, 25×14, 12×7
+  and 254×169, 127×84, 63×42, 15×10. A size table would be a fudge, so the mipmap algorithm stays as
+  in `e0f613e`. Evidence: `oracle/evidence/npot-mipmaps-2026-10-11/README.md`.
+- Test inputs: Ryan's Mall items, **`oracle/corpus-items2/` (296 `.wrl`, live tree without `.edit.wrl`, qa folders and tmp/bak files; keys `oracle/items2-baseline.json`, `render-items2-baseline`, `render-msaa4-items2-baseline`) is the primary test set** (2026-10-11: scene text 296/296 exact, pictures 294/296 at 0x and 4x, the 2 misses are the known NVIDIA NPOT mipmap differences; details in `oracle/README.md`). The older `oracle/corpus-items/` (606 files, frozen earlier) is secondary and keeps its baselines.
 
 ## Published crates and release rule
 
