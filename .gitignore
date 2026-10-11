@@ -14,3 +14,8 @@
 /oracle/x_ite-text.json
 /nightly/
 /target-nightly/
+# MSAA render answer keys (X_ITE antialiased, Multisampling 4/8). Regenerable with oracle/x_ite-shot-msaa.mjs; sha256 in oracle/README.md.
+/oracle/render-msaa4-items-baseline/
+/oracle/render-msaa4-x8-baseline/
+/oracle/render-msaa8-items-baseline/
+/oracle/render-msaa8-x8-baseline/

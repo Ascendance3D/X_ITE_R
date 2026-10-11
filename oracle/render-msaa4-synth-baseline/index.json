@@ -1,0 +1,84 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.39",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "edge-fine-lines.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ec4fe8aa54f85e1b0162981d35682e99ad653e36fc9e7f8c69b183e897c304ee",
+   "pngSha256": "86986d891156573999e843e3c6528db0e951421f34bd01ee3324821c7f6df0f6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "edge-quad.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f5681baaddea9cc8ebddedac96b791cbe08160d4c60f7b2fa39afa275e24984f",
+   "pngSha256": "66fdc67f1f53264a6a40b0652437ce9bacfb9708470ab4f198e75d2752dcb509",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "edge-sliver.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a02efc8fdefac1266ecca0fe4e4b2ba263ba8267990262f4c37cc1d372a29ace",
+   "pngSha256": "dee62ba3dd22bc6191fd3d76f48a0fc1055f50c72d64ca8285f118b85a9cf219",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "edge-sphere.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7ac4abb70315b3fdecc4a68c4841417bf9fb35db28a733f978ec2a80e747da06",
+   "pngSha256": "44a9b83a7a7e2ce9940ad616591a5051c73d1a907275a46c983f05541a9b05e8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

@@ -31,6 +31,8 @@ pub struct Options {
     pub script: Option<Value>,
     pub png: Option<PathBuf>,
     pub size: (u32, u32),
+    /// Requested multisampling (`--msaa N`); X_ITE's default 4 when `None`.
+    pub msaa: Option<u32>,
 }
 
 /// Everything that exists once the window does.
@@ -157,6 +159,13 @@ impl ViewerWindow {
                 "3" => self.set_viewer("FLY"),
                 "4" => self.set_viewer("NONE"),
                 "q" | "Q" => event_loop.exit(),
+                "m" | "M" => {
+                    if let Some(g) = &mut self.gfx {
+                        let n = g.viewer.cycle_multisampling();
+                        eprintln!("multisampling {n}x");
+                    }
+                    self.update_title();
+                }
                 "r" | "R" => {
                     if let Some(g) = &mut self.gfx {
                         if let Err(e) = g.viewer.reload() {
@@ -388,6 +397,16 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
 
     let mut viewer = EmbeddedViewer::new(device.clone(), queue.clone(), (config.width, config.height));
     viewer.renderer().clear_color = [0.0, 0.0, 0.0, 1.0];
+    viewer.configure_samples(&adapter, view_format);
+
+    if let Some(n) = opts.msaa {
+        viewer.set_multisampling(n);
+    }
+
+    if std::env::var("X3D_VIEW_STATS").is_ok() {
+        eprintln!("multisampling {} (supported {:?})", viewer.multisampling(), viewer.supported_multisampling());
+    }
+
     Ok(Gfx { window, surface, config, view_format, device, queue, adapter_info, viewer })
 }
 

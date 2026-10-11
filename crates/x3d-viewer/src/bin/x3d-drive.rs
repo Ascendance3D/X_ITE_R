@@ -91,6 +91,12 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     }
 
     let mut gpu = if png_dir.is_some() { x3d_render::gpu::Gpu::new().ok() } else { None };
+    // `--msaa N`: X_ITE's Multisampling for the captured PNGs (default 0, so the oracle baselines stay valid).
+    if let Some(g) = gpu.as_mut() {
+        g.renderer.set_sample_count(std::env::args().skip_while(|a| a != "--msaa").nth(1).and_then(|v| v.parse().ok()).unwrap_or(0));
+        // `--gl-samples`: mirror the draw so the MSAA sample pattern matches the GL oracle's.
+        g.renderer.set_gl_sample_orientation(std::env::args().any(|a| a == "--gl-samples"));
+    }
     let mut poses = serde_json::Map::new();
     let mut vrml = serde_json::Map::new();
     let mut events_log: Vec<Value> = vec![];

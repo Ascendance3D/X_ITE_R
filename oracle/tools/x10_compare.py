@@ -2,7 +2,7 @@
 """Run one X10 case in both implementations and compare.
 
   python3 oracle/tools/x10_compare.py <world inside oracle/> <script.json> <out-dir>
-         [--pose-tol 1e-4] [--rust-only-bin DIR] [--no-images]
+         [--pose-tol 1e-4] [--rust-only-bin DIR] [--no-images] [--msaa N]
 
 Runs oracle/x_ite-anim.mjs (pinned X_ITE, headless Chrome on the GPU) and crates/x3d-viewer's
 x3d-drive with the same script. Compares: scene text (toVRMLString) at the dumped frames (exact),
@@ -28,10 +28,12 @@ imgs = "--no-images" not in args
 # Scripts whose size is not 512x512 need the sized oracle page (anim.html is fixed at 512x512).
 size = json.load(open(script)).get("size", [512, 512])
 anim = "x_ite-anim.mjs" if list(size) == [512, 512] else "x_ite-anim-sized.mjs"
-cmd = ["node", os.path.join(root, "oracle", anim), world, script, "--out", js_json]
+msaa = opt("--msaa")  # additive: X_ITE antialiased with N samples vs Rust N samples (offscreen, GL sample positions)
+cmd = ["node", os.path.join(root, "oracle", anim if not msaa else "x_ite-anim-msaa.mjs"), world, script, "--out", js_json] + (["--ms", msaa] if msaa else [])
 if imgs: cmd += ["--png-dir", os.path.join(out, "js")]
 subprocess.run(cmd, check=False, timeout=180, cwd=root)
 cmd = [os.path.join(target, "x3d-drive"), world, script, "--oracle", os.path.join(root, "oracle"), "--out", rs_json, "--warmup-from", js_json]
+if msaa: cmd += ["--msaa", msaa, "--gl-samples"]
 if imgs: cmd += ["--png-dir", os.path.join(out, "rs")]
 subprocess.run(cmd, check=False, timeout=180, cwd=root)
 

@@ -1,0 +1,931 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.39",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "00-89chevy4.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8e8f27af2b0184eb89e9a7d46b8b8c7dad2a02237ffd90b4e09a8147b0ef942c",
+   "pngSha256": "e969b395141ffac72737d7249a6d3a3ab299579057f859668a46def97aa0858c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "01-Sears_stove.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0000.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0001.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0002.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0003.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0004.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0005.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0006.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0007.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0008.jpg'. TypeError: Failed to fetch",
+    "error: ImageTexture: Couldn't load URL 'http://www.canoma.com/blaxxun/sears_stove0009.jpg'. TypeError: Failed to fetch"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e1753a7427e8fdf3f6f38d56a203970089f4e37ff1572d6777bb59ca61968a21",
+   "pngSha256": "b8d25182a95a041ac6feb757f7c04d4c82f67e236a0c79fc7bef3bc8edc7e106",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "02-Brass_Bed.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/orleop2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/orleop2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/orleop2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/orleop2.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ed6df39b0aa0c73e390660b46c46a2f9bfd5e9790ad964721ee4fddf001a0583",
+   "pngSha256": "c826246d2b915acb12b07597a3425ff88b4f3fac65b33fedd35cf328f2471fa7",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "03-kitchen.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/rosewood.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "430a065841f57964fc58637e77885748ccfadddaaa42253483679a34e4b1b641",
+   "pngSha256": "2d88e3796f9d7e75c8429cd05d95ca92f4930fec59079141db9552f35edc57ef",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "04-antiquechair2.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/-colourembospaper.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/-colourembospaper.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/-colourembospaper.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0be757da8f71008555f63b5fef6f0daf6c3c3844846e9c096d3db7008e8ca6d4",
+   "pngSha256": "0a71e957f64f3606b15cbd458188e61d26f73cc6fb4324835934adee14ece127",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "05-Susan2.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/Susantexture2.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8ecb5c80e6f2408fb1397fde2425cd526d4a46ac39a3d508b6c2e710501b6757",
+   "pngSha256": "8c4fedd10020c8a7f52cca5c006d24de4a32d381492cee426b9a3125e0c4abd5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "06-kue.wrl",
+   "ok": false,
+   "error": "Couldn't load X3D file.",
+   "log": [
+    "error: Couldn't load URL 'http://oracle/corpus-x0/06-kue.wrl'. Error: ",
+    "error: Error: Field 'G0' and 'gesture1' in PROTO '' are incompatible as an IS mapping."
+   ]
+  },
+  {
+   "file": "07-bookcase.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stone.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stone.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stone.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stone.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stone.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "02837f901a5b84c1f300513e9b2cb35533667e7bc07197bc329f9cffc1eba2cd",
+   "pngSha256": "4a933a72c66f3c0ceb751585ad6bcfd8fe1651a3976ed8b2c2e3b5995cea8e7c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "08-fairie_statue.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f9c2f67b950011dd8fd90700eeee54d7f27ccce94ca7a7deb33f53f6cc5f280d",
+   "pngSha256": "3650be2a7580f2bbd4633344212cbc738b63a7133f4830c8a33a41f272247f11",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "09-midwayjugs.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/midway.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d5a43efe877d748415272c583fe3bce54d3ceac880559e79a0ae9966969ecc55",
+   "pngSha256": "71019a61d8aa32ec5f0c9b8b86ae1226db81ad7817b59b969f6c4e5cdd403c12",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "10-Cash_Register.wrl",
+   "ok": true,
+   "log": [
+    "error: AudioClip: Couldn't load any of the 2 URLs, tried in this order:",
+    "warn: AudioClip: Couldn't load URL 'http://oracle/corpus-x0/cashr.wav', trying URL 2 of 2. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f6432a241b25e52675af533f1b334182e4a3cec59f0bfae72f42243be06440da",
+   "pngSha256": "ff100da86cbe43177f623b6fa541acfced0880c5a396e31bbc87b6fb497d3c5c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "11-swan.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "c49d3d6047cc1bbab737d00c035c4b31db962e1272092b1cb2384733fdbff82e",
+   "pngSha256": "4fa7e77f7c6e2d5f460611676dec98414d6523419086306a76d9d09f039a7c7b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "12-chair.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/blue.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/blue.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/blue.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/blue.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "9d161311bea335c48a9a4fea4ba0ddb18da1c9c03a9525ea520981931d52c700",
+   "pngSha256": "d74451350b4611ff0f0733953c51f08bd0aacc7a2698cbb1749ed24b2b245801",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "13-purpatio4ch.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6480c5cbe9dcb4f99f49ea262efa87249b39d008a533ce68f89344196fbd243c",
+   "pngSha256": "f2087b8306aab322399cc24fb92b97911c9a577447f8b7bc8aa78c9b1929af84",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "14-club_proto.wrl",
+   "ok": true,
+   "log": [
+    "warn: Parser error at line 473: Unknown field 'sides' in class 'Cylinder'."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "15-sign.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/reflective.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/reflective.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/reflective.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/reflective.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/reflective.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/reflective.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/reflective.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a6839c0d512fc96f3f38c113bc2cdf632ce6638e85a6f3062429c27843baabb3",
+   "pngSha256": "d88fa39da0085be60c526b93f463e01e8a667c73508f41626ff653245c6db4a3",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "16-couch1_1er.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/images/stoff1.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "262790dc1f900eb42b3c10611a588ae3b749acb133e66bcd4d765c72bf4f2fe9",
+   "pngSha256": "6c48bafdd0065b2705c5749643bcd6f71287c69b41de1ae05c270a5d61eb8898",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "17-av0x.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/av0.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "276c7539f5696bb0ff78f9abbcc8aa69fa75636eedc4e6ac5b8bfd9b69943aeb",
+   "pngSha256": "378327348d78b46b6f3fcddc01955eb17fef074e06ed836acdc2e4efc6ba02e0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "18-example2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5731276ea05b9f449fa6391118b7e51b725e04c329ddab0bdf217e7e394da125",
+   "pngSha256": "d87f674cc200f4cf6adbeb73ebac7cf7416b1762270df73a7e8d007ab20fd9b9",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "19-helpman.wrl",
+   "ok": true,
+   "log": [
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/places/suburbs/WorldChanger.wrl'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "20-ic_exleb.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/vrml_images/obbw0101.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/vrml_images/obbw0102.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/vrml_images/tr15.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/vrml_images/tr16.gif'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "21-fairydefensesys.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e0b5ef49f32f5ca9bf68968a6a3ef4566164f18d2678c8efec7e38aa27e9a5ee",
+   "pngSha256": "fdbd0ddb902272d06c529f780ec1d7df8dc02bc166dc639883ee90906ee0910e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "22-temp_bots-bases.wrl",
+   "ok": true,
+   "log": [
+    "error: Inline: Couldn't load URL 'http://oracle/b1.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/b1.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/b2.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/b2.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/b3.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/cannon.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/corpus-x0/m_flag.wrl'. Error: Not Found",
+    "error: Inline: Couldn't load URL 'http://oracle/ct_flag.wrl'. Error: Not Found",
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://www.colonycity.com/events/morph2/vrml/bots/mcp.wrl#Bot'. TypeError: Failed to fetch"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "23-dragon.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/dragontxt.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "655f8b0c2ab94adecbfaca70a241902a4a41c4e10122f4e138e10c7fff234d07",
+   "pngSha256": "3fe8759bd2e2ba6dcbc9eb2b48e1d0562ce3885bdee38909ad8fec59063a0010",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "24-pickup.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "35529bf538ef3756238da2219f685bf967a958b1028f276fa816cac3ee7497fd",
+   "pngSha256": "42997c974b49adcc3bf43520b8e298674c6d87d5a7ac6be5f27659e97a94f920",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "25-srchest.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/spikedrose.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/spikedrose.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/spikedrose.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/spikedrose.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/spikedrose.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a9261f207df3d5dd61efcfe2589a9034a199664d3747ab078621c794e616f2f4",
+   "pngSha256": "e79a50240f12ca239409376dd20a2780f3f1523ab619cff5a2a2595b7de6debf",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "26-avx.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/av.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "64d74503818613403aa758a387d4d856ff35cf59686edcf5632d18651650cfca",
+   "pngSha256": "7768b9a966994952bd4af29b3a8e377be4a878eb5ca4e2a22978599323f9ef07",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "27-firstknight.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "9ac729967634b69ba08a39b29be44db669c3923f9a1cca70ed9acc2631789e4d",
+   "pngSha256": "c06cb0ef24f85c27f12846cd737e6a96b45e90dadf2a5d1949d9a24f255bcc2c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "28-venus_gradient.wrl",
+   "ok": true,
+   "log": [
+    "error: Error: Bad ROUTE specification: source node must be of type X3DNode.",
+    "error: JavaScript Error in Script 'start', in function 'initialize'",
+    "warn: Parser error at line 186: Unknown node type or proto 'TextureCoordGen'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3fa974e23c3ac0dfaa540e6247692f2de2bb94e46014fa3bc756d041b192c82f",
+   "pngSha256": "89e3623c026ab243cd0f8737ce58f82624a5d725e67fe6ec73294edaf0c9a3e9",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "29-av0.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cb113d3d5c570de77fda88b6b4fb6b14ed9eeeb1013f90ac55621df919420d10",
+   "pngSha256": "5500a51c7a4aaaf5ca6903363a38881c0b4c6118ecb80953a4cc9425d4d1c740",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "30-drag1red.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "91d9f233ea44c7cdc2598ca813693ac0d07e326ffb2397afc80e9d671796c24d",
+   "pngSha256": "ca5475b73b4226cdc33687d8c548706b61e32e6345d81e64c2f6bd7e4274d021",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "31-av0.wrl",
+   "ok": false,
+   "error": "Couldn't load X3D file.",
+   "log": [
+    "error: Couldn't load URL 'http://oracle/corpus-x0/31-av0.wrl'. Error: ",
+    "error: Error: Field 'touchTime' and 'touchTime' in PROTO  are incompatible as an IS mapping."
+   ]
+  },
+  {
+   "file": "32-canisters3.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/parchment.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/parchment.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/parchment.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/parchment.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7eaf6b94563b206e630233976c19db746d67a36be43478c3b9da05ef8b4c37ce",
+   "pngSha256": "04282bb47a9a1ddbb6eb493d31360634e99df9e301e531c13bceb8af14fd2dba",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "33-Drinkthingy.wrl",
+   "ok": true,
+   "log": [
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://ww2.blaxxun.com/vrml/protos/gestures.wrl#DefaultAvatar'. TypeError: Failed to fetch"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "34-pearlbunny.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/pearlbunnytex.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5fd31302d3b86f33b83191a77ba1f40579878926aab7fa9d5b751584f8cfdcea",
+   "pngSha256": "8bd18f9dbbf3971dd95b30d5e041887c57f3a2d4ea26b27f4936bea1125486c7",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "35-veggies.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/gardenbg.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/gardenbg.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/gardenbg.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0c87be311abd91cf666df20bb3c28dd56af082c304f95e84f9c2c2cf45cb37c5",
+   "pngSha256": "f5e7ef875083236ae203402cda3409cbbe0cd38656a42ef6fa7a2130c2653aef",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "36-Mountain.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://www.spyglassvr.com/GORTz/images/wood.jpg'. TypeError: Failed to fetch"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "37-sink.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/mixed.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d91d03434f7fc9fa04fda13c4a7ad48d1aabe2d600dec6bb4e84ca5bdba8e849",
+   "pngSha256": "d1e18655a909339366a2679dfed5e40ca9c6c1ac66bab83cc5f95eae1e506f23",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "38-RedCarpet.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/2.JPG'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7793bf2ab92f3fecf90331a7d280ea82a7514db9ad787432b9e1ef9cde566acb",
+   "pngSha256": "6bbd0e9d18150e113456df042dfe34b2c987a0120138e2b41f698422ef448919",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "39-Caution.wrl",
+   "ok": true,
+   "log": [
+    "error: Error: MovieTexture: No suitable file handler found.",
+    "error: MovieTexture: Couldn't load URL 'http://oracle/corpus-x0/Stripes.gif'. Error: Not Found",
+    "warn: Error loading movie 'http://oracle/corpus-x0/Stripes.gif': MovieTexture: No suitable file handler found."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "c72a9944797e24f2c39774a0c2c272d5057a52c37dad820f7a91023523ac1bf8",
+   "pngSha256": "1795a78d9c58238bc1e2da3dab50f2a4e7c2028c82634ea87c690cd88c57e087",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "40-car3.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a2e1f87d799389143bf422bb94b61dd71f4972ae156456c77da5adba931f0a47",
+   "pngSha256": "a2408046ae677be75c0096c4f5f07ba17ae2cd56b0e570ac3460140c5b5668f0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "41-Fclock.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/stain.jpg'. Error: Not Found",
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://ww2.blaxxun.com/vrml/protos/gestures.wrl#DefaultAvatar'. TypeError: Failed to fetch"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "42-taharutben1.wrl",
+   "ok": false,
+   "error": "Couldn't load X3D file.",
+   "log": [
+    "error: Couldn't load URL 'http://oracle/corpus-x0/42-taharutben1.wrl'. Error: ",
+    "error: Error: Field 'touchTime' and 'touchTime' in PROTO  are incompatible as an IS mapping."
+   ]
+  },
+  {
+   "file": "43-villasantzip.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/UniversalMedia/textures/nature/tree_9.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/UniversalMedia/textures/panoramas/horizon_3_back.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/UniversalMedia/textures/panoramas/horizon_3_front.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/UniversalMedia/textures/panoramas/horizon_3_left.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/UniversalMedia/textures/panoramas/horizon_3_right.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/UniversalMedia/textures/panoramas/horizon_3_top.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bkgrndbot.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2a.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling2a.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceiling3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/ceramic2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/control.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/control.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/doors.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/doors.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/doors.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/doors.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/doors.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/doors.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/fence.png'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/fence.png'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/fence.png'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/fence.png'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/fence.png'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/floor3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/gateway.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/grass.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/grass.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/grass.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/grass.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/grass.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/pavement.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/pavement.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/pavement.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/pavement.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/pavement.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/planter2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/poolsides.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/poolsides.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/poolsides.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/poolsides.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/poolwater.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/vine2.gif'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall1.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall2.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/wall3.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "03bd343c7f635b1088a8ea2a1b277b0776e9dc5d89b601073e3cb6bbe844e916",
+   "pngSha256": "86bc7281a8f0ec10a7492db75ed2547cbfaaaa05834755865790769c55cf9ca9",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "44-proto.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "45-cash.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/cashtext.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/cashtext.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/cashtext.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/cashtext.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/cashtext.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e5b86327b3bbf624df31578e5a9ed8aa3517345e99097007482c1a3054fd8bda",
+   "pngSha256": "10df9587063d895e9386ad6126145961989cc441b0e30a4d79f99bf0c838b255",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "46-av0.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/av0.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d48dad52dc2c614db9ffb79424ba98d5193f1fac32ee1b4d4d75e2af885c5bc4",
+   "pngSha256": "86a343f63e8ef726679d204d8cae39cbd2041a757a9456ae590384c931910736",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "47-Birthday bird.wrl",
+   "ok": true,
+   "log": [
+    "error: RuntimeError: unreachable",
+    "error: RuntimeError: unreachable",
+    "error: RuntimeError: unreachable",
+    "error: RuntimeError: unreachable"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "619b8f31f419e377bda4c4312f8809a922c5d5204e812761489cbf628e8d373a",
+   "pngSha256": "dd2fab06d19b2f842243ab7965ab1364b9318b8ec8f097d77051f9387fe41cc4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "48-lib.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/img/lib.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "80b6e251cb1f0292c3cc24d5cdacb1d0c64a9ef40e03b662a0b2d326ed4122aa",
+   "pngSha256": "1550dad481d85ba545bc8b6b9332c52aeda80ec2a0fa161c9b049e020a316fab",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "49-big-safe.wrl",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found",
+    "error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x0/bumps.jpg'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "25e1df6733e5abcf8ee82ac2a1caa54b03894642fa0c689bd2a08ab79e5dad24",
+   "pngSha256": "9c98483d480396551475d13589aef3a78c6d4e87f24c4bd206822e6712f78b8c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

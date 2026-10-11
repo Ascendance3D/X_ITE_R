@@ -27,6 +27,9 @@ use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use x3d_fields::NodeId;
 use x3d_render::gpu::Renderer;
 
+/// X_ITE's default `Multisampling` rendering property (RenderingProperties.js).
+pub const DEFAULT_MULTISAMPLING: u32 = 4;
+
 /// Seconds since the Unix epoch: the browser clock (`getCurrentTime`) of a live viewer.
 pub fn realtime_now() -> f64 {
     SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_secs_f64()).unwrap_or(0.0)
@@ -83,7 +86,40 @@ pub struct EmbeddedViewer {
 impl EmbeddedViewer {
     /// A viewer drawing on the host's device. `size` is the initial canvas size in pixels.
     pub fn new(device: wgpu::Device, queue: wgpu::Queue, size: (u32, u32)) -> Self {
-        EmbeddedViewer { core: None, renderer: Renderer::new(device, queue), source: None, size: (size.0.max(1), size.1.max(1)) }
+        let mut renderer = Renderer::new(device, queue);
+        // BrowserOptions / RenderingProperties: Multisampling defaults to 4 (clamped to the
+        // device maximum, which is 4 here until `configure_samples` has seen the adapter).
+        renderer.set_sample_count(DEFAULT_MULTISAMPLING);
+        EmbeddedViewer { core: None, renderer, source: None, size: (size.0.max(1), size.1.max(1)) }
+    }
+
+    /// Tell the viewer which multisample counts the adapter supports for the host's target
+    /// `format` (2, 8 and 16 need the device to have been created with
+    /// [`EmbeddedViewer::wanted_features`]); without this call only 1 and 4 are used.
+    pub fn configure_samples(&mut self, adapter: &wgpu::Adapter, format: wgpu::TextureFormat) {
+        let supported = Renderer::supported_sample_counts(adapter, self.renderer.device(), format);
+        self.renderer.set_supported_samples(supported);
+    }
+
+    /// X_ITE's `Multisampling` (0 or 1 = antialiasing off; default 4). The viewer uses the highest
+    /// supported count not above the request, like X_ITE clamps to `getMaxSamples ()`.
+    pub fn set_multisampling(&mut self, samples: u32) {
+        self.renderer.set_sample_count(samples);
+    }
+
+    /// The sample count in use (after clamping).
+    pub fn multisampling(&self) -> u32 {
+        self.renderer.sample_count()
+    }
+
+    /// Supported counts, ascending.
+    pub fn supported_multisampling(&self) -> &[u32] {
+        self.renderer.supported_samples()
+    }
+
+    /// Step to the next supported count (wraps to 1); returns the new count.
+    pub fn cycle_multisampling(&mut self) -> u32 {
+        self.renderer.cycle_sample_count()
     }
 
     /// The device features that make [`FrameInfo::gpu_ms`] available; add them to the device

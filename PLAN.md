@@ -183,6 +183,13 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   Renderer`, no readback/blit), keeps geometry/textures/bind groups between frames (write stamps
   on `Runtime`), and exposes `x3d_viewer::embed::EmbeddedViewer` for a host application (see
   `crates/x3d-viewer/README.md`). Offscreen path (`Gpu`) is bit-identical to before.
+- 2026-10-11: **MSAA** — `x3d_render::gpu::Renderer` has X_ITE's `Multisampling` (MultiSampleFramebuffer:
+  multisampled color + depth, resolved into the target): `set_sample_count`, clamp to the highest
+  supported count (1/2/4/8 on NVIDIA). Viewer/embed default 4 like X_ITE (`x3d-view --msaa N`, key
+  `m`); `x3d-shot` / `x3d-drive` stay at 0 unless `--msaa N`. MSAA oracle (`oracle/README.md`): with
+  `--gl-samples` Rust matches X_ITE 4x/8x on 604/606 items (same 2 as MSAA off) and byte-for-byte on
+  synthetic edge scenes. The orrery "tearing" is aliasing plus a hatch at the extrusion joints that
+  X_ITE itself draws (not a depth bug).
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
 ## Published crates and release rule
