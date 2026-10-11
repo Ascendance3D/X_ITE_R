@@ -122,6 +122,10 @@ fn filter_change(doc: &Doc, change: &Change, update: bool) -> Option<Change> {
 
 /// `makeChange(doc, change, ignoreReadOnly)`.
 pub(crate) fn make_change(doc: &Doc, change: Change, ignore_read_only: bool) {
+    // `if (doc.cm.state.suppressEdits) return`
+    if doc.suppress_edits() {
+        return;
+    }
     doc.in_op(|| {
         let mut change = change;
         if !doc.inner().before_change.is_empty() {
@@ -172,6 +176,10 @@ fn make_change_inner(doc: &Doc, change: Change) {
 
 /// `makeChangeFromHistory(doc, type, allowSelectionOnly)`; `undo == false` is redo.
 pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_only: bool) {
+    let suppress = doc.suppress_edits();
+    if suppress && !allow_selection_only {
+        return;
+    }
     let hist_rc = doc.history_rc();
     let ty = if undo { "undo" } else { "redo" };
     let mut sel_after: Sel = doc.inner().sel.clone();
@@ -217,6 +225,13 @@ pub(crate) fn make_change_from_history(doc: &Doc, undo: bool, allow_selection_on
                 sel_after = s;
             }
             HistEvent::Change(c) => {
+                if suppress {
+                    // `else if (suppress) { source.push(event); return }`
+                    let mut hist = hist_rc.borrow_mut();
+                    let source = if undo { &mut hist.done } else { &mut hist.undone };
+                    source.push(HistEvent::Change(c));
+                    return;
+                }
                 event = c;
                 break;
             }
@@ -358,6 +373,14 @@ fn make_change_single_doc(doc: &Doc, change: &Change, sel_after: Option<Sel>, sp
         None => compute_sel_after_change(doc, &change),
     };
     update_doc(doc, &change, spans);
+    if !doc.inner().change_listeners.is_empty() {
+        doc.fire_change(&super::doc::ChangeInfo {
+            from: change.from,
+            to: change.to,
+            text_lines: change.text().len(),
+            origin: change.origin.clone(),
+        });
+    }
     set_selection_no_undo(doc, sel_after, Some(&SelOptions { scroll: Some(false), ..Default::default() }));
 
     if doc.inner().cant_edit {

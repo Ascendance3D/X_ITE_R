@@ -82,7 +82,29 @@ pub(crate) struct DocInner {
     pub op_span_arrays: Vec<super::spans::SpanArr>,
     pub before_change: Vec<BeforeChangeHandler>,
     pub before_selection_change: Vec<BeforeSelHandler>,
+    /// Editor `change` listeners (view bookkeeping; see [`Doc::on_change`]).
+    pub change_listeners: Vec<ChangeHandler>,
+    /// `cm.state.suppressEdits`: set while a key handler runs in a read-only editor.
+    pub suppress_edits: bool,
+    /// Set by `setSelectionNoUndo` when it would call `ensureCursorVisible(doc.cm)`;
+    /// taken by the view ([`Doc::take_scroll_request`]).
+    pub scroll_request: bool,
+    /// `cm.display.shift` (see [`Doc::set_display_shift`]).
+    pub display_shift: bool,
 }
+
+/// What a `change` listener sees: the change as applied to this document.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ChangeInfo {
+    pub from: Pos,
+    /// End of the replaced range, in pre-change coordinates.
+    pub to: Pos,
+    /// Number of inserted lines (`change.text.length`).
+    pub text_lines: usize,
+    pub origin: Option<String>,
+}
+
+type ChangeHandler = Rc<dyn Fn(&Doc, &ChangeInfo)>;
 
 #[derive(Clone)]
 pub struct Doc(pub(crate) Rc<RefCell<DocInner>>);
@@ -153,6 +175,10 @@ impl Doc {
             cur_op: None,
             op_span_arrays: Vec::new(),
             before_change: Vec::new(),
+            change_listeners: Vec::new(),
+            suppress_edits: false,
+            display_shift: false,
+            scroll_request: false,
             before_selection_change: Vec::new(),
         };
         let doc = Doc(Rc::new(RefCell::new(inner)));
@@ -204,7 +230,11 @@ impl Doc {
     /// always false, even after `setExtending(true)`.
     pub(crate) fn extend_flag(&self) -> bool {
         let i = self.inner();
-        i.editor.is_some() && i.extend
+        i.editor.is_some() && (i.display_shift || i.extend)
+    }
+    /// `cm.display.shift`, mirrored by a view so `extendSelection(s)` sees it.
+    pub fn set_display_shift(&self, v: bool) {
+        self.inner_mut().display_shift = v;
     }
     /// `doc.cm ? doc.cm.curOp.id : NaN`.
     pub(crate) fn op_id(&self) -> Option<u64> {
@@ -404,6 +434,74 @@ impl Doc {
     pub fn on_before_change<F: Fn(&Doc, &mut BeforeChange) + 'static>(&self, f: F) {
         self.inner_mut().before_change.push(Rc::new(f));
     }
+    /// Editor-side `change` notification (`makeChangeSingleDocInEditor`), called
+    /// after each change is applied to this document's lines and before the
+    /// selection is updated. Used by a view for frontier/cache invalidation.
+    pub fn on_change<F: Fn(&Doc, &ChangeInfo) + 'static>(&self, f: F) {
+        self.inner_mut().change_listeners.push(Rc::new(f));
+    }
+    pub(crate) fn fire_change(&self, info: &ChangeInfo) {
+        let ls: Vec<ChangeHandler> = self.inner().change_listeners.clone();
+        for l in ls {
+            l(self, info);
+        }
+    }
+    /// `cm.state.suppressEdits` (src/edit/key_events.js:doHandleBinding sets it while a
+    /// key handler runs in a read-only editor). Only honored with editor semantics,
+    /// like the JS (`doc.cm && doc.cm.state.suppressEdits`).
+    pub fn set_suppress_edits(&self, v: bool) {
+        self.inner_mut().suppress_edits = v;
+    }
+    /// Whether a selection change since the last call asked for the cursor to be
+    /// scrolled into view (`setSelectionNoUndo`: `if (!(options && options.scroll ===
+    /// false) && doc.cm) ensureCursorVisible(doc.cm)`). Only with editor semantics.
+    pub fn take_scroll_request(&self) -> bool {
+        std::mem::take(&mut self.inner_mut().scroll_request)
+    }
+    pub fn suppress_edits(&self) -> bool {
+        let i = self.inner();
+        i.editor.is_some() && i.suppress_edits
+    }
+    /// `goalColumn` of each current selection range (`moveV`, src/edit/methods.js).
+    pub fn goal_columns(&self) -> Vec<Option<f64>> {
+        self.inner().sel.ranges.iter().map(|r| r.goal_column.get()).collect()
+    }
+    /// `doc.sel.ranges[i].goalColumn = v`.
+    pub fn set_goal_column(&self, i: usize, v: Option<f64>) {
+        if let Some(r) = self.inner().sel.ranges.get(i) {
+            r.goal_column.set(v);
+        }
+    }
+    /// `doc.history.lastSelOrigin = null` (the end of a mouse selection,
+    /// src/edit/mouse_events.js:leftButtonSelect `done`).
+    pub fn clear_last_sel_origin(&self) {
+        self.history_rc().borrow_mut().last_sel_origin = None;
+    }
+    /// `skipAtomic(doc, pos, oldPos, bias, mayClear)` (src/model/selection_updates.js).
+    pub fn skip_atomic(&self, pos: Pos, old_pos: Option<Pos>, bias: i64, may_clear: bool) -> Pos {
+        let p = PosRef::new(pos);
+        let o = old_pos.map(PosRef::new);
+        super::selection_updates::skip_atomic(self, &p, o.as_ref(), Some(bias), may_clear).get()
+    }
+    /// `replaceOneSelection(doc, i, range, options)` (src/model/selection_updates.js).
+    pub fn replace_one_selection(&self, i: usize, anchor: Pos, head: Pos, options: Option<SelOptions>) {
+        self.in_op(|| {
+            let range = if anchor == head {
+                let p = PosRef::new(anchor);
+                Range::new(p.clone(), p)
+            } else {
+                Range::new(PosRef::new(anchor), PosRef::new(head))
+            };
+            super::selection_updates::replace_one_selection(self, i, range, options.as_ref());
+        })
+    }
+    /// `makeChange(doc, {from, to, text, origin})` (src/model/changes.js) with the
+    /// positions passed through unclipped, as `applyTextInput` does.
+    pub fn make_change_lines(&self, from: Pos, to: Pos, lines: Vec<String>, origin: Option<&str>) {
+        let text: Vec<Text> = lines.iter().map(|l| to_u16(l)).collect();
+        make_change(self, Change { from, to, text: Some(text), origin: origin.map(|s| s.to_string()), full: false }, false);
+    }
+
     /// `on("beforeSelectionChange", f)`.
     pub fn on_before_selection_change<F: Fn(&Doc, &mut BeforeSelectionChange) + 'static>(&self, f: F) {
         self.inner_mut().before_selection_change.push(Rc::new(f));
@@ -454,6 +552,11 @@ impl Doc {
     /// `replaceRange(arrayOfLines, from, to, origin)`.
     pub fn replace_range_lines(&self, lines: &[&str], from: Pos, to: Option<Pos>, origin: Option<&str>) {
         self.replace_range_lines_u16(lines.iter().map(|l| to_u16(l)).collect(), from, to, origin);
+    }
+    /// `replaceRange(code, from, to, origin)` with UTF-16 text (keeps lone surrogates).
+    pub fn replace_range_utf16(&self, code: &[u16], from: Pos, to: Option<Pos>, origin: Option<&str>) {
+        let lines = self.split_lines_u16(code);
+        self.replace_range_lines_u16(lines, from, to, origin);
     }
     fn replace_range_lines_u16(&self, lines: Vec<Text>, from: Pos, to: Option<Pos>, origin: Option<&str>) {
         let from = self.clip_pos(from);

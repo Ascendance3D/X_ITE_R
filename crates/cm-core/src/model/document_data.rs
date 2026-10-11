@@ -18,7 +18,13 @@ pub(crate) fn is_whole_line_update(doc: &Doc, change: &Change) -> bool {
 
 /// `updateLine(line, text, markedSpans)` (height estimate is 1 without a view).
 fn update_line(doc: &Doc, line: &LineRef, text: Text, spans: Option<SpanArr>) {
-    line.borrow_mut().text = text;
+    {
+        let mut l = line.borrow_mut();
+        l.text = text;
+        // `if (line.stateAfter) line.stateAfter = null; if (line.styles) line.styles = null`
+        l.state_after = None;
+        l.styles = None;
+    }
     detach_marked_spans(line);
     attach_marked_spans(line, spans);
     if line.borrow().height != 1.0 {
