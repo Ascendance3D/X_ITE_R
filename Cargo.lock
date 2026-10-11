@@ -573,6 +573,7 @@ version = "0.1.0"
 dependencies = [
  "rquickjs",
  "serde_json",
+ "url",
  "x3d-fields",
  "x3d-parse",
  "x3d-runtime",

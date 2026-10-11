@@ -1,0 +1,6 @@
+# Differences from oracle/x1-baseline.json after X3-X6. Oracle TIMEOUT files (349-queen, 379-ifs_lightmap) are not compared.
+# Format: <file><TAB><phase><TAB><one-line cause>. Applies to scene text and console log.
+244-tardis666.wrl	X6 nondeterministic	Script initialize() writes new Date() hours:minutes:seconds into Text.string; the oracle baked its own wall clock ("8:05:17") into the baseline
+265-tardis666.wrl	X6 nondeterministic	same clock Script as 244-tardis666 (oracle wall clock "8:05:47")
+87-weaver_anime_final_fixed2.wrl	X6 nondeterministic	Script DisplayTime() seeds a clock from new Date(); the hand rotations routed from it depend on the wall clock
+19-fish.wrl	render (out of scope)	log only: X_ITE prints "RuntimeError: unreachable", a WebAssembly trap during rendering (MikkTSpace tangent generation is the only WASM in that path); rendering is not ported

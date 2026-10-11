@@ -84,6 +84,33 @@ Both answer keys were made twice in parallel and saved only when byte-identical.
 `items-baseline.json` first held 13 extra entries for top-level directory names
 (runner filter bug, fixed: `x_ite-dump.mjs` now lists files only); those were removed.
 
+## X5/X6 — event engine and Script node
+
+- `synthetic-x6/` — 8 newly authored scenes (no archive content) plus `js/s08.js`:
+  router order and route loops (`s01`), interpolator setup (`s02`), TimeSensor initialize
+  in a never-live scene (`s03`), Script field marshalling for every VRML97 field type (`s04`),
+  the Browser object (`s05`), Script error reporting (`s06`), Scripts inside PROTOs plus a
+  missing EXTERNPROTO and Inline (`s07`), external `.js` with URL fallback (`s08`). Results
+  are written into Script fields, which `toVRMLString` prints (`print` goes to
+  `console.log`, which `dump.html` does not record).
+- `synthetic-x6-baseline.json` — 2026-10-11, `node oracle/x_ite-dump.mjs oracle/synthetic-x6
+  oracle/synthetic-x6-baseline.json`: 8 of 8 ok. A second run was byte-identical
+  (sha256 `bf0d7d3dee695610…`).
+
+Findings that the Rust side depends on:
+
+- **Math in the dump oracle is not V8's fdlibm.** On 2000 random inputs per function,
+  headless Chromium's `Math.sin` matched glibc bit for bit and `cos/tan/acos/asin/atan2/exp/log`
+  differed from glibc in 1–7 inputs, while node (V8 fdlibm, which `x_ite-fields.json`
+  records) differed from Chromium in 60–1000 inputs. `x3d_fields::jsmath` therefore has a
+  `Chrome` flavor (platform libm) that the corpus comparison selects; node-based oracle tests
+  keep the default `Node` flavor. Found through a last-digit rotation difference in x1
+  `125-shapesofart.wrl`.
+- `dump.html` sorts the log, but a message logged between `log .sort ()` and the result's
+  serialization can leave it unsorted (x1 `331-couch.wrl`). Comparisons sort both sides.
+- Scripts that read `new Date ()` bake the oracle's wall clock into the baseline
+  (x1 `244-tardis666`, `265-tardis666`, `87-weaver_anime_final_fixed2`); these cannot match.
+
 ## C4 — CodeMirror modes
 
 `cm5-modes-tokens.mjs <xml|javascript|css|htmlmixed|vrml>` writes `cm5-<mode>-baseline.json`

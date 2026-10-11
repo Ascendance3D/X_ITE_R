@@ -1,44 +1,74 @@
 //! JavaScript `Math` and number-conversion semantics that X_ITE relies on.
 //!
-//! V8 implements `Math.sin`, `Math.cos`, `Math.acos`, `Math.exp`, `Math.log`, `Math.log10`
-//! with the original fdlibm 5.3 algorithms (ported in `fdlibm.rs`, bit-exact with V8 in the
-//! oracle tests). `Math.tan`, `Math.asin`, `Math.atan2` use the `libm` crate (musl, same
-//! fdlibm lineage, not verified bit-exact). `Math.hypot` is V8's own algorithm, ported here.
+//! Two flavors, because the two oracles disagree in the last bit:
+//!
+//! * [`MathFlavor::Node`] (default): V8 as embedded in node — `Math.sin`, `cos`, `acos`, `exp`,
+//!   `log`, `log10` are the original fdlibm 5.3 algorithms (ported in `fdlibm.rs`, bit-exact in
+//!   the X1 oracle tests, which run in node); `tan`, `asin`, `atan2` use the `libm` crate.
+//! * [`MathFlavor::Chrome`]: headless Chromium, where the X0/X1/items dump oracles run. Its
+//!   results agree with the platform C library (glibc) on almost every input: on 2000 random
+//!   inputs per function, sin matched glibc bit for bit, cos/tan/acos/asin/atan2/exp/log differed
+//!   in 1–7 inputs (1 ulp). Selected with [`set_flavor`] by the runtime; see oracle/README.md.
+//!
+//! `Math.hypot` is V8's own algorithm in both, ported here.
+
+use std::sync::atomic::{AtomicU8, Ordering};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum MathFlavor {
+    Node = 0,
+    Chrome = 1,
+}
+
+static FLAVOR: AtomicU8 = AtomicU8::new(0);
+
+/// Select the JavaScript engine whose Math functions are reproduced (process-wide).
+pub fn set_flavor(f: MathFlavor) {
+    FLAVOR.store(f as u8, Ordering::Relaxed);
+}
+
+pub fn flavor() -> MathFlavor {
+    if FLAVOR.load(Ordering::Relaxed) == 1 { MathFlavor::Chrome } else { MathFlavor::Node }
+}
+
+fn chrome() -> bool {
+    FLAVOR.load(Ordering::Relaxed) == 1
+}
 
 pub fn sin(x: f64) -> f64 {
-    crate::fdlibm::sin(x)
+    if chrome() { x.sin() } else { crate::fdlibm::sin(x) }
 }
 
 pub fn cos(x: f64) -> f64 {
-    crate::fdlibm::cos(x)
+    if chrome() { x.cos() } else { crate::fdlibm::cos(x) }
 }
 
 pub fn exp(x: f64) -> f64 {
-    crate::fdlibm::exp(x)
+    if chrome() { x.exp() } else { crate::fdlibm::exp(x) }
 }
 
 pub fn log(x: f64) -> f64 {
-    crate::fdlibm::log(x)
+    if chrome() { x.ln() } else { crate::fdlibm::log(x) }
 }
 
 pub fn tan(x: f64) -> f64 {
-    libm::tan(x)
+    if chrome() { x.tan() } else { libm::tan(x) }
 }
 
 pub fn acos(x: f64) -> f64 {
-    crate::fdlibm::acos(x)
+    if chrome() { x.acos() } else { crate::fdlibm::acos(x) }
 }
 
 pub fn asin(x: f64) -> f64 {
-    libm::asin(x)
+    if chrome() { x.asin() } else { libm::asin(x) }
 }
 
 pub fn atan2(y: f64, x: f64) -> f64 {
-    libm::atan2(y, x)
+    if chrome() { y.atan2(x) } else { libm::atan2(y, x) }
 }
 
 pub fn log10(x: f64) -> f64 {
-    crate::fdlibm::log10(x)
+    if chrome() { x.log10() } else { crate::fdlibm::log10(x) }
 }
 
 pub fn sqrt(x: f64) -> f64 {

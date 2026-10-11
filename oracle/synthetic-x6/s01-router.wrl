@@ -1,0 +1,33 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# Router order at load: one TimeSensor start event fans out to two interpolators, both fan
+# in to a Script, and two Transforms route into each other (a loop the router must break).
+DEF A Transform { }
+DEF B Transform { }
+DEF T TimeSensor { cycleInterval 4 loop TRUE }
+DEF P PositionInterpolator { key [ 0 1 ] keyValue [ 0 0 0, 4 8 12 ] }
+DEF S ScalarInterpolator { key [ 0 0.5 1 ] keyValue [ 1 3 2 ] }
+DEF C Script {
+  eventIn SFFloat set_s
+  eventIn SFVec3f set_p
+  eventIn SFTime  set_cycle
+  eventIn SFBool  set_active
+  field MFString log [ ]
+  field SFInt32 processed 0
+  url "javascript:
+function set_s (v, t) { log [log .length] = 's ' + v + ' ' + t; }
+function set_p (v, t) { log [log .length] = 'p ' + v + ' ' + t; }
+function set_cycle (v, t) { log [log .length] = 'cycle ' + v; }
+function set_active (v, t) { log [log .length] = 'active ' + v; }
+function eventsProcessed () { processed ++; log [log .length] = 'eventsProcessed'; }
+"
+}
+ROUTE T.fraction_changed TO P.set_fraction
+ROUTE T.fraction_changed TO S.set_fraction
+ROUTE T.isActive TO C.set_active
+ROUTE T.cycleTime TO C.set_cycle
+ROUTE P.value_changed TO A.set_translation
+ROUTE P.value_changed TO C.set_p
+ROUTE S.value_changed TO C.set_s
+ROUTE A.translation_changed TO B.set_translation
+ROUTE B.translation_changed TO A.set_translation

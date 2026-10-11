@@ -1,0 +1,49 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# TimeSensor initialize in a scene that never goes live: which sensors start, and what
+# they send in the first frame.
+DEF Loop TimeSensor { cycleInterval 2.5 loop TRUE }
+DEF Once TimeSensor { cycleInterval 2 }
+DEF Off TimeSensor { cycleInterval 2 loop TRUE enabled FALSE }
+DEF Stopped TimeSensor { cycleInterval 2 loop TRUE startTime 1 stopTime 5 }
+DEF Future TimeSensor { cycleInterval 2 loop TRUE startTime 2000000000 }
+DEF Zero TimeSensor { cycleInterval 0 loop TRUE }
+DEF Log Script {
+  eventIn SFBool loopActive
+  eventIn SFFloat loopFraction
+  eventIn SFTime loopCycle
+  eventIn SFTime loopTime
+  eventIn SFTime loopElapsed
+  eventIn SFBool onceActive
+  eventIn SFBool offActive
+  eventIn SFBool stoppedActive
+  eventIn SFBool futureActive
+  eventIn SFBool zeroActive
+  eventIn SFFloat zeroFraction
+  field MFString log [ ]
+  url "javascript:
+function add (s) { log [log .length] = s; }
+function loopActive (v) { add ('loop active ' + v); }
+function loopFraction (v) { add ('loop fraction ' + v); }
+function loopCycle (v) { add ('loop cycle ' + v); }
+function loopTime (v) { add ('loop time ' + v); }
+function loopElapsed (v) { add ('loop elapsed ' + v); }
+function onceActive (v) { add ('once active ' + v); }
+function offActive (v) { add ('off active ' + v); }
+function stoppedActive (v) { add ('stopped active ' + v); }
+function futureActive (v) { add ('future active ' + v); }
+function zeroActive (v) { add ('zero active ' + v); }
+function zeroFraction (v) { add ('zero fraction ' + v); }
+"
+}
+ROUTE Loop.isActive TO Log.loopActive
+ROUTE Loop.fraction_changed TO Log.loopFraction
+ROUTE Loop.cycleTime TO Log.loopCycle
+ROUTE Loop.time TO Log.loopTime
+ROUTE Loop.elapsedTime TO Log.loopElapsed
+ROUTE Once.isActive TO Log.onceActive
+ROUTE Off.isActive TO Log.offActive
+ROUTE Stopped.isActive TO Log.stoppedActive
+ROUTE Future.isActive TO Log.futureActive
+ROUTE Zero.isActive TO Log.zeroActive
+ROUTE Zero.fraction_changed TO Log.zeroFraction

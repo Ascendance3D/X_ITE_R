@@ -28,6 +28,17 @@ impl<T: Copy + PartialEq> InfoArray<T> {
         &self.array
     }
 
+    /// Rewrite every value (used when scenes are merged and ids shift).
+    pub fn map_values(&mut self, f: impl Fn(T) -> T) {
+        for v in &mut self.array {
+            *v = f(*v);
+        }
+
+        for v in self.index.values_mut() {
+            *v = f(*v);
+        }
+    }
+
     pub fn len(&self) -> usize {
         self.array.len()
     }

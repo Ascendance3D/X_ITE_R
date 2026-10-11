@@ -1,0 +1,3 @@
+# Differences from oracle/synthetic-x6-baseline.json (clean-room X5/X6 scenes).
+# Format: <file><TAB><phase><TAB><one-line cause>. Applies to scene text and console log.
+s06-errors.wrl	X6 engine	log only: a JavaScript SyntaxError message is engine wording (V8 "Unexpected token ';'", QuickJS "invalid property name"); runtime TypeError wording is mapped to V8's, syntax errors are not

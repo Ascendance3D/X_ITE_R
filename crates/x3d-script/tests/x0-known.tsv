@@ -1,0 +1,3 @@
+# Differences from oracle/x0-baseline.json after X3-X6 (scene, loading, events, Script).
+# Format: <file><TAB><phase><TAB><one-line cause>. Applies to scene text and console log.
+# (none: 47 exact, 3 X_ITE rejections reproduced, 50/50 logs identical)
