@@ -1,4 +1,5 @@
-//! x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--script script.json --png out.png]
+//! x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--msaa 0|1|2|4|8|16]
+//!       [--script script.json --png out.png]
 //!
 //! Opens a VRML/X3D world in a native window and runs it live: TimeSensors, interpolators,
 //! Scripts, routes, navigation (EXAMINE / WALK / FLY / NONE) and the pointing device sensors.
@@ -6,7 +7,7 @@
 //!
 //! Mouse and keys: see the README section in the report; `1` EXAMINE, `2` WALK, `3` FLY,
 //! `4` NONE, Home/End first/last viewpoint, PageUp/PageDown previous/next viewpoint, `l` list
-//! viewpoints, `s` save /tmp/x3d-view-N.png, Esc or `q` quit.
+//! viewpoints, `m` cycle multisampling (default 4, like X_ITE), `s` save /tmp/x3d-view-N.png, Esc or `q` quit.
 
 use std::path::PathBuf;
 use x3d_viewer::window::{Options, run};
@@ -16,7 +17,7 @@ fn main() {
     let opt = |f: &str| args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned();
 
     let Some(path) = args.get(1).filter(|a| !a.starts_with("--")) else {
-        eprintln!("usage: x3d-view <file.wrl> [--oracle dir] [--size WxH] [--script script.json --png out.png]");
+        eprintln!("usage: x3d-view <file.wrl> [--oracle dir] [--size WxH] [--msaa N] [--script script.json --png out.png]");
         std::process::exit(2);
     };
 
@@ -31,7 +32,7 @@ fn main() {
         size = (s[0].as_u64().unwrap_or(512) as u32, s[1].as_u64().unwrap_or(512) as u32);
     }
 
-    let opts = Options { path: PathBuf::from(path), oracle: opt("--oracle").map(PathBuf::from), script, png: opt("--png").map(PathBuf::from), size };
+    let opts = Options { path: PathBuf::from(path), oracle: opt("--oracle").map(PathBuf::from), script, png: opt("--png").map(PathBuf::from), size, msaa: opt("--msaa").and_then(|v| v.parse().ok()) };
 
     // QuickJS wants a big stack (x3d-shot uses the same 256 MB).
     let r = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(opts)).unwrap().join().unwrap();

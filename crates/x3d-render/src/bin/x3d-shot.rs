@@ -35,7 +35,7 @@ fn main() -> ExitCode {
             Some(file) if args.len() >= 3 && !file.starts_with("--") => single(file, &args[2], w, h, opt("--oracle")),
             _ => {
                 eprintln!(
-                    "usage: x3d-shot <file.wrl> <out.png> [--size WxH] [--oracle dir]\n       x3d-shot batch <corpus-dir> <out-dir> [--size WxH] [--only s]\n       x3d-shot compare <baseline-dir> <rust-dir> [--threshold N] [--max-pct P] [--diff-dir d] [--json f]\n       x3d-shot info"
+                    "usage: x3d-shot <file.wrl> <out.png> [--size WxH] [--oracle dir] [--msaa N]\n       x3d-shot batch <corpus-dir> <out-dir> [--size WxH] [--only s] [--msaa N]\n       x3d-shot compare <baseline-dir> <rust-dir> [--threshold N] [--max-pct P] [--diff-dir d] [--json f]\n       x3d-shot info"
                 );
                 2
             }
@@ -51,9 +51,20 @@ fn opt(args: &[String], f: &str) -> Option<String> {
     args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned()
 }
 
+/// `--msaa N`: X_ITE's Multisampling (default here 0 = off, so the baselines stay valid).
+fn msaa() -> u32 {
+    let args: Vec<String> = std::env::args().collect();
+    opt(&args, "--msaa").and_then(|v| v.parse().ok()).unwrap_or(0)
+}
+
 fn gpu() -> Gpu {
     match Gpu::new() {
-        Ok(g) => g,
+        Ok(mut g) => {
+            g.renderer.set_sample_count(msaa());
+            // `--gl-samples`: mirror the draw so the MSAA sample pattern matches the GL oracle's.
+            g.renderer.set_gl_sample_orientation(std::env::args().any(|a| a == "--gl-samples"));
+            g
+        }
         Err(e) => {
             eprintln!("error: {e}");
             std::process::exit(1);
@@ -64,6 +75,7 @@ fn gpu() -> Gpu {
 fn info() -> u8 {
     let g = gpu();
     let i = &g.adapter_info;
+    println!("supported sample counts: {:?}", g.renderer.supported_samples());
     println!("adapter: {} | backend {:?} | driver {} {} | type {:?}", i.name, i.backend, i.driver, i.driver_info, i.device_type);
     0
 }

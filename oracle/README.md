@@ -191,3 +191,73 @@ The Rust side: `x3d-shot batch oracle/synthetic-x8 <out> --size 512x512` then
   than X_ITE (end state and all captured frames of the scripts agree); and with the camera inside
   a model (`vehicles/smartcar` zoom-in, frame 80) one huge near triangle shades differently
   (not near-plane clipping: a CPU near-plane clip of the geometry changed 2 of 295,899 pixels).
+
+## MSAA oracle (2026-10-11): X_ITE with antialiasing on
+
+Everything above renders with `antialiased="false"` (Multisampling 0) for pixel-exact checks, and
+stays that way: `x3d-shot`, `x3d-drive` and `x3d-bench` default to 0 samples. X_ITE's own default
+is `antialiased=true`, `Multisampling 4` (clamped to `getMaxSamples ()`, 8 on this GPU).
+
+New files (nothing existing was edited): `x_ite-pin/src/shot-msaa.html` + `x_ite-shot-msaa.mjs`
+(like shot.html / x_ite-shot.mjs, `--ms N`, default 4), `x_ite-pin/src/anim-msaa.html` +
+`x_ite-anim-msaa.mjs` (like the sized anim page; `--aa` = X_ITE default, `--ms N`), the scripts
+`x10-scripts/msaa-orrery-{rotate,zoom12,zoom22}.json` (1024x768, rotate drag, 45 frames of rest,
+then 0 / 12 / 22 wheel notches, 60 settle frames), and `synthetic-msaa/` (4 edge scenes: slanted
+box, thin sliver, sphere, fine lines).
+
+GL here: ANGLE / NVIDIA GeForce RTX 3060 Ti, Chrome 155, X_ITE 16.5.0 (pin `34cdf9f97`).
+`x3d-shot ... --msaa N` / `x3d-drive ... --msaa N` render Rust with N samples; `--gl-samples` makes
+the *offscreen* path draw mirrored and flip the readback (see "Why `--gl-samples`").
+
+| set | JS command | answer key | `index.json` sha256 |
+| --- | --- | --- | --- |
+| render-items 4x | `node oracle/x_ite-shot-msaa.mjs oracle/render-items <dir> --jobs 8` | `render-msaa4-items-baseline/` (18 MB, gitignored) | `8dda1bc4366eeabd…` |
+| render-items 8x | `... --ms 8` | `render-msaa8-items-baseline/` (18 MB, gitignored) | `928b554c00807900…` |
+| synthetic-x8 4x / 8x | `... oracle/synthetic-x8 <dir> --size 512x512 [--ms 8]` | `render-msaa4-x8-baseline/`, `render-msaa8-x8-baseline/` (2.5 MB each, gitignored) | `b52169d90233f312…`, `9ec6f6ff03819298…` |
+| corpus-x0 4x | `... oracle/corpus-x0 <dir>` | `render-msaa4-x0-baseline/` (512 KB, tracked) | `4ad72bdea59ed3c2…` |
+| synthetic-msaa 4x / 8x | `... oracle/synthetic-msaa <dir> [--ms 8]` | `render-msaa4-synth-baseline/`, `render-msaa8-synth-baseline/` (tracked, used by `crates/x3d-render/tests/msaa.rs`) | `b9c59a3a078ca2fd…`, `08e0b3398e96443c…` |
+
+Noise floor (render-items captured twice in parallel): **not zero, but 1 level.** 4x: 597 of 606
+raw-RGBA hashes identical; the other 9 differ by at most 1 in at most 18 pixels. 8x: the same
+(0 pixels over 8 in all 606; max difference 1). So MSAA resolves on ANGLE/GL are deterministic to
++-1 and a tolerance only has to cover real differences between the two implementations.
+
+Rust vs X_ITE on the same GPU (RTX 3060 Ti; ANGLE/GL vs wgpu/Vulkan), threshold 8 / 0.5%:
+
+| comparison | within tolerance | pixels over 8: median / p99 / max |
+| --- | --- | --- |
+| render-items, 4x, `--gl-samples` | 604/606 (the same 2 files as MSAA off: `art/rainbow-room`, `art/djascendance-live`) | 0.000 / 0.067 / 2.545 % |
+| render-items, 8x, `--gl-samples` | 604/606 (same 2) | 0.000 / 0.088 / 2.544 % |
+| render-items, 4x, native Vulkan sample positions | 550/606 | 0.089 / 1.517 / 2.546 % |
+| render-items, 8x, native Vulkan sample positions | 561/606 | 0.080 / 0.984 / 2.818 % |
+| render-items, Rust 0x vs X_ITE 4x (what the viewer was before) | 0.531 / 3.840 / 4.879 % | |
+| synthetic-x8, 4x and 8x, `--gl-samples` | 125/125 | 0 / 0 / 0 % (4x: mean absolute difference at most 0.0023 per channel) |
+| synthetic-msaa, 4x and 8x, `--gl-samples` | 4/4 **byte-identical** | 0 |
+| synthetic-msaa, 4x and 8x, native | 3 to 4 of 4 | one-sample steps on nearly every edge pixel (max diff 64 at 4x) |
+| corpus-x0, 4x, `--gl-samples` | 46/47 (43-villasantzip, the known static-shot gravity case) | |
+| orrery poses (rotate / zoom12 / zoom22), `--gl-samples` | poses identical to 1e-16; images 0.007 to 0.065 % over at 4x and 8x | |
+| orrery poses, native | 0.16 to 0.46 % over | |
+
+**Tolerance, chosen:** the existing one (RGB delta > 8 on at most 0.5% of pixels) when Rust draws
+with `--gl-samples`, because then the resolves are byte-identical on synthetic edges and the
+only misses are the two files that already miss with MSAA off. For the native (windowed)
+orientation use `--max-pct 3`: the failures are single-sample coverage flips on edge pixels (0.25
+of a contrast step at 4x), the worst file is 2.8% over 8, and the images are visually the same.
+
+### Why `--gl-samples`
+
+The hardware sample pattern is fixed in framebuffer memory. GL framebuffers are bottom-up and
+wgpu/Vulkan ones top-down, so on the same GPU the 4x/8x pattern is mirrored vertically between
+the two. Drawing mirrored (clip y negated, front face reversed) and flipping the readback makes
+the Vulkan resolve **byte-identical** to the GL one on slanted-edge scenes (synthetic-msaa), and
+removes the edge-pixel noise from the 606 items. This is an oracle option of the offscreen path
+(`Renderer::set_gl_sample_orientation`); the window path never mirrors.
+
+### Zoom/rotate drift (found while building the orrery scripts, not fixed)
+
+`x10-scripts/msaa-orrery-*` wait 45 frames between the rotate release and the first wheel notch
+on purpose. When wheel notches come within about 2 frames of the release, X_ITE's rotation
+chaser (still writing `positionOffset`) and the zoom position chaser overlap, and Rust's final
+zoom distance ends 0.5% different (frame 18 of the scripted case, pose delta 0.02, orientation
+identical). With the wheel after the rotation settled (or with no preceding drag) poses agree to
+1e-16. Repro: a rotate drag, release at frame 15, wheel from frame 17.

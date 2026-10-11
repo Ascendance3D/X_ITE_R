@@ -26,6 +26,9 @@ use x3d_fields::math::{Matrix3, Matrix4};
 
 const FLOATS_PER_VERTEX: usize = 14;
 
+/// MultiSampleFramebuffer: DEPTH_COMPONENT24.
+const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth24Plus;
+
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 enum Topology {
     Triangles,
@@ -157,7 +160,7 @@ pub struct Renderer {
     layout: wgpu::PipelineLayout,
     draw_layout: wgpu::BindGroupLayout,
     texture_layout: wgpu::BindGroupLayout,
-    pipelines: HashMap<(PipelineKey, wgpu::TextureFormat), wgpu::RenderPipeline>,
+    pipelines: HashMap<(PipelineKey, wgpu::TextureFormat, u32, bool), wgpu::RenderPipeline>,
     frame_buffer: wgpu::Buffer,
     frame_group: wgpu::BindGroup,
     draw_buffer: wgpu::Buffer,
@@ -170,7 +173,20 @@ pub struct Renderer {
     geometries: HashMap<*const crate::geometry::Geometry, GeoGpu>,
     textures: HashMap<*const TextureImage, TexGpu>,
     white_group: wgpu::BindGroup,
-    depth: Option<(wgpu::Texture, wgpu::TextureView, u32, u32)>,
+    depth: Option<(wgpu::Texture, wgpu::TextureView, u32, u32, u32)>,
+    /// Multisampled color target (MultiSampleFramebuffer colorBuffer): texture, view, format, size, samples.
+    msaa_color: Option<(wgpu::Texture, wgpu::TextureView, wgpu::TextureFormat, u32, u32, u32)>,
+    /// Draw the scene mirrored vertically (and un-mirror `render_to_rgba`): GL framebuffers are
+    /// bottom-up, so the hardware's MSAA sample pattern lands vertically mirrored relative to a
+    /// top-down Vulkan one. Only the offscreen readback path can undo that; see
+    /// [`Renderer::set_gl_sample_orientation`].
+    gl_sample_orientation: bool,
+    /// True while `render_to_rgba` draws mirrored.
+    flip_now: bool,
+    /// Requested sample count (X_ITE's `Multisampling` rendering property); 0 and 1 mean none.
+    requested_samples: u32,
+    /// Sample counts the adapter supports for the color target and Depth24Plus, ascending, 1 first.
+    supported_samples: Vec<u32>,
     /// RGBA8 target and readback buffer of the offscreen paths (`render_to_rgba`).
     offscreen: Option<(wgpu::Texture, wgpu::TextureView, u32, u32)>,
     readback: Option<(wgpu::Buffer, u32, u32)>,
@@ -196,7 +212,64 @@ pub struct RenderStats {
 impl Renderer {
     /// The device features this renderer can use if the adapter offers them (GPU timing).
     pub fn wanted_features(adapter: &wgpu::Adapter) -> wgpu::Features {
-        adapter.features() & wgpu::Features::TIMESTAMP_QUERY
+        adapter.features() & (wgpu::Features::TIMESTAMP_QUERY | wgpu::Features::TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES)
+    }
+
+    /// The sample counts (ascending, starting with 1) usable with `color_format` and the depth
+    /// format on this device. WebGPU guarantees 1 and 4; 2, 8 and 16 need the device to have been
+    /// created with `TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES` (see [`Renderer::wanted_features`])
+    /// and the adapter to report them for both formats.
+    pub fn supported_sample_counts(adapter: &wgpu::Adapter, device: &wgpu::Device, color_format: wgpu::TextureFormat) -> Vec<u32> {
+        let adapter_specific = device.features().contains(wgpu::Features::TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES);
+        let color = adapter.get_texture_format_features(color_format).flags;
+        let depth = adapter.get_texture_format_features(DEPTH_FORMAT).flags;
+        [1u32, 2, 4, 8, 16]
+            .into_iter()
+            .filter(|&n| n == 1 || (n == 4 && color.sample_count_supported(4) && depth.sample_count_supported(4)) || (adapter_specific && n != 4 && color.sample_count_supported(n) && depth.sample_count_supported(n)))
+            .collect()
+    }
+
+    /// Declare which sample counts the device supports (see [`Renderer::supported_sample_counts`]).
+    /// The default is `[1, 4]`, the WebGPU baseline.
+    pub fn set_supported_samples(&mut self, supported: Vec<u32>) {
+        self.supported_samples = if supported.is_empty() { vec![1] } else { supported };
+    }
+
+    /// Match the sample positions of the GL oracle in `render_to_rgba` (oracle comparisons only;
+    /// the picture is identical up to which samples cover an edge pixel). The windowed path
+    /// ignores it.
+    pub fn set_gl_sample_orientation(&mut self, on: bool) {
+        if self.gl_sample_orientation != on {
+            self.gl_sample_orientation = on;
+        }
+    }
+
+    /// Request a sample count: X_ITE's `Multisampling` rendering property (BrowserOptions
+    /// set_Multisampling__). 0 or 1 draws without multisampling.
+    pub fn set_sample_count(&mut self, samples: u32) {
+        self.requested_samples = samples;
+    }
+
+    pub fn requested_sample_count(&self) -> u32 {
+        self.requested_samples
+    }
+
+    /// The count actually used: the highest supported count not above the request, like X_ITE
+    /// clamps Multisampling to `getMaxSamples ()`.
+    pub fn sample_count(&self) -> u32 {
+        self.supported_samples.iter().copied().filter(|&n| n <= self.requested_samples.max(1)).max().unwrap_or(1)
+    }
+
+    pub fn supported_samples(&self) -> &[u32] {
+        &self.supported_samples
+    }
+
+    /// Step the request to the next supported count (1, 2, 4, 8, 16 as supported), wrapping.
+    pub fn cycle_sample_count(&mut self) -> u32 {
+        let cur = self.sample_count();
+        let next = self.supported_samples.iter().copied().find(|&n| n > cur).unwrap_or(self.supported_samples[0]);
+        self.requested_samples = next;
+        next
     }
 
     /// A renderer on the host's device and queue. Cheap resources only; nothing is drawn.
@@ -273,6 +346,11 @@ impl Renderer {
             geometries: HashMap::new(),
             textures: HashMap::new(),
             depth: None,
+            msaa_color: None,
+            gl_sample_orientation: false,
+            flip_now: false,
+            requested_samples: 1,
+            supported_samples: vec![1, 4],
             offscreen: None,
             readback: None,
             frame_no: 0,
@@ -347,7 +425,7 @@ impl Renderer {
         (buffer, group)
     }
 
-    fn make_pipeline(&self, key: PipelineKey, format: wgpu::TextureFormat) -> wgpu::RenderPipeline {
+    fn make_pipeline(&self, key: PipelineKey, format: wgpu::TextureFormat, samples: u32, flip: bool) -> wgpu::RenderPipeline {
         let attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4];
         let blend = key.blend.then_some(wgpu::BlendState {
             // gl.blendFuncSeparate (SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ONE_MINUS_SRC_ALPHA)
@@ -369,7 +447,7 @@ impl Renderer {
                     Topology::Lines => wgpu::PrimitiveTopology::LineList,
                     Topology::Points => wgpu::PrimitiveTopology::PointList,
                 },
-                front_face: if key.ccw { wgpu::FrontFace::Ccw } else { wgpu::FrontFace::Cw },
+                front_face: if key.ccw != flip { wgpu::FrontFace::Ccw } else { wgpu::FrontFace::Cw },
                 cull_mode: match key.cull {
                     Cull::None => None,
                     Cull::Front => Some(wgpu::Face::Front),
@@ -378,13 +456,13 @@ impl Renderer {
                 ..Default::default()
             },
             depth_stencil: Some(wgpu::DepthStencilState {
-                format: wgpu::TextureFormat::Depth24Plus,
+                format: DEPTH_FORMAT,
                 depth_write_enabled: Some(key.depth_write),
                 depth_compare: Some(if key.depth_test { wgpu::CompareFunction::LessEqual } else { wgpu::CompareFunction::Always }),
                 stencil: Default::default(),
                 bias: Default::default(),
             }),
-            multisample: Default::default(),
+            multisample: wgpu::MultisampleState { count: samples, mask: !0, alpha_to_coverage_enabled: false },
             fragment: Some(wgpu::FragmentState {
                 module: &self.shader,
                 entry_point: Some("fs_main"),
@@ -487,7 +565,11 @@ impl Renderer {
 
         let view = self.offscreen.as_ref().unwrap().1.clone();
         let mut encoder = self.device.create_command_encoder(&Default::default());
-        self.encode(&mut encoder, frame, &view, wgpu::TextureFormat::Rgba8Unorm, width, height).expect("render");
+        let flip = self.gl_sample_orientation && self.sample_count() > 1;
+        self.flip_now = flip;
+        let encoded = self.encode(&mut encoder, frame, &view, wgpu::TextureFormat::Rgba8Unorm, width, height);
+        self.flip_now = false;
+        encoded.expect("render");
         let (texture, readback) = (&self.offscreen.as_ref().unwrap().0, &self.readback.as_ref().unwrap().0);
         encoder.copy_texture_to_buffer(
             wgpu::TexelCopyTextureInfo { texture, mip_level: 0, origin: wgpu::Origin3d::ZERO, aspect: wgpu::TextureAspect::All },
@@ -505,7 +587,8 @@ impl Renderer {
         let mut out = Vec::with_capacity((width * height * 4) as usize);
 
         for y in 0..height {
-            out.extend_from_slice(&data[(y * bytes_per_row) as usize..(y * bytes_per_row + width * 4) as usize]);
+            let row = if flip { height - 1 - y } else { y };
+            out.extend_from_slice(&data[(row * bytes_per_row) as usize..(row * bytes_per_row + width * 4) as usize]);
         }
 
         drop(data);
@@ -558,10 +641,18 @@ impl Renderer {
         self.frame_no += 1;
         self.stats = RenderStats::default();
         let frame_no = self.frame_no;
+        let samples = self.sample_count();
+        let flip = self.flip_now;
 
         // --- frame uniforms
         let mut fu: FrameU = bytemuck::Zeroable::zeroed();
         fu.projection = f32x16(&frame.projection);
+
+        if flip {
+            for i in [1, 5, 9, 13] {
+                fu.projection[i] = -fu.projection[i];
+            }
+        }
         let n = frame.lights.len().min(MAX_LIGHTS);
         fu.num_lights = [n as u32, 0, 0, 0];
         for (i, l) in frame.lights.iter().take(MAX_LIGHTS).enumerate() {
@@ -787,42 +878,63 @@ impl Renderer {
 
         // Pipelines for the formats and states of this frame.
         for c in &calls {
-            if !self.pipelines.contains_key(&(c.key, format)) {
-                let p = self.make_pipeline(c.key, format);
-                self.pipelines.insert((c.key, format), p);
+            if !self.pipelines.contains_key(&(c.key, format, samples, flip)) {
+                let p = self.make_pipeline(c.key, format, samples, flip);
+                self.pipelines.insert((c.key, format, samples, flip), p);
                 self.stats.pipelines_created += 1;
             }
         }
 
         // Depth buffer sized to the target.
-        if self.depth.as_ref().is_none_or(|d| d.2 != width || d.3 != height) {
+        if self.depth.as_ref().is_none_or(|d| d.2 != width || d.3 != height || d.4 != samples) {
             let texture = self.device.create_texture(&wgpu::TextureDescriptor {
                 label: Some("depth"),
                 size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
                 mip_level_count: 1,
-                sample_count: 1,
+                sample_count: samples,
                 dimension: wgpu::TextureDimension::D2,
-                format: wgpu::TextureFormat::Depth24Plus,
+                format: DEPTH_FORMAT,
                 usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                 view_formats: &[],
             });
             let view = texture.create_view(&Default::default());
-            self.depth = Some((texture, view, width, height));
+            self.depth = Some((texture, view, width, height, samples));
+        }
+
+        // MultiSampleFramebuffer: renderbufferStorageMultisample (RGBA8) next to the depth buffer.
+        if samples > 1 && self.msaa_color.as_ref().is_none_or(|m| m.2 != format || m.3 != width || m.4 != height || m.5 != samples) {
+            let texture = self.device.create_texture(&wgpu::TextureDescriptor {
+                label: Some("msaa color"),
+                size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
+                mip_level_count: 1,
+                sample_count: samples,
+                dimension: wgpu::TextureDimension::D2,
+                format,
+                usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+                view_formats: &[],
+            });
+            let view = texture.create_view(&Default::default());
+            self.msaa_color = Some((texture, view, format, width, height, samples));
+        } else if samples <= 1 {
+            self.msaa_color = None;
         }
 
         // --- the pass
         {
             let depth_view = &self.depth.as_ref().unwrap().1;
+            let msaa_view = if samples > 1 { self.msaa_color.as_ref().map(|m| &m.1) } else { None };
             let timestamp_writes = self.timer.as_ref().map(|t| wgpu::RenderPassTimestampWrites { query_set: &t.queries, beginning_of_pass_write_index: Some(0), end_of_pass_write_index: Some(1) });
             let [r, g, b, a] = self.clear_color;
             let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("x3d"),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: target,
+                    // MultiSampleFramebuffer.blit: the multisampled color renderbuffer is resolved
+                    // into the default framebuffer after drawShapes; the samples are not kept.
+                    view: msaa_view.unwrap_or(target),
                     depth_slice: None,
-                    resolve_target: None,
+                    resolve_target: msaa_view.map(|_| target),
                     // drawShapes: gl.clearColor (0, 0, 0, 0)
-                    ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color { r, g, b, a }), store: wgpu::StoreOp::Store },
+                    ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color { r, g, b, a }), store: if msaa_view.is_some() { wgpu::StoreOp::Discard } else { wgpu::StoreOp::Store } },
                 })],
                 depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
                     view: depth_view,
@@ -837,7 +949,7 @@ impl Renderer {
             let white_group = &self.white_group;
 
             for c in &calls {
-                pass.set_pipeline(&self.pipelines[&(c.key, format)]);
+                pass.set_pipeline(&self.pipelines[&(c.key, format, samples, flip)]);
                 pass.set_bind_group(1, &self.draw_group, &[(c.draw_index as u64 * DRAW_STRIDE) as u32]);
                 let tg = c.texture.and_then(|p| self.textures.get(&p)).map(|t| &t.group).unwrap_or(white_group);
                 pass.set_bind_group(2, tg, &[]);
@@ -935,7 +1047,8 @@ impl Gpu {
             ..Default::default()
         }))
         .map_err(|e| e.to_string())?;
-        let renderer = Renderer::new(device.clone(), queue.clone());
+        let mut renderer = Renderer::new(device.clone(), queue.clone());
+        renderer.set_supported_samples(Renderer::supported_sample_counts(&adapter, &device, wgpu::TextureFormat::Rgba8Unorm));
         Ok(Gpu { device, queue, adapter_info, renderer })
     }
 

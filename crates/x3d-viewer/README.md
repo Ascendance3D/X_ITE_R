@@ -50,7 +50,15 @@ EmbeddedViewer::new(device, queue, (w, h))     the host's wgpu device and queue
   milliseconds, the GPU milliseconds of the pass (when the device was created with
   `EmbeddedViewer::wanted_features(&adapter)`, i.e. `TIMESTAMP_QUERY`), draw calls and uploads.
 * **Not covered yet.** In-window text, Followers, PLANE / LOOKAT navigation, double-click lookAt,
-  Scripts inside Inlines (see `PLAN.md`); no MSAA; MovieTexture is not drawn.
+  Scripts inside Inlines (see `PLAN.md`); MovieTexture is not drawn.
+* **Multisampling.** Like X_ITE's `Multisampling` rendering property the viewer defaults to 4 samples
+  (`embed::DEFAULT_MULTISAMPLING`): a multisampled color + `Depth24Plus` target resolved into your
+  view (`MultiSampleFramebuffer`). `set_multisampling(0|1|2|4|8|16)` requests a count; the viewer uses
+  the highest supported count not above it (X_ITE clamps to `getMaxSamples ()`). Only 1 and 4 are
+  guaranteed. For 2, 8 and 16 create the device with `EmbeddedViewer::wanted_features(&adapter)`
+  (adds `TEXTURE_ADAPTER_SPECIFIC_FORMAT_FEATURES`) and call
+  `configure_samples(&adapter, target_format)` once; `supported_multisampling()` lists what you got
+  and `cycle_multisampling()` steps through it. NVIDIA reports 1, 2, 4, 8.
 
 ### Minimal host
 
@@ -84,7 +92,8 @@ non-sRGB format, `frame()`, then present. `x3d-view` is exactly that (`src/windo
 
 ## x3d-view
 
-`x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--script script.json --png out.png]`.
+`x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--msaa 0|1|2|4|8|16] [--script script.json --png out.png]`.
+`--msaa` defaults to X_ITE's 4 (clamped to what the adapter supports); `m` cycles 1, 2, 4, 8 live.
 Keys: `1` EXAMINE, `2` WALK, `3` FLY, `4` NONE, Home / End first / last viewpoint, PageUp /
 PageDown previous / next, `l` list viewpoints, `r` reload, `s` screenshot to `/tmp/x3d-view-N.png`,
 Esc / `q` quit. Mouse: left drag rotates (EXAMINE), middle drag pans, wheel zooms; WALK / FLY as in
