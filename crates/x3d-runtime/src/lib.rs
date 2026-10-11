@@ -20,6 +20,7 @@
 //! loading and exactly one frame (FileLoader.set_loadCount__ awaits `browser .nextFrame ()`).
 
 pub mod events;
+pub mod inline;
 pub mod loader;
 pub mod nodes;
 pub mod protos;
@@ -87,6 +88,10 @@ pub enum Cb {
     TimeSensorSetTime,
     // X3DBindableNode.set_bind__
     BindableSetBind,
+    // FileLoader.set_loadCount__ of a scene that an Inline loaded (interest on the scene's loadCount).
+    SceneLoadCount,
+    // X3DRoute.reconnect: interest on the loadState of an Inline that an imported node of the route belongs to.
+    RouteReconnect(usize),
 }
 
 /// A pending `setTimeout` of X3DTimeDependentNode.addTimeout (virtual time).
@@ -154,9 +159,12 @@ pub enum Task {
     ScriptLoad(NodeId),
     /// Script: setLoadState (COMPLETE/FAILED) after initialize__ resolved.
     ScriptLoaded(NodeId, bool),
-    /// Inline.loadData / X3DExternProtoDeclaration.loadData.
+    /// Inline.loadData / X3DUrlObject loadData: the fetch (a macrotask: it completes after the
+    /// pending microtasks).
     UrlLoad(NodeId),
     ExternLoad(ExternId),
+    /// A Script whose source is fetched (a macrotask, requested by the Script's microtask).
+    ScriptFetch(NodeId),
 }
 
 pub struct Runtime {
@@ -181,8 +189,27 @@ pub struct Runtime {
     pub font_cache: HashMap<String, bool>,
     /// Script nodes in the order their contexts became active, for diagnostics.
     pub scripts: Vec<NodeId>,
-    /// Scenes loaded by Inline nodes (Inline node → its runtime), kept for rendering.
-    pub inline_runtimes: HashMap<NodeId, Runtime>,
+    /// Inline.getInternalScene: Inline node → root context of the scene it loaded and attached.
+    /// The scenes live in this runtime's node arena (`scene.merge_inline`), like X_ITE's one
+    /// browser: one event queue, one set of browser events, one script realm.
+    pub inline_scenes: HashMap<NodeId, CtxId>,
+    /// Scenes that were parsed and set up but are not attached yet (FileLoader.setScene waits for
+    /// their loadCount to reach 0 and then for the next frame).
+    pub pending_scenes: Vec<inline::PendingScene>,
+    /// `await browser .nextFrame ()` continuations, resolved after the finishEvents of a frame.
+    pub frame_waiters: Vec<inline::FrameWaiter>,
+    /// Fetches in flight in request order (macrotasks); `tasks` holds the microtasks.
+    pub fetches: std::collections::VecDeque<Task>,
+    /// Own live flag (X3DBaseNode [_live]) of the scenes that Inlines loaded, by root context.
+    pub inline_live: HashMap<CtxId, bool>,
+    /// Nodes that react to their live state (X3DTimeDependentNode.set_live__, X3DFollowerNode
+    /// .set_live__), in the order their initialize () asked for the live event, with the state
+    /// they last saw.
+    pub live_watchers: Vec<(NodeId, bool)>,
+    /// Record every console message (log / warn / error) in order in [`Runtime::console`].
+    pub record_console: bool,
+    /// All console output in the order it was logged: `log: text`, `warn: first line`, `error: first line`.
+    pub console: Vec<String>,
     /// The scene is live (browser updating): TimeSensors tick on the browser's frames. The
     /// oracle runs (dump.html, `update="false"`) leave this false.
     pub live: bool,
@@ -233,7 +260,14 @@ impl Runtime {
             extern_loaded: HashMap::new(),
             font_cache: HashMap::new(),
             scripts: vec![],
-            inline_runtimes: HashMap::new(),
+            inline_scenes: HashMap::new(),
+            pending_scenes: vec![],
+            frame_waiters: vec![],
+            fetches: Default::default(),
+            inline_live: HashMap::new(),
+            live_watchers: vec![],
+            record_console: false,
+            console: vec![],
             live: false,
             timeouts: vec![],
             prints: vec![],
@@ -265,11 +299,32 @@ impl Runtime {
     }
 
     pub fn log_error(&mut self, message: impl AsRef<str>) {
-        self.log.push(format!("error: {}", message.as_ref().split('\n').next().unwrap_or("")));
+        let line = format!("error: {}", message.as_ref().split('\n').next().unwrap_or(""));
+
+        if self.record_console {
+            self.console.push(line.clone());
+        }
+
+        self.log.push(line);
     }
 
     pub fn log_warn(&mut self, message: impl AsRef<str>) {
-        self.log.push(format!("warn: {}", message.as_ref().split('\n').next().unwrap_or("")));
+        let line = format!("warn: {}", message.as_ref().split('\n').next().unwrap_or(""));
+
+        if self.record_console {
+            self.console.push(line.clone());
+        }
+
+        self.log.push(line);
+    }
+
+    /// Browser.print / Browser.println: `console .log (string)`.
+    pub fn print(&mut self, text: String) {
+        if self.record_console {
+            self.console.push(format!("log: {text}"));
+        }
+
+        self.prints.push(text);
     }
 
     fn create_internal_node(&mut self, name: &'static str) -> NodeId {
@@ -569,49 +624,97 @@ impl Runtime {
         }
     }
 
-    /// Run deferred work in microtask order. Scripts whose source must be fetched finish after
-    /// the ones with inline source (a fetch resolves after the pending microtasks).
+    /// Run deferred work like the JavaScript event loop: microtasks first (`tasks`), then the
+    /// oldest fetch (a macrotask) whose completion queues new microtasks, and so on until quiet.
+    /// Fetches complete in request order; a Script requests its source when its own microtask
+    /// runs, after the microtasks that were queued before it (Inlines and textures asked for
+    /// theirs at setup).
     pub fn run_tasks(&mut self) {
-        let mut fetched_scripts = vec![];
+        loop {
+            if let Some(task) = self.tasks.pop_front() {
+                match task {
+                    Task::ScriptLoad(node) => {
+                        let first = self.url_strings(node).into_iter().find(|u| !u.is_empty()).unwrap_or_default();
+                        let inline = ["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| first.trim_start().starts_with(s));
 
-        while let Some(task) = self.tasks.pop_front() {
-            match task {
-                Task::ScriptLoad(node) => {
-                    let first = self.url_strings(node).into_iter().find(|u| !u.is_empty()).unwrap_or_default();
-                    let inline = ["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| first.trim_start().starts_with(s));
-
-                    if inline || first.is_empty() {
-                        self.script_load(node);
-                    } else {
-                        fetched_scripts.push(node);
+                        if inline || first.is_empty() {
+                            self.script_load(node);
+                        } else {
+                            self.fetches.push_back(Task::ScriptFetch(node));
+                        }
                     }
+                    other => self.fetches.push_back(other),
                 }
-                Task::UrlLoad(node) => self.url_load(node),
-                Task::ExternLoad(e) => self.extern_load(e),
-                Task::ScriptLoaded(..) => {}
+
+                continue;
             }
 
-            if self.tasks.is_empty() {
-                for node in std::mem::take(&mut fetched_scripts) {
-                    self.script_load(node);
-                }
+            let Some(task) = self.fetches.pop_front() else {
+                break;
+            };
+
+            match task {
+                Task::UrlLoad(node) => self.url_load(node),
+                Task::ExternLoad(e) => self.extern_load(e),
+                Task::ScriptFetch(node) => self.script_load(node),
+                Task::ScriptLoad(..) | Task::ScriptLoaded(..) => {}
             }
         }
     }
 
+    /// Everything that settles between two frames: microtasks and the fetches they wait for.
+    pub fn settle(&mut self) {
+        self.run_tasks();
+    }
+
+    /// Is a load of an Inline still in progress (X3DBrowser loadCount > 0)?
+    pub fn has_unfinished_loads(&self) -> bool {
+        !self.pending_scenes.is_empty()
+            || !self.frame_waiters.is_empty()
+            || (0..self.scene.nodes.len() as NodeId).any(|n| {
+                self.builtin_name(n) == Some("Inline") && self.url_load_state(n) == nodes::LoadState::InProgress
+            })
+    }
+
     /// Everything `browser .createX3DFromURL` does before its promise resolves: setup, loads,
-    /// one frame. Returns the scene ready for `toVRMLString`.
+    /// the frames the loads wait for. Returns the scene ready for `toVRMLString`.
     pub fn load_world(&mut self) {
+        self.load_scene();
+        self.go_live();
+    }
+
+    /// X3DBrowser.replaceWorld after the scene is loaded: it awaits one more frame (the events of
+    /// the new scene are processed before the old world goes), then `scene .setLive (true)`.
+    pub fn replace_world(&mut self) {
+        self.frame();
+        self.run_tasks();
+        self.go_live();
+    }
+
+    /// The loading part of [`Runtime::load_world`], without `go_live`.
+    pub fn load_scene(&mut self) {
         for w in std::mem::take(&mut self.scene.warnings) {
             self.log_warn(w);
         }
 
         self.start();
         self.run_tasks();
-        self.frame();
-        self.run_tasks();
+
+        // FileLoader.set_loadCount__ awaits `browser .nextFrame ()` once the scene's loadCount is
+        // 0, and every Inline in it holds the count until its own scene is attached: one frame,
+        // plus one for every level of nested Inlines.
+        loop {
+            let waiting = self.has_unfinished_loads();
+
+            self.frame();
+            self.run_tasks();
+
+            if !waiting {
+                break;
+            }
+        }
+
         self.publish_clone_counts();
-        self.go_live();
     }
 
     /// `scene .setLive (true)`: every node's `set_live__` runs, in the order the nodes asked for
@@ -627,6 +730,8 @@ impl Runtime {
         for node in self.followers.clone() {
             self.follower_set_live(node);
         }
+
+        self.refresh_live();
     }
 }
 
@@ -653,7 +758,7 @@ impl Runtime {
             }
 
             for r in self.scene.contexts[c].routes.clone() {
-                self.add_field_interest((r.source_node, r.source_loc), (r.destination_node, r.destination_loc));
+                self.activate_route(&r);
             }
         }
 

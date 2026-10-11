@@ -92,10 +92,46 @@ function encodePNG (w, h, rgba)
 
 const result = { ok: false, poses: { }, vrml: { }, prints: [ ], log: [ ], anchors: [ ] };
 
+// Script key "console": true records every console.log / warn / error message in the order it was
+// logged ("log: text", "warn: first line", "error: first line"), over the whole run. Playwright's
+// console listener sees them in order, so no page code is needed (anim.html only keeps the sorted
+// warn / error lines in `log`). Script key "dumpInlines": true adds, to every dumped frame, the
+// scene text of each DEF-named Inline scene: result .inlines [frame] [path] = scene .toVRMLString ().
+const consoleLines = [ ];
+
+// Script key "settle": true makes loads deterministic: after the load and after every event and frame
+// step the harness waits until no request is in flight and the page's continuations (parse, setup,
+// Script initialize, nested loads) have run, so a fetch started in frame k always completes between
+// frame k and frame k + 1. x3d-drive models the same rule (Runtime::settle). Without it the frame in
+// which a file fetched at run time arrives depends on the wall clock.
+let inFlight = 0;
+
 const context = await browser .newContext ({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
 await context .route (url => !url .href .startsWith (base), route => route .abort ());
 
 const page = await context .newPage ();
+
+if (script .settle)
+{
+   page .on ("request", () => ++ inFlight);
+   page .on ("requestfinished", () => -- inFlight);
+   page .on ("requestfailed", () => -- inFlight);
+}
+
+if (script .console)
+{
+   page .on ("console", m =>
+   {
+      const type = m .type ();
+
+      if (type !== "log" && type !== "warning" && type !== "error")
+         return;
+
+      const text = m .text () .replaceAll (base, "http://oracle");
+
+      consoleLines .push (type === "log" ? `log: ${text}` : `${type === "warning" ? "warn" : "error"}: ${text .split ("\n") [0]}`);
+   });
+}
 
 try
 {
@@ -122,6 +158,32 @@ try
    await page .evaluate (d => window .setDt (d), dt);
    result .geometry = await page .evaluate (() => window .geometry ());
    await page .evaluate (() => window .focusCanvas ());
+
+   const yieldTask = () => page .evaluate (() => new Promise (resolve =>
+   {
+      const channel = new MessageChannel ();
+      channel .port1 .onmessage = () => resolve ();
+      channel .port2 .postMessage (0);
+   }));
+
+   const settle = async () =>
+   {
+      if (!script .settle)
+         return;
+
+      for (let quiet = 0; quiet < 3;)
+      {
+         while (inFlight > 0)
+            await new Promise (r => setTimeout (r, 2));
+
+         await yieldTask ();
+         await yieldTask ();
+
+         quiet = inFlight > 0 ? 0 : quiet + 1;
+      }
+   };
+
+   await settle ();
 
    const mouseButton = b => ({ 0: "left", 1: "middle", 2: "right" }) [b] ?? "left";
 
@@ -152,8 +214,10 @@ try
          }
       }
 
+      await settle ();
       await page .evaluate (ms => window .setDate (ms), (t0 + k * dt) * 1000);
       await page .evaluate (t => window .step (t), t0 + k * dt);
+      await settle ();
 
       if (capture .has (k) || dump .has (k) || k === frames)
          result .poses [k] = await page .evaluate (() =>
@@ -172,6 +236,42 @@ try
       if (dump .has (k) || k === frames)
          result .vrml [k] = await page .evaluate (() => window .vrml ());
 
+      if (script .dumpInlines && (dump .has (k) || k === frames))
+      {
+         result .inlines ??= { };
+         result .inlines [k] = await page .evaluate (() =>
+         {
+            const
+               browser = document .getElementById ("c") .browser,
+               out     = { };
+
+            const walk = (scene, prefix) =>
+            {
+               for (const node of scene .namedNodes)
+               {
+                  const n = node .getValue ();
+
+                  if (n ?.getTypeName () !== "Inline")
+                     continue;
+
+                  const inner = n .getInternalScene ();
+
+                  if (inner === browser .getDefaultScene ())
+                  {
+                     out [prefix + n .getName ()] = null;
+                     continue;
+                  }
+
+                  out [prefix + n .getName ()] = inner .toVRMLString ();
+                  walk (inner, prefix + n .getName () + "/");
+               }
+            };
+
+            walk (browser .currentScene, "");
+            return out;
+         });
+      }
+
       if (capture .has (k) && pngDir)
       {
          const r = await page .evaluate (() => window .pixels ());
@@ -188,6 +288,9 @@ try
    }
 
    result .log = (await page .evaluate (() => window .getLog ())) .map (l => l .replaceAll (base, "http://oracle"));
+
+   if (script .console)
+      result .console = consoleLines .slice ();
    result .ok  = true;
 }
 catch (e)

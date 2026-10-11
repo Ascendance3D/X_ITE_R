@@ -168,10 +168,6 @@ impl ScriptHost for QuickJsHost {
             }
         })
     }
-
-    fn fork(&self) -> Option<Box<dyn ScriptHost>> {
-        None
-    }
 }
 
 // --- slots ---------------------------------------------------------------------------------
@@ -684,7 +680,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 eprintln!("print: {}", str_arg(ctx, a, 0));
             }
 
-            rt().prints.push(str_arg(ctx, a, 0));
+            let text = str_arg(ctx, a, 0);
+            rt().print(text);
 
             Ok(undefined)
         }
@@ -887,8 +884,16 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             rt().browser_requests.push(r);
             Ok(undefined)
         }
-        "specVersion" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.specification_version)?.into_value()),
-        "worldURL" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.world_url)?.into_value()),
+        "specVersion" => {
+            let script = num_arg(ctx, a, 0);
+            let c = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.spec_version_of(c))?.into_value())
+        }
+        "worldURL" => {
+            let script = num_arg(ctx, a, 0);
+            let c = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.world_url_of(c))?.into_value())
+        }
         "createVrml" => {
             let text = str_arg(ctx, a, 0);
             let script = num_arg(ctx, a, 1);

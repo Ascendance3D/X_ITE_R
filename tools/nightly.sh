@@ -100,6 +100,8 @@ step scene-x1    600 "$R/x3d-run" compare oracle/x1-baseline.json oracle/corpus-
 step scene-x6    600 "$R/x3d-run" compare oracle/synthetic-x6-baseline.json oracle/synthetic-x6 --known crates/x3d-script/tests/synthetic-x6-known.tsv --logs
 # Followers component (Chaser/Damper x 7 node types): initial state at load, synthetic worlds.
 step scene-followers 600 "$R/x3d-run" compare oracle/synthetic-followers-baseline.json oracle/synthetic-followers --known crates/x3d-script/tests/synthetic-followers-known.tsv --logs
+# Script nodes inside Inline scenes: initial state at load, synthetic worlds (outer + inner files).
+step scene-inline-scripts 600 "$R/x3d-run" compare oracle/synthetic-inline-scripts-baseline.json oracle/synthetic-inline-scripts --known crates/x3d-script/tests/synthetic-inline-scripts-known.tsv --logs
 
 SHOTS=$OUT/shots; rm -rf "$SHOTS"
 step render-items2 900 bash -c "'$R/x3d-shot' batch oracle/render-items2 '$SHOTS/items2' && '$R/x3d-shot' compare oracle/render-items2-baseline '$SHOTS/items2'"
@@ -139,6 +141,10 @@ done
 # Followers: 10 synthetic worlds, scene text exact at every frame, poses 1e-4, images 8 / 0.5% (tools/gen_followers.py).
 step followers-anim 1800 python3 -I oracle/tools/run_followers_suite.py --jobs 3 --out "$V/followers" --target "$R"
 expect followers-anim "10 of 10 worlds pass"
+# Scripts in Inlines: scene text, ordered console and every Inline's own scene text exact at each dumped frame.
+for c in basic reload order nested browser output exportimport; do
+   step viewer-inline-$c 600 python3 -I oracle/tools/x10_compare.py oracle/synthetic-inline-scripts/$c.wrl oracle/synthetic-inline-scripts/scripts/$c.json "$V/inline-$c" --target "$R"
+done
 rm -rf "$V"
 
 step cm5-suite 900 node oracle/cm5-run.mjs

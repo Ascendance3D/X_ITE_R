@@ -56,7 +56,18 @@ impl<'a> Sg<'a> {
 
     /// Root nodes of the runtime's scene (inner nodes of PROTO instances).
     pub fn roots(&self) -> Vec<NodeId> {
-        self.rt.scene.ctx(x3d_scene::ROOT).root_nodes.iter().flatten().filter_map(|n| self.inner(*n)).collect()
+        self.roots_of(x3d_scene::ROOT)
+    }
+
+    /// Root nodes of the scene whose root context is `ctx` (the world's, or the one an Inline
+    /// loaded: Inline.getInternalScene () .rootNodes).
+    pub fn roots_of(&self, ctx: CtxId) -> Vec<NodeId> {
+        self.rt.scene.ctx(ctx).root_nodes.iter().flatten().filter_map(|n| self.inner(*n)).collect()
+    }
+
+    /// Inline.getInternalScene: the root context of the scene an Inline attached.
+    pub fn inline_scene(&self, inline: NodeId) -> Option<CtxId> {
+        self.rt.inline_scenes.get(&inline).copied()
     }
 
     pub fn value(&self, n: NodeId, name: &str) -> Option<&FieldValue> {

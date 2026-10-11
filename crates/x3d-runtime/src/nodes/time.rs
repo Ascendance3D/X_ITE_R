@@ -93,6 +93,9 @@ impl Runtime {
         let now = self.now;
         self.set_value(initialized, FieldValue::SFTime(now));
 
+        // this .getLive () .addInterest ("set_live__", this)
+        self.watch_live(node);
+
         // TimeSensor.initialize
         self.interest(node, "cycleInterval", Cb::TimeSensorSetCycleInterval);
         let range = self.private_field(node, "range").unwrap();
@@ -224,7 +227,7 @@ impl Runtime {
         self.set_pre(node, "isActive", FieldValue::SFBool(true));
         self.time_sensor_set_start(node);
 
-        if self.live {
+        if self.time_node_live(node) {
             // getBrowser () .timeEvents () .addInterest ("set_time", this);
             let k = self.private_field(self.browser_node, "timeEvents").unwrap();
             self.add_interest(k, node, Cb::TimeSensorSetTime);
@@ -239,7 +242,7 @@ impl Runtime {
         if self.is_active(node) && !self.is_paused(node) {
             self.set_pre(node, "isPaused", FieldValue::SFBool(true));
 
-            if self.live {
+            if self.time_node_live(node) {
                 self.time_real_pause(node);
             }
         }
@@ -249,9 +252,28 @@ impl Runtime {
         if self.is_active(node) && self.is_paused(node) {
             self.set_pre(node, "isPaused", FieldValue::SFBool(false));
 
-            if self.live {
+            if self.time_node_live(node) {
                 self.time_real_resume(node);
             }
+        }
+    }
+
+    /// X3DTimeDependentNode.set_live__.
+    pub(crate) fn time_set_live(&mut self, node: NodeId, live: bool) {
+        let active = self.is_active(node);
+        let paused = self.is_paused(node);
+
+        if live {
+            if self.ts(node).disabled {
+                self.ts(node).disabled = false;
+
+                if active && !paused {
+                    self.time_real_resume(node);
+                }
+            }
+        } else if !self.ts(node).disabled && active && !paused {
+            self.ts(node).disabled = true;
+            self.time_real_pause(node);
         }
     }
 

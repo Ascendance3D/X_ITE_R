@@ -1,0 +1,16 @@
+#VRML V2.0 utf8
+# directOutput / mustEvaluate in an Inline's Scripts, next to the same flags in the parent.
+DEF Inl Inline { url "output-inner.wrl" }
+DEF PT Transform { children Shape { geometry Box { size 0.5 0.5 0.5 } } }
+DEF PClock TimeSensor { cycleInterval 1 loop TRUE }
+DEF PDirect Script {
+  directOutput TRUE
+  mustEvaluate TRUE
+  eventIn SFFloat set_f
+  field SFNode target USE PT
+  url "javascript:
+    function set_f (f) { target.translation = new SFVec3f (0, f, 0); }
+    function eventsProcessed () { if (target.translation.y > 0.9) print ('parent direct done ' + target.translation); }
+  "
+}
+ROUTE PClock.fraction_changed TO PDirect.set_f

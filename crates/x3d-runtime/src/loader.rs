@@ -138,8 +138,8 @@ pub struct FileLoader {
 
 impl Runtime {
     /// X3DExecutionContext.getBaseURL of a node's context (the scene's world URL).
-    pub fn base_url(&self, _node: NodeId) -> String {
-        self.scene.world_url.clone()
+    pub fn base_url(&self, node: NodeId) -> String {
+        self.scene.world_url_of(self.scene.node(node).ctx).to_string()
     }
 
     /// FileLoader.loadDocument with its fallback loop. `accept` is the data callback: an `Err`
@@ -225,59 +225,6 @@ impl Runtime {
         }
     }
 
-    fn url_state(&mut self, node: NodeId) -> Option<&mut UrlStateRef> {
-        match &mut self.nrt_mut(node).state {
-            nodes::State::UrlObject(s) => Some(s),
-            _ => None,
-        }
-    }
-
-    /// X3DUrlObject.initialize + requestImmediateLoad for nodes that only fetch.
-    pub(crate) fn inline_initialize(&mut self, node: NodeId) {
-        self.interest(node, "load", Cb::UrlSetLoad);
-        self.interest(node, "url", Cb::UrlSetUrl);
-        self.request_immediate_load(node);
-    }
-
-    /// X3DUrlObject.requestImmediateLoad (before `loadData`).
-    pub(crate) fn request_immediate_load(&mut self, node: NodeId) {
-        let Some(s) = self.url_state(node) else {
-            return;
-        };
-
-        if s.load_state != nodes::LoadState::NotStarted {
-            return;
-        }
-
-        if !self.get_bool(node, "load") {
-            return;
-        }
-
-        if self.url_strings(node).is_empty() {
-            return;
-        }
-
-        if let Some(s) = self.url_state(node) {
-            s.load_state = nodes::LoadState::InProgress;
-        }
-
-        self.tasks.push_back(Task::UrlLoad(node));
-    }
-
-    pub(crate) fn url_object_changed(&mut self, node: NodeId, cb: Cb) {
-        match cb {
-            Cb::UrlSetLoad if self.get_bool(node, "load") => self.request_immediate_load(node),
-            Cb::UrlSetUrl if self.get_bool(node, "load") => {
-                if let Some(s) = self.url_state(node) {
-                    s.load_state = nodes::LoadState::NotStarted;
-                }
-
-                self.request_immediate_load(node);
-            }
-            _ => {}
-        }
-    }
-
     /// Inline.loadData / ImageTexture.loadData … : run the FileLoader for the node.
     pub(crate) fn url_load(&mut self, node: NodeId) {
         let type_name = self.type_name(node);
@@ -285,18 +232,20 @@ impl Runtime {
         if type_name == "MovieTexture" {
             return self.movie_load(node);
         }
-        let loader = FileLoader { type_name: type_name.clone(), base: self.base_url(node), data_as_string: type_name == "Inline" };
+
+        if type_name == "Inline" {
+            return self.inline_load(node);
+        }
+
+        let loader = FileLoader { type_name: type_name.clone(), base: self.base_url(node), data_as_string: false };
         let urls = self.url_strings(node);
 
-        let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
+        let ok = self.load_document(&loader, &urls, |_rt, loaded| match loaded {
             Loaded::Script(_) => Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
-            Loaded::Data(data, url) if type_name == "Inline" => rt.inline_scene(node, &data, url.as_str()),
             Loaded::Data(..) => Ok(()),
         });
 
-        if let Some(s) = self.url_state(node) {
-            s.load_state = if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed };
-        }
+        self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
     }
 
     /// MovieTexture.loadData: one attempt per URL, each with its own FileLoader (GIF/PNG) or a
@@ -344,9 +293,7 @@ impl Runtime {
             self.log_error(format!("Error: {error}"));
         }
 
-        if let Some(s) = self.url_state(node) {
-            s.load_state = nodes::LoadState::Failed;
-        }
+        self.set_load_state(node, nodes::LoadState::Failed);
     }
 
     /// X3DFontStyleNode.initialize → requestImmediateLoad → loadData (font selection only).
@@ -429,34 +376,6 @@ impl Runtime {
             }
         }
     }
-
-    /// Parse and run an Inline's scene for its side effects on the log (the scene is not
-    /// printed by the parent's toVRMLString).
-    fn inline_scene(&mut self, node: NodeId, data: &[u8], url: &str) -> Result<(), String> {
-        let scene = x3d_parse::parse_bytes(data, url).map_err(|e| format!("Error: {e}"))?;
-
-        for w in &scene.warnings {
-            self.log_warn(w);
-        }
-
-        let mut child = Runtime::new(scene, Box::new(NullFetcherProxy(self as *const Runtime)));
-        child.script_host = self.script_host.as_ref().and_then(|h| h.fork());
-        child.live = self.live;
-        child.now = self.now;
-        child.frame_rate = self.frame_rate;
-        child.start();
-        child.run_tasks();
-        child.frame();
-        child.go_live();
-
-        self.log.append(&mut child.log);
-
-        // Keep the loaded scene for renderers (Inline.getInternalScene). Its fetcher pointed at
-        // this runtime, which may move after this call; replace it with one that fails.
-        child.fetcher = Box::new(DetachedFetcher);
-        self.inline_runtimes.insert(node, child);
-        Ok(())
-    }
 }
 
 impl Runtime {
@@ -476,7 +395,7 @@ impl Runtime {
 
     /// X3DExternProtoDeclaration.loadData: FileLoader.createX3DFromURL (url, null, setInternalScene).
     pub(crate) fn extern_load(&mut self, e: ExternId) {
-        let loader = FileLoader { type_name: "X3DExternProtoDeclaration".into(), base: self.scene.world_url.clone(), data_as_string: false };
+        let loader = FileLoader { type_name: "X3DExternProtoDeclaration".into(), base: self.scene.world_url_of(self.scene.externprotos[e].ctx).to_string(), data_as_string: false };
         let urls = self.scene.externprotos[e].url.clone();
 
         self.load_document(&loader, &urls, |_rt, loaded| match loaded {
@@ -487,27 +406,5 @@ impl Runtime {
                 Ok(())
             }
         });
-    }
-}
-
-type UrlStateRef = nodes::UrlState;
-
-/// The fetcher of a kept Inline runtime after its load finished.
-struct DetachedFetcher;
-
-impl Fetcher for DetachedFetcher {
-    fn fetch(&self, _url: &url::Url) -> Result<Vec<u8>, String> {
-        Err("TypeError: Failed to fetch".into())
-    }
-}
-
-/// Lets a child runtime fetch through its parent's fetcher (same oracle file root).
-struct NullFetcherProxy(*const Runtime);
-
-impl Fetcher for NullFetcherProxy {
-    fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
-        // SAFETY: used only while the parent's `inline_scene` call runs; afterwards the kept
-        // child gets a DetachedFetcher.
-        unsafe { (*self.0).fetcher.fetch(url) }
     }
 }

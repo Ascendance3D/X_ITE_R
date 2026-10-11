@@ -83,7 +83,11 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
     // `"pinFrameRate": true`: browser .currentFrameRate is 1 / dt (the oracle pins it the same way).
     let pinned = script["pinFrameRate"].as_bool().unwrap_or(false).then(|| 1.0 / dt);
-    let mut v = match Viewer3d::load_pinned(file, oracle, t0, size.0, size.1, pinned) {
+    // `"console": true`: record every console message in order (`console` in the result), like the
+    // oracle's page listener. `"dumpInlines": true`: the scene text of every DEF-named Inline.
+    let console = script["console"].as_bool().unwrap_or(false);
+    let dump_inlines = script["dumpInlines"].as_bool().unwrap_or(false);
+    let mut v = match Viewer3d::load_opts(file, oracle, t0, size.0, size.1, pinned, console) {
         Ok(v) => v,
         Err(e) => return json!({ "ok": false, "error": e }),
     };
@@ -108,6 +112,7 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     let mut poses = serde_json::Map::new();
     let mut vrml = serde_json::Map::new();
     let mut events_log: Vec<Value> = vec![];
+    let mut inlines = serde_json::Map::new();
 
     for k in 1..=frames {
         let prev = t0 + (k - 1) as f64 * dt;
@@ -129,6 +134,13 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
             vrml.insert(k.to_string(), json!(v.rt.scene.to_vrml_string()));
         }
 
+        if dump_inlines && (dump.contains(&k) || k == frames) {
+            v.rt.publish_clone_counts();
+            let mut out = serde_json::Map::new();
+            inline_scenes(&v.rt, x3d_scene::ROOT, "", &mut out);
+            inlines.insert(k.to_string(), Value::Object(out));
+        }
+
         if capture.contains(&k) {
             if let (Some(g), Some(dir)) = (gpu.as_mut(), png_dir) {
                 let frame = v.build_frame();
@@ -145,7 +157,7 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     let mut log = v.rt.log.clone();
     log.sort();
 
-    json!({
+    let mut result = json!({
         "ok": true,
         "poses": poses,
         "vrml": vrml,
@@ -154,5 +166,37 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         "anchors": v.anchors.iter().map(|a| json!({ "description": a.description, "url": a.urls, "parameter": a.parameters })).collect::<Vec<_>>(),
         "status": v.status,
         "title": v.title(),
-    })
+    });
+
+    if console {
+        result["console"] = json!(v.rt.console);
+    }
+
+    if dump_inlines {
+        result["inlines"] = Value::Object(inlines);
+    }
+
+    result
+}
+
+/// The scene text of every DEF-named Inline of `ctx` (nested Inlines as `A/B`): `null` while the
+/// Inline has no scene (Inline.getInternalScene () is the empty default scene).
+fn inline_scenes(rt: &x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut serde_json::Map<String, Value>) {
+    for &n in rt.scene.ctx(ctx).named_nodes.values() {
+        if rt.builtin_name(n) != Some("Inline") {
+            continue;
+        }
+
+        let name = format!("{prefix}{}", rt.scene.node(n).name);
+
+        match rt.inline_scenes.get(&n) {
+            Some(&c) => {
+                out.insert(name.clone(), json!(rt.scene.to_vrml_string_ctx(c)));
+                inline_scenes(rt, c, &format!("{name}/"), out);
+            }
+            None => {
+                out.insert(name, Value::Null);
+            }
+        }
+    }
 }

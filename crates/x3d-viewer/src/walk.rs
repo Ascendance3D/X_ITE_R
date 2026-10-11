@@ -13,7 +13,9 @@ use x3d_fields::math::{Matrix4, Rotation4, Vector3};
 use x3d_render::sg::Sg;
 use x3d_runtime::Runtime;
 
-/// Path of Inline nodes from the world's runtime to the runtime holding a node.
+/// Path of Inline nodes from the world's runtime to the runtime holding a node. Inline scenes
+/// are contexts of the world's runtime now (one browser), so the path is always empty; it stays
+/// in the types the viewer keys its caches with.
 pub type RtPath = Rc<Vec<NodeId>>;
 
 /// A node together with the runtime that owns it.
@@ -68,43 +70,18 @@ pub struct Scan {
 const GROUPS: &[&str] = &["Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "StaticGroup"];
 const SENSORS: &[&str] = &["TouchSensor", "PlaneSensor", "SphereSensor", "CylinderSensor"];
 
-/// Resolve a runtime path (Inline nodes) from the root runtime.
+/// Resolve a runtime path from the root runtime (all nodes live in the root runtime).
 pub fn rt_at<'a>(root: &'a Runtime, path: &[NodeId]) -> Option<&'a Runtime> {
-    let mut rt = root;
-
-    for n in path {
-        rt = rt.inline_runtimes.get(n)?;
-    }
-
-    Some(rt)
+    path.is_empty().then_some(root)
 }
 
 pub fn rt_at_mut<'a>(root: &'a mut Runtime, path: &[NodeId]) -> Option<&'a mut Runtime> {
-    let mut rt = root;
-
-    for n in path {
-        rt = rt.inline_runtimes.get_mut(n)?;
-    }
-
-    Some(rt)
+    path.is_empty().then_some(root)
 }
 
-/// Every runtime path (root and nested Inlines), parents before children.
-pub fn all_paths(root: &Runtime) -> Vec<Vec<NodeId>> {
-    fn go(rt: &Runtime, prefix: &mut Vec<NodeId>, out: &mut Vec<Vec<NodeId>>) {
-        out.push(prefix.clone());
-        let mut keys: Vec<NodeId> = rt.inline_runtimes.keys().copied().collect();
-        keys.sort();
-        for k in keys {
-            prefix.push(k);
-            go(&rt.inline_runtimes[&k], prefix, out);
-            prefix.pop();
-        }
-    }
-
-    let mut out = vec![];
-    go(root, &mut vec![], &mut out);
-    out
+/// Every runtime path: only the root.
+pub fn all_paths(_root: &Runtime) -> Vec<Vec<NodeId>> {
+    vec![vec![]]
 }
 
 /// Transform: Matrix4.setTransform (translation, rotation, scale, scaleOrientation, center).
@@ -220,7 +197,7 @@ impl Walker<'_> {
         let Some(ty) = sg.type_name(n) else { return };
         let me = || NodeRef { path: path.clone(), node: n };
         // Bindables of Inline scenes are not bound (BindableList.getBound enableInlineBindables).
-        let inline = !path.is_empty();
+        let inline = sg.in_inline(n);
 
         match ty {
             "Viewpoint" | "OrthoViewpoint" if !inline => self.scan.viewpoints.push((me(), *mv)),
@@ -243,10 +220,10 @@ impl Walker<'_> {
             }
             "Inline" => {
                 if sg.bool(n, "load", true) {
-                    if let Some(child) = sg.rt.inline_runtimes.get(&n) {
-                        let mut p = (**path).clone();
-                        p.push(n);
-                        self.runtime(child, &Rc::new(p), mv, sensors, anchors, collidable, depth + 1);
+                    if let Some(ctx) = sg.inline_scene(n) {
+                        for r in sg.roots_of(ctx) {
+                            self.node(sg, path, r, mv, sensors, anchors, collidable, depth + 1);
+                        }
                     }
                 }
             }

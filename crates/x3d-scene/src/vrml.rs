@@ -12,6 +12,8 @@ struct CtxIndex {
     names_by_node: HashMap<NodeId, String>,
     nodes: HashSet<NodeId>,
     route_nodes: HashSet<NodeId>,
+    /// X3DGenerator [importedNames]: the printed name of an imported node instance.
+    imported_names: HashMap<NodeId, String>,
 }
 
 pub struct VrmlGenerator<'a> {
@@ -104,7 +106,102 @@ impl<'a> VrmlGenerator<'a> {
             return true;
         }
 
-        self.scene.has_routes(node)
+        if self.scene.has_routes(node) {
+            return true;
+        }
+
+        // An Inline that an IMPORT refers to, and an exported node.
+        let Some(ctx) = self.current() else {
+            return false;
+        };
+        let c = self.scene.ctx(ctx);
+
+        c.imported.values().iter().any(|&i| self.scene.imported[i].inline == node) || c.exported.values().iter().any(|&e| self.scene.exported[e].local == node)
+    }
+
+    /// X3DGenerator.ImportedName.
+    fn imported_name(&mut self, instance: NodeId) -> String {
+        if let Some(n) = self.cur_index().imported_names.get(&instance) {
+            return n.clone();
+        }
+
+        let name = self.scene.node(instance).name.clone();
+        let index = self.cur_index();
+        let new_name = crate::info_array::get_unique_name(|n| index.names.contains(n), &name);
+
+        index.names.insert(new_name.clone());
+        index.imported_names.insert(instance, new_name.clone());
+        new_name
+    }
+
+    /// X3DImportedNode.toVRMLStream; `false` where X_ITE throws (the array printer skips it).
+    fn imported_to_vrml(&mut self, id: ImportedId) -> bool {
+        let scene = self.scene;
+        let imported = &scene.imported[id];
+
+        if !self.cur_index().nodes.contains(&imported.inline) {
+            return false;
+        }
+
+        self.cur_index().route_nodes.insert(imported.instance);
+
+        let imported_name = self.imported_name(imported.instance);
+        let inline_name = self.name(imported.inline);
+        let g = &mut self.g;
+
+        g.indent();
+        g.push("IMPORT");
+        g.space();
+        g.push(&inline_name);
+        g.push(".");
+        g.push(&imported.exported_name);
+
+        if imported_name != imported.exported_name {
+            g.space();
+            g.push("AS");
+            g.space();
+            g.push(&imported_name);
+        }
+
+        if !imported.description.is_empty() {
+            g.space();
+            g.push("DESCRIPTION");
+            g.space();
+            g.push("\"");
+            g.push(&imported.description);
+            g.push("\"");
+        }
+
+        true
+    }
+
+    /// X3DExportedNode.toVRMLStream.
+    fn exported_to_vrml(&mut self, id: ExportedId) {
+        let scene = self.scene;
+        let exported = &scene.exported[id];
+        let local_name = self.name(exported.local);
+        let g = &mut self.g;
+
+        g.indent();
+        g.push("EXPORT");
+        g.space();
+        g.push(&local_name);
+
+        if exported.exported_name != local_name {
+            g.space();
+            g.push("AS");
+            g.space();
+            g.push(&exported.exported_name);
+        }
+
+        if !exported.description.is_empty() {
+            g.space();
+            g.push("DESCRIPTION");
+            g.space();
+            g.push("\"");
+            g.push(&exported.description);
+            g.push("\"");
+        }
     }
 
     fn is_shared_node(&self, node: NodeId) -> bool {
@@ -113,7 +210,13 @@ impl<'a> VrmlGenerator<'a> {
 
     // --- scene -------------------------------------------------------------------------------
 
-    pub fn scene_to_vrml(mut self) -> String {
+    pub fn scene_to_vrml(self) -> String {
+        self.scene_to_vrml_ctx(ROOT)
+    }
+
+    /// X3DScene.toVRMLStream of the scene whose root context is `root` (the world's, or an
+    /// Inline's merged scene).
+    pub fn scene_to_vrml_ctx(mut self, root: CtxId) -> String {
         let scene = self.scene;
 
         self.push_ctx(None);
@@ -133,7 +236,7 @@ impl<'a> VrmlGenerator<'a> {
         g.push("\n");
         g.push("\n");
 
-        if let Some(profile) = &scene.profile {
+        if let Some(profile) = scene.profile_of(root) {
             g.indent();
             g.push("PROFILE");
             g.space();
@@ -142,8 +245,8 @@ impl<'a> VrmlGenerator<'a> {
             g.tidy_break();
         }
 
-        if !scene.components.is_empty() {
-            for (name, level) in &scene.components {
+        if !scene.components_of(root).is_empty() {
+            for (name, level) in scene.components_of(root) {
                 g.indent();
                 g.push("COMPONENT");
                 g.space();
@@ -158,8 +261,8 @@ impl<'a> VrmlGenerator<'a> {
             g.tidy_break();
         }
 
-        if !scene.meta.is_empty() {
-            for (key, value) in &scene.meta {
+        if !scene.meta_of(root).is_empty() {
+            for (key, value) in scene.meta_of(root) {
                 g.indent();
                 g.push("META");
                 g.space();
@@ -172,8 +275,18 @@ impl<'a> VrmlGenerator<'a> {
             g.tidy_break();
         }
 
-        self.push_ctx(Some(ROOT));
-        self.context_to_vrml(ROOT);
+        self.push_ctx(Some(root));
+        self.context_to_vrml(root);
+
+        if !scene.ctx(root).exported.is_empty() {
+            self.g.tidy_break();
+
+            for &e in scene.ctx(root).exported.values() {
+                self.exported_to_vrml(e);
+                self.g.brk();
+            }
+        }
+
         self.pop_ctx();
         self.pop_ctx();
 
@@ -218,6 +331,18 @@ impl<'a> VrmlGenerator<'a> {
             }
         }
 
+        let imported = &scene.ctx(ctx).imported;
+
+        if !imported.is_empty() {
+            self.g.tidy_break();
+
+            for &i in imported.values() {
+                if self.imported_to_vrml(i) {
+                    self.g.brk();
+                }
+            }
+        }
+
         let routes = &scene.ctx(ctx).routes;
 
         if !routes.is_empty() {
@@ -243,8 +368,9 @@ impl<'a> VrmlGenerator<'a> {
             }
         }
 
-        let source = self.name(route.source_node);
-        let destination = self.name(route.destination_node);
+        let source = if scene_is_imported(self.scene, route.source_node) { self.imported_name(route.source_node) } else { self.name(route.source_node) };
+        let destination =
+            if scene_is_imported(self.scene, route.destination_node) { self.imported_name(route.destination_node) } else { self.name(route.destination_node) };
         let g = &mut self.g;
 
         g.indent();
@@ -407,6 +533,17 @@ impl<'a> VrmlGenerator<'a> {
     /// X3DNode.toVRMLStream.
     pub fn node_to_vrml(&mut self, id: NodeId) {
         let scene = self.scene;
+
+        // X3DImportedNodeInstance.toVRMLStream: `USE importedName`.
+        if scene.is_imported(id) {
+            self.g.check_space();
+            let name = self.imported_name(id);
+            self.g.push("USE");
+            self.g.space();
+            self.g.push(&name);
+            self.g.set_needs_space();
+            return;
+        }
 
         self.g.check_space();
 
@@ -620,6 +757,10 @@ impl<'a> VrmlGenerator<'a> {
     }
 }
 
+fn scene_is_imported(scene: &Scene, node: NodeId) -> bool {
+    scene.is_imported(node)
+}
+
 fn is_underscore_number(name: &str) -> bool {
     name.len() > 1 && name.starts_with('_') && name[1..].bytes().all(|b| b.is_ascii_digit())
 }
@@ -628,6 +769,11 @@ impl Scene {
     /// `scene .toVRMLString ()` with X_ITE's default (TIDY) generator options.
     pub fn to_vrml_string(&self) -> String {
         VrmlGenerator::new(self).scene_to_vrml()
+    }
+
+    /// `toVRMLString ()` of the scene whose root context is `root` (an Inline's scene).
+    pub fn to_vrml_string_ctx(&self, root: CtxId) -> String {
+        VrmlGenerator::new(self).scene_to_vrml_ctx(root)
     }
 }
 

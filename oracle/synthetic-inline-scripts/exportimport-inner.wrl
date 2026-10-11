@@ -1,0 +1,13 @@
+#VRML V2.0 utf8
+DEF InnerScript Script {
+  eventIn SFFloat set_fraction
+  eventOut SFVec3f pos_changed
+  field SFInt32 n 0
+  url "javascript:
+    function initialize () { print ('inner initialize'); }
+    function set_fraction (f) { n = n + 1; pos_changed = new SFVec3f (f * 2, 0, 0); if (n == 1) print ('inner first'); }
+  "
+}
+DEF InnerBox Transform { children Shape { geometry Box { size 0.5 0.5 0.5 } } }
+EXPORT InnerScript
+EXPORT InnerBox

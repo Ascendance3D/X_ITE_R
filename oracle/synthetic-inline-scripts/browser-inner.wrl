@@ -1,0 +1,44 @@
+#VRML V2.0 utf8
+DEF Clock TimeSensor { cycleInterval 1 loop TRUE enabled FALSE }
+DEF Target Transform { children DEF G Group { } }
+DEF Sink Script {
+  eventIn SFFloat set_f
+  field SFInt32 n 0
+  url "javascript:
+    function set_f (f) { n = n + 1; if (n < 4) print ('sink ' + n + ' ' + f); }
+  "
+}
+DEF S Script {
+  field SFNode clock USE Clock
+  field SFNode sink USE Sink
+  field SFNode group USE G
+  field SFNode target USE Target
+  eventOut SFBool kick
+  field SFBool done FALSE
+  url "javascript:
+    function initialize () {
+      print ('time ' + Browser.getCurrentTime ());
+      print ('scene ' + Browser.currentScene.worldURL);
+      print ('world ' + Browser.getWorldURL ());
+      print ('roots ' + Browser.currentScene.rootNodes.length);
+      print ('named ' + Browser.currentScene.getNamedNode ('Target').getNodeName ());
+      print ('spec ' + Browser.currentScene.specificationVersion);
+    }
+    function prepareEvents (t) {
+      if (done || t < 946684800.1) return;
+      done = TRUE;
+      print ('exec ' + Browser.getExecutionContext ().worldURL);
+      var nodes = Browser.createVrmlFromString ('Transform { translation 1 2 3 children Shape { geometry Sphere { radius 0.2 } } }');
+      print ('created ' + nodes.length + ' ' + nodes [0].getNodeTypeName ());
+      group.addChildren = nodes;
+      Browser.addRoute (clock, 'fraction_changed', sink, 'set_f');
+      print ('routes added');
+      kick = TRUE;
+      var made = Browser.currentScene.createNode ('Transform');
+      print ('created node ' + made.getNodeTypeName () + ' in ' + Browser.currentScene.worldURL);
+      target.translation = new SFVec3f (0, 1, 0);
+      print ('translation ' + target.translation);
+    }
+  "
+}
+ROUTE S.kick TO Clock.set_enabled

@@ -1,0 +1,14 @@
+#VRML V2.0 utf8
+DEF Clock TimeSensor { cycleInterval 2 loop TRUE }
+DEF Mover Script {
+  eventIn SFFloat set_fraction
+  eventOut SFVec3f position_changed
+  field SFInt32 count 0
+  url "javascript:
+    function initialize () { print ('inner initialize'); }
+    function set_fraction (f) { position_changed = new SFVec3f (f * 4, 0, 0); count = count + 1; }
+  "
+}
+DEF Box Transform { children Shape { geometry Box { size 1 1 1 } } }
+ROUTE Clock.fraction_changed TO Mover.set_fraction
+ROUTE Mover.position_changed TO Box.set_translation

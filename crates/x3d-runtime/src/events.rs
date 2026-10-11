@@ -174,9 +174,7 @@ impl Runtime {
     /// loaded by createX3DFromURL is not the browser's world, so no traversal touches it.
     pub fn frame(&mut self) {
         for name in ["prepareEvents", "timePrepareEvents", "timeEvents", "cameraEvents", "sensorEvents", "displayEvents", "finishEvents"] {
-            let k = self.private_field(self.browser_node, name).expect("browser event field");
-            self.add_tainted_field(k);
-            self.process_events();
+            self.process_phase(name);
         }
     }
 }
@@ -189,5 +187,11 @@ impl Runtime {
         let k = self.private_field(self.browser_node, name).expect("browser event field");
         self.add_tainted_field(k);
         self.process_events();
+
+        // The `nextFrame ()` promises resolve on finishEvents; their continuations (Inline.setInternalScene)
+        // and the fetches they start run right after the frame, before the next one.
+        if name == "finishEvents" {
+            self.finish_frame();
+        }
     }
 }
