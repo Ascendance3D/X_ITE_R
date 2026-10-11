@@ -61,6 +61,11 @@ impl Chase for Rotation4 {
     }
 }
 
+/// Order in which chasers joined the browser's prepareEvents interests: X_ITE keeps them in a Map,
+/// `removeInterest` deletes and `addInterest` appends, so within a frame the chasers run in the
+/// order they last became active (X3DFollowerNode.set_live__), not in the order of the viewer's fields.
+static ACTIVATIONS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
 const NUM_BUFFERS: usize = 60;
 const TOLERANCE: f64 = 1e-8;
 
@@ -74,6 +79,8 @@ pub struct Chaser<T: Chase> {
     /// set_destination as last received (`_set_destination .getValue ()`).
     pub set_destination_value: T,
     pub is_active: bool,
+    /// Sequence number of the last inactive to active transition (prepareEvents interest order).
+    pub activated_at: u64,
     /// The viewer attached its `value_changed` callback (`hasInterest`).
     pub connected: bool,
     pub value: T,
@@ -91,9 +98,19 @@ impl<T: Chase> Chaser<T> {
             destination: T::zero(),
             set_destination_value: T::zero(),
             is_active: false,
+            activated_at: 0,
             connected: false,
             value: T::zero(),
         }
+    }
+
+    /// set_active__ (true).
+    fn activate(&mut self) {
+        if !self.is_active {
+            self.activated_at = ACTIVATIONS.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+        }
+
+        self.is_active = true;
     }
 
     /// set_value__: returns the new value_changed.
@@ -108,7 +125,7 @@ impl<T: Chase> Chaser<T> {
 
         self.previous = v;
         self.value = v;
-        self.is_active = true;
+        self.activate();
         v
     }
 
@@ -121,7 +138,7 @@ impl<T: Chase> Chaser<T> {
             self.buffer_end_time = now;
         }
 
-        self.is_active = true;
+        self.activate();
     }
 
     fn step_response(&self, t: f64) -> f64 {

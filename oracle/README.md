@@ -253,14 +253,28 @@ the Vulkan resolve **byte-identical** to the GL one on slanted-edge scenes (synt
 removes the edge-pixel noise from the 606 items. This is an oracle option of the offscreen path
 (`Renderer::set_gl_sample_orientation`); the window path never mirrors.
 
-### Zoom/rotate drift (found while building the orrery scripts, not fixed)
+### Zoom/rotate drift (fixed 2026-10-11)
 
-`x10-scripts/msaa-orrery-*` wait 45 frames between the rotate release and the first wheel notch
-on purpose. When wheel notches come within about 2 frames of the release, X_ITE's rotation
-chaser (still writing `positionOffset`) and the zoom position chaser overlap, and Rust's final
-zoom distance ends 0.5% different (frame 18 of the scripted case, pose delta 0.02, orientation
-identical). With the wheel after the rotation settled (or with no preceding drag) poses agree to
-1e-16. Repro: a rotate drag, release at frame 15, wheel from frame 17.
+Symptom: when wheel notches came within about 2 frames of a rotate-drag release, Rust's final zoom
+distance ended 0.5% off X_ITE's (pose delta 0.02, orientation identical). `x10-scripts/msaa-orrery-*`
+had waited 45 frames to avoid it.
+
+Cause: `ExamineViewer`'s rotation chaser (`set_rotation__`) rewrites `positionOffset` from
+`initialPositionOffset` every tick, and so does the zoom position chaser (`set_positionOffset__`),
+so whichever runs last in a frame wins. X_ITE runs chasers from `browser.prepareEvents`, whose
+interests are a `Map`: `X3DFollowerNode.set_active__` adds the interest when a chaser becomes active
+and removes it when it settles (`removeInterest` deletes, `addInterest` appends). The chasers
+therefore tick in the order they last became active, not in the viewer's field order. Rust ticked
+position, center of rotation, rotation, always. Fix: `Chaser::activated_at` (sequence number of the
+last inactive-to-active transition, `chaser.rs`) and a sorted tick in `Examine::prepare` (`nav.rs`);
+a chaser activated by this frame's events still waits for the next frame, as before.
+
+Regression scripts (`tools/gen_x10_rotate_zoom.py`, world `render-items/antiques/chronos-orrery`):
+`x10-scripts/rotate-then-zoom-{in-r0,in-r1,in-r2,in-r5,out-r0,out-r2}.json` (release at frame 15,
+wheel from release+0/1/2/5, zoom in and out) and `rotate-during-zoom-{in,out}-d9.json` (wheel from
+frame 9, inside the drag). All eight: pose delta 0.0, images within tolerance. Before the fix r2 was
+off by 2.5e-2. Note for script authors: X_ITE's harness moves the mouse to a wheel event's x,y first,
+so a wheel inside a drag must sit on the current pointer position, or X_ITE also sees a rotate step.
 
 
 ## Depth fighting (2026-10-11): which triangles fight, X_ITE's LogarithmicDepthBuffer, reversed-Z
