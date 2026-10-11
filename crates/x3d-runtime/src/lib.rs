@@ -194,6 +194,12 @@ pub struct Runtime {
     /// Bump counter for X3DBindableNode.modificationCount.
     pub bind_modifications: HashMap<NodeId, u64>,
     pub bind_counter: u64,
+    /// Per node: the value of `stamp_counter` at the last field write (`set_raw`), 0 if never
+    /// written. Lets a renderer notice which nodes changed without comparing field values.
+    pub stamps: Vec<u64>,
+    pub stamp_counter: u64,
+    /// Process-unique id of this runtime (stable when an Inline's runtime moves in its map).
+    pub uid: u64,
 }
 
 impl Runtime {
@@ -223,6 +229,12 @@ impl Runtime {
             browser_requests: vec![],
             bind_modifications: HashMap::new(),
             bind_counter: 0,
+            stamps: vec![],
+            stamp_counter: 0,
+            uid: {
+                static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+                NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+            },
         };
 
         rt.browser_node = rt.create_internal_node("X3DBrowser");
@@ -467,12 +479,30 @@ impl Runtime {
         self.parents.get(&node).map(|l| l.iter().filter(|h| !matches!(h, Holder::Field((_, FieldLoc::Priv(_))))).count()).unwrap_or(0)
     }
 
+    /// Record a field write on `node` (see [`Runtime::stamps`]).
+    pub fn touch(&mut self, node: NodeId) {
+        let i = node as usize;
+
+        if self.stamps.len() <= i {
+            self.stamps.resize(i + 1, 0);
+        }
+
+        self.stamp_counter += 1;
+        self.stamps[i] = self.stamp_counter;
+    }
+
+    /// The stamp of the last field write on `node`; changes whenever a field of the node is set.
+    pub fn stamp(&self, node: NodeId) -> u64 {
+        self.stamps.get(node as usize).copied().unwrap_or(0)
+    }
+
     /// Set a field's value without an event (X3DField.set), keeping the parent index.
     pub fn set_raw(&mut self, k: FKey, value: FieldValue) {
         let old = Self::node_values(self.value(k));
         let new = Self::node_values(&value);
 
         self.scene.field_mut(k.0, k.1).value = value;
+        self.touch(k.0);
 
         if old.is_empty() && new.is_empty() {
             return;

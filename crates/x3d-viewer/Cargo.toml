@@ -8,9 +8,11 @@ description = "Interactive X3D/VRML viewer: live frame loop, navigation, pointer
 
 [features]
 default = ["gpu"]
+# The embedding API (`embed::EmbeddedViewer`): the viewer on a host-provided wgpu device.
+embed = ["dep:wgpu"]
 # The native window (winit + wgpu) and the `x3d-view` binary. The viewer core (frame stepping,
 # navigation, sensors, scripted input) builds and tests without it.
-gpu = ["dep:winit", "dep:wgpu", "dep:pollster", "dep:bytemuck"]
+gpu = ["embed", "dep:winit", "dep:pollster", "dep:bytemuck"]
 
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
@@ -31,3 +33,15 @@ required-features = ["gpu"]
 
 [[bin]]
 name = "x3d-drive"
+
+[[bin]]
+name = "x3d-bench"
+required-features = ["gpu"]
+
+[[example]]
+name = "embed_minimal"
+required-features = ["embed"]
+
+[dev-dependencies]
+wgpu = "30"
+pollster = "1"

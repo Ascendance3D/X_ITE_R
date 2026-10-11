@@ -4,7 +4,10 @@
 //!
 //! Pipeline: [`load::load_world`] (x3d-runtime: parse, setup, loads, frozen-time frames) →
 //! [`traverse::Builder`] (bindables, shapes, lights) → [`geometry`] (X_ITE's geometry generation)
-//! → [`gpu::Gpu`] (wgpu on Vulkan, offscreen RGBA8 + depth24, WGSL port of the shaders).
+//! → [`gpu::Renderer`] (wgpu, WGSL port of the shaders; draws into a texture view of the host's
+//! device, keeps its GPU resources between frames) or [`gpu::Gpu`] (headless wrapper: own Vulkan
+//! device, RGBA8 target, CPU readback). [`traverse::RenderCache`] keeps geometry and textures
+//! between frames for an interactive viewer.
 //! [`compare`] measures images against the render oracle (oracle/x_ite-shot.mjs).
 
 pub mod compare;

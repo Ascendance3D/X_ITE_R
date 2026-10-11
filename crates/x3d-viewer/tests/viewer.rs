@@ -215,3 +215,75 @@ fn anchor_activation_is_reported_not_opened() {
         assert!(v.status.contains("Anchor") && v.status.contains("example.invalid"), "status: {:?}", v.status);
     });
 }
+
+/// The render cache rebuilds a geometry only when its node (or a node its fields reference)
+/// was written; an unchanged scene reuses everything.
+#[test]
+fn render_cache_rebuilds_only_changed_geometry() {
+    big(|| {
+        let mut v = open(
+            "cache.wrl",
+            "#VRML V2.0 utf8\nShape { geometry Box {} }\nShape { geometry DEF F IndexedFaceSet { coord DEF C Coordinate { point [0 0 0, 1 0 0, 1 1 0, 0 1 0] } coordIndex [0 1 2 3 -1] } }\nDEF T TimeSensor { cycleInterval 2 loop TRUE startTime 1 }\nDEF I CoordinateInterpolator { key [0 1] keyValue [0 0 0, 1 0 0, 1 1 0, 0 1 0, 0 0 0, 2 0 0, 2 2 0, 0 2 0] }\nROUTE T.fraction_changed TO I.set_fraction\nROUTE I.value_changed TO C.set_point\n",
+        );
+        v.date_now = T0 + 2.0;
+        v.step(T0 + 2.0);
+        let f1 = v.build_frame();
+        assert_eq!(v.render_cache.built, 2, "first frame builds both geometries");
+        v.date_now = T0 + 3.0;
+        v.step(T0 + 3.0);
+        let f2 = v.build_frame();
+        // The Box is reused, the animated IndexedFaceSet is rebuilt, and its vertices moved.
+        assert_eq!((v.render_cache.built, v.render_cache.reused), (1, 1));
+        let verts = |f: &x3d_render::traverse::Frame| f.items.iter().find(|i| i.geometry.vertex_count() < 36).map(|i| i.geometry.vertices.clone());
+        assert_ne!(verts(&f1), verts(&f2), "coordinate animation reached the geometry");
+        // Nothing changes between two builds without a step: all reused.
+        let _ = v.build_frame();
+        assert_eq!((v.render_cache.built, v.render_cache.reused), (0, 2));
+    });
+}
+
+/// Several mouse moves in one frame accumulate in the pan destination (ExamineViewer.addMove
+/// reads the chaser's `set_destination` field, which changes at once).
+#[test]
+fn examine_pan_accumulates_moves_within_a_frame() {
+    big(|| {
+        let pan = |moves_per_frame: usize| {
+            let mut v = open("pan.wrl", "#VRML V2.0 utf8\nShape { geometry Box {} }\n");
+            v.input(UiEvent::MouseDown { button: 1, x: 256.0, y: 256.0 });
+            let mut x = 256.0;
+
+            for frame in 1..=20u64 {
+                if frame <= 6 {
+                    for _ in 0..moves_per_frame {
+                        x += 6.0 / moves_per_frame as f64;
+                        v.input(UiEvent::MouseMove { x, y: 256.0 });
+                    }
+                }
+
+                v.date_now = T0 + frame as f64 * DT;
+                v.step(T0 + frame as f64 * DT);
+            }
+
+            v.user_pose().0
+        };
+
+        let (one, many) = (pan(1), pan(6));
+        assert!((one.x - many.x).abs() < 1e-9, "same total pan: {} vs {}", one.x, many.x);
+        assert!(many.x.abs() > 0.1, "the camera panned: {}", many.x);
+    });
+}
+
+/// Background face images are decoded once, not every frame.
+#[test]
+fn render_cache_keeps_background_textures() {
+    big(|| {
+        let p = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-x8/b-all-front.wrl");
+        let mut v = Viewer3d::load(&p, None, T0, 128, 128).expect("load");
+        v.frame_rate = 1.0 / DT;
+        run(&mut v, 1, 3);
+        let faces = |f: &x3d_render::traverse::Frame| f.background.as_ref().map(|b| b.faces.iter().map(|x| std::rc::Rc::as_ptr(&x.texture) as usize).collect::<Vec<_>>()).unwrap_or_default();
+        let (a, b) = (faces(&v.build_frame()), faces(&v.build_frame()));
+        assert!(!a.is_empty(), "the scene has textured background faces");
+        assert_eq!(a, b, "the same decoded images in consecutive frames");
+    });
+}

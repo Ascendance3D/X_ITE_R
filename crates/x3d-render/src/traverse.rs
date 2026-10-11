@@ -10,7 +10,7 @@ use crate::text;
 use crate::texture::{self, TextureImage};
 use std::collections::{BTreeSet, HashMap};
 use std::rc::Rc;
-use x3d_fields::NodeId;
+use x3d_fields::{FieldValue, NodeId};
 use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -130,6 +130,85 @@ fn key(sg: &Sg, n: NodeId) -> Key {
     (sg.rt as *const x3d_runtime::Runtime as usize, n)
 }
 
+/// Geometry and texture results kept between frames by an interactive viewer, so an unchanged
+/// node is not rebuilt (X_ITE rebuilds a geometry only when one of its fields changes:
+/// X3DGeometryNode.set_live / addInterest rebuild). A node is rebuilt when the write stamp
+/// ([`x3d_runtime::Runtime::stamp`]) of the node or of any node its fields reference changed.
+#[derive(Default)]
+pub struct RenderCache {
+    geometries: HashMap<(u64, NodeId), CacheEntry<Geometry>>,
+    textures: HashMap<(u64, NodeId), CacheEntry<TextureImage>>,
+    /// Background face images (the six `*Url` fields of a Background), by node and face.
+    faces: HashMap<(u64, NodeId, usize), CacheEntry<TextureImage>>,
+    /// X_ITE's 1x1 white default texture, shared so the GPU keeps one bind group for it.
+    white: Option<Rc<TextureImage>>,
+    frame: u64,
+    /// Counters for tests and tools: geometries (re)built / reused in the last frame.
+    pub built: usize,
+    pub reused: usize,
+}
+
+struct CacheEntry<T> {
+    fingerprint: u64,
+    value: Option<Rc<T>>,
+    used: u64,
+}
+
+/// How many frames an unused entry is kept (a Switch or LOD may bring the node back).
+const CACHE_KEEP_FRAMES: u64 = 600;
+
+impl RenderCache {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Drop entries that have not been used for a while; call once per frame after the build.
+    fn end_frame(&mut self) {
+        let frame = self.frame;
+        self.geometries.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.textures.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.faces.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+    }
+}
+
+/// FNV-style mix of the write stamps of `n` and of the nodes its fields reference.
+fn fingerprint(sg: &Sg, n: NodeId) -> u64 {
+    fn mix(h: &mut u64, v: u64) {
+        *h = (*h ^ v).wrapping_mul(0x100000001b3).rotate_left(23);
+    }
+
+    fn walk(sg: &Sg, n: NodeId, depth: usize, h: &mut u64) {
+        mix(h, n as u64);
+        mix(h, sg.rt.stamp(n));
+
+        if depth >= 3 {
+            return;
+        }
+
+        for f in &sg.rt.scene.node(n).fields {
+            match &f.value {
+                FieldValue::SFNode(Some(c)) => {
+                    if let Some(c) = sg.inner(*c) {
+                        walk(sg, c, depth + 1, h);
+                    }
+                }
+                FieldValue::MFNode(v) => {
+                    for c in v.iter().flatten() {
+                        if let Some(c) = sg.inner(*c) {
+                            walk(sg, c, depth + 1, h);
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
+    let mut h = 0xcbf29ce484222325u64;
+    walk(sg, n, 0, &mut h);
+    h
+}
+
 pub struct Builder<'a> {
     /// The world's runtime: its fetcher serves every load (Inline runtimes are detached).
     root: &'a x3d_runtime::Runtime,
@@ -140,6 +219,8 @@ pub struct Builder<'a> {
     lights: Vec<LightParams>,
     /// Interactive camera (see [`CameraOverride`]); `None` for the oracle renders.
     pub camera: Option<CameraOverride>,
+    /// Results kept between frames (interactive viewer); `None` rebuilds everything per frame.
+    cache: Option<&'a mut RenderCache>,
 }
 
 /// Children-like fields of the grouping nodes.
@@ -176,7 +257,16 @@ const GROUPS: &[&str] = &["Group", "Transform", "Anchor", "Collision", "Billboar
 
 impl<'a> Builder<'a> {
     pub fn new(root: &'a x3d_runtime::Runtime) -> Self {
-        Builder { root, geometries: HashMap::new(), textures: HashMap::new(), unsupported: BTreeSet::new(), items: vec![], lights: vec![], camera: None }
+        Builder { root, geometries: HashMap::new(), textures: HashMap::new(), unsupported: BTreeSet::new(), items: vec![], lights: vec![], camera: None, cache: None }
+    }
+
+    /// Keep geometry and texture results in `cache` between frames.
+    pub fn with_cache(mut self, cache: &'a mut RenderCache) -> Self {
+        cache.frame += 1;
+        cache.built = 0;
+        cache.reused = 0;
+        self.cache = Some(cache);
+        self
     }
 
     /// Transform: Matrix4.setTransform (translation, rotation, scale, scaleOrientation, center).
@@ -390,9 +480,32 @@ impl<'a> Builder<'a> {
         }
     }
 
+    fn white_texture(&mut self) -> Rc<TextureImage> {
+        match self.cache.as_deref_mut() {
+            Some(c) => c.white.get_or_insert_with(|| Rc::new(TextureImage::white())).clone(),
+            None => Rc::new(TextureImage::white()),
+        }
+    }
+
     fn texture(&mut self, sg: &Sg, n: NodeId) -> Option<Rc<TextureImage>> {
         if let Some(t) = self.textures.get(&key(sg, n)) {
             return t.clone();
+        }
+
+        let persistent = self.cache.is_some();
+        let (ckey, fp) = if persistent { ((sg.rt.uid, n), fingerprint(sg, n)) } else { ((0, 0), 0) };
+
+        if let Some(c) = self.cache.as_deref_mut() {
+            let frame = c.frame;
+
+            if let Some(e) = c.textures.get_mut(&ckey) {
+                if e.fingerprint == fp {
+                    e.used = frame;
+                    let t = e.value.clone();
+                    self.textures.insert(key(sg, n), t.clone());
+                    return t;
+                }
+            }
         }
         let ty = sg.type_name(n).unwrap_or("");
         let t = match ty {
@@ -409,6 +522,12 @@ impl<'a> Builder<'a> {
             }
         };
         self.textures.insert(key(sg, n), t.clone());
+
+        if let Some(c) = self.cache.as_deref_mut() {
+            let frame = c.frame;
+            c.textures.insert(ckey, CacheEntry { fingerprint: fp, value: t.clone(), used: frame });
+        }
+
         t
     }
 
@@ -416,8 +535,32 @@ impl<'a> Builder<'a> {
         if let Some(g) = self.geometries.get(&key(sg, n)) {
             return g.clone();
         }
+        let persistent = self.cache.is_some();
+        let (ckey, fp) = if persistent { ((sg.rt.uid, n), fingerprint(sg, n)) } else { ((0, 0), 0) };
+
+        if let Some(c) = self.cache.as_deref_mut() {
+            let frame = c.frame;
+
+            if let Some(e) = c.geometries.get_mut(&ckey) {
+                if e.fingerprint == fp {
+                    e.used = frame;
+                    c.reused += 1;
+                    let g = e.value.clone();
+                    self.geometries.insert(key(sg, n), g.clone());
+                    return g;
+                }
+            }
+        }
+
         let g = self.build_geometry(sg, n).filter(|g| g.vertex_count() > 0).map(Rc::new);
         self.geometries.insert(key(sg, n), g.clone());
+
+        if let Some(c) = self.cache.as_deref_mut() {
+            let frame = c.frame;
+            c.built += 1;
+            c.geometries.insert(ckey, CacheEntry { fingerprint: fp, value: g.clone(), used: frame });
+        }
+
         g
     }
 
@@ -589,7 +732,7 @@ impl<'a> Builder<'a> {
         let texture = texture_node.and_then(|t| self.texture(sg, t));
         // An X3DTextureNode that failed to load still binds X_ITE's 1×1 white default texture.
         let texture = match (texture_node, texture) {
-            (Some(t), None) if matches!(sg.type_name(t), Some("ImageTexture" | "PixelTexture")) => Some(Rc::new(TextureImage::white())),
+            (Some(t), None) if matches!(sg.type_name(t), Some("ImageTexture" | "PixelTexture")) => Some(self.white_texture()),
             (_, t) => t,
         };
 
@@ -638,9 +781,30 @@ impl<'a> Builder<'a> {
                     None => None,
                 }
             } else {
-                let urls = sg.strings(b, &format!("{name}Url"));
+                let ckey = (sg.rt.uid, b, i);
+                let fp = if self.cache.is_some() { fingerprint(sg, b) } else { 0 };
+                let hit = self.cache.as_deref_mut().and_then(|c| {
+                    let frame = c.frame;
+                    c.faces.get_mut(&ckey).filter(|e| e.fingerprint == fp).map(|e| {
+                        e.used = frame;
+                        e.value.clone()
+                    })
+                });
 
-                texture::load_background_texture(&urls, &sg.rt.scene.world_url, self.root.fetcher.as_ref()).map(Rc::new)
+                match hit {
+                    Some(t) => t,
+                    None => {
+                        let urls = sg.strings(b, &format!("{name}Url"));
+                        let t = texture::load_background_texture(&urls, &sg.rt.scene.world_url, self.root.fetcher.as_ref()).map(Rc::new);
+
+                        if let Some(c) = self.cache.as_deref_mut() {
+                            let frame = c.frame;
+                            c.faces.insert(ckey, CacheEntry { fingerprint: fp, value: t.clone(), used: frame });
+                        }
+
+                        t
+                    }
+                }
             };
 
             if let Some(texture) = texture {
@@ -745,6 +909,10 @@ impl<'a> Builder<'a> {
 
         let faces = bound.background.map(|(b, _)| self.background_faces(sg, b)).unwrap_or_default();
         let background = bound.background.and_then(|(b, m)| background_params(sg, b, &m, &view, far_max(), faces));
+
+        if let Some(c) = self.cache.as_deref_mut() {
+            c.end_frame();
+        }
 
         Frame {
             projection,
