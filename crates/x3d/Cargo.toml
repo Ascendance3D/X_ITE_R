@@ -1,0 +1,14 @@
+[package]
+name = "x3d"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+description = "X3D and VRML97 node reference (all node types, fields, defaults, components, profiles) plus classic-encoding I/O, from a faithful Rust port of X_ITE"
+readme = "README.md"
+keywords = ["x3d", "vrml", "vrml97", "3d", "scene-graph"]
+categories = ["graphics", "parser-implementations", "rendering::data-formats"]
+include = ["src/**/*.rs", "README.md", "LICENSE", "Cargo.toml"]
+
+[dependencies]
+vrml97 = { version = "0.1", path = "../vrml97" }
