@@ -1,0 +1,46 @@
+//! x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--script script.json --png out.png]
+//!
+//! Opens a VRML/X3D world in a native window and runs it live: TimeSensors, interpolators,
+//! Scripts, routes, navigation (EXAMINE / WALK / FLY / NONE) and the pointing device sensors.
+//! Anchor activations are reported in the title bar, never opened.
+//!
+//! Mouse and keys: see the README section in the report; `1` EXAMINE, `2` WALK, `3` FLY,
+//! `4` NONE, Home/End first/last viewpoint, PageUp/PageDown previous/next viewpoint, `l` list
+//! viewpoints, `s` save /tmp/x3d-view-N.png, Esc or `q` quit.
+
+use std::path::PathBuf;
+use x3d_viewer::window::{Options, run};
+
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    let opt = |f: &str| args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned();
+
+    let Some(path) = args.get(1).filter(|a| !a.starts_with("--")) else {
+        eprintln!("usage: x3d-view <file.wrl> [--oracle dir] [--size WxH] [--script script.json --png out.png]");
+        std::process::exit(2);
+    };
+
+    let script = opt("--script").map(|p| serde_json::from_str(&std::fs::read_to_string(p).expect("script")).expect("script json"));
+    let mut size = (1024, 768);
+
+    if let Some(s) = opt("--size") {
+        if let Some((w, h)) = s.split_once('x') {
+            size = (w.parse().unwrap_or(1024), h.parse().unwrap_or(768));
+        }
+    } else if let Some(s) = script.as_ref().and_then(|s: &serde_json::Value| s["size"].as_array()) {
+        size = (s[0].as_u64().unwrap_or(512) as u32, s[1].as_u64().unwrap_or(512) as u32);
+    }
+
+    let opts = Options { path: PathBuf::from(path), oracle: opt("--oracle").map(PathBuf::from), script, png: opt("--png").map(PathBuf::from), size };
+
+    // QuickJS wants a big stack (x3d-shot uses the same 256 MB).
+    let r = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(opts)).unwrap().join().unwrap();
+
+    match r {
+        Ok(n) => eprintln!("presented {n} frames"),
+        Err(e) => {
+            eprintln!("x3d-view: {e}");
+            std::process::exit(1);
+        }
+    }
+}

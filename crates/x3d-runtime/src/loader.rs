@@ -395,7 +395,21 @@ impl Runtime {
                     Some(ok) => *ok,
                     None => {
                         let loader = FileLoader { type_name: self.type_name(node), base: href.clone(), data_as_string: false };
-                        let ok = self.load_document(&loader, std::slice::from_ref(&href), |_, _| Ok(()));
+                        // browser.loadFont: `OpenType .parse (await decompressFont (data))`. A file that
+                        // does not parse throws inside the loader's async callback, so the promise never
+                        // resolves: the FontStyle stays without a font and no further family is tried.
+                        let mut parsed: Option<Result<std::rc::Rc<x3d_text::Font>, x3d_text::FontError>> = None;
+                        let ok = self.load_document(&loader, std::slice::from_ref(&href), |_, loaded| {
+                            if let Loaded::Data(data, _) = loaded {
+                                parsed = Some(x3d_text::Font::parse(&data).map(std::rc::Rc::new));
+                            }
+
+                            Ok(())
+                        });
+
+                        if let Some(result) = parsed {
+                            x3d_text::fonts::register_url_font(&href, result.ok());
+                        }
 
                         if !ok && file_url.scheme() != "data" {
                             let decoded = decode_uri(&href).unwrap_or_else(|| href.clone());
@@ -427,6 +441,8 @@ impl Runtime {
 
         let mut child = Runtime::new(scene, Box::new(NullFetcherProxy(self as *const Runtime)));
         child.script_host = self.script_host.as_ref().and_then(|h| h.fork());
+        child.live = self.live;
+        child.now = self.now;
         child.start();
         child.run_tasks();
         child.frame();

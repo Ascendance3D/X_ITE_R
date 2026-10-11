@@ -12,6 +12,7 @@ x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
 x3d-runtime = { path = "../x3d-runtime" }
 x3d-script = { path = "../x3d-script" }
+x3d-text = { path = "../x3d-text" }
 url = "2"
 wgpu = "30"
 pollster = "1"

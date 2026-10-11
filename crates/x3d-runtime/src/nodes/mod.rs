@@ -154,7 +154,11 @@ impl Runtime {
             }
             "Script" => self.script_initialize(node),
             "Inline" | "ImageTexture" | "MovieTexture" | "AudioClip" => self.inline_initialize(node),
-            "Background" => self.background_initialize(node),
+            "Background" => {
+                self.interest(node, "set_bind", Cb::BindableSetBind);
+                self.background_initialize(node)
+            }
+            "Viewpoint" | "OrthoViewpoint" | "NavigationInfo" | "Fog" | "LocalFog" => self.interest(node, "set_bind", Cb::BindableSetBind),
             "FontStyle" | "ScreenFontStyle" => self.font_style_initialize(node),
             _ if !GEOMETRY_FIELD_INTERESTS.iter().any(|(t, _)| *t == name) => {
                 // X3DGroupingNode.initialize
@@ -308,6 +312,13 @@ impl Runtime {
             Cb::GroupAddChildren => self.group_add_children(node),
             Cb::GroupRemoveChildren => self.group_remove_children(node),
             Cb::FollowerSetValue | Cb::FollowerSetDestination => {}
+            Cb::TimeSensorSetPrepare => self.time_sensor_set_prepare(node),
+            Cb::TimeSensorSetTime => self.time_sensor_set_time(node),
+            Cb::BindableSetBind => {
+                // X3DBindableNode.set_bind__: modificationCount = ++modificationCount.
+                self.bind_counter += 1;
+                self.bind_modifications.insert(node, self.bind_counter);
+            }
         }
     }
 }

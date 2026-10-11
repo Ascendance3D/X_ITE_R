@@ -1,0 +1,5 @@
+#X3D V3.0 utf8
+PROFILE Immersive
+Viewpoint { position 0 0 0 orientation 0 1 0 0.6 fieldOfView 2.0 }
+NavigationInfo { type "NONE" }
+TextureBackground { frontTexture ImageTexture { url "bg-front.png" } backTexture ImageTexture { url "bg-back.png" } leftTexture ImageTexture { url "bg-left.png" } rightTexture ImageTexture { url "bg-right.png" } topTexture ImageTexture { url "bg-top.png" } bottomTexture ImageTexture { url "bg-bottom.png" } }

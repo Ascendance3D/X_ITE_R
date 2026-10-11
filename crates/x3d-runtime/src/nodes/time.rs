@@ -1,5 +1,8 @@
 //! X3DTimeDependentNode.js and TimeSensor.js.
 //!
+//! With `Runtime::live` (the viewer) TimeSensors tick: set_start adds timePrepareEvents →
+//! set_prepare, do_start adds timeEvents → set_time, pause/resume/stop remove or re-add them.
+//!
 //! The oracle scene is never live (dump.html sets `update="false"`, so the browser calls
 //! endUpdate → setLive (false), and the loaded scene's live state derives from it). So
 //! `do_start` always takes the "not live" branch: `isActive` and the set_start () events are
@@ -128,10 +131,15 @@ impl Runtime {
         let v = self.get_f64(node, "startTime");
         self.ts(node).start_time_value = v;
 
-        if self.get_bool(node, "enabled") && v <= self.now {
-            self.time_do_start(node);
+        if self.get_bool(node, "enabled") {
+            self.remove_timeout(node, "start");
+
+            if v <= self.now {
+                self.time_do_start(node);
+            } else {
+                self.add_timeout(node, "start", v);
+            }
         }
-        // else addTimeout ("start", …): a future start never fires before the dump.
     }
 
     pub(crate) fn time_set_pause_time(&mut self, node: NodeId) {
@@ -141,12 +149,17 @@ impl Runtime {
         if self.get_bool(node, "enabled") {
             let s = self.ts(node).clone();
 
+            self.remove_timeout(node, "pause");
+
             if s.pause_time_value <= s.resume_time_value {
                 return;
             }
 
             if s.pause_time_value <= self.now {
                 self.time_do_pause(node);
+            } else {
+                let t = s.pause_time_value;
+                self.add_timeout(node, "pause", t);
             }
         }
     }
@@ -158,12 +171,17 @@ impl Runtime {
         if self.get_bool(node, "enabled") {
             let s = self.ts(node).clone();
 
+            self.remove_timeout(node, "resume");
+
             if s.resume_time_value <= s.pause_time_value {
                 return;
             }
 
             if s.resume_time_value <= self.now {
                 self.time_do_resume(node);
+            } else {
+                let t = s.resume_time_value;
+                self.add_timeout(node, "resume", t);
             }
         }
     }
@@ -175,12 +193,17 @@ impl Runtime {
         if self.get_bool(node, "enabled") {
             let s = self.ts(node).clone();
 
+            self.remove_timeout(node, "stop");
+
             if s.stop_time_value <= s.start_time_value {
                 return;
             }
 
             if s.stop_time_value <= self.now {
                 self.time_stop(node);
+            } else {
+                let t = s.stop_time_value;
+                self.add_timeout(node, "stop", t);
             }
         }
     }
@@ -201,20 +224,113 @@ impl Runtime {
         self.set_pre(node, "isActive", FieldValue::SFBool(true));
         self.time_sensor_set_start(node);
 
-        // Not live: disabled = true; real_pause () → set_pause (): no observable events.
-        self.ts(node).disabled = true;
+        if self.live {
+            // getBrowser () .timeEvents () .addInterest ("set_time", this);
+            let k = self.private_field(self.browser_node, "timeEvents").unwrap();
+            self.add_interest(k, node, Cb::TimeSensorSetTime);
+        } else {
+            // Not live: disabled = true; real_pause () → set_pause (): no observable events.
+            self.ts(node).disabled = true;
+            self.time_sensor_remove_prepare(node);
+        }
     }
 
     fn time_do_pause(&mut self, node: NodeId) {
         if self.is_active(node) && !self.is_paused(node) {
             self.set_pre(node, "isPaused", FieldValue::SFBool(true));
-            // Not live: no real_pause.
+
+            if self.live {
+                self.time_real_pause(node);
+            }
         }
     }
 
     fn time_do_resume(&mut self, node: NodeId) {
         if self.is_active(node) && self.is_paused(node) {
             self.set_pre(node, "isPaused", FieldValue::SFBool(false));
+
+            if self.live {
+                self.time_real_resume(node);
+            }
+        }
+    }
+
+    /// X3DTimeDependentNode.real_pause.
+    fn time_real_pause(&mut self, node: NodeId) {
+        let now = self.now;
+        self.ts(node).pause = now;
+
+        // set_pause (): timePrepareEvents .removeInterest ("set_prepare", this).
+        self.time_sensor_remove_prepare(node);
+
+        let k = self.private_field(self.browser_node, "timeEvents").unwrap();
+        self.remove_interest(k, node, Cb::TimeSensorSetTime);
+    }
+
+    /// X3DTimeDependentNode.real_resume.
+    fn time_real_resume(&mut self, node: NodeId) {
+        let interval = self.now - self.ts(node).pause;
+        self.ts(node).pause_interval += interval;
+
+        // TimeSensor.set_resume
+        self.time_sensor_add_prepare(node);
+        let [_, r1, r2] = self.range(node);
+        let fraction = self.ts(node).fraction;
+        self.time_sensor_set_range_values(node, fraction, r1, r2, false);
+
+        let k = self.private_field(self.browser_node, "timeEvents").unwrap();
+        self.add_interest(k, node, Cb::TimeSensorSetTime);
+    }
+
+    fn time_sensor_add_prepare(&mut self, node: NodeId) {
+        let k = self.private_field(self.browser_node, "timePrepareEvents").unwrap();
+        self.add_interest(k, node, Cb::TimeSensorSetPrepare);
+    }
+
+    fn time_sensor_remove_prepare(&mut self, node: NodeId) {
+        let k = self.private_field(self.browser_node, "timePrepareEvents").unwrap();
+        self.remove_interest(k, node, Cb::TimeSensorSetPrepare);
+    }
+
+    // --- timeouts (X3DTimeDependentNode.addTimeout / removeTimeout / processTimeout) ----------
+
+    fn add_timeout(&mut self, node: NodeId, name: &'static str, time: f64) {
+        self.remove_timeout(node, name);
+
+        // Only a live scene has a frame clock; the oracle's frozen scene never fires them.
+        if self.live {
+            self.timeouts.push(Timeout { time, node, name });
+        }
+    }
+
+    fn remove_timeout(&mut self, node: NodeId, name: &str) {
+        self.timeouts.retain(|t| !(t.node == node && t.name == name));
+    }
+
+    /// Fire the timeouts due at `now` in time order (setTimeout order). processTimeout:
+    /// `if (!enabled) return; advanceOnlyTime (); this [callback] ()`.
+    pub fn fire_timeouts(&mut self, now: f64) {
+        loop {
+            let Some(i) = self.timeouts.iter().enumerate().filter(|(_, t)| t.time <= now).min_by(|a, b| a.1.time.partial_cmp(&b.1.time).unwrap()).map(|(i, _)| i) else {
+                break;
+            };
+
+            let t = self.timeouts.remove(i);
+
+            if !self.get_bool(t.node, "enabled") {
+                continue;
+            }
+
+            self.now = now;
+
+            match t.name {
+                "start" => self.time_do_start(t.node),
+                "pause" => self.time_do_pause(t.node),
+                "resume" => self.time_do_resume(t.node),
+                _ => self.time_stop(t.node),
+            }
+
+            self.process_events();
         }
     }
 
@@ -225,11 +341,16 @@ impl Runtime {
         }
 
         // set_stop (): removes the prepare interest only.
+        self.time_sensor_remove_prepare(node);
+
         if self.is_paused(node) {
             self.set_pre(node, "isPaused", FieldValue::SFBool(false));
         }
 
         self.set_pre(node, "isActive", FieldValue::SFBool(false));
+
+        let k = self.private_field(self.browser_node, "timeEvents").unwrap();
+        self.remove_interest(k, node, Cb::TimeSensorSetTime);
     }
 
     /// TimeSensor.setRange.
@@ -257,6 +378,8 @@ impl Runtime {
 
     /// TimeSensor.set_start.
     fn time_sensor_set_start(&mut self, node: NodeId) {
+        self.time_sensor_add_prepare(node);
+
         let [r0, r1, r2] = self.range(node);
         self.time_sensor_set_range_values(node, r0, r1, r2, true);
 
@@ -296,5 +419,67 @@ impl Runtime {
         let f = self.time_sensor_get_fraction(node, now);
         self.ts(node).fraction = f;
         self.set_pre(node, "fraction_changed", FieldValue::SFFloat(f));
+    }
+}
+
+impl Runtime {
+    /// X3DTimeDependentNode.getElapsedTime.
+    fn time_elapsed(&mut self, node: NodeId) -> f64 {
+        let now = self.now;
+        let s = self.ts(node);
+        now - s.start - s.pause_interval
+    }
+
+    /// TimeSensor.set_prepare (timePrepareEvents).
+    pub(crate) fn time_sensor_set_prepare(&mut self, node: NodeId) {
+        let time = self.now;
+        let elapsed = self.time_elapsed(node);
+
+        self.set_pre(node, "time", FieldValue::SFTime(time));
+        self.set_pre(node, "elapsedTime", FieldValue::SFTime(elapsed));
+
+        let s = self.ts(node).clone();
+
+        if time - s.cycle < s.interval {
+            return;
+        }
+
+        self.set_pre(node, "fraction_changed", FieldValue::SFFloat(s.last));
+
+        let count = match self.pre_value(node, "cycleCount") {
+            Some(FieldValue::SFInt32(c)) => *c,
+            _ => 0,
+        };
+
+        self.set_pre(node, "cycleCount", FieldValue::SFInt32(count.wrapping_add(1)));
+        self.set_pre(node, "cycleComplete", FieldValue::SFBool(true));
+        self.set_pre(node, "cycleCompleteTime", FieldValue::SFTime(time));
+    }
+
+    /// TimeSensor.set_time (timeEvents).
+    pub(crate) fn time_sensor_set_time(&mut self, node: NodeId) {
+        let time = self.now;
+        let s = self.ts(node).clone();
+
+        if time - s.cycle >= s.interval {
+            if self.get_bool(node, "loop") {
+                if s.interval != 0.0 {
+                    let cycle = s.cycle + s.interval * ((time - s.cycle) / s.interval).floor();
+                    self.ts(node).cycle = cycle;
+
+                    self.set_pre(node, "cycleTime", FieldValue::SFTime(time));
+
+                    let f = self.time_sensor_get_fraction(node, time);
+                    self.ts(node).fraction = f;
+                    self.set_pre(node, "fraction_changed", FieldValue::SFFloat(f));
+                }
+            } else {
+                self.time_stop(node);
+            }
+        } else {
+            let f = self.time_sensor_get_fraction(node, time);
+            self.ts(node).fraction = f;
+            self.set_pre(node, "fraction_changed", FieldValue::SFFloat(f));
+        }
     }
 }

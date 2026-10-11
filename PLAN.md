@@ -167,6 +167,13 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   floor 0). Within tolerance (RGB delta > 8 on ≤ 0.5% of pixels): items 604/606, x0 46/47
   rendered (3 known rejections). Geometry 23/23 against the pinned JS. Gaps: Text, Fog,
   MovieTexture, background textures, libtess (ear clipping instead), NVIDIA NPOT mipmaps.
+- 2026-10-11: **X10 first version** — crate `x3d-viewer`, binary `x3d-view`: live runtime,
+  EXAMINE/WALK/FLY, viewpoints, Touch/Plane/Cylinder/Sphere sensors. Matches X_ITE on the
+  animation, navigation and sensor oracles (`oracle/tools/x10_compare.py`). Gaps: no in-window
+  text, two GPU devices, no Followers/PLANE/LOOKAT/double-click lookAt, Scripts in Inlines.
+- 2026-10-11: **X8 subset** — crate `x3d-text` (fonts, libtess port), Text/FontStyle, Fog,
+  Background textures: synthetic-x8 125/125. x0 43-villasantzip still over (static shot has no
+  WALK gravity step; text itself is fine).
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
 ## Suggested order

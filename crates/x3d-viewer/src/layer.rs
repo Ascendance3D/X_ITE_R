@@ -1,0 +1,973 @@
+//! Bindable stacks and viewpoint state: Execution/BindableStack.js, Execution/BindableList.js,
+//! Components/Layering/X3DLayerNode.js (bindBindables, camera), Components/Core/X3DBindableNode.js,
+//! Components/Navigation/X3DViewpointNode.js, Viewpoint.js and NavigationInfo.js.
+//!
+//! Viewpoint private fields (positionOffset, orientationOffset, scaleOffset, ...) live in
+//! [`Vp`] here, not in node fields. Transitions (the viewpoint's private TimeSensor,
+//! EaseInEaseOut and interpolators) are a small [`Transition`] ticked on the frame clock.
+
+use std::collections::HashMap;
+use x3d_fields::{FieldValue, NodeId};
+use x3d_fields::math::{Matrix4, Rotation4, Vector3};
+use x3d_runtime::Runtime;
+use x3d_render::traverse::straighten;
+
+/// The layer's default Viewpoint / NavigationInfo / Background / Fog (stack bottom).
+pub const DEFAULT: NodeId = NodeId::MAX;
+
+const VIEW_ALL_SCALE_FACTOR: f64 = 1.1;
+
+// --- NavigationInfo ----------------------------------------------------------------------------
+
+#[derive(Clone, Debug)]
+pub struct NavInfo {
+    pub types: Vec<String>,
+    pub avatar_size: Vec<f64>,
+    pub speed: f64,
+    pub headlight: bool,
+    pub visibility_limit: f64,
+    pub transition_type: Vec<String>,
+    pub transition_time: f64,
+}
+
+impl NavInfo {
+    pub fn read(rt: &Runtime, n: NodeId) -> NavInfo {
+        if n == DEFAULT {
+            return NavInfo {
+                types: vec!["EXAMINE".into(), "ANY".into()],
+                avatar_size: vec![0.25, 1.6, 0.75],
+                speed: 1.0,
+                headlight: true,
+                visibility_limit: 0.0,
+                transition_type: vec!["LINEAR".into()],
+                transition_time: 1.0,
+            };
+        }
+
+        let strings = |name: &str| match rt.pre_value(n, name) {
+            Some(FieldValue::MFString(v)) => v.clone(),
+            _ => vec![],
+        };
+
+        NavInfo {
+            types: strings("type"),
+            avatar_size: match rt.pre_value(n, "avatarSize") {
+                Some(FieldValue::MFFloat(v)) => v.iter().map(|x| *x as f64).collect(),
+                _ => vec![],
+            },
+            speed: rt.get_f64(n, "speed"),
+            headlight: rt.get_bool(n, "headlight"),
+            visibility_limit: rt.get_f64(n, "visibilityLimit"),
+            transition_type: strings("transitionType"),
+            transition_time: rt.get_f64(n, "transitionTime"),
+        }
+    }
+
+    /// NavigationInfo.set_type__: the active viewer.
+    pub fn viewer(&self) -> String {
+        for t in &self.types {
+            match t.as_str() {
+                "EXAMINE" | "WALK" | "FLY" | "LOOKAT" | "PLANE" | "NONE" => return t.clone(),
+                "EXPLORE" => return "EXAMINE".into(),
+                "PLANE_create3000.github.io" | "PLANE_create3000.de" => return "PLANE".into(),
+                _ => continue,
+            }
+        }
+
+        "EXAMINE".into()
+    }
+
+    /// NavigationInfo.set_type__: availableViewers.
+    pub fn available_viewers(&self) -> Vec<String> {
+        let (mut examine, mut walk, mut fly, mut plane, mut none, mut lookat) = (false, false, false, false, false, false);
+
+        if self.types.is_empty() {
+            examine = true;
+            walk = true;
+            fly = true;
+            plane = true;
+            none = true;
+            lookat = true;
+        } else {
+            for s in &self.types {
+                match s.as_str() {
+                    "EXAMINE" => examine = true,
+                    "WALK" => walk = true,
+                    "FLY" => fly = true,
+                    "LOOKAT" => lookat = true,
+                    "PLANE" | "PLANE_create3000.github.io" | "PLANE_create3000.de" => plane = true,
+                    "NONE" => none = true,
+                    "ANY" => {
+                        examine = true;
+                        walk = true;
+                        fly = true;
+                        plane = true;
+                        none = true;
+                        lookat = true;
+                        break;
+                    }
+                    _ => examine = true,
+                }
+            }
+        }
+
+        let mut v = vec![];
+        for (on, name) in [(examine, "EXAMINE"), (walk, "WALK"), (fly, "FLY"), (plane, "PLANE"), (lookat, "LOOKAT"), (none, "NONE")] {
+            if on {
+                v.push(name.to_string());
+            }
+        }
+        v
+    }
+
+    pub fn collision_radius(&self) -> f64 {
+        self.avatar_size.first().copied().unwrap_or(0.25).max(0.0)
+    }
+
+    pub fn avatar_height(&self) -> f64 {
+        self.avatar_size.get(1).copied().unwrap_or(1.6).max(0.0)
+    }
+
+    pub fn step_height(&self) -> f64 {
+        self.avatar_size.get(2).copied().unwrap_or(0.75).max(0.0)
+    }
+
+    pub fn near_value(&self) -> f64 {
+        let r = self.collision_radius();
+        if r == 0.0 { 0.125 } else { r / 2.0 }
+    }
+
+    pub fn far_value(&self) -> f64 {
+        self.visibility_limit.max(0.0)
+    }
+
+    /// NavigationInfo.getTransitionType.
+    pub fn transition_kind(&self) -> &str {
+        for v in &self.transition_type {
+            if matches!(v.as_str(), "TELEPORT" | "LINEAR" | "ANIMATE") {
+                return v;
+            }
+        }
+        "LINEAR"
+    }
+}
+
+// --- Viewpoint ---------------------------------------------------------------------------------
+
+/// A viewpoint's own field values (position, orientation, ...).
+#[derive(Clone, Debug)]
+pub struct VpBase {
+    pub position: Vector3,
+    pub orientation: Rotation4,
+    pub center_of_rotation: Vector3,
+    pub field_of_view: f64,
+    pub jump: bool,
+    pub retain_user_offsets: bool,
+    pub view_all: bool,
+    pub near_field: Option<f64>,
+    pub far_field: Option<f64>,
+    pub description: String,
+}
+
+impl VpBase {
+    pub fn read(rt: &Runtime, n: NodeId) -> VpBase {
+        if n == DEFAULT {
+            return VpBase {
+                position: Vector3::new(0.0, 0.0, 10.0),
+                orientation: Rotation4::identity(),
+                center_of_rotation: Vector3::ZERO,
+                field_of_view: 0.785398,
+                jump: true,
+                retain_user_offsets: false,
+                view_all: false,
+                near_field: None,
+                far_field: None,
+                description: String::new(),
+            };
+        }
+
+        let sg = x3d_render::sg::Sg::new(rt);
+        let ge0 = |v: f64| if v >= 0.0 { Some(v) } else { None };
+
+        VpBase {
+            position: sg.vec3(n, "position", Vector3::new(0.0, 0.0, 10.0)),
+            orientation: sg.rotation(n, "orientation"),
+            center_of_rotation: sg.vec3(n, "centerOfRotation", Vector3::ZERO),
+            field_of_view: sg.f64(n, "fieldOfView", 0.785398),
+            jump: sg.bool(n, "jump", true),
+            retain_user_offsets: sg.bool(n, "retainUserOffsets", false),
+            view_all: sg.bool(n, "viewAll", false),
+            near_field: ge0(sg.f64(n, "nearDistance", -1.0)),
+            far_field: ge0(sg.f64(n, "farDistance", -1.0)),
+            description: match sg.value(n, "description") {
+                Some(FieldValue::SFString(s)) => s.clone(),
+                _ => String::new(),
+            },
+        }
+    }
+
+    /// Viewpoint.getFieldOfView.
+    pub fn fov(&self) -> f64 {
+        let f = self.field_of_view;
+        if f > 0.0 && f < std::f64::consts::PI { f } else { std::f64::consts::FRAC_PI_4 }
+    }
+}
+
+/// X3DViewpointNode state that is not a field.
+#[derive(Clone, Debug)]
+pub struct Vp {
+    pub position_offset: Vector3,
+    pub orientation_offset: Rotation4,
+    pub scale_offset: Vector3,
+    pub scale_orientation_offset: Rotation4,
+    pub center_of_rotation_offset: Vector3,
+    pub field_of_view_scale: f64,
+    /// X3DViewpointNode nearDistance / farDistance (set by lookAt / viewAll, else the field).
+    pub near_override: Option<Option<f64>>,
+    pub far_override: Option<Option<f64>>,
+    pub model: Matrix4,
+    pub camera_space: Matrix4,
+    pub view: Matrix4,
+    pub vrml_transition: bool,
+    pub transition: Option<Transition>,
+    /// timeSensor ._description (checkTransition).
+    pub transition_description: String,
+}
+
+impl Default for Vp {
+    fn default() -> Vp {
+        Vp {
+            position_offset: Vector3::ZERO,
+            orientation_offset: Rotation4::identity(),
+            scale_offset: Vector3::ONE,
+            scale_orientation_offset: Rotation4::identity(),
+            center_of_rotation_offset: Vector3::ZERO,
+            field_of_view_scale: 1.0,
+            near_override: None,
+            far_override: None,
+            model: Matrix4::IDENTITY,
+            camera_space: Matrix4([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 10.0, 1.0]),
+            view: Matrix4([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -10.0, 1.0]),
+            vrml_transition: false,
+            transition: None,
+            transition_description: String::new(),
+        }
+    }
+}
+
+/// The viewpoint's private TimeSensor + EaseInEaseOut + interpolators.
+#[derive(Clone, Debug)]
+pub struct Transition {
+    pub start: f64,
+    pub interval: f64,
+    /// easeInEaseOut [0].y (easeOut of key 0) and [1].x (easeIn of key 1).
+    pub ease_out: f64,
+    pub ease_in: f64,
+    pub position: (Vector3, Vector3),
+    pub orientation: (Rotation4, Rotation4),
+    pub scale: (Vector3, Vector3),
+    pub scale_orientation: (Rotation4, Rotation4),
+    pub fov_scale: (f64, f64),
+    /// The NavigationInfo to notify when the transition completes (set_active__).
+    pub nav_info: NodeId,
+}
+
+/// EaseInEaseOut.interpolate with two keys.
+fn ease(weight: f64, ease_out_in: f64, ease_in_in: f64) -> f64 {
+    let (mut ease_out, mut ease_in) = (ease_out_in, ease_in_in);
+    let sum = ease_out + ease_in;
+
+    if sum < 0.0 {
+        return weight;
+    }
+
+    if sum > 1.0 {
+        ease_in /= sum;
+        ease_out /= sum;
+    }
+
+    let t = 1.0 / (2.0 - ease_out - ease_in);
+
+    if weight < ease_out {
+        (t / ease_out) * weight * weight
+    } else if weight <= 1.0 - ease_in {
+        t * (2.0 * weight - ease_out)
+    } else {
+        let w = 1.0 - weight;
+        1.0 - ((t * w * w) / ease_in)
+    }
+}
+
+fn lerp3(a: &Vector3, b: &Vector3, t: f64) -> Vector3 {
+    let mut r = *a;
+    r.lerp(b, t);
+    r
+}
+
+fn slerp(a: &Rotation4, b: &Rotation4, t: f64) -> Rotation4 {
+    let mut r = *a;
+    r.slerp(b, t);
+    r
+}
+
+impl Vp {
+    pub fn user_position(&self, base: &VpBase) -> Vector3 {
+        let mut p = base.position;
+        p.add(&self.position_offset);
+        p
+    }
+
+    pub fn user_orientation(&self, base: &VpBase) -> Rotation4 {
+        let mut o = base.orientation;
+        o.mult_right(&self.orientation_offset);
+        o
+    }
+
+    pub fn user_center_of_rotation(&self, base: &VpBase) -> Vector3 {
+        let mut c = base.center_of_rotation;
+        c.add(&self.center_of_rotation_offset);
+        c
+    }
+
+    /// Viewpoint.getUserFieldOfView.
+    pub fn user_fov(&self, base: &VpBase) -> f64 {
+        let f = base.field_of_view * self.field_of_view_scale;
+        if f > 0.0 && f < std::f64::consts::PI { f } else { std::f64::consts::FRAC_PI_4 }
+    }
+
+    pub fn near_distance(&self, base: &VpBase, nav: &NavInfo) -> f64 {
+        let v = match self.near_override {
+            Some(o) => o,
+            None => base.near_field,
+        };
+        v.unwrap_or_else(|| nav.near_value())
+    }
+
+    pub fn far_distance(&self, base: &VpBase, nav: &NavInfo) -> f64 {
+        let v = match self.far_override {
+            Some(o) => o,
+            None => base.far_field,
+        };
+        v.unwrap_or_else(|| if nav.far_value() != 0.0 { nav.far_value() } else { MAX_FAR })
+    }
+
+    /// X3DViewpointNode.update.
+    pub fn update(&mut self, base: &VpBase) {
+        let mut m = Matrix4::IDENTITY;
+        m.set_transform(Some(&self.user_position(base)), Some(&self.user_orientation(base)), Some(&self.scale_offset), Some(&self.scale_orientation_offset), None);
+        m.mult_right(&self.model);
+        self.camera_space = m;
+        let mut v = m;
+        v.inverse();
+        self.view = v;
+    }
+
+    /// X3DViewpointNode.resetUserOffsets.
+    pub fn reset_user_offsets(&mut self, base: &VpBase) {
+        self.position_offset = Vector3::ZERO;
+        self.orientation_offset = Rotation4::identity();
+        self.scale_offset = Vector3::ONE;
+        self.scale_orientation_offset = Rotation4::identity();
+        self.center_of_rotation_offset = Vector3::ZERO;
+        self.field_of_view_scale = 1.0;
+        self.near_override = None;
+        self.far_override = None;
+        self.update(base);
+    }
+
+    /// X3DViewpointNode.getLookAtRotation.
+    pub fn look_at_rotation(&self, from: &Vector3, to: &Vector3) -> Rotation4 {
+        let up = Vector3::Y_AXIS;
+        let mut z = *from;
+        z.subtract(to).normalize();
+        let mut x = up;
+        x.cross(&z).normalize();
+        let mut y = z;
+        y.cross(&x).normalize();
+        let m = x3d_fields::math::Matrix3([x.x, x.y, x.z, y.x, y.y, y.z, z.x, z.y, z.z]);
+        let mut r = Rotation4::identity();
+        r.set_matrix(&m);
+        r
+    }
+
+    /// Relative transformation between this viewpoint and `from` (getRelativeTransformation).
+    fn relative(&self, base: &VpBase, from_view: &Matrix4) -> Relative {
+        let mut diff = self.model;
+        diff.mult_right(from_view);
+        diff.inverse();
+
+        let (mut position, mut orientation, scale, scale_orientation);
+        (position, orientation, scale, scale_orientation) = factor_simple(&diff);
+
+        position.subtract(&base.position);
+        let mut inv = base.orientation;
+        inv.inverse();
+        orientation.mult_left(&inv);
+
+        Relative { position, orientation, scale, scale_orientation }
+    }
+
+    fn start_transition(&mut self, now: f64, interval: f64, easing: bool, nav_info: NodeId, rel: &Relative, from_fov: Option<f64>, base: &VpBase) {
+        let (eo, ei) = if easing { (0.0, 1.0) } else { (0.0, 0.0) };
+        let (eo, ei) = if easing { (eo, ei) } else { (eo, ei) };
+
+        // ANIMATE: easeInEaseOut = [(0, 1), (1, 0)] → easeOut = [0].y = 1, easeIn = [1].x = 1.
+        let (ease_out, ease_in) = if easing { (1.0, 1.0) } else { (0.0, 0.0) };
+        let _ = (eo, ei);
+
+        // Viewpoint.setInterpolators
+        let (fs_from, fs_to) = match from_fov {
+            Some(from) => {
+                let scale = from / self.user_fov_with_scale(base, rel);
+                (scale, 1.0)
+            }
+            None => (1.0, 1.0),
+        };
+
+        let t = Transition {
+            start: now,
+            interval,
+            ease_out,
+            ease_in,
+            position: (rel.position, self.position_offset),
+            orientation: (rel.orientation, self.orientation_offset),
+            scale: (rel.scale, self.scale_offset),
+            scale_orientation: (rel.scale_orientation, self.scale_orientation_offset),
+            fov_scale: (fs_from, fs_to),
+            nav_info,
+        };
+
+        self.position_offset = rel.position;
+        self.orientation_offset = rel.orientation;
+        self.scale_offset = rel.scale;
+        self.scale_orientation_offset = rel.scale_orientation;
+        self.field_of_view_scale = fs_from;
+        self.transition = Some(t);
+    }
+
+    fn user_fov_with_scale(&self, base: &VpBase, _rel: &Relative) -> f64 {
+        // `relative .fieldOfView / this .getUserFieldOfView ()` — getUserFieldOfView of the
+        // incoming viewpoint at its current scale (fieldOfViewScale is still 1 after reset).
+        let f = base.field_of_view * self.field_of_view_scale;
+        if f > 0.0 && f < std::f64::consts::PI { f } else { std::f64::consts::FRAC_PI_4 }
+    }
+
+    /// One frame of the transition. Returns `Some(nav_info)` when it just completed.
+    pub fn tick_transition(&mut self, now: f64) -> Option<NodeId> {
+        let t = self.transition.clone()?;
+        let elapsed = now - t.start;
+        let done = elapsed >= t.interval;
+        let f = if done { 1.0 } else if t.interval > 0.0 { (elapsed / t.interval).max(0.0) } else { 1.0 };
+        let w = ease(f, t.ease_out, t.ease_in);
+
+        self.position_offset = lerp3(&t.position.0, &t.position.1, w);
+        self.orientation_offset = slerp(&t.orientation.0, &t.orientation.1, w);
+        self.scale_offset = lerp3(&t.scale.0, &t.scale.1, w);
+        self.scale_orientation_offset = slerp(&t.scale_orientation.0, &t.scale_orientation.1, w);
+        self.field_of_view_scale = t.fov_scale.0 + (t.fov_scale.1 - t.fov_scale.0) * w;
+
+        if done {
+            self.transition = None;
+            return Some(t.nav_info);
+        }
+
+        None
+    }
+
+    /// X3DViewpointNode.transitionStop (the timeSensor stops; set_active__ is removed, so no
+    /// transitionComplete is ever sent for the interrupted transition).
+    pub fn transition_stop(&mut self) {
+        self.transition = None;
+    }
+}
+
+struct Relative {
+    position: Vector3,
+    orientation: Rotation4,
+    scale: Vector3,
+    scale_orientation: Rotation4,
+}
+
+/// X3DViewpointNode.getMaxFarValue (no logarithmic depth buffer).
+pub const MAX_FAR: f64 = 1e5;
+
+/// An axis-aligned box in some space (Box3 reduced to what viewAll / lookAt need).
+#[derive(Clone, Copy, Debug)]
+pub struct BBox {
+    pub min: Vector3,
+    pub max: Vector3,
+}
+
+impl BBox {
+    pub fn size(&self) -> Vector3 {
+        let mut s = self.max;
+        s.subtract(&self.min);
+        s
+    }
+
+    pub fn center(&self) -> Vector3 {
+        let mut c = self.min;
+        c.add(&self.max).divide(2.0);
+        c
+    }
+}
+
+/// The layer: four bindable stacks and lists, the viewpoint states.
+pub struct Layer {
+    pub nav_stack: Vec<NodeId>,
+    pub vp_stack: Vec<NodeId>,
+    pub bg_stack: Vec<NodeId>,
+    pub fog_stack: Vec<NodeId>,
+    nav_list: Vec<NodeId>,
+    vp_list: Vec<NodeId>,
+    bg_list: Vec<NodeId>,
+    fog_list: Vec<NodeId>,
+    nav_mod: u64,
+    vp_mod: u64,
+    bg_mod: u64,
+    fog_mod: u64,
+    pub vps: HashMap<NodeId, Vp>,
+    /// NavigationInfo ._transitionActive.
+    pub transition_active: HashMap<NodeId, bool>,
+    pub bound_changed: bool,
+    /// Viewport size in pixels (getLookAtDistance).
+    pub viewport: (f64, f64),
+}
+
+impl Layer {
+    pub fn new() -> Layer {
+        let mut vps = HashMap::new();
+        vps.insert(DEFAULT, Vp::default());
+
+        Layer {
+            nav_stack: vec![DEFAULT],
+            vp_stack: vec![DEFAULT],
+            bg_stack: vec![DEFAULT],
+            fog_stack: vec![DEFAULT],
+            nav_list: vec![DEFAULT],
+            vp_list: vec![DEFAULT],
+            bg_list: vec![DEFAULT],
+            fog_list: vec![DEFAULT],
+            nav_mod: 0,
+            vp_mod: 0,
+            bg_mod: 0,
+            fog_mod: 0,
+            vps,
+            transition_active: HashMap::new(),
+            bound_changed: false,
+            viewport: (512.0, 512.0),
+        }
+    }
+
+    pub fn viewpoint(&self) -> NodeId {
+        *self.vp_stack.last().unwrap()
+    }
+
+    pub fn navigation_info(&self) -> NodeId {
+        *self.nav_stack.last().unwrap()
+    }
+
+    pub fn background(&self) -> NodeId {
+        *self.bg_stack.last().unwrap()
+    }
+
+    pub fn fog(&self) -> NodeId {
+        *self.fog_stack.last().unwrap()
+    }
+
+    pub fn vp(&mut self, n: NodeId) -> &mut Vp {
+        self.vps.entry(n).or_default()
+    }
+
+    pub fn viewpoint_list(&self) -> &[NodeId] {
+        &self.vp_list
+    }
+
+    /// BindableList.getBound.
+    fn get_bound(rt: &Runtime, list: &[NodeId], name: Option<&str>) -> NodeId {
+        if list.len() == 1 {
+            return list[0];
+        }
+
+        if let Some(name) = name {
+            for &n in &list[1..] {
+                if rt.scene.node(n).name == name {
+                    return n;
+                }
+            }
+        }
+
+        for &n in &list[1..] {
+            if rt.get_bool(n, "isBound") {
+                return n;
+            }
+        }
+
+        list[1]
+    }
+
+    fn set_bound(rt: &mut Runtime, n: NodeId, bound: bool, bind_time: Option<f64>) {
+        if n == DEFAULT {
+            return;
+        }
+
+        if let Some(k) = rt.pre(n, "isBound") {
+            rt.set_value(k, FieldValue::SFBool(bound));
+        }
+
+        if let Some(t) = bind_time {
+            if let Some(k) = rt.pre(n, "bindTime") {
+                rt.set_value(k, FieldValue::SFTime(t));
+            }
+        }
+    }
+
+    /// BindableStack.pushOnTop.
+    fn push_on_top(stack: &mut Vec<NodeId>, rt: &mut Runtime, node: NodeId) {
+        if node != stack[0] {
+            let top = *stack.last().unwrap();
+            Self::set_bound(rt, top, false, None);
+            stack.push(node);
+        }
+
+        let now = rt.now;
+        Self::set_bound(rt, node, true, Some(now));
+    }
+
+    /// BindableStack.update. Returns (from, top, transition) when the viewpoint stack needs
+    /// `top .transitionStart (layerNode, fromNode)`.
+    fn stack_update(stack: &mut Vec<NodeId>, rt: &mut Runtime, removed: &[NodeId], changed: &[NodeId]) -> Option<(NodeId, NodeId)> {
+        if removed.is_empty() && changed.is_empty() {
+            return None;
+        }
+
+        let from = *stack.last().unwrap();
+        let bound = from;
+
+        for r in removed {
+            if let Some(i) = stack.iter().position(|n| n == r) {
+                if i > 0 {
+                    stack.remove(i);
+                }
+            }
+        }
+
+        let set_bind = |rt: &Runtime, n: NodeId| rt.get_bool(n, "set_bind");
+
+        if bound != stack[0] && changed.iter().any(|n| !set_bind(rt, *n) && *n == bound) {
+            stack.pop();
+        }
+
+        for b in changed {
+            if !set_bind(rt, *b) {
+                continue;
+            }
+
+            if let Some(i) = stack.iter().position(|n| n == b) {
+                stack.remove(i);
+            }
+
+            stack.push(*b);
+        }
+
+        let top = *stack.last().unwrap();
+
+        if top != bound {
+            Self::set_bound(rt, bound, false, None);
+            let now = rt.now;
+            Self::set_bound(rt, top, true, Some(now));
+            Some((from, top))
+        } else if changed.contains(&top) {
+            Some((from, top))
+        } else {
+            None
+        }
+    }
+
+    fn lists_update(&mut self, rt: &Runtime, scan: &crate::walk::Scan) -> [(Vec<NodeId>, Vec<NodeId>); 4] {
+        for (n, m) in &scan.viewpoints {
+            self.vp(n.node).model = *m;
+        }
+
+        let mut out: [(Vec<NodeId>, Vec<NodeId>); 4] = Default::default();
+
+        for which in 0..4usize {
+            let collected = Self::collected(scan, which);
+            let (list, modc) = match which {
+                0 => (&mut self.nav_list, &mut self.nav_mod),
+                1 => (&mut self.vp_list, &mut self.vp_mod),
+                2 => (&mut self.bg_list, &mut self.bg_mod),
+                _ => (&mut self.fog_list, &mut self.fog_mod),
+            };
+
+            let changed: Vec<NodeId> = collected.iter().copied().filter(|n| *n != DEFAULT && rt.bind_modifications.get(n).copied().unwrap_or(0) > *modc).collect();
+            let removed: Vec<NodeId> = if *list != collected { list.iter().copied().filter(|n| !collected.contains(n)).collect() } else { vec![] };
+
+            *list = collected;
+            *modc = rt.bind_counter;
+            out[which] = (removed, changed);
+        }
+
+        out
+    }
+
+    fn collected(scan: &crate::walk::Scan, which: usize) -> Vec<NodeId> {
+        let mut v = vec![DEFAULT];
+
+        match which {
+            0 => v.extend(scan.navigation_infos.iter().map(|n| n.node)),
+            1 => v.extend(scan.viewpoints.iter().map(|(n, _)| n.node)),
+            2 => v.extend(scan.backgrounds.iter().map(|(n, _)| n.node)),
+            _ => v.extend(scan.fogs.iter().map(|n| n.node)),
+        }
+
+        v
+    }
+
+    /// X3DLayerNode.bindBindables: the first CAMERA pass binds the first bindables.
+    pub fn bind_bindables(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, viewpoint_name: Option<&str>, bbox: &dyn Fn() -> Option<BBox>) {
+        let _ = self.lists_update(rt, scan);
+
+        let nav = Self::get_bound(rt, &self.nav_list, None);
+        let bg = Self::get_bound(rt, &self.bg_list, None);
+        let fog = Self::get_bound(rt, &self.fog_list, None);
+        let vp = Self::get_bound(rt, &self.vp_list, viewpoint_name);
+
+        Self::push_on_top(&mut self.nav_stack, rt, nav);
+        Self::push_on_top(&mut self.bg_stack, rt, bg);
+        Self::push_on_top(&mut self.fog_stack, rt, fog);
+        Self::push_on_top(&mut self.vp_stack, rt, vp);
+
+        let base = VpBase::read(rt, vp);
+        self.vp(vp).reset_user_offsets(&base);
+
+        if base.view_all {
+            self.view_all(rt, vp, &base, bbox());
+        }
+
+        self.vp(vp).update(&base);
+    }
+
+    /// X3DLayerNode.camera after the traversal: lists, stacks, viewpoint transitions,
+    /// `getViewpoint () .update ()`.
+    pub fn camera(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, bbox: &dyn Fn() -> Option<BBox>) {
+        let [nav, vp, bg, fog] = self.lists_update(rt, scan);
+
+        Self::stack_update(&mut self.nav_stack, rt, &nav.0, &nav.1);
+        let vp_change = Self::stack_update(&mut self.vp_stack, rt, &vp.0, &vp.1);
+        Self::stack_update(&mut self.bg_stack, rt, &bg.0, &bg.1);
+        Self::stack_update(&mut self.fog_stack, rt, &fog.0, &fog.1);
+
+        // Bound NavigationInfo's own transitions are no-ops; a viewpoint starts a transition.
+        // NavigationInfo.set_isBound__: unbinding ends an active transition.
+        for n in self.nav_list.clone() {
+            if n != DEFAULT && !rt.get_bool(n, "isBound") && self.transition_active.get(&n).copied().unwrap_or(false) {
+                self.transition_active.insert(n, false);
+            }
+        }
+
+        if let Some((from, top)) = vp_change {
+            self.transition_start(rt, top, from, bbox);
+        }
+
+        let cur = self.viewpoint();
+        let base = VpBase::read(rt, cur);
+        self.vp(cur).update(&base);
+    }
+
+    fn nav_complete(&mut self, rt: &mut Runtime, nav: NodeId) {
+        if nav != DEFAULT {
+            if let Some(k) = rt.pre(nav, "transitionComplete") {
+                rt.set_value(k, FieldValue::SFBool(true));
+            }
+        }
+
+        self.transition_active.insert(nav, false);
+    }
+
+    fn nav_start(&mut self, rt: &mut Runtime, nav: NodeId) {
+        if nav != DEFAULT {
+            if let Some(k) = rt.private_field(nav, "transitionStart") {
+                rt.set_value(k, FieldValue::SFBool(true));
+            }
+        }
+
+        self.transition_active.insert(nav, true);
+    }
+
+    /// X3DViewpointNode.transitionStart.
+    fn transition_start(&mut self, rt: &mut Runtime, top: NodeId, from: NodeId, bbox: &dyn Fn() -> Option<BBox>) {
+        let base = VpBase::read(rt, top);
+        let from_base = VpBase::read(rt, from);
+        let from_view = self.vp(from).view;
+        let nav_node = self.navigation_info();
+        let nav = NavInfo::read(rt, nav_node);
+        let now = rt.now;
+
+        if base.jump {
+            if self.vp(top).transition.is_some() && self.vp(top).transition_description == "transitionStart" {
+                return;
+            }
+
+            self.vp(top).transition_description = "transitionStart".into();
+
+            let from_fov = self.vp(from).user_fov(&from_base);
+            let rel = self.vp(top).relative(&base, &from_view);
+
+            if !base.retain_user_offsets {
+                self.vp(top).reset_user_offsets(&base);
+            }
+
+            if base.view_all {
+                self.view_all(rt, top, &base, bbox());
+            }
+
+            let mut kind = nav.transition_kind().to_string();
+
+            // VRML behavior
+            if rt.scene.specification_version.parse::<f64>().ok() == Some(2.0) {
+                kind = if self.vp(top).vrml_transition { "LINEAR".into() } else { "TELEPORT".into() };
+            }
+
+            self.vp(top).vrml_transition = false;
+
+            if nav.transition_time <= 0.0 {
+                kind = "TELEPORT".into();
+            }
+
+            if kind == "TELEPORT" {
+                self.nav_complete(rt, nav_node);
+                return;
+            }
+
+            self.nav_start(rt, nav_node);
+            let vp = self.vp(top);
+            vp.start_transition(now, nav.transition_time, kind == "ANIMATE", nav_node, &rel, Some(from_fov), &base);
+        } else {
+            self.vp(top).transition_stop();
+            self.nav_complete(rt, nav_node);
+
+            let from_fov = self.vp(from).user_fov(&from_base);
+            let rel = self.vp(top).relative(&base, &from_view);
+            let vp = self.vp(top);
+            vp.position_offset = rel.position;
+            vp.orientation_offset = rel.orientation;
+            vp.scale_offset = rel.scale;
+            vp.scale_orientation_offset = rel.scale_orientation;
+            vp.field_of_view_scale = from_fov / base.field_of_view.max(f64::MIN_POSITIVE);
+        }
+    }
+
+    /// Advance the bound viewpoint's transition (its private TimeSensor on timeEvents).
+    pub fn tick(&mut self, rt: &mut Runtime) {
+        let cur = self.viewpoint();
+        let now = rt.now;
+
+        if let Some(nav) = self.vp(cur).tick_transition(now) {
+            // set_active__: when still bound and fraction is 1, the transition is complete.
+            self.nav_complete(rt, nav);
+        }
+    }
+
+    /// X3DViewpointNode.getLookAtDistance (Viewpoint).
+    pub fn look_at_distance(&self, base: &VpBase, vp: &Vp, viewport: (f64, f64), bbox_size: &Vector3) -> f64 {
+        let (w, h) = viewport;
+        let size = if w < h {
+            if w / h < bbox_size.x / bbox_size.y { bbox_size.x } else { bbox_size.y * w / h }
+        } else if w / h < bbox_size.x / bbox_size.y {
+            bbox_size.x * h / w
+        } else {
+            bbox_size.y
+        };
+        let size = size * VIEW_ALL_SCALE_FACTOR;
+        (size / 2.0) / (vp.user_fov(base) / 2.0).tan() + bbox_size.z / 2.0
+    }
+
+    /// X3DViewpointNode.viewAll with the scene bounding box in world space.
+    pub fn view_all(&mut self, rt: &Runtime, n: NodeId, base: &VpBase, bbox: Option<BBox>) {
+        let Some(bbox) = bbox else {
+            let vp = self.vp(n);
+            vp.near_override = None;
+            vp.far_override = None;
+            return;
+        };
+        let _ = rt;
+        let size = bbox.size();
+
+        if size.equals(&Vector3::ZERO) {
+            let vp = self.vp(n);
+            vp.near_override = None;
+            vp.far_override = None;
+            return;
+        }
+
+        let viewport = self.viewport;
+        let vp = self.vp(n).clone();
+        let mut inv_model = vp.model;
+        inv_model.inverse();
+        let center = bbox_transform(&bbox, &inv_model).center();
+        let local = bbox_transform(&bbox, &vp.view);
+        let mut direction = vp.user_position(base);
+        direction.subtract(&center).normalize();
+        let distance = self.look_at_distance(base, &vp, viewport, &local.size());
+        let mut user_position = center;
+        let mut d = direction;
+        d.multiply(distance);
+        user_position.add(&d);
+        let user_orientation = vp.look_at_rotation(&user_position, &center);
+
+        let v = self.vp(n);
+        let mut po = user_position;
+        po.subtract(&base.position);
+        v.position_offset = po;
+        let mut inv = base.orientation;
+        inv.inverse();
+        inv.mult_right(&user_orientation);
+        v.orientation_offset = inv;
+        let mut c = center;
+        c.subtract(&base.center_of_rotation);
+        v.center_of_rotation_offset = c;
+        v.field_of_view_scale = 1.0;
+        let near = distance * (0.125 / 10.0);
+        v.near_override = Some(Some(near));
+        v.far_override = Some(Some(near * MAX_FAR / 0.125));
+    }
+}
+
+/// Transform a box by a matrix and take the axis-aligned extents of its corners.
+pub fn bbox_transform(b: &BBox, m: &Matrix4) -> BBox {
+    let mut min = Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
+    let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
+
+    for i in 0..8 {
+        let mut p = Vector3::new(if i & 1 == 0 { b.min.x } else { b.max.x }, if i & 2 == 0 { b.min.y } else { b.max.y }, if i & 4 == 0 { b.min.z } else { b.max.z });
+        m.mult_vec_matrix3(&mut p);
+        min.min(&p);
+        max.max(&p);
+    }
+
+    BBox { min, max }
+}
+
+#[allow(dead_code)]
+fn _unused(r: &Rotation4) -> Rotation4 {
+    straighten(r, &Vector3::Y_AXIS)
+}
+
+/// Matrix4.getTransform (translation, rotation, scale, scaleOrientation) without X_ITE's eigen
+/// decomposition: exact for translation + rotation + non-negative axis-aligned scale (every
+/// viewpoint model matrix without shear), scaleOrientation is the identity.
+pub fn factor_simple(m: &Matrix4) -> (Vector3, Rotation4, Vector3, Rotation4) {
+    let a = &m.0;
+    let t = Vector3::new(a[12], a[13], a[14]);
+    let sx = Vector3::new(a[0], a[1], a[2]).norm();
+    let sy = Vector3::new(a[4], a[5], a[6]).norm();
+    let sz = Vector3::new(a[8], a[9], a[10]).norm();
+    let det = m.determinant();
+    let sign = if det < 0.0 { -1.0 } else { 1.0 };
+    let (sx, sy, sz) = (sign * sx, sign * sy, sign * sz);
+    let r = x3d_fields::math::Matrix3([a[0] / sx, a[1] / sx, a[2] / sx, a[4] / sy, a[5] / sy, a[6] / sy, a[8] / sz, a[9] / sz, a[10] / sz]);
+    let mut rot = Rotation4::identity();
+    rot.set_matrix(&r);
+    (t, rot, Vector3::new(sx, sy, sz), Rotation4::identity())
+}

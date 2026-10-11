@@ -180,3 +180,14 @@ impl Runtime {
         }
     }
 }
+
+impl Runtime {
+    /// One named browser event phase of X3DBrowserContext [_traverse]: add the browser's tainted
+    /// field and process events. Phases: prepareEvents, timePrepareEvents, timeEvents,
+    /// cameraEvents, sensorEvents, displayEvents, finishEvents.
+    pub fn process_phase(&mut self, name: &str) {
+        let k = self.private_field(self.browser_node, name).expect("browser event field");
+        self.add_tainted_field(k);
+        self.process_events();
+    }
+}

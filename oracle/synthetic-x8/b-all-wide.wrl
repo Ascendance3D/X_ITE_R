@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 0 0 orientation 0 1 0 0.6 fieldOfView 2.0 }
+NavigationInfo { type "NONE" }
+Background { frontUrl "bg-front.png" backUrl "bg-back.png" leftUrl "bg-left.png" rightUrl "bg-right.png" topUrl "bg-top.png" bottomUrl "bg-bottom.png" }

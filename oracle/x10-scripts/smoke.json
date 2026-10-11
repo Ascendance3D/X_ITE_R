@@ -1,0 +1,9 @@
+{"size":[640,480],"t0":946684800,"dt":0.03333333333333333,"frames":60,"warmup":8,
+ "events":[
+  {"frame":2,"type":"mousedown","button":0,"x":320,"y":240},
+  {"frame":3,"type":"mousemove","x":350,"y":250},
+  {"frame":4,"type":"mousemove","x":390,"y":260},
+  {"frame":5,"type":"mousemove","x":420,"y":270},
+  {"frame":6,"type":"mouseup","button":0,"x":420,"y":270},
+  {"frame":30,"type":"wheel","deltaY":-100,"x":320,"y":240},
+  {"frame":40,"type":"key","key":"PageDown"}]}

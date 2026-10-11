@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 0 0 orientation 0 1 0 0 fieldOfView 0.785398 }
+NavigationInfo { type "NONE" }
+Transform { rotation 0 1 0 1.5708 children Background { frontUrl "bg-front.png" backUrl "bg-back.png" leftUrl "bg-left.png" rightUrl "bg-right.png" topUrl "bg-top.png" bottomUrl "bg-bottom.png" } }

@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 0 0 orientation 0 1 0 0.5 fieldOfView 1.8 }
+NavigationInfo { type "NONE" }
+Background { skyColor [ 0.3 0.6 0.3 ] }

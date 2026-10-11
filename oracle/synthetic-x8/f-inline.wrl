@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 1.5 6 orientation 1 0 0 -0.08 }
+Background { skyColor [ 0.1 0.2 0.5 ] }
+Fog { color 0.8 0.8 0.85 visibilityRange 20 }
+Transform { translation -20 -1 -50 children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 } } geometry ElevationGrid { xDimension 2 zDimension 2 xSpacing 40 zSpacing 60 height [ 0 0 0 0 ] } } }
+Transform { translation -3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0.3 0.3  } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 3 0 -4 children Shape { appearance Appearance { material Material { diffuseColor 0.3 1 0.3  } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -3 0 -8 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.4 1  } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 3 0 -12 children Shape { appearance Appearance { material Material { diffuseColor 1 1 0.3  } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -3 0 -16 children Shape { appearance Appearance { material Material { diffuseColor 1 0.4 1  } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 3 0 -20 children Shape { appearance Appearance { material Material { diffuseColor 0.3 1 1  } } geometry Box { size 1.4 1.4 1.4 } } }
+Inline { url "f-inline-part.wrl" }

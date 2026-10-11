@@ -1,0 +1,33 @@
+[package]
+name = "x3d-viewer"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Interactive X3D/VRML viewer: live frame loop, navigation, pointer sensors; ported from X_ITE (MIT)."
+
+[features]
+default = ["gpu"]
+# The native window (winit + wgpu) and the `x3d-view` binary. The viewer core (frame stepping,
+# navigation, sensors, scripted input) builds and tests without it.
+gpu = ["dep:winit", "dep:wgpu", "dep:pollster", "dep:bytemuck"]
+
+[dependencies]
+x3d-fields = { path = "../x3d-fields" }
+x3d-scene = { path = "../x3d-scene" }
+x3d-parse = { path = "../x3d-parse" }
+x3d-runtime = { path = "../x3d-runtime" }
+x3d-script = { path = "../x3d-script" }
+x3d-render = { path = "../x3d-render" }
+serde_json = "1"
+winit = { version = "0.30", optional = true }
+wgpu = { version = "30", optional = true }
+pollster = { version = "1", optional = true }
+bytemuck = { version = "1", optional = true, features = ["derive"] }
+
+[[bin]]
+name = "x3d-view"
+required-features = ["gpu"]
+
+[[bin]]
+name = "x3d-drive"
