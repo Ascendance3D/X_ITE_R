@@ -1,0 +1,14 @@
+[package]
+name = "vrml"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+description = "VRML / X3D classic-encoding toolkit: version detection, plus a `vrml` CLI to check, reformat and summarize .wrl files (X_ITE-compatible)"
+readme = "README.md"
+keywords = ["vrml", "wrl", "x3d", "3d", "cli"]
+categories = ["command-line-utilities", "parser-implementations", "graphics"]
+include = ["src/**/*.rs", "README.md", "LICENSE", "Cargo.toml"]
+
+[dependencies]
+vrml97 = { version = "0.1", path = "../vrml97" }
