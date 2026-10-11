@@ -679,24 +679,34 @@ impl Examine {
             }
         }
 
-        if pa && self.position_chaser.is_active {
-            let o = self.position_chaser.prepare(now);
-            if self.position_chaser.connected {
-                cx.vp.position_offset = o;
-            }
-        }
+        // prepareEvents runs the interests in the order the chasers became active. Chasers that
+        // were not active when the frame began (activated by the events above) wait for the next one.
+        let mut order: Vec<(u64, u8)> = Vec::new();
+        if pa && self.position_chaser.is_active { order.push((self.position_chaser.activated_at, 0)); }
+        if ca && self.cor_chaser.is_active { order.push((self.cor_chaser.activated_at, 1)); }
+        if ra && self.rotation_chaser.is_active { order.push((self.rotation_chaser.activated_at, 2)); }
+        order.sort();
 
-        if ca && self.cor_chaser.is_active {
-            let o = self.cor_chaser.prepare(now);
-            if self.cor_chaser.connected {
-                cx.vp.center_of_rotation_offset = o;
-            }
-        }
-
-        if ra && self.rotation_chaser.is_active {
-            let o = self.rotation_chaser.prepare(now);
-            if self.rotation_chaser.connected {
-                self.set_rotation(cx, &o);
+        for (_, which) in order {
+            match which {
+                0 => {
+                    let o = self.position_chaser.prepare(now);
+                                if self.position_chaser.connected {
+                        cx.vp.position_offset = o;
+                    }
+                }
+                1 => {
+                    let o = self.cor_chaser.prepare(now);
+                    if self.cor_chaser.connected {
+                        cx.vp.center_of_rotation_offset = o;
+                    }
+                }
+                _ => {
+                    let o = self.rotation_chaser.prepare(now);
+                                if self.rotation_chaser.connected {
+                        self.set_rotation(cx, &o);
+                    }
+                }
             }
         }
 
