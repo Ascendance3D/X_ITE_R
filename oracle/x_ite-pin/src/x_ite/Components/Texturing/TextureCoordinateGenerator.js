@@ -1,0 +1,99 @@
+import Fields                         from "../../Fields.js";
+import X3DFieldDefinition             from "../../Base/X3DFieldDefinition.js";
+import FieldDefinitionArray           from "../../Base/FieldDefinitionArray.js";
+import X3DNode                        from "../Core/X3DNode.js";
+import X3DSingleTextureCoordinateNode from "./X3DSingleTextureCoordinateNode.js";
+import X3DConstants                   from "../../Base/X3DConstants.js";
+import ModeType                       from "../../Browser/Texturing/TextureCoordinateGeneratorModeType.js";
+
+function TextureCoordinateGenerator (executionContext)
+{
+   X3DSingleTextureCoordinateNode .call (this, executionContext);
+
+   this .addType (X3DConstants .TextureCoordinateGenerator);
+
+   // Private properties
+
+   this .mode      = ModeType .SPHERE;
+   this .parameter = new Float32Array (6);
+}
+
+Object .assign (Object .setPrototypeOf (TextureCoordinateGenerator .prototype, X3DSingleTextureCoordinateNode .prototype),
+{
+   initialize ()
+   {
+      X3DSingleTextureCoordinateNode .prototype .initialize .call (this);
+
+      this ._mode      .addInterest ("set_mode__",      this);
+      this ._parameter .addInterest ("set_parameter__", this);
+
+      this .set_mode__ ();
+      this .set_parameter__ ();
+   },
+   set_mode__: (() =>
+   {
+      const modes = new Map ([
+         ... Object .entries (ModeType),
+         // Legacy Enums
+         ["CAMERASPACENORMAL",           ModeType .CAMERA_SPACE_NORMAL],
+         ["CAMERASPACEPOSITION",         ModeType .CAMERA_SPACE_POSITION],
+         ["CAMERASPACEREFLECTIONVECTOR", ModeType .CAMERA_SPACE_REFLECTION_VECTOR],
+         ["SPHERE-LOCAL",                ModeType .SPHERE_LOCAL],
+         ["COORD-EYE",                   ModeType .COORD_EYE],
+         ["NOISE-EYE",                   ModeType .NOISE_EYE],
+         ["SPHERE-REFLECT",              ModeType .SPHERE_REFLECT],
+         ["SPHERE-REFLECT-LOCAL",        ModeType .SPHERE_REFLECT_LOCAL],
+      ]);
+
+      modes .delete ("NONE");
+
+      return function ()
+      {
+         this .mode = modes .get (this ._mode .getValue ())
+            ?? ModeType .SPHERE;
+      };
+   })(),
+   set_parameter__ ()
+   {
+      const
+         parameter = this .parameter,
+         length    = Math .min (parameter .length, this ._parameter .length);
+
+      for (let i = 0; i < length; ++ i)
+         parameter [i] = this ._parameter [i];
+
+      parameter .fill (0, length);
+   },
+   addPointToChannel (index, array)
+   {
+      array .push (0, 0, 0, 1);
+   },
+   addPoints (array)
+   {
+      return array;
+   },
+   setShaderUniforms (gl, shaderObject, channel = 0)
+   {
+      const uniforms = shaderObject .x3d_TextureCoordinateGenerator [channel];
+
+      gl .uniform1i  (uniforms .mode,      this .mode);
+      gl .uniform1fv (uniforms .parameter, this .parameter);
+   },
+});
+
+Object .defineProperties (TextureCoordinateGenerator,
+{
+   ... X3DNode .getStaticProperties ("TextureCoordinateGenerator", "Texturing", 2, "texCoord", "3.0"),
+   fieldDefinitions:
+   {
+      value: new FieldDefinitionArray ([
+         new X3DFieldDefinition (X3DConstants .inputOutput, "metadata",  new Fields .SFNode ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "mapping",   new Fields .SFString ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "mode",      new Fields .SFString ("SPHERE")),
+         new X3DFieldDefinition (X3DConstants .inputOutput, "parameter", new Fields .MFFloat ()),
+      ]),
+      enumerable: true,
+   },
+});
+
+export default TextureCoordinateGenerator;

@@ -1,0 +1,509 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "srchest"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_dresser Transform {
+     translation 0.0 -0.5 0.888
+     children [
+      DEF dresser Group {
+       children [
+        DEF dad_body Transform {
+         translation 0.012 0.467 0.0
+         children [
+          DEF body Group {
+           children [
+            DEF dad_chestbody Transform {
+             translation -0.039 -0.3 -0.888
+             children [
+              DEF chestbody Shape {
+               appearance Appearance {
+                material DEF teal_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 0.0 0.65882 0.65882
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 0.0 0.0
+                }
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.70364 1.15000 0.43722
+                  0.70761 1.15000 -0.50000
+                  -0.71590 1.15000 -0.50000
+                  -0.71297 1.15000 0.43837
+                  -0.85000 1.01376 0.50000
+                  -0.85000 -1.15000 0.50000
+                  0.85000 -1.15000 0.50000
+                  0.85000 1.00431 0.50000
+                  0.76713 1.08665 0.50000
+                  -0.77531 1.08792 0.50000
+                  0.85000 -1.15000 -0.50000
+                  0.85000 1.00852 -0.50000
+                  -0.85000 -1.15000 -0.50000
+                  -0.85000 1.01686 -0.50000
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  4 5 6 -1 
+                  4 6 7 -1 
+                  4 7 8 -1 
+                  4 8 9 -1 
+                  7 6 10 -1 
+                  7 10 11 -1 
+                  11 10 12 -1 
+                  11 12 13 -1 
+                  11 13 2 -1 
+                  11 2 1 -1 
+                  13 12 5 -1 
+                  13 5 4 -1 
+                  6 5 12 -1 
+                  6 12 10 -1 
+                  3 2 13 -1 
+                  3 13 4 -1 
+                  3 4 9 -1 
+                  8 7 11 -1 
+                  8 11 1 -1 
+                  8 1 0 -1 
+                  8 0 3 -1 
+                  8 3 9 -1 
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_legs Transform {
+         translation -0.027 0.712 0.093
+         children [
+          DEF legs Group {
+           children [
+            DEF dad_leg3 Transform {
+             translation -0.73888 -1.95 -1.22631
+             rotation 0.26 -0.688 0.677 2.633
+             scale 0.26653 0.13975 0.23801
+             children [
+              DEF leg3 Shape {
+               appearance Appearance {
+                material DEF Shiny_Cyan_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 0.0 1.0 1.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 1.0 1.0
+                }
+               }
+               geometry Extrusion {
+                creaseAngle 0.524
+                convex FALSE
+                crossSection [
+                  -0.94675 -1.0503
+                  -0.92899 -0.92012
+                  -0.89941 -0.67456
+                  -0.87574 -0.50888
+                  -0.85207 -0.29586
+                  -0.82249 -0.00888
+                  -0.72781 -0.00888
+                  -0.50888 -0.00888
+                  -0.34911 -0.00888
+                  -0.33136 -0.20118
+                  -0.30769 -0.36686
+                  -0.28402 -0.55621
+                  -0.26627 -0.7426
+                  -0.23669 -0.93491
+                  -0.22485 -1.06213
+                  -0.45562 -1.06213
+                  -0.65089 -1.06213
+                  -0.94675 -1.0503
+                ]
+                spine [
+                  0.0 0.0 0.0
+                  0.0 1.0 0.0
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_leg4 Transform {
+             translation 0.84391 -1.95 -1.33599
+             rotation 0.896 -0.32 0.309 1.697
+             scale 0.26784 0.13899 0.23801
+             children [
+              DEF leg4 Shape {
+               appearance Appearance {
+                material USE Shiny_Cyan_mat
+               }
+               geometry Extrusion {
+                creaseAngle 0.524
+                convex FALSE
+                crossSection [
+                  -0.94675 -1.0503
+                  -0.92899 -0.92012
+                  -0.89941 -0.67456
+                  -0.87574 -0.50888
+                  -0.85207 -0.29586
+                  -0.82249 -0.00888
+                  -0.72781 -0.00888
+                  -0.50888 -0.00888
+                  -0.34911 -0.00888
+                  -0.33136 -0.20118
+                  -0.30769 -0.36686
+                  -0.28402 -0.55621
+                  -0.26627 -0.7426
+                  -0.23669 -0.93491
+                  -0.22485 -1.06213
+                  -0.45562 -1.06213
+                  -0.65089 -1.06213
+                  -0.94675 -1.0503
+                ]
+                spine [
+                  0.0 0.0 0.0
+                  0.0 1.0 0.0
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_leg2 Transform {
+             translation 0.75806 -1.95 -0.75694
+             rotation 0.913 0.272 -0.303 1.638
+             scale 0.26995 0.13749 0.23807
+             children [
+              DEF leg2 Shape {
+               appearance Appearance {
+                material USE Shiny_Cyan_mat
+               }
+               geometry Extrusion {
+                creaseAngle 0.524
+                convex FALSE
+                crossSection [
+                  -0.94675 -1.0503
+                  -0.92899 -0.92012
+                  -0.89941 -0.67456
+                  -0.87574 -0.50888
+                  -0.85207 -0.29586
+                  -0.82249 -0.00888
+                  -0.72781 -0.00888
+                  -0.50888 -0.00888
+                  -0.34911 -0.00888
+                  -0.33136 -0.20118
+                  -0.30769 -0.36686
+                  -0.28402 -0.55621
+                  -0.26627 -0.7426
+                  -0.23669 -0.93491
+                  -0.22485 -1.06213
+                  -0.45562 -1.06213
+                  -0.65089 -1.06213
+                  -0.94675 -1.0503
+                ]
+                spine [
+                  0.0 0.0 0.0
+                  0.0 1.0 0.0
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_leg1 Transform {
+             translation -0.50401 -1.95 -0.57638
+             rotation 0.896 -0.32 0.309 1.697
+             scale 0.267 0.138 0.238
+             children [
+              DEF leg1 Shape {
+               appearance Appearance {
+                material USE Shiny_Cyan_mat
+               }
+               geometry Extrusion {
+                creaseAngle 0.524
+                convex FALSE
+                crossSection [
+                  -0.94675 -1.0503
+                  -0.92899 -0.92012
+                  -0.89941 -0.67456
+                  -0.87574 -0.50888
+                  -0.85207 -0.29586
+                  -0.82249 -0.00888
+                  -0.72781 -0.00888
+                  -0.50888 -0.00888
+                  -0.34911 -0.00888
+                  -0.33136 -0.20118
+                  -0.30769 -0.36686
+                  -0.28402 -0.55621
+                  -0.26627 -0.7426
+                  -0.23669 -0.93491
+                  -0.22485 -1.06213
+                  -0.45562 -1.06213
+                  -0.65089 -1.06213
+                  -0.94675 -1.0503
+                ]
+                spine [
+                  0.0 0.0 0.0
+                  0.0 1.0 0.0
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_drawers Transform {
+         translation -0.105 1.194 -0.888
+         children [
+          DEF drawers Group {
+           children [
+            DEF dad_drawer6 Transform {
+             translation 2.037 -0.222 0.0
+             scale 1.7 0.8 1.0
+             children [
+              DEF drawer6 Group {
+               children [
+                DEF dad_drawer7 Transform {
+                 translation -1.155 0.021 0.438
+                 children [
+                  DEF drawer7 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "spikedrose.jpg"
+                    }
+                    textureTransform TextureTransform {
+                     rotation 4.712
+                     scale 1.0 3.0
+                    }
+                    material DEF teal0_mat Material {
+                     ambientIntensity 0.100
+                     shininess 0.100
+                     diffuseColor 0.0 0.21569 0.21569
+                     emissiveColor 0.0 0.3098 0.3098
+                     specularColor 0.0 0.25098 0.25098
+                    }
+                   }
+                   geometry Box {
+                    size 0.85 0.4 0.2
+                   }
+                  }
+                 ]
+                }
+                DEF dad_drawerinsert2 Transform {
+                 translation -1.15526 0.0192 0.433
+                 children [
+                  DEF drawerinsert2 Shape {
+                   appearance Appearance {
+                    material DEF dark_teal_mat Material {
+                     ambientIntensity 0.200
+                     shininess 0.100
+                     diffuseColor 0.0 0.46667 0.46667
+                     emissiveColor 0.0 0.0 0.0
+                     specularColor 0.0 0.0 0.0
+                    }
+                   }
+                   geometry Box {
+                    size 0.87 0.42 0.2
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+            DEF dad_drawer2 Transform {
+             translation 2.037 -0.65 0.0
+             scale 1.7 0.8 1.0
+             children [
+              DEF drawer2 Group {
+               children [
+                DEF dad_drawer8 Transform {
+                 translation -1.155 0.021 0.438
+                 children [
+                  DEF drawer8 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "spikedrose.jpg"
+                    }
+                    textureTransform TextureTransform {
+                     rotation 4.712
+                     scale 1.0 3.0
+                    }
+                    material USE teal0_mat
+                   }
+                   geometry Box {
+                    size 0.85 0.4 0.2
+                   }
+                  }
+                 ]
+                }
+                DEF dad_drawerinsert3 Transform {
+                 translation -1.15526 0.0192 0.433
+                 children [
+                  DEF drawerinsert3 Shape {
+                   appearance Appearance {
+                    material USE dark_teal_mat
+                   }
+                   geometry Box {
+                    size 0.87 0.42 0.2
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+            DEF dad_drawer3 Transform {
+             translation 2.037 -1.07 0.0
+             scale 1.7 0.8 1.0
+             children [
+              DEF drawer3 Group {
+               children [
+                DEF dad_drawer9 Transform {
+                 translation -1.155 0.021 0.438
+                 children [
+                  DEF drawer9 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "spikedrose.jpg"
+                    }
+                    textureTransform TextureTransform {
+                     rotation 4.712
+                     scale 1.0 3.0
+                    }
+                    material USE teal0_mat
+                   }
+                   geometry Box {
+                    size 0.85 0.4 0.2
+                   }
+                  }
+                 ]
+                }
+                DEF dad_drawerinsert4 Transform {
+                 translation -1.15526 0.0192 0.433
+                 children [
+                  DEF drawerinsert4 Shape {
+                   appearance Appearance {
+                    material USE dark_teal_mat
+                   }
+                   geometry Box {
+                    size 0.87 0.42 0.2
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+            DEF dad_drawer4 Transform {
+             translation 2.037 -1.485 0.0
+             scale 1.7 0.8 1.0
+             children [
+              DEF drawer4 Group {
+               children [
+                DEF dad_drawer10 Transform {
+                 translation -1.155 0.021 0.438
+                 children [
+                  DEF drawer10 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "spikedrose.jpg"
+                    }
+                    textureTransform TextureTransform {
+                     rotation 4.712
+                     scale 1.0 3.0
+                    }
+                    material USE teal0_mat
+                   }
+                   geometry Box {
+                    size 0.85 0.4 0.2
+                   }
+                  }
+                 ]
+                }
+                DEF dad_drawerinsert5 Transform {
+                 translation -1.15526 0.0192 0.433
+                 children [
+                  DEF drawerinsert5 Shape {
+                   appearance Appearance {
+                    material USE dark_teal_mat
+                   }
+                   geometry Box {
+                    size 0.87 0.42 0.2
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+            DEF dad_drawer5 Transform {
+             translation 2.037 -1.9 0.0
+             scale 1.7 0.8 1.0
+             children [
+              DEF drawer5 Group {
+               children [
+                DEF dad_drawerinsert1 Transform {
+                 translation -1.15526 0.0192 0.433
+                 children [
+                  DEF drawerinsert1 Shape {
+                   appearance Appearance {
+                    material USE dark_teal_mat
+                   }
+                   geometry Box {
+                    size 0.87 0.42 0.2
+                   }
+                  }
+                 ]
+                }
+                DEF dad_drawer1 Transform {
+                 translation -1.155 0.021 0.438
+                 children [
+                  DEF drawer1 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "spikedrose.jpg"
+                    }
+                    textureTransform TextureTransform {
+                     rotation 4.712
+                     scale 1.0 3.0
+                    }
+                    material USE teal0_mat
+                   }
+                   geometry Box {
+                    size 0.85 0.4 0.2
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

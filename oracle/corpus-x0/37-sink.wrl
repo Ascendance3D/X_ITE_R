@@ -1,0 +1,4995 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "sink"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Group15 Transform {
+     translation 0.02566 -1.6117 0.29092
+     scale 1.0 0.89239 1.157
+     children [
+      DEF Group15 Group {
+       children [
+        DEF dad_Box22 Transform {
+         translation -0.04994 1.17792 -0.24645
+         scale 3.13 0.113 0.589
+         children [
+          DEF Box22 Shape {
+           appearance Appearance {
+            material DEF Rust2_mat Material {
+             ambientIntensity 0.000
+             shininess 0.000
+             diffuseColor 1.0 0.85098 0.77647
+             emissiveColor 0.99216 0.99216 0.99216
+             specularColor 0.95294 0.95294 0.95294
+            }
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              0.50000 0.50000 0.50000
+              0.11733 0.50000 0.33635
+              -0.09314 0.50000 0.33731
+              -0.09512 0.50000 -0.09512
+              -0.09593 0.50000 -0.27414
+              0.11454 0.50000 -0.27510
+              0.50000 0.50000 -0.50000
+              -0.50000 0.50000 -0.50000
+              -0.50000 0.50000 0.50000
+              -0.50000 -0.50000 0.50000
+              0.50000 -0.50000 0.50000
+              0.50000 -0.50000 -0.50000
+              -0.50000 -0.50000 -0.50000
+              0.11535 -0.50000 0.33685
+              0.11433 -0.50000 0.11433
+              0.11256 -0.50000 -0.27460
+              -0.09792 -0.50000 -0.27364
+              -0.09513 -0.50000 0.33781
+             ]
+            }
+            coordIndex [
+              0 1 2 3 
+              4 5 1 0 
+              6 7 8 -1 
+              8 9 10 0 
+              -1 0 10 11 
+              6 -1 6 11 
+              12 7 -1 7 
+              12 9 8 -1 
+              13 14 15 16 
+              11 10 9 12 
+              11 16 17 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Group16 Transform {
+         translation 0.10926 1.25353 -0.43454
+         scale 0.60746 0.60746 0.52503
+         children [
+          DEF Group16 Group {
+           children [
+            DEF dad_Box25 Transform {
+             translation 0.00493 0.01972 -0.00229
+             rotation 0.0 1.0 0.0 1.571
+             scale 0.123 0.03049 0.04233
+             children [
+              DEF Box25 Shape {
+               appearance Appearance {
+                material DEF silver0_mat Material {
+                 ambientIntensity 0.300
+                 shininess 1.000
+                 diffuseColor 0.50196 0.50196 0.50196
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.50196 0.50196 0.50196
+                }
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box26 Transform {
+             translation 0.00848 0.01666 -0.0027
+             scale 0.123 0.03049 0.04233
+             children [
+              DEF Box26 Shape {
+               appearance Appearance {
+                material USE silver0_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Box15 Transform {
+         translation -0.02 1.054 -0.22793
+         scale 0.65879 0.39164 0.36061
+         children [
+          DEF Box15 Shape {
+           appearance Appearance {
+            material USE silver0_mat
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.50000 0.17160 0.50000
+              -0.50000 0.46103 0.50000
+              0.50000 0.46115 0.50000
+              0.50000 0.17172 0.50000
+              0.50000 0.46124 -0.50000
+              0.50000 0.17180 -0.50000
+              -0.50000 0.46112 -0.50000
+              -0.50000 0.17168 -0.50000
+             ]
+            }
+            coordIndex [
+              0 1 2 3 
+              -1 3 2 4 
+              5 -1 5 4 
+              6 7 -1 7 
+              6 1 0 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Box27 Transform {
+         translation -0.017 1.109 -0.05445
+         scale 0.656 0.25376 0.01406
+         children [
+          DEF Box27 Shape {
+           appearance Appearance {
+            material DEF Dk_Grey_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.29412 0.29412 0.29412
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box28 Transform {
+         translation -0.02018 1.10908 -0.40857
+         scale 0.656 0.253 0.01383
+         children [
+          DEF Box28 Shape {
+           appearance Appearance {
+            material USE Dk_Grey_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box28q Transform {
+         translation -0.33572 1.10894 -0.23312
+         scale 0.02199 0.25376 0.36358
+         children [
+          DEF Box28q Shape {
+           appearance Appearance {
+            material USE Dk_Grey_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box16 Transform {
+         translation 0.30259 1.11058 -0.2317
+         scale 0.02199 0.25376 0.36358
+         children [
+          DEF Box16 Shape {
+           appearance Appearance {
+            material USE Dk_Grey_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box20l Transform {
+         translation -0.018 1.085 -0.241
+         scale 0.64053 0.09431 0.39204
+         children [
+          DEF Box20l Shape {
+           appearance Appearance {
+            material USE silver0_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Extrusion1 Transform {
+         translation -0.008 1.321 -0.37338
+         rotation 0.584 -0.575 0.573 2.122
+         scale 0.06565 0.03433 0.09776
+         children [
+          DEF Extrusion1 Shape {
+           appearance Appearance {
+            material DEF Purple2_mat Material {
+             ambientIntensity 0.200
+             shininess 1.000
+             diffuseColor 0.40784 0.40784 0.40784
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Extrusion {
+            creaseAngle 0.524
+            convex FALSE
+            crossSection [
+              -0.62577 0.90798
+              -0.62577 -0.04908
+              -0.62577 -0.22086
+              -0.60123 -0.3681
+              -0.52761 -0.51534
+              -0.40491 -0.66258
+              -0.23313 -0.7362
+              -0.06135 -0.7362
+              0.13497 -0.66258
+              0.28221 -0.4908
+              0.33129 -0.26994
+              0.60123 -0.26994
+              0.52761 -0.51534
+              0.38037 -0.76074
+              0.15951 -0.90798
+              -0.15951 -0.9816
+              -0.42945 -0.95706
+              -0.69939 -0.80982
+              -0.89571 -0.56442
+              -0.99387 -0.02454
+              -0.99387 0.90798
+              -0.62577 0.90798
+            ]
+            spine [
+              0.0 0.0 0.0
+              0.0 1.0 0.0
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder14p Transform {
+         translation -0.03 1.104 -0.21867
+         scale 0.04365 0.04365 0.03773
+         children [
+          DEF Cylinder14p Shape {
+           appearance Appearance {
+            material DEF Black1_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.0 0.0 0.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Box29 Transform {
+         translation -0.15643 1.215 -0.42924
+         rotation 0.0 0.0 1.0 1.571
+         scale 0.07197 0.03049 0.03658
+         children [
+          DEF Box29 Shape {
+           appearance Appearance {
+            material USE silver0_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box17 Transform {
+         translation 0.11583 1.22067 -0.43208
+         rotation 0.0 0.0 1.0 1.571
+         scale 0.07197 0.03049 0.03658
+         children [
+          DEF Box17 Shape {
+           appearance Appearance {
+            material USE silver0_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box21 Transform {
+         translation -0.05 1.323 -0.505
+         rotation 1.0 0.0 0.0 1.571
+         scale 3.13 0.073 0.144
+         children [
+          DEF Box21 Shape {
+           appearance Appearance {
+            material USE Rust2_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box26q Transform {
+         translation -0.04976 1.41334 -0.50475
+         rotation 1.0 0.0 0.0 1.571
+         scale 3.13 0.073 0.036
+         children [
+          DEF Box26q Shape {
+           appearance Appearance {
+            material DEF darkbrown_mat Material {
+             ambientIntensity 0.200
+             shininess 0.500
+             diffuseColor 0.1451 0.09412 0.08627
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.22353 0.1451 0.13333
+            }
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Group19 Transform {
+         translation 0.07651 1.45959 0.0
+         scale 0.908 1.112 0.547
+         children [
+          DEF Group19 Group {
+           children [
+            DEF dad_Box24n Transform {
+             translation 1.56417 -0.80341 -0.487
+             scale 0.043 1.0 1.004
+             children [
+              DEF Box24n Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.003 0.034
+                }
+                material DEF Green3_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.000
+                 diffuseColor 0.71765 0.54902 0.34118
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 0.0 0.0
+                }
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box25j Transform {
+             translation 0.56424 -0.80341 -0.48633
+             scale 0.043 1.0 1.004
+             children [
+              DEF Box25j Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.003 0.034
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box19 Transform {
+             translation 1.06317 -1.26103 -0.477
+             scale 0.96152 0.08481 0.98543
+             children [
+              DEF Box19 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box20 Transform {
+             translation 1.06633 -0.3469 -0.47647
+             scale 0.96152 0.08481 0.98543
+             children [
+              DEF Box20 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box13w Transform {
+             translation 1.07002 -0.80341 -0.96952
+             scale 1.0 1.0 0.04841
+             children [
+              DEF Box13w Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material DEF Red1_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.200
+                 diffuseColor 1.0 0.0 0.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 0.0 0.0
+                }
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group13u Transform {
+         translation -0.03738 -0.0099 -0.30916
+         scale 1.4023 1.112 0.547
+         children [
+          DEF Group13u Group {
+           children [
+            DEF dad_SculptedSurface11 Transform {
+             translation -0.5898 0.77493 0.584
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.176 0.053 0.179
+             children [
+              DEF SculptedSurface11 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation 1.570
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.99387 0.00000 -1.00613
+                  1.95092 0.00000 -0.04908
+                  2.00000 1.00000 -0.04908
+                  0.99387 1.00000 -1.00613
+                  1.95092 0.00000 3.04294
+                  2.00000 1.00000 2.96933
+                  0.99387 0.00000 4.00000
+                  0.99387 1.00000 4.00000
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.125 0.000 
+                   0.128 1.000 0.000 1.000 
+                   0.411 0.000 0.406 1.000 
+                   0.537 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   1.000 0.809 1.000 0.206 
+                   1.000 0.191 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 0 3 
+                  7 -1 3 2 
+                  5 7 -1 6 
+                  4 1 0 -1 
+                ]
+                texCoordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 8 9 
+                  7 -1 3 10 
+                  11 0 -1 0 
+                  12 10 3 -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface12 Transform {
+             translation 0.5891 0.7839 0.63749
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.176 0.053 0.17992
+             children [
+              DEF SculptedSurface12 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.606
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  -0.99387 0.00000 -1.00613
+                  -1.95092 0.00000 -0.04908
+                  -2.00000 -1.00000 -0.04908
+                  -0.99387 -1.00000 -1.00613
+                  -1.95092 0.00000 3.04294
+                  -2.00000 -1.00000 2.96933
+                  -0.99387 0.00000 4.00000
+                  -0.99387 -1.00000 4.00000
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.125 0.000 
+                   0.128 1.000 0.000 1.000 
+                   0.411 0.000 0.406 1.000 
+                   0.537 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   1.000 0.809 1.000 0.206 
+                   1.000 0.191 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 0 3 
+                  7 -1 3 2 
+                  5 7 -1 6 
+                  4 1 0 -1 
+                ]
+                texCoordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 8 9 
+                  7 -1 3 10 
+                  11 0 -1 0 
+                  12 10 3 -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface13 Transform {
+             translation -0.25047 0.24906 0.63749
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.167 0.05439 0.18
+             children [
+              DEF SculptedSurface13 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  3.00613 -1.00000 0.02454
+                  3.00613 0.00000 0.02454
+                  4.01227 0.00000 1.03067
+                  4.01227 -1.00000 1.03067
+                  -0.01227 -1.00000 0.02454
+                  -0.01227 0.00000 0.02454
+                  -0.99387 -1.00000 1.03067
+                  -1.01840 0.00000 1.03067
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.131 1.000 0.131 0.000 
+                   0.000 0.000 0.000 1.000 
+                   0.409 1.000 0.408 0.000 
+                   0.539 1.000 0.538 0.000 
+                   1.000 1.000 1.000 0.000 
+                   0.804 0.000 0.201 0.000 
+                   1.000 1.000 0.200 0.000 
+                   0.800 0.000 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 4 5 1 
+                  0 -1 6 7 
+                  5 -1 4 6 
+                  5 -1 3 2 
+                  7 6 -1 4 
+                  0 3 6 -1 
+                  1 5 7 2 
+                  -1 
+                ]
+                texCoordIndex [
+                  0 1 2 3 
+                  -1 4 5 1 
+                  0 -1 6 7 
+                  5 -1 4 6 
+                  5 -1 8 9 
+                  7 6 -1 10 
+                  11 3 12 -1 
+                  13 14 12 3 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface14 Transform {
+             translation 0.25044 0.77955 0.58163
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.16592 0.05372 0.17344
+             children [
+              DEF SculptedSurface14 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  -4.01227 0.00000 -1.03067
+                  -3.00613 0.00000 -0.02454
+                  -3.00613 1.00000 -0.02454
+                  -4.01227 1.00000 -1.03067
+                  0.01227 0.00000 -0.02454
+                  0.01227 1.00000 -0.02454
+                  1.01840 0.00000 -1.03067
+                  0.99387 1.00000 -1.03067
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.131 0.000 
+                   0.131 1.000 0.000 1.000 
+                   0.408 0.000 0.409 1.000 
+                   0.538 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   0.201 0.000 0.804 0.000 
+                   1.000 1.000 0.800 0.000 
+                   0.200 0.000 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 0 
+                  3 7 -1 3 
+                  2 5 7 -1 
+                  6 4 1 0 
+                  -1 
+                ]
+                texCoordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 8 
+                  9 7 -1 3 
+                  10 11 12 -1 
+                  12 13 14 3 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_Box13zc Transform {
+             translation -0.00572 0.51338 0.569
+             scale 0.5184 0.53673 0.01505
+             children [
+              DEF Box13zc Shape {
+               appearance Appearance {
+                material USE Rust2_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group14k Transform {
+         translation -1.31724 1.45962 0.0
+         scale 1.20291 1.112 0.547
+         children [
+          DEF Group14k Group {
+           children [
+            DEF dad_Box14k Transform {
+             translation 1.56417 -0.80341 -0.487
+             scale 0.043 1.0 1.004
+             children [
+              DEF Box14k Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.003 0.034
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box15k Transform {
+             translation 0.56424 -0.80341 -0.48633
+             scale 0.043 1.0 1.004
+             children [
+              DEF Box15k Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.003 0.034
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box19w Transform {
+             translation 1.06317 -1.26103 -0.477
+             scale 0.96152 0.08481 0.98543
+             children [
+              DEF Box19w Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box20j Transform {
+             translation 1.06633 -0.3469 -0.47647
+             scale 0.96152 0.08481 0.98543
+             children [
+              DEF Box20j Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box13l Transform {
+             translation 1.07002 -0.80341 -0.96952
+             scale 1.0 1.0 0.04841
+             children [
+              DEF Box13l Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material DEF White3_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.200
+                 diffuseColor 1.0 1.0 1.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 0.0 0.0
+                }
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group20 Transform {
+         translation -0.16102 1.25135 -0.43312
+         scale 0.60746 0.60746 0.52503
+         children [
+          DEF Group20 Group {
+           children [
+            DEF dad_Box23 Transform {
+             translation 0.00036 0.01666 -0.0027
+             scale 0.123 0.03049 0.04233
+             children [
+              DEF Box23 Shape {
+               appearance Appearance {
+                material USE silver0_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box24 Transform {
+             translation 0.00493 0.01972 -0.00229
+             rotation 0.0 1.0 0.0 1.571
+             scale 0.123 0.03049 0.04233
+             children [
+              DEF Box24 Shape {
+               appearance Appearance {
+                material USE silver0_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group21 Transform {
+         translation -2.10682 1.45903 0.0
+         scale 0.908 1.112 0.547
+         children [
+          DEF Group21 Group {
+           children [
+            DEF dad_Box16d Transform {
+             translation 1.56417 -0.80341 -0.487
+             scale 0.043 1.0 1.004
+             children [
+              DEF Box16d Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.003 0.034
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box5 Transform {
+             translation 0.56424 -0.80341 -0.48633
+             scale 0.043 1.0 1.004
+             children [
+              DEF Box5 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.003 0.034
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box21p0 Transform {
+             translation 1.06317 -1.26103 -0.477
+             scale 0.96152 0.08481 0.98543
+             children [
+              DEF Box21p0 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box22p Transform {
+             translation 1.06633 -0.3469 -0.47647
+             scale 0.96152 0.08481 0.98543
+             children [
+              DEF Box22p Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material USE Green3_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF dad_Box18h Transform {
+             translation 1.07002 -0.80341 -0.96952
+             scale 1.0 1.0 0.04841
+             children [
+              DEF Box18h Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.570
+                 scale 0.951 0.543
+                 translation -1.88 0.033
+                }
+                material USE Red1_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group23 Transform {
+         translation 1.04414 -0.00335 -0.30916
+         scale 1.0585 1.112 0.547
+         children [
+          DEF Group23 Group {
+           children [
+            DEF dad_SculptedSurface7 Transform {
+             translation -0.5898 0.77493 0.584
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.176 0.053 0.179
+             children [
+              DEF SculptedSurface7 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation 1.570
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.99387 0.00000 -1.00613
+                  1.95092 0.00000 -0.04908
+                  2.00000 1.00000 -0.04908
+                  0.99387 1.00000 -1.00613
+                  1.95092 0.00000 3.04294
+                  2.00000 1.00000 2.96933
+                  0.99387 0.00000 4.00000
+                  0.99387 1.00000 4.00000
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.125 0.000 
+                   0.128 1.000 0.000 1.000 
+                   0.411 0.000 0.406 1.000 
+                   0.537 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   1.000 0.809 1.000 0.206 
+                   1.000 0.191 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 0 3 
+                  7 -1 3 2 
+                  5 7 -1 6 
+                  4 1 0 -1 
+                ]
+                texCoordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 8 9 
+                  7 -1 3 10 
+                  11 0 -1 0 
+                  12 10 3 -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface8 Transform {
+             translation 0.5891 0.7839 0.63749
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.176 0.053 0.17992
+             children [
+              DEF SculptedSurface8 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.606
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  -0.99387 0.00000 -1.00613
+                  -1.95092 0.00000 -0.04908
+                  -2.00000 -1.00000 -0.04908
+                  -0.99387 -1.00000 -1.00613
+                  -1.95092 0.00000 3.04294
+                  -2.00000 -1.00000 2.96933
+                  -0.99387 0.00000 4.00000
+                  -0.99387 -1.00000 4.00000
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.125 0.000 
+                   0.128 1.000 0.000 1.000 
+                   0.411 0.000 0.406 1.000 
+                   0.537 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   1.000 0.809 1.000 0.206 
+                   1.000 0.191 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 0 3 
+                  7 -1 3 2 
+                  5 7 -1 6 
+                  4 1 0 -1 
+                ]
+                texCoordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 8 9 
+                  7 -1 3 10 
+                  11 0 -1 0 
+                  12 10 3 -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface10 Transform {
+             translation 0.25044 0.77955 0.58163
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.16592 0.05372 0.17344
+             children [
+              DEF SculptedSurface10 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  -4.01227 0.00000 -1.03067
+                  -3.00613 0.00000 -0.02454
+                  -3.00613 1.00000 -0.02454
+                  -4.01227 1.00000 -1.03067
+                  0.01227 0.00000 -0.02454
+                  0.01227 1.00000 -0.02454
+                  1.01840 0.00000 -1.03067
+                  0.99387 1.00000 -1.03067
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.131 0.000 
+                   0.131 1.000 0.000 1.000 
+                   0.408 0.000 0.409 1.000 
+                   0.538 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   0.201 0.000 0.804 0.000 
+                   1.000 1.000 0.800 0.000 
+                   0.200 0.000 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 0 
+                  3 7 -1 3 
+                  2 5 7 -1 
+                  6 4 1 0 
+                  -1 
+                ]
+                texCoordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 8 
+                  9 7 -1 3 
+                  10 11 12 -1 
+                  12 13 14 3 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_Box13z Transform {
+             translation -0.00331 0.51338 0.569
+             scale 0.48645 0.54094 0.01505
+             children [
+              DEF Box13z Shape {
+               appearance Appearance {
+                material USE Rust2_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+            DEF Sensor20 TouchSensor {
+            }
+            DEF dad_SculptedSurface9 Transform {
+             translation -0.25047 0.24906 0.63749
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.167 0.05439 0.18
+             children [
+              DEF SculptedSurface9 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  3.00613 -1.00000 0.02454
+                  3.00613 0.00000 0.02454
+                  4.01227 0.00000 1.03067
+                  4.01227 -1.00000 1.03067
+                  -0.01227 -1.00000 0.02454
+                  -0.01227 0.00000 0.02454
+                  -0.99387 -1.00000 1.03067
+                  -1.01840 0.00000 1.03067
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.131 1.000 0.131 0.000 
+                   0.000 0.000 0.000 1.000 
+                   0.409 1.000 0.408 0.000 
+                   0.539 1.000 0.538 0.000 
+                   1.000 1.000 1.000 0.000 
+                   0.804 0.000 0.201 0.000 
+                   1.000 1.000 0.200 0.000 
+                   0.800 0.000 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 4 5 1 
+                  0 -1 6 7 
+                  5 -1 4 6 
+                  5 -1 3 2 
+                  7 6 -1 4 
+                  0 3 6 -1 
+                  1 5 7 2 
+                  -1 
+                ]
+                texCoordIndex [
+                  0 1 2 3 
+                  -1 4 5 1 
+                  0 -1 6 7 
+                  5 -1 4 6 
+                  5 -1 8 9 
+                  7 6 -1 10 
+                  11 3 12 -1 
+                  13 14 12 3 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group22 Transform {
+         translation -1.13262 -0.00392 -0.30916
+         scale 1.07517 1.112 0.547
+         children [
+          DEF Group22 Group {
+           children [
+            DEF dad_SculptedSurface3 Transform {
+             translation -0.5898 0.77493 0.584
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.176 0.053 0.179
+             children [
+              DEF SculptedSurface3 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation 1.570
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.99387 0.00000 -1.00613
+                  1.95092 0.00000 -0.04908
+                  2.00000 1.00000 -0.04908
+                  0.99387 1.00000 -1.00613
+                  1.95092 0.00000 3.04294
+                  2.00000 1.00000 2.96933
+                  0.99387 0.00000 4.00000
+                  0.99387 1.00000 4.00000
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.125 0.000 
+                   0.128 1.000 0.000 1.000 
+                   0.411 0.000 0.406 1.000 
+                   0.537 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   1.000 0.809 1.000 0.206 
+                   1.000 0.191 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 0 3 
+                  7 -1 3 2 
+                  5 7 -1 6 
+                  4 1 0 -1 
+                ]
+                texCoordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 8 9 
+                  7 -1 3 10 
+                  11 0 -1 0 
+                  12 10 3 -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface4 Transform {
+             translation 0.5891 0.7839 0.63749
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.176 0.053 0.17992
+             children [
+              DEF SculptedSurface4 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                textureTransform TextureTransform {
+                 rotation -1.606
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  -0.99387 0.00000 -1.00613
+                  -1.95092 0.00000 -0.04908
+                  -2.00000 -1.00000 -0.04908
+                  -0.99387 -1.00000 -1.00613
+                  -1.95092 0.00000 3.04294
+                  -2.00000 -1.00000 2.96933
+                  -0.99387 0.00000 4.00000
+                  -0.99387 -1.00000 4.00000
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.125 0.000 
+                   0.128 1.000 0.000 1.000 
+                   0.411 0.000 0.406 1.000 
+                   0.537 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   1.000 0.809 1.000 0.206 
+                   1.000 0.191 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 0 3 
+                  7 -1 3 2 
+                  5 7 -1 6 
+                  4 1 0 -1 
+                ]
+                texCoordIndex [
+                  0 1 2 -1 
+                  0 2 3 -1 
+                  1 4 5 2 
+                  -1 4 6 7 
+                  -1 4 7 5 
+                  -1 6 8 9 
+                  7 -1 3 10 
+                  11 0 -1 0 
+                  12 10 3 -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface5 Transform {
+             translation -0.25047 0.24906 0.63749
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.167 0.05439 0.18
+             children [
+              DEF SculptedSurface5 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  4.01227 0.00000 1.03067
+                  3.00613 0.00000 0.02454
+                  3.00613 -1.00000 0.02454
+                  4.01227 -1.00000 1.03067
+                  -0.01227 0.00000 0.02454
+                  -0.01227 -1.00000 0.02454
+                  -1.01840 0.00000 1.03067
+                  -0.99387 -1.00000 1.03067
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.131 0.000 
+                   0.131 1.000 0.000 1.000 
+                   0.408 0.000 0.409 1.000 
+                   0.538 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   0.201 0.000 0.804 0.000 
+                   1.000 1.000 0.800 0.000 
+                   0.200 0.000 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 0 
+                  3 7 -1 3 
+                  2 5 7 -1 
+                  6 4 1 0 
+                  -1 
+                ]
+                texCoordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 8 
+                  9 7 -1 3 
+                  10 11 12 -1 
+                  12 13 14 3 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface6 Transform {
+             translation 0.25044 0.77955 0.58163
+             rotation 1.0 0.0 0.0 1.571
+             scale 0.16592 0.05372 0.17344
+             children [
+              DEF SculptedSurface6 Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "mixed.jpg"
+                }
+                material USE Green3_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  -4.01227 0.00000 -1.03067
+                  -3.00613 0.00000 -0.02454
+                  -3.00613 1.00000 -0.02454
+                  -4.01227 1.00000 -1.03067
+                  0.01227 0.00000 -0.02454
+                  0.01227 1.00000 -0.02454
+                  1.01840 0.00000 -1.03067
+                  0.99387 1.00000 -1.03067
+                 ]
+                }
+                texCoord TextureCoordinate {
+                 point [
+                   0.000 0.000 0.131 0.000 
+                   0.131 1.000 0.000 1.000 
+                   0.408 0.000 0.409 1.000 
+                   0.538 0.000 0.539 1.000 
+                   1.000 0.000 1.000 1.000 
+                   0.201 0.000 0.804 0.000 
+                   1.000 1.000 0.800 0.000 
+                   0.200 0.000 
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 0 
+                  3 7 -1 3 
+                  2 5 7 -1 
+                  6 4 1 0 
+                  -1 
+                ]
+                texCoordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 -1 4 7 
+                  5 -1 6 8 
+                  9 7 -1 3 
+                  10 11 12 -1 
+                  12 13 14 3 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF Sensor19 TouchSensor {
+            }
+            DEF dad_Box23s Transform {
+             translation -0.006 0.518 0.569
+             scale 0.51919 0.56333 0.01505
+             children [
+              DEF Box23s Shape {
+               appearance Appearance {
+                material USE Rust2_mat
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Box26n Transform {
+         translation -0.05 1.249 -0.497
+         rotation 1.0 0.0 0.0 1.571
+         scale 3.13 0.086 0.018
+         children [
+          DEF Box26n Shape {
+           appearance Appearance {
+            material USE darkbrown_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Group18 Transform {
+         translation -0.074 1.07801 -0.05877
+         scale 1.0 1.12059 0.8643
+         children [
+          DEF Group18 Group {
+           children [
+            DEF Sensor28 TouchSensor {
+            }
+            DEF dad_Box32 Transform {
+             translation 0.055 0.02 -0.201
+             scale 0.617 0.048 0.394
+             children [
+              DEF Box32 Shape {
+               appearance Appearance {
+                material DEF Shiny_Cyan_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 0.0 1.0 1.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 1.0 1.0
+                }
+               }
+               geometry Box {
+                size 1.0 1.0 1.0
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group17 Transform {
+         translation 1.04505 1.35623 -1.7174
+         rotation 0.0 1.0 0.0 1.571
+         scale 0.80305 1.04118 0.92913
+         children [
+          DEF Group17 Group {
+           children [
+            DEF dad_SculptedSurface16 Transform {
+             translation -1.74817 0.13875 0.0034
+             rotation -0.523 -0.688 -0.502 2.479
+             scale 0.04659 0.04659 0.04659
+             children [
+              DEF SculptedSurface16 Shape {
+               appearance Appearance {
+                material DEF Yellow1_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.200
+                 diffuseColor 1.0 1.0 0.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 0.0 0.0
+                }
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.03681 0.00000 -1.98773
+                  -0.40491 0.00000 -1.52147
+                  -0.40491 1.00000 -1.52147
+                  0.03681 1.00000 -1.98773
+                  -0.72393 0.00000 -0.98160
+                  -0.72393 1.00000 -0.98160
+                  -0.89571 0.00000 -0.44172
+                  -0.89571 1.00000 -0.44172
+                  -0.94479 0.00000 0.24540
+                  -0.94479 1.00000 0.24540
+                  -0.84663 0.00000 0.85890
+                  -0.84663 1.00000 0.85890
+                  -0.47853 0.00000 1.37423
+                  -0.47853 1.00000 1.37423
+                  -0.06135 0.00000 1.81595
+                  -0.06135 1.00000 1.81595
+                  0.47853 0.00000 2.08589
+                  0.47853 1.00000 2.08589
+                  1.14110 0.00000 2.20859
+                  1.14110 1.00000 2.20859
+                  1.48466 0.00000 2.20859
+                  1.48466 1.00000 2.20859
+                  1.48466 0.00000 1.81595
+                  1.48466 1.00000 1.81595
+                  1.01840 0.00000 1.66871
+                  1.01840 1.00000 1.66871
+                  0.55215 0.00000 1.30061
+                  0.55215 1.00000 1.30061
+                  0.18405 0.00000 0.73620
+                  0.18405 1.00000 0.73620
+                  -0.03681 0.00000 0.04908
+                  -0.03681 1.00000 0.04908
+                  0.03681 0.00000 -0.66258
+                  0.03681 1.00000 -0.66258
+                  0.25767 0.00000 -1.07975
+                  0.25767 1.00000 -1.07975
+                  0.52761 0.00000 -1.54601
+                  0.52761 1.00000 -1.54601
+                  0.72393 0.00000 -2.01227
+                  0.72393 1.00000 -2.01227
+                  0.60123 0.00000 -2.42945
+                  0.60123 1.00000 -2.42945
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 5 -1 6 
+                  8 9 7 -1 
+                  8 10 11 9 
+                  -1 10 12 13 
+                  11 -1 12 14 
+                  15 13 -1 14 
+                  16 17 15 -1 
+                  16 18 19 17 
+                  -1 18 20 21 
+                  19 -1 20 22 
+                  23 21 -1 22 
+                  24 25 23 -1 
+                  24 26 27 25 
+                  -1 26 28 29 
+                  27 -1 28 30 
+                  31 29 -1 30 
+                  32 33 31 -1 
+                  32 34 35 33 
+                  -1 34 36 37 
+                  35 -1 36 38 
+                  39 37 -1 38 
+                  40 41 39 -1 
+                  40 0 3 41 
+                  -1 19 21 23 
+                  25 27 29 31 
+                  33 35 37 39 
+                  41 3 2 5 
+                  7 9 11 13 
+                  15 17 -1 24 
+                  22 20 18 16 
+                  14 12 10 8 
+                  6 4 1 0 
+                  40 38 36 34 
+                  32 30 28 26 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface17 Transform {
+             translation -1.7876 0.1203 -0.04628
+             rotation -0.521 -0.697 -0.492 2.452
+             scale 0.05689 0.05689 0.05689
+             children [
+              DEF SculptedSurface17 Shape {
+               appearance Appearance {
+                material USE Yellow1_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.03681 0.00000 -1.98773
+                  -0.40491 0.00000 -1.52147
+                  -0.40491 1.00000 -1.52147
+                  0.03681 1.00000 -1.98773
+                  -0.72393 0.00000 -0.98160
+                  -0.72393 1.00000 -0.98160
+                  -0.89571 0.00000 -0.44172
+                  -0.89571 1.00000 -0.44172
+                  -0.94479 0.00000 0.24540
+                  -0.94479 1.00000 0.24540
+                  -0.84663 0.00000 0.85890
+                  -0.84663 1.00000 0.85890
+                  -0.47853 0.00000 1.37423
+                  -0.47853 1.00000 1.37423
+                  -0.06135 0.00000 1.81595
+                  -0.06135 1.00000 1.81595
+                  0.47853 0.00000 2.08589
+                  0.47853 1.00000 2.08589
+                  1.14110 0.00000 2.20859
+                  1.14110 1.00000 2.20859
+                  1.48466 0.00000 2.20859
+                  1.48466 1.00000 2.20859
+                  1.48466 0.00000 1.81595
+                  1.48466 1.00000 1.81595
+                  1.01840 0.00000 1.66871
+                  1.01840 1.00000 1.66871
+                  0.55215 0.00000 1.30061
+                  0.55215 1.00000 1.30061
+                  0.18405 0.00000 0.73620
+                  0.18405 1.00000 0.73620
+                  -0.03681 0.00000 0.04908
+                  -0.03681 1.00000 0.04908
+                  0.03681 0.00000 -0.66258
+                  0.03681 1.00000 -0.66258
+                  0.25767 0.00000 -1.07975
+                  0.25767 1.00000 -1.07975
+                  0.52761 0.00000 -1.54601
+                  0.52761 1.00000 -1.54601
+                  0.72393 0.00000 -2.01227
+                  0.72393 1.00000 -2.01227
+                  0.60123 0.00000 -2.42945
+                  0.60123 1.00000 -2.42945
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 5 -1 6 
+                  8 9 7 -1 
+                  8 10 11 9 
+                  -1 10 12 13 
+                  11 -1 12 14 
+                  15 13 -1 14 
+                  16 17 15 -1 
+                  16 18 19 17 
+                  -1 18 20 21 
+                  19 -1 20 22 
+                  23 21 -1 22 
+                  24 25 23 -1 
+                  24 26 27 25 
+                  -1 26 28 29 
+                  27 -1 28 30 
+                  31 29 -1 30 
+                  32 33 31 -1 
+                  32 34 35 33 
+                  -1 34 36 37 
+                  35 -1 36 38 
+                  39 37 -1 38 
+                  40 41 39 -1 
+                  40 0 3 41 
+                  -1 19 21 23 
+                  25 27 29 31 
+                  33 35 37 39 
+                  41 3 2 5 
+                  7 9 11 13 
+                  15 17 -1 24 
+                  22 20 18 16 
+                  14 12 10 8 
+                  6 4 1 0 
+                  40 38 36 34 
+                  32 30 28 26 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface18 Transform {
+             translation -1.79019 0.11376 0.13186
+             rotation -0.73 0.316 0.606 1.661
+             scale 0.05689 0.05689 0.05689
+             children [
+              DEF SculptedSurface18 Shape {
+               appearance Appearance {
+                material USE Yellow1_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.03681 0.00000 -1.98773
+                  -0.40491 0.00000 -1.52147
+                  -0.40491 1.00000 -1.52147
+                  0.03681 1.00000 -1.98773
+                  -0.72393 0.00000 -0.98160
+                  -0.72393 1.00000 -0.98160
+                  -0.89571 0.00000 -0.44172
+                  -0.89571 1.00000 -0.44172
+                  -0.94479 0.00000 0.24540
+                  -0.94479 1.00000 0.24540
+                  -0.84663 0.00000 0.85890
+                  -0.84663 1.00000 0.85890
+                  -0.47853 0.00000 1.37423
+                  -0.47853 1.00000 1.37423
+                  -0.06135 0.00000 1.81595
+                  -0.06135 1.00000 1.81595
+                  0.47853 0.00000 2.08589
+                  0.47853 1.00000 2.08589
+                  1.14110 0.00000 2.20859
+                  1.14110 1.00000 2.20859
+                  1.48466 0.00000 2.20859
+                  1.48466 1.00000 2.20859
+                  1.48466 0.00000 1.81595
+                  1.48466 1.00000 1.81595
+                  1.01840 0.00000 1.66871
+                  1.01840 1.00000 1.66871
+                  0.55215 0.00000 1.30061
+                  0.55215 1.00000 1.30061
+                  0.18405 0.00000 0.73620
+                  0.18405 1.00000 0.73620
+                  -0.03681 0.00000 0.04908
+                  -0.03681 1.00000 0.04908
+                  0.03681 0.00000 -0.66258
+                  0.03681 1.00000 -0.66258
+                  0.25767 0.00000 -1.07975
+                  0.25767 1.00000 -1.07975
+                  0.52761 0.00000 -1.54601
+                  0.52761 1.00000 -1.54601
+                  0.72393 0.00000 -2.01227
+                  0.72393 1.00000 -2.01227
+                  0.60123 0.00000 -2.42945
+                  0.60123 1.00000 -2.42945
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 5 -1 6 
+                  8 9 7 -1 
+                  8 10 11 9 
+                  -1 10 12 13 
+                  11 -1 12 14 
+                  15 13 -1 14 
+                  16 17 15 -1 
+                  16 18 19 17 
+                  -1 18 20 21 
+                  19 -1 20 22 
+                  23 21 -1 22 
+                  24 25 23 -1 
+                  24 26 27 25 
+                  -1 26 28 29 
+                  27 -1 28 30 
+                  31 29 -1 30 
+                  32 33 31 -1 
+                  32 34 35 33 
+                  -1 34 36 37 
+                  35 -1 36 38 
+                  39 37 -1 38 
+                  40 41 39 -1 
+                  40 0 3 41 
+                  -1 19 21 23 
+                  25 27 29 31 
+                  33 35 37 39 
+                  41 3 2 5 
+                  7 9 11 13 
+                  15 17 -1 24 
+                  22 20 18 16 
+                  14 12 10 8 
+                  6 4 1 0 
+                  40 38 36 34 
+                  32 30 28 26 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+            DEF dad_Cylinder16 Transform {
+             translation -1.7686 -0.11098 0.05764
+             scale 0.13551 0.03443 0.08966
+             children [
+              DEF Cylinder16 Shape {
+               appearance Appearance {
+                material USE darkbrown_mat
+               }
+               geometry Cylinder {
+                height 2.000
+                radius 1.000
+               }
+              }
+             ]
+            }
+            DEF dad_Cylinder17 Transform {
+             translation -1.78247 0.07073 0.04951
+             scale 0.02196 0.17212 0.01823
+             children [
+              DEF Cylinder17 Shape {
+               appearance Appearance {
+                material USE darkbrown_mat
+               }
+               geometry Cylinder {
+                height 2.000
+                radius 1.000
+               }
+              }
+             ]
+            }
+            DEF dad_Cylinder18 Transform {
+             translation -1.78306 0.25064 0.05549
+             rotation 1.0 0.005 0.005 1.571
+             scale 0.00647 0.05337 0.00634
+             children [
+              DEF Cylinder18 Shape {
+               appearance Appearance {
+                material USE darkbrown_mat
+               }
+               geometry Cylinder {
+                height 2.000
+                radius 1.000
+               }
+              }
+             ]
+            }
+            DEF dad_SculptedSurface15 Transform {
+             translation -1.82845 0.13747 0.05682
+             rotation -0.881 -0.467 -0.076 1.732
+             scale 0.04741 0.04741 0.04741
+             children [
+              DEF SculptedSurface15 Shape {
+               appearance Appearance {
+                material USE Yellow1_mat
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.03681 0.00000 -1.98773
+                  -0.40491 0.00000 -1.52147
+                  -0.40491 1.00000 -1.52147
+                  0.03681 1.00000 -1.98773
+                  -0.72393 0.00000 -0.98160
+                  -0.72393 1.00000 -0.98160
+                  -0.89571 0.00000 -0.44172
+                  -0.89571 1.00000 -0.44172
+                  -0.94479 0.00000 0.24540
+                  -0.94479 1.00000 0.24540
+                  -0.84663 0.00000 0.85890
+                  -0.84663 1.00000 0.85890
+                  -0.47853 0.00000 1.37423
+                  -0.47853 1.00000 1.37423
+                  -0.06135 0.00000 1.81595
+                  -0.06135 1.00000 1.81595
+                  0.47853 0.00000 2.08589
+                  0.47853 1.00000 2.08589
+                  1.14110 0.00000 2.20859
+                  1.14110 1.00000 2.20859
+                  1.48466 0.00000 2.20859
+                  1.48466 1.00000 2.20859
+                  1.48466 0.00000 1.81595
+                  1.48466 1.00000 1.81595
+                  1.01840 0.00000 1.66871
+                  1.01840 1.00000 1.66871
+                  0.55215 0.00000 1.30061
+                  0.55215 1.00000 1.30061
+                  0.18405 0.00000 0.73620
+                  0.18405 1.00000 0.73620
+                  -0.03681 0.00000 0.04908
+                  -0.03681 1.00000 0.04908
+                  0.03681 0.00000 -0.66258
+                  0.03681 1.00000 -0.66258
+                  0.25767 0.00000 -1.07975
+                  0.25767 1.00000 -1.07975
+                  0.52761 0.00000 -1.54601
+                  0.52761 1.00000 -1.54601
+                  0.72393 0.00000 -2.01227
+                  0.72393 1.00000 -2.01227
+                  0.60123 0.00000 -2.42945
+                  0.60123 1.00000 -2.42945
+                 ]
+                }
+                coordIndex [
+                  0 1 2 3 
+                  -1 1 4 5 
+                  2 -1 4 6 
+                  7 5 -1 6 
+                  8 9 7 -1 
+                  8 10 11 9 
+                  -1 10 12 13 
+                  11 -1 12 14 
+                  15 13 -1 14 
+                  16 17 15 -1 
+                  16 18 19 17 
+                  -1 18 20 21 
+                  19 -1 20 22 
+                  23 21 -1 22 
+                  24 25 23 -1 
+                  24 26 27 25 
+                  -1 26 28 29 
+                  27 -1 28 30 
+                  31 29 -1 30 
+                  32 33 31 -1 
+                  32 34 35 33 
+                  -1 34 36 37 
+                  35 -1 36 38 
+                  39 37 -1 38 
+                  40 41 39 -1 
+                  40 0 3 41 
+                  -1 19 21 23 
+                  25 27 29 31 
+                  33 35 37 39 
+                  41 3 2 5 
+                  7 9 11 13 
+                  15 17 -1 24 
+                  22 20 18 16 
+                  14 12 10 8 
+                  6 4 1 0 
+                  40 38 36 34 
+                  32 30 28 26 
+                  -1 
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Cylinder19 Transform {
+         translation -0.46111 1.24749 -0.40481
+         scale 0.04209 0.01724 0.03573
+         children [
+          DEF Cylinder19 Shape {
+           appearance Appearance {
+            material DEF Purple0_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.55294 0.55294 0.55294
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder20 Transform {
+         translation -0.462 1.40186 -0.40449
+         scale 0.01463 0.16484 0.0137
+         children [
+          DEF Cylinder20 Shape {
+           appearance Appearance {
+            material USE Purple0_mat
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder27 Transform {
+         translation -0.46364 1.57106 -0.40709
+         rotation 0.0 0.0 1.0 1.571
+         scale 0.00672 0.11692 0.00584
+         children [
+          DEF Cylinder27 Shape {
+           appearance Appearance {
+            material USE Purple0_mat
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder21 Transform {
+         translation -0.4627 1.43894 -0.40765
+         rotation 0.0 0.0 1.0 1.571
+         scale 0.00672 0.11692 0.00584
+         children [
+          DEF Cylinder21 Shape {
+           appearance Appearance {
+            material USE Purple0_mat
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Box33 Transform {
+         translation -0.399 1.35703 -0.40795
+         scale 0.07419 0.18082 0.0123
+         children [
+          DEF Box33 Shape {
+           appearance Appearance {
+            material DEF Blue_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.67059 0.58824 0.70588
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.50000 0.50000 -0.50000
+              -0.50000 0.50000 0.50000
+              0.50000 0.50000 0.50000
+              0.50000 0.50000 -0.50000
+              -0.50000 -0.50000 0.50000
+              0.50000 -0.50000 0.50000
+              0.50000 -0.50000 -0.50000
+              -0.50000 -0.50000 -0.50000
+             ]
+            }
+            coordIndex [
+              0 1 2 3 
+              -1 1 4 5 
+              2 -1 2 5 
+              6 3 -1 3 
+              6 7 0 -1 
+              0 7 4 1 
+              -1 5 4 7 
+              6 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Box31 Transform {
+         translation -0.54112 1.48817 -0.40694
+         scale 0.07419 0.18082 0.0123
+         children [
+          DEF Box31 Shape {
+           appearance Appearance {
+            material DEF Blue0_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.58824 0.48235 0.63529
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.50000 0.50000 -0.50000
+              -0.50000 0.50000 0.50000
+              0.50000 0.50000 0.50000
+              0.50000 0.50000 -0.50000
+              -0.50000 -0.50000 0.50000
+              0.50000 -0.50000 0.50000
+              0.50000 -0.50000 -0.50000
+              -0.50000 -0.50000 -0.50000
+             ]
+            }
+            coordIndex [
+              0 1 2 3 
+              -1 1 4 5 
+              2 -1 2 5 
+              6 3 -1 3 
+              6 7 0 -1 
+              0 7 4 1 
+              -1 5 4 7 
+              6 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Revolution2 Transform {
+         translation 0.605 1.39897 -0.21844
+         rotation -1.0 -0.0 0.0 3.142
+         scale 0.27501 0.15576 0.22213
+         children [
+          DEF Revolution2 Shape {
+           appearance Appearance {
+            material USE Red1_mat
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.20859 1.03067 0.00000
+              -0.19271 1.03067 0.07982
+              -0.30607 0.85890 0.12678
+              -0.33129 0.85890 0.00000
+              -0.41943 0.58896 0.17373
+              -0.45399 0.58896 0.00000
+              -0.48745 0.31902 0.20191
+              -0.52761 0.31902 0.00000
+              -0.51012 0.02454 0.21130
+              -0.55215 0.02454 0.00000
+              0.41943 0.02454 -0.17373
+              0.45399 0.02454 0.00000
+              0.39676 0.29448 -0.16434
+              0.42945 0.29448 0.00000
+              0.32874 0.66258 -0.13617
+              0.35583 0.66258 0.00000
+              0.26073 0.85890 -0.10800
+              0.28221 0.85890 0.00000
+              0.17004 1.05521 -0.07043
+              0.18405 1.05521 0.00000
+              -0.14749 1.03067 0.14749
+              -0.23426 0.85890 0.23426
+              -0.32102 0.58896 0.32102
+              -0.37307 0.31902 0.37307
+              -0.39043 0.02454 0.39043
+              0.32102 0.02454 -0.32102
+              0.30367 0.29448 -0.30367
+              0.25161 0.66258 -0.25161
+              0.19955 0.85890 -0.19955
+              0.13014 1.05521 -0.13014
+              -0.07982 1.03067 0.19271
+              -0.12678 0.85890 0.30607
+              -0.17373 0.58896 0.41943
+              -0.20191 0.31902 0.48745
+              -0.21130 0.02454 0.51012
+              0.17373 0.02454 -0.41943
+              0.16434 0.29448 -0.39676
+              0.13617 0.66258 -0.32874
+              0.10800 0.85890 -0.26073
+              0.07043 1.05521 -0.17004
+              0.00000 1.03067 0.20859
+              0.00000 0.85890 0.33129
+              0.00000 0.58896 0.45399
+              0.00000 0.31902 0.52761
+              0.00000 0.02454 0.55215
+              0.00000 0.02454 -0.45399
+              0.00000 0.29448 -0.42945
+              0.00000 0.66258 -0.35583
+              0.00000 0.85890 -0.28221
+              0.00000 1.05521 -0.18405
+              0.07982 1.03067 0.19271
+              0.12678 0.85890 0.30607
+              0.17373 0.58896 0.41943
+              0.20191 0.31902 0.48745
+              0.21130 0.02454 0.51012
+              -0.17373 0.02454 -0.41943
+              -0.16434 0.29448 -0.39676
+              -0.13617 0.66258 -0.32874
+              -0.10800 0.85890 -0.26073
+              -0.07043 1.05521 -0.17004
+              0.14749 1.03067 0.14749
+              0.23426 0.85890 0.23426
+              0.32102 0.58896 0.32102
+              0.37307 0.31902 0.37307
+              0.39043 0.02454 0.39043
+              -0.32102 0.02454 -0.32102
+              -0.30367 0.29448 -0.30367
+              -0.25161 0.66258 -0.25161
+              -0.19955 0.85890 -0.19955
+              -0.13014 1.05521 -0.13014
+              0.19271 1.03067 0.07982
+              0.30607 0.85890 0.12678
+              0.41943 0.58896 0.17373
+              0.48745 0.31902 0.20191
+              0.51012 0.02454 0.21130
+              -0.41943 0.02454 -0.17373
+              -0.39676 0.29448 -0.16434
+              -0.32874 0.66258 -0.13617
+              -0.26073 0.85890 -0.10800
+              -0.17004 1.05521 -0.07043
+              0.20859 1.03067 0.00000
+              0.33129 0.85890 0.00000
+              0.45399 0.58896 0.00000
+              0.52761 0.31902 0.00000
+              0.55215 0.02454 0.00000
+              -0.45399 0.02454 0.00000
+              -0.42945 0.29448 0.00000
+              -0.35583 0.66258 0.00000
+              -0.28221 0.85890 0.00000
+              -0.18405 1.05521 0.00000
+              0.19271 1.03067 -0.07982
+              0.30607 0.85890 -0.12678
+              0.41943 0.58896 -0.17373
+              0.48745 0.31902 -0.20191
+              0.51012 0.02454 -0.21130
+              -0.41943 0.02454 0.17373
+              -0.39676 0.29448 0.16434
+              -0.32874 0.66258 0.13617
+              -0.26073 0.85890 0.10800
+              -0.17004 1.05521 0.07043
+              0.14749 1.03067 -0.14749
+              0.23426 0.85890 -0.23426
+              0.32102 0.58896 -0.32102
+              0.37307 0.31902 -0.37307
+              0.39043 0.02454 -0.39043
+              -0.32102 0.02454 0.32102
+              -0.30367 0.29448 0.30367
+              -0.25161 0.66258 0.25161
+              -0.19955 0.85890 0.19955
+              -0.13014 1.05521 0.13014
+              0.07982 1.03067 -0.19271
+              0.12678 0.85890 -0.30607
+              0.17373 0.58896 -0.41943
+              0.20191 0.31902 -0.48745
+              0.21130 0.02454 -0.51012
+              -0.17373 0.02454 0.41943
+              -0.16434 0.29448 0.39676
+              -0.13617 0.66258 0.32874
+              -0.10800 0.85890 0.26073
+              -0.07043 1.05521 0.17004
+              0.00000 1.03067 -0.20859
+              0.00000 0.85890 -0.33129
+              0.00000 0.58896 -0.45399
+              0.00000 0.31902 -0.52761
+              0.00000 0.02454 -0.55215
+              0.00000 0.02454 0.45399
+              0.00000 0.29448 0.42945
+              0.00000 0.66258 0.35583
+              0.00000 0.85890 0.28221
+              0.00000 1.05521 0.18405
+              -0.07982 1.03067 -0.19271
+              -0.12678 0.85890 -0.30607
+              -0.17373 0.58896 -0.41943
+              -0.20191 0.31902 -0.48745
+              -0.21130 0.02454 -0.51012
+              0.17373 0.02454 0.41943
+              0.16434 0.29448 0.39676
+              0.13617 0.66258 0.32874
+              0.10800 0.85890 0.26073
+              0.07043 1.05521 0.17004
+              -0.14749 1.03067 -0.14749
+              -0.23426 0.85890 -0.23426
+              -0.32102 0.58896 -0.32102
+              -0.37307 0.31902 -0.37307
+              -0.39043 0.02454 -0.39043
+              0.32102 0.02454 0.32102
+              0.30367 0.29448 0.30367
+              0.25161 0.66258 0.25161
+              0.19955 0.85890 0.19955
+              0.13014 1.05521 0.13014
+              -0.19271 1.03067 -0.07982
+              -0.30607 0.85890 -0.12678
+              -0.41943 0.58896 -0.17373
+              -0.48745 0.31902 -0.20191
+              -0.51012 0.02454 -0.21130
+              0.41943 0.02454 0.17373
+              0.39676 0.29448 0.16434
+              0.32874 0.66258 0.13617
+              0.26073 0.85890 0.10800
+              0.17004 1.05521 0.07043
+             ]
+            }
+            coordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              3 2 4 -1 
+              3 4 5 -1 
+              5 4 6 -1 
+              5 6 7 -1 
+              7 6 8 -1 
+              7 8 9 -1 
+              9 8 10 -1 
+              9 10 11 -1 
+              11 10 12 -1 
+              11 12 13 -1 
+              13 12 14 -1 
+              13 14 15 -1 
+              15 14 16 -1 
+              15 16 17 -1 
+              17 16 18 -1 
+              17 18 19 -1 
+              1 20 21 -1 
+              1 21 2 -1 
+              2 21 22 -1 
+              2 22 4 -1 
+              4 22 23 -1 
+              4 23 6 -1 
+              6 23 24 -1 
+              6 24 8 -1 
+              8 24 25 -1 
+              8 25 10 -1 
+              10 25 26 -1 
+              10 26 12 -1 
+              12 26 27 -1 
+              12 27 14 -1 
+              14 27 28 -1 
+              14 28 16 -1 
+              16 28 29 -1 
+              16 29 18 -1 
+              20 30 31 -1 
+              20 31 21 -1 
+              21 31 32 -1 
+              21 32 22 -1 
+              22 32 33 -1 
+              22 33 23 -1 
+              23 33 34 -1 
+              23 34 24 -1 
+              24 34 35 -1 
+              24 35 25 -1 
+              25 35 36 -1 
+              25 36 26 -1 
+              26 36 37 -1 
+              26 37 27 -1 
+              27 37 38 -1 
+              27 38 28 -1 
+              28 38 39 -1 
+              28 39 29 -1 
+              30 40 41 -1 
+              30 41 31 -1 
+              31 41 42 -1 
+              31 42 32 -1 
+              32 42 43 -1 
+              32 43 33 -1 
+              33 43 44 -1 
+              33 44 34 -1 
+              34 44 45 -1 
+              34 45 35 -1 
+              35 45 46 -1 
+              35 46 36 -1 
+              36 46 47 -1 
+              36 47 37 -1 
+              37 47 48 -1 
+              37 48 38 -1 
+              38 48 49 -1 
+              38 49 39 -1 
+              40 50 51 -1 
+              40 51 41 -1 
+              41 51 52 -1 
+              41 52 42 -1 
+              42 52 53 -1 
+              42 53 43 -1 
+              43 53 54 -1 
+              43 54 44 -1 
+              44 54 55 -1 
+              44 55 45 -1 
+              45 55 56 -1 
+              45 56 46 -1 
+              46 56 57 -1 
+              46 57 47 -1 
+              47 57 58 -1 
+              47 58 48 -1 
+              48 58 59 -1 
+              48 59 49 -1 
+              50 60 61 -1 
+              50 61 51 -1 
+              51 61 62 -1 
+              51 62 52 -1 
+              52 62 63 -1 
+              52 63 53 -1 
+              53 63 64 -1 
+              53 64 54 -1 
+              54 64 65 -1 
+              54 65 55 -1 
+              55 65 66 -1 
+              55 66 56 -1 
+              56 66 67 -1 
+              56 67 57 -1 
+              57 67 68 -1 
+              57 68 58 -1 
+              58 68 69 -1 
+              58 69 59 -1 
+              60 70 71 -1 
+              60 71 61 -1 
+              61 71 72 -1 
+              61 72 62 -1 
+              62 72 73 -1 
+              62 73 63 -1 
+              63 73 74 -1 
+              63 74 64 -1 
+              64 74 75 -1 
+              64 75 65 -1 
+              65 75 76 -1 
+              65 76 66 -1 
+              66 76 77 -1 
+              66 77 67 -1 
+              67 77 78 -1 
+              67 78 68 -1 
+              68 78 79 -1 
+              68 79 69 -1 
+              70 80 81 -1 
+              70 81 71 -1 
+              71 81 82 -1 
+              71 82 72 -1 
+              72 82 83 -1 
+              72 83 73 -1 
+              73 83 84 -1 
+              73 84 74 -1 
+              74 84 85 -1 
+              74 85 75 -1 
+              75 85 86 -1 
+              75 86 76 -1 
+              76 86 87 -1 
+              76 87 77 -1 
+              77 87 88 -1 
+              77 88 78 -1 
+              78 88 89 -1 
+              78 89 79 -1 
+              80 90 91 -1 
+              80 91 81 -1 
+              81 91 92 -1 
+              81 92 82 -1 
+              82 92 93 -1 
+              82 93 83 -1 
+              83 93 94 -1 
+              83 94 84 -1 
+              84 94 95 -1 
+              84 95 85 -1 
+              85 95 96 -1 
+              85 96 86 -1 
+              86 96 97 -1 
+              86 97 87 -1 
+              87 97 98 -1 
+              87 98 88 -1 
+              88 98 99 -1 
+              88 99 89 -1 
+              90 100 101 -1 
+              90 101 91 -1 
+              91 101 102 -1 
+              91 102 92 -1 
+              92 102 103 -1 
+              92 103 93 -1 
+              93 103 104 -1 
+              93 104 94 -1 
+              94 104 105 -1 
+              94 105 95 -1 
+              95 105 106 -1 
+              95 106 96 -1 
+              96 106 107 -1 
+              96 107 97 -1 
+              97 107 108 -1 
+              97 108 98 -1 
+              98 108 109 -1 
+              98 109 99 -1 
+              100 110 111 -1 
+              100 111 101 -1 
+              101 111 112 -1 
+              101 112 102 -1 
+              102 112 113 -1 
+              102 113 103 -1 
+              103 113 114 -1 
+              103 114 104 -1 
+              104 114 115 -1 
+              104 115 105 -1 
+              105 115 116 -1 
+              105 116 106 -1 
+              106 116 117 -1 
+              106 117 107 -1 
+              107 117 118 -1 
+              107 118 108 -1 
+              108 118 119 -1 
+              108 119 109 -1 
+              110 120 121 -1 
+              110 121 111 -1 
+              111 121 122 -1 
+              111 122 112 -1 
+              112 122 123 -1 
+              112 123 113 -1 
+              113 123 124 -1 
+              113 124 114 -1 
+              114 124 125 -1 
+              114 125 115 -1 
+              115 125 126 -1 
+              115 126 116 -1 
+              116 126 127 -1 
+              116 127 117 -1 
+              117 127 128 -1 
+              117 128 118 -1 
+              118 128 129 -1 
+              118 129 119 -1 
+              120 130 131 -1 
+              120 131 121 -1 
+              121 131 132 -1 
+              121 132 122 -1 
+              122 132 133 -1 
+              122 133 123 -1 
+              123 133 134 -1 
+              123 134 124 -1 
+              124 134 135 -1 
+              124 135 125 -1 
+              125 135 136 -1 
+              125 136 126 -1 
+              126 136 137 -1 
+              126 137 127 -1 
+              127 137 138 -1 
+              127 138 128 -1 
+              128 138 139 -1 
+              128 139 129 -1 
+              130 140 141 -1 
+              130 141 131 -1 
+              131 141 142 -1 
+              131 142 132 -1 
+              132 142 143 -1 
+              132 143 133 -1 
+              133 143 144 -1 
+              133 144 134 -1 
+              134 144 145 -1 
+              134 145 135 -1 
+              135 145 146 -1 
+              135 146 136 -1 
+              136 146 147 -1 
+              136 147 137 -1 
+              137 147 148 -1 
+              137 148 138 -1 
+              138 148 149 -1 
+              138 149 139 -1 
+              140 150 151 -1 
+              140 151 141 -1 
+              141 151 152 -1 
+              141 152 142 -1 
+              142 152 153 -1 
+              142 153 143 -1 
+              143 153 154 -1 
+              143 154 144 -1 
+              144 154 155 -1 
+              144 155 145 -1 
+              145 155 156 -1 
+              145 156 146 -1 
+              146 156 157 -1 
+              146 157 147 -1 
+              147 157 158 -1 
+              147 158 148 -1 
+              148 158 159 -1 
+              148 159 149 -1 
+              150 0 3 -1 
+              150 3 151 -1 
+              151 3 5 -1 
+              151 5 152 -1 
+              152 5 7 -1 
+              152 7 153 -1 
+              153 7 9 -1 
+              153 9 154 -1 
+              154 9 11 -1 
+              154 11 155 -1 
+              155 11 13 -1 
+              155 13 156 -1 
+              156 13 15 -1 
+              156 15 157 -1 
+              157 15 17 -1 
+              157 17 158 -1 
+              158 17 19 -1 
+              158 19 159 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Box45 Transform {
+         translation -1.20103 1.32029 -0.41672
+         scale 0.16 0.17129 0.07433
+         children [
+          DEF Box45 Shape {
+           appearance Appearance {
+            material DEF Green2_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.92941 0.99608 0.55294
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box46 Transform {
+         translation -1.38478 1.33397 -0.41672
+         scale 0.175 0.1961 0.07433
+         children [
+          DEF Box46 Shape {
+           appearance Appearance {
+            material USE Green2_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box44 Transform {
+         translation -1.02707 1.30925 -0.41659
+         scale 0.15664 0.14984 0.07433
+         children [
+          DEF Box44 Shape {
+           appearance Appearance {
+            material USE Green2_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box21p1 Transform {
+         translation -1.13732 0.59624 -0.2628
+         scale 0.87306 0.07277 0.46263
+         children [
+          DEF Box21p1 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "mixed.jpg"
+            }
+            textureTransform TextureTransform {
+             rotation -1.570
+             scale 0.951 0.543
+             translation -1.88 0.033
+            }
+            material USE Green3_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box48 Transform {
+         translation -1.13403 0.2722 -0.2628
+         scale 0.255 0.39445 0.16404
+         children [
+          DEF Box48 Shape {
+           appearance Appearance {
+            material DEF Yellow2_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.74118 0.74118 0.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Box47 Transform {
+         translation -0.84486 0.2722 -0.25144
+         scale 0.16663 0.39445 0.16404
+         children [
+          DEF Box47 Shape {
+           appearance Appearance {
+            material USE Yellow2_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Revolution3 Transform {
+         translation -1.14718 0.75826 -0.25144
+         rotation -1.0 -0.001 0.001 3.142
+         scale 0.27501 0.15576 0.22213
+         children [
+          DEF Revolution3 Shape {
+           appearance Appearance {
+            material USE Red1_mat
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.20859 1.03067 0.00000
+              -0.19271 1.03067 0.07982
+              -0.30607 0.85890 0.12678
+              -0.33129 0.85890 0.00000
+              -0.41943 0.58896 0.17373
+              -0.45399 0.58896 0.00000
+              -0.48745 0.31902 0.20191
+              -0.52761 0.31902 0.00000
+              -0.51012 0.02454 0.21130
+              -0.55215 0.02454 0.00000
+              0.41943 0.02454 -0.17373
+              0.45399 0.02454 0.00000
+              0.39676 0.29448 -0.16434
+              0.42945 0.29448 0.00000
+              0.32874 0.66258 -0.13617
+              0.35583 0.66258 0.00000
+              0.26073 0.85890 -0.10800
+              0.28221 0.85890 0.00000
+              0.17004 1.05521 -0.07043
+              0.18405 1.05521 0.00000
+              -0.14749 1.03067 0.14749
+              -0.23426 0.85890 0.23426
+              -0.32102 0.58896 0.32102
+              -0.37307 0.31902 0.37307
+              -0.39043 0.02454 0.39043
+              0.32102 0.02454 -0.32102
+              0.30367 0.29448 -0.30367
+              0.25161 0.66258 -0.25161
+              0.19955 0.85890 -0.19955
+              0.13014 1.05521 -0.13014
+              -0.07982 1.03067 0.19271
+              -0.12678 0.85890 0.30607
+              -0.17373 0.58896 0.41943
+              -0.20191 0.31902 0.48745
+              -0.21130 0.02454 0.51012
+              0.17373 0.02454 -0.41943
+              0.16434 0.29448 -0.39676
+              0.13617 0.66258 -0.32874
+              0.10800 0.85890 -0.26073
+              0.07043 1.05521 -0.17004
+              0.00000 1.03067 0.20859
+              0.00000 0.85890 0.33129
+              0.00000 0.58896 0.45399
+              0.00000 0.31902 0.52761
+              0.00000 0.02454 0.55215
+              0.00000 0.02454 -0.45399
+              0.00000 0.29448 -0.42945
+              0.00000 0.66258 -0.35583
+              0.00000 0.85890 -0.28221
+              0.00000 1.05521 -0.18405
+              0.07982 1.03067 0.19271
+              0.12678 0.85890 0.30607
+              0.17373 0.58896 0.41943
+              0.20191 0.31902 0.48745
+              0.21130 0.02454 0.51012
+              -0.17373 0.02454 -0.41943
+              -0.16434 0.29448 -0.39676
+              -0.13617 0.66258 -0.32874
+              -0.10800 0.85890 -0.26073
+              -0.07043 1.05521 -0.17004
+              0.14749 1.03067 0.14749
+              0.23426 0.85890 0.23426
+              0.32102 0.58896 0.32102
+              0.37307 0.31902 0.37307
+              0.39043 0.02454 0.39043
+              -0.32102 0.02454 -0.32102
+              -0.30367 0.29448 -0.30367
+              -0.25161 0.66258 -0.25161
+              -0.19955 0.85890 -0.19955
+              -0.13014 1.05521 -0.13014
+              0.19271 1.03067 0.07982
+              0.30607 0.85890 0.12678
+              0.41943 0.58896 0.17373
+              0.48745 0.31902 0.20191
+              0.51012 0.02454 0.21130
+              -0.41943 0.02454 -0.17373
+              -0.39676 0.29448 -0.16434
+              -0.32874 0.66258 -0.13617
+              -0.26073 0.85890 -0.10800
+              -0.17004 1.05521 -0.07043
+              0.20859 1.03067 0.00000
+              0.33129 0.85890 0.00000
+              0.45399 0.58896 0.00000
+              0.52761 0.31902 0.00000
+              0.55215 0.02454 0.00000
+              -0.45399 0.02454 0.00000
+              -0.42945 0.29448 0.00000
+              -0.35583 0.66258 0.00000
+              -0.28221 0.85890 0.00000
+              -0.18405 1.05521 0.00000
+              0.19271 1.03067 -0.07982
+              0.30607 0.85890 -0.12678
+              0.41943 0.58896 -0.17373
+              0.48745 0.31902 -0.20191
+              0.51012 0.02454 -0.21130
+              -0.41943 0.02454 0.17373
+              -0.39676 0.29448 0.16434
+              -0.32874 0.66258 0.13617
+              -0.26073 0.85890 0.10800
+              -0.17004 1.05521 0.07043
+              0.14749 1.03067 -0.14749
+              0.23426 0.85890 -0.23426
+              0.32102 0.58896 -0.32102
+              0.37307 0.31902 -0.37307
+              0.39043 0.02454 -0.39043
+              -0.32102 0.02454 0.32102
+              -0.30367 0.29448 0.30367
+              -0.25161 0.66258 0.25161
+              -0.19955 0.85890 0.19955
+              -0.13014 1.05521 0.13014
+              0.07982 1.03067 -0.19271
+              0.12678 0.85890 -0.30607
+              0.17373 0.58896 -0.41943
+              0.20191 0.31902 -0.48745
+              0.21130 0.02454 -0.51012
+              -0.17373 0.02454 0.41943
+              -0.16434 0.29448 0.39676
+              -0.13617 0.66258 0.32874
+              -0.10800 0.85890 0.26073
+              -0.07043 1.05521 0.17004
+              0.00000 1.03067 -0.20859
+              0.00000 0.85890 -0.33129
+              0.00000 0.58896 -0.45399
+              0.00000 0.31902 -0.52761
+              0.00000 0.02454 -0.55215
+              0.00000 0.02454 0.45399
+              0.00000 0.29448 0.42945
+              0.00000 0.66258 0.35583
+              0.00000 0.85890 0.28221
+              0.00000 1.05521 0.18405
+              -0.07982 1.03067 -0.19271
+              -0.12678 0.85890 -0.30607
+              -0.17373 0.58896 -0.41943
+              -0.20191 0.31902 -0.48745
+              -0.21130 0.02454 -0.51012
+              0.17373 0.02454 0.41943
+              0.16434 0.29448 0.39676
+              0.13617 0.66258 0.32874
+              0.10800 0.85890 0.26073
+              0.07043 1.05521 0.17004
+              -0.14749 1.03067 -0.14749
+              -0.23426 0.85890 -0.23426
+              -0.32102 0.58896 -0.32102
+              -0.37307 0.31902 -0.37307
+              -0.39043 0.02454 -0.39043
+              0.32102 0.02454 0.32102
+              0.30367 0.29448 0.30367
+              0.25161 0.66258 0.25161
+              0.19955 0.85890 0.19955
+              0.13014 1.05521 0.13014
+              -0.19271 1.03067 -0.07982
+              -0.30607 0.85890 -0.12678
+              -0.41943 0.58896 -0.17373
+              -0.48745 0.31902 -0.20191
+              -0.51012 0.02454 -0.21130
+              0.41943 0.02454 0.17373
+              0.39676 0.29448 0.16434
+              0.32874 0.66258 0.13617
+              0.26073 0.85890 0.10800
+              0.17004 1.05521 0.07043
+             ]
+            }
+            coordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              3 2 4 -1 
+              3 4 5 -1 
+              5 4 6 -1 
+              5 6 7 -1 
+              7 6 8 -1 
+              7 8 9 -1 
+              9 8 10 -1 
+              9 10 11 -1 
+              11 10 12 -1 
+              11 12 13 -1 
+              13 12 14 -1 
+              13 14 15 -1 
+              15 14 16 -1 
+              15 16 17 -1 
+              17 16 18 -1 
+              17 18 19 -1 
+              1 20 21 -1 
+              1 21 2 -1 
+              2 21 22 -1 
+              2 22 4 -1 
+              4 22 23 -1 
+              4 23 6 -1 
+              6 23 24 -1 
+              6 24 8 -1 
+              8 24 25 -1 
+              8 25 10 -1 
+              10 25 26 -1 
+              10 26 12 -1 
+              12 26 27 -1 
+              12 27 14 -1 
+              14 27 28 -1 
+              14 28 16 -1 
+              16 28 29 -1 
+              16 29 18 -1 
+              20 30 31 -1 
+              20 31 21 -1 
+              21 31 32 -1 
+              21 32 22 -1 
+              22 32 33 -1 
+              22 33 23 -1 
+              23 33 34 -1 
+              23 34 24 -1 
+              24 34 35 -1 
+              24 35 25 -1 
+              25 35 36 -1 
+              25 36 26 -1 
+              26 36 37 -1 
+              26 37 27 -1 
+              27 37 38 -1 
+              27 38 28 -1 
+              28 38 39 -1 
+              28 39 29 -1 
+              30 40 41 -1 
+              30 41 31 -1 
+              31 41 42 -1 
+              31 42 32 -1 
+              32 42 43 -1 
+              32 43 33 -1 
+              33 43 44 -1 
+              33 44 34 -1 
+              34 44 45 -1 
+              34 45 35 -1 
+              35 45 46 -1 
+              35 46 36 -1 
+              36 46 47 -1 
+              36 47 37 -1 
+              37 47 48 -1 
+              37 48 38 -1 
+              38 48 49 -1 
+              38 49 39 -1 
+              40 50 51 -1 
+              40 51 41 -1 
+              41 51 52 -1 
+              41 52 42 -1 
+              42 52 53 -1 
+              42 53 43 -1 
+              43 53 54 -1 
+              43 54 44 -1 
+              44 54 55 -1 
+              44 55 45 -1 
+              45 55 56 -1 
+              45 56 46 -1 
+              46 56 57 -1 
+              46 57 47 -1 
+              47 57 58 -1 
+              47 58 48 -1 
+              48 58 59 -1 
+              48 59 49 -1 
+              50 60 61 -1 
+              50 61 51 -1 
+              51 61 62 -1 
+              51 62 52 -1 
+              52 62 63 -1 
+              52 63 53 -1 
+              53 63 64 -1 
+              53 64 54 -1 
+              54 64 65 -1 
+              54 65 55 -1 
+              55 65 66 -1 
+              55 66 56 -1 
+              56 66 67 -1 
+              56 67 57 -1 
+              57 67 68 -1 
+              57 68 58 -1 
+              58 68 69 -1 
+              58 69 59 -1 
+              60 70 71 -1 
+              60 71 61 -1 
+              61 71 72 -1 
+              61 72 62 -1 
+              62 72 73 -1 
+              62 73 63 -1 
+              63 73 74 -1 
+              63 74 64 -1 
+              64 74 75 -1 
+              64 75 65 -1 
+              65 75 76 -1 
+              65 76 66 -1 
+              66 76 77 -1 
+              66 77 67 -1 
+              67 77 78 -1 
+              67 78 68 -1 
+              68 78 79 -1 
+              68 79 69 -1 
+              70 80 81 -1 
+              70 81 71 -1 
+              71 81 82 -1 
+              71 82 72 -1 
+              72 82 83 -1 
+              72 83 73 -1 
+              73 83 84 -1 
+              73 84 74 -1 
+              74 84 85 -1 
+              74 85 75 -1 
+              75 85 86 -1 
+              75 86 76 -1 
+              76 86 87 -1 
+              76 87 77 -1 
+              77 87 88 -1 
+              77 88 78 -1 
+              78 88 89 -1 
+              78 89 79 -1 
+              80 90 91 -1 
+              80 91 81 -1 
+              81 91 92 -1 
+              81 92 82 -1 
+              82 92 93 -1 
+              82 93 83 -1 
+              83 93 94 -1 
+              83 94 84 -1 
+              84 94 95 -1 
+              84 95 85 -1 
+              85 95 96 -1 
+              85 96 86 -1 
+              86 96 97 -1 
+              86 97 87 -1 
+              87 97 98 -1 
+              87 98 88 -1 
+              88 98 99 -1 
+              88 99 89 -1 
+              90 100 101 -1 
+              90 101 91 -1 
+              91 101 102 -1 
+              91 102 92 -1 
+              92 102 103 -1 
+              92 103 93 -1 
+              93 103 104 -1 
+              93 104 94 -1 
+              94 104 105 -1 
+              94 105 95 -1 
+              95 105 106 -1 
+              95 106 96 -1 
+              96 106 107 -1 
+              96 107 97 -1 
+              97 107 108 -1 
+              97 108 98 -1 
+              98 108 109 -1 
+              98 109 99 -1 
+              100 110 111 -1 
+              100 111 101 -1 
+              101 111 112 -1 
+              101 112 102 -1 
+              102 112 113 -1 
+              102 113 103 -1 
+              103 113 114 -1 
+              103 114 104 -1 
+              104 114 115 -1 
+              104 115 105 -1 
+              105 115 116 -1 
+              105 116 106 -1 
+              106 116 117 -1 
+              106 117 107 -1 
+              107 117 118 -1 
+              107 118 108 -1 
+              108 118 119 -1 
+              108 119 109 -1 
+              110 120 121 -1 
+              110 121 111 -1 
+              111 121 122 -1 
+              111 122 112 -1 
+              112 122 123 -1 
+              112 123 113 -1 
+              113 123 124 -1 
+              113 124 114 -1 
+              114 124 125 -1 
+              114 125 115 -1 
+              115 125 126 -1 
+              115 126 116 -1 
+              116 126 127 -1 
+              116 127 117 -1 
+              117 127 128 -1 
+              117 128 118 -1 
+              118 128 129 -1 
+              118 129 119 -1 
+              120 130 131 -1 
+              120 131 121 -1 
+              121 131 132 -1 
+              121 132 122 -1 
+              122 132 133 -1 
+              122 133 123 -1 
+              123 133 134 -1 
+              123 134 124 -1 
+              124 134 135 -1 
+              124 135 125 -1 
+              125 135 136 -1 
+              125 136 126 -1 
+              126 136 137 -1 
+              126 137 127 -1 
+              127 137 138 -1 
+              127 138 128 -1 
+              128 138 139 -1 
+              128 139 129 -1 
+              130 140 141 -1 
+              130 141 131 -1 
+              131 141 142 -1 
+              131 142 132 -1 
+              132 142 143 -1 
+              132 143 133 -1 
+              133 143 144 -1 
+              133 144 134 -1 
+              134 144 145 -1 
+              134 145 135 -1 
+              135 145 146 -1 
+              135 146 136 -1 
+              136 146 147 -1 
+              136 147 137 -1 
+              137 147 148 -1 
+              137 148 138 -1 
+              138 148 149 -1 
+              138 149 139 -1 
+              140 150 151 -1 
+              140 151 141 -1 
+              141 151 152 -1 
+              141 152 142 -1 
+              142 152 153 -1 
+              142 153 143 -1 
+              143 153 154 -1 
+              143 154 144 -1 
+              144 154 155 -1 
+              144 155 145 -1 
+              145 155 156 -1 
+              145 156 146 -1 
+              146 156 157 -1 
+              146 157 147 -1 
+              147 157 158 -1 
+              147 158 148 -1 
+              148 158 159 -1 
+              148 159 149 -1 
+              150 0 3 -1 
+              150 3 151 -1 
+              151 3 5 -1 
+              151 5 152 -1 
+              152 5 7 -1 
+              152 7 153 -1 
+              153 7 9 -1 
+              153 9 154 -1 
+              154 9 11 -1 
+              154 11 155 -1 
+              155 11 13 -1 
+              155 13 156 -1 
+              156 13 15 -1 
+              156 15 157 -1 
+              157 15 17 -1 
+              157 17 158 -1 
+              158 17 19 -1 
+              158 19 159 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Box21p Transform {
+         translation 1.0216 0.57046 -0.25144
+         scale 0.87306 0.07277 0.46263
+         children [
+          DEF Box21p Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "mixed.jpg"
+            }
+            textureTransform TextureTransform {
+             rotation -1.570
+             scale 0.951 0.543
+             translation -1.88 0.033
+            }
+            material USE Green3_mat
+           }
+           geometry Box {
+            size 1.0 1.0 1.0
+           }
+          }
+         ]
+        }
+        DEF dad_Revolution4 Transform {
+         translation 0.87702 0.23169 -0.25144
+         rotation -1.0 -0.001 0.001 3.142
+         scale 0.27501 0.15576 0.22213
+         children [
+          DEF Revolution4 Shape {
+           appearance Appearance {
+            material DEF Cyan1_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.0 1.0 1.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.20859 1.03067 0.00000
+              -0.19056 1.03067 0.08484
+              -0.30265 0.85890 0.13475
+              -0.33129 0.85890 0.00000
+              -0.41474 0.58896 0.18465
+              -0.45399 0.58896 0.00000
+              -0.48199 0.31902 0.21460
+              -0.52761 0.31902 0.00000
+              -0.50441 0.02454 0.22458
+              -0.55215 0.02454 0.00000
+              0.41474 0.02454 -0.18465
+              0.45399 0.02454 0.00000
+              0.39232 0.29448 -0.17467
+              0.42945 0.29448 0.00000
+              0.32507 0.66258 -0.14473
+              0.35583 0.66258 0.00000
+              0.25781 0.85890 -0.11478
+              0.28221 0.85890 0.00000
+              0.16814 1.05521 -0.07486
+              0.18405 1.05521 0.00000
+              -0.13957 1.03067 0.15501
+              -0.22168 0.85890 0.24620
+              -0.30378 0.58896 0.33738
+              -0.35304 0.31902 0.39209
+              -0.36946 0.02454 0.41033
+              0.30378 0.02454 -0.33738
+              0.28736 0.29448 -0.31914
+              0.23810 0.66258 -0.26443
+              0.18883 0.85890 -0.20972
+              0.12315 1.05521 -0.13678
+              -0.06446 1.03067 0.19838
+              -0.10237 0.85890 0.31507
+              -0.14029 0.58896 0.43177
+              -0.16304 0.31902 0.50178
+              -0.17062 0.02454 0.52512
+              0.14029 0.02454 -0.43177
+              0.13271 0.29448 -0.40843
+              0.10996 0.66258 -0.33841
+              0.08721 0.85890 -0.26840
+              0.05687 1.05521 -0.17504
+              0.02180 1.03067 0.20745
+              0.03463 0.85890 0.32947
+              0.04745 0.58896 0.45150
+              0.05515 0.31902 0.52472
+              0.05772 0.02454 0.54912
+              -0.04745 0.02454 -0.45150
+              -0.04489 0.29448 -0.42710
+              -0.03719 0.66258 -0.35388
+              -0.02950 0.85890 -0.28066
+              -0.01924 1.05521 -0.18304
+              0.10429 1.03067 0.18064
+              0.16564 0.85890 0.28690
+              0.22699 0.58896 0.39316
+              0.26380 0.31902 0.45692
+              0.27607 0.02454 0.47817
+              -0.22699 0.02454 -0.39316
+              -0.21472 0.29448 -0.37191
+              -0.17791 0.66258 -0.30816
+              -0.14110 0.85890 -0.24440
+              -0.09202 1.05521 -0.15939
+              0.16875 1.03067 0.12261
+              0.26802 0.85890 0.19473
+              0.36728 0.58896 0.26685
+              0.42684 0.31902 0.31012
+              0.44670 0.02454 0.32454
+              -0.36728 0.02454 -0.26685
+              -0.34743 0.29448 -0.25242
+              -0.28787 0.66258 -0.20915
+              -0.22831 0.85890 -0.16588
+              -0.14890 1.05521 -0.10818
+              0.20403 1.03067 0.04337
+              0.32405 0.85890 0.06888
+              0.44407 0.58896 0.09439
+              0.51608 0.31902 0.10970
+              0.54008 0.02454 0.11480
+              -0.44407 0.02454 -0.09439
+              -0.42006 0.29448 -0.08929
+              -0.34805 0.66258 -0.07398
+              -0.27604 0.85890 -0.05867
+              -0.18003 1.05521 -0.03827
+              0.20403 1.03067 -0.04337
+              0.32405 0.85890 -0.06888
+              0.44407 0.58896 -0.09439
+              0.51608 0.31902 -0.10970
+              0.54008 0.02454 -0.11480
+              -0.44407 0.02454 0.09439
+              -0.42006 0.29448 0.08929
+              -0.34805 0.66258 0.07398
+              -0.27604 0.85890 0.05867
+              -0.18003 1.05521 0.03827
+              0.16875 1.03067 -0.12261
+              0.26802 0.85890 -0.19473
+              0.36728 0.58896 -0.26685
+              0.42684 0.31902 -0.31012
+              0.44670 0.02454 -0.32454
+              -0.36728 0.02454 0.26685
+              -0.34743 0.29448 0.25242
+              -0.28787 0.66258 0.20915
+              -0.22831 0.85890 0.16588
+              -0.14890 1.05521 0.10818
+              0.10429 1.03067 -0.18064
+              0.16564 0.85890 -0.28690
+              0.22699 0.58896 -0.39316
+              0.26380 0.31902 -0.45692
+              0.27607 0.02454 -0.47817
+              -0.22699 0.02454 0.39316
+              -0.21472 0.29448 0.37191
+              -0.17791 0.66258 0.30816
+              -0.14110 0.85890 0.24440
+              -0.09202 1.05521 0.15939
+              0.02180 1.03067 -0.20745
+              0.03463 0.85890 -0.32947
+              0.04745 0.58896 -0.45150
+              0.05515 0.31902 -0.52472
+              0.05772 0.02454 -0.54912
+              -0.04745 0.02454 0.45150
+              -0.04489 0.29448 0.42710
+              -0.03719 0.66258 0.35388
+              -0.02950 0.85890 0.28066
+              -0.01924 1.05521 0.18304
+              -0.06446 1.03067 -0.19838
+              -0.10237 0.85890 -0.31507
+              -0.14029 0.58896 -0.43177
+              -0.16304 0.31902 -0.50178
+              -0.17062 0.02454 -0.52512
+              0.14029 0.02454 0.43177
+              0.13271 0.29448 0.40843
+              0.10996 0.66258 0.33841
+              0.08721 0.85890 0.26840
+              0.05687 1.05521 0.17504
+              -0.13957 1.03067 -0.15501
+              -0.22168 0.85890 -0.24620
+              -0.30378 0.58896 -0.33738
+              -0.35304 0.31902 -0.39209
+              -0.36946 0.02454 -0.41033
+              0.30378 0.02454 0.33738
+              0.28736 0.29448 0.31914
+              0.23810 0.66258 0.26443
+              0.18883 0.85890 0.20972
+              0.12315 1.05521 0.13678
+              -0.19056 1.03067 -0.08484
+              -0.30265 0.85890 -0.13475
+              -0.41474 0.58896 -0.18465
+              -0.48199 0.31902 -0.21460
+              -0.50441 0.02454 -0.22458
+              0.41474 0.02454 0.18465
+              0.39232 0.29448 0.17467
+              0.32507 0.66258 0.14473
+              0.25781 0.85890 0.11478
+              0.16814 1.05521 0.07486
+             ]
+            }
+            coordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              3 2 4 -1 
+              3 4 5 -1 
+              5 4 6 -1 
+              5 6 7 -1 
+              7 6 8 -1 
+              7 8 9 -1 
+              9 8 10 -1 
+              9 10 11 -1 
+              11 10 12 -1 
+              11 12 13 -1 
+              13 12 14 -1 
+              13 14 15 -1 
+              15 14 16 -1 
+              15 16 17 -1 
+              17 16 18 -1 
+              17 18 19 -1 
+              1 20 21 -1 
+              1 21 2 -1 
+              2 21 22 -1 
+              2 22 4 -1 
+              4 22 23 -1 
+              4 23 6 -1 
+              6 23 24 -1 
+              6 24 8 -1 
+              8 24 25 -1 
+              8 25 10 -1 
+              10 25 26 -1 
+              10 26 12 -1 
+              12 26 27 -1 
+              12 27 14 -1 
+              14 27 28 -1 
+              14 28 16 -1 
+              16 28 29 -1 
+              16 29 18 -1 
+              20 30 31 -1 
+              20 31 21 -1 
+              21 31 32 -1 
+              21 32 22 -1 
+              22 32 33 -1 
+              22 33 23 -1 
+              23 33 34 -1 
+              23 34 24 -1 
+              24 34 35 -1 
+              24 35 25 -1 
+              25 35 36 -1 
+              25 36 26 -1 
+              26 36 37 -1 
+              26 37 27 -1 
+              27 37 38 -1 
+              27 38 28 -1 
+              28 38 39 -1 
+              28 39 29 -1 
+              30 40 41 -1 
+              30 41 31 -1 
+              31 41 42 -1 
+              31 42 32 -1 
+              32 42 43 -1 
+              32 43 33 -1 
+              33 43 44 -1 
+              33 44 34 -1 
+              34 44 45 -1 
+              34 45 35 -1 
+              35 45 46 -1 
+              35 46 36 -1 
+              36 46 47 -1 
+              36 47 37 -1 
+              37 47 48 -1 
+              37 48 38 -1 
+              38 48 49 -1 
+              38 49 39 -1 
+              40 50 51 -1 
+              40 51 41 -1 
+              41 51 52 -1 
+              41 52 42 -1 
+              42 52 53 -1 
+              42 53 43 -1 
+              43 53 54 -1 
+              43 54 44 -1 
+              44 54 55 -1 
+              44 55 45 -1 
+              45 55 56 -1 
+              45 56 46 -1 
+              46 56 57 -1 
+              46 57 47 -1 
+              47 57 58 -1 
+              47 58 48 -1 
+              48 58 59 -1 
+              48 59 49 -1 
+              50 60 61 -1 
+              50 61 51 -1 
+              51 61 62 -1 
+              51 62 52 -1 
+              52 62 63 -1 
+              52 63 53 -1 
+              53 63 64 -1 
+              53 64 54 -1 
+              54 64 65 -1 
+              54 65 55 -1 
+              55 65 66 -1 
+              55 66 56 -1 
+              56 66 67 -1 
+              56 67 57 -1 
+              57 67 68 -1 
+              57 68 58 -1 
+              58 68 69 -1 
+              58 69 59 -1 
+              60 70 71 -1 
+              60 71 61 -1 
+              61 71 72 -1 
+              61 72 62 -1 
+              62 72 73 -1 
+              62 73 63 -1 
+              63 73 74 -1 
+              63 74 64 -1 
+              64 74 75 -1 
+              64 75 65 -1 
+              65 75 76 -1 
+              65 76 66 -1 
+              66 76 77 -1 
+              66 77 67 -1 
+              67 77 78 -1 
+              67 78 68 -1 
+              68 78 79 -1 
+              68 79 69 -1 
+              70 80 81 71 
+              -1 71 81 82 
+              72 -1 72 82 
+              83 73 -1 73 
+              83 84 74 -1 
+              74 84 85 -1 
+              74 85 75 -1 
+              75 85 86 76 
+              -1 76 86 87 
+              77 -1 77 87 
+              88 78 -1 78 
+              88 89 79 -1 
+              80 90 91 -1 
+              80 91 81 -1 
+              81 91 92 -1 
+              81 92 82 -1 
+              82 92 93 -1 
+              82 93 83 -1 
+              83 93 94 -1 
+              83 94 84 -1 
+              84 94 95 -1 
+              84 95 85 -1 
+              85 95 96 -1 
+              85 96 86 -1 
+              86 96 97 -1 
+              86 97 87 -1 
+              87 97 98 -1 
+              87 98 88 -1 
+              88 98 99 -1 
+              88 99 89 -1 
+              90 100 101 -1 
+              90 101 91 -1 
+              91 101 102 -1 
+              91 102 92 -1 
+              92 102 103 -1 
+              92 103 93 -1 
+              93 103 104 -1 
+              93 104 94 -1 
+              94 104 105 -1 
+              94 105 95 -1 
+              95 105 106 -1 
+              95 106 96 -1 
+              96 106 107 -1 
+              96 107 97 -1 
+              97 107 108 -1 
+              97 108 98 -1 
+              98 108 109 -1 
+              98 109 99 -1 
+              100 110 111 -1 
+              100 111 101 -1 
+              101 111 112 -1 
+              101 112 102 -1 
+              102 112 113 -1 
+              102 113 103 -1 
+              103 113 114 -1 
+              103 114 104 -1 
+              104 114 115 -1 
+              104 115 105 -1 
+              105 115 116 -1 
+              105 116 106 -1 
+              106 116 117 -1 
+              106 117 107 -1 
+              107 117 118 -1 
+              107 118 108 -1 
+              108 118 119 -1 
+              108 119 109 -1 
+              110 120 121 -1 
+              110 121 111 -1 
+              111 121 122 -1 
+              111 122 112 -1 
+              112 122 123 -1 
+              112 123 113 -1 
+              113 123 124 -1 
+              113 124 114 -1 
+              114 124 125 -1 
+              114 125 115 -1 
+              115 125 126 -1 
+              115 126 116 -1 
+              116 126 127 -1 
+              116 127 117 -1 
+              117 127 128 -1 
+              117 128 118 -1 
+              118 128 129 -1 
+              118 129 119 -1 
+              120 130 131 -1 
+              120 131 121 -1 
+              121 131 132 -1 
+              121 132 122 -1 
+              122 132 133 -1 
+              122 133 123 -1 
+              123 133 134 -1 
+              123 134 124 -1 
+              124 134 135 -1 
+              124 135 125 -1 
+              125 135 136 -1 
+              125 136 126 -1 
+              126 136 137 -1 
+              126 137 127 -1 
+              127 137 138 -1 
+              127 138 128 -1 
+              128 138 139 -1 
+              128 139 129 -1 
+              130 140 141 -1 
+              130 141 131 -1 
+              131 141 142 -1 
+              131 142 132 -1 
+              132 142 143 -1 
+              132 143 133 -1 
+              133 143 144 -1 
+              133 144 134 -1 
+              134 144 145 -1 
+              134 145 135 -1 
+              135 145 146 -1 
+              135 146 136 -1 
+              136 146 147 -1 
+              136 147 137 -1 
+              137 147 148 -1 
+              137 148 138 -1 
+              138 148 149 -1 
+              138 149 139 -1 
+              140 0 3 -1 
+              140 3 141 -1 
+              141 3 5 -1 
+              141 5 142 -1 
+              142 5 7 -1 
+              142 7 143 -1 
+              143 7 9 -1 
+              143 9 144 -1 
+              144 9 11 -1 
+              144 11 145 -1 
+              145 11 13 -1 
+              145 13 146 -1 
+              146 13 15 -1 
+              146 15 147 -1 
+              147 15 17 -1 
+              147 17 148 -1 
+              148 17 19 -1 
+              148 19 149 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Revolution5 Transform {
+         translation 1.26477 0.25378 -0.25144
+         rotation -1.0 -0.001 0.001 3.142
+         scale 0.195 0.15576 0.22126
+         children [
+          DEF Revolution5 Shape {
+           appearance Appearance {
+            material USE Cyan1_mat
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.20859 1.03067 0.00000
+              -0.19271 1.03067 0.07982
+              -0.30607 0.85890 0.12678
+              -0.33129 0.85890 0.00000
+              -0.41943 0.58896 0.17373
+              -0.45399 0.58896 0.00000
+              -0.48745 0.31902 0.20191
+              -0.52761 0.31902 0.00000
+              -0.51012 0.02454 0.21130
+              -0.55215 0.02454 0.00000
+              0.41943 0.02454 -0.17373
+              0.45399 0.02454 0.00000
+              0.39676 0.29448 -0.16434
+              0.42945 0.29448 0.00000
+              0.32874 0.66258 -0.13617
+              0.35583 0.66258 0.00000
+              0.26073 0.85890 -0.10800
+              0.28221 0.85890 0.00000
+              0.17004 1.05521 -0.07043
+              0.18405 1.05521 0.00000
+              -0.14749 1.03067 0.14749
+              -0.23426 0.85890 0.23426
+              -0.32102 0.58896 0.32102
+              -0.37307 0.31902 0.37307
+              -0.39043 0.02454 0.39043
+              0.32102 0.02454 -0.32102
+              0.30367 0.29448 -0.30367
+              0.25161 0.66258 -0.25161
+              0.19955 0.85890 -0.19955
+              0.13014 1.05521 -0.13014
+              -0.07982 1.03067 0.19271
+              -0.12678 0.85890 0.30607
+              -0.17373 0.58896 0.41943
+              -0.20191 0.31902 0.48745
+              -0.21130 0.02454 0.51012
+              0.17373 0.02454 -0.41943
+              0.16434 0.29448 -0.39676
+              0.13617 0.66258 -0.32874
+              0.10800 0.85890 -0.26073
+              0.07043 1.05521 -0.17004
+              0.00000 1.03067 0.20859
+              0.00000 0.85890 0.33129
+              0.00000 0.58896 0.45399
+              0.00000 0.31902 0.52761
+              0.00000 0.02454 0.55215
+              0.00000 0.02454 -0.45399
+              0.00000 0.29448 -0.42945
+              0.00000 0.66258 -0.35583
+              0.00000 0.85890 -0.28221
+              0.00000 1.05521 -0.18405
+              0.07982 1.03067 0.19271
+              0.12678 0.85890 0.30607
+              0.17373 0.58896 0.41943
+              0.20191 0.31902 0.48745
+              0.21130 0.02454 0.51012
+              -0.17373 0.02454 -0.41943
+              -0.16434 0.29448 -0.39676
+              -0.13617 0.66258 -0.32874
+              -0.10800 0.85890 -0.26073
+              -0.07043 1.05521 -0.17004
+              0.14749 1.03067 0.14749
+              0.23426 0.85890 0.23426
+              0.32102 0.58896 0.32102
+              0.37307 0.31902 0.37307
+              0.39043 0.02454 0.39043
+              -0.32102 0.02454 -0.32102
+              -0.30367 0.29448 -0.30367
+              -0.25161 0.66258 -0.25161
+              -0.19955 0.85890 -0.19955
+              -0.13014 1.05521 -0.13014
+              0.19271 1.03067 0.07982
+              0.30607 0.85890 0.12678
+              0.41943 0.58896 0.17373
+              0.48745 0.31902 0.20191
+              0.51012 0.02454 0.21130
+              -0.41943 0.02454 -0.17373
+              -0.39676 0.29448 -0.16434
+              -0.32874 0.66258 -0.13617
+              -0.26073 0.85890 -0.10800
+              -0.17004 1.05521 -0.07043
+              0.20859 1.03067 0.00000
+              0.33129 0.85890 0.00000
+              0.45399 0.58896 0.00000
+              0.52761 0.31902 0.00000
+              0.55215 0.02454 0.00000
+              -0.45399 0.02454 0.00000
+              -0.42945 0.29448 0.00000
+              -0.35583 0.66258 0.00000
+              -0.28221 0.85890 0.00000
+              -0.18405 1.05521 0.00000
+              0.19271 1.03067 -0.07982
+              0.30607 0.85890 -0.12678
+              0.41943 0.58896 -0.17373
+              0.48745 0.31902 -0.20191
+              0.51012 0.02454 -0.21130
+              -0.41943 0.02454 0.17373
+              -0.39676 0.29448 0.16434
+              -0.32874 0.66258 0.13617
+              -0.26073 0.85890 0.10800
+              -0.17004 1.05521 0.07043
+              0.14749 1.03067 -0.14749
+              0.23426 0.85890 -0.23426
+              0.32102 0.58896 -0.32102
+              0.37307 0.31902 -0.37307
+              0.39043 0.02454 -0.39043
+              -0.32102 0.02454 0.32102
+              -0.30367 0.29448 0.30367
+              -0.25161 0.66258 0.25161
+              -0.19955 0.85890 0.19955
+              -0.13014 1.05521 0.13014
+              0.07982 1.03067 -0.19271
+              0.12678 0.85890 -0.30607
+              0.17373 0.58896 -0.41943
+              0.20191 0.31902 -0.48745
+              0.21130 0.02454 -0.51012
+              -0.17373 0.02454 0.41943
+              -0.16434 0.29448 0.39676
+              -0.13617 0.66258 0.32874
+              -0.10800 0.85890 0.26073
+              -0.07043 1.05521 0.17004
+              0.00000 1.03067 -0.20859
+              0.00000 0.85890 -0.33129
+              0.00000 0.58896 -0.45399
+              0.00000 0.31902 -0.52761
+              0.00000 0.02454 -0.55215
+              0.00000 0.02454 0.45399
+              0.00000 0.29448 0.42945
+              0.00000 0.66258 0.35583
+              0.00000 0.85890 0.28221
+              0.00000 1.05521 0.18405
+              -0.07982 1.03067 -0.19271
+              -0.12678 0.85890 -0.30607
+              -0.17373 0.58896 -0.41943
+              -0.20191 0.31902 -0.48745
+              -0.21130 0.02454 -0.51012
+              0.17373 0.02454 0.41943
+              0.16434 0.29448 0.39676
+              0.13617 0.66258 0.32874
+              0.10800 0.85890 0.26073
+              0.07043 1.05521 0.17004
+              -0.14749 1.03067 -0.14749
+              -0.23426 0.85890 -0.23426
+              -0.32102 0.58896 -0.32102
+              -0.37307 0.31902 -0.37307
+              -0.39043 0.02454 -0.39043
+              0.32102 0.02454 0.32102
+              0.30367 0.29448 0.30367
+              0.25161 0.66258 0.25161
+              0.19955 0.85890 0.19955
+              0.13014 1.05521 0.13014
+              -0.19271 1.03067 -0.07982
+              -0.30607 0.85890 -0.12678
+              -0.41943 0.58896 -0.17373
+              -0.48745 0.31902 -0.20191
+              -0.51012 0.02454 -0.21130
+              0.41943 0.02454 0.17373
+              0.39676 0.29448 0.16434
+              0.32874 0.66258 0.13617
+              0.26073 0.85890 0.10800
+              0.17004 1.05521 0.07043
+             ]
+            }
+            coordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              3 2 4 -1 
+              3 4 5 -1 
+              5 4 6 -1 
+              5 6 7 -1 
+              7 6 8 -1 
+              7 8 9 -1 
+              9 8 10 -1 
+              9 10 11 -1 
+              11 10 12 -1 
+              11 12 13 -1 
+              13 12 14 -1 
+              13 14 15 -1 
+              15 14 16 -1 
+              15 16 17 -1 
+              17 16 18 -1 
+              17 18 19 -1 
+              1 20 21 -1 
+              1 21 2 -1 
+              2 21 22 -1 
+              2 22 4 -1 
+              4 22 23 -1 
+              4 23 6 -1 
+              6 23 24 -1 
+              6 24 8 -1 
+              8 24 25 -1 
+              8 25 10 -1 
+              10 25 26 -1 
+              10 26 12 -1 
+              12 26 27 -1 
+              12 27 14 -1 
+              14 27 28 -1 
+              14 28 16 -1 
+              16 28 29 -1 
+              16 29 18 -1 
+              20 30 31 -1 
+              20 31 21 -1 
+              21 31 32 -1 
+              21 32 22 -1 
+              22 32 33 -1 
+              22 33 23 -1 
+              23 33 34 -1 
+              23 34 24 -1 
+              24 34 35 -1 
+              24 35 25 -1 
+              25 35 36 -1 
+              25 36 26 -1 
+              26 36 37 -1 
+              26 37 27 -1 
+              27 37 38 -1 
+              27 38 28 -1 
+              28 38 39 -1 
+              28 39 29 -1 
+              30 40 41 -1 
+              30 41 31 -1 
+              31 41 42 -1 
+              31 42 32 -1 
+              32 42 43 -1 
+              32 43 33 -1 
+              33 43 44 -1 
+              33 44 34 -1 
+              34 44 45 -1 
+              34 45 35 -1 
+              35 45 46 -1 
+              35 46 36 -1 
+              36 46 47 -1 
+              36 47 37 -1 
+              37 47 48 -1 
+              37 48 38 -1 
+              38 48 49 -1 
+              38 49 39 -1 
+              40 50 51 -1 
+              40 51 41 -1 
+              41 51 52 -1 
+              41 52 42 -1 
+              42 52 53 -1 
+              42 53 43 -1 
+              43 53 54 -1 
+              43 54 44 -1 
+              44 54 55 -1 
+              44 55 45 -1 
+              45 55 56 -1 
+              45 56 46 -1 
+              46 56 57 -1 
+              46 57 47 -1 
+              47 57 58 -1 
+              47 58 48 -1 
+              48 58 59 -1 
+              48 59 49 -1 
+              50 60 61 -1 
+              50 61 51 -1 
+              51 61 62 -1 
+              51 62 52 -1 
+              52 62 63 -1 
+              52 63 53 -1 
+              53 63 64 -1 
+              53 64 54 -1 
+              54 64 65 -1 
+              54 65 55 -1 
+              55 65 66 -1 
+              55 66 56 -1 
+              56 66 67 -1 
+              56 67 57 -1 
+              57 67 68 -1 
+              57 68 58 -1 
+              58 68 69 -1 
+              58 69 59 -1 
+              60 70 71 -1 
+              60 71 61 -1 
+              61 71 72 -1 
+              61 72 62 -1 
+              62 72 73 -1 
+              62 73 63 -1 
+              63 73 74 -1 
+              63 74 64 -1 
+              64 74 75 -1 
+              64 75 65 -1 
+              65 75 76 -1 
+              65 76 66 -1 
+              66 76 77 -1 
+              66 77 67 -1 
+              67 77 78 -1 
+              67 78 68 -1 
+              68 78 79 -1 
+              68 79 69 -1 
+              70 80 81 -1 
+              70 81 71 -1 
+              71 81 82 -1 
+              71 82 72 -1 
+              72 82 83 -1 
+              72 83 73 -1 
+              73 83 84 -1 
+              73 84 74 -1 
+              74 84 85 -1 
+              74 85 75 -1 
+              75 85 86 -1 
+              75 86 76 -1 
+              76 86 87 -1 
+              76 87 77 -1 
+              77 87 88 -1 
+              77 88 78 -1 
+              78 88 89 -1 
+              78 89 79 -1 
+              80 90 91 -1 
+              80 91 81 -1 
+              81 91 92 -1 
+              81 92 82 -1 
+              82 92 93 -1 
+              82 93 83 -1 
+              83 93 94 -1 
+              83 94 84 -1 
+              84 94 95 -1 
+              84 95 85 -1 
+              85 95 96 -1 
+              85 96 86 -1 
+              86 96 97 -1 
+              86 97 87 -1 
+              87 97 98 -1 
+              87 98 88 -1 
+              88 98 99 -1 
+              88 99 89 -1 
+              90 100 101 -1 
+              90 101 91 -1 
+              91 101 102 -1 
+              91 102 92 -1 
+              92 102 103 -1 
+              92 103 93 -1 
+              93 103 104 -1 
+              93 104 94 -1 
+              94 104 105 -1 
+              94 105 95 -1 
+              95 105 106 -1 
+              95 106 96 -1 
+              96 106 107 -1 
+              96 107 97 -1 
+              97 107 108 -1 
+              97 108 98 -1 
+              98 108 109 -1 
+              98 109 99 -1 
+              100 110 111 -1 
+              100 111 101 -1 
+              101 111 112 -1 
+              101 112 102 -1 
+              102 112 113 -1 
+              102 113 103 -1 
+              103 113 114 -1 
+              103 114 104 -1 
+              104 114 115 -1 
+              104 115 105 -1 
+              105 115 116 -1 
+              105 116 106 -1 
+              106 116 117 -1 
+              106 117 107 -1 
+              107 117 118 -1 
+              107 118 108 -1 
+              108 118 119 -1 
+              108 119 109 -1 
+              110 120 121 -1 
+              110 121 111 -1 
+              111 121 122 -1 
+              111 122 112 -1 
+              112 122 123 -1 
+              112 123 113 -1 
+              113 123 124 -1 
+              113 124 114 -1 
+              114 124 125 -1 
+              114 125 115 -1 
+              115 125 126 -1 
+              115 126 116 -1 
+              116 126 127 -1 
+              116 127 117 -1 
+              117 127 128 -1 
+              117 128 118 -1 
+              118 128 129 -1 
+              118 129 119 -1 
+              120 130 131 -1 
+              120 131 121 -1 
+              121 131 132 -1 
+              121 132 122 -1 
+              122 132 133 -1 
+              122 133 123 -1 
+              123 133 134 -1 
+              123 134 124 -1 
+              124 134 135 -1 
+              124 135 125 -1 
+              125 135 136 -1 
+              125 136 126 -1 
+              126 136 137 -1 
+              126 137 127 -1 
+              127 137 138 -1 
+              127 138 128 -1 
+              128 138 139 -1 
+              128 139 129 -1 
+              130 140 141 -1 
+              130 141 131 -1 
+              131 141 142 -1 
+              131 142 132 -1 
+              132 142 143 -1 
+              132 143 133 -1 
+              133 143 144 -1 
+              133 144 134 -1 
+              134 144 145 -1 
+              134 145 135 -1 
+              135 145 146 -1 
+              135 146 136 -1 
+              136 146 147 -1 
+              136 147 137 -1 
+              137 147 148 -1 
+              137 148 138 -1 
+              138 148 149 -1 
+              138 149 139 -1 
+              140 150 151 -1 
+              140 151 141 -1 
+              141 151 152 -1 
+              141 152 142 -1 
+              142 152 153 -1 
+              142 153 143 -1 
+              143 153 154 -1 
+              143 154 144 -1 
+              144 154 155 -1 
+              144 155 145 -1 
+              145 155 156 -1 
+              145 156 146 -1 
+              146 156 157 -1 
+              146 157 147 -1 
+              147 157 158 -1 
+              147 158 148 -1 
+              148 158 159 -1 
+              148 159 149 -1 
+              150 0 3 -1 
+              150 3 151 -1 
+              151 3 5 -1 
+              151 5 152 -1 
+              152 5 7 -1 
+              152 7 153 -1 
+              153 7 9 -1 
+              153 9 154 -1 
+              154 9 11 -1 
+              154 11 155 -1 
+              155 11 13 -1 
+              155 13 156 -1 
+              156 13 15 -1 
+              156 15 157 -1 
+              157 15 17 -1 
+              157 17 158 -1 
+              158 17 19 -1 
+              158 19 159 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Revolution1 Transform {
+         translation 0.94931 0.73985 -0.25144
+         rotation -1.0 -0.001 0.001 3.142
+         scale 0.27501 0.15576 0.22213
+         children [
+          DEF Revolution1 Shape {
+           appearance Appearance {
+            material DEF silver1_mat Material {
+             ambientIntensity 0.300
+             shininess 0.050
+             diffuseColor 0.50196 0.50196 0.50196
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.50196 0.50196 0.50196
+            }
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.20859 1.03067 0.00000
+              -0.19056 1.03067 0.08484
+              -0.30265 0.85890 0.13475
+              -0.33129 0.85890 0.00000
+              -0.41474 0.58896 0.18465
+              -0.45399 0.58896 0.00000
+              -0.48199 0.31902 0.21460
+              -0.52761 0.31902 0.00000
+              -0.50441 0.02454 0.22458
+              -0.55215 0.02454 0.00000
+              0.41474 0.02454 -0.18465
+              0.45399 0.02454 0.00000
+              0.39232 0.29448 -0.17467
+              0.42945 0.29448 0.00000
+              0.32507 0.66258 -0.14473
+              0.35583 0.66258 0.00000
+              0.25781 0.85890 -0.11478
+              0.28221 0.85890 0.00000
+              0.16814 1.05521 -0.07486
+              0.18405 1.05521 0.00000
+              -0.13957 1.03067 0.15501
+              -0.22168 0.85890 0.24620
+              -0.30378 0.58896 0.33738
+              -0.35304 0.31902 0.39209
+              -0.36946 0.02454 0.41033
+              0.30378 0.02454 -0.33738
+              0.28736 0.29448 -0.31914
+              0.23810 0.66258 -0.26443
+              0.18883 0.85890 -0.20972
+              0.12315 1.05521 -0.13678
+              -0.06446 1.03067 0.19838
+              -0.10237 0.85890 0.31507
+              -0.14029 0.58896 0.43177
+              -0.16304 0.31902 0.50178
+              -0.17062 0.02454 0.52512
+              0.14029 0.02454 -0.43177
+              0.13271 0.29448 -0.40843
+              0.10996 0.66258 -0.33841
+              0.08721 0.85890 -0.26840
+              0.05687 1.05521 -0.17504
+              0.02180 1.03067 0.20745
+              0.03463 0.85890 0.32947
+              0.04745 0.58896 0.45150
+              0.05515 0.31902 0.52472
+              0.05772 0.02454 0.54912
+              -0.04745 0.02454 -0.45150
+              -0.04489 0.29448 -0.42710
+              -0.03719 0.66258 -0.35388
+              -0.02950 0.85890 -0.28066
+              -0.01924 1.05521 -0.18304
+              0.10429 1.03067 0.18064
+              0.16564 0.85890 0.28690
+              0.22699 0.58896 0.39316
+              0.26380 0.31902 0.45692
+              0.27607 0.02454 0.47817
+              -0.22699 0.02454 -0.39316
+              -0.21472 0.29448 -0.37191
+              -0.17791 0.66258 -0.30816
+              -0.14110 0.85890 -0.24440
+              -0.09202 1.05521 -0.15939
+              0.16875 1.03067 0.12261
+              0.26802 0.85890 0.19473
+              0.36728 0.58896 0.26685
+              0.42684 0.31902 0.31012
+              0.44670 0.02454 0.32454
+              -0.36728 0.02454 -0.26685
+              -0.34743 0.29448 -0.25242
+              -0.28787 0.66258 -0.20915
+              -0.22831 0.85890 -0.16588
+              -0.14890 1.05521 -0.10818
+              0.20403 1.03067 0.04337
+              0.32405 0.85890 0.06888
+              0.44407 0.58896 0.09439
+              0.51608 0.31902 0.10970
+              0.54008 0.02454 0.11480
+              -0.44407 0.02454 -0.09439
+              -0.42006 0.29448 -0.08929
+              -0.34805 0.66258 -0.07398
+              -0.27604 0.85890 -0.05867
+              -0.18003 1.05521 -0.03827
+              0.20403 1.03067 -0.04337
+              0.32405 0.85890 -0.06888
+              0.44407 0.58896 -0.09439
+              0.51608 0.31902 -0.10970
+              0.54008 0.02454 -0.11480
+              -0.44407 0.02454 0.09439
+              -0.42006 0.29448 0.08929
+              -0.34805 0.66258 0.07398
+              -0.27604 0.85890 0.05867
+              -0.18003 1.05521 0.03827
+              0.16875 1.03067 -0.12261
+              0.26802 0.85890 -0.19473
+              0.36728 0.58896 -0.26685
+              0.42684 0.31902 -0.31012
+              0.44670 0.02454 -0.32454
+              -0.36728 0.02454 0.26685
+              -0.34743 0.29448 0.25242
+              -0.28787 0.66258 0.20915
+              -0.22831 0.85890 0.16588
+              -0.14890 1.05521 0.10818
+              0.10429 1.03067 -0.18064
+              0.16564 0.85890 -0.28690
+              0.22699 0.58896 -0.39316
+              0.26380 0.31902 -0.45692
+              0.27607 0.02454 -0.47817
+              -0.22699 0.02454 0.39316
+              -0.21472 0.29448 0.37191
+              -0.17791 0.66258 0.30816
+              -0.14110 0.85890 0.24440
+              -0.09202 1.05521 0.15939
+              0.02180 1.03067 -0.20745
+              0.03463 0.85890 -0.32947
+              0.04745 0.58896 -0.45150
+              0.05515 0.31902 -0.52472
+              0.05772 0.02454 -0.54912
+              -0.04745 0.02454 0.45150
+              -0.04489 0.29448 0.42710
+              -0.03719 0.66258 0.35388
+              -0.02950 0.85890 0.28066
+              -0.01924 1.05521 0.18304
+              -0.06446 1.03067 -0.19838
+              -0.10237 0.85890 -0.31507
+              -0.14029 0.58896 -0.43177
+              -0.16304 0.31902 -0.50178
+              -0.17062 0.02454 -0.52512
+              0.14029 0.02454 0.43177
+              0.13271 0.29448 0.40843
+              0.10996 0.66258 0.33841
+              0.08721 0.85890 0.26840
+              0.05687 1.05521 0.17504
+              -0.13957 1.03067 -0.15501
+              -0.22168 0.85890 -0.24620
+              -0.30378 0.58896 -0.33738
+              -0.35304 0.31902 -0.39209
+              -0.36946 0.02454 -0.41033
+              0.30378 0.02454 0.33738
+              0.28736 0.29448 0.31914
+              0.23810 0.66258 0.26443
+              0.18883 0.85890 0.20972
+              0.12315 1.05521 0.13678
+              -0.19056 1.03067 -0.08484
+              -0.30265 0.85890 -0.13475
+              -0.41474 0.58896 -0.18465
+              -0.48199 0.31902 -0.21460
+              -0.50441 0.02454 -0.22458
+              0.41474 0.02454 0.18465
+              0.39232 0.29448 0.17467
+              0.32507 0.66258 0.14473
+              0.25781 0.85890 0.11478
+              0.16814 1.05521 0.07486
+             ]
+            }
+            coordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              3 2 4 -1 
+              3 4 5 -1 
+              5 4 6 -1 
+              5 6 7 -1 
+              7 6 8 -1 
+              7 8 9 -1 
+              9 8 10 -1 
+              9 10 11 -1 
+              11 10 12 -1 
+              11 12 13 -1 
+              13 12 14 -1 
+              13 14 15 -1 
+              15 14 16 -1 
+              15 16 17 -1 
+              17 16 18 -1 
+              17 18 19 -1 
+              1 20 21 -1 
+              1 21 2 -1 
+              2 21 22 -1 
+              2 22 4 -1 
+              4 22 23 -1 
+              4 23 6 -1 
+              6 23 24 -1 
+              6 24 8 -1 
+              8 24 25 -1 
+              8 25 10 -1 
+              10 25 26 -1 
+              10 26 12 -1 
+              12 26 27 -1 
+              12 27 14 -1 
+              14 27 28 -1 
+              14 28 16 -1 
+              16 28 29 -1 
+              16 29 18 -1 
+              20 30 31 -1 
+              20 31 21 -1 
+              21 31 32 -1 
+              21 32 22 -1 
+              22 32 33 -1 
+              22 33 23 -1 
+              23 33 34 -1 
+              23 34 24 -1 
+              24 34 35 -1 
+              24 35 25 -1 
+              25 35 36 -1 
+              25 36 26 -1 
+              26 36 37 -1 
+              26 37 27 -1 
+              27 37 38 -1 
+              27 38 28 -1 
+              28 38 39 -1 
+              28 39 29 -1 
+              30 40 41 -1 
+              30 41 31 -1 
+              31 41 42 -1 
+              31 42 32 -1 
+              32 42 43 -1 
+              32 43 33 -1 
+              33 43 44 -1 
+              33 44 34 -1 
+              34 44 45 -1 
+              34 45 35 -1 
+              35 45 46 -1 
+              35 46 36 -1 
+              36 46 47 -1 
+              36 47 37 -1 
+              37 47 48 -1 
+              37 48 38 -1 
+              38 48 49 -1 
+              38 49 39 -1 
+              40 50 51 -1 
+              40 51 41 -1 
+              41 51 52 -1 
+              41 52 42 -1 
+              42 52 53 -1 
+              42 53 43 -1 
+              43 53 54 -1 
+              43 54 44 -1 
+              44 54 55 -1 
+              44 55 45 -1 
+              45 55 56 -1 
+              45 56 46 -1 
+              46 56 57 -1 
+              46 57 47 -1 
+              47 57 58 -1 
+              47 58 48 -1 
+              48 58 59 -1 
+              48 59 49 -1 
+              50 60 61 -1 
+              50 61 51 -1 
+              51 61 62 -1 
+              51 62 52 -1 
+              52 62 63 -1 
+              52 63 53 -1 
+              53 63 64 -1 
+              53 64 54 -1 
+              54 64 65 -1 
+              54 65 55 -1 
+              55 65 66 -1 
+              55 66 56 -1 
+              56 66 67 -1 
+              56 67 57 -1 
+              57 67 68 -1 
+              57 68 58 -1 
+              58 68 69 -1 
+              58 69 59 -1 
+              60 70 71 -1 
+              60 71 61 -1 
+              61 71 72 -1 
+              61 72 62 -1 
+              62 72 73 -1 
+              62 73 63 -1 
+              63 73 74 -1 
+              63 74 64 -1 
+              64 74 75 -1 
+              64 75 65 -1 
+              65 75 76 -1 
+              65 76 66 -1 
+              66 76 77 -1 
+              66 77 67 -1 
+              67 77 78 -1 
+              67 78 68 -1 
+              68 78 79 -1 
+              68 79 69 -1 
+              70 80 81 71 
+              -1 71 81 82 
+              72 -1 72 82 
+              83 73 -1 73 
+              83 84 74 -1 
+              74 84 85 -1 
+              74 85 75 -1 
+              75 85 86 76 
+              -1 76 86 87 
+              77 -1 77 87 
+              88 78 -1 78 
+              88 89 79 -1 
+              80 90 91 -1 
+              80 91 81 -1 
+              81 91 92 -1 
+              81 92 82 -1 
+              82 92 93 -1 
+              82 93 83 -1 
+              83 93 94 -1 
+              83 94 84 -1 
+              84 94 95 -1 
+              84 95 85 -1 
+              85 95 96 -1 
+              85 96 86 -1 
+              86 96 97 -1 
+              86 97 87 -1 
+              87 97 98 -1 
+              87 98 88 -1 
+              88 98 99 -1 
+              88 99 89 -1 
+              90 100 101 -1 
+              90 101 91 -1 
+              91 101 102 -1 
+              91 102 92 -1 
+              92 102 103 -1 
+              92 103 93 -1 
+              93 103 104 -1 
+              93 104 94 -1 
+              94 104 105 -1 
+              94 105 95 -1 
+              95 105 106 -1 
+              95 106 96 -1 
+              96 106 107 -1 
+              96 107 97 -1 
+              97 107 108 -1 
+              97 108 98 -1 
+              98 108 109 -1 
+              98 109 99 -1 
+              100 110 111 -1 
+              100 111 101 -1 
+              101 111 112 -1 
+              101 112 102 -1 
+              102 112 113 -1 
+              102 113 103 -1 
+              103 113 114 -1 
+              103 114 104 -1 
+              104 114 115 -1 
+              104 115 105 -1 
+              105 115 116 -1 
+              105 116 106 -1 
+              106 116 117 -1 
+              106 117 107 -1 
+              107 117 118 -1 
+              107 118 108 -1 
+              108 118 119 -1 
+              108 119 109 -1 
+              110 120 121 -1 
+              110 121 111 -1 
+              111 121 122 -1 
+              111 122 112 -1 
+              112 122 123 -1 
+              112 123 113 -1 
+              113 123 124 -1 
+              113 124 114 -1 
+              114 124 125 -1 
+              114 125 115 -1 
+              115 125 126 -1 
+              115 126 116 -1 
+              116 126 127 -1 
+              116 127 117 -1 
+              117 127 128 -1 
+              117 128 118 -1 
+              118 128 129 -1 
+              118 129 119 -1 
+              120 130 131 -1 
+              120 131 121 -1 
+              121 131 132 -1 
+              121 132 122 -1 
+              122 132 133 -1 
+              122 133 123 -1 
+              123 133 134 -1 
+              123 134 124 -1 
+              124 134 135 -1 
+              124 135 125 -1 
+              125 135 136 -1 
+              125 136 126 -1 
+              126 136 137 -1 
+              126 137 127 -1 
+              127 137 138 -1 
+              127 138 128 -1 
+              128 138 139 -1 
+              128 139 129 -1 
+              130 140 141 -1 
+              130 141 131 -1 
+              131 141 142 -1 
+              131 142 132 -1 
+              132 142 143 -1 
+              132 143 133 -1 
+              133 143 144 -1 
+              133 144 134 -1 
+              134 144 145 -1 
+              134 145 135 -1 
+              135 145 146 -1 
+              135 146 136 -1 
+              136 146 147 -1 
+              136 147 137 -1 
+              137 147 148 -1 
+              137 148 138 -1 
+              138 148 149 -1 
+              138 149 139 -1 
+              140 0 3 -1 
+              140 3 141 -1 
+              141 3 5 -1 
+              141 5 142 -1 
+              142 5 7 -1 
+              142 7 143 -1 
+              143 7 9 -1 
+              143 9 144 -1 
+              144 9 11 -1 
+              144 11 145 -1 
+              145 11 13 -1 
+              145 13 146 -1 
+              146 13 15 -1 
+              146 15 147 -1 
+              147 15 17 -1 
+              147 17 148 -1 
+              148 17 19 -1 
+              148 19 149 -1 
+            ]
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
+DEF Animation21 TimeSensor {
+ cycleInterval 10.000
+ loop FALSE
+ startTime  -1
+}
+DEF Animation21_pos0 PositionInterpolator {
+ key [
+  0.0 0.125 0.25 0.375 0.5
+  0.625 0.75 0.875 1.0 
+ ]
+ keyValue [
+  1.04496 -0.00417 -0.30916
+  0.944 -0.006 -0.118
+  0.925 0.003 0.083
+  0.983 -0.01673 0.279
+  1.134 -0.0301 0.43744
+  0.982 0.002 0.279
+  0.925 -0.012 0.083
+  0.944 -0.006 -0.118
+  1.04496 -0.00582 -0.30064
+ ]
+}
+DEF Animation21_rot0 OrientationInterpolator {
+ key [
+  0.0 0.5 1.0 
+ ]
+ keyValue [
+  0.0 1.0 0.0 0.0
+  0.0 1.0 0.0 1.571
+  0.0 1.0 0.0 0.0
+ ]
+}
+DEF Animation20 TimeSensor {
+ cycleInterval 10.000
+ loop FALSE
+ startTime  -1
+}
+DEF Animation20_pos0 PositionInterpolator {
+ key [
+  0.0 0.125 0.25 0.375 0.5
+  0.625 0.75 0.875 1.0 
+ ]
+ keyValue [
+  -1.13262 -0.00392 -0.30916
+  -1.03214 -0.00232 -0.127
+  -1.02872 -0.028 0.056
+  -1.09543 -0.029 0.273
+  -1.24343 -0.01741 0.422
+  -1.09543 -0.02532 0.273
+  -1.02872 -0.028 0.056
+  -1.019 -0.006 -0.127
+  -1.13262 -0.00392 -0.30916
+ ]
+}
+DEF Animation20_rot0 OrientationInterpolator {
+ key [
+  0.0 0.5 1.0 
+ ]
+ keyValue [
+  0.0 1.0 0.0 0.0
+  0.0 1.0 0.0 -1.571
+  0.0 1.0 0.0 0.0
+ ]
+}
+DEF Animation28 TimeSensor {
+ cycleInterval 10.000
+ loop FALSE
+ startTime  -1
+}
+DEF Animation28_pos0 PositionInterpolator {
+ key [
+  0.0 0.25 0.5 0.75 1.0
+ ]
+ keyValue [
+  0.055 0.02 -0.201
+  0.055 0.01 -0.201
+  0.055 0.12 -0.201
+  0.055 0.01 -0.201
+  0.055 0.02 -0.201
+ ]
+}
+DEF Animation28_scl0 PositionInterpolator {
+ key [
+  0.0 0.25 0.5 0.75 1.0
+ ]
+ keyValue [
+  0.617 0.048 0.394
+  0.617 0.1 0.536
+  0.617 0.048 0.394
+  0.617 0.1 0.536
+  0.617 0.048 0.394
+ ]
+}
+DEF Script_Animation21 Script {
+  field    SFNode      tproc     USE  Animation21
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime startAt0
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function startAt0( stime ) {
+  state = TRUE;
+  tproc.set_startTime = stime;
+  tproc.enabled = TRUE;
+  pause = 0;
+ }
+ "
+}
+DEF Script_Animation20 Script {
+  field    SFNode      tproc     USE  Animation20
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime startAt0
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function startAt0( stime ) {
+  state = TRUE;
+  tproc.set_startTime = stime;
+  tproc.enabled = TRUE;
+  pause = 0;
+ }
+ "
+}
+DEF Script_Animation28 Script {
+  field    SFNode      tproc     USE  Animation28
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime startAt0
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function startAt0( stime ) {
+  state = TRUE;
+  tproc.set_startTime = stime;
+  tproc.enabled = TRUE;
+  pause = 0;
+ }
+ "
+}
+ROUTE Sensor20.touchTime TO Script_Animation21.startAt0
+ROUTE Sensor19.touchTime TO Script_Animation20.startAt0
+ROUTE Sensor28.touchTime TO Script_Animation28.startAt0
+ROUTE Animation21.fraction_changed TO Animation21_pos0.set_fraction
+ROUTE Animation21_pos0.value_changed TO dad_Group23.set_translation
+ROUTE Animation21.fraction_changed TO Animation21_rot0.set_fraction
+ROUTE Animation21_rot0.value_changed TO dad_Group23.set_rotation
+ROUTE Animation21.isActive TO Script_Animation21.activated
+
+ROUTE Animation21.cycleTime TO Script_Animation21.cycle
+
+ROUTE Animation20.fraction_changed TO Animation20_pos0.set_fraction
+ROUTE Animation20_pos0.value_changed TO dad_Group22.set_translation
+ROUTE Animation20.fraction_changed TO Animation20_rot0.set_fraction
+ROUTE Animation20_rot0.value_changed TO dad_Group22.set_rotation
+ROUTE Animation20.isActive TO Script_Animation20.activated
+
+ROUTE Animation20.cycleTime TO Script_Animation20.cycle
+
+ROUTE Animation28.fraction_changed TO Animation28_pos0.set_fraction
+ROUTE Animation28_pos0.value_changed TO dad_Box32.set_translation
+ROUTE Animation28.fraction_changed TO Animation28_scl0.set_fraction
+ROUTE Animation28_scl0.value_changed TO dad_Box32.set_scale
+ROUTE Animation28.isActive TO Script_Animation28.activated
+
+ROUTE Animation28.cycleTime TO Script_Animation28.cycle
+

@@ -1,0 +1,168 @@
+import Fields               from "../../Fields.js";
+import X3DFieldDefinition   from "../../Base/X3DFieldDefinition.js";
+import FieldDefinitionArray from "../../Base/FieldDefinitionArray.js";
+import X3DNode              from "../Core/X3DNode.js";
+import X3DTexture2DNode     from "./X3DTexture2DNode.js";
+import X3DUrlObject         from "../Networking/X3DUrlObject.js";
+import X3DConstants         from "../../Base/X3DConstants.js";
+import FileLoader           from "../../InputOutput/FileLoader.js";
+import DEVELOPMENT          from "../../DEVELOPMENT.js";
+
+function ImageTexture (executionContext)
+{
+   X3DTexture2DNode .call (this, executionContext);
+   X3DUrlObject     .call (this, executionContext);
+
+   this .addType (X3DConstants .ImageTexture);
+
+   // Private properties
+
+   this .getMatrix () .set ([1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1]); // flipY
+}
+
+Object .assign (Object .setPrototypeOf (ImageTexture .prototype, X3DTexture2DNode .prototype),
+   X3DUrlObject .prototype,
+{
+   initialize ()
+   {
+      X3DTexture2DNode .prototype .initialize .call (this);
+      X3DUrlObject     .prototype .initialize .call (this);
+
+      this ._colorSpaceConversion .addInterest ("loadNow", this);
+
+      this .requestImmediateLoad () .catch (Function .prototype);
+   },
+   getTextureType ()
+   {
+      return 1;
+   },
+   unloadData ()
+   {
+      this .clearTexture ();
+      this .updateOutputs (0, 0, 0);
+   },
+   loadData ()
+   {
+      new FileLoader (this, { dataAsString: false }) .loadDocument (this ._url, async (data, fileURL) =>
+      {
+         if (data === null)
+         {
+            this .clearTexture ();
+            this .updateOutputs (0, 0, 0);
+            this .setLoadState (X3DConstants .FAILED_STATE);
+         }
+         else if (data instanceof ArrayBuffer)
+         {
+            fileURL = new URL (fileURL);
+
+            if (fileURL .pathname .match (/\.ktx2?(?:\.gz)?$/) || fileURL .href .match (/^\s*data:image\/ktx2[;,]/s))
+            {
+               this .setLinear (true);
+               this .setMipMaps (false);
+
+               const
+                  decoder = await this .getBrowser () .getKTXDecoder (),
+                  texture = await decoder .loadKTXFromBuffer (data);
+
+               this .setKTXTexture (texture, fileURL);
+            }
+            else
+            {
+               this .setLinear (false);
+               this .setMipMaps (true);
+
+               const objectURL = URL .createObjectURL (new Blob ([data]));
+
+               try
+               {
+                  this .setImage (await this .loadImage (objectURL), fileURL);
+               }
+               finally
+               {
+                  URL .revokeObjectURL (objectURL);
+               }
+            }
+         }
+         else
+         {
+            throw new Error (`${this .getTypeName ()}: No suitable file handler found.`);
+         }
+      });
+   },
+   setKTXTexture (texture, fileURL)
+   {
+      if (texture .target !== this .getTarget ())
+         throw new Error ("Invalid KTX texture target, must be 'TEXTURE_2D'.");
+
+      if (DEVELOPMENT)
+      {
+         if (fileURL .protocol !== "data:")
+            console .info (`Done loading ${this .getTypeName ()} '${decodeURI (fileURL)}'.`);
+      }
+
+      const { baseWidth, baseHeight, numComponents } = texture;
+
+      this .setTexture (texture);
+      this .setTransparent (false);
+      this .setWidth (baseWidth);
+      this .setHeight (baseHeight);
+      this .updateTextureParameters ();
+      this .updateOutputs (baseWidth, baseHeight, numComponents);
+
+      this .setLoadState (X3DConstants .COMPLETE_STATE);
+   },
+   setImage (image, fileURL)
+   {
+      if (DEVELOPMENT)
+      {
+         if (fileURL .protocol !== "data:")
+            console .info (`Done loading ${this .getTypeName ()} '${decodeURI (fileURL)}'.`);
+      }
+
+      const { width, height } = image;
+
+      // Upload image to GPU.
+
+      this .setTextureData (width, height, this ._colorSpaceConversion .getValue (), this .isTransparent (), image);
+      this .setTransparent (this .isImageTransparent (this .getTextureData (this .getTexture (), width, height)));
+      this .updateOutputs (width, height, this .isTransparent () ? 4 : 3);
+      this .setLoadState (X3DConstants .COMPLETE_STATE);
+   },
+   updateOutputs (width, height, colorDepth)
+   {
+      this ._width      = width;
+      this ._height     = height;
+      this ._colorDepth = colorDepth;
+   },
+   dispose ()
+   {
+      X3DUrlObject     .prototype .dispose .call (this);
+      X3DTexture2DNode .prototype .dispose .call (this);
+   },
+});
+
+Object .defineProperties (ImageTexture,
+{
+   ... X3DNode .getStaticProperties ("ImageTexture", "Texturing", 1, "texture", "2.0"),
+   fieldDefinitions:
+   {
+      value: new FieldDefinitionArray ([
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "metadata",             new Fields .SFNode ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "description",          new Fields .SFString ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "load",                 new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "url",                  new Fields .MFString ()),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "autoRefresh",          new Fields .SFTime (0)),
+         new X3DFieldDefinition (X3DConstants .inputOutput,    "autoRefreshTimeLimit", new Fields .SFTime (3600)),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "colorSpaceConversion", new Fields .SFBool (true)), // experimental
+         new X3DFieldDefinition (X3DConstants .outputOnly,     "width",                new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .outputOnly,     "height",               new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .outputOnly,     "colorDepth",           new Fields .SFInt32 ()),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "repeatS",              new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "repeatT",              new Fields .SFBool (true)),
+         new X3DFieldDefinition (X3DConstants .initializeOnly, "textureProperties",    new Fields .SFNode ()),
+      ]),
+      enumerable: true,
+   },
+});
+
+export default ImageTexture;

@@ -1,0 +1,47 @@
+#VRML V2.0 utf8
+ Background {
+ skyColor [ 0 0 1 ] }
+ Transform {
+ scale 3 3 3
+ children [
+ Shape { 
+ appearance Appearance { texture MovieTexture { url [ "Stripes.gif" ]
+ loop TRUE
+ speed 1 } }
+ geometry Box { size 0.75 0.1 0.05 } }
+ Transform {
+ translation -0.325 0.0875 0
+ children [
+ DEF Light Group {
+ children [ 
+ Shape {
+ appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 } }
+ geometry Box { size 0.075 0.075 0.035 } }
+ Transform {
+ translation 0 0.075 0
+ rotation 1 0 0 1.571
+ children [
+ Shape {
+ appearance Appearance { material Material { diffuseColor 1 1 0 } }
+ geometry Cylinder { height 0.035
+ radius 0.0425 } } ] } ] } ] }
+ Transform {
+ translation 0.325 0.0875 0
+ children USE Light }
+ Transform {
+ translation -0.325 -0.2 0.175
+ rotation 1 0 0 -0.585
+ children [
+ DEF Support1 Shape {
+ appearance DEF Black Appearance { material Material { diffuseColor 0 0 0 } }
+ geometry Box { size 0.05 0.4 0.05 } }
+ Transform {
+ translation 0.65 0 0
+ children USE Support1 } ] }
+ Transform {
+ translation -0.325 -0.2 -0.175
+ rotation 1 0 0 0.585
+ children [ USE Support1
+ Transform {
+ translation 0.65 0 0
+ children USE Support1 } ] } ] }

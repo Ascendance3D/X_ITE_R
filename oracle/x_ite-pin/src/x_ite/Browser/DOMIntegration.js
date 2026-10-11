@@ -1,0 +1,409 @@
+/*******************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2016 Andreas Plesch
+ * taken from https://github.com/andreasplesch/x_ite_dom.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ ******************************************************************************/
+
+import XMLParser    from "../Parser/XMLParser.js";
+import X3DConstants from "../Base/X3DConstants.js";
+import X3DScene     from "../Execution/X3DScene.js";
+import SFNodeCache  from "../Fields/SFNodeCache.js";
+
+const
+   _x3d  = Symbol .for ("X_ITE.X3DElement"),
+   _node = Symbol .for ("X_ITE.NodeElement");
+
+class DOMIntegration
+{
+   constructor (browser)
+   {
+      this .browser        = browser;
+      this .rootElement    = null;
+      this .canvasObserver = new MutationObserver (() => this .processCanvasMutation (browser));
+
+      this .canvasObserver .observe (browser .getElement (),
+      {
+         attributes: false,
+         childList: true,
+      });
+
+      this .processCanvasMutation (browser);
+   }
+
+   isPrivate ()
+   {
+      // Don't count as loading object.
+      return true;
+   }
+
+   processCanvasMutation (browser)
+   {
+      const X3D = browser .getElement () .querySelector (":scope > X3D:last-of-type");
+
+      this .processRootElement (browser, X3D);
+   }
+
+   async processRootElement (browser, rootElement)
+   {
+      try
+      {
+         if (rootElement === this .rootElement)
+            return;
+
+         this .rootElement = rootElement;
+
+         if (!rootElement)
+         {
+            browser .replaceWorld (null);
+            return;
+         }
+
+         // Display splash screen.
+
+         browser .setBrowserLoading (true);
+         browser .addLoadingObject (this);
+
+         // Now also attached node property to each node element.
+
+         const scene = new X3DScene (browser);
+
+         this .parser = new XMLParser (scene);
+
+         this .parser .setInput (rootElement);
+
+         await new Promise ((resolve, reject) => this .parser .parseIntoScene (resolve, reject));
+
+         browser .replaceWorld (scene);
+
+         // Create an observer instance.
+
+         this .observer = new MutationObserver (mutations =>
+         {
+            for (const mutation of mutations)
+               this .processMutation (mutation);
+         });
+
+         // Start observing, also catches inlined Inline elements.
+
+         this .observer .observe (rootElement,
+         {
+            attributes: true,
+            childList: true,
+            subtree: true,
+         });
+
+         // Add Inline elements from initial scene, and connect to node events.
+
+         this .processInlineElements (rootElement);
+         this .addEventDispatchersAll (rootElement);
+
+         browser .removeLoadingObject (this);
+      }
+      catch (error)
+      {
+         console .error ("Error importing document:", error);
+      }
+   }
+
+   processMutation (mutation)
+   {
+      switch (mutation .type)
+      {
+         case "attributes":
+         {
+            this .processAttribute (mutation);
+            break;
+         }
+         case "childList":
+         {
+            for (const node of mutation .addedNodes)
+               this .processAddedNode (node);
+
+            for (const node of mutation .removedNodes)
+               this .processRemovedNode (node);
+
+            break;
+         }
+      }
+   }
+
+   processAttribute ({ target: element, attributeName })
+   {
+      const
+         parser = this .parser,
+         node   = element [_node];
+
+      if (node)
+      {
+         const attribute = element .getAttributeNode (attributeName);
+
+         parser .nodeAttribute (attribute, node);
+      }
+      else
+      {
+         // Is an attribute of non-node child such as fieldValue (or ROUTE).
+
+         const
+            parentNode = element .parentNode,
+            node       = parentNode [_node];
+
+         if (node)
+         {
+            parser .pushExecutionContext (node .getExecutionContext ());
+            parser .pushParent (node);
+            parser .childElement (element);
+            parser .popParent ();
+            parser .setupNodes ();
+            parser .popExecutionContext ();
+         }
+      }
+   }
+
+   processAddedNode (element)
+   {
+      // Only process element nodes.
+
+      if (element .nodeType !== Node .ELEMENT_NODE)
+         return;
+
+      if (element .nodeName === "X3D")
+         return;
+
+      if (element [_node])
+         return;
+
+      const
+         parentNode = element .parentNode,
+         parser     = this .parser;
+
+      if (parentNode .nodeName .match (/^(?:Scene|SCENE)$/))
+      {
+         // Root scene or Inline scene.
+
+         const scene = parentNode [_node];
+
+         parser .pushExecutionContext (scene);
+         parser .childElement (element);
+         parser .setupNodes ();
+         parser .popExecutionContext ();
+      }
+      else if (parentNode [_node])
+      {
+         // Use parent's scene if non-root, works for Inline.
+
+         const
+            node             = parentNode [_node],
+            executionContext = node .getExecutionContext ();
+
+         parser .pushExecutionContext (executionContext);
+         parser .pushParent (node);
+         parser .childElement (element);
+         parser .popParent ();
+         parser .setupNodes ();
+         parser .popExecutionContext ();
+      }
+      else
+      {
+         const scene = this .browser .currentScene;
+
+         parser .pushExecutionContext (scene);
+         parser .childElement (element);
+         parser .setupNodes ();
+         parser .popExecutionContext ();
+      }
+
+      // Now after creating nodes need to look again for Inline elements.
+
+      this .processInlineElements (element);
+
+      // Then attach event dispatchers.
+
+      this .addEventDispatchers (element);
+      this .addEventDispatchersAll (element);
+   }
+
+   processRemovedNode (element)
+   {
+      // Works also for root nodes, as it has to be, since scene .rootNodes is effectively a MFNode in x-ite.
+      // Also removes ROUTE elements.
+
+      const node = element [_node];
+
+      if (!node)
+         return;
+
+      node .dispose ();
+
+      delete element [_node];
+   }
+
+   processInlineElements (element)
+   {
+      if (element .nodeName .match (/^(?:Inline|INLINE)$/))
+         this .processInlineElement (element);
+
+      for (const inlineElement of element .querySelectorAll ("Inline"))
+         this .processInlineElement (inlineElement);
+   }
+
+   processInlineElement (element)
+   {
+      const node = element [_node];
+
+      if (!node)
+         return;
+
+      node ._loadState .addInterest ("appendInlineChildElement", this, element);
+
+      this .appendInlineChildElement (element);
+   }
+
+   appendInlineChildElement (element)
+   {
+      const node = element [_node];
+
+      switch (node .checkLoadState ())
+      {
+         case X3DConstants .NOT_STARTED_STATE:
+         case X3DConstants .FAILED_STATE:
+         {
+            // Remove all child nodes.
+
+            while (element .firstChild)
+               element .removeChild (element .lastChild);
+
+            break;
+         }
+         case X3DConstants .COMPLETE_STATE:
+         {
+            // Remove all child nodes.
+
+            while (element .firstChild)
+               element .removeChild (element .lastChild);
+
+            // Add scene as child node of Inline element.
+
+            const X3DElement = node .getInternalScene () [_x3d];
+
+            if (!X3DElement)
+               break;
+
+            element .append (X3DElement);
+
+            // Add Inline elements, and connect to node events.
+
+            this .processInlineElements (X3DElement);
+            this .addEventDispatchersAll (X3DElement);
+
+            break;
+         }
+      }
+
+      switch (node .checkLoadState ())
+      {
+         case X3DConstants .COMPLETE_STATE:
+         {
+            const event = new CustomEvent ("load",
+            {
+               detail: { node: SFNodeCache .get (node) },
+            });
+
+            element .dispatchEvent (event);
+            break;
+         }
+         case X3DConstants .FAILED_STATE:
+         {
+            const event = new CustomEvent ("error",
+            {
+               detail: { node: SFNodeCache .get (node) },
+            });
+
+            element .dispatchEvent (event);
+            break;
+         }
+      }
+   }
+
+   addEventDispatchersAll (element)
+   {
+      const childElements = element .querySelectorAll ("*");
+
+      for (const childElement of childElements)
+         this .addEventDispatchers (childElement);
+   }
+
+   addEventDispatchers (element)
+   {
+      // Check for USE nodes; they do not emit events.
+
+      if (element .nodeName === "ROUTE")
+         return;
+
+      const node = element [_node];
+
+      if (!node)
+         return;
+
+      for (const field of node .getPredefinedFields ())
+         this .bindFieldCallback (field, element);
+
+      for (const field of node .getUserDefinedFields ())
+         this .bindFieldCallback (field, element);
+   }
+
+   bindFieldCallback (field, element)
+   {
+      if (!field .isOutput ())
+         return;
+
+      field .addInterest ("fieldCallback", this, element);
+   }
+
+   fieldCallback (element, field)
+   {
+      const node = element [_node];
+
+      if (!node)
+         return;
+
+      // Unfortunately `getEventListeners` is not available all the time.
+      // if (!getEventListeners (element) .hasOwnProperty (field .getName ()))
+      //    return;
+
+      const event = new CustomEvent (field .getName (),
+      {
+         detail: {
+            node: SFNodeCache .get (node),
+            value: field .valueOf (),
+         },
+      });
+
+      element .dispatchEvent (event);
+   }
+
+   dispose ()
+   {
+      this .canvasObserver .disconnect ();
+   }
+};
+
+export default DOMIntegration;

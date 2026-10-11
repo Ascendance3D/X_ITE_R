@@ -1,0 +1,6265 @@
+#VRML V2.0 utf8
+PROTO a [
+eventIn SFFloat i
+exposedField MFFloat k [ 0 1 ] exposedField MFRotation v []
+eventOut SFRotation o
+] {
+OrientationInterpolator {
+set_fraction IS i
+key IS k
+keyValue IS v
+value_changed IS o } } WorldInfo
+{
+title "Talonns Pickup"
+info [
+"This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+"www.spazz3d.com"
+"Built by Paden for Tallon"
+"Copyright March 2000Chris M. Elliott"
+]
+}
+Transform {
+children [
+Group {
+children [
+Transform {
+translation 0.22018 -0.88745 0.0
+scale 0.048 0.048 0.048
+children [
+Group {
+children [
+Transform {
+children [
+Group {
+children [
+Transform {
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF a
+Material {
+shininess 0.100
+diffuseColor 0.71373 0.00392 0.00392
+specularColor 0.99216 0.91765 0.92157
+}
+}
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 -15.1 5.972 15.394 -41.8 3.681 14.381 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+DEF b
+Appearance
+{
+material
+USE a
+}
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 -41.8 3.681 14.381 -41.842 -1.388 15.636 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.691 -.198 -16.745 8.5 5.973 -15.396 43.167 6.084 -15.581 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.691 -.198 -16.745 43.167 6.084 -15.581 44.031 -.388 -16.838 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.1 6.572 0 -15.1 5.972 -15.394 -41.8 3.681 -14.381 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.1 6.572 0 -41.8 3.681 -14.381 -37.2 4.681 0 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF c
+Material {
+shininess 0.100
+diffuseColor 0.28235 0.28235 0.28235
+specularColor 0.61961 0.58431 0.53725
+}
+}
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 -6.599 -15.3 -38.36 -6.513 -15.45 -38.36 -6.513 15.45 -41.8
+-6.599 15.3 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 44.031 -.388 -16.838 43.167 6.084 -15.581 43.167
+6.084 15.581 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 3.681 14.381 -37.2 4.681 0 -41.8 3.681 -14.381 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.417 -1.727 15.18 42.947 -1.617 15.364 42.947 -1.617 -15.364 8.417
+-1.727 -15.18 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.621 6.203 -13.944 7.585 6.517 14.196 7.621 6.203 13.944 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.842 -1.388 -15.636 -41.8 3.681 -14.381 -15.1 5.972 -15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.842 -1.388 -15.636 -15.1 5.972 -15.394 -15.254 -.193 -16.743 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+DEF d
+Appearance
+{
+material
+USE c
+}
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.333 -6.5 -16.5 8.183 -6.5 -16.5 8.533 -6.5 -16.15 8.533 -6.5 16.15
+8.183 -6.5 16.5 -15.333 -6.5 16.5 ] }
+coordIndex [ 0 1 2 3 4 5 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.533 -6.5 -16.15 8.884 -6.504 -16.5 15.521 -6.588 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.533 -6.5 -16.15 15.521 -6.588 -16.5 15.521 -6.588 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.533 -6.5 -16.15 15.521 -6.588 16.5 8.884 -6.504 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.533 -6.5 -16.15 8.884 -6.504 16.5 8.533 -6.5 16.15 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 43.167 6.084 15.581 8.5 5.973 15.396 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 8.5 5.973 15.396 8.691 -.198 16.745 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 -16.743 -22.227 -3.179 -16.2 -28.585 -1.55 -15.9 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 -16.743 -28.585 -1.55 -15.9 -41.842 -1.388 -15.636 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -34.919 -3.226 -15.6 -38.36 -6.513 -15.45 -41.8 -6.599 -15.3 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -34.919 -3.226 -15.6 -41.8 -6.599 -15.3 -41.842 -1.388 -15.636 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -34.919 -3.226 -15.6 -41.842 -1.388 -15.636 -28.585 -1.55 -15.9 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 -41.842 -1.388 15.636 -28.585 -1.55 15.9 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 -28.585 -1.55 15.9 -22.227 -3.179 16.2 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 -22.227 -3.179 16.2 -18.78 -6.439 16.35 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 -18.78 -6.439 16.35 -15.333 -6.5 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -34.919 -3.226 15.6 -28.585 -1.55 15.9 -41.842 -1.388 15.636 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -34.919 -3.226 15.6 -41.842 -1.388 15.636 -41.8 -6.599 15.3 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -34.919 -3.226 15.6 -41.8 -6.599 15.3 -38.36 -6.513 15.45 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 8.691 -.198 16.745 25.922 -1.747 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 25.922 -1.747 16.5 32.99 -3.891 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 32.99 -3.891 16.5 36.68 -6.944 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 36.68 -6.944 16.5 43.168 -6.992 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.884 -6.504 16.5 15.521 -6.588 16.5 19.296 -3.641 16.5 25.922 -1.747
+16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.884 -6.504 16.5 25.922 -1.747 16.5 8.691 -.198 16.745 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 16.838 43.168 -6.992 16.5 43.168 -6.992 -16.5 44.031
+-.388 -16.838 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 -16.838 43.168 -6.992 -16.5 36.68 -6.944 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 -16.838 36.68 -6.944 -16.5 32.99 -3.891 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 -16.838 32.99 -3.891 -16.5 25.922 -1.747 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -28.585 -1.55 -15.9 -22.227 -3.179 -16.2 -22.227 -3.179 16.2 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -28.585 -1.55 -15.9 -22.227 -3.179 16.2 -28.585 -1.55 15.9 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 25.922 -1.747 -16.5 32.99 -3.891 -16.5 32.99 -3.891 16.5 25.922 -1.747
+16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -22.227 -3.179 -16.2 -18.78 -6.439 -16.35 -18.78 -6.439 16.35 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -22.227 -3.179 -16.2 -18.78 -6.439 16.35 -22.227 -3.179 16.2 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -34.919 -3.226 -15.6 -28.585 -1.55 -15.9 -28.585 -1.55 15.9 -34.919
+-3.226 15.6 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -18.78 -6.439 -16.35 -15.333 -6.5 -16.5 -15.333 -6.5 16.5 -18.78 -6.439
+16.35 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -38.36 -6.513 -15.45 -34.919 -3.226 -15.6 -34.919 -3.226 15.6 -38.36
+-6.513 15.45 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 19.296 -3.641 -16.5 25.922 -1.747 -16.5 25.922 -1.747 16.5 19.296
+-3.641 16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 32.99 -3.891 -16.5 36.68 -6.944 -16.5 36.68 -6.944 16.5 32.99 -3.891
+16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 15.521 -6.588 -16.5 19.296 -3.641 -16.5 19.296 -3.641 16.5 15.521
+-6.588 16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 36.68 -6.944 -16.5 43.168 -6.992 -16.5 43.168 -6.992 16.5 36.68 -6.944
+16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 43.167 6.084 15.581 41.903 5.98 14.456 9.415 5.876 14.282 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 43.167 6.084 15.581 9.415 5.876 14.282 8.412 5.952 15.163 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 43.167 6.084 15.581 8.412 5.952 15.163 8.5 5.973 15.396 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.15 5.972 15.044 8.412 5.952 15.163 9.415 5.876 14.282 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.15 5.972 15.044 9.415 5.876 14.282 9.415 5.876 -14.282 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.15 5.972 15.044 9.415 5.876 -14.282 8.412 5.952 -15.163 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.15 5.972 15.044 8.412 5.952 -15.163 8.15 5.972 -15.044 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.5 5.973 -15.396 8.412 5.952 -15.163 9.415 5.876 -14.282 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.5 5.973 -15.396 9.415 5.876 -14.282 41.903 5.98 -14.456 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.5 5.973 -15.396 41.903 5.98 -14.456 43.167 6.084 -15.581 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 43.167 6.084 -15.581 41.903 5.98 -14.456 41.903 5.98 14.456 43.167
+6.084 15.581 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 41.903 5.98 14.456 43.274 -.416 15.659 8.082 -.528 15.471 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 41.903 5.98 14.456 8.082 -.528 15.471 9.415 5.876 14.282 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 9.415 5.876 14.282 8.082 -.528 15.471 8.082 -.528 -15.471 9.415 5.876
+-14.282 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 9.415 5.876 -14.282 8.082 -.528 -15.471 43.274 -.416 -15.659 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 9.415 5.876 -14.282 43.274 -.416 -15.659 41.903 5.98 -14.456 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 41.903 5.98 -14.456 43.274 -.416 -15.659 43.274 -.416 15.659 41.903
+5.98 14.456 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 43.274 -.416 15.659 42.947 -1.617 15.364 8.417 -1.727 15.18 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 43.274 -.416 15.659 8.417 -1.727 15.18 8.082 -.528 15.471 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.082 -.528 15.471 8.417 -1.727 15.18 8.417 -1.727 -15.18 8.082 -.528
+-15.471 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.082 -.528 -15.471 8.417 -1.727 -15.18 42.947 -1.617 -15.364 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.082 -.528 -15.471 42.947 -1.617 -15.364 43.274 -.416 -15.659 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 43.274 -.416 -15.659 42.947 -1.617 -15.364 42.947 -1.617 15.364 43.274
+-.416 15.659 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.533 -6.5 -16.15 8.183 -6.5 -16.5 8.884 -6.504 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 -15.316 8.15 5.972 -15.044 8.412 5.952 -15.163 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 -15.316 8.412 5.952 -15.163 8.5 5.973 -15.396 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 -15.316 8.5 5.973 -15.396 7.8 5.972 -15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.533 -6.5 16.15 8.884 -6.504 16.5 8.183 -6.5 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 15.316 7.8 5.972 15.394 8.5 5.973 15.396 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 15.316 8.5 5.973 15.396 8.412 5.952 15.163 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 15.316 8.412 5.952 15.163 8.15 5.972 15.044 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.249 16.146 8.184 -6.553 15.902 8.691 -.251 16.147 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.249 16.146 8.691 -.251 16.147 8.501 5.92 14.798 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.249 16.146 8.501 5.92 14.798 7.801 5.919 14.796 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.691 -.251 16.147 8.184 -6.553 15.902 8.884 -6.557 15.902 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.249 -16.146 7.801 5.919 -14.796 8.501 5.92 -14.798 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.249 -16.146 8.501 5.92 -14.798 8.691 -.251 -16.147 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.8 5.972 -15.394 7.801 5.919 -14.796 7.991 -.249 -16.146 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.8 5.972 -15.394 7.991 -.249 -16.146 7.991 -.196 -16.744 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.183 -6.5 -16.5 8.184 -6.553 -15.902 8.884 -6.557 -15.902 8.884 -6.504
+-16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.691 -.198 -16.745 8.691 -.251 -16.147 8.501 5.92 -14.798 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.691 -.198 -16.745 8.501 5.92 -14.798 8.5 5.973 -15.396 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.5 5.973 -15.396 8.501 5.92 -14.798 7.801 5.919 -14.796 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.5 5.973 -15.396 7.801 5.919 -14.796 7.8 5.972 -15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.8 5.972 15.394 7.801 5.919 14.796 8.501 5.92 14.798 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.8 5.972 15.394 8.501 5.92 14.798 8.5 5.973 15.396 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.5 5.973 15.396 8.501 5.92 14.798 8.691 -.251 16.147 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.5 5.973 15.396 8.691 -.251 16.147 8.691 -.198 16.745 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.691 -.198 16.745 8.691 -.251 16.147 8.884 -6.557 15.902 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.691 -.198 16.745 8.884 -6.557 15.902 8.884 -6.504 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.884 -6.504 16.5 8.884 -6.557 15.902 8.184 -6.553 15.902 8.183 -6.5
+16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.183 -6.5 16.5 8.184 -6.553 15.902 7.991 -.249 16.146 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.183 -6.5 16.5 7.991 -.249 16.146 7.991 -.196 16.744 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 16.744 7.991 -.249 16.146 7.801 5.919 14.796 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 16.744 7.801 5.919 14.796 7.8 5.972 15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.676 17.053 11.953 -9.407 16.921 11.953 -14.654 6.2 14.426 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.676 17.053 11.953 -14.654 6.2 14.426 -14.924 6.332 14.426 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 15.316 7.57 6.586 15.252 7.278 6.268 15.326 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 15.316 7.278 6.268 15.326 7.8 5.972 15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.8 5.972 -15.394 7.278 6.268 -15.326 7.57 6.586 -15.252 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.8 5.972 -15.394 7.57 6.586 -15.252 8.111 6.311 -15.316 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.57 6.586 15.252 7.57 6.473 14.765 7.278 6.156 14.838 7.278 6.268
+15.326 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.16 6.268 15.326 -14.16 6.156 14.838 -8.917 16.866 12.368 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.16 6.268 15.326 -8.917 16.866 12.368 -8.917 16.979 12.855 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -8.917 16.979 12.855 -8.917 16.866 12.368 6.389 16.866 12.368 6.389
+16.979 12.855 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -8.917 16.979 -12.855 -8.917 16.866 -12.368 -14.16 6.156 -14.838 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -8.917 16.979 -12.855 -14.16 6.156 -14.838 -14.16 6.268 -15.326 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.278 6.268 -15.326 7.278 6.156 -14.838 7.57 6.473 -14.765 7.57 6.586
+-15.252 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.389 16.979 -12.855 6.389 16.866 -12.368 -8.917 16.866 -12.368 -8.917
+16.979 -12.855 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 -15.316 8.082 6.573 -14.196 8.117 6.259 -13.944 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 -15.316 8.117 6.259 -13.944 8.15 5.972 -15.044 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.15 5.972 15.044 8.117 6.259 13.944 8.082 6.573 14.196 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.15 5.972 15.044 8.082 6.573 14.196 8.111 6.311 15.316 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.082 6.573 -14.196 7.585 6.517 -14.196 7.621 6.203 -13.944 8.117
+6.259 -13.944 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.117 6.259 -13.944 7.621 6.203 -13.944 7.621 6.203 13.944 8.117 6.259
+13.944 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.117 6.259 13.944 7.621 6.203 13.944 7.585 6.517 14.196 8.082 6.573
+14.196 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.082 6.573 14.196 7.585 6.517 14.196 6.416 16.807 11.822 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.082 6.573 14.196 6.416 16.807 11.822 6.912 16.863 11.822 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.912 16.863 11.822 6.416 16.807 11.822 6.416 16.807 -11.822 6.912
+16.863 -11.822 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -37.2 4.681 0 -41.8 3.681 14.381 -15.1 5.972 15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -37.2 4.681 0 -15.1 5.972 15.394 -15.1 6.572 0 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 -6.599 15.3 -41.842 -1.388 15.636 -41.8 3.681 14.381 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF e
+Material {
+shininess 0.000
+diffuseColor 0.43529 0.43529 0.43529
+}
+}
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.9 .922 10.277 -41.9 .922 -10.777 -41.9 -3.24 -10.843 -41.9 -3.24
+10.343 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 3.681 -14.381 -41.842 -1.388 -15.636 -41.8 -6.599 -15.3 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 3.681 -14.381 -41.9 .922 -10.777 -41.9 .922 10.277 -41.8 3.681
+14.381 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 3.681 14.381 -41.9 .922 10.277 -41.9 -3.24 10.343 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 3.681 14.381 -41.9 -3.24 10.343 -41.8 -6.599 15.3 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 -6.599 15.3 -41.9 -3.24 10.343 -41.9 -3.24 -10.843 -41.8 -6.599
+-15.3 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 -6.599 -15.3 -41.9 -3.24 -10.843 -41.9 .922 -10.777 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -41.8 -6.599 -15.3 -41.9 .922 -10.777 -41.8 3.681 -14.381 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.884 -6.504 -16.5 8.884 -6.557 -15.902 8.691 -.251 -16.147 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.884 -6.504 -16.5 8.691 -.251 -16.147 8.691 -.198 -16.745 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 -16.744 7.991 -.249 -16.146 8.184 -6.553 -15.902 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 -16.744 8.184 -6.553 -15.902 8.183 -6.5 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.249 -16.146 8.884 -6.557 -15.902 8.184 -6.553 -15.902 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.249 -16.146 8.691 -.251 -16.147 8.884 -6.557 -15.902 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.884 -6.504 -16.5 25.922 -1.747 -16.5 19.296 -3.641 -16.5 15.521
+-6.588 -16.5 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 44.031 -.388 -16.838 25.922 -1.747 -16.5 8.691 -.198 -16.745 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.884 -6.504 -16.5 8.691 -.198 -16.745 25.922 -1.747 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 -16.743 -15.333 -6.5 -16.5 -18.78 -6.439 -16.35 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 -16.743 -18.78 -6.439 -16.35 -22.227 -3.179 -16.2 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.15 5.972 -15.044 8.117 6.259 -13.944 8.117 6.259 13.944 8.15 5.972
+15.044 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+DEF f
+Transform {
+translation -14.929 7.19 16.138
+children [
+Group {
+children [
+Transform {
+translation 14.929 -7.19 -16.138
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 16.744 -15.1 5.972 15.394 -15.254 -.193 16.743 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.929 -7.19 -16.138
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 16.744 7.8 5.972 15.394 -15.1 5.972 15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.929 -7.19 -16.138
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF g
+Material {
+shininess 0.100
+transparency 0.400
+diffuseColor 0.64706 0.79608 0.98039
+specularColor 0.9098 0.98824 1.0
+}
+}
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.278 6.156 14.838 6.389 16.866 12.368 -8.917 16.866 12.368 -14.16
+6.156 14.838 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.929 -7.19 -16.138
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 -15.333 -6.5 16.5 8.183 -6.5 16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.929 -7.19 -16.138
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 16.743 8.183 -6.5 16.5 7.991 -.196 16.744 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 3.201 2.196 2.682
+children [
+DEF h
+Group {
+children [
+Transform {
+translation 0.0 -1.62653 -0.348
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF i
+Material {
+shininess 0.100
+diffuseColor 0.58824 0.57647 0.57255
+specularColor 0.98824 0.98824 0.98824
+}
+}
+geometry
+Box
+{
+size 0.393 4.73554 3.373
+}
+}
+]
+}
+Transform {
+translation -0.023 -4.147 -0.231
+children [
+Shape {
+appearance
+DEF j
+Appearance
+{
+material
+USE i
+}
+geometry
+Cylinder
+{
+height 0.412
+radius 0.118
+}
+}
+]
+}
+Transform {
+translation -0.053 -4.391 -2.052
+rotation -1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+USE j
+geometry
+Cylinder
+{
+height 3.847
+radius 0.118
+}
+}
+]
+}
+Transform {
+translation -0.025 -4.464 -3.842
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ .353 -.386 .851 .354 -.383 .854 0 -.383 .924 0 -.465 .869 -.354 -.383
+.854 -.352 -.389 .85 -.362 -.383 .848 .628 0 .76 .383 0 .924 .358 -.383 .851
+0 0 1 -.383 0 .924 -.635 0 .756 .631 .383 .668 .354 .383 .854 0 .383 .924
+-.354 .383 .854 -.638 .383 .664 .366 .707 .589 .271 .707 .653 0 .707 .707
+-.271 .707 .653 -.37 .707 .587 .238 .763 .575 0 .802 .565 -.238 .765 .573
+] }
+coordIndex [ 0 1 2 3 -1 3 2 4 5 -1 5 4 6 -1 7 8 1 9 -1 1 8 10 2 -1 2 10 11 4
+-1 4 11 12 6 -1 13 14 8 7 -1 8 14 15 10 -1 10 15 16 11 -1 11 16 17 12 -1 18
+19 14 13 -1 14 19 20 15 -1 15 20 21 16 -1 16 21 22 17 -1 23 19 18 -1 19 23 24
+20 -1 20 24 25 21 -1 21 25 22 -1 17 22 25 24 23 18 13 7 9 0 3 5 6 12 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation 14.929 -7.19 -16.138
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.278 6.268 15.326 7.278 6.156 14.838 -14.16 6.156 14.838 -14.16 6.268
+15.326 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 19.31 -4.227 0.16
+children [
+Shape {
+appearance
+USE j geometry
+DEF k
+Box
+{
+size 2.855 0.563 1.0
+}
+}
+]
+}
+Transform {
+translation 14.929 -7.19 -16.138
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.8 5.972 15.394 7.278 6.268 15.326 -14.16 6.268 15.326 -15.1 5.972
+15.394 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+DEF l
+Transform {
+translation -14.832 7.19 -16.221
+children [
+Group {
+children [
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 -16.743 -15.1 5.972 -15.394 7.8 5.972 -15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.254 -.193 -16.743 7.8 5.972 -15.394 7.991 -.196 -16.744 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 -16.744 -15.333 -6.5 -16.5 -15.254 -.193 -16.743 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.991 -.196 -16.744 8.183 -6.5 -16.5 -15.333 -6.5 -16.5 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 19.15641 -4.15909 -0.05237
+children [
+Shape {
+appearance
+USE j geometry
+USE k
+}
+]
+}
+Transform {
+translation 3.19201 2.12724 -2.56552
+rotation 0.0 -1.0 -0.001 3.142
+children [
+USE h
+]
+}
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+DEF m
+Appearance
+{
+material
+USE g
+}
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.16 6.156 -14.838 -8.917 16.866 -12.368 6.389 16.866 -12.368 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+USE m
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.16 6.156 -14.838 6.389 16.866 -12.368 7.57 6.473 -14.765 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.1 5.972 -15.394 -14.16 6.268 -15.326 7.278 6.268 -15.326 7.8 5.972
+-15.394 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.83101 -7.19076 16.22048
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.16 6.268 -15.326 -14.16 6.156 -14.838 7.278 6.156 -14.838 7.278
+6.268 -15.326 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 14.832 -7.19 16.221
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.16 6.156 -14.838 7.57 6.473 -14.765 7.278 6.156 -14.838 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -0.963 7.19 2.895
+children [
+Group {
+children [
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.5 17.413 12.755 6.85 17.413 12.755 6.85 17.413 -12.755 -9.5 17.413
+-12.755 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE m
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.654 6.2 14.426 -9.407 16.921 11.953 -9.407 16.921 -11.953 -14.654
+6.2 -14.426 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.85 17.413 -12.755 6.912 16.863 -11.822 8.082 6.573 -14.196 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.85 17.413 -12.755 8.082 6.573 -14.196 8.111 6.311 -15.316 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 -15.316 6.389 16.979 -12.855 6.85 17.413 -12.755 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.85 17.413 12.755 6.912 16.863 11.822 6.912 16.863 -11.822 6.85 17.413
+-12.755 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 15.316 8.082 6.573 14.196 6.912 16.863 11.822 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 15.316 6.912 16.863 11.822 6.85 17.413 12.755 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.85 17.413 12.755 6.389 16.979 12.855 7.57 6.586 15.252 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE m
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.621 6.203 -13.944 6.416 16.807 11.822 7.585 6.517 14.196 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE m
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.621 6.203 -13.944 6.416 16.807 -11.822 6.416 16.807 11.822 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.389 16.979 12.855 7.57 6.473 14.765 7.57 6.586 15.252 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.5 17.413 12.755 -8.917 16.979 12.855 6.389 16.979 12.855 6.85 17.413
+12.755 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.1 5.972 15.394 -14.16 6.268 15.326 -8.917 16.979 12.855 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.1 5.972 15.394 -8.917 16.979 12.855 -9.5 17.413 12.755 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.5 17.413 12.755 -14.924 6.332 14.426 -15.1 5.972 15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.1 5.972 -15.394 -14.924 6.332 -14.426 -9.676 17.053 -11.953 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -15.1 5.972 -15.394 -9.676 17.053 -11.953 -9.5 17.413 -12.755 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.924 6.332 -14.426 -9.407 16.921 -11.953 -9.676 17.053 -11.953
+] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.85 17.413 -12.755 6.389 16.979 -12.855 -8.917 16.979 -12.855 -9.5
+17.413 -12.755 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.5 17.413 -12.755 -8.917 16.979 -12.855 -14.16 6.268 -15.326 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.5 17.413 -12.755 -14.16 6.268 -15.326 -15.1 5.972 -15.394 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 8.111 6.311 -15.316 7.57 6.586 -15.252 6.389 16.979 -12.855 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.5 17.413 -12.755 -9.676 17.053 -11.953 -9.676 17.053 11.953 -9.5
+17.413 12.755 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+solid FALSE
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.5 17.413 12.755 -9.676 17.053 11.953 -14.924 6.332 14.426 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.924 6.332 -14.426 -14.654 6.2 -14.426 -9.407 16.921 -11.953 ]
+}
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -9.676 17.053 -11.953 -9.407 16.921 -11.953 -9.407 16.921 11.953 -9.676
+17.053 11.953 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.85 17.413 12.755 7.57 6.586 15.252 8.111 6.311 15.316 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.278 6.156 14.838 7.57 6.473 14.765 6.389 16.866 12.368 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.57 6.586 -15.252 6.389 16.866 -12.368 6.389 16.979 -12.855 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.57 6.586 -15.252 7.57 6.473 -14.765 6.389 16.866 -12.368 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -14.924 6.332 14.426 -14.654 6.2 14.426 -14.654 6.2 -14.426 -14.924
+6.332 -14.426 ] }
+coordIndex [ 0 1 2 3 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 7.621 6.203 -13.944 7.585 6.517 -14.196 6.416 16.807 -11.822 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.912 16.863 -11.822 6.416 16.807 -11.822 7.585 6.517 -14.196 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.912 16.863 -11.822 7.585 6.517 -14.196 8.082 6.573 -14.196 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.963 -7.19 -2.895
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 6.389 16.979 12.855 6.389 16.866 12.368 7.57 6.473 14.765 ] }
+coordIndex [ 0 1 2 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -11.343 7.19 -0.45
+children [
+Group {
+children [
+Transform {
+translation -2.091 -3.65 -0.403
+rotation 1.0 0.0 0.0 1.571
+scale 4.279 4.279 4.279
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF n
+Material {
+diffuseColor .47843 .02745 .12157
+}
+}
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ .633 -3.304 -.412 .824 -3.304 -.74 .837 .119 -.867 .646 .119 -.539
+-1.148 -3.304 -.442 -1.135 .119 -.569 -1.699 -3.304 1.7 -1.686 .119 1.573
+-.574 -3.304 .847 -.561 .119 .72 -.246 -3.304 .328 -.233 .119 .2 -.016 -3.304
+.334 -.003 .119 .207 -.048 -3.304 -.315 -.035 .119 -.442 .851 3.62 -.765 .66
+3.62 -.437 -1.121 3.62 -.467 -1.672 3.62 1.675 -.547 3.62 .822 -.219 3.62
+.303 .011 3.62 .309 -.021 3.62 -.339 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 1 4 5 -1 1 5 2 -1 4 6 7 5 -1 6 8 9 -1 6 9 7 -1
+8 10 11 9 -1 10 12 13 -1 10 13 11 -1 12 14 15 13 -1 14 0 3 15 -1 3 2 16 -1 3
+16 17 -1 2 5 18 16 -1 5 7 19 18 -1 7 9 20 19 -1 9 11 21 20 -1 11 13 22 21 -1
+13 15 23 22 -1 15 3 17 -1 15 17 23 -1 23 17 16 18 19 20 21 22 -1 14 12 10 8
+6 4 1 0 -1 ]
+}
+}
+]
+}
+Transform {
+translation 18.151 -5.506 -2.479
+rotation 1.0 0.0 0.0 1.571
+scale 5.039 5.039 5.039
+children [
+Shape {
+appearance
+DEF o
+Appearance
+{
+material
+USE n
+}
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -.235 -2.152 -1.252 -.468 -2.152 -.992 -.467 3.242 -.992 -.234 3.242
+-1.252 -.65 -2.152 -.264 -.649 3.242 -.264 -.624 -2.152 .047 -.623 3.242 .047
+-.572 -2.152 .333 -.571 3.242 .333 -2.001 -2.152 .281 -2 3.242 .281 -2.157
+-2.152 .411 -2.156 3.242 .411 -2.183 -2.152 .567 -2.182 3.242 .567 -2.079
+-2.152 .775 -2.078 3.242 .775 .296 -2.152 .768 .297 3.242 .768 .188 -2.152
+-1.281 .189 3.242 -1.281 ] }
+coordIndex [ 0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 8 10 11 9 -1 10 12
+13 11 -1 12 14 15 13 -1 14 16 17 15 -1 16 18 19 17 -1 18 20 21 19 -1 20 0 3
+21 -1 19 21 3 2 5 7 9 11 13 15 17 -1 16 14 12 10 8 6 4 1 0 20 18 -1 ]
+}
+}
+]
+}
+Transform {
+translation 19.38 -8.977 0.517
+children [
+Shape {
+appearance
+USE b
+geometry
+Box
+{
+size 1.0 9.021 31.212
+}
+}
+]
+}
+Transform {
+translation 13.46751 -11.13 -0.173
+scale 3.474 3.474 3.474
+children [
+Shape {
+appearance
+DEF p
+Appearance
+{
+material
+USE e
+}
+geometry
+Box
+{
+size 3.15509 1.336 6.494
+}
+}
+]
+}
+Transform {
+translation -0.19 -3.592 9.284
+rotation 0.0 0.0 -1.0 0.884
+scale 0.613 0.613 0.613
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE p
+geometry
+Cylinder
+{
+height 19.870
+}
+}
+]
+}
+Transform {
+translation 0.0 9.693 0.0
+children [
+Shape {
+appearance
+USE b
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 1.811 .356 4.373 3.347 .356 3.347 4.373 .356 1.811 4.733 .356 0 4.373
+.356 -1.811 3.347 .356 -3.347 1.811 .356 -4.373 0 .356 -4.733 -1.811 .356
+-4.373 -3.347 .356 -3.347 -4.373 .356 -1.811 -4.733 .356 0 -4.373 .356 1.811
+-4.177 .356 .015 -3.864 .356 -1.585 -2.964 .356 -2.944 -1.611 .356 -3.854
+-.014 .356 -4.178 1.586 .356 -3.866 2.945 .356 -2.965 3.856 .356 -1.613 4.179
+.356 -.015 3.867 .356 1.585 2.966 .356 2.944 1.614 .356 3.854 .016 .356 4.178
+-1.584 .356 3.866 -2.943 .356 2.965 -3.853 .356 1.612 -3.347 .356 3.347 -1.811
+.356 4.373 0 .356 4.733 -4.179 -.356 .015 -3.856 -.356 1.613 -2.945 -.356
+2.965 -1.586 -.356 3.866 .014 -.356 4.178 1.611 -.356 3.854 2.964 -.356 2.944
+3.864 -.356 1.585 4.177 -.356 -.015 3.853 -.356 -1.612 2.943 -.356 -2.965
+1.584 -.356 -3.866 -.016 -.356 -4.178 -1.614 -.356 -3.854 -2.966 -.356 -2.944
+-3.867 -.356 -1.585 -4.373 -.356 1.811 -4.733 -.356 0 -4.373 -.356 -1.811
+-3.347 -.356 -3.347 -1.811 -.356 -4.373 0 -.356 -4.733 1.811 -.356 -4.373
+3.347 -.356 -3.347 4.373 -.356 -1.811 4.733 -.356 0 4.373 -.356 1.811 3.347
+-.356 3.347 1.811 -.356 4.373 0 -.356 4.733 -1.811 -.356 4.373 -3.347 -.356
+3.347 ] }
+coordIndex [ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+25 26 27 28 13 12 29 30 31 -1 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+32 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 48 -1 7 6 54 53 -1 6 5 55
+54 -1 5 4 56 55 -1 4 3 57 56 -1 3 2 58 57 -1 2 1 59 58 -1 1 0 60 59 -1 0 31
+61 60 -1 31 30 62 61 -1 30 29 63 62 -1 29 12 48 63 -1 12 11 49 48 -1 11 10 50
+49 -1 10 9 51 50 -1 9 8 52 51 -1 8 7 53 52 -1 44 43 18 17 -1 43 42 19 18 -1
+42 41 20 19 -1 41 40 21 20 -1 40 39 22 21 -1 39 38 23 22 -1 38 37 24 23 -1 37
+36 25 24 -1 36 35 26 25 -1 35 34 27 26 -1 34 33 28 27 -1 33 32 13 28 -1 32 47
+14 13 -1 47 46 15 14 -1 46 45 16 15 -1 45 44 17 16 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.0 9.574 0.0
+rotation -1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF q
+Material {
+shininess 0.000
+diffuseColor 0.0 0.0 0.0
+}
+}
+geometry
+Cylinder
+{
+height 8.799
+radius 0.150
+}
+}
+]
+}
+Transform {
+translation 0.0 9.574 0.0
+rotation -0.707 -0.708 0.0 3.142
+children [
+Shape {
+appearance
+USE o
+geometry
+Cylinder
+{
+height 8.872
+radius 0.150
+}
+}
+]
+}
+Transform {
+translation -0.05333 6.462 -0.98093
+rotation -1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+USE j
+geometry
+Cylinder
+{
+height 1.037
+radius 0.323
+}
+}
+]
+}
+Transform {
+translation -1.33691 6.701 1.72953
+rotation -0.944 -0.234 -0.234 1.629
+children [
+Shape {
+appearance
+USE j geometry
+DEF r
+Cylinder
+{
+height 3.342
+radius 0.098
+}
+}
+]
+}
+Transform {
+translation -1.22257 6.701 -1.78826
+rotation -0.251 -0.685 -0.685 2.651
+children [
+Shape {
+appearance
+USE j geometry
+USE r
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -5.9767 -12.08873 6.805
+rotation 0.0 0.0 -1.0 0.91
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE p geometry
+DEF s
+Cylinder
+{
+height 3.280
+radius 0.357
+}
+}
+]
+}
+Transform {
+translation 0.0 1.556 0.0
+children [
+Shape {
+appearance
+DEF t
+Appearance
+{
+material
+USE q
+}
+geometry
+DEF u
+Box
+{
+size 3.035 0.465 1.278
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -5.7467 -11.7297 13.034
+rotation 0.0 0.0 -1.0 0.91
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE p geometry
+USE s
+}
+]
+}
+Transform {
+translation 0.0 1.556 0.0
+children [
+Shape {
+appearance
+USE t geometry
+USE u
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation 1.48788 7.658 -0.80777
+rotation 0.0 0.0 -1.0 0.293
+children [
+Group {
+children [
+Transform {
+rotation 0.0 0.0 -1.0 1.571
+children [
+Shape {
+appearance
+USE j
+geometry
+Cylinder
+{
+height 1.321
+radius 0.304
+}
+}
+]
+}
+Transform {
+translation 0.66029 -0.00977 0.02684
+rotation 0.288 -0.958 0.0 0.175
+children [
+Shape {
+appearance
+USE j
+geometry
+Box
+{
+size 0.359 1.605 3.572
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}
+Transform {
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 42.611 -6.045 -16.348 42.671 -5.677 -16.389 42.842 -5.366 -16.509
+43.096 -5.157 -16.689 43.395 -5.084 -16.903 43.694 -5.157 -17.117 43.947 -5.366
+-17.3 44.115 -5.677 -17.422 44.174 -6.045 -17.467 44.113 -6.413 -17.426 43.943
+-6.725 -17.306 43.689 -6.933 -17.125 43.389 -7.006 -16.911 43.091 -6.933 -16.697
+42.838 -6.725 -16.514 42.669 -6.413 -16.392 42.701 -5.862 16.343 42.644 -6.23
+16.296 42.703 -6.598 16.34 42.868 -6.91 16.467 43.113 -7.118 16.659 43.403
+-7.191 16.886 43.691 -7.118 17.114 43.936 -6.91 17.308 44.098 -6.598 17.438
+44.155 -6.23 17.485 44.096 -5.862 17.441 43.931 -5.551 17.313 43.686 -5.342
+17.121 43.396 -5.269 16.894 43.108 -5.342 16.666 42.863 -5.551 16.473 44.69
+-6.112 -4.905 44.67 -6.099 -8.782 44.742 -6.164 5.002 44.743 -6.466 -8.784
+44.762 -6.176 8.879 44.763 -6.479 -4.907 44.815 -6.531 5 44.835 -6.544 8.876
+45.05 -6.745 -13.425 45.218 -6.89 13.481 45.053 -6.578 13.353 44.841 -6.557
+9.953 44.737 -6.453 -9.861 44.881 -6.433 -13.302 45.303 -6.953 -13.607 45.463
+-7.098 13.673 45.601 -7.026 -13.821 45.753 -7.171 13.9 45.901 -6.953 -14.035
+46.041 -7.098 14.128 46.155 -6.745 -14.216 46.286 -6.89 14.321 46.325 -6.433
+-14.336 46.448 -6.578 14.452 46.386 -6.065 -14.377 46.505 -6.21 14.498 46.327
+-5.697 -14.333 46.446 -5.842 14.455 46.159 -5.385 -14.21 46.281 -5.531 14.327
+45.906 -5.177 -14.028 46.036 -5.322 14.135 45.607 -5.104 -13.813 45.746 -5.249
+13.908 45.308 -5.177 -13.599 45.458 -5.322 13.68 45.054 -5.385 -13.419 45.213
+-5.531 13.487 44.884 -5.697 -13.299 45.051 -5.842 13.356 44.823 -6.065 -13.258
+44.664 -6.086 -9.859 44.768 -6.189 9.955 44.994 -6.21 13.31 43.07 -6.895 8.881
+43.076 -6.908 9.958 43.002 -6.541 9.96 42.997 -6.528 8.884 42.904 -6.45 -8.777
+42.899 -6.437 -9.854 42.972 -6.805 -9.856 42.977 -6.818 -8.779 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 5 -1 0 5 6 -1 0 6 7 -1 0 7 8 -1
+0 8 9 -1 0 9 10 -1 0 10 11 -1 0 11 12 -1 0 12 13 -1 0 13 14 -1 0 14 15 -1 16
+17 18 -1 16 18 19 -1 16 19 20 -1 16 20 21 -1 16 21 22 -1 16 22 23 -1 16 23 24
+-1 16 24 25 -1 16 25 26 -1 16 26 27 -1 16 27 28 -1 16 28 29 -1 16 29 30 -1 16
+30 31 -1 32 33 34 -1 34 33 35 -1 34 35 36 -1 36 35 37 -1 36 37 38 -1 36 38 39
+-1 40 41 42 -1 40 42 43 -1 40 43 39 -1 40 39 38 -1 40 38 37 -1 40 37 35 -1 40
+35 44 -1 40 44 45 -1 46 47 41 -1 46 41 40 -1 48 49 47 -1 48 47 46 -1 50 51 49
+-1 50 49 48 -1 52 53 51 -1 52 51 50 -1 54 55 53 -1 54 53 52 -1 56 57 55 -1 56
+55 54 -1 58 59 57 -1 58 57 56 -1 60 61 59 -1 60 59 58 -1 62 63 61 -1 62 61 60
+-1 64 65 63 -1 64 63 62 -1 66 67 65 -1 66 65 64 -1 68 69 67 -1 68 67 66 -1 70
+71 69 -1 70 69 68 -1 71 70 72 -1 71 72 73 -1 71 73 33 -1 71 33 32 -1 71 32 34
+-1 71 34 36 -1 71 36 74 -1 71 74 75 -1 43 42 75 -1 43 75 74 -1 73 72 45 -1 73
+45 44 -1 76 77 78 -1 76 78 79 -1 80 81 82 -1 80 82 83 -1 43 77 76 39 -1 39 76
+79 -1 39 79 36 -1 36 79 78 74 -1 74 78 77 -1 74 77 43 -1 73 81 80 -1 73 80 33
+-1 33 80 83 -1 33 83 35 -1 35 83 82 -1 35 82 44 -1 44 82 81 73 -1 70 1 0 -1
+70 0 72 -1 72 0 15 -1 72 15 45 -1 45 15 14 -1 45 14 40 -1 40 14 13 46 -1 46
+13 12 -1 46 12 48 -1 48 12 11 -1 48 11 50 -1 50 11 10 -1 50 10 52 -1 52 10 9
+-1 52 9 54 -1 54 9 8 56 -1 56 8 7 -1 56 7 58 -1 58 7 6 -1 58 6 60 -1 60 6 5
+-1 60 5 62 -1 62 5 4 -1 62 4 64 -1 64 4 3 66 -1 66 3 2 -1 66 2 68 -1 68 2 1
+-1 68 1 70 -1 75 17 16 -1 75 16 71 -1 71 16 31 -1 71 31 69 -1 69 31 30 -1 69
+30 67 -1 67 30 29 -1 67 29 65 -1 65 29 28 -1 65 28 63 -1 63 28 27 -1 63 27 61
+-1 61 27 26 -1 61 26 59 -1 59 26 25 -1 59 25 57 -1 57 25 24 -1 57 24 55 -1 55
+24 23 -1 55 23 53 -1 53 23 22 -1 53 22 51 -1 51 22 21 -1 51 21 49 -1 49 21 20
+-1 49 20 47 -1 47 20 19 -1 47 19 41 -1 41 19 18 -1 41 18 42 -1 42 18 17 -1 42
+17 75 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -40.92 -5.108 16.407 -40.981 -4.74 16.448 -41.152 -4.428 16.567 -41.407
+-4.22 16.746 -41.707 -4.147 16.958 -42.007 -4.22 17.171 -42.261 -4.428 17.352
+-42.43 -4.74 17.474 -42.489 -5.108 17.518 -42.428 -5.475 17.477 -42.257 -5.787
+17.358 -42.002 -5.995 17.178 -41.701 -6.069 16.966 -41.401 -5.995 16.753 -41.148
+-5.787 16.572 -40.978 -5.475 16.451 -40.838 -4.925 -16.284 -40.782 -5.292
+-16.237 -40.841 -5.66 -16.281 -41.005 -5.972 -16.409 -41.25 -6.18 -16.602
+-41.538 -6.254 -16.831 -41.825 -6.18 -17.06 -42.068 -5.972 -17.255 -42.231
+-5.66 -17.386 -42.287 -5.292 -17.433 -42.228 -4.925 -17.389 -42.064 -4.613
+-17.261 -41.819 -4.405 -17.067 -41.531 -4.331 -16.839 -41.244 -4.405 -16.609
+-41 -4.613 -16.415 -42.939 -5.174 4.954 -42.939 -5.161 8.83 -42.939 -5.226
+-4.954 -43.012 -5.529 8.832 -42.939 -5.239 -8.83 -43.012 -5.542 4.956 -43.012
+-5.594 -4.952 -43.012 -5.607 -8.828 -43.343 -5.807 13.471 -43.37 -5.952 -13.435
+-43.206 -5.64 -13.307 -43.012 -5.62 -9.905 -43.012 -5.516 9.909 -43.174 -5.495
+13.349 -43.597 -6.015 13.652 -43.615 -6.16 -13.628 -43.897 -6.088 13.865 -43.903
+-6.234 -13.857 -44.197 -6.015 14.077 -44.191 -6.16 -14.086 -44.453 -5.807
+14.256 -44.434 -5.952 -14.281 -44.624 -5.495 14.376 -44.596 -5.64 -14.412
+-44.684 -5.127 14.416 -44.652 -5.273 -14.459 -44.626 -4.76 14.372 -44.594
+-4.905 -14.415 -44.457 -4.448 14.251 -44.43 -4.593 -14.287 -44.203 -4.24 14.07
+-44.185 -4.385 -14.093 -43.903 -4.166 13.857 -43.897 -4.312 -13.865 -43.603
+-4.24 13.645 -43.609 -4.385 -13.636 -43.347 -4.448 13.465 -43.366 -4.593 -13.441
+-43.177 -4.76 13.346 -43.204 -4.905 -13.31 -43.116 -5.127 13.306 -42.939 -5.148
+9.907 -42.939 -5.252 -9.907 -43.148 -5.273 -13.263 -41.247 -5.958 -8.824 -41.247
+-5.971 -9.901 -41.174 -5.603 -9.903 -41.174 -5.59 -8.826 -41.174 -5.512 8.835
+-41.174 -5.499 9.911 -41.247 -5.867 9.913 -41.247 -5.88 8.837 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 5 -1 0 5 6 -1 0 6 7 -1 0 7 8 -1
+0 8 9 -1 0 9 10 -1 0 10 11 -1 0 11 12 -1 0 12 13 -1 0 13 14 -1 0 14 15 -1 16
+17 18 -1 16 18 19 -1 16 19 20 -1 16 20 21 -1 16 21 22 -1 16 22 23 -1 16 23 24
+-1 16 24 25 -1 16 25 26 -1 16 26 27 -1 16 27 28 -1 16 28 29 -1 16 29 30 -1 16
+30 31 -1 32 33 34 -1 34 33 35 -1 34 35 36 -1 36 35 37 -1 36 37 38 -1 36 38 39
+-1 40 41 42 -1 40 42 43 -1 40 43 39 -1 40 39 38 -1 40 38 37 -1 40 37 35 -1 40
+35 44 -1 40 44 45 -1 46 47 41 -1 46 41 40 -1 48 49 47 -1 48 47 46 -1 50 51 49
+-1 50 49 48 -1 52 53 51 -1 52 51 50 -1 54 55 53 -1 54 53 52 -1 56 57 55 -1 56
+55 54 -1 58 59 57 -1 58 57 56 -1 60 61 59 -1 60 59 58 -1 62 63 61 -1 62 61 60
+-1 64 65 63 -1 64 63 62 -1 66 67 65 -1 66 65 64 -1 68 69 67 -1 68 67 66 -1 70
+71 69 -1 70 69 68 -1 71 70 72 -1 71 72 73 -1 71 73 33 -1 71 33 32 -1 71 32 34
+-1 71 34 36 -1 71 36 74 -1 71 74 75 -1 43 42 75 -1 43 75 74 -1 73 72 45 -1 73
+45 44 -1 76 77 78 79 -1 80 81 82 83 -1 43 77 76 39 -1 39 76 79 -1 39 79 36 -1
+36 79 78 74 -1 74 78 77 -1 74 77 43 -1 73 81 80 33 -1 33 80 83 -1 33 83 35 -1
+35 83 82 44 -1 44 82 81 -1 44 81 73 -1 70 1 0 -1 70 0 72 -1 72 0 15 -1 72 15
+45 -1 45 15 14 -1 45 14 40 -1 40 14 13 -1 40 13 46 -1 46 13 12 -1 46 12 48 -1
+48 12 11 -1 48 11 50 -1 50 11 10 -1 50 10 52 -1 52 10 9 -1 52 9 54 -1 54 9 8
+-1 54 8 56 -1 56 8 7 -1 56 7 58 -1 58 7 6 60 -1 60 6 5 -1 60 5 62 -1 62 5 4
+-1 62 4 64 -1 64 4 3 -1 64 3 66 -1 66 3 2 68 -1 68 2 1 -1 68 1 70 -1 75 17 16
+71 -1 71 16 31 69 -1 69 31 30 -1 69 30 67 -1 67 30 29 -1 67 29 65 -1 65 29 28
+-1 65 28 63 -1 63 28 27 61 -1 61 27 26 -1 61 26 59 -1 59 26 25 -1 59 25 57 -1
+57 25 24 -1 57 24 55 -1 55 24 23 -1 55 23 53 -1 53 23 22 -1 53 22 51 -1 51 22
+21 49 -1 49 21 20 -1 49 20 47 -1 47 20 19 -1 47 19 41 -1 41 19 18 -1 41 18 42
+-1 42 18 17 -1 42 17 75 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Group {
+children [
+Transform {
+rotation -1.0 0.0 0.0 0.027
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ -43.106 -4.847 9.633 -43.158 -4.852 9.899 -43.309 -4.856 10.125 -43.534
+-4.858 10.275 -43.8 -4.859 10.328 -44.066 -4.858 10.275 -44.291 -4.856 10.125
+-44.442 -4.852 9.899 -44.495 -4.847 9.633 -44.442 -4.843 9.368 -44.291 -4.839
+9.142 -44.066 -4.836 8.992 -43.8 -4.835 8.939 -43.534 -4.836 8.992 -43.309
+-4.839 9.142 -43.158 -4.843 9.368 -43.158 -4.694 -9.466 -43.106 -4.694 -9.2
+-43.158 -4.694 -8.934 -43.309 -4.694 -8.709 -43.534 -4.694 -8.558 -43.8 -4.694
+-8.506 -44.066 -4.694 -8.558 -44.291 -4.694 -8.709 -44.442 -4.694 -8.934 -44.495
+-4.694 -9.2 -44.442 -4.694 -9.466 -44.291 -4.694 -9.691 -44.066 -4.694 -9.842
+-43.8 -4.694 -9.894 -43.534 -4.694 -9.842 -43.309 -4.694 -9.691 -43.158 1.894
+-8.934 -43.106 1.894 -9.2 -43.309 1.894 -8.709 -43.534 1.894 -8.558 -43.8
+1.894 -8.506 -44.066 1.894 -8.558 -44.291 1.894 -8.709 -44.442 1.894 -8.934
+-44.495 2.594 -9.2 -44.442 1.894 -9.466 -44.495 1.894 -9.2 -44.291 1.894 -9.691
+-44.066 1.894 -9.842 -43.8 1.894 -9.894 -43.534 1.894 -9.842 -43.309 1.894
+-9.691 -43.158 1.894 -9.466 -43.106 2.594 -9.2 -43.158 2.739 -9.423 -43.158
+2.45 -8.977 -43.309 2.328 -8.788 -43.534 2.246 -8.661 -43.8 2.217 -8.617 -44.066
+2.246 -8.661 -44.291 2.328 -8.788 -44.442 2.45 -8.977 -44.442 2.739 -9.423
+-44.291 2.861 -9.612 -44.066 2.943 -9.739 -43.8 2.972 -9.783 -43.534 2.943
+-9.739 -43.309 2.861 -9.612 -43.158 3.448 -8.415 -43.106 3.182 -8.42 -43.158
+2.917 -8.425 -43.309 2.691 -8.429 -43.534 2.541 -8.432 -43.8 2.488 -8.433
+-44.066 2.541 -8.432 -44.291 2.691 -8.429 -44.442 2.917 -8.425 -44.495 3.182
+-8.42 -44.442 3.448 -8.415 -44.291 3.673 -8.41 -44.066 3.824 -8.407 -43.8
+3.877 -8.406 -43.534 3.824 -8.407 -43.309 3.673 -8.41 -43.158 3.125 8.382
+-43.106 2.86 8.377 -43.158 2.594 8.372 -43.309 2.369 8.368 -43.534 2.218 8.365
+-43.8 2.165 8.364 -44.066 2.218 8.365 -44.291 2.369 8.368 -44.442 2.594 8.372
+-44.495 2.86 8.377 -44.442 3.125 8.382 -44.291 3.351 8.387 -44.066 3.501 8.389
+-43.8 3.554 8.39 -43.534 3.501 8.389 -43.309 3.351 8.387 -43.158 3.067 9.328
+-43.106 2.848 9.177 -43.158 2.629 9.026 -43.309 2.443 8.899 -43.534 2.319
+8.814 -43.8 2.276 8.784 -44.066 2.319 8.814 -44.291 2.443 8.899 -44.442 2.629
+9.026 -44.495 2.848 9.177 -44.442 3.067 9.328 -44.291 3.253 9.455 -44.066
+3.377 9.54 -43.8 3.42 9.57 -43.534 3.377 9.54 -43.309 3.253 9.455 -43.158
+2.047 10.02 -43.106 2.052 9.754 -43.158 2.056 9.488 -43.309 2.06 9.263 -43.534
+2.063 9.112 -43.8 2.064 9.06 -44.066 2.063 9.112 -44.291 2.06 9.263 -44.442
+2.056 9.488 -44.495 2.052 9.754 -44.442 2.047 10.02 -44.291 2.043 10.245 -44.066
+2.04 10.395 -43.8 2.04 10.448 -43.534 2.04 10.395 -43.309 2.043 10.245 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 5 -1 0 5 6 -1 0 6 7 -1 0 7 8 9 -1
+0 9 10 -1 0 10 11 -1 0 11 12 -1 0 12 13 -1 0 13 14 -1 0 14 15 -1 16 17 18 19
+20 21 22 23 24 25 26 27 28 29 30 31 -1 32 18 17 33 -1 34 19 18 32 -1 35 20 19
+34 -1 36 21 20 35 -1 37 22 21 36 -1 38 23 22 37 -1 39 24 23 38 -1 40 25 24 39
+-1 41 26 25 42 -1 43 27 26 41 -1 44 28 27 43 -1 45 29 28 44 -1 46 30 29 45 -1
+47 31 30 46 -1 48 16 31 47 -1 49 17 16 48 -1 48 50 49 -1 33 49 51 -1 33 51 32
+-1 32 51 52 -1 32 52 34 -1 34 52 53 -1 34 53 35 -1 35 53 54 -1 35 54 36 -1 36
+54 55 -1 36 55 37 -1 37 55 56 -1 37 56 38 -1 38 56 57 -1 38 57 39 -1 39 57 40
+-1 42 40 58 -1 42 58 41 -1 41 58 59 -1 41 59 43 -1 43 59 60 -1 43 60 44 -1 44
+60 61 -1 44 61 45 -1 45 61 62 -1 45 62 46 -1 46 62 63 -1 46 63 47 -1 47 63 50
+-1 47 50 48 -1 50 64 65 -1 50 65 49 -1 49 65 66 -1 49 66 51 -1 51 66 67 -1 51
+67 52 -1 52 67 68 -1 52 68 53 -1 53 68 69 -1 53 69 54 -1 54 69 70 -1 54 70 55
+-1 55 70 71 -1 55 71 56 -1 56 71 72 -1 56 72 57 -1 57 72 73 -1 57 73 40 -1 40
+73 74 -1 40 74 58 -1 58 74 75 -1 58 75 59 -1 59 75 76 -1 59 76 60 -1 60 76 77
+-1 60 77 61 -1 61 77 78 -1 61 78 62 -1 62 78 79 -1 62 79 63 -1 63 79 64 -1 63
+64 50 -1 64 80 81 65 -1 65 81 82 -1 65 82 66 -1 66 82 83 -1 66 83 67 -1 67 83
+84 -1 67 84 68 -1 68 84 85 69 -1 69 85 86 70 -1 70 86 87 -1 70 87 71 -1 71 87
+88 -1 71 88 72 -1 72 88 89 -1 72 89 73 -1 73 89 90 74 -1 74 90 91 75 -1 75 91
+92 -1 75 92 76 -1 76 92 93 -1 76 93 77 -1 77 93 94 -1 77 94 78 -1 78 94 95 -1
+78 95 79 -1 79 95 80 64 -1 80 96 97 -1 80 97 81 -1 81 97 98 -1 81 98 82 -1 82
+98 99 -1 82 99 83 -1 83 99 100 -1 83 100 84 -1 84 100 101 -1 84 101 85 -1 85
+101 102 -1 85 102 86 -1 86 102 103 -1 86 103 87 -1 87 103 104 -1 87 104 88 -1
+88 104 105 -1 88 105 89 -1 89 105 106 -1 89 106 90 -1 90 106 107 -1 90 107 91
+-1 91 107 108 -1 91 108 92 -1 92 108 109 -1 92 109 93 -1 93 109 110 -1 93 110
+94 -1 94 110 111 -1 94 111 95 -1 95 111 96 -1 95 96 80 -1 96 112 113 -1 96 113
+97 -1 97 113 114 -1 97 114 98 -1 98 114 115 -1 98 115 99 -1 99 115 116 -1 99
+116 100 -1 100 116 117 -1 100 117 101 -1 101 117 118 -1 101 118 102 -1 102 118
+119 -1 102 119 103 -1 103 119 120 -1 103 120 104 -1 104 120 121 -1 104 121 105
+-1 105 121 122 -1 105 122 106 -1 106 122 123 -1 106 123 107 -1 107 123 124 -1
+107 124 108 -1 108 124 125 -1 108 125 109 -1 109 125 126 -1 109 126 110 -1 110
+126 127 -1 110 127 111 -1 111 127 112 -1 111 112 96 -1 112 1 0 -1 112 0 113
+-1 113 0 15 114 -1 114 15 14 -1 114 14 115 -1 115 14 13 116 -1 116 13 12 117
+-1 117 12 11 118 -1 118 11 10 119 -1 119 10 9 -1 119 9 120 -1 120 9 8 121 -1
+121 8 7 -1 121 7 122 -1 122 7 6 -1 122 6 123 -1 123 6 5 124 -1 124 5 4 125 -1
+125 4 3 126 -1 126 3 2 127 -1 127 2 1 -1 127 1 112 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation 1.84526 0.0 -0.23066
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 10.633 -2.409 -14.921 10.547 -2.403 -14.488 10.301 -2.397 -14.12 9.934
+-2.393 -13.874 9.5 -2.392 -13.788 9.066 -2.393 -13.874 8.699 -2.397 -14.12
+8.453 -2.403 -14.488 8.367 -2.409 -14.921 8.453 -2.416 -15.355 8.699 -2.422
+-15.723 9.066 -2.426 -15.968 9.5 -2.427 -16.054 9.934 -2.426 -15.968 10.301
+-2.422 -15.723 10.547 -2.416 -15.355 10.547 -2.598 13.802 10.633 -2.593 14.236
+10.547 -2.589 14.669 10.301 -2.585 15.037 9.934 -2.582 15.283 9.5 -2.582 15.369
+9.066 -2.582 15.283 8.699 -2.585 15.037 8.453 -2.589 14.669 8.367 -2.593 14.236
+8.453 -2.598 13.802 8.699 -2.602 13.434 9.066 -2.604 13.189 9.5 -2.605 13.102
+9.934 -2.604 13.189 10.301 -2.602 13.434 10.547 17.378 -11.177 10.547 17.352
+11.159 10.633 16.981 10.933 10.633 17.019 -10.933 10.301 17.682 -11.384 10.301
+17.666 11.35 9.934 17.885 -11.522 9.934 17.876 11.477 9.5 17.956 -11.57 9.5
+17.949 11.522 9.066 17.885 -11.522 9.066 17.876 11.477 8.699 17.682 -11.384
+8.699 17.666 11.35 8.453 17.378 -11.177 8.453 17.352 11.159 8.367 17.019 -10.933
+8.367 16.981 10.933 8.453 16.66 -10.69 8.453 16.61 10.708 8.699 16.356 -10.483
+8.699 16.296 10.517 9.066 16.153 -10.345 9.066 16.086 10.389 9.5 16.082 -10.296
+9.5 16.013 10.345 9.934 16.153 -10.345 9.934 16.086 10.389 10.301 16.356 -10.483
+10.301 16.296 10.517 10.547 16.66 -10.69 10.547 16.61 10.708 10.633 15.706
+12.044 10.547 15.701 11.61 10.301 15.697 11.243 9.934 15.695 10.997 9.5 15.694
+10.911 9.066 15.695 10.997 8.699 15.697 11.243 8.453 15.701 11.61 8.367 15.706
+12.044 8.453 15.71 12.478 8.699 15.714 12.846 9.066 15.717 13.091 9.5 15.717
+13.177 9.934 15.717 13.091 10.301 15.714 12.846 10.547 15.71 12.478 10.547
+15.895 -11.575 10.633 15.888 -12.009 10.547 15.882 -12.442 10.301 15.876 -12.81
+9.934 15.872 -13.056 9.5 15.871 -13.142 9.066 15.872 -13.056 8.699 15.876
+-12.81 8.453 15.882 -12.442 8.367 15.888 -12.009 8.453 15.895 -11.575 8.699
+15.901 -11.207 9.066 15.905 -10.962 9.5 15.906 -10.875 9.934 15.905 -10.962
+10.301 15.901 -11.207 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 5 -1 0 5 6 -1 0 6 7 -1 0 7 8 -1
+0 8 9 -1 0 9 10 -1 0 10 11 -1 0 11 12 -1 0 12 13 -1 0 13 14 -1 0 14 15 -1 16
+17 18 -1 16 18 19 -1 16 19 20 -1 16 20 21 -1 16 21 22 -1 16 22 23 -1 16 23 24
+-1 16 24 25 -1 16 25 26 -1 16 26 27 -1 16 27 28 -1 16 28 29 -1 16 29 30 -1 16
+30 31 -1 32 33 34 -1 32 34 35 -1 36 37 33 -1 36 33 32 -1 38 39 37 -1 38 37 36
+-1 40 41 39 -1 40 39 38 -1 42 43 41 -1 42 41 40 -1 44 45 43 -1 44 43 42 -1 46
+47 45 -1 46 45 44 -1 48 49 47 -1 48 47 46 -1 50 51 49 -1 50 49 48 -1 52 53 51
+-1 52 51 50 -1 54 55 53 -1 54 53 52 -1 56 57 55 -1 56 55 54 -1 58 59 57 -1 58
+57 56 -1 60 61 59 -1 60 59 58 -1 62 63 61 -1 62 61 60 -1 35 34 63 -1 35 63 62
+-1 34 64 65 -1 34 65 63 -1 63 65 66 -1 63 66 61 -1 61 66 67 -1 61 67 59 -1 59
+67 68 -1 59 68 57 -1 57 68 69 -1 57 69 55 -1 55 69 70 -1 55 70 53 -1 53 70 71
+-1 53 71 51 -1 51 71 72 -1 51 72 49 -1 49 72 73 -1 49 73 47 -1 47 73 74 -1 47
+74 45 -1 45 74 75 -1 45 75 43 -1 43 75 76 -1 43 76 41 -1 41 76 77 -1 41 77 39
+-1 39 77 78 -1 39 78 37 -1 37 78 79 -1 37 79 33 -1 33 79 64 -1 33 64 34 -1 62
+80 81 -1 62 81 35 -1 35 81 82 -1 35 82 32 -1 32 82 83 -1 32 83 36 -1 36 83 84
+-1 36 84 38 -1 38 84 85 -1 38 85 40 -1 40 85 86 -1 40 86 42 -1 42 86 87 -1 42
+87 44 -1 44 87 88 -1 44 88 46 -1 46 88 89 -1 46 89 48 -1 48 89 90 -1 48 90 50
+-1 50 90 91 -1 50 91 52 -1 52 91 92 -1 52 92 54 -1 54 92 93 -1 54 93 56 -1 56
+93 94 -1 56 94 58 -1 58 94 95 -1 58 95 60 -1 60 95 80 -1 60 80 62 -1 80 1 0
+-1 80 0 81 -1 81 0 15 -1 81 15 82 -1 82 15 14 -1 82 14 83 -1 83 14 13 -1 83
+13 84 -1 84 13 12 -1 84 12 85 -1 85 12 11 -1 85 11 86 -1 86 11 10 -1 86 10 87
+-1 87 10 9 -1 87 9 88 -1 88 9 8 -1 88 8 89 -1 89 8 7 -1 89 7 90 -1 90 7 6 -1
+90 6 91 -1 91 6 5 -1 91 5 92 -1 92 5 4 -1 92 4 93 -1 93 4 3 -1 93 3 94 -1 94
+3 2 -1 94 2 95 -1 95 2 1 -1 95 1 80 -1 64 17 16 -1 64 16 65 -1 65 16 31 -1 65
+31 66 -1 66 31 30 -1 66 30 67 -1 67 30 29 -1 67 29 68 -1 68 29 28 -1 68 28 69
+-1 69 28 27 -1 69 27 70 -1 70 27 26 -1 70 26 71 -1 71 26 25 -1 71 25 72 -1 72
+25 24 -1 72 24 73 -1 73 24 23 -1 73 23 74 -1 74 23 22 -1 74 22 75 -1 75 22 21
+-1 75 21 76 -1 76 21 20 -1 76 20 77 -1 77 20 19 -1 77 19 78 -1 78 19 18 -1 78
+18 79 -1 79 18 17 -1 79 17 64 -1 ]
+}
+}
+]
+}
+Transform {
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 22.74 -2.192 -12.462 22.812 -2.174 -12.837 23.019 -2.124 -13.155 23.328
+-2.048 -13.368 23.692 -1.96 -13.443 24.057 -1.871 -13.368 24.366 -1.795 -13.155
+24.572 -1.745 -12.837 24.645 -1.727 -12.462 24.572 -1.745 -12.087 24.366 -1.795
+-11.769 24.057 -1.871 -11.556 23.692 -1.96 -11.482 23.328 -2.048 -11.556 23.019
+-2.124 -11.769 22.812 -2.174 -12.087 9.81 12.198 -12.837 9.81 12.123 -12.462
+9.81 12.198 -12.087 9.811 12.41 -11.769 9.812 12.728 -11.556 9.813 13.103
+-11.482 9.814 13.479 -11.556 9.815 13.797 -11.769 9.816 14.009 -12.087 9.816
+14.084 -12.462 9.816 14.009 -12.837 9.815 13.797 -13.155 9.814 13.479 -13.368
+9.813 13.103 -13.443 9.812 12.728 -13.368 9.811 12.41 -13.155 18.171 12.191
+-12.087 18.171 12.116 -12.462 18.172 12.403 -11.769 18.173 12.721 -11.556
+18.174 13.097 -11.482 18.175 13.472 -11.556 18.176 13.79 -11.769 18.177 14.002
+-12.087 18.177 14.077 -12.462 18.177 14.002 -12.837 18.176 13.79 -13.155 18.175
+13.472 -13.368 18.174 13.097 -13.443 18.173 12.721 -13.368 18.172 12.403 -13.155
+18.171 12.191 -12.837 19.094 11.579 -12.837 19.021 11.562 -12.462 19.094 11.579
+-12.087 19.3 11.63 -11.769 19.609 11.705 -11.556 19.974 11.794 -11.482 20.338
+11.883 -11.556 20.647 11.958 -11.769 20.854 12.008 -12.087 20.926 12.026 -12.462
+20.854 12.008 -12.837 20.647 11.958 -13.155 20.338 11.883 -13.368 19.974 11.794
+-13.443 19.609 11.705 -13.368 19.3 11.63 -13.155 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 5 -1 0 5 6 -1 0 6 7 -1 0 7 8 -1
+0 8 9 -1 0 9 10 -1 0 10 11 -1 0 11 12 -1 0 12 13 -1 0 13 14 -1 0 14 15 -1 16
+17 18 -1 16 18 19 -1 16 19 20 -1 16 20 21 -1 16 21 22 -1 16 22 23 -1 16 23 24
+-1 16 24 25 -1 16 25 26 -1 16 26 27 -1 16 27 28 -1 16 28 29 -1 16 29 30 -1 16
+30 31 -1 32 18 17 -1 32 17 33 -1 34 19 18 -1 34 18 32 -1 35 20 19 -1 35 19 34
+-1 36 21 20 35 -1 37 22 21 36 -1 38 23 22 -1 38 22 37 -1 39 24 23 -1 39 23 38
+-1 40 25 24 -1 40 24 39 -1 41 26 25 -1 41 25 40 -1 42 27 26 -1 42 26 41 -1 43
+28 27 -1 43 27 42 -1 44 29 28 43 -1 45 30 29 44 -1 46 31 30 -1 46 30 45 -1 47
+16 31 -1 47 31 46 -1 33 17 16 -1 33 16 47 -1 47 48 49 -1 47 49 33 -1 33 49 50
+-1 33 50 32 -1 32 50 51 -1 32 51 34 -1 34 51 52 -1 34 52 35 -1 35 52 53 -1 35
+53 36 -1 36 53 54 -1 36 54 37 -1 37 54 55 -1 37 55 38 -1 38 55 56 -1 38 56 39
+-1 39 56 57 -1 39 57 40 -1 40 57 58 -1 40 58 41 -1 41 58 59 -1 41 59 42 -1 42
+59 60 -1 42 60 43 -1 43 60 61 -1 43 61 44 -1 44 61 62 -1 44 62 45 -1 45 62 63
+-1 45 63 46 -1 46 63 48 -1 46 48 47 -1 48 1 0 -1 48 0 49 -1 49 0 15 -1 49 15
+50 -1 50 15 14 -1 50 14 51 -1 51 14 13 -1 51 13 52 -1 52 13 12 -1 52 12 53 -1
+53 12 11 -1 53 11 54 -1 54 11 10 -1 54 10 55 -1 55 10 9 -1 55 9 56 -1 56 9 8
+-1 56 8 57 -1 57 8 7 -1 57 7 58 -1 58 7 6 -1 58 6 59 -1 59 6 5 -1 59 5 60 -1
+60 5 4 -1 60 4 61 -1 61 4 3 -1 61 3 62 -1 62 3 2 -1 62 2 63 -1 63 2 1 -1 63
+1 48 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 22.746 -2.192 12.3 22.819 -2.174 11.925 23.025 -2.124 11.607 23.334
+-2.048 11.394 23.699 -1.96 11.32 24.063 -1.871 11.394 24.372 -1.795 11.607
+24.579 -1.745 11.925 24.651 -1.727 12.3 24.579 -1.745 12.675 24.372 -1.795
+12.993 24.063 -1.871 13.206 23.699 -1.96 13.28 23.334 -2.048 13.206 23.025
+-2.124 12.993 22.819 -2.174 12.675 9.816 12.198 11.925 9.816 12.123 12.3 9.816
+12.198 12.675 9.817 12.41 12.993 9.818 12.728 13.206 9.82 13.103 13.28 9.821
+13.479 13.206 9.822 13.797 12.993 9.823 14.009 12.675 9.823 14.084 12.3 9.823
+14.009 11.925 9.822 13.797 11.607 9.821 13.479 11.394 9.82 13.103 11.32 9.818
+12.728 11.394 9.817 12.41 11.607 18.177 12.191 12.675 18.177 12.116 12.3 18.178
+12.403 12.993 18.179 12.721 13.206 18.18 13.097 13.28 18.182 13.472 13.206
+18.183 13.79 12.993 18.184 14.002 12.675 18.184 14.077 12.3 18.184 14.002
+11.925 18.183 13.79 11.607 18.182 13.472 11.394 18.18 13.097 11.32 18.179
+12.721 11.394 18.178 12.403 11.607 18.177 12.191 11.925 19.1 11.579 11.925
+19.028 11.562 12.3 19.1 11.579 12.675 19.307 11.63 12.993 19.616 11.705 13.206
+19.98 11.794 13.28 20.345 11.883 13.206 20.654 11.958 12.993 20.86 12.008
+12.675 20.933 12.026 12.3 20.86 12.008 11.925 20.654 11.958 11.607 20.345
+11.883 11.394 19.98 11.794 11.32 19.616 11.705 11.394 19.307 11.63 11.607
+] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 0 3 4 -1 0 4 5 -1 0 5 6 -1 0 6 7 -1 0 7 8 -1
+0 8 9 -1 0 9 10 -1 0 10 11 -1 0 11 12 -1 0 12 13 -1 0 13 14 -1 0 14 15 -1 16
+17 18 -1 16 18 19 -1 16 19 20 -1 16 20 21 -1 16 21 22 -1 16 22 23 -1 16 23 24
+-1 16 24 25 -1 16 25 26 -1 16 26 27 -1 16 27 28 -1 16 28 29 -1 16 29 30 -1 16
+30 31 -1 32 18 17 -1 32 17 33 -1 34 19 18 -1 34 18 32 -1 35 20 19 -1 35 19 34
+-1 36 21 20 35 -1 37 22 21 36 -1 38 23 22 -1 38 22 37 -1 39 24 23 -1 39 23 38
+-1 40 25 24 -1 40 24 39 -1 41 26 25 -1 41 25 40 -1 42 27 26 -1 42 26 41 -1 43
+28 27 -1 43 27 42 -1 44 29 28 43 -1 45 30 29 44 -1 46 31 30 -1 46 30 45 -1 47
+16 31 -1 47 31 46 -1 33 17 16 -1 33 16 47 -1 47 48 49 -1 47 49 33 -1 33 49 50
+-1 33 50 32 -1 32 50 51 -1 32 51 34 -1 34 51 52 -1 34 52 35 -1 35 52 53 -1 35
+53 36 -1 36 53 54 -1 36 54 37 -1 37 54 55 -1 37 55 38 -1 38 55 56 -1 38 56 39
+-1 39 56 57 -1 39 57 40 -1 40 57 58 -1 40 58 41 -1 41 58 59 -1 41 59 42 -1 42
+59 60 -1 42 60 43 -1 43 60 61 -1 43 61 44 -1 44 61 62 -1 44 62 45 -1 45 62 63
+-1 45 63 46 -1 46 63 48 -1 46 48 47 -1 48 1 0 -1 48 0 49 -1 49 0 15 -1 49 15
+50 -1 50 15 14 -1 50 14 51 -1 51 14 13 -1 51 13 52 -1 52 13 12 -1 52 12 53 -1
+53 12 11 -1 53 11 54 -1 54 11 10 -1 54 10 55 -1 55 10 9 -1 55 9 56 -1 56 9 8
+-1 56 8 57 -1 57 8 7 -1 57 7 58 -1 58 7 6 -1 58 6 59 -1 59 6 5 -1 59 5 60 -1
+60 5 4 -1 60 4 61 -1 61 4 3 -1 61 3 62 -1 62 3 2 -1 62 2 63 -1 63 2 1 -1 63
+1 48 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -28.601 -10.061 0.214
+children [
+DEF v
+Group {
+children [
+Transform {
+rotation -1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+USE p
+geometry
+Cylinder
+{
+height 24.298
+}
+}
+]
+}
+Transform {
+translation 0.0 0.0 -14.979
+rotation -1.0 0.0 0.0 1.571
+scale 1.541 1.541 1.541
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF w
+Material {
+shininess 0.000
+diffuseColor 0.26275 0.18039 0.13725
+}
+}
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 0 2.03 5.019 1.921 2.03 4.637 3.549 2.03 3.549 4.637 2.03 1.921 5.019
+2.03 0 4.637 2.03 -1.921 3.549 2.03 -3.549 1.921 2.03 -4.637 0 2.03 -5.019
+-1.921 2.03 -4.637 -3.549 2.03 -3.549 -4.637 2.03 -1.921 -5.019 2.03 0 -4.637
+2.03 1.921 -3.008 2.03 .011 -2.781 2.03 -1.144 -2.131 2.03 -2.124 -1.154 2.03
+-2.781 -.001 2.03 -3.014 1.154 2.03 -2.788 2.134 2.03 -2.137 2.791 2.03 -1.16
+3.024 2.03 -.007 2.797 2.03 1.148 2.147 2.03 2.128 1.17 2.03 2.785 .017 2.03
+3.017 -1.138 2.03 2.791 -2.118 2.03 2.141 -2.775 2.03 1.164 -3.549 2.03 3.549
+-1.921 2.03 4.637 1.921 -2.03 -4.637 3.549 -2.03 -3.549 4.637 -2.03 -1.921
+5.019 -2.03 0 4.637 -2.03 1.921 3.549 -2.03 3.549 1.921 -2.03 4.637 0 -2.03
+5.019 -1.921 -2.03 4.637 -3.549 -2.03 3.549 -4.637 -2.03 1.921 -5.019 -2.03
+0 -4.637 -2.03 -1.921 -3.549 -2.03 -3.549 -1.921 -2.03 -4.637 0 -2.03 -5.019
+-.005 1.041 -3.015 -1.158 1.046 -2.782 -2.135 1.049 -2.125 -2.785 1.051 -1.145
+-3.011 1.05 .01 -2.779 1.048 1.163 -2.122 1.045 2.14 -1.142 1.04 2.79 .013
+1.036 3.017 1.166 1.031 2.784 2.143 1.028 2.127 2.793 1.027 1.147 3.02 1.027
+-.008 2.787 1.029 -1.161 2.13 1.032 -2.138 1.15 1.037 -2.788 ] }
+coordIndex [ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+25 26 27 28 29 14 13 30 31 -1 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+-1 8 7 32 47 -1 7 6 33 32 -1 6 5 34 33 -1 5 4 35 34 -1 4 3 36 35 -1 3 2 37 36
+-1 2 1 38 37 -1 1 0 39 38 -1 0 31 40 39 -1 31 30 41 40 -1 30 13 42 41 -1 13
+12 43 42 -1 12 11 44 43 -1 11 10 45 44 -1 10 9 46 45 -1 9 8 47 46 -1 48 49 50
+51 52 53 54 55 56 57 58 59 60 61 62 63 -1 48 63 19 18 -1 63 62 20 19 -1 62 61
+21 20 -1 61 60 22 21 -1 60 59 23 22 -1 59 58 24 23 -1 58 57 25 24 -1 57 56 26
+25 -1 56 55 27 26 -1 55 54 28 27 -1 54 53 29 28 -1 53 52 14 29 -1 52 51 15 14
+-1 51 50 16 15 -1 50 49 17 16 -1 49 48 18 17 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.0 0.0 15.424
+rotation -1.0 0.0 0.0 1.571
+scale 1.541 1.541 1.541
+children [
+Shape {
+appearance
+Appearance
+{
+material
+USE w
+}
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 0 2.03 -5.019 -1.921 2.03 -4.637 -3.549 2.03 -3.549 -4.637 2.03 -1.921
+-5.019 2.03 0 -4.637 2.03 1.921 -3.549 2.03 3.549 -1.921 2.03 4.637 0 2.03
+5.019 1.921 2.03 4.637 3.549 2.03 3.549 4.637 2.03 1.921 5.019 2.03 0 4.637
+2.03 -1.921 3.549 2.03 -3.549 1.921 2.03 -4.637 -4.637 -2.03 -1.921 -3.549
+-2.03 -3.549 -1.921 -2.03 -4.637 0 -2.03 -5.019 1.921 -2.03 -4.637 3.549 -2.03
+-3.549 4.637 -2.03 -1.921 5.019 -2.03 0 4.637 -2.03 1.921 3.549 -2.03 3.549
+1.921 -2.03 4.637 0 -2.03 5.019 -1.921 -2.03 4.637 -3.549 -2.03 3.549 -4.637
+-2.03 1.921 -5.019 -2.03 0 -2.129 -2.03 -2.142 -2.787 -2.03 -1.166 -3.021
+-2.03 -.013 -2.796 -2.03 1.142 -2.147 -2.03 2.123 -1.171 -2.03 2.781 -.018
+-2.03 3.015 1.137 -2.03 2.79 2.118 -2.03 2.141 2.776 -2.03 1.165 3.01 -2.03
+.012 2.785 -2.03 -1.143 2.136 -2.03 -2.124 1.16 -2.03 -2.782 .007 -2.03 -3.016
+-1.148 -2.03 -2.792 1.163 -1.041 -2.782 2.138 -1.044 -2.124 2.788 -1.046 -1.143
+3.013 -1.047 .012 2.778 -1.047 1.165 2.121 -1.046 2.141 1.14 -1.043 2.79 -.015
+-1.04 3.015 -1.168 -1.037 2.781 -2.144 -1.034 2.123 -2.794 -1.032 1.142 -3.018
+-1.031 -.013 -2.784 -1.031 -1.166 -2.126 -1.033 -2.142 -1.145 -1.035 -2.791
+.01 -1.038 -3.016 ] }
+coordIndex [ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 -1 16 17 18 19 20 21 22 23
+24 25 26 27 28 29 30 31 16 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 32
+-1 0 15 20 19 -1 15 14 21 20 -1 14 13 22 21 -1 13 12 23 22 -1 12 11 24 23 -1
+11 10 25 24 -1 10 9 26 25 -1 9 8 27 26 -1 8 7 28 27 -1 7 6 29 28 -1 6 5 30 29
+-1 5 4 31 30 -1 4 3 16 31 -1 3 2 17 16 -1 2 1 18 17 -1 1 0 19 18 -1 48 49 50
+51 52 53 54 55 56 57 58 59 60 61 62 63 -1 46 45 48 63 -1 45 44 49 48 -1 44 43
+50 49 -1 43 42 51 50 -1 42 41 52 51 -1 41 40 53 52 -1 40 39 54 53 -1 39 38 55
+54 -1 38 37 56 55 -1 37 36 57 56 -1 36 35 58 57 -1 35 34 59 58 -1 34 33 60 59
+-1 33 32 61 60 -1 32 47 62 61 -1 47 46 63 62 -1 ]
+}
+}
+]
+}
+Transform {
+scale 2.581 2.581 2.581
+children [
+Shape {
+appearance
+USE p geometry
+DEF x
+Sphere
+{
+}
+}
+]
+}
+Transform {
+translation 0.0 0.0 16.094
+rotation -1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+USE j geometry
+DEF y
+Cylinder
+{
+height 2.236
+radius 4.647
+}
+}
+]
+}
+Transform {
+translation 0.0 0.0 -16.099
+rotation -1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+USE j geometry
+USE y
+}
+]
+}
+Transform {
+translation 0.0 0.0 17.436
+rotation 1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+USE j geometry
+DEF z
+Cylinder
+{
+height 3.528
+}
+}
+]
+}
+Transform {
+translation 0.0 0.0 -16.769
+rotation 1.0 0.0 0.0 1.571
+children [
+Shape {
+appearance
+USE j geometry
+USE z
+}
+]
+}
+Transform {
+translation -0.22248 4.03778 10.73942
+children [
+DEF a0
+Shape {
+appearance
+Appearance
+{
+material
+Material {
+shininess 0.000
+diffuseColor 0.95686 0.56863 0.13333
+}
+}
+geometry
+Cylinder
+{
+height 9.688
+radius 0.534
+}
+}
+]
+}
+Transform {
+translation 0.89478 3.80089 10.515
+rotation 0.0 0.0 -1.0 0.357
+children [
+USE a0
+]
+}
+Transform {
+translation -2.01144 3.12966 10.291
+rotation 0.0 0.0 1.0 0.35
+children [
+USE a0
+]
+}
+Transform {
+translation -0.22192 3.57787 -10.94558
+children [
+USE a0
+]
+}
+Transform {
+translation -2.01092 3.13022 -10.94614
+rotation 0.0 0.0 1.0 0.364
+children [
+USE a0
+]
+}
+Transform {
+translation 1.34141 3.80033 -11.16958
+rotation 0.0 0.0 -1.0 0.337
+children [
+USE a0
+]
+}
+]
+}
+]
+}
+Transform {
+translation 25.946 -11.179 0.437
+children [
+USE v
+]
+}
+Transform {
+translation -3.561 0.0 2.45
+children [
+Group {
+children [
+Transform {
+translation -19.674 -8.70567 -2.451
+rotation 0.0 0.0 -1.0 1.354
+children [
+Shape {
+appearance
+USE j
+geometry
+Cylinder
+{
+height 11.000
+radius 0.583
+}
+}
+]
+}
+Transform {
+translation 12.293 -9.379 -2.451
+rotation 0.0 0.0 -1.0 1.671
+children [
+Shape {
+appearance
+USE j
+geometry
+Cylinder
+{
+height 35.033
+radius 0.583
+}
+}
+]
+}
+Transform {
+translation -9.391 -6.708 -2.683
+scale 7.546 7.546 7.546
+children [
+Shape {
+appearance
+USE p
+geometry
+Box
+{
+size 1.703 0.518 1.0
+}
+}
+]
+}
+Transform {
+translation -38.005 -0.15 10.067
+scale 1.772 1.772 1.772
+children [
+Shape {
+appearance
+Appearance
+{
+material
+DEF a1
+Material {
+shininess 0.800
+diffuseColor 0.96078 0.73333 0.03922
+specularColor 0.98431 0.96078 0.07451
+}
+}
+geometry
+USE x
+}
+]
+}
+Transform {
+translation -38.005 -0.15099 -15.711
+scale 1.772 1.772 1.772
+children [
+Shape {
+appearance
+DEF a2
+Appearance
+{
+material
+USE a1
+}
+geometry
+USE x
+}
+]
+}
+Transform {
+translation 14.55 19.672 0.902
+children [
+DEF a3
+Group {
+children [
+Transform {
+scale 1.448 1.448 1.448
+children [
+Shape {
+appearance
+USE j
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ 0 -.924 -.383 .146 -.924 -.354 0 -1 0 .271 -.924 -.271 .354 -.924
+-.146 .383 -.924 0 .354 -.924 .146 .271 -.924 .271 .146 -.924 .354 0 -.924
+.383 -.146 -.924 .354 -.259 -.924 .279 -.259 -.927 .259 -.257 -.929 .25 -.256
+-.945 .106 -.256 -.945 .104 -.255 -.949 0 -.255 -.945 -.104 -.255 -.945 -.106
+-.255 -.929 -.25 -.256 -.928 -.256 -.256 -.924 -.28 -.146 -.924 -.354 .146
+.924 -.354 0 .924 -.383 0 1 0 .271 .924 -.271 .354 .924 -.146 .383 .924 0
+.354 .924 .146 .271 .924 .271 .146 .924 .354 0 .924 .383 -.146 .924 .354 -.247
+.931 .247 -.245 .93 .252 -.245 .925 .28 -.249 .924 .285 -.247 .947 .103 -.247
+.947 .102 -.247 .951 0 -.247 .947 -.102 -.247 .951 -.001 -.246 .931 -.246
+-.246 .947 -.106 -.146 .924 -.354 -.247 .924 -.287 -.244 .925 -.284 -.244
+.93 -.255 0 -.707 -.707 .271 -.707 -.653 .5 -.707 -.5 .653 -.707 -.271 .707
+-.707 0 .653 -.707 .271 .5 -.707 .5 .271 -.707 .653 0 -.707 .707 -.26 -.707
+.655 -.26 -.726 .627 -.255 -.739 .607 -.255 -.923 .283 -.253 -.923 -.284 -.252
+-.741 -.606 -.253 -.738 -.611 -.253 -.707 -.657 0 -.383 -.924 .354 -.383 -.854
+.653 -.383 -.653 .854 -.383 -.354 .924 -.383 0 .854 -.383 .354 .653 -.383
+.653 .354 -.383 .854 0 -.383 .924 -.257 -.383 .873 -.257 -.706 .657 -.252
+-.707 -.657 -.25 -.383 -.874 0 0 -1 .383 0 -.924 .707 0 -.707 .924 0 -.383
+1 0 0 .924 0 .383 .707 0 .707 .383 0 .924 0 0 1 -.255 0 .949 -.255 -.381 .873
+-.249 -.382 -.874 -.248 0 -.951 0 .383 -.924 .354 .383 -.854 .653 .383 -.653
+.854 .383 -.354 .924 .383 0 .854 .383 .354 .653 .383 .653 .354 .383 .854 0
+.383 .924 -.253 .383 .873 -.254 .002 .949 -.246 .383 -.875 0 .707 -.707 .271
+.707 -.653 .5 .707 -.5 .653 .707 -.271 .707 .707 0 .653 .707 .271 .5 .707
+.5 .271 .707 .653 0 .707 .707 -.251 .707 .657 -.251 .384 .873 -.245 .707 -.658
+-.25 .744 .602 -.248 .74 .609 -.248 .709 .656 -.247 .748 -.596 -.244 .708
+-.658 -.243 .737 -.614 -.234 -.923 -.271 -.152 -.923 -.146 -.123 -.923 0 -.153
+-.923 .147 -.236 -.923 .271 -.227 .925 -.272 -.144 .924 -.148 -.116 .924 -.001
+-.145 .925 .145 -.229 .925 .269 -.232 -.707 -.654 -.003 -.707 -.5 .149 -.708
+-.27 .202 -.708 .001 .148 -.708 .272 -.006 -.707 .5 -.236 -.706 .653 -.148
+-.383 -.854 .152 -.384 -.653 .351 -.384 -.352 .42 -.384 .002 .349 -.384 .355
+.148 -.383 .654 -.153 -.382 .853 -.117 0 -.924 .207 -.001 -.707 .423 -.002
+-.381 .498 -.002 .001 .421 -.001 .384 .203 0 .708 -.122 .001 .924 -.144 .383
+-.854 .155 .382 -.653 .354 .381 -.353 .423 .381 .001 .352 .382 .354 .151 .383
+.653 -.15 .384 .853 -.227 .708 -.654 .002 .707 -.5 .155 .706 -.271 .208 .706
+0 .153 .707 .271 -.001 .707 .5 -.231 .708 .652 ] }
+coordIndex [ 0 1 2 -1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2 -1 7 8 2 -1
+8 9 2 -1 9 10 2 -1 10 11 12 2 -1 13 14 2 12 -1 15 16 2 14 -1 2 16 17 18 -1 19
+20 2 18 -1 21 22 2 20 -1 22 0 2 -1 23 24 25 -1 26 23 25 -1 27 26 25 -1 28 27
+25 -1 29 28 25 -1 30 29 25 -1 31 30 25 -1 32 31 25 -1 33 32 25 -1 33 25 34 35
+36 37 -1 38 34 25 39 -1 39 25 40 -1 25 41 42 40 -1 25 43 44 41 -1 45 46 47 48
+43 25 -1 24 45 25 -1 0 49 50 1 -1 1 50 51 3 -1 3 51 52 4 -1 4 52 53 5 -1 5 53
+54 6 -1 6 54 55 7 -1 7 55 56 8 -1 8 56 57 9 -1 9 57 58 59 10 -1 10 59 60 61
+11 -1 22 21 62 63 64 -1 22 64 65 49 0 -1 49 66 67 50 -1 50 67 68 51 -1 51 68
+69 52 -1 52 69 70 53 -1 53 70 71 54 -1 54 71 72 55 -1 55 72 73 56 -1 56 73 74
+57 -1 57 74 75 76 58 -1 49 65 77 78 66 -1 66 79 80 67 -1 67 80 81 68 -1 68 81
+82 69 -1 69 82 83 70 -1 70 83 84 71 -1 71 84 85 72 -1 72 85 86 73 -1 73 86 87
+74 -1 74 87 88 89 75 -1 66 78 90 91 79 -1 79 92 93 80 -1 80 93 94 81 -1 81 94
+95 82 -1 82 95 96 83 -1 83 96 97 84 -1 84 97 98 85 -1 85 98 99 86 -1 86 99 100
+87 -1 87 100 101 102 88 -1 79 91 103 92 -1 92 104 105 93 -1 93 105 106 94 -1
+94 106 107 95 -1 95 107 108 96 -1 96 108 109 97 -1 97 109 110 98 -1 98 110 111
+99 -1 99 111 112 100 -1 100 112 113 114 101 -1 92 103 115 104 -1 104 24 23 105
+-1 105 23 26 106 -1 106 26 27 107 -1 107 27 28 108 -1 108 28 29 109 -1 109 29
+30 110 -1 110 30 31 111 -1 111 31 32 112 -1 112 32 33 116 117 118 113 -1 116
+33 37 -1 46 45 119 -1 24 104 115 120 121 119 45 -1 19 122 62 21 20 -1 17 123
+122 19 18 -1 16 124 123 17 -1 15 125 124 16 -1 13 126 125 15 14 -1 61 126 13
+12 11 -1 47 127 48 -1 48 127 128 44 43 -1 44 128 129 42 41 -1 42 129 130 38
+39 40 -1 38 130 131 35 34 -1 35 131 36 -1 132 77 65 64 63 -1 133 132 63 62 122
+-1 134 133 122 123 -1 135 134 123 124 -1 136 135 124 125 -1 137 136 125 126
+-1 138 137 126 61 60 -1 76 138 60 59 58 -1 139 90 78 77 132 -1 140 139 132 133
+-1 141 140 133 134 -1 142 141 134 135 -1 143 142 135 136 -1 144 143 136 137
+-1 145 144 137 138 -1 89 145 138 76 75 -1 146 91 90 139 -1 147 146 139 140 -1
+148 147 140 141 -1 149 148 141 142 -1 150 149 142 143 -1 151 150 143 144 -1
+152 151 144 145 -1 102 152 145 89 88 -1 153 103 91 146 -1 154 153 146 147 -1
+155 154 147 148 -1 156 155 148 149 -1 157 156 149 150 -1 158 157 150 151 -1
+159 158 151 152 -1 114 159 152 102 101 -1 160 120 115 103 153 -1 161 160 153
+154 -1 162 161 154 155 -1 163 162 155 156 -1 164 163 156 157 -1 165 164 157
+158 -1 166 165 158 159 -1 118 166 159 114 113 -1 120 160 121 -1 127 47 46 119
+121 160 161 -1 128 127 161 162 -1 129 128 162 163 -1 130 129 163 164 -1 131
+130 164 165 -1 36 131 165 166 117 116 37 -1 117 166 118 -1 ]
+}
+}
+]
+}
+Transform {
+translation 0.223 -1.733 0.0
+children [
+Shape {
+appearance
+USE j
+geometry
+Cylinder
+{
+radius 0.308
+}
+}
+]
+}
+Transform {
+children [
+Shape {
+appearance
+USE a2 geometry
+USE x
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation 14.55 19.672 -6.03
+children [
+USE a3
+]
+}
+Transform {
+translation 14.55 19.911 -12.511
+children [
+USE a3
+]
+}
+Transform {
+translation -40.633 -2.692 -8.242
+children [
+USE a3
+]
+}
+Transform {
+translation -40.633 -2.692 -2.451
+children [
+USE a3
+]
+}
+Transform {
+translation -40.633 -2.692 4.256
+children [
+USE a3
+]
+}
+Transform {
+translation 46.82565 1.16727 -1.885
+rotation 0.541 0.642 -0.543 2.0
+scale 5.408 5.408 5.408
+children [
+Group {
+children [
+Transform {
+translation -1.63889 0.0 0.0
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ .518 0 -.638 .521 0 -.653 .521 .2 -.653 .518 .2 -.638 .522 0 -.666
+.522 .2 -.666 .519 0 -.68 .519 .2 -.68 .51 0 -.689 .51 .2 -.689 .493 0 -.693
+.493 .2 -.693 .465 0 -.694 .465 .2 -.694 .134 0 -.694 .134 .2 -.694 .099 0
+-.693 .099 .2 -.693 .079 0 -.688 .079 .2 -.688 .067 0 -.675 .067 .2 -.675
+.055 0 -.651 .055 .2 -.651 .047 0 -.628 .047 .2 -.628 .044 0 -.613 .044 .2
+-.613 .041 0 -.596 .041 .2 -.596 .038 0 -.58 .038 .2 -.58 .037 0 -.565 .037
+.2 -.565 .041 0 -.546 .041 .2 -.546 .051 0 -.535 .051 .2 -.535 .07 0 -.53
+.07 .2 -.53 .1 0 -.528 .1 .2 -.528 .19 0 -.528 .19 .2 -.528 .198 0 -.524 .198
+.2 -.524 .2 0 -.514 .2 .2 -.514 .199 0 -.506 .199 .2 -.506 .196 0 -.495 .196
+.2 -.495 .179 0 -.444 .179 .2 -.444 .162 0 -.392 .162 .2 -.392 .139 0 -.311
+.139 .2 -.311 .121 0 -.244 .121 .2 -.244 .108 0 -.194 .108 .2 -.194 .103 0
+-.178 .103 .2 -.178 .077 0 -.091 .077 .2 -.091 .072 0 -.075 .072 .2 -.075
+.068 0 -.058 .068 .2 -.058 .067 0 -.046 .067 .2 -.046 .07 0 -.029 .07 .2 -.029
+.078 0 -.02 .078 .2 -.02 .092 0 -.015 .092 .2 -.015 .11 0 -.01 .11 .2 -.01
+.138 0 -.003 .138 .2 -.003 .145 0 -.001 .145 .2 -.001 .157 0 0 .157 .2 0 .185
+0 0 .185 .2 0 .212 0 -.003 .212 .2 -.003 .23 0 -.01 .23 .2 -.01 .242 0 -.025
+.242 .2 -.025 .251 0 -.047 .251 .2 -.047 .265 0 -.098 .265 .2 -.098 .267 0
+-.105 .267 .2 -.105 .287 0 -.192 .287 .2 -.192 .289 0 -.197 .289 .2 -.197
+.306 0 -.256 .306 .2 -.256 .314 0 -.286 .314 .2 -.286 .337 0 -.37 .337 .2
+-.37 .339 0 -.375 .339 .2 -.375 .356 0 -.433 .356 .2 -.433 .361 0 -.469 .361
+.2 -.469 .359 0 -.485 .359 .2 -.485 .352 0 -.495 .352 .2 -.495 .341 0 -.502
+.341 .2 -.502 .328 0 -.507 .328 .2 -.507 .312 0 -.514 .312 .2 -.514 .303 0
+-.516 .303 .2 -.516 .272 0 -.528 .272 .2 -.528 .445 0 -.528 .445 .2 -.528
+.467 0 -.53 .467 .2 -.53 .481 0 -.535 .481 .2 -.535 .491 0 -.545 .491 .2 -.545
+.497 0 -.562 .497 .2 -.562 .508 0 -.6 .508 .2 -.6 .509 0 -.607 .509 .2 -.607
+] }
+coordIndex [ 0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 8 10 11 9 -1 10 12
+13 11 -1 12 14 15 13 -1 14 16 17 15 -1 16 18 19 17 -1 18 20 21 19 -1 20 22 23
+21 -1 22 24 25 23 -1 24 26 27 25 -1 26 28 29 27 -1 28 30 31 29 -1 30 32 33 31
+-1 32 34 35 33 -1 34 36 37 35 -1 36 38 39 37 -1 38 40 41 39 -1 40 42 43 41 -1
+42 44 45 43 -1 44 46 47 45 -1 46 48 49 47 -1 48 50 51 49 -1 50 52 53 51 -1 52
+54 55 53 -1 54 56 57 55 -1 56 58 59 57 -1 58 60 61 59 -1 60 62 63 61 -1 62 64
+65 63 -1 64 66 67 65 -1 66 68 69 67 -1 68 70 71 69 -1 70 72 73 71 -1 72 74 75
+73 -1 74 76 77 75 -1 76 78 79 77 -1 78 80 81 79 -1 80 82 83 81 -1 82 84 85 83
+-1 84 86 87 85 -1 86 88 89 87 -1 88 90 91 89 -1 90 92 93 91 -1 92 94 95 93 -1
+94 96 97 95 -1 96 98 99 97 -1 98 100 101 99 -1 100 102 103 101 -1 102 104 105
+103 -1 104 106 107 105 -1 106 108 109 107 -1 108 110 111 109 -1 110 112 113
+111 -1 112 114 115 113 -1 114 116 117 115 -1 116 118 119 117 -1 118 120 121
+119 -1 120 122 123 121 -1 122 124 125 123 -1 124 126 127 125 -1 126 128 129
+127 -1 128 130 131 129 -1 130 132 133 131 -1 132 134 135 133 -1 134 136 137
+135 -1 136 138 139 137 -1 138 140 141 139 -1 140 142 143 141 -1 142 0 3 143
+-1 131 133 135 137 139 141 143 3 2 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+35 37 39 41 -1 79 81 83 85 87 89 91 93 95 97 99 101 103 105 107 109 111 113
+115 117 119 121 123 125 127 129 43 45 47 49 51 53 55 57 59 61 63 65 67 69 71
+73 75 77 -1 40 38 36 34 32 30 28 26 24 22 20 18 16 14 12 10 8 6 4 1 0 142 140
+138 136 134 132 130 -1 86 84 82 80 78 76 74 72 70 68 66 64 62 60 58 56 54 52
+50 48 46 44 42 128 126 124 122 120 118 116 114 112 110 108 106 104 102 100 98
+96 94 92 90 88 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -1.16667 0.0 0.0
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ .444 0 -.397 .444 0 -.554 .444 .2 -.554 .444 .2 -.397 .441 0 -.632
+.441 .2 -.632 .431 0 -.673 .431 .2 -.673 .405 0 -.691 .405 .2 -.691 .353 0
+-.702 .353 .2 -.702 .342 0 -.704 .342 .2 -.704 .315 0 -.708 .315 .2 -.708
+.293 0 -.708 .293 .2 -.708 .269 0 -.703 .269 .2 -.703 .25 0 -.688 .25 .2 -.688
+.227 0 -.653 .227 .2 -.653 .193 0 -.59 .193 .2 -.59 .144 0 -.494 .144 .2 -.494
+.111 0 -.43 .111 .2 -.43 .107 0 -.421 .107 .2 -.421 .086 0 -.373 .086 .2 -.373
+.082 0 -.367 .082 .2 -.367 .077 0 -.355 .077 .2 -.355 .069 0 -.341 .069 .2
+-.341 .06 0 -.341 .06 .2 -.341 .027 0 -.34 .027 .2 -.34 .009 0 -.335 .009
+.2 -.335 0 0 -.323 0 .2 -.323 -.01 0 -.299 -.01 .2 -.299 -.02 0 -.266 -.02
+.2 -.266 -.022 0 -.259 -.022 .2 -.259 -.026 0 -.246 -.026 .2 -.246 -.036 0
+-.205 -.036 .2 -.205 -.039 0 -.179 -.039 .2 -.179 -.038 0 -.168 -.038 .2 -.168
+-.034 0 -.161 -.034 .2 -.161 -.028 0 -.157 -.028 .2 -.157 -.019 0 -.154 -.019
+.2 -.154 -.027 0 -.13 -.027 .2 -.13 -.033 0 -.118 -.033 .2 -.118 -.048 0 -.082
+-.048 .2 -.082 -.054 0 -.063 -.054 .2 -.063 -.056 0 -.05 -.056 .2 -.05 -.048
+0 -.032 -.048 .2 -.032 -.025 0 -.014 -.025 .2 -.014 -.015 0 -.007 -.015 .2
+-.007 -.001 0 -.002 -.001 .2 -.002 .007 0 .002 .007 .2 .002 .013 0 .004 .013
+.2 .004 .021 0 .006 .021 .2 .006 .03 0 .009 .03 .2 .009 .039 0 .011 .039 .2
+.011 .046 0 .013 .046 .2 .013 .053 0 .014 .053 .2 .014 .062 0 .014 .062 .2
+.014 .079 0 .01 .079 .2 .01 .093 0 -.001 .093 .2 -.001 .105 0 -.024 .105 .2
+-.024 .12 0 -.063 .12 .2 -.063 .124 0 -.072 .124 .2 -.072 .143 0 -.115 .143
+.2 -.115 .153 0 -.144 .153 .2 -.144 .163 0 -.167 .163 .2 -.167 .171 0 -.156
+.171 .2 -.156 .183 0 -.153 .183 .2 -.153 .208 0 -.155 .208 .2 -.155 .226 0
+-.161 .226 .2 -.161 .239 0 -.173 .239 .2 -.173 .251 0 -.193 .251 .2 -.193
+.261 0 -.213 .261 .2 -.213 .264 0 -.219 .264 .2 -.219 .241 0 -.337 .241 .2
+-.337 .249 0 -.359 .249 .2 -.359 .252 0 -.365 .252 .2 -.365 .291 0 -.462 .291
+.2 -.462 .293 0 -.468 .293 .2 -.468 .306 0 -.494 .306 .2 -.494 .306 0 -.417
+.306 .2 -.417 .302 0 -.39 .302 .2 -.39 .298 0 -.364 .298 .2 -.364 .294 0 -.337
+.294 .2 -.337 .264 0 -.044 .264 .2 -.044 .266 0 -.023 .266 .2 -.023 .273 0
+-.008 .273 .2 -.008 .283 0 .002 .283 .2 .002 .299 0 .009 .299 .2 .009 .316
+0 .013 .316 .2 .013 .334 0 .014 .334 .2 .014 .388 0 .014 .388 .2 .014 .406
+0 .011 .406 .2 .011 .419 0 .003 .419 .2 .003 .428 0 -.008 .428 .2 -.008 .431
+0 -.019 .431 .2 -.019 .431 0 -.117 .431 .2 -.117 .432 0 -.171 .432 .2 -.171
+.438 0 -.254 .438 .2 -.254 .443 0 -.337 .443 .2 -.337 ] }
+coordIndex [ 0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 8 10 11 9 -1 10 12
+13 11 -1 12 14 15 13 -1 14 16 17 15 -1 16 18 19 17 -1 18 20 21 19 -1 20 22 23
+21 -1 22 24 25 23 -1 24 26 27 25 -1 26 28 29 27 -1 28 30 31 29 -1 30 32 33 31
+-1 32 34 35 33 -1 34 36 37 35 -1 36 38 39 37 -1 38 40 41 39 -1 40 42 43 41 -1
+42 44 45 43 -1 44 46 47 45 -1 46 48 49 47 -1 48 50 51 49 -1 50 52 53 51 -1 52
+54 55 53 -1 54 56 57 55 -1 56 58 59 57 -1 58 60 61 59 -1 60 62 63 61 -1 62 64
+65 63 -1 64 66 67 65 -1 66 68 69 67 -1 68 70 71 69 -1 70 72 73 71 -1 72 74 75
+73 -1 74 76 77 75 -1 76 78 79 77 -1 78 80 81 79 -1 80 82 83 81 -1 82 84 85 83
+-1 84 86 87 85 -1 86 88 89 87 -1 88 90 91 89 -1 90 92 93 91 -1 92 94 95 93 -1
+94 96 97 95 -1 96 98 99 97 -1 98 100 101 99 -1 100 102 103 101 -1 102 104 105
+103 -1 104 106 107 105 -1 106 108 109 107 -1 108 110 111 109 -1 110 112 113
+111 -1 112 114 115 113 -1 114 116 117 115 -1 116 118 119 117 -1 118 120 121
+119 -1 120 122 123 121 -1 122 124 125 123 -1 124 126 127 125 -1 126 128 129
+127 -1 128 130 131 129 -1 130 132 133 131 -1 132 134 135 133 -1 134 136 137
+135 -1 136 138 139 137 -1 138 140 141 139 -1 140 142 143 141 -1 142 144 145
+143 -1 144 146 147 145 -1 146 148 149 147 -1 148 150 151 149 -1 150 152 153
+151 -1 152 134 135 153 -1 134 132 133 135 -1 132 154 155 133 -1 154 156 157
+155 -1 156 158 159 157 -1 158 160 161 159 -1 160 162 163 161 -1 162 164 165
+163 -1 164 166 167 165 -1 166 168 169 167 -1 168 170 171 169 -1 170 172 173
+171 -1 172 174 175 173 -1 174 176 177 175 -1 176 178 179 177 -1 178 180 181
+179 -1 180 182 183 181 -1 182 184 185 183 -1 184 0 3 185 -1 177 179 181 183
+185 3 2 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 41 43 135 137 139
+141 143 145 147 149 151 153 135 43 45 47 49 51 53 55 57 59 61 63 65 67 69 71
+73 75 77 79 81 83 85 87 89 91 93 95 97 99 101 103 105 107 109 111 113 115 117
+119 121 123 125 127 129 131 133 155 157 159 161 163 165 167 169 171 173 175
+-1 178 176 174 172 170 168 166 164 162 160 158 156 154 132 130 128 126 124 122
+120 118 116 114 112 110 108 106 104 102 100 98 96 94 92 90 88 86 84 82 80 78
+76 74 72 70 68 66 64 62 60 58 56 54 52 50 48 46 44 42 40 38 36 34 32 30 28 26
+24 22 20 18 16 14 12 10 8 6 4 1 0 184 148 146 144 142 140 138 136 134 152 150
+148 184 182 180 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -0.625 0.0 0.0
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ .377 0 -.099 .385 0 -.126 .385 .2 -.126 .377 .2 -.099 .388 0 -.144
+.388 .2 -.144 .379 0 -.161 .379 .2 -.161 .352 0 -.167 .352 .2 -.167 .216 0
+-.167 .216 .2 -.167 .189 0 -.168 .189 .2 -.168 .2 0 -.211 .2 .2 -.211 .212
+0 -.259 .212 .2 -.259 .26 0 -.441 .26 .2 -.441 .274 0 -.492 .274 .2 -.492
+.286 0 -.53 .286 .2 -.53 .31 0 -.613 .31 .2 -.613 .312 0 -.62 .312 .2 -.62
+.313 0 -.626 .313 .2 -.626 .317 0 -.645 .317 .2 -.645 .319 0 -.658 .319 .2
+-.658 .317 0 -.667 .317 .2 -.667 .312 0 -.674 .312 .2 -.674 .301 0 -.68 .301
+.2 -.68 .281 0 -.687 .281 .2 -.687 .251 0 -.696 .251 .2 -.696 .236 0 -.701
+.236 .2 -.701 .214 0 -.707 .214 .2 -.707 .193 0 -.708 .193 .2 -.708 .167 0
+-.705 .167 .2 -.705 .151 0 -.694 .151 .2 -.694 .134 0 -.645 .134 .2 -.645
+.131 0 -.636 .131 .2 -.636 .12 0 -.595 .12 .2 -.595 .101 0 -.532 .101 .2 -.532
+.09 0 -.495 .09 .2 -.495 .052 0 -.358 .052 .2 -.358 .029 0 -.271 .029 .2 -.271
+.022 0 -.249 .022 .2 -.249 .016 0 -.223 .016 .2 -.223 .003 0 -.159 .003 .2
+-.159 -.001 0 -.12 -.001 .2 -.12 .003 0 -.089 .003 .2 -.089 .014 0 -.065 .014
+.2 -.065 .027 0 -.049 .027 .2 -.049 .035 0 -.04 .035 .2 -.04 .042 0 -.033
+.042 .2 -.033 .054 0 -.023 .054 .2 -.023 .068 0 -.013 .068 .2 -.013 .081 0
+-.006 .081 .2 -.006 .093 0 -.001 .093 .2 -.001 .104 0 0 .104 .2 0 .296 0 0
+.296 .2 0 .323 0 -.003 .323 .2 -.003 .341 0 -.012 .341 .2 -.012 .354 0 -.03
+.354 .2 -.03 .366 0 -.061 .366 .2 -.061 .372 0 -.082 .372 .2 -.082 ] }
+coordIndex [ 0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 8 10 11 9 -1 10 12
+13 11 -1 12 14 15 13 -1 14 16 17 15 -1 16 18 19 17 -1 18 20 21 19 -1 20 22 23
+21 -1 22 24 25 23 -1 24 26 27 25 -1 26 28 29 27 -1 28 30 31 29 -1 30 32 33 31
+-1 32 34 35 33 -1 34 36 37 35 -1 36 38 39 37 -1 38 40 41 39 -1 40 42 43 41 -1
+42 44 45 43 -1 44 46 47 45 -1 46 48 49 47 -1 48 50 51 49 -1 50 52 53 51 -1 52
+54 55 53 -1 54 56 57 55 -1 56 58 59 57 -1 58 60 61 59 -1 60 62 63 61 -1 62 64
+65 63 -1 64 66 67 65 -1 66 68 69 67 -1 68 70 71 69 -1 70 72 73 71 -1 72 74 75
+73 -1 74 76 77 75 -1 76 78 79 77 -1 78 80 81 79 -1 80 82 83 81 -1 82 84 85 83
+-1 84 86 87 85 -1 86 88 89 87 -1 88 90 91 89 -1 90 92 93 91 -1 92 94 95 93 -1
+94 96 97 95 -1 96 98 99 97 -1 98 100 101 99 -1 100 102 103 101 -1 102 104 105
+103 -1 104 106 107 105 -1 106 0 3 107 -1 87 89 91 93 95 97 99 101 103 105 107
+3 2 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 41 43 45 47 49 51 53
+55 57 59 61 63 65 67 69 71 73 75 77 79 81 83 85 -1 88 86 84 82 80 78 76 74 72
+70 68 66 64 62 60 58 56 54 52 50 48 46 44 42 40 38 36 34 32 30 28 26 24 22 20
+18 16 14 12 10 8 6 4 1 0 106 104 102 100 98 96 94 92 90 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation -0.167 0.0 0.0
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE d
+geometry
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ .542 0 -.494 .54 0 -.551 .54 .2 -.551 .542 .2 -.494 .533 0 -.599 .533
+.2 -.599 .524 0 -.637 .524 .2 -.637 .513 0 -.666 .513 .2 -.666 .491 0 -.695
+.491 .2 -.695 .469 0 -.704 .469 .2 -.704 .45 0 -.699 .45 .2 -.699 .429 0 -.685
+.429 .2 -.685 .409 0 -.669 .409 .2 -.669 .399 0 -.66 .399 .2 -.66 .358 0 -.625
+.358 .2 -.625 .346 0 -.569 .346 .2 -.569 .355 0 -.54 .355 .2 -.54 .361 0 -.504
+.361 .2 -.504 .361 0 -.472 .361 .2 -.472 .357 0 -.415 .357 .2 -.415 .354 0
+-.394 .354 .2 -.394 .35 0 -.372 .35 .2 -.372 .345 0 -.347 .345 .2 -.347 .336
+0 -.318 .336 .2 -.318 .323 0 -.285 .323 .2 -.285 .304 0 -.249 .304 .2 -.249
+.283 0 -.216 .283 .2 -.216 .264 0 -.196 .264 .2 -.196 .247 0 -.184 .247 .2
+-.184 .231 0 -.181 .231 .2 -.181 .207 0 -.186 .207 .2 -.186 .192 0 -.204 .192
+.2 -.204 .183 0 -.23 .183 .2 -.23 .181 0 -.259 .181 .2 -.259 .181 0 -.274
+.181 .2 -.274 .183 0 -.292 .183 .2 -.292 .187 0 -.317 .187 .2 -.317 .195 0
+-.352 .195 .2 -.352 .209 0 -.394 .209 .2 -.394 .234 0 -.441 .234 .2 -.441
+.266 0 -.483 .266 .2 -.483 .299 0 -.512 .299 .2 -.512 .33 0 -.531 .33 .2 -.531
+.332 0 -.533 .332 .2 -.533 .333 0 -.536 .333 .2 -.536 .336 0 -.541 .336 .2
+-.541 .339 0 -.55 .339 .2 -.55 .344 0 -.563 .344 .2 -.563 .36 0 -.662 .36
+.2 -.662 .362 0 -.686 .362 .2 -.686 .36 0 -.699 .36 .2 -.699 .355 0 -.705
+.355 .2 -.705 .345 0 -.707 .345 .2 -.707 .328 0 -.708 .328 .2 -.708 .309 0
+-.706 .309 .2 -.706 .282 0 -.7 .282 .2 -.7 .25 0 -.69 .25 .2 -.69 .213 0 -.673
+.213 .2 -.673 .173 0 -.646 .173 .2 -.646 .129 0 -.604 .129 .2 -.604 .087 0
+-.549 .087 .2 -.549 .053 0 -.484 .053 .2 -.484 .032 0 -.43 .032 .2 -.43 .008
+0 -.329 .008 .2 -.329 0 0 -.241 0 .2 -.241 .011 0 -.156 .011 .2 -.156 .044
+0 -.077 .044 .2 -.077 .092 0 -.018 .092 .2 -.018 .145 0 .007 .145 .2 .007
+.192 0 .012 .192 .2 .012 .219 0 .014 .219 .2 .014 .264 0 .008 .264 .2 .008
+.308 0 -.009 .308 .2 -.009 .35 0 -.037 .35 .2 -.037 .394 0 -.076 .394 .2 -.076
+.434 0 -.122 .434 .2 -.122 .466 0 -.173 .466 .2 -.173 .491 0 -.227 .491 .2
+-.227 .511 0 -.287 .511 .2 -.287 .526 0 -.345 .526 .2 -.345 .535 0 -.396 .535
+.2 -.396 .54 0 -.444 .54 .2 -.444 .361 0 -.481 ] }
+coordIndex [ 0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 8 10 11 9 -1 10 12
+13 11 -1 12 14 15 13 -1 14 16 17 15 -1 16 18 19 17 -1 18 20 21 19 -1 20 22 23
+21 -1 22 24 25 23 -1 24 26 27 25 -1 26 28 29 27 -1 28 30 31 29 -1 30 32 33 31
+-1 32 34 35 33 -1 34 36 37 35 -1 36 38 39 37 -1 38 40 41 39 -1 40 42 43 41 -1
+42 44 45 43 -1 44 46 47 45 -1 46 48 49 47 -1 48 50 51 49 -1 50 52 53 51 -1 52
+54 55 53 -1 54 56 57 55 -1 56 58 59 57 -1 58 60 61 59 -1 60 62 63 61 -1 62 64
+65 63 -1 64 66 67 65 -1 66 68 69 67 -1 68 70 71 69 -1 70 72 73 71 -1 72 74 75
+73 -1 74 76 77 75 -1 76 78 79 77 -1 78 80 81 79 -1 80 82 83 81 -1 82 84 85 83
+-1 84 86 87 85 -1 86 88 89 87 -1 88 24 25 89 -1 24 22 23 25 -1 22 90 91 23 -1
+90 92 93 91 -1 92 94 95 93 -1 94 96 97 95 -1 96 98 99 97 -1 98 100 101 99 -1
+100 102 103 101 -1 102 104 105 103 -1 104 106 107 105 -1 106 108 109 107 -1
+108 110 111 109 -1 110 112 113 111 -1 112 114 115 113 -1 114 116 117 115 -1
+116 118 119 117 -1 118 120 121 119 -1 120 122 123 121 -1 122 124 125 123 -1
+124 126 127 125 -1 126 128 129 127 -1 128 130 131 129 -1 130 132 133 131 -1
+132 134 135 133 -1 134 136 137 135 -1 136 138 139 137 -1 138 140 141 139 -1
+140 142 143 141 -1 142 144 145 143 -1 144 146 147 145 -1 146 148 149 147 -1
+148 150 151 149 -1 150 152 153 151 -1 152 154 155 153 -1 154 156 157 155 -1
+156 0 3 157 -1 137 139 141 143 145 147 149 151 153 155 157 3 2 5 7 9 11 13 15
+17 19 21 23 25 27 29 31 33 35 37 39 41 43 45 47 49 51 53 55 57 59 61 63 65 67
+69 71 73 75 77 79 81 83 85 87 89 25 23 91 93 95 97 99 101 103 105 107 109 111
+113 115 117 119 121 123 125 127 129 131 133 135 -1 142 140 138 136 134 132 130
+128 126 124 122 120 118 116 114 112 110 108 106 104 102 100 98 96 94 92 90 22
+20 18 16 14 12 10 8 6 4 1 0 156 158 28 26 24 88 86 84 82 80 78 76 74 72 70 68
+66 64 62 60 58 56 54 52 50 48 46 44 42 40 38 36 34 32 30 158 156 154 152 150
+148 146 144 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation 0.41667 0.0 0.0
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE d geometry
+DEF a4
+IndexedFaceSet
+{
+convex FALSE
+creaseAngle 0.524
+coord
+Coordinate
+{
+point [ .618 0 -.599 .622 0 -.62 .622 .2 -.62 .618 .2 -.599 .623 0 -.634 .623
+.2 -.634 .612 0 -.662 .612 .2 -.662 .58 0 -.681 .58 .2 -.681 .549 0 -.69 .549
+.2 -.69 .536 0 -.694 .536 .2 -.694 .521 0 -.697 .521 .2 -.697 .507 0 -.698
+.507 .2 -.698 .484 0 -.692 .484 .2 -.692 .469 0 -.676 .469 .2 -.676 .449 0
+-.603 .449 .2 -.603 .428 0 -.52 .428 .2 -.52 .423 0 -.497 .423 .2 -.497 .416
+0 -.464 .416 .2 -.464 .409 0 -.428 .409 .2 -.428 .403 0 -.39 .403 .2 -.39
+.403 0 -.347 .403 .2 -.347 .403 0 -.375 .403 .2 -.375 .385 0 -.448 .385 .2
+-.448 .385 0 -.454 .385 .2 -.454 .379 0 -.496 .379 .2 -.496 .374 0 -.524 .374
+.2 -.524 .368 0 -.547 .368 .2 -.547 .358 0 -.574 .358 .2 -.574 .353 0 -.588
+.353 .2 -.588 .347 0 -.607 .347 .2 -.607 .336 0 -.634 .336 .2 -.634 .325 0
+-.655 .325 .2 -.655 .311 0 -.669 .311 .2 -.669 .288 0 -.68 .288 .2 -.68 .247
+0 -.695 .247 .2 -.695 .216 0 -.703 .216 .2 -.703 .193 0 -.707 .193 .2 -.707
+.179 0 -.708 .179 .2 -.708 .163 0 -.703 .163 .2 -.703 .152 0 -.685 .152 .2
+-.685 .144 0 -.663 .144 .2 -.663 .136 0 -.64 .136 .2 -.64 .127 0 -.61 .127
+.2 -.61 .089 0 -.471 .089 .2 -.471 .078 0 -.427 .078 .2 -.427 .043 0 -.29
+.043 .2 -.29 .006 0 -.139 .006 .2 -.139 -.005 0 -.101 -.005 .2 -.101 -.006
+0 -.098 -.006 .2 -.098 -.012 0 -.074 -.012 .2 -.074 -.014 0 -.057 -.014 .2
+-.057 -.008 0 -.036 -.008 .2 -.036 .008 0 -.021 .008 .2 -.021 .034 0 -.012
+.034 .2 -.012 .066 0 -.005 .066 .2 -.005 .094 0 -.001 .094 .2 -.001 .107 0
+0 .107 .2 0 .136 0 -.009 .136 .2 -.009 .152 0 -.038 .152 .2 -.038 .156 0 -.049
+.156 .2 -.049 .169 0 -.103 .169 .2 -.103 .184 0 -.158 .184 .2 -.158 .187 0
+-.172 .187 .2 -.172 .188 0 -.179 .188 .2 -.179 .203 0 -.24 .203 .2 -.24 .215
+0 -.301 .215 .2 -.301 .216 0 -.307 .216 .2 -.307 .218 0 -.321 .218 .2 -.321
+.227 0 -.376 .227 .2 -.376 .229 0 -.392 .229 .2 -.392 .233 0 -.421 .233 .2
+-.421 .24 0 -.381 .24 .2 -.381 .244 0 -.359 .244 .2 -.359 .25 0 -.32 .25 .2
+-.32 .257 0 -.278 .257 .2 -.278 .264 0 -.232 .264 .2 -.232 .271 0 -.197 .271
+.2 -.197 .281 0 -.137 .281 .2 -.137 .284 0 -.114 .284 .2 -.114 .292 0 -.07
+.292 .2 -.07 .301 0 -.044 .301 .2 -.044 .314 0 -.029 .314 .2 -.029 .335 0
+-.017 .335 .2 -.017 .353 0 -.011 .353 .2 -.011 .362 0 -.008 .362 .2 -.008
+.37 0 -.006 .37 .2 -.006 .381 0 -.003 .381 .2 -.003 .392 0 -.001 .392 .2 -.001
+.404 0 0 .404 .2 0 .42 0 .001 .42 .2 .001 .429 0 0 .429 .2 0 .467 0 -.006
+.467 .2 -.006 .479 0 -.024 .479 .2 -.024 .479 0 -.028 .479 .2 -.028 .477 0
+-.035 .477 .2 -.035 .473 0 -.049 .473 .2 -.049 .473 0 -.054 .473 .2 -.054
+.474 0 -.064 .474 .2 -.064 .478 0 -.079 .478 .2 -.079 .487 0 -.108 .487 .2
+-.108 .505 0 -.161 .505 .2 -.161 .537 0 -.27 .537 .2 -.27 .556 0 -.34 .556
+.2 -.34 .567 0 -.379 .567 .2 -.379 .593 0 -.489 .593 .2 -.489 .403 .2 -.371
+] }
+coordIndex [ 0 1 2 3 -1 1 4 5 2 -1 4 6 7 5 -1 6 8 9 7 -1 8 10 11 9 -1 10 12
+13 11 -1 12 14 15 13 -1 14 16 17 15 -1 16 18 19 17 -1 18 20 21 19 -1 20 22 23
+21 -1 22 24 25 23 -1 24 26 27 25 -1 26 28 29 27 -1 28 30 31 29 -1 30 32 33 31
+-1 32 34 35 33 -1 34 36 37 35 -1 36 38 39 37 -1 38 40 41 39 -1 40 42 43 41 -1
+42 44 45 43 -1 44 46 47 45 -1 46 48 49 47 -1 48 50 51 49 -1 50 52 53 51 -1 52
+54 55 53 -1 54 56 57 55 -1 56 58 59 57 -1 58 60 61 59 -1 60 62 63 61 -1 62 64
+65 63 -1 64 66 67 65 -1 66 68 69 67 -1 68 70 71 69 -1 70 72 73 71 -1 72 74 75
+73 -1 74 76 77 75 -1 76 78 79 77 -1 78 80 81 79 -1 80 82 83 81 -1 82 84 85 83
+-1 84 86 87 85 -1 86 88 89 87 -1 88 90 91 89 -1 90 92 93 91 -1 92 94 95 93 -1
+94 96 97 95 -1 96 98 99 97 -1 98 100 101 99 -1 100 102 103 101 -1 102 104 105
+103 -1 104 106 107 105 -1 106 108 109 107 -1 108 110 111 109 -1 110 112 113
+111 -1 112 114 115 113 -1 114 116 117 115 -1 116 118 119 117 -1 118 120 121
+119 -1 120 122 123 121 -1 122 124 125 123 -1 124 126 127 125 -1 126 128 129
+127 -1 128 130 131 129 -1 130 132 133 131 -1 132 134 135 133 -1 134 136 137
+135 -1 136 138 139 137 -1 138 140 141 139 -1 140 142 143 141 -1 142 144 145
+143 -1 144 146 147 145 -1 146 148 149 147 -1 148 150 151 149 -1 150 152 153
+151 -1 152 154 155 153 -1 154 156 157 155 -1 156 158 159 157 -1 158 160 161
+159 -1 160 162 163 161 -1 162 164 165 163 -1 164 166 167 165 -1 166 168 169
+167 -1 168 170 171 169 -1 170 172 173 171 -1 172 174 175 173 -1 174 176 177
+175 -1 176 178 179 177 -1 178 180 181 179 -1 180 182 183 181 -1 182 184 185
+183 -1 184 186 187 185 -1 186 188 189 187 -1 188 190 191 189 -1 190 192 193
+191 -1 192 194 195 193 -1 194 196 197 195 -1 196 198 199 197 -1 198 200 201
+199 -1 200 202 203 201 -1 202 0 3 203 -1 99 101 103 105 107 109 111 113 115
+117 119 121 123 125 127 129 131 133 135 137 139 141 143 145 147 149 151 153
+155 157 159 161 163 165 167 169 171 173 175 177 179 181 183 185 187 189 191
+193 195 197 199 204 199 201 203 3 2 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+37 39 41 43 45 47 49 51 53 55 57 59 61 63 65 67 69 71 73 75 77 79 81 83 85 87
+89 91 93 95 97 -1 102 100 98 96 94 92 90 88 86 84 82 80 78 76 74 72 70 68 66
+64 62 60 58 56 54 52 50 48 46 44 42 40 38 36 32 30 28 26 24 22 20 18 16 14 12
+10 8 6 4 1 0 202 200 198 34 198 196 194 192 190 188 186 184 182 180 178 176
+174 172 170 168 166 164 162 160 158 156 154 152 150 148 146 144 142 140 138
+136 134 132 130 128 126 124 122 120 118 116 114 112 110 108 106 104 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation 1.02778 0.0 0.0
+children [
+Group {
+children [
+Transform {
+children [
+Shape {
+appearance
+USE d geometry
+USE a4
+}
+]
+}
+]
+}
+]
+}
+]
+}
+]
+}
+Transform {
+translation 52.12474 5.04876 -2.45
+children [
+Background {
+skyColor [
+0.0 0.50196 0.75294
+]
+groundColor [
+0.0 0.0 0.0
+]
+}
+]
+}
+Transform {
+translation 14.55 19.672 7.159
+children [
+USE a3
+]
+}
+]
+}
+]
+}
+Transform {
+translation -20.74162 7.19076 -9.67556
+children [
+Group {
+}
+]
+}
+DEF a5
+TouchSensor {
+}
+]
+}
+]
+}
+]
+}
+]
+}
+DEF a6
+TimeSensor {
+cycleInterval 4.000
+startTime  -1
+}
+DEF a7 a { v [ 0 -1 0 0 0 -1 0 1.307 ] }
+DEF a8 a { v [ 0 1 0 0 0 1 0 1.004 ] }
+DEF a9
+TimeSensor {
+cycleInterval 15.000
+startTime  -1
+}
+DEF ba
+a { k [ 0 .75 .812 .875 .937 1 ] v [ 0 -1 0 1.307 0 -1 0 1.307 0 -1 0 .937
+0 -1 0 .728 0 -1 0 .148 0 -1 0 0 ] }
+DEF bb
+a { k [ 0 .75 .812 .875 .937 1 ] v [ 0 1 0 1.004 0 1 0 1.004 0 1 0 .606 0
+1 0 .526 0 1 0 .303 0 1 0 0 ] }
+DEF bc
+Script {
+field    SFNode      tproc
+USE a6
+field    SFBool state     FALSE
+field    SFTime pause     0
+eventIn  SFTime toggle
+eventOut SFTime triggerStart
+eventOut SFTime triggerStop
+eventOut SFTime triggerStartInt
+eventIn  SFBool activated
+eventIn  SFTime cycle
+directOutput TRUE
+url "vrmlscript:
+function activated( active, curtime ) {
+if( active ) {
+triggerStart = curtime;
+state = TRUE;
+}
+else {
+triggerStop = curtime;
+state = FALSE;
+}
+}
+function cycle( curtime ) {
+triggerStartInt = curtime;
+}
+function toggle( stime ) {
+if( state )
+{
+state = FALSE;
+pause = stime - tproc.startTime_changed;
+tproc.enabled = FALSE;
+}
+else
+{
+state = TRUE;
+tproc.set_startTime = stime - pause;
+tproc.enabled = TRUE;
+pause = 0;
+}
+}
+"
+}
+DEF bd
+Script {
+field    SFNode      tproc
+USE a9
+field    SFBool state     FALSE
+field    SFTime pause     0
+eventIn  SFTime startAt0
+eventOut SFTime triggerStart
+eventOut SFTime triggerStop
+eventOut SFTime triggerStartInt
+eventIn  SFBool activated
+eventIn  SFTime cycle
+directOutput TRUE
+url "vrmlscript:
+function activated( active, curtime ) {
+if( active ) {
+triggerStart = curtime;
+state = TRUE;
+}
+else {
+triggerStop = curtime;
+state = FALSE;
+}
+}
+function cycle( curtime ) {
+triggerStartInt = curtime;
+}
+function startAt0( stime ) {
+state = TRUE;
+tproc.set_startTime = stime;
+tproc.enabled = TRUE;
+pause = 0;
+}
+"
+}
+ROUTE a5.touchTime TO bc.toggle
+ROUTE a6.fraction_changed TO a7.i
+ROUTE a7.o TO f.set_rotation
+ROUTE a6.fraction_changed TO a8.i
+ROUTE a8.o TO l.set_rotation
+ROUTE a6.isActive TO bc.activated
+ROUTE a6.cycleTime TO bc.cycle
+ROUTE bc.triggerStop TO bd.startAt0
+ROUTE a9.fraction_changed TO ba.i
+ROUTE ba.o TO f.set_rotation
+ROUTE a9.fraction_changed TO bb.i
+ROUTE bb.o TO l.set_rotation
+ROUTE a9.isActive TO bd.activated
+ROUTE a9.cycleTime TO bd.cycle

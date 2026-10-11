@@ -1,0 +1,804 @@
+import X3DConstants        from "../../Base/X3DConstants.js";
+import Fields              from "../../Fields.js";
+import Context             from "./Context.js";
+import BrowserTimings      from "./BrowserTimings.js";
+import BrowserOptions      from "./BrowserOptions.js";
+import BrowserProperties   from "./BrowserProperties.js";
+import RenderingProperties from "./RenderingProperties.js";
+import Notification        from "./Notification.js";
+import ContextMenu         from "./ContextMenu.js";
+import URLs                from "../Networking/URLs.js";
+import X3DScene            from "../../Execution/X3DScene.js";
+import DataStorage         from "../../../standard/Utility/DataStorage.js";
+import Vector3             from "../../../standard/Math/Numbers/Vector3.js";
+import Features            from "../../Features.js";
+import Legacy              from "../Legacy.js";
+import _                   from "../../../locale/gettext.js";
+
+import "./Fonts.js";
+
+const
+   _instanceId          = Symbol (),
+   _element             = Symbol (),
+   _shadow              = Symbol (),
+   _surface             = Symbol (),
+   _canvas              = Symbol (),
+   _context             = Symbol (),
+   _splashScreen        = Symbol (),
+   _localStorage        = Symbol (),
+   _browserTimings      = Symbol (),
+   _browserOptions      = Symbol (),
+   _browserProperties   = Symbol (),
+   _renderingProperties = Symbol (),
+   _notification        = Symbol (),
+   _contextMenu         = Symbol (),
+   _privateScene        = Symbol (),
+   _keydown             = Symbol (),
+   _keyup               = Symbol ();
+
+let instanceId = 0;
+
+function X3DCoreContext (element)
+{
+   // Events
+
+   this .addChildObjects (X3DConstants .outputOnly, "controlKey", new Fields .SFBool (),
+                          X3DConstants .outputOnly, "shiftKey",   new Fields .SFBool (),
+                          X3DConstants .outputOnly, "altKey",     new Fields .SFBool (),
+                          X3DConstants .outputOnly, "commandKey", new Fields .SFBool (),
+                          X3DConstants .outputOnly, "altGrKey",   new Fields .SFBool ());
+
+   // Create html, canvas & context.
+
+   const html = /* html */ `
+<div class="x_ite-private-browser" part="browser" tabindex="0">
+   <div class="x_ite-private-surface" part="surface">
+      <canvas class="x_ite-private-canvas" part="canvas"></canvas>
+      <div class="x_ite-private-buttons x_ite-private-fade" part="buttons"></div>
+   </div>
+   <div class="x_ite-private-splash-screen x_ite-private-fade x_ite-private-hidden">
+      <div class="x_ite-private-spinner"></div>
+      <div class="x_ite-private-progress">
+         <div class="x_ite-private-x_ite">
+            ${this .getName ()}<b>X3D</b>
+         </div>
+         <div class="x_ite-private-progressbar">
+            <div></div>
+         </div>
+         <div class="x_ite-private-spinner-text"></div>
+      </div>
+   </div>
+</div>`;
+
+   if (element .shadowRoot)
+   {
+      this [_shadow] = element .shadowRoot;
+
+      this [_shadow] .innerHTML = html;
+
+      const stylesheet = new Promise ((resolve, reject) =>
+      {
+         const link = document .createElement ("link");
+
+         link .integrity   = "integrity:x_ite.css";
+         link .rel         = "stylesheet";
+         link .crossOrigin = "anonymous";
+         link .onload      = resolve;
+         link .onerror     = reject;
+         link .href        = new URL ("x_ite.css", URLs .getScriptURL ());
+
+         this [_shadow] .prepend (link);
+      });
+
+      const browser = this [_shadow] .querySelector (".x_ite-private-browser");
+
+      // Must use display, because Firefox doesn't like visibility.
+      browser .style .display = "none";
+
+      stylesheet .then (() => browser .style .display = "");
+   }
+   else
+   {
+      // Legacy
+
+      element .insertAdjacentHTML ("afterbegin", html);
+
+      this [_shadow] = element;
+   }
+
+   this [_instanceId]   = ++ instanceId;
+   this [_element]      = element;
+   this [_surface]      = this [_shadow] .querySelector (".x_ite-private-surface");
+   this [_splashScreen] = this [_shadow] .querySelector (".x_ite-private-splash-screen");
+   this [_canvas]       = this [_shadow] .querySelector ("canvas");
+   this [_context]      = Context .create (this [_canvas], element .getAttribute ("preserveDrawingBuffer") === "true");
+   this [_localStorage] = new DataStorage (localStorage, `X_ITE.X3DBrowser(${this [_instanceId]}).`);
+
+   const privateScene = this .getPrivateScene ();
+
+   this [_renderingProperties] = new RenderingProperties (privateScene);
+   this [_browserOptions]      = new BrowserOptions      (privateScene);
+   this [_browserProperties]   = new BrowserProperties   (privateScene);
+   this [_browserTimings]      = new BrowserTimings      (privateScene);
+   this [_notification]        = new Notification        (privateScene);
+   this [_contextMenu]         = new ContextMenu         (privateScene);
+}
+
+Object .assign (X3DCoreContext .prototype,
+{
+   initialize ()
+   {
+      const element = this [_element];
+
+      // Setup browser nodes.
+
+      this [_renderingProperties] .setup ();
+      this [_browserOptions]      .setup ();
+      this [_browserProperties]   .setup ();
+      this [_browserTimings]      .setup ();
+      this [_notification]        .setup ();
+      this [_contextMenu]         .setup ();
+
+      // Define properties of X3DCanvasElement.
+
+      Object .defineProperties (element,
+      {
+         browser:
+         {
+            value: this,
+            enumerable: true,
+         },
+         ... Legacy .properties (this,
+         {
+            src:
+            {
+               get: () =>
+               {
+                  return element .getAttribute ("src");
+               },
+               set: (value) =>
+               {
+                  element .setAttribute ("src", value);
+               },
+               enumerable: true,
+            },
+            url:
+            {
+               get: () =>
+               {
+                  return this .parseUrlAttribute (element .getAttribute ("url"));
+               },
+               set: (value) =>
+               {
+                  element .setAttribute ("url", [... value] .map (src => `"${src}"`) .join (", "));
+               },
+               enumerable: true,
+            },
+         }),
+      });
+
+      // Configure browser event handlers.
+
+      element .addEventListener ("keydown", this [_keydown] .bind (this));
+      element .addEventListener ("keyup",   this [_keyup]   .bind (this));
+
+      // Workaround for a bug in Chrome (v135) where attributeChangedCallback is not
+      // initially called for attributes set in XHTML.
+
+      (() =>
+      {
+         if (element .nodeName .toUpperCase () !== "X3D-CANVAS")
+            return;
+
+         if (document .contentType !== "application/xhtml+xml")
+            return;
+
+         if (!navigator .userAgent .includes ("Chrome/"))
+            return;
+
+         setTimeout (() =>
+         {
+            for (const { name, value } of element .attributes)
+               this .attributeChangedCallback (name, undefined, value);
+         });
+      })();
+   },
+   getInstanceId ()
+   {
+      return this [_instanceId];
+   },
+   getElement ()
+   {
+      return this [_element];
+   },
+   getShadow ()
+   {
+      return this [_shadow];
+   },
+   getSurface ()
+   {
+      return this [_surface];
+   },
+   getSplashScreen ()
+   {
+      return this [_splashScreen];
+   },
+   getCanvas ()
+   {
+      return this [_canvas];
+   },
+   getContext ()
+   {
+      return this [_context];
+   },
+   getLocalStorage ()
+   {
+      return this [_localStorage];
+   },
+   getBrowserTimings ()
+   {
+      return this [_browserTimings];
+   },
+   getBrowserOptions ()
+   {
+      return this [_browserOptions];
+   },
+   getBrowserProperties ()
+   {
+      return this [_browserProperties];
+   },
+   getRenderingProperties ()
+   {
+      return this [_renderingProperties];
+   },
+   getNotification ()
+   {
+      return this [_notification];
+   },
+   getContextMenu ()
+   {
+      return this [_contextMenu];
+   },
+   getPrivateScene ()
+   {
+      // X3DScene for default nodes.
+
+      return this [_privateScene] ??= (() =>
+      {
+         const privateScene = new X3DScene (this);
+
+         privateScene .checkLiveState = () => true;
+         privateScene .setLive (true);
+         privateScene .setup ();
+
+         return privateScene;
+      })();
+   },
+   connectedCallback ()
+   {
+      // AutoUpdate
+
+      this .getBrowserOptions () .checkUpdate ();
+   },
+   disconnectedCallback ()
+   {
+      // AutoUpdate
+
+      this .getBrowserOptions () .checkUpdate ();
+   },
+   attributeChangedCallback (name, oldValue, newValue)
+   {
+      switch (name .toLowerCase ())
+      {
+         case "antialiased":
+         {
+            this .setBrowserOption ("Antialiased", this .parseBooleanAttribute (newValue) ?? true);
+            break;
+         }
+         case "baseurl":
+         {
+            this .setBaseURL (newValue);
+            break;
+         }
+         case "cache":
+         {
+            this .setBrowserOption ("Cache", this .parseBooleanAttribute (newValue) ?? true);
+            break;
+         }
+         case "colorspace":
+         {
+            this .setBrowserOption ("ColorSpace", newValue || "LINEAR_WHEN_PHYSICAL_MATERIAL");
+            break;
+         }
+         case "contentscale":
+         {
+            this .setBrowserOption ("ContentScale", newValue === "auto" ? -1 : newValue);
+            break;
+         }
+         case "contextmenu":
+         {
+            this .setBrowserOption ("ContextMenu", this .parseBooleanAttribute (newValue) ?? true);
+            break;
+         }
+         case "debug":
+         {
+            this .setBrowserOption ("Debug", this .parseBooleanAttribute (newValue) ?? false);
+            break;
+         }
+         case "displaycolorspace":
+         {
+            this .setBrowserOption ("DisplayColorSpace", newValue || "SRGB");
+            break;
+         }
+         case "exposure":
+         {
+            this .setBrowserOption ("Exposure", newValue);
+            break;
+         }
+         case "logarithmicdepthbuffer":
+         {
+            this .setBrowserOption ("LogarithmicDepthBuffer", this .parseBooleanAttribute (newValue) ?? false);
+            break;
+         }
+         case "maximumframerate":
+         {
+            this .setBrowserOption ("MaximumFrameRate", newValue);
+            break;
+         }
+         case "multisampling":
+         {
+            this .setBrowserOption ("Multisampling", newValue);
+            break;
+         }
+         case "notifications":
+         {
+            this .setBrowserOption ("Notifications", this .parseBooleanAttribute (newValue) ?? true);
+            break;
+         }
+         case "oninitialized":
+         case "onshutdown":
+         {
+            try
+            {
+               this [_element] [name] = new Function ("event", newValue);
+            }
+            catch (error)
+            {
+               console .error (error);
+            }
+
+            break;
+         }
+         case "orderindependenttransparency":
+         {
+            this .setBrowserOption ("OrderIndependentTransparency", this .parseBooleanAttribute (newValue) ?? false);
+            break;
+         }
+         case "splashscreen":
+         {
+            this .setBrowserOption ("SplashScreen", this .parseBooleanAttribute (newValue) ?? true);
+
+            if (!this .getBrowserOption ("SplashScreen"))
+               this .getSplashScreen () .classList .add ("x_ite-private-hidden");
+
+            break;
+         }
+         case "src":
+         {
+            if (newValue)
+            {
+               this .loadURL (new Fields .MFString (newValue))
+                  .catch (error => console .error (error));
+            }
+
+            break;
+         }
+         case "textcompression":
+         {
+            this .setBrowserOption ("TextCompression", newValue || "CHAR_SPACING");
+            break;
+         }
+         case "timings":
+         {
+            this .setBrowserOption ("Timings", this .parseBooleanAttribute (newValue) ?? false);
+            break;
+         }
+         case "tonemapping":
+         {
+            this .setBrowserOption ("ToneMapping", newValue || "NONE");
+            break;
+         }
+         case "update":
+         {
+            if (newValue === "auto")
+            {
+               this .setBrowserOption ("AutoUpdate", true);
+            }
+            else
+            {
+               this .setBrowserOption ("AutoUpdate", false);
+
+               if (this .parseBooleanAttribute (newValue) ?? true)
+                  this .beginUpdate ();
+               else
+                  this .endUpdate ();
+            }
+
+            break;
+         }
+         case "url":
+         {
+            if (newValue)
+            {
+               this .loadURL (this .parseUrlAttribute (newValue))
+                  .catch (error => console .error (error));
+            }
+
+            break;
+         }
+         case "xrsessionmode":
+         {
+            this .setBrowserOption ("XRSessionMode", newValue || "IMMERSIVE_VR");
+            break;
+         }
+      }
+   },
+   parseBooleanAttribute (value)
+   {
+      if (value === "true")
+         return true;
+
+      if (value === "false")
+         return false;
+   },
+   parseUrlAttribute (urlCharacters)
+   {
+      try
+      {
+         const url = new Fields .MFString ();
+
+         url .setName ("url");
+         url .fromXMLString (urlCharacters, this .getExecutionContext ());
+
+         return url;
+      }
+      catch
+      {
+         throw new Error ("Couldn't parse url attribute.");
+      }
+   },
+   callBrowserEventHandler: (() =>
+   {
+      const build_in = new Set (["error", "load"]);
+
+      return function (events)
+      {
+         const element = this [_element];
+
+         for (const name of events .split (" "))
+         {
+            // Order is attribute, then dispatch.
+
+            const event = new CustomEvent (name);
+
+            try
+            {
+               if (!build_in .has (name))
+                  element [`on${name}`] ?.(event);
+            }
+            catch (error)
+            {
+               console .error (error);
+            }
+
+            element .dispatchEvent (event);
+         }
+      };
+   })(),
+   getShiftKey ()
+   {
+      return this ._shiftKey .getValue ();
+   },
+   getControlKey ()
+   {
+      return this ._controlKey .getValue ();
+   },
+   getAltKey ()
+   {
+      return this ._altKey .getValue ();
+   },
+   getCommandKey ()
+   {
+      return this ._commandKey .getValue ();
+   },
+   getAltGrKey ()
+   {
+      return this ._altGrKey .getValue ();
+   },
+   [_keydown] (event)
+   {
+      // console .log (event .keyCode);
+
+      switch (event .keyCode)
+      {
+         case 16: // Shift
+         {
+            this ._shiftKey = true;
+            break;
+         }
+         case 17: // Ctrl
+         {
+            this ._controlKey = true;
+            break;
+         }
+         case 18: // Alt
+         {
+            this ._altKey = true;
+            break;
+         }
+         case 49: // 1
+         {
+            if (this .getBrowserOption ("Debug"))
+            {
+               if (this .getControlKey ())
+               {
+                  event .preventDefault ();
+                  this .setBrowserOption ("Shading", "POINT");
+                  this .setDescription ("Shading: Pointset");
+               }
+            }
+
+            break;
+         }
+         case 50: // 2
+         {
+            if (this .getBrowserOption ("Debug"))
+            {
+               if (this .getControlKey ())
+               {
+                  event .preventDefault ();
+                  this .setBrowserOption ("Shading", "WIREFRAME");
+                  this .setDescription ("Shading: Wireframe");
+               }
+            }
+
+            break;
+         }
+         case 51: // 3
+         {
+            if (this .getBrowserOption ("Debug"))
+            {
+               if (this .getControlKey ())
+               {
+                  event .preventDefault ();
+                  this .setBrowserOption ("Shading", "FLAT");
+                  this .setDescription ("Shading: Flat");
+               }
+            }
+
+            break;
+         }
+         case 52: // 4
+         {
+            if (this .getBrowserOption ("Debug"))
+            {
+               if (this .getControlKey ())
+               {
+                  event .preventDefault ();
+                  this .setBrowserOption ("Shading", "GOURAUD");
+                  this .setDescription ("Shading: Gouraud");
+               }
+            }
+
+            break;
+         }
+         case 53: // 5
+         {
+            if (this .getBrowserOption ("Debug"))
+            {
+               if (this .getControlKey ())
+               {
+                  event .preventDefault ();
+                  this .setBrowserOption ("Shading", "PHONG");
+                  this .setDescription ("Shading: Phong");
+               }
+            }
+
+            break;
+         }
+         case 83: // s
+         {
+            if (this .getBrowserOption ("Debug"))
+            {
+               if (this .getControlKey ())
+               {
+                  event .preventDefault ();
+
+                  if (this .isLive ())
+                     this .endUpdate ();
+                  else
+                     this .beginUpdate ();
+
+                  this .setDescription (this .isLive () ? "Begin Update" : "End Update");
+               }
+            }
+
+            break;
+         }
+         case 91: // Command
+         {
+            this ._commandKey = true;
+            break;
+         }
+         case 225: // Alt Gr
+         {
+            this ._altGrKey = true;
+            break;
+         }
+         case 171: // Plus // Firefox
+         case 187: // Plus // Opera
+         {
+            if (this .getControlKey ())
+            {
+               event .preventDefault ();
+               this .setBrowserOption ("Timings", !this .getBrowserOption ("Timings"));
+            }
+
+            break;
+         }
+         case 36: // Pos 1
+         {
+            event .preventDefault ();
+            this .firstViewpoint ();
+            break;
+         }
+         case 35: // End
+         {
+            event .preventDefault ();
+            this .lastViewpoint ();
+            break;
+         }
+         case 33: // Page Up
+         {
+            event .preventDefault ();
+            this .previousViewpoint ();
+            break;
+         }
+         case 34: // Page Down
+         {
+            event .preventDefault ();
+            this .nextViewpoint ();
+            break;
+         }
+         case 119: // F8
+         {
+            if (this .getShiftKey ())
+            {
+               event .preventDefault ();
+
+               // Create viewpoint node.
+
+               const viewpoint = this .getActiveViewpoint ();
+
+               if (!viewpoint)
+                  break;
+
+               const
+                  executionContext = this .getExecutionContext (),
+                  vp               = executionContext .createNode (viewpoint .getTypeName ());
+
+               switch (viewpoint .getTypeName ())
+               {
+                  case "Viewpoint":
+                  {
+                     vp .position         = viewpoint .getUserPosition ();
+                     vp .orientation      = viewpoint .getUserOrientation ();
+                     vp .centerOfRotation = viewpoint .getUserCenterOfRotation ();
+                     vp .fieldOfView      = viewpoint .getUserFieldOfView ();
+                     break;
+                  }
+                  case "OrthoViewpoint":
+                  {
+                     vp .position         = viewpoint .getUserPosition ();
+                     vp .orientation      = viewpoint .getUserOrientation ();
+                     vp .centerOfRotation = viewpoint .getUserCenterOfRotation ();
+                     vp .fieldOfView      = viewpoint .getUserFieldOfView ();
+                     break;
+                  }
+                  case "GeoViewpoint":
+                  {
+                     const
+                        geoOrigin = viewpoint ._geoOrigin,
+                        geoCoord  = new Vector3 ();
+
+                     if (geoOrigin .getValue () && geoOrigin .getNodeTypeName () === "GeoOrigin")
+                     {
+                        const go = executionContext .createNode ("GeoOrigin");
+
+                        vp .geoOrigin = go;
+                        go .geoSystem = geoOrigin .geoSystem;
+                        go .geoCoords = geoOrigin .geoCoords;
+                        go .rotateYUp = geoOrigin .rotateYUp;
+                     }
+
+                     vp .geoSystem        = viewpoint ._geoSystem;
+                     vp .position         = viewpoint .getGeoCoord (viewpoint .getUserPosition (), geoCoord);
+                     vp .orientation      = viewpoint .getUserOrientation ();
+                     vp .centerOfRotation = viewpoint .getGeoCoord (viewpoint .getUserCenterOfRotation (), geoCoord);
+                     vp .fieldOfView      = viewpoint .getUserFieldOfView ();
+                     break;
+                  }
+               }
+
+               // Create text.
+
+               const options = Features .ENVIRONMENT === "NODE" ? { } : { scene: executionContext };
+
+               let text;
+
+               switch (executionContext .getEncoding ())
+               {
+                  case "ASCII":
+                  case "VRML": text = vp .toVRMLString (options); break;
+                  case "JSON": text = vp .toJSONString (options); break;
+                  default:     text = vp .toXMLString  (options); break;
+               }
+
+               text += "\n";
+
+               // Copy to clipboard.
+
+               navigator .clipboard .writeText (text) .then (() =>
+               {
+                  this .setDescription (_("Viewpoint copied to clipboard."));
+
+                  console .info ("Viewpoint copied to clipboard.");
+                  console .debug (text);
+               });
+            }
+
+            break;
+         }
+      }
+   },
+   [_keyup] (event)
+   {
+      //console .log (event .which);
+
+      switch (event .which)
+      {
+         case 16: // Shift
+         {
+            this ._shiftKey = false;
+            break;
+         }
+         case 17: // Ctrl
+         {
+            this ._controlKey = false;
+            break;
+         }
+         case 18: // Alt
+         {
+            this ._altKey = false;
+            break;
+         }
+         case 91: // Command
+         {
+            this ._commandKey = false;
+            break;
+         }
+         case 225: // Alt Gr
+         {
+            this ._altGrKey = false;
+            break;
+         }
+      }
+   },
+   dispose ()
+   {
+      this [_context] .getExtension ("WEBGL_lose_context") ?.loseContext ?.();
+      this [_element] .remove ();
+   },
+});
+
+export default X3DCoreContext;
