@@ -191,6 +191,16 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
 patch releases only (0.1.1, 0.1.2, ...), published only when the oracle checks prove full
 1:1 parity with X_ITE for what the release claims. An API break would need 0.2: ask Ryan first.
 
+## Later extras (after 1:1 parity; optional, off by default, not 1:1-testable)
+
+X_ITE has neither, so there is no oracle; they are "enhanced" modes on top of the faithful port.
+- **DLSS** (NVIDIA RTX only): mainly DLAA for smoothing, via the `dlss_wgpu` crate (wgpu 30,
+  Vulkan). Ryan downloads the NVIDIA DLSS SDK and accepts its license himself; shipping needs
+  NVIDIA's library + license text. Not in the public crates by default.
+- **Ray tracing**: wgpu's experimental ray queries (Vulkan) for real shadows, reflections and
+  bounced light; pairs with DLSS Ray Reconstruction. Never the default, so worlds keep looking
+  the way their authors and X_ITE show them.
+
 ## Automation (later, not on this workstation)
 
 When both ports are 1:1 with X_ITE and CodeMirror: a nightly VM on Ryan's Proxmox VE runs
