@@ -296,3 +296,39 @@ select the mode. `LogarithmicDepthBuffer` is ported exactly (Logarithmic2.js: ve
 `synthetic-zfight` 2/2, and on the orrery pose pair the flicker pixels overlap 99% with X_ITE's
 (standard: 64%). Reversed-Z (`Depth32Float`, GreaterEqual, same near/far) is not in X_ITE and is
 checked only against its own properties (`crates/x3d-render/tests/depth.rs`).
+
+
+## corpus-items2 (2026-10-11): the new primary item set
+
+Taken from the live tree `new-items/item-categories` (HEAD `cb1ad41cb`, 63 dirty paths) with
+`python3 -I oracle/tools/snapshot_items.py --no-edit oracle/corpus-items2`, then
+`snapshot_item_media.py oracle/corpus-items2 oracle/corpus-items2-media`, merged by
+`cp -al` into `oracle/render-items2/` (provenance kept as `PROVENANCE-items.json` / `PROVENANCE-media.json`).
+`--no-edit` skips `*.edit.wrl` (plain-text editing copies; the real item is the gzipped `.wrl` beside it),
+`qa` / `qa-*` folders, and scratch/backup files (`tmp_*`, `tmp-*`, `*.bak*`), besides the old dot-dir /
+`node_modules` / `preview` rules. 296 `.wrl`, 185 `.json`, 1 `.js`; 67 media files (6 referenced ones
+are missing in the live tree). No kept file references a `.edit.wrl`. The old `corpus-items/` set and
+its baselines are unchanged (secondary now). It still contains `work/`, `morph-fails/`, `backups/`,
+`old/` and `preserved/` folders; those are items too.
+
+| key | file | `index.json` / file sha256 |
+| --- | --- | --- |
+| scene text + logs | `items2-baseline.json` (gitignored) | `49632805…` |
+| picture, MSAA off | `render-items2-baseline/` (gitignored) | `c1ccb313…` |
+| picture, MSAA 4x | `render-msaa4-items2-baseline/` (gitignored) | `ab357137…` |
+
+All three were captured twice (concurrently with 4 other Chrome runs): scene text byte-identical,
+rgba hashes identical for 296/296 at both 0 and 4 samples (4x was not +-1 here).
+
+```
+node oracle/x_ite-dump.mjs oracle/corpus-items2 oracle/items2-baseline.json
+node oracle/x_ite-shot.mjs oracle/render-items2 oracle/render-items2-baseline --jobs 4
+node oracle/x_ite-shot-msaa.mjs oracle/render-items2 oracle/render-msaa4-items2-baseline --jobs 4
+x3d-run compare oracle/items2-baseline.json oracle/corpus-items2 --known crates/x3d-script/tests/items2-known.tsv --logs
+x3d-shot batch oracle/render-items2 out && x3d-shot compare oracle/render-items2-baseline out
+x3d-shot batch oracle/render-items2 out4 --msaa 4 --gl-samples && x3d-shot compare oracle/render-msaa4-items2-baseline out4
+```
+
+Rust results: scene text 296/296 exact and 296/296 logs; pictures 294/296 at 0x and at 4x
+`--gl-samples`; the two misses are `art/rainbow-room` (2.5% over) and `art/djascendance-live`
+(1.8%), the same non-power-of-two texture cause as before.

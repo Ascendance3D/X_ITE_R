@@ -69,8 +69,11 @@ while read -r rel; do
 done <<'EOF'
 upstream
 oracle/items-baseline.json
+oracle/items2-baseline.json
 oracle/x1-baseline.json
 oracle/render-items-baseline
+oracle/render-items2-baseline
+oracle/render-msaa4-items2-baseline
 oracle/render-synthetic-x8-baseline
 oracle/x_ite-text.json
 oracle/x_ite-pin/node_modules
@@ -90,12 +93,17 @@ R=$CARGO_TARGET_DIR/release
 step build 3600 cargo build --release --workspace -j $JOBS
 step tests 3600 cargo test --release --workspace -j $JOBS
 
+step scene-items2 600 "$R/x3d-run" compare oracle/items2-baseline.json oracle/corpus-items2 --known crates/x3d-script/tests/items2-known.tsv --logs
 step scene-items 600 "$R/x3d-run" compare oracle/items-baseline.json oracle/corpus-items --known crates/x3d-script/tests/items-known.tsv --logs
 step scene-x0    600 "$R/x3d-run" compare oracle/x0-baseline.json oracle/corpus-x0 --known crates/x3d-script/tests/x0-known.tsv --logs
 step scene-x1    600 "$R/x3d-run" compare oracle/x1-baseline.json oracle/corpus-x1 --known crates/x3d-script/tests/x1-known.tsv --logs
 step scene-x6    600 "$R/x3d-run" compare oracle/synthetic-x6-baseline.json oracle/synthetic-x6 --known crates/x3d-script/tests/synthetic-x6-known.tsv --logs
 
 SHOTS=$OUT/shots; rm -rf "$SHOTS"
+step render-items2 900 bash -c "'$R/x3d-shot' batch oracle/render-items2 '$SHOTS/items2' && '$R/x3d-shot' compare oracle/render-items2-baseline '$SHOTS/items2'"
+expect render-items2 "294 within tolerance"
+step render-items2-msaa4 900 bash -c "'$R/x3d-shot' batch oracle/render-items2 '$SHOTS/items2m4' --msaa 4 --gl-samples && '$R/x3d-shot' compare oracle/render-msaa4-items2-baseline '$SHOTS/items2m4'"
+expect render-items2-msaa4 "294 within tolerance"
 step render-items 900 bash -c "'$R/x3d-shot' batch oracle/render-items '$SHOTS/items' && '$R/x3d-shot' compare oracle/render-items-baseline '$SHOTS/items'"
 expect render-items "604 within tolerance"
 step render-x0 900 bash -c "'$R/x3d-shot' batch oracle/corpus-x0 '$SHOTS/x0' && '$R/x3d-shot' compare oracle/render-x0-baseline '$SHOTS/x0'"

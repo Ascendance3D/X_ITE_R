@@ -1,0 +1,7 @@
+# Differences from oracle/items2-baseline.json (corpus-items2). Applies to scene text and console log.
+# Format: <file><TAB><phase><TAB><one-line cause>.
+# (none: 296 exact, 296/296 logs identical)
+#
+# Picture misses (x3d-shot compare, threshold 8 / 0.5%; same at MSAA off and 4x --gl-samples; not scene text):
+#   art/rainbow-room/rainbow-room.wrl           2.5% over   non-power-of-two texture files (NVIDIA NPOT mipmaps, X8 gap)
+#   art/djascendance-live/djascendance-live.wrl 1.8% over   same cause

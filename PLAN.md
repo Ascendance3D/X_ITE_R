@@ -200,7 +200,7 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   `gpu::DepthMode` {Standard (default, X_ITE), Logarithmic (X_ITE's property, ported: 604/606 vs X_ITE log),
   Reversed (beyond X_ITE)}, `x3d-view --depth`, key `z`, embed `set_depth_mode`. Closed-spine Extrusion caps
   match X_ITE (100 triangles). Details: `oracle/README.md` "Depth fighting".
-- Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
+- Test inputs: Ryan's Mall items, **`oracle/corpus-items2/` (296 `.wrl`, live tree without `.edit.wrl`, qa folders and tmp/bak files; keys `oracle/items2-baseline.json`, `render-items2-baseline`, `render-msaa4-items2-baseline`) is the primary test set** (2026-10-11: scene text 296/296 exact, pictures 294/296 at 0x and 4x; details in `oracle/README.md`). The older `oracle/corpus-items/` (606 files, frozen earlier) is secondary and keeps its baselines.
 
 ## Published crates and release rule
 
