@@ -1,0 +1,11 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# Script source from a file, with a failing candidate first, and an inline Script for order.
+DEF External Script {
+  field MFString log [ ]
+  url [ "js/missing.js" "js/s08.js" ]
+}
+DEF Inline Script {
+  field MFString log [ ]
+  url "javascript: function initialize () { log [0] = 'inline initialize'; }"
+}

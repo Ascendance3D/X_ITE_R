@@ -1,0 +1,43 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# X3DInterpolatorNode setup: keyValue resized to key length, set_fraction at setup, and the
+# first frame's fraction routed from a TimeSensor.
+DEF T TimeSensor { cycleInterval 3 loop TRUE }
+DEF Short PositionInterpolator { key [ 0 0.5 1 ] keyValue [ 1 2 3 ] }
+DEF Long ScalarInterpolator { key [ 0 1 ] keyValue [ 5 6 7 8 ] }
+DEF Pos PositionInterpolator { key [ 0 0.25 1 ] keyValue [ 0 0 0, 1 0 0, 1 1 1 ] }
+DEF Ori OrientationInterpolator { key [ 0 1 ] keyValue [ 0 1 0 0, 1 0 0 3 ] }
+DEF Col ColorInterpolator { key [ 0 1 ] keyValue [ 1 0 0, 0 0 1 ] }
+DEF Sca ScalarInterpolator { key [ 0 0.4 1 ] keyValue [ 10 20 -5 ] }
+DEF Crd CoordinateInterpolator { key [ 0 1 ] keyValue [ 0 0 0, 1 1 1, 2 2 2, 3 3 3 ] }
+DEF Nrm NormalInterpolator { key [ 0 1 ] keyValue [ 1 0 0, 0 1 0 ] }
+DEF Pos2 PositionInterpolator2D { key [ 0 1 ] keyValue [ 0 0, 10 -10 ] }
+DEF X Transform {
+  children Shape {
+    appearance Appearance { material DEF M Material { } textureTransform DEF TT TextureTransform { } }
+    geometry IndexedFaceSet { coord DEF K Coordinate { point [ 9 9 9, 9 9 9 ] } normal DEF N Normal { } coordIndex [ 0 1 -1 ] }
+  }
+}
+DEF Probe Script {
+  eventIn SFFloat set_scalar
+  eventIn MFVec3f set_normals
+  field MFString log [ ]
+  url "javascript:
+function set_scalar (v) { log [log .length] = 'scalar ' + v; }
+function set_normals (v) { log [log .length] = 'normals ' + v .length + ' ' + v [0]; }
+"
+}
+ROUTE T.fraction_changed TO Pos.set_fraction
+ROUTE T.fraction_changed TO Ori.set_fraction
+ROUTE T.fraction_changed TO Col.set_fraction
+ROUTE T.fraction_changed TO Sca.set_fraction
+ROUTE T.fraction_changed TO Crd.set_fraction
+ROUTE T.fraction_changed TO Nrm.set_fraction
+ROUTE T.fraction_changed TO Pos2.set_fraction
+ROUTE Pos.value_changed TO X.set_translation
+ROUTE Ori.value_changed TO X.set_rotation
+ROUTE Col.value_changed TO M.set_diffuseColor
+ROUTE Sca.value_changed TO Probe.set_scalar
+ROUTE Crd.value_changed TO K.set_point
+ROUTE Nrm.value_changed TO Probe.set_normals
+ROUTE Pos2.value_changed TO TT.set_translation

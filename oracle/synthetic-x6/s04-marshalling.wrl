@@ -1,0 +1,116 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# Script field marshalling: every VRML97 field type read, written and printed from JavaScript.
+DEF T Transform { translation 1 2 3 rotation 0 1 0 1.5 }
+DEF S Script {
+  field SFBool     b TRUE
+  field SFInt32    i 7
+  field SFFloat    f 0.25
+  field SFTime     t 12.5
+  field SFString   s "abc"
+  field SFVec2f    v2 1 2
+  field SFVec3f    v3 1 2 3
+  field SFRotation r 0 0 1 0.5
+  field SFColor    c 0.2 0.4 0.6
+  field SFImage    img 2 1 3 0xff0000 0x00ff00
+  field SFNode     n USE T
+  field MFInt32    mi [ 1 2 3 ]
+  field MFFloat    mf [ 0.5 1.5 ]
+  field MFString   ms [ "x" "y" ]
+  field MFVec2f    mv2 [ 1 1, 2 2 ]
+  field MFVec3f    mv3 [ 1 0 0, 0 1 0 ]
+  field MFRotation mr [ 1 0 0 1 ]
+  field MFColor    mc [ 1 0 0 ]
+  field MFNode     mn [ ]
+  field MFString   out [ ]
+  url "javascript:
+function add (k, v) { out [out .length] = k + ' = ' + v; }
+function initialize ()
+{
+   add ('typeof b', typeof b);
+   add ('typeof i', typeof i);
+   add ('typeof s', typeof s);
+   add ('typeof v3', typeof v3);
+   add ('i * 3', i * 3);
+   i = 2.9;
+   add ('i = 2.9', i);
+   i = -2.9;
+   add ('i = -2.9', i);
+   f = '1.5';
+   add ('f = string', f);
+   b = 0;
+   add ('b = 0', b);
+   s = 42;
+   add ('s = 42', s + 1);
+   t = 3;
+   add ('v3', v3);
+   add ('v3.y', v3 .y);
+   add ('v3[2]', v3 [2]);
+   v3 .x = 10;
+   add ('v3.x = 10', v3);
+   add ('add', v3 .add (new SFVec3f (1, 1, 1)));
+   add ('cross', new SFVec3f (1, 0, 0) .cross (new SFVec3f (0, 1, 0)));
+   add ('normalize', new SFVec3f (3, 4, 0) .normalize ());
+   add ('length', new SFVec3f (3, 4, 12) .length ());
+   add ('dot', v3 .dot (new SFVec3f (1, 2, 3)));
+   add ('negate', v3 .negate ());
+   add ('multiply', v3 .multiply (0.5));
+   add ('v2', v2 .add (new SFVec2f (0.5, 0.5)));
+   add ('r', r);
+   add ('r.angle', r .angle);
+   add ('r.getAxis', r .getAxis ());
+   add ('r.inverse', r .inverse ());
+   add ('r.multiply', r .multiply (new SFRotation (0, 0, 1, 0.25)));
+   add ('r.multVec', r .multVec (new SFVec3f (1, 0, 0)));
+   add ('r.slerp', r .slerp (new SFRotation (0, 0, 1, 1.5), 0.5));
+   add ('r from vectors', new SFRotation (new SFVec3f (1, 0, 0), new SFVec3f (0, 1, 0)));
+   add ('r from axis', new SFRotation (new SFVec3f (0, 2, 0), 1));
+   add ('c', c);
+   add ('c.g', c .g);
+   add ('c.getHSV', c .getHSV ());
+   var h = new SFColor (0, 0, 0);
+   h .setHSV (120, 1, 0.5);
+   add ('setHSV', h);
+   add ('img', img);
+   add ('img.width', img .width);
+   add ('img.array.length', img .array .length);
+   add ('n.translation', n .translation);
+   add ('n.rotation', n .rotation);
+   add ('n.children.length', n .children .length);
+   add ('n type', n .getNodeName ());
+   n .set_translation = new SFVec3f (4, 5, 6);
+   n .scale = new SFVec3f (2, 2, 2);
+   add ('mi', mi);
+   add ('mi.length', mi .length);
+   mi [5] = 9;
+   add ('mi[5] = 9', mi);
+   mi .length = 2;
+   add ('mi.length = 2', mi);
+   mf [mf .length] = 2.5;
+   add ('mf push', mf);
+   ms [0] = 'changed';
+   add ('ms', ms);
+   add ('ms join', ms .join ? 'has join' : 'no join');
+   mv3 [1] .z = 5;
+   add ('mv3', mv3);
+   mv3 [2] = new SFVec3f (7, 8, 9);
+   add ('mv3 grow', mv3);
+   mr [0] = new SFRotation (0, 1, 0, 2);
+   add ('mr', mr);
+   mc [1] = new SFColor (0, 1, 0);
+   add ('mc', mc);
+   mn [0] = n;
+   add ('mn.length', mn .length);
+   add ('new MFVec3f', new MFVec3f (new SFVec3f (1, 2, 3), new SFVec3f (4, 5, 6)));
+   add ('new MFString', new MFString ('a', 'b'));
+   add ('new MFFloat', new MFFloat (1, 2.5));
+   var m = new VrmlMatrix ();
+   m .setTransform (new SFVec3f (1, 2, 3), new SFRotation (0, 0, 1, 1.5707963267948966), new SFVec3f (2, 2, 2));
+   add ('matrix', m);
+   add ('multVecMatrix', m .multVecMatrix (new SFVec3f (1, 0, 0)));
+   add ('inverse', m .inverse ());
+   add ('NULL', NULL);
+   add ('TRUE', TRUE);
+}
+"
+}

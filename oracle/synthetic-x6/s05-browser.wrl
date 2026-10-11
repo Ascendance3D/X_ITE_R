@@ -1,0 +1,36 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# Browser object: identity, frozen time, createVrmlFromString, addRoute, deleteRoute.
+DEF G Group { }
+DEF Src Transform { translation 1 1 1 }
+DEF Dst Transform { }
+DEF Other Transform { }
+DEF S Script {
+  directOutput TRUE
+  field SFNode g USE G
+  field SFNode src USE Src
+  field SFNode dst USE Dst
+  field SFNode other USE Other
+  field MFString out [ ]
+  url "javascript:
+function add (k, v) { out [out .length] = k + ' = ' + v; }
+function initialize ()
+{
+   add ('name', Browser .getName ());
+   add ('version', typeof Browser .getVersion ());
+   add ('time', Browser .getCurrentTime ());
+   add ('speed', Browser .getCurrentSpeed ());
+   add ('frameRate', typeof Browser .getCurrentFrameRate ());
+   var nodes = Browser .createVrmlFromString ('DEF Made Transform { translation 3 4 5 } Shape { }');
+   add ('created', nodes .length);
+   add ('created[0]', nodes [0] .translation);
+   g .addChildren = nodes;
+   Browser .addRoute (src, 'translation_changed', dst, 'set_translation');
+   Browser .addRoute (src, 'translation_changed', other, 'set_translation');
+   Browser .deleteRoute (src, 'translation_changed', other, 'set_translation');
+   src .translation = new SFVec3f (7, 8, 9);
+   try { Browser .createVrmlFromString ('Transform { translation }'); }
+   catch (e) { add ('bad vrml', 'threw'); }
+}
+"
+}

@@ -71,6 +71,8 @@ pub enum NodeKind {
     Instance(ProtoRef),
     /// A forward `USE` that was never resolved (Placeholder.js).
     Placeholder,
+    /// A runtime object that is not a node of the scene graph (the browser), never printed.
+    Internal(&'static str),
 }
 
 #[derive(Clone, Debug)]
@@ -80,6 +82,8 @@ pub struct Node {
     pub name: String,
     pub fields: Vec<Field>,
     pub user_fields: Vec<Field>,
+    /// Private child objects (X3DBaseNode.addChildObject), owned by the runtime.
+    pub private_fields: Vec<Field>,
     pub can_user_defined_fields: bool,
 }
 
@@ -87,6 +91,11 @@ pub struct Node {
 pub enum Outer {
     Scene,
     Proto(ProtoId),
+    /// Body of an X3DPrototypeInstance (the instance node).
+    Instance(NodeId),
+    /// Root context of a scene loaded by an Inline (the Inline node), or of a scene created
+    /// at runtime (createVrmlFromString); `None` for the latter.
+    Inline(Option<NodeId>),
 }
 
 #[derive(Clone, Debug)]
@@ -95,9 +104,9 @@ pub struct Route {
     pub source_field: String,
     pub destination_node: NodeId,
     pub destination_field: String,
-    /// Resolved field identity, for duplicate detection (X3DExecutionContext.getRoute).
-    source_key: (NodeId, bool, usize),
-    destination_key: (NodeId, bool, usize),
+    /// Resolved fields (X3DRoute [_sourceField] / [_destinationField]).
+    pub source_loc: FieldLoc,
+    pub destination_loc: FieldLoc,
 }
 
 #[derive(Clone, Debug)]
@@ -131,10 +140,12 @@ pub struct ExternProtoDecl {
     pub url: Vec<String>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum FieldLoc {
     Pre(usize),
     User(usize),
+    /// Private child object (not visible to getField, never printed).
+    Priv(usize),
 }
 
 #[derive(Debug)]
@@ -153,6 +164,11 @@ pub struct Scene {
     pub externprotos: Vec<ExternProtoDecl>,
     /// Console output X_ITE would have produced (warnings), for diagnostics.
     pub warnings: Vec<String>,
+    /// Nodes parsed outside PROTO declarations, in the order X3DParser.getNodes () collects
+    /// them (when the node body closes). X3DParser.setupNodes sets them up in this order.
+    pub setup_order: Vec<NodeId>,
+    /// Clone counts > 1 (X3DNode.getCloneCount), filled in by the runtime before printing.
+    pub clone_counts: Option<std::collections::HashMap<NodeId, usize>>,
 }
 
 pub const ROOT: CtxId = 0;
@@ -183,6 +199,8 @@ impl Scene {
             protos: vec![],
             externprotos: vec![],
             warnings: vec![],
+            setup_order: vec![],
+            clone_counts: None,
         }
     }
 
@@ -218,6 +236,11 @@ impl Scene {
     /// Concrete node classes registered in the browser once this scene's components are loaded:
     /// every non-external component, plus external ones requested by the profile or COMPONENT
     /// statements (and their dependencies). X3DBrowser.loadComponents.
+    /// `browser .getConcreteNodes () .has (name)`: node types of the components loaded so far.
+    pub fn is_concrete_node(&self, name: &str) -> bool {
+        self.table.get(name).is_some_and(|t| self.component_loaded(&t.component))
+    }
+
     pub fn component_loaded(&self, name: &str) -> bool {
         let Some(c) = self.table.component(name) else {
             return false;
@@ -327,6 +350,7 @@ impl Scene {
             name: String::new(),
             fields,
             user_fields: vec![],
+            private_fields: vec![],
             can_user_defined_fields: variant.can_user_defined_fields,
         })
     }
@@ -338,6 +362,7 @@ impl Scene {
             name: String::new(),
             fields: vec![],
             user_fields: vec![],
+            private_fields: vec![],
             can_user_defined_fields: false,
         })
     }
@@ -391,6 +416,7 @@ impl Scene {
             name: String::new(),
             fields,
             user_fields: vec![],
+            private_fields: vec![],
             can_user_defined_fields: false,
         })
     }
@@ -402,6 +428,7 @@ impl Scene {
             NodeKind::Instance(ProtoRef::Extern(e)) => self.externprotos[*e].name.clone(),
             // Placeholder extends X3DNode and inherits its static typeName.
             NodeKind::Placeholder => "X3DNode".to_string(),
+            NodeKind::Internal(name) => name.to_string(),
         }
     }
 
@@ -465,6 +492,7 @@ impl Scene {
         match loc {
             FieldLoc::Pre(i) => &self.node(id).fields[i],
             FieldLoc::User(i) => &self.node(id).user_fields[i],
+            FieldLoc::Priv(i) => &self.node(id).private_fields[i],
         }
     }
 
@@ -472,6 +500,7 @@ impl Scene {
         match loc {
             FieldLoc::Pre(i) => &mut self.node_mut(id).fields[i],
             FieldLoc::User(i) => &mut self.node_mut(id).user_fields[i],
+            FieldLoc::Priv(i) => &mut self.node_mut(id).private_fields[i],
         }
     }
 
@@ -582,15 +611,32 @@ impl Scene {
         fields.push(field);
     }
 
-    /// X3DExecutionContext.updateProtoDeclaration.
+    /// X3DExecutionContext.updateProtoDeclaration (with its console warnings).
     pub fn update_proto_declaration(&mut self, ctx: CtxId, name: &str, proto: ProtoId) {
+        if self.contexts[ctx].externprotos.get(name).is_some() {
+            self.warnings.push(format!("Added proto '{name}' will override extern proto with same name."));
+        }
+
+        if self.is_concrete_node(name) {
+            self.warnings.push(format!("Added proto '{name}', but will not override built-in node of same type if profile/components include this node."));
+        }
+
         let old_name = self.protos[proto].name.clone();
 
         self.contexts[ctx].protos.update(&old_name, name, proto);
         self.protos[proto].name = name.to_string();
     }
 
+    /// X3DExecutionContext.updateExternProtoDeclaration (with its console warnings).
     pub fn update_extern_proto_declaration(&mut self, ctx: CtxId, name: &str, proto: ExternId) {
+        if self.contexts[ctx].protos.get(name).is_some() {
+            self.warnings.push(format!("Added extern proto '{name}' will be overridden by proto with same name."));
+        }
+
+        if self.is_concrete_node(name) {
+            self.warnings.push(format!("Added extern proto '{name}', but will not override built-in node of same type if profile/components include this node."));
+        }
+
         let old_name = self.externprotos[proto].name.clone();
 
         self.contexts[ctx].externprotos.update(&old_name, name, proto);
@@ -611,7 +657,7 @@ impl Scene {
     pub fn outer_proto(&self, ctx: CtxId) -> Option<ProtoId> {
         match self.contexts[ctx].outer {
             Outer::Proto(p) => Some(p),
-            Outer::Scene => None,
+            _ => None,
         }
     }
 
@@ -619,7 +665,7 @@ impl Scene {
 
     /// X3DExecutionContext.addRoute (with X3DRoute.checkFields). Returns an error message for
     /// the cases where X_ITE throws.
-    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(), String> {
+    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<Option<usize>, String> {
         let src = self
             .get_field(source, source_field)
             .ok_or_else(|| format!("Unknown field '{source_field}' in node class {}.", self.type_name(source)))?;
@@ -644,15 +690,10 @@ impl Scene {
             return Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name));
         }
 
-        let key = |id: NodeId, loc: FieldLoc| match loc {
-            FieldLoc::Pre(i) => (id, false, i),
-            FieldLoc::User(i) => (id, true, i),
-        };
-
-        let (source_key, destination_key) = (key(source, src), key(destination, dst));
-
-        if self.contexts[ctx].routes.iter().any(|r| r.source_key == source_key && r.destination_key == destination_key) {
-            return Ok(());
+        if self.contexts[ctx].routes.iter().any(|r| {
+            r.source_node == source && r.source_loc == src && r.destination_node == destination && r.destination_loc == dst
+        }) {
+            return Ok(None);
         }
 
         // X3DRoute.getSourceField / getDestinationField.
@@ -667,11 +708,11 @@ impl Scene {
             source_field: source_name,
             destination_node: destination,
             destination_field: destination_name,
-            source_key,
-            destination_key,
+            source_loc: src,
+            destination_loc: dst,
         });
 
-        Ok(())
+        Ok(Some(self.contexts[ctx].routes.len() - 1))
     }
 
     /// X3DNode.hasRoutes.
@@ -683,5 +724,117 @@ impl Scene {
         }
 
         self.contexts[node.ctx].routes.iter().any(|r| r.source_node == id || r.destination_node == id)
+    }
+}
+
+/// Id offsets of a scene merged into another (see [`Scene::merge`]).
+#[derive(Clone, Copy, Debug)]
+pub struct MergeMap {
+    pub node_offset: NodeId,
+    pub ctx_offset: CtxId,
+    pub proto_offset: ProtoId,
+    pub extern_offset: ExternId,
+    /// The merged scene's root execution context.
+    pub root_ctx: CtxId,
+}
+
+impl MergeMap {
+    pub fn node(&self, n: NodeId) -> NodeId {
+        n + self.node_offset
+    }
+}
+
+impl Scene {
+    /// Append another scene (an X3DScene created at runtime, e.g. by createVrmlFromString or an
+    /// Inline) to this one so both share one node arena. Its root context becomes a child of
+    /// `parent` with `Outer::Inline (outer)`.
+    pub fn merge(&mut self, mut other: Scene, parent: CtxId, outer: Option<NodeId>) -> MergeMap {
+        let m = MergeMap {
+            node_offset: self.nodes.len() as NodeId,
+            ctx_offset: self.contexts.len(),
+            proto_offset: self.protos.len(),
+            extern_offset: self.externprotos.len(),
+            root_ctx: self.contexts.len(),
+        };
+
+        let remap_value = |v: &mut FieldValue| match v {
+            FieldValue::SFNode(Some(n)) => *n += m.node_offset,
+            FieldValue::MFNode(list) => {
+                for n in list.iter_mut().flatten() {
+                    *n += m.node_offset;
+                }
+            }
+            _ => {}
+        };
+
+        let remap_field = |f: &mut Field| {
+            remap_value(&mut f.value);
+
+            for r in &mut f.references {
+                r.proto += m.proto_offset;
+            }
+        };
+
+        for node in &mut other.nodes {
+            node.ctx += m.ctx_offset;
+
+            if let NodeKind::Instance(p) = &mut node.kind {
+                *p = match *p {
+                    ProtoRef::Proto(i) => ProtoRef::Proto(i + m.proto_offset),
+                    ProtoRef::Extern(i) => ProtoRef::Extern(i + m.extern_offset),
+                };
+            }
+
+            for f in node.fields.iter_mut().chain(node.user_fields.iter_mut()).chain(node.private_fields.iter_mut()) {
+                remap_field(f);
+            }
+        }
+
+        for (i, c) in other.contexts.iter_mut().enumerate() {
+            c.parent = if i == 0 { Some(parent) } else { c.parent.map(|p| p + m.ctx_offset) };
+            c.outer = match c.outer {
+                Outer::Scene => Outer::Inline(outer),
+                Outer::Proto(p) => Outer::Proto(p + m.proto_offset),
+                Outer::Instance(n) => Outer::Instance(n + m.node_offset),
+                Outer::Inline(n) => Outer::Inline(n.map(|n| n + m.node_offset)),
+            };
+
+            for r in c.root_nodes.iter_mut().flatten() {
+                *r += m.node_offset;
+            }
+
+            c.named_nodes.map_values(|n| n + m.node_offset);
+            c.protos.map_values(|p| p + m.proto_offset);
+            c.externprotos.map_values(|e| e + m.extern_offset);
+
+            for r in &mut c.routes {
+                r.source_node += m.node_offset;
+                r.destination_node += m.node_offset;
+            }
+        }
+
+        for p in &mut other.protos {
+            p.ctx += m.ctx_offset;
+            p.body += m.ctx_offset;
+
+            for f in &mut p.fields {
+                remap_field(f);
+            }
+        }
+
+        for e in &mut other.externprotos {
+            e.ctx += m.ctx_offset;
+
+            for f in &mut e.fields {
+                remap_field(f);
+            }
+        }
+
+        self.nodes.append(&mut other.nodes);
+        self.contexts.append(&mut other.contexts);
+        self.protos.append(&mut other.protos);
+        self.externprotos.append(&mut other.externprotos);
+
+        m
     }
 }

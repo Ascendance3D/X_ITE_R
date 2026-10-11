@@ -1,0 +1,45 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# How Script errors are reported (Script.js setError) and which callbacks still run.
+DEF Syntax Script {
+  url "javascript:
+function initialize ( { }
+"
+}
+DEF Throws Script {
+  field SFInt32 reached 0
+  url "javascript:
+function initialize () { reached = 1; undefinedFunction (); reached = 2; }
+"
+}
+DEF NullRead Script {
+  field SFNode n NULL
+  url "javascript:
+function initialize () { var x = n .translation; }
+"
+}
+DEF NotFunction Script {
+  url "javascript:
+function initialize () { Browser .noSuchMethod (1); }
+"
+}
+DEF UndefinedRead Script {
+  url "javascript:
+function initialize () { var a; return a [0]; }
+"
+}
+DEF ThrowString Script {
+  url "javascript:
+function initialize () { throw 'plain string'; }
+"
+}
+DEF Fallback Script {
+  field SFInt32 which 0
+  url [ "javascript: function initialize ( {", "vrmlscript: function initialize () { which = 2; }" ]
+}
+DEF Empty Script { url [ "" "javascript: function initialize () { }" ] }
+DEF NewNode Script {
+  url "javascript:
+function initialize () { var a = new SFNode ('Transform { }'); var b = new SFNode (); }
+"
+}

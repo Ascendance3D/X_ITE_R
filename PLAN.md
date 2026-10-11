@@ -152,6 +152,12 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   htmlmixed, plus a **new VRML mode** (JS for real CM5 + Rust). 0 token and 0 indent mismatches
   across ~37.7M callbacks; VRML mode checked on all 606 Mall item files. 174/174 upstream mode
   tests pass. One known divergence: htmlmixed `<pre>` `Pass + n` (JS gives a string, Rust NaN).
+- 2026-10-11: **X3–X6 done (no pixels)** — crates `x3d-runtime` (scene setup, PROTO
+  realize, routing/event engine, TimeSensor/interpolators/event utilities, FileLoader,
+  Inline/EXTERNPROTO/texture/movie/font loads) and `x3d-script` (Script on rquickjs).
+  Items 606/606 exact and 606/606 console logs; x0 47/47 exact (07-bookcase and
+  43-villasantzip fixed) and 50/50 logs; x1 470/473 exact (3 wall-clock `Date` scripts)
+  and 497/498 logs (1 render-time WASM trap). Known lists in `crates/x3d-script/tests/`.
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
 ## Suggested order

@@ -103,8 +103,8 @@ fn compare(baseline: &str, corpus: &str, rest: &[String]) -> ExitCode {
 
                 if let Some(dir) = &out_dir {
                     let _ = std::fs::create_dir_all(dir);
-                    let _ = std::fs::write(Path::new(dir).join(format!("{}.rust", r.file)), r.rust_output.as_deref().unwrap_or(""));
-                    let _ = std::fs::write(Path::new(dir).join(format!("{}.xite", r.file)), r.expected_output.as_deref().unwrap_or(""));
+                    let _ = std::fs::write(Path::new(dir).join(format!("{}.rust", r.file.replace('/', "__"))), r.rust_output.as_deref().unwrap_or(""));
+                    let _ = std::fs::write(Path::new(dir).join(format!("{}.xite", r.file.replace('/', "__"))), r.expected_output.as_deref().unwrap_or(""));
                 }
             }
             Outcome::RustRejected(e) => {

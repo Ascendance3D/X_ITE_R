@@ -1,0 +1,43 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# PROTO bodies with Scripts and IS, a missing local EXTERNPROTO, and a missing Inline.
+PROTO Counter [
+  field SFInt32 start 0
+  eventIn SFTime tick
+  eventOut SFInt32 count_changed
+  exposedField SFVec3f where 0 0 0
+]
+{
+  DEF Body Transform {
+    translation IS where
+    children DEF Logic Script {
+      field SFInt32 start IS start
+      field SFInt32 count 0
+      eventIn SFTime tick IS tick
+      eventOut SFInt32 count_changed IS count_changed
+      url "javascript:
+function initialize () { count = start * 10; count_changed = count; }
+function tick (v) { count ++; count_changed = count; }
+"
+    }
+  }
+}
+EXTERNPROTO Missing [ field SFFloat size ] "missing-proto.wrl#Missing"
+EXTERNPROTO Unused [ field SFFloat size ] "unused-proto.wrl#Unused"
+DEF One Counter { start 1 where 1 2 3 }
+DEF Two Counter { start 2 }
+DEF Clock TimeSensor { loop TRUE }
+DEF Sink Script {
+  eventIn SFInt32 set_one
+  eventIn SFInt32 set_two
+  field MFString log [ ]
+  url "javascript:
+function set_one (v) { log [log .length] = 'one ' + v; }
+function set_two (v) { log [log .length] = 'two ' + v; }
+"
+}
+ROUTE Clock.cycleTime TO One.tick
+ROUTE One.count_changed TO Sink.set_one
+ROUTE Two.count_changed TO Sink.set_two
+Missing { size 2 }
+Inline { url "missing-inline.wrl" }

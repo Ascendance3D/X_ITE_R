@@ -76,6 +76,25 @@ impl<'a> Parser<'a> {
         }
     }
 
+    /// X3DField.fromVRMLString (value, executionContext) on a fresh SFNode, parsed into an
+    /// existing scene (Script.js `new SFNode (vrmlSyntax)`). Returns the scene back, and
+    /// `Ok(Some(value))` for a parsed value (`SFNode(None)` for NULL), `Ok(None)` when
+    /// nothing could be read (X_ITE: "Couldn't read value for field ''.").
+    pub fn parse_sfnode_into(scene: Scene, ctx: CtxId, text: &str) -> (Scene, Result<Option<FieldValue>, ParseError>) {
+        let mut parser = Parser::new(text, "");
+
+        parser.scene = scene;
+        parser.contexts = vec![ctx];
+
+        let result = parser.field_value(FieldType::SFNode, &FieldValue::SFNode(None));
+
+        if result.is_ok() {
+            parser.setup_nodes();
+        }
+
+        (parser.scene, result)
+    }
+
     // --- helpers ---------------------------------------------------------------------------
 
     fn err<T>(&self, message: impl Into<String>) -> R<T> {
@@ -776,8 +795,10 @@ impl<'a> Parser<'a> {
                                             (Some(f), Some(t)) => self.scene.add_route(ctx, f, &event_out_id, t, &event_in_id),
                                         };
 
+                                        // console .warn (`Parser error at line ${n}.`, error): the
+                                        // dump prints the Error argument as String (error).
                                         if let Err(e) = result {
-                                            self.warn(format!("Parser error at line {line}. {e}"));
+                                            self.warn(format!("Parser error at line {line}. Error: {e}"));
                                         }
 
                                         return Ok(true);
@@ -868,6 +889,10 @@ impl<'a> Parser<'a> {
             self.comments();
 
             if self.keyword("}") {
+                if !self.is_inside_proto_declaration() {
+                    self.scene.setup_order.push(base_node);
+                }
+
                 return Ok(Stmt::Node(base_node));
             }
 
@@ -964,7 +989,16 @@ impl<'a> Parser<'a> {
                             let field = &mut self.scene.node_mut(node).user_fields[index];
 
                             if access_type == field.access && reference.ty() == field.ty() {
-                                field.add_reference(FieldRef { proto, index: r });
+                                if !field.references.contains(&FieldRef { proto, index: r }) {
+                                    field.add_reference(FieldRef { proto, index: r });
+
+                                    // X3DField.addReference: initializeOnly / inputOutput relations
+                                    // process an event from the reference (copy its value).
+                                    if matches!(field.access & reference.access, access::INITIALIZE_ONLY | access::INPUT_OUTPUT) {
+                                        field.value = reference.value.clone();
+                                    }
+                                }
+
                                 return Ok(true);
                             }
 
@@ -1063,7 +1097,17 @@ impl<'a> Parser<'a> {
 
             if field.ty() == reference.ty() {
                 if reference.is_reference(field.access) {
-                    self.scene.node_mut(node).fields[index].add_reference(FieldRef { proto, index: r });
+                    let f = &mut self.scene.node_mut(node).fields[index];
+
+                    if !f.references.contains(&FieldRef { proto, index: r }) {
+                        f.add_reference(FieldRef { proto, index: r });
+
+                        // X3DField.addReference: processEvent (Events .from (reference)).
+                        if matches!(f.access & reference.access, access::INITIALIZE_ONLY | access::INPUT_OUTPUT) {
+                            f.value = reference.value.clone();
+                        }
+                    }
+
                     return Ok(true);
                 }
 
@@ -1623,8 +1667,37 @@ impl<'a> Parser<'a> {
 
             match target {
                 Some(node) => self.replace_node_references(placeholder, node),
-                None => self.warn(format!("Parser: Named or imported node '{name}' not found.")),
+                None => {
+                    self.warn(format!("Parser: Named or imported node '{name}' not found."));
+                    self.dispose_placeholder(placeholder);
+                }
             }
+        }
+    }
+
+    /// Placeholder.replaceWithNode → this .dispose () → X3DNode.dispose: removed from every
+    /// MFNode (including root nodes), SFNode parents set to NULL.
+    fn dispose_placeholder(&mut self, p: NodeId) {
+        let remove = |v: &mut FieldValue| match v {
+            FieldValue::SFNode(Some(n)) if *n == p => *v = FieldValue::SFNode(None),
+            FieldValue::MFNode(list) => list.retain(|n| *n != Some(p)),
+            _ => {}
+        };
+
+        for node in &mut self.scene.nodes {
+            for f in node.fields.iter_mut().chain(node.user_fields.iter_mut()) {
+                remove(&mut f.value);
+            }
+        }
+
+        for proto in &mut self.scene.protos {
+            for f in &mut proto.fields {
+                remove(&mut f.value);
+            }
+        }
+
+        for c in &mut self.scene.contexts {
+            c.root_nodes.retain(|n| *n != Some(p));
         }
     }
 

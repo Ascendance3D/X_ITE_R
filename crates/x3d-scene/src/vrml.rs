@@ -27,7 +27,7 @@ impl<'a> VrmlGenerator<'a> {
         VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new() }
     }
 
-    fn push_ctx(&mut self, ctx: Option<CtxId>) {
+    pub fn push_ctx(&mut self, ctx: Option<CtxId>) {
         self.stack.push(ctx);
 
         if let Some(c) = ctx {
@@ -40,7 +40,7 @@ impl<'a> VrmlGenerator<'a> {
         }
     }
 
-    fn pop_ctx(&mut self) {
+    pub fn pop_ctx(&mut self) {
         let ctx = self.stack.pop().flatten();
 
         if self.stack.last().copied().flatten() == ctx && ctx.is_some() {
@@ -98,9 +98,12 @@ impl<'a> VrmlGenerator<'a> {
         new_name
     }
 
-    /// X3DGenerator.NeedsName. Clone counts are not tracked (only reachable through IS-copied
-    /// SFNode values, which do not occur in the X0 corpus); routes are.
+    /// X3DGenerator.NeedsName: clone count > 1 (known once the runtime ran), or routes.
     fn needs_name(&self, node: NodeId) -> bool {
+        if self.scene.clone_counts.as_ref().is_some_and(|c| c.get(&node).is_some_and(|n| *n > 1)) {
+            return true;
+        }
+
         self.scene.has_routes(node)
     }
 
@@ -611,5 +614,32 @@ impl Scene {
     /// `scene .toVRMLString ()` with X_ITE's default (TIDY) generator options.
     pub fn to_vrml_string(&self) -> String {
         VrmlGenerator::new(self).scene_to_vrml()
+    }
+}
+
+impl Scene {
+    /// `node .toString ()`: the node printed in its own execution context.
+    pub fn node_to_vrml_string(&self, node: NodeId) -> String {
+        let mut g = VrmlGenerator::new(self);
+        let ctx = self.node(node).ctx;
+
+        g.push_ctx(Some(ctx));
+        g.node_to_vrml(node);
+        g.pop_ctx();
+        g.g.string
+    }
+
+    /// Remove a route (X3DExecutionContext.deleteRoute); the removed route, if any.
+    pub fn delete_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Option<Route> {
+        let src = self.get_field(source, source_field)?;
+        let dst = self.get_field(destination, destination_field)?;
+        let i = self.contexts[ctx].routes.iter().position(|r| {
+            r.source_node == source && r.source_loc == src && r.destination_node == destination && r.destination_loc == dst
+        })?;
+        let r = self.contexts[ctx].routes.remove(i);
+
+        self.field_mut(source, src).output_routes -= 1;
+        self.field_mut(destination, dst).input_routes -= 1;
+        Some(r)
     }
 }
