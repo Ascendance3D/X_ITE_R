@@ -1,5 +1,7 @@
 pub mod chaser;
 pub mod collision;
+#[cfg(feature = "embed")]
+pub mod embed;
 pub mod geom;
 pub mod layer;
 pub mod nav;

@@ -25,7 +25,10 @@ js_json, rs_json = os.path.join(out, "js.json"), os.path.join(out, "rs.json")
 env = dict(os.environ, CARGO_TARGET_DIR=os.path.join(root, "target-viewer"))
 imgs = "--no-images" not in args
 
-cmd = ["node", os.path.join(root, "oracle/x_ite-anim.mjs"), world, script, "--out", js_json]
+# Scripts whose size is not 512x512 need the sized oracle page (anim.html is fixed at 512x512).
+size = json.load(open(script)).get("size", [512, 512])
+anim = "x_ite-anim.mjs" if list(size) == [512, 512] else "x_ite-anim-sized.mjs"
+cmd = ["node", os.path.join(root, "oracle", anim), world, script, "--out", js_json]
 if imgs: cmd += ["--png-dir", os.path.join(out, "js")]
 subprocess.run(cmd, check=False, timeout=180, cwd=root)
 cmd = [os.path.join(target, "x3d-drive"), world, script, "--oracle", os.path.join(root, "oracle"), "--out", rs_json, "--warmup-from", js_json]
@@ -89,5 +92,7 @@ for k, a in js["poses"].items():
 if imgs:
     r = subprocess.run([os.path.join(target, "x3d-shot"), "compare", os.path.join(out, "js"), os.path.join(out, "rs"), "--threshold", "8", "--max-pct", "0.5"], capture_output=True, text=True, cwd=root)
     print(r.stdout.rstrip())
-    report(r.returncode == 0, "images within tolerance (threshold 8, max 0.5%)")
+    # x3d-shot compare exits 0 even for "over" or SIZE-mismatch files; read its summary line.
+    ok_imgs = r.returncode == 0 and ", 0 over, 0 missing" in r.stdout and "SIZE" not in r.stdout
+    report(ok_imgs, "images within tolerance (threshold 8, max 0.5%)")
 sys.exit(1 if fails else 0)

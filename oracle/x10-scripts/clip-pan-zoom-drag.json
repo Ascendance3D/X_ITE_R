@@ -1,0 +1,492 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  30,
+  75,
+  100,
+  120
+ ],
+ "dump": [],
+ "frames": 120,
+ "events": [
+  {
+   "frame": 2,
+   "type": "mousedown",
+   "button": 1,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 3,
+   "type": "mousemove",
+   "x": 256,
+   "y": 248
+  },
+  {
+   "frame": 4,
+   "type": "mousemove",
+   "x": 256,
+   "y": 240
+  },
+  {
+   "frame": 5,
+   "type": "mousemove",
+   "x": 256,
+   "y": 232
+  },
+  {
+   "frame": 6,
+   "type": "mousemove",
+   "x": 256,
+   "y": 224
+  },
+  {
+   "frame": 7,
+   "type": "mousemove",
+   "x": 256,
+   "y": 216
+  },
+  {
+   "frame": 8,
+   "type": "mousemove",
+   "x": 256,
+   "y": 208
+  },
+  {
+   "frame": 9,
+   "type": "mousemove",
+   "x": 256,
+   "y": 200
+  },
+  {
+   "frame": 10,
+   "type": "mousemove",
+   "x": 256,
+   "y": 192
+  },
+  {
+   "frame": 11,
+   "type": "mousemove",
+   "x": 256,
+   "y": 184
+  },
+  {
+   "frame": 12,
+   "type": "mousemove",
+   "x": 256,
+   "y": 176
+  },
+  {
+   "frame": 13,
+   "type": "mousemove",
+   "x": 256,
+   "y": 168
+  },
+  {
+   "frame": 14,
+   "type": "mousemove",
+   "x": 256,
+   "y": 160
+  },
+  {
+   "frame": 15,
+   "type": "mousemove",
+   "x": 256,
+   "y": 152
+  },
+  {
+   "frame": 16,
+   "type": "mousemove",
+   "x": 256,
+   "y": 144
+  },
+  {
+   "frame": 17,
+   "type": "mousemove",
+   "x": 256,
+   "y": 136
+  },
+  {
+   "frame": 18,
+   "type": "mousemove",
+   "x": 256,
+   "y": 128
+  },
+  {
+   "frame": 19,
+   "type": "mousemove",
+   "x": 256,
+   "y": 120
+  },
+  {
+   "frame": 20,
+   "type": "mousemove",
+   "x": 256,
+   "y": 112
+  },
+  {
+   "frame": 21,
+   "type": "mousemove",
+   "x": 256,
+   "y": 104
+  },
+  {
+   "frame": 22,
+   "type": "mousemove",
+   "x": 256,
+   "y": 96
+  },
+  {
+   "frame": 23,
+   "type": "mousemove",
+   "x": 256,
+   "y": 88
+  },
+  {
+   "frame": 24,
+   "type": "mousemove",
+   "x": 256,
+   "y": 80
+  },
+  {
+   "frame": 25,
+   "type": "mousemove",
+   "x": 256,
+   "y": 72
+  },
+  {
+   "frame": 26,
+   "type": "mousemove",
+   "x": 256,
+   "y": 64
+  },
+  {
+   "frame": 27,
+   "type": "mouseup",
+   "button": 1,
+   "x": 256,
+   "y": 64
+  },
+  {
+   "frame": 30,
+   "type": "mousedown",
+   "button": 2,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 31,
+   "type": "mousemove",
+   "x": 262,
+   "y": 256
+  },
+  {
+   "frame": 32,
+   "type": "mousemove",
+   "x": 268,
+   "y": 256
+  },
+  {
+   "frame": 33,
+   "type": "mousemove",
+   "x": 274,
+   "y": 256
+  },
+  {
+   "frame": 34,
+   "type": "mousemove",
+   "x": 280,
+   "y": 256
+  },
+  {
+   "frame": 35,
+   "type": "mousemove",
+   "x": 286,
+   "y": 256
+  },
+  {
+   "frame": 36,
+   "type": "mousemove",
+   "x": 292,
+   "y": 256
+  },
+  {
+   "frame": 37,
+   "type": "mousemove",
+   "x": 298,
+   "y": 256
+  },
+  {
+   "frame": 38,
+   "type": "mousemove",
+   "x": 304,
+   "y": 256
+  },
+  {
+   "frame": 39,
+   "type": "mousemove",
+   "x": 310,
+   "y": 256
+  },
+  {
+   "frame": 40,
+   "type": "mousemove",
+   "x": 316,
+   "y": 256
+  },
+  {
+   "frame": 41,
+   "type": "mousemove",
+   "x": 322,
+   "y": 256
+  },
+  {
+   "frame": 42,
+   "type": "mousemove",
+   "x": 328,
+   "y": 256
+  },
+  {
+   "frame": 43,
+   "type": "mousemove",
+   "x": 334,
+   "y": 256
+  },
+  {
+   "frame": 44,
+   "type": "mousemove",
+   "x": 340,
+   "y": 256
+  },
+  {
+   "frame": 45,
+   "type": "mousemove",
+   "x": 346,
+   "y": 256
+  },
+  {
+   "frame": 46,
+   "type": "mousemove",
+   "x": 352,
+   "y": 256
+  },
+  {
+   "frame": 47,
+   "type": "mousemove",
+   "x": 358,
+   "y": 256
+  },
+  {
+   "frame": 48,
+   "type": "mousemove",
+   "x": 364,
+   "y": 256
+  },
+  {
+   "frame": 49,
+   "type": "mousemove",
+   "x": 370,
+   "y": 256
+  },
+  {
+   "frame": 50,
+   "type": "mousemove",
+   "x": 376,
+   "y": 256
+  },
+  {
+   "frame": 51,
+   "type": "mousemove",
+   "x": 382,
+   "y": 256
+  },
+  {
+   "frame": 52,
+   "type": "mousemove",
+   "x": 388,
+   "y": 256
+  },
+  {
+   "frame": 53,
+   "type": "mousemove",
+   "x": 394,
+   "y": 256
+  },
+  {
+   "frame": 54,
+   "type": "mousemove",
+   "x": 400,
+   "y": 256
+  },
+  {
+   "frame": 55,
+   "type": "mouseup",
+   "button": 2,
+   "x": 400,
+   "y": 256
+  },
+  {
+   "frame": 58,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 59,
+   "type": "mousemove",
+   "x": 265,
+   "y": 265
+  },
+  {
+   "frame": 60,
+   "type": "mousemove",
+   "x": 274,
+   "y": 274
+  },
+  {
+   "frame": 61,
+   "type": "mousemove",
+   "x": 283,
+   "y": 283
+  },
+  {
+   "frame": 62,
+   "type": "mousemove",
+   "x": 292,
+   "y": 292
+  },
+  {
+   "frame": 63,
+   "type": "mousemove",
+   "x": 301,
+   "y": 301
+  },
+  {
+   "frame": 64,
+   "type": "mousemove",
+   "x": 310,
+   "y": 310
+  },
+  {
+   "frame": 65,
+   "type": "mousemove",
+   "x": 319,
+   "y": 319
+  },
+  {
+   "frame": 66,
+   "type": "mousemove",
+   "x": 328,
+   "y": 328
+  },
+  {
+   "frame": 67,
+   "type": "mousemove",
+   "x": 337,
+   "y": 337
+  },
+  {
+   "frame": 68,
+   "type": "mousemove",
+   "x": 346,
+   "y": 346
+  },
+  {
+   "frame": 69,
+   "type": "mousemove",
+   "x": 355,
+   "y": 355
+  },
+  {
+   "frame": 70,
+   "type": "mousemove",
+   "x": 364,
+   "y": 364
+  },
+  {
+   "frame": 71,
+   "type": "mousemove",
+   "x": 373,
+   "y": 373
+  },
+  {
+   "frame": 72,
+   "type": "mousemove",
+   "x": 382,
+   "y": 382
+  },
+  {
+   "frame": 73,
+   "type": "mousemove",
+   "x": 391,
+   "y": 391
+  },
+  {
+   "frame": 74,
+   "type": "mousemove",
+   "x": 400,
+   "y": 400
+  },
+  {
+   "frame": 75,
+   "type": "mousemove",
+   "x": 409,
+   "y": 409
+  },
+  {
+   "frame": 76,
+   "type": "mousemove",
+   "x": 418,
+   "y": 418
+  },
+  {
+   "frame": 77,
+   "type": "mousemove",
+   "x": 427,
+   "y": 427
+  },
+  {
+   "frame": 78,
+   "type": "mousemove",
+   "x": 436,
+   "y": 436
+  },
+  {
+   "frame": 79,
+   "type": "mousemove",
+   "x": 445,
+   "y": 445
+  },
+  {
+   "frame": 80,
+   "type": "mousemove",
+   "x": 454,
+   "y": 454
+  },
+  {
+   "frame": 81,
+   "type": "mousemove",
+   "x": 463,
+   "y": 463
+  },
+  {
+   "frame": 82,
+   "type": "mousemove",
+   "x": 472,
+   "y": 472
+  },
+  {
+   "frame": 83,
+   "type": "mouseup",
+   "button": 0,
+   "x": 472,
+   "y": 472
+  }
+ ]
+}

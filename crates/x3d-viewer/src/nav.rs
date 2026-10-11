@@ -623,20 +623,27 @@ impl Examine {
     fn add_move(&mut self, position_change: &Vector3, cor_change: &Vector3, cx: &mut Cx) {
         if self.position_chaser.connected {
             let p = add(&self.position_chaser.set_destination_value, position_change);
+            // The set_destination *field* changes at once; only its interest (set_destination__)
+            // waits for event processing (ExamineViewer.addMove reads `_set_destination .getValue ()`
+            // for every mouse event of the frame).
+            self.position_chaser.set_destination_value = p;
             self.pending.push(Pend::PosDest(p));
         } else {
             self.position_chaser.connected = true;
             let p = add(&cx.vp.position_offset, position_change);
+            self.position_chaser.set_destination_value = p;
             self.pending.push(Pend::PosValue(cx.vp.position_offset));
             self.pending.push(Pend::PosDest(p));
         }
 
         if self.cor_chaser.connected {
             let p = add(&self.cor_chaser.set_destination_value, cor_change);
+            self.cor_chaser.set_destination_value = p;
             self.pending.push(Pend::CorDest(p));
         } else {
             self.cor_chaser.connected = true;
             let p = add(&cx.vp.center_of_rotation_offset, cor_change);
+            self.cor_chaser.set_destination_value = p;
             self.pending.push(Pend::CorValue(cx.vp.center_of_rotation_offset));
             self.pending.push(Pend::CorDest(p));
         }
@@ -990,10 +997,12 @@ impl Fly {
 
         if self.chaser.is_active && self.chaser.connected {
             oo.mult_right(&self.chaser.set_destination_value);
+            self.chaser.set_destination_value = oo; // the field changes at once (FlyViewer addRotation/addRoll read it)
             self.pending.push(FPend::Dest(oo));
         } else {
             oo.mult_right(&cx.vp.user_orientation(cx.base));
             self.pending.push(FPend::Value(cx.vp.orientation_offset));
+            self.chaser.set_destination_value = oo; // the field changes at once (FlyViewer addRotation/addRoll read it)
             self.pending.push(FPend::Dest(oo));
         }
 
@@ -1018,6 +1027,7 @@ impl Fly {
 
             let mut oo = inv(&cx.base.orientation);
             oo.mult_right(&uo);
+            self.chaser.set_destination_value = oo; // the field changes at once (FlyViewer addRotation/addRoll read it)
             self.pending.push(FPend::Dest(oo));
         } else {
             let mut uo = set_vectors(to, from);
@@ -1034,6 +1044,7 @@ impl Fly {
             let mut oo = inv(&cx.base.orientation);
             oo.mult_right(&uo);
             self.pending.push(FPend::Value(cx.vp.orientation_offset));
+            self.chaser.set_destination_value = oo; // the field changes at once (FlyViewer addRotation/addRoll read it)
             self.pending.push(FPend::Dest(oo));
         }
 

@@ -70,6 +70,8 @@ pub struct Viewer3d {
     pub advance_only_time: bool,
     gravity_speed: f64,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
+    /// Geometry and textures kept between frames (rebuilt only when their nodes change).
+    pub render_cache: x3d_render::traverse::RenderCache,
     pub scan_cam: Scan,
     pub scan_display: Scan,
     prox: HashMap<(Vec<NodeId>, NodeId), ProxState>,
@@ -141,6 +143,7 @@ impl Viewer3d {
             advance_only_time: false,
             gravity_speed: 0.0,
             geom_cache: HashMap::new(),
+            render_cache: Default::default(),
             scan_cam: Scan::default(),
             scan_display: Scan::default(),
             prox: HashMap::new(),
@@ -909,7 +912,7 @@ impl Viewer3d {
 
         let background = if bg == DEFAULT { None } else { self.scan_cam.backgrounds.iter().find(|(n, _)| n.node == bg).map(|(n, m)| (n.node, *m)) };
 
-        let mut b = Builder::new(&self.rt);
+        let mut b = Builder::new(&self.rt).with_cache(&mut self.render_cache);
         b.camera = Some(CameraOverride {
             camera_space: vp.camera_space,
             fov: vp.user_fov(&base),

@@ -174,6 +174,15 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
 - 2026-10-11: **X8 subset** — crate `x3d-text` (fonts, libtess port), Text/FontStyle, Fog,
   Background textures: synthetic-x8 125/125. x0 43-villasantzip still over (static shot has no
   WALK gravity step; text itself is fine).
+- 2026-10-11: **X10 drag/clipping + one-device viewer** — EXAMINE drag report ("picture was
+  clipping"): not reproducible as a projection/near-far/pose divergence (12 stress scripts x 10
+  worlds, 512x512 and 1024x768, poses to 1e-4 and images within tolerance; see
+  `oracle/x10-scripts/clip-*.json`). Found and fixed a real drag bug: several mouse moves in one
+  frame lost all but the last in pan (chaser `set_destination` field changes at once in X_ITE).
+  The viewer now renders straight into the window surface on one wgpu device (`x3d_render::gpu::
+  Renderer`, no readback/blit), keeps geometry/textures/bind groups between frames (write stamps
+  on `Runtime`), and exposes `x3d_viewer::embed::EmbeddedViewer` for a host application (see
+  `crates/x3d-viewer/README.md`). Offscreen path (`Gpu`) is bit-identical to before.
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
 ## Published crates and release rule
