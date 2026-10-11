@@ -176,6 +176,12 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   WALK gravity step; text itself is fine).
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
+## Published crates and release rule
+
+`vrml97`, `x3d`, `vrml` 0.1.0 are public on crates.io (local tags `*-v0.1.0`). Updates are
+patch releases only (0.1.1, 0.1.2, ...), published only when the oracle checks prove full
+1:1 parity with X_ITE for what the release claims. An API break would need 0.2: ask Ryan first.
+
 ## Automation (later, not on this workstation)
 
 When both ports are 1:1 with X_ITE and CodeMirror: a nightly VM on Ryan's Proxmox VE runs
