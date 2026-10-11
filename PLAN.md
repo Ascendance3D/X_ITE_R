@@ -231,6 +231,14 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   events); Alt double click (lookAtPoint) differs from X_ITE by 6e-6 to 1.6e-5 because X_ITE reads the hit point from a float32 GPU
   pointing buffer; static `x3d-shot` still ignores OrthoViewpoint; `x3d-view` maps a second left release within 500 ms and 4 px
   to `dblclick` (not run in a window).
+- 2026-10-11: **EXAMINE double-click lookAt ported (X10).** `nav.rs` `Examine::dblclick` = ExamineViewer.dblclick (`disconnect`
+  = stop position / center-of-rotation / rotation chasers and the spin, then `lookAtPoint` with Alt, else `lookAtBBox`, through the
+  shared `lookat.rs` request path); `x3d-view`'s double-click detection (window.rs) reaches it unchanged. Also ported, without an
+  oracle (no touch events in the harness): Examine's touchstart / touchmove / touchend incl. the `tapedTwice` 300 ms dblclick.
+  7 new x10 scripts on `oracle/x10-scripts/examine-nav.wrl` (generator: `oracle/tools/gen_x10_plane_lookat.py`):
+  `examine-dblclick{,-miss,-alt,-during-spin,-during-chaser,-then-drag,-drag-interrupt}`, all PASS; poses 0 to 1e-9 except the Alt
+  case (dcenter 6.2e-6, dpos 3.1e-6: float32 GPU pointing buffer vs f64 ray cast, as in LOOKAT). Added to `tools/nightly.sh`
+  (not installed). Ryan decided 2026-10-11 to keep nav::DEVELOPMENT = true (matches the src oracle).
 - Test inputs: Ryan's Mall items, **`oracle/corpus-items2/` (296 `.wrl`, live tree without `.edit.wrl`, qa folders and tmp/bak files; keys `oracle/items2-baseline.json`, `render-items2-baseline`, `render-msaa4-items2-baseline`) is the primary test set** (2026-10-11: scene text 296/296 exact, pictures 294/296 at 0x and 4x, the 2 misses are the known NVIDIA NPOT mipmap differences; details in `oracle/README.md`). The older `oracle/corpus-items/` (606 files, frozen earlier) is secondary and keeps its baselines.
 
 ## Published crates and release rule

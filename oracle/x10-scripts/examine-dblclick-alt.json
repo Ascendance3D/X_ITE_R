@@ -1,0 +1,38 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  4,
+  10,
+  25,
+  60
+ ],
+ "dump": [],
+ "frames": 60,
+ "events": [
+  {
+   "type": "mods",
+   "shift": false,
+   "ctrl": false,
+   "alt": true,
+   "frame": 2
+  },
+  {
+   "frame": 3,
+   "type": "dblclick",
+   "x": 256,
+   "y": 256
+  },
+  {
+   "type": "mods",
+   "shift": false,
+   "ctrl": false,
+   "alt": false,
+   "frame": 4
+  }
+ ]
+}

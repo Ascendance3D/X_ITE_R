@@ -96,3 +96,21 @@ write("lookat-drag-then-click", 100, ev + [{"frame": last + 40, "type": "dblclic
 write("lookat-wheel", 90, wheel(range(2, 8), -100, 256, 256) + wheel(range(30, 40), 100, 256, 256), capture=[5, 12, 35, 60, 90])
 ev, last = drag(0, (256, 256), line((256, 256), (-9, 6), 12))
 write("lookat-wheel-in-drag", last + 30, ev + wheel([6], -100, 256 - 9 * 4, 256 + 6 * 4) + wheel([7], -100, 256 - 9 * 5, 256 + 6 * 5), capture=[8, last + 30])
+
+# --- EXAMINE double click (ExamineViewer.dblclick, world examine-nav.wrl) ----------------------
+ALT_ON = {"type": "mods", "shift": False, "ctrl": False, "alt": True}
+ALT_OFF = {"type": "mods", "shift": False, "ctrl": False, "alt": False}
+write("examine-dblclick", 60, [{"frame": 2, "type": "dblclick", "x": 400, "y": 300}], capture=[3, 6, 12, 25, 40, 60])
+write("examine-dblclick-miss", 20, [{"frame": 2, "type": "dblclick", "x": 20, "y": 490}], capture=[3, 20])
+write("examine-dblclick-alt", 60, [dict(ALT_ON, frame=2), {"frame": 3, "type": "dblclick", "x": 256, "y": 256}, dict(ALT_OFF, frame=4)], capture=[4, 10, 25, 60])
+# release spin (fast drag, mouseup on the last move frame), then a double click while it runs
+ev, last = drag(0, (256, 256), line((256, 256), (24, 10), 8))
+write("examine-dblclick-during-spin", last + 60, ev + [{"frame": last + 8, "type": "dblclick", "x": 300, "y": 280}], capture=[last + 4, last + 9, last + 20, last + 60])
+# a double click while the rotation chaser is still running (slow drag, released, double click at once)
+ev, last = drag(0, (256, 256), line((256, 256), (-5, 4), 10))
+write("examine-dblclick-during-chaser", last + 60, ev + [{"frame": last + 2, "type": "dblclick", "x": 200, "y": 300}], capture=[last + 1, last + 3, last + 20, last + 60])
+# drag after the look-at animation has finished, and a drag that interrupts it
+ev, last = drag(0, (256, 256), line((256, 256), (9, 6), 10), f0=70)
+write("examine-dblclick-then-drag", last + 30, [{"frame": 2, "type": "dblclick", "x": 400, "y": 300}] + ev, capture=[60, 75, last + 30])
+ev, last = drag(0, (256, 256), line((256, 256), (9, 6), 10), f0=8)
+write("examine-dblclick-drag-interrupt", last + 40, [{"frame": 2, "type": "dblclick", "x": 400, "y": 300}] + ev, capture=[7, 12, last + 40])
