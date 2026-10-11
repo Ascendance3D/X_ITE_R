@@ -1,0 +1,43 @@
+//! Offscreen wgpu renderer for X3D/VRML scenes, ported from X_ITE's renderer and WebGL2 shaders
+//! (https://github.com/create3000/x_ite, MIT, Copyright (c) 2009 Holger Seelig and other
+//! contributors). Pinned reference: oracle/x_ite-pin (fork commit 34cdf9f97).
+//!
+//! Pipeline: [`load::load_world`] (x3d-runtime: parse, setup, loads, frozen-time frames) →
+//! [`traverse::Builder`] (bindables, shapes, lights) → [`geometry`] (X_ITE's geometry generation)
+//! → [`gpu::Gpu`] (wgpu on Vulkan, offscreen RGBA8 + depth24, WGSL port of the shaders).
+//! [`compare`] measures images against the render oracle (oracle/x_ite-shot.mjs).
+
+pub mod compare;
+pub mod geometry;
+pub mod gpu;
+pub mod load;
+pub mod sg;
+pub mod tess;
+pub mod texture;
+pub mod traverse;
+
+use std::path::Path;
+
+pub struct Shot {
+    pub width: u32,
+    pub height: u32,
+    /// RGBA8, top row first. Alpha is the framebuffer alpha (the oracle's readback is opaque).
+    pub rgba: Vec<u8>,
+    pub unsupported: Vec<String>,
+    pub log: Vec<String>,
+}
+
+/// Load a world from the oracle directory and render it like oracle/x_ite-pin/src/shot.html.
+pub fn render_file(gpu: &mut gpu::Gpu, oracle_root: &Path, file: &Path, width: u32, height: u32) -> Result<Shot, String> {
+    let rt = load::load_world(oracle_root, file, true)?;
+    let frame = traverse::Builder::new(&rt).build(width, height);
+    let rgba = gpu.render(&frame, width, height);
+    Ok(Shot { width, height, rgba, unsupported: frame.unsupported.into_iter().collect(), log: rt.log.clone() })
+}
+
+pub fn write_png(path: &Path, width: u32, height: u32, rgba: &[u8]) -> Result<(), String> {
+    if let Some(p) = path.parent() {
+        std::fs::create_dir_all(p).map_err(|e| e.to_string())?;
+    }
+    image::save_buffer(path, rgba, width, height, image::ExtendedColorType::Rgba8).map_err(|e| e.to_string())
+}

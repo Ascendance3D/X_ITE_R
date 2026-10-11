@@ -164,6 +164,8 @@ pub struct Runtime {
     pub font_cache: HashMap<String, bool>,
     /// Script nodes in the order their contexts became active, for diagnostics.
     pub scripts: Vec<NodeId>,
+    /// Scenes loaded by Inline nodes (Inline node → its runtime), kept for rendering.
+    pub inline_runtimes: HashMap<NodeId, Runtime>,
 }
 
 impl Runtime {
@@ -185,6 +187,7 @@ impl Runtime {
             extern_loaded: HashMap::new(),
             font_cache: HashMap::new(),
             scripts: vec![],
+            inline_runtimes: HashMap::new(),
         };
 
         rt.browser_node = rt.create_internal_node("X3DBrowser");

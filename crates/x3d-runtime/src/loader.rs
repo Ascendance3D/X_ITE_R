@@ -290,7 +290,7 @@ impl Runtime {
 
         let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
             Loaded::Script(_) => Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
-            Loaded::Data(data, url) if type_name == "Inline" => rt.inline_scene(&data, url.as_str()),
+            Loaded::Data(data, url) if type_name == "Inline" => rt.inline_scene(node, &data, url.as_str()),
             Loaded::Data(..) => Ok(()),
         });
 
@@ -418,7 +418,7 @@ impl Runtime {
 
     /// Parse and run an Inline's scene for its side effects on the log (the scene is not
     /// printed by the parent's toVRMLString).
-    fn inline_scene(&mut self, data: &[u8], url: &str) -> Result<(), String> {
+    fn inline_scene(&mut self, node: NodeId, data: &[u8], url: &str) -> Result<(), String> {
         let scene = x3d_parse::parse_bytes(data, url).map_err(|e| format!("Error: {e}"))?;
 
         for w in &scene.warnings {
@@ -432,6 +432,11 @@ impl Runtime {
         child.frame();
 
         self.log.append(&mut child.log);
+
+        // Keep the loaded scene for renderers (Inline.getInternalScene). Its fetcher pointed at
+        // this runtime, which may move after this call; replace it with one that fails.
+        child.fetcher = Box::new(DetachedFetcher);
+        self.inline_runtimes.insert(node, child);
         Ok(())
     }
 }
@@ -469,12 +474,22 @@ impl Runtime {
 
 type UrlStateRef = nodes::UrlState;
 
+/// The fetcher of a kept Inline runtime after its load finished.
+struct DetachedFetcher;
+
+impl Fetcher for DetachedFetcher {
+    fn fetch(&self, _url: &url::Url) -> Result<Vec<u8>, String> {
+        Err("TypeError: Failed to fetch".into())
+    }
+}
+
 /// Lets a child runtime fetch through its parent's fetcher (same oracle file root).
 struct NullFetcherProxy(*const Runtime);
 
 impl Fetcher for NullFetcherProxy {
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
-        // SAFETY: the child runtime only lives inside the parent's `inline_scene` call.
+        // SAFETY: used only while the parent's `inline_scene` call runs; afterwards the kept
+        // child gets a DetachedFetcher.
         unsafe { (*self.0).fetcher.fetch(url) }
     }
 }
