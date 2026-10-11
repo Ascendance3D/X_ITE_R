@@ -61,6 +61,13 @@ fn gpu() -> Gpu {
     match Gpu::new() {
         Ok(mut g) => {
             g.renderer.set_sample_count(msaa());
+            // `--depth log|reversed`: X_ITE's LogarithmicDepthBuffer (oracle: x_ite-shot-log.mjs) or the reversed-Z extra.
+            let args: Vec<String> = std::env::args().collect();
+
+            if let Some(m) = opt(&args, "--depth").and_then(|v| x3d_render::gpu::DepthMode::parse(&v)) {
+                g.renderer.set_depth_mode(m);
+            }
+
             // `--gl-samples`: mirror the draw so the MSAA sample pattern matches the GL oracle's.
             g.renderer.set_gl_sample_orientation(std::env::args().any(|a| a == "--gl-samples"));
             g

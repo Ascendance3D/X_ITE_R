@@ -867,9 +867,9 @@ impl<'a> Builder<'a> {
                 let radius = avatar.first().copied().unwrap_or(0.25).max(0.0);
                 let near = if radius == 0.0 { 0.125 } else { radius / 2.0 };
                 let limit = sg.f64(ni, "visibilityLimit", 0.0).max(0.0);
-                (sg.bool(ni, "headlight", true), near, if limit != 0.0 { limit } else { 1e5 })
+                (sg.bool(ni, "headlight", true), near, if limit != 0.0 { limit } else { far_max() })
             }
-            None => (true, 0.125, 1e5),
+            None => (true, 0.125, far_max()),
         };
 
         let projection = perspective(fov, near, far, width as f64, height as f64);
@@ -978,9 +978,21 @@ pub fn straighten(r: &Rotation4, up: &Vector3) -> Rotation4 {
     r
 }
 
-/// X3DViewpointNode.getMaxFarValue without a logarithmic depth buffer.
-fn far_max() -> f64 {
-    1e5
+static LOGARITHMIC_DEPTH_BUFFER: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// X3D `LogarithmicDepthBuffer` rendering property (a browser-wide property in X_ITE, so a
+/// process-wide switch here). Set through `gpu::Renderer::set_depth_mode`.
+pub fn set_logarithmic_depth_buffer(on: bool) {
+    LOGARITHMIC_DEPTH_BUFFER.store(on, std::sync::atomic::Ordering::Relaxed);
+}
+
+pub fn logarithmic_depth_buffer() -> bool {
+    LOGARITHMIC_DEPTH_BUFFER.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// X3DViewpointNode.getMaxFarValue: 1e10 with the LogarithmicDepthBuffer rendering property, else 1e5.
+pub fn far_max() -> f64 {
+    if logarithmic_depth_buffer() { 1e10 } else { 1e5 }
 }
 
 /// Camera.perspective → Camera.frustum (column-major array, X_ITE layout).

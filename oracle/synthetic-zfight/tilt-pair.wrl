@@ -1,0 +1,15 @@
+#VRML V2.0 utf8
+# Two nearly coplanar quads, authored for the depth-fighting oracle (synthetic, no corpus content).
+# Red: plane z = 0. Green: plane z = 0.00012 * x, so the planes cross along x = 0 and the green
+# quad is nearer for x > 0. Seen from z = 10 the 24-bit depth step is about 5e-5, so with the
+# standard depth buffer the green quad wins wrongly wherever |x| < about 0.4.
+Viewpoint { position 0 0 10 }
+NavigationInfo { headlight FALSE }
+Shape {
+  appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 1 0 0 } }
+  geometry IndexedFaceSet { coord Coordinate { point [ -4 -3 0, 4 -3 0, 4 3 0, -4 3 0 ] } coordIndex [ 0 1 2 3 -1 ] solid FALSE }
+}
+Shape {
+  appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 0 1 0 } }
+  geometry IndexedFaceSet { coord Coordinate { point [ -4 -3 -0.00048, 4 -3 0.00048, 4 3 0.00048, -4 3 -0.00048 ] } coordIndex [ 0 1 2 3 -1 ] solid FALSE }
+}

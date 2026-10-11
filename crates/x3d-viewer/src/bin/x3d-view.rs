@@ -1,4 +1,4 @@
-//! x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--msaa 0|1|2|4|8|16]
+//! x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--msaa 0|1|2|4|8|16] [--depth standard|log|reversed]
 //!       [--script script.json --png out.png]
 //!
 //! Opens a VRML/X3D world in a native window and runs it live: TimeSensors, interpolators,
@@ -7,7 +7,7 @@
 //!
 //! Mouse and keys: see the README section in the report; `1` EXAMINE, `2` WALK, `3` FLY,
 //! `4` NONE, Home/End first/last viewpoint, PageUp/PageDown previous/next viewpoint, `l` list
-//! viewpoints, `m` cycle multisampling (default 4, like X_ITE), `s` save /tmp/x3d-view-N.png, Esc or `q` quit.
+//! viewpoints, `m` cycle multisampling (default 4, like X_ITE), `z` cycle the depth buffer (standard = X_ITE, reversed, log), `s` save /tmp/x3d-view-N.png, Esc or `q` quit.
 
 use std::path::PathBuf;
 use x3d_viewer::window::{Options, run};
@@ -17,7 +17,7 @@ fn main() {
     let opt = |f: &str| args.iter().position(|a| a == f).and_then(|i| args.get(i + 1)).cloned();
 
     let Some(path) = args.get(1).filter(|a| !a.starts_with("--")) else {
-        eprintln!("usage: x3d-view <file.wrl> [--oracle dir] [--size WxH] [--msaa N] [--script script.json --png out.png]");
+        eprintln!("usage: x3d-view <file.wrl> [--oracle dir] [--size WxH] [--msaa N] [--depth standard|log|reversed] [--script script.json --png out.png]");
         std::process::exit(2);
     };
 
@@ -32,7 +32,7 @@ fn main() {
         size = (s[0].as_u64().unwrap_or(512) as u32, s[1].as_u64().unwrap_or(512) as u32);
     }
 
-    let opts = Options { path: PathBuf::from(path), oracle: opt("--oracle").map(PathBuf::from), script, png: opt("--png").map(PathBuf::from), size, msaa: opt("--msaa").and_then(|v| v.parse().ok()) };
+    let opts = Options { path: PathBuf::from(path), oracle: opt("--oracle").map(PathBuf::from), script, png: opt("--png").map(PathBuf::from), size, msaa: opt("--msaa").and_then(|v| v.parse().ok()), depth: opt("--depth").map(|v| x3d_viewer::embed::DepthMode::parse(&v).unwrap_or_else(|| { eprintln!("--depth: standard, log or reversed"); std::process::exit(2) })) };
 
     // QuickJS wants a big stack (x3d-shot uses the same 256 MB).
     let r = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(opts)).unwrap().join().unwrap();

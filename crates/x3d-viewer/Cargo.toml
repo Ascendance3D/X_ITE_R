@@ -45,3 +45,7 @@ required-features = ["embed"]
 [dev-dependencies]
 wgpu = "30"
 pollster = "1"
+
+# Debug tool: finds depth-fighting pixels (see its header).
+[[bin]]
+name = "x3d-zfight"

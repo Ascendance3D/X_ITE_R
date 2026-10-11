@@ -60,6 +60,14 @@ EmbeddedViewer::new(device, queue, (w, h))     the host's wgpu device and queue
   `configure_samples(&adapter, target_format)` once; `supported_multisampling()` lists what you got
   and `cycle_multisampling()` steps through it. NVIDIA reports 1, 2, 4, 8.
 
+* **Depth buffer.** `set_depth_mode(DepthMode::Standard | Logarithmic | Reversed)`. `Standard` (default) is
+  X_ITE's `DEPTH_COMPONENT24`, `LESS_EQUAL`. `Logarithmic` is X_ITE's `LogarithmicDepthBuffer` property
+  ported exactly (far plane 1e10). `Reversed` is beyond X_ITE: reversed-Z with a 32-bit float depth buffer
+  and the same near and far planes; it resolves near-coplanar surfaces (planes a few 1e-5 apart at
+  distance 10) that the 24-bit buffer ties, but exactly coincident faces flicker more with it (the
+  24-bit quantization snaps their equal depths to a tie). Set the mode before `load`; it is
+  process-wide, like X_ITE's browser-wide property. `cycle_depth_mode()` steps through the three.
+
 ### Minimal host
 
 `examples/embed_minimal.rs` (run: `cargo run --release -p x3d-viewer --example embed_minimal --
@@ -94,6 +102,7 @@ non-sRGB format, `frame()`, then present. `x3d-view` is exactly that (`src/windo
 
 `x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--msaa 0|1|2|4|8|16] [--script script.json --png out.png]`.
 `--msaa` defaults to X_ITE's 4 (clamped to what the adapter supports); `m` cycles 1, 2, 4, 8 live.
+`--depth standard|log|reversed` picks the depth buffer (default standard, X_ITE's); `z` cycles it live.
 Keys: `1` EXAMINE, `2` WALK, `3` FLY, `4` NONE, Home / End first / last viewpoint, PageUp /
 PageDown previous / next, `l` list viewpoints, `r` reload, `s` screenshot to `/tmp/x3d-view-N.png`,
 Esc / `q` quit. Mouse: left drag rotates (EXAMINE), middle drag pans, wheel zooms; WALK / FLY as in

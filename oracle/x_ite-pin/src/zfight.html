@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Depth-fighting oracle (anim-msaa.html + window.jitter, ?log=1): MSAA oracle (?aa=1 keeps X_ITE default antialiased, Multisampling 4; sized variant of anim.html): deterministic frame stepping, navigation and sensors</title>
+<!-- Lives inside the pinned src/ so X_ITE resolves its assets/ the same way it does upstream.
+     dump.html and shot.html stay untouched; this page drives the browser's frame loop by hand.
+
+     Clock model (shared with the Rust viewer core, crates/x3d-viewer):
+       * browser .getCurrentTime () returns T, which the harness sets per frame;
+       * Date .now () returns DATE (ms), which the harness sets per event and per frame, and
+         window .setTimeout is replaced by a virtual queue that fires timers in due order
+         when the harness advances the clock;
+       * the browser's own requestAnimationFrame loop still runs but advanceTime () returns
+         false, so it never traverses; the harness calls the browser's [_traverse] itself. -->
+<style>html, body { margin: 0; padding: 0; background: #000; }</style>
+<script src="../node_modules/libtess/libtess.cat.js"></script>
+<script src="../node_modules/@create3000/libgif/libgif.js"></script>
+<script src="../node_modules/apng-js/lib/index.js"></script>
+<script>
+// Canvas size from ?w=&h= (default 512x512, as anim.html).
+{ const q = new URLSearchParams (location .search), w = +q .get ("w") || 512, h = +q .get ("h") || 512, aa = q .get ("aa") === "1", ms = q .get ("ms"), lg = q .get ("log") === "1";
+document .write (`<x3d-canvas id="c" antialiased="${aa}" ${ms ? `multisampling="${ms}"` : ""} ${lg ? `logarithmicDepthBuffer="true"` : ""} preserveDrawingBuffer="true" splashScreen="false"
+   contextMenu="false" notifications="false" timings="false" contentScale="1" tabindex="0"
+   style="display:block;width:${w}px;height:${h}px"></x3d-canvas>`); }
+</script>
+<script type="module">
+await import ("./x_ite.js");
+
+const canvasElement = document .getElementById ("c");
+const browser       = canvasElement .browser;
+const X3D           = window [Symbol .for ("X_ITE.X3D")];
+const traverse      = browser [Symbol .for ("X_ITE.X3DBrowserContext.traverse")];
+const realDateNow   = Date .now .bind (Date);
+const realSetTimeout = window .setTimeout .bind (window);
+const realClearTimeout = window .clearTimeout .bind (window);
+
+let T = 946684800, RATE = 60, DATE = T * 1000, allow = true, traverses = 0, counted = 0, target = "";
+
+browser .getCurrentTime      = () => T;
+browser .getCurrentFrameRate = () => RATE;
+// `counted` = frames traversed while the loaded world is the browser's current scene.
+browser .advanceTime         = () => { if (!allow) return false; ++ traverses; if (target && browser .currentScene ?.worldURL === target) ++ counted; return true; };
+
+// Virtual timers (installed after the world has loaded).
+let timers = [ ], timerId = 0, virtual = false;
+
+function installVirtualClock ()
+{
+   virtual = true;
+   Date .now = () => DATE;
+
+   window .setTimeout = (fn, ms = 0, ... args) =>
+   {
+      const id = ++ timerId;
+      timers .push ({ id, due: DATE + Math .max (+ms || 0, 0), seq: id, fn: () => fn (... args) });
+      return id;
+   };
+
+   window .clearTimeout = id => { timers = timers .filter (t => t .id !== id); };
+}
+
+function runTimers (untilMs)
+{
+   for (;;)
+   {
+      timers .sort ((a, b) => a .due - b .due || a .seq - b .seq);
+
+      const t = timers [0];
+
+      if (!t || t .due > untilMs)
+         break;
+
+      timers .shift ();
+
+      const saveT = T, saveDATE = DATE;
+
+      DATE = Math .max (DATE, t .due);
+      T    = Math .max (T, t .due / 1000);
+
+      try { t .fn (); } catch (e) { console .error (e); }
+
+      T    = saveT;
+      DATE = Math .max (saveDATE, DATE);
+   }
+}
+
+function doTraverse ()
+{
+   allow = true;
+   traverse .call (browser, 0, undefined);
+   allow = false;
+}
+
+window .info = () =>
+{
+   const gl  = browser .getContext ();
+   const ext = gl .getExtension ("WEBGL_debug_renderer_info");
+   return { renderer: ext ? gl .getParameter (ext .UNMASKED_RENDERER_WEBGL) : gl .getParameter (gl .RENDERER), x_ite: browser .version, multisampling: browser .getRenderingProperty ("Multisampling"), antialiased: browser .getRenderingProperty ("Antialiased"), maxSamples: browser .getMaxSamples (), contextAttributes: gl .getContextAttributes () };
+};
+
+const log = [ ];
+
+for (const m of [ "error", "warn" ])
+{
+   const orig = console [m] .bind (console);
+   console [m] = (... a) => { log .push (`${m}: ${a .map (String) .join (" ") .split ("\n") [0]}`); };
+}
+
+// Load the world with real frames at the frozen time t0, then top up to `warmup` frames at t0.
+window .load = async function (url, t0, dt, warmup)
+{
+   T    = t0;
+   DATE = t0 * 1000;
+   RATE = 1 / dt;
+   target = url;
+
+   try
+   {
+      await browser .loadURL (new X3D .MFString (url));
+      await browser .nextFrame ();
+      await browser .nextFrame ();
+   }
+   catch (e)
+   {
+      return { ok: false, error: String (e ?.message ?? e) .split ("\n") [0], log };
+   }
+
+   allow = false;
+   installVirtualClock ();
+
+   const real = counted;
+
+   while (counted < warmup)
+      doTraverse ();
+
+   return { ok: true, loadFrames: real, frames: counted, log };
+};
+
+window .setDate = ms => { DATE = ms; };
+
+// One browser frame at browser time `t` (seconds).
+window .step = function (t)
+{
+   runTimers (t * 1000);
+
+   T    = t;
+   DATE = Math .max (DATE, t * 1000);
+   RATE = 1 / Math .max (window .__dt ?? (1 / 60), 1e-9);
+
+   doTraverse ();
+};
+
+window .setDt = dt => { window .__dt = dt; };
+
+window .pose = function ()
+{
+   const vp = browser .getActiveViewpoint ();
+   const p  = vp .getUserPosition (), o = vp .getUserOrientation (), c = vp .getUserCenterOfRotation ();
+
+   return {
+      position: [ p .x, p .y, p .z ],
+      orientation: [ o .x, o .y, o .z, o .angle ],
+      centerOfRotation: [ c .x, c .y, c .z ],
+      viewpoint: vp .getName (),
+      description: vp ._description .getValue (),
+      viewer: browser .getCurrentViewer (),
+   };
+};
+
+window .vrml = () => browser .currentScene .toVRMLString ();
+
+window .getLog = () => log .slice () .sort ();
+
+window .pixels = function ()
+{
+   const gl = browser .getContext ();
+   const w  = gl .drawingBufferWidth, h = gl .drawingBufferHeight;
+   const px = new Uint8Array (w * h * 4);
+   const fb = gl .getParameter (gl .FRAMEBUFFER_BINDING);
+
+   gl .bindFramebuffer (gl .FRAMEBUFFER, null);
+   gl .readPixels (0, 0, w, h, gl .RGBA, gl .UNSIGNED_BYTE, px);
+   gl .bindFramebuffer (gl .FRAMEBUFFER, fb);
+
+   let bin = "";
+
+   for (let i = 0; i < px .length; i += 0x8000)
+      bin += String .fromCharCode .apply (null, px .subarray (i, i + 0x8000));
+
+   return { width: w, height: h, rgba: btoa (bin) };
+};
+
+// Same effect as the viewer menu: the browser's `viewer` field drives set_viewer__.
+window .setViewer = name => { browser ._viewer = name; };
+
+window .geometry = () => { const r = browser .getSurface () .getBoundingClientRect (); return { rect: [ r .left, r .top, r .width, r .height ], viewport: [ ... browser .getViewport () ], scroll: [ window .scrollX, window .scrollY ] }; };
+
+// Depth-fighting oracle: world-space offset (relative to the position offset at first call) of the active viewpoint.
+let jitterBase = null;
+window .jitter = d =>
+{
+   const vp = browser .getActiveViewpoint (), f = vp ._positionOffset, v = f .getValue (), V = v .constructor;
+   jitterBase ??= [ v .x, v .y, v .z ];
+   f .setValue (new V (jitterBase [0] + d [0], jitterBase [1] + d [1], jitterBase [2] + d [2]));
+};
+
+window .focusCanvas = () => canvasElement .focus ();
+window .ready = true;
+</script>

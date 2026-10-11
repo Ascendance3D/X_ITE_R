@@ -1,0 +1,19 @@
+#VRML V2.0 utf8
+# Depth range, authored for the depth-fighting oracle (synthetic). Red at z = -10000, green 5 units
+# behind it (drawn later), blue at z = -200000 (beyond X_ITE's default far plane of 1e5, inside the
+# 1e10 of the LogarithmicDepthBuffer). Standard 24-bit depth step at 1e4 is about 48, so green
+# wins wrongly there; blue is clipped. With the logarithmic depth buffer red wins and blue shows.
+Viewpoint { position 0 0 0 }
+NavigationInfo { headlight FALSE }
+Shape {
+  appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 0 0 1 } }
+  geometry IndexedFaceSet { coord Coordinate { point [ -100000 -100000 -200000, 100000 -100000 -200000, 100000 100000 -200000, -100000 100000 -200000 ] } coordIndex [ 0 1 2 3 -1 ] solid FALSE }
+}
+Shape {
+  appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 1 0 0 } }
+  geometry IndexedFaceSet { coord Coordinate { point [ -2000 -2000 -10000, 2000 -2000 -10000, 2000 2000 -10000, -2000 2000 -10000 ] } coordIndex [ 0 1 2 3 -1 ] solid FALSE }
+}
+Shape {
+  appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 0 1 0 } }
+  geometry IndexedFaceSet { coord Coordinate { point [ -2000 -2000 -10005, 2000 -2000 -10005, 2000 2000 -10005, -2000 2000 -10005 ] } coordIndex [ 0 1 2 3 -1 ] solid FALSE }
+}
