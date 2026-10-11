@@ -73,6 +73,27 @@ for k, a in js["vrml"].items():
         d = list(difflib.unified_diff(a.split("\n"), b.split("\n") if b else [], lineterm="", n=0))
         print("\n".join("    " + l for l in d[:20]))
 
+# Script keys "console" and "dumpInlines" (oracle/synthetic-inline-scripts): the console messages in
+# the order they were logged, and the scene text of every DEF-named Inline, compared exactly.
+if "console" in js or "console" in rs:
+    a, b = js.get("console"), rs.get("console")
+    report(a == b, f"console log equal ({len(a or [])} messages)")
+    if a != b:
+        import difflib
+        d = list(difflib.unified_diff(a or [], b or [], lineterm="", n=1))
+        print("\n".join("    " + l for l in d[:30]))
+
+for k, a in (js.get("inlines") or {}).items():
+    b = (rs.get("inlines") or {}).get(k)
+    paths = sorted(set(a) | set(b or {}))
+    bad = [p for p in paths if a.get(p) != (b or {}).get(p)]
+    report(not bad, f"inline scene text equal at frame {k} ({len(paths)} inline scenes)")
+    for p in bad[:3]:
+        import difflib
+        d = list(difflib.unified_diff((a.get(p) or "<null>").split("\n"), ((b or {}).get(p) or "<null>").split("\n"), lineterm="", n=0))
+        print(f"    inline {p}:")
+        print("\n".join("    " + l for l in d[:12]))
+
 def quat(r):
     x, y, z, a = r
     n = math.sqrt(x*x + y*y + z*z) or 1

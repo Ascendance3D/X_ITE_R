@@ -813,7 +813,7 @@ impl Runtime {
     pub(crate) fn follower_set_live(&mut self, node: NodeId) {
         let prepare = self.private_field(self.browser_node, "prepareEvents").unwrap();
 
-        if self.scene_live && self.get_bool(node, "isActive") {
+        if self.ctx_live(self.scene.node(node).ctx) && self.get_bool(node, "isActive") {
             self.add_interest(prepare, node, Cb::FollowerPrepare);
         } else {
             self.remove_interest(prepare, node, Cb::FollowerPrepare);

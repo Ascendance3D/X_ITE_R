@@ -466,3 +466,26 @@ Regression after the change (same commit): items2 296/296 exact and 296/296 logs
 and `--msaa 4 --gl-samples` (the 2 NPOT files); clip suite 48 cases, 0 unexpected (1 known XFAIL); 46 x10 scripts (click, walk,
 examine, sensors with `--text-tol 1e-3`, plane-*, lookat-*, examine-dblclick-*, rotate-*) PASS; `cargo build --release
 --workspace` and `cargo test --release --workspace` green (409 tests).
+
+
+## Scripts in Inlines (2026-10-11)
+
+Before: an Inline's scene ran in a separate detached runtime (own queue, own script realm, forked Script host), so
+Script nodes inside an Inline did not share time, event order, console order, `Browser` state or routes with the parent.
+Now the scene is merged into the parent runtime (`crates/x3d-runtime/src/inline.rs`) as a context of its own.
+
+Test set `oracle/synthetic-inline-scripts/` (clean-room): `basic` (TimeSensor -> Script -> Transform inside the Inline),
+`order` (six ticker Scripts, parent/inline/nested print order), `reload` (load FALSE -> TRUE, url a -> b -> empty,
+shutdown/initialize order), `nested` (P -> A -> B -> C), `browser` (getCurrentTime, currentScene/getExecutionContext,
+createVrmlFromString, addRoute inside an Inline), `output` (directOutput/mustEvaluate), `exportimport` (IMPORT/EXPORT routes
+both ways, kept across unload/load). The harness (`x_ite-anim.mjs` keys `console`, `settle`, `dumpInlines`) records the
+ordered console and each DEF-named Inline's `toVRMLString ()`; `x10_compare.py` compares both exactly.
+
+| check | command | result |
+| --- | --- | --- |
+| initial state (static dump) | `node oracle/x_ite-dump.mjs oracle/synthetic-inline-scripts oracle/synthetic-inline-scripts-baseline.json` then `x3d-run compare ... --logs` | 18/18 exact, 18/18 logs (two baseline runs byte-identical) |
+| every frame | `python3 -I oracle/tools/x10_compare.py oracle/synthetic-inline-scripts/<w>.wrl oracle/synthetic-inline-scripts/scripts/<w>.json <out> --target target-viewer/release` | 7 of 7: scene text, Inline scene text, console exact; poses 0 |
+
+JS facts reproduced: a scene's Scripts initialize at parse time, before the scene is attached; unloading disposes the
+scene's routes but not its nodes (no `shutdown ()`, and a zombie Script keeps its `prepareEvents` interest); a TimeSensor in
+an Inline ticks only once the world is live; the world is live after `replaceWorld`'s extra frame.

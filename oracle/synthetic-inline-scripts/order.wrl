@@ -1,0 +1,35 @@
+#VRML V2.0 utf8
+# Console order across scenes: parent Scripts around two sibling Inlines, all with the same callbacks.
+DEF P1 Script {
+  eventIn SFFloat set_fraction
+  eventOut SFBool kick
+  field SFFloat last -1
+  field SFBool dirty FALSE
+  field SFBool kicked FALSE
+  url "javascript:
+    function initialize () { print ('P1 initialize'); }
+    function prepareEvents (t) { if (!kicked && t >= 946684800.1) { kicked = TRUE; print ('P1 prepare'); kick = TRUE; } }
+    function set_fraction (f) { var q = Math.floor (f * 4); if (q != last) { last = q; dirty = TRUE; print ('P1 fraction ' + q); } }
+    function eventsProcessed () { if (dirty) { dirty = FALSE; print ('P1 eventsProcessed'); } }
+  "
+}
+DEF ClockP TimeSensor { cycleInterval 1 loop TRUE enabled FALSE }
+DEF InlA Inline { url "order-a.wrl" }
+DEF InlB Inline { url "order-b.wrl" }
+DEF P2 Script {
+  eventIn SFFloat set_fraction
+  eventOut SFBool kick
+  field SFFloat last -1
+  field SFBool dirty FALSE
+  field SFBool kicked FALSE
+  url "javascript:
+    function initialize () { print ('P2 initialize'); }
+    function prepareEvents (t) { if (!kicked && t >= 946684800.1) { kicked = TRUE; print ('P2 prepare'); kick = TRUE; } }
+    function set_fraction (f) { var q = Math.floor (f * 4); if (q != last) { last = q; dirty = TRUE; print ('P2 fraction ' + q); } }
+    function eventsProcessed () { if (dirty) { dirty = FALSE; print ('P2 eventsProcessed'); } }
+  "
+}
+ROUTE P1.kick TO ClockP.set_enabled
+ROUTE ClockP.fraction_changed TO P1.set_fraction
+ROUTE ClockP.fraction_changed TO P2.set_fraction
+ROUTE P2.kick TO ClockP.set_enabled

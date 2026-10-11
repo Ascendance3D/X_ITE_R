@@ -1,0 +1,37 @@
+#VRML V2.0 utf8
+DEF T Transform { children Shape { geometry Sphere { radius 0.3 } } }
+DEF U Transform { children Shape { geometry Cone { } } }
+DEF Clock TimeSensor { cycleInterval 1 loop TRUE }
+DEF Direct Script {
+  directOutput TRUE
+  mustEvaluate TRUE
+  eventIn SFFloat set_f
+  field SFNode target USE T
+  field SFNode other USE U
+  field SFInt32 n 0
+  url "javascript:
+    function initialize () { print ('direct init ' + target.getNodeName () + ' ' + other.getNodeName ()); }
+    function set_f (f) { target.translation = new SFVec3f (f * 3, 0, 0); n = n + 1; if (n == 1) print ('direct first ' + target.translation); }
+    function eventsProcessed () { if (target.translation.x > 2.9) print ('direct eventsProcessed ' + target.translation); }
+  "
+}
+DEF Plain Script {
+  eventIn SFFloat set_f
+  field SFNode target USE U
+  url "javascript:
+    function set_f (f) { target.scale = new SFVec3f (1, 1 + f, 1); if (f > 0.9) print ('plain wrote ' + target.scale); }
+  "
+}
+DEF Must Script {
+  mustEvaluate TRUE
+  eventIn SFFloat set_f
+  eventOut SFFloat out_f
+  field SFInt32 n 0
+  url "javascript:
+    function set_f (f) { n = n + 1; out_f = f; }
+    function eventsProcessed () { if (n == 1) print ('must eventsProcessed first'); }
+  "
+}
+ROUTE Clock.fraction_changed TO Direct.set_f
+ROUTE Clock.fraction_changed TO Plain.set_f
+ROUTE Clock.fraction_changed TO Must.set_f

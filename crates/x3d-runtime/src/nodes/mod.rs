@@ -92,7 +92,11 @@ impl Runtime {
             "ColorInterpolator" => self.nrt_mut(node).state = State::ColorInterp { hsv: vec![] },
             "Script" => self.nrt_mut(node).state = State::Script(Default::default()),
             n if followers::make(n).is_some() => self.nrt_mut(node).state = State::Follower(followers::make(n).unwrap()),
-            "Inline" | "ImageTexture" | "MovieTexture" | "AudioClip" => self.nrt_mut(node).state = State::UrlObject(Default::default()),
+            "Inline" => {
+                self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
+                self.nrt_mut(node).state = State::UrlObject(Default::default());
+            }
+            "ImageTexture" | "MovieTexture" | "AudioClip" => self.nrt_mut(node).state = State::UrlObject(Default::default()),
             _ => {}
         }
     }
@@ -312,6 +316,8 @@ impl Runtime {
             | Cb::SequencerSetKey
             | Cb::SequencerSetKeyValue => self.event_utils_call(node, i.cb),
             Cb::UrlSetLoad | Cb::UrlSetUrl => self.url_object_changed(node, i.cb),
+            Cb::SceneLoadCount => self.scene_load_count(node),
+            Cb::RouteReconnect(id) => self.reconnect_route(id),
             Cb::ScriptField(_) | Cb::ScriptEventsProcessed | Cb::ScriptPrepareEvents => self.script_interest(node, i.cb, k),
             Cb::GroupAddChildren => self.group_add_children(node),
             Cb::GroupRemoveChildren => self.group_remove_children(node),

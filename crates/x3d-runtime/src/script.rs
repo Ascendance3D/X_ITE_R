@@ -25,9 +25,6 @@ pub trait ScriptHost {
 
     /// Script.call__ / set_field__.
     fn call(&mut self, rt: &mut Runtime, node: NodeId, call: ScriptCall) -> Result<(), ScriptError>;
-
-    /// A host for a child runtime (Inline scenes); `None` disables scripts there.
-    fn fork(&self) -> Option<Box<dyn ScriptHost>>;
 }
 
 #[derive(Debug, Default, Clone)]
@@ -147,7 +144,7 @@ impl Runtime {
 
         if let Err(e) = result {
             let name = self.scene.node(node).name.clone();
-            let world = self.scene.world_url.clone();
+            let world = self.scene.world_url_of(self.scene.node(node).ctx).to_string();
             let world = if world.starts_with("data:") { "data:".to_string() } else { world };
 
             self.log_error(format!("JavaScript Error in Script '{name}', in function '{reason_name}'\nworld url is '{world}':"));

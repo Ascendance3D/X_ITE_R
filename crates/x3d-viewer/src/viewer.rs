@@ -115,6 +115,12 @@ impl Viewer3d {
     /// [`Viewer3d::load`] with `currentFrameRate` pinned (see [`Viewer3d::pinned_frame_rate`]) from
     /// the first frame on, including the frame that finishes loading.
     pub fn load_pinned(file: &Path, oracle_root: Option<&Path>, t0: f64, width: u32, height: u32, pinned_frame_rate: Option<f64>) -> Result<Viewer3d, String> {
+        Self::load_opts(file, oracle_root, t0, width, height, pinned_frame_rate, false)
+    }
+
+    /// [`Viewer3d::load_pinned`] that can also record the console output in order
+    /// ([`Runtime::console`]) from the first message on.
+    pub fn load_opts(file: &Path, oracle_root: Option<&Path>, t0: f64, width: u32, height: u32, pinned_frame_rate: Option<f64>, record_console: bool) -> Result<Viewer3d, String> {
         x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
         let file = std::fs::canonicalize(file).map_err(|e| format!("{}: {e}", file.display()))?;
@@ -133,12 +139,14 @@ impl Viewer3d {
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
         rt.live = true;
         rt.now = t0;
+        rt.record_console = record_console;
 
         if let Some(rate) = pinned_frame_rate {
             rt.frame_rate = rate;
         }
 
-        rt.load_world();
+        rt.load_scene();
+        rt.replace_world();
 
         let mut v = Self::from_runtime(rt, t0, width, height);
         v.pinned_frame_rate = pinned_frame_rate;
@@ -810,6 +818,13 @@ impl Viewer3d {
     // --- input -------------------------------------------------------------------------------
 
     pub fn input(&mut self, ev: UiEvent) {
+        self.input_event(ev);
+
+        // The event handler returned: pending microtasks run and the loads they wait for complete.
+        self.rt.settle();
+    }
+
+    fn input_event(&mut self, ev: UiEvent) {
         match ev {
             UiEvent::Mods { shift, ctrl, alt } => {
                 self.shift = shift;

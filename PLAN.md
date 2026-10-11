@@ -170,7 +170,7 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
 - 2026-10-11: **X10 first version** — crate `x3d-viewer`, binary `x3d-view`: live runtime,
   EXAMINE/WALK/FLY, viewpoints, Touch/Plane/Cylinder/Sphere sensors. Matches X_ITE on the
   animation, navigation and sensor oracles (`oracle/tools/x10_compare.py`). Gaps: no in-window
-  text, two GPU devices, no Followers/PLANE/LOOKAT/double-click lookAt, Scripts in Inlines.
+  text, two GPU devices.
 - 2026-10-11: **X8 subset** — crate `x3d-text` (fonts, libtess port), Text/FontStyle, Fog,
   Background textures: synthetic-x8 125/125. x0 43-villasantzip still over (static shot has no
   WALK gravity step; text itself is fine).
@@ -259,6 +259,12 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   shots 294/296 at 0x and 4x (same 2 NPOT files); clip suite 48 cases, 0 unexpected (1 known XFAIL); 46 x10 scripts PASS;
   `cargo test --release --workspace` all green.
 - Test inputs: Ryan's Mall items, **`oracle/corpus-items2/` (296 `.wrl`, live tree without `.edit.wrl`, qa folders and tmp/bak files; keys `oracle/items2-baseline.json`, `render-items2-baseline`, `render-msaa4-items2-baseline`) is the primary test set** (2026-10-11: scene text 296/296 exact, pictures 294/296 at 0x and 4x, the 2 misses are the known NVIDIA NPOT mipmap differences; details in `oracle/README.md`). The older `oracle/corpus-items/` (606 files, frozen earlier) is secondary and keeps its baselines.
+- 2026-10-11: **Scripts in Inlines done** — an Inline's scene is merged into the one runtime (X_ITE has one browser,
+  one event queue, one script realm), with the Inline load timeline of Inline.js/FileLoader.js (fetch macrotask, Script
+  `initialize ()` at parse, `loadCount`, `nextFrame ()`, setInternalScene, live state), load FALSE/TRUE and url changes,
+  nested Inlines, `Browser.*` from an inlined Script, directOutput/mustEvaluate, and IMPORT/EXPORT (routes reconnect on
+  the Inline's `loadState`). New oracle `oracle/synthetic-inline-scripts/` (7 worlds): ordered console and each Inline's
+  own scene text exact at every dumped frame. See `oracle/README.md`.
 
 ## Published crates and release rule
 

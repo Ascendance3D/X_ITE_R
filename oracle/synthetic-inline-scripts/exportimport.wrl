@@ -1,0 +1,29 @@
+#VRML V2.0 utf8
+# EXPORT / IMPORT between the parent and a Script inside an Inline: routes cross the Inline boundary
+# in both directions, and keep working after the Inline is unloaded and loaded again.
+DEF Inl Inline { url "exportimport-inner.wrl" }
+IMPORT Inl.InnerScript AS Imp
+IMPORT Inl.InnerBox
+IMPORT Inl.NeverExported AS Missing
+DEF ParentClock TimeSensor { cycleInterval 1 loop TRUE }
+DEF ParentBox Transform { children Shape { geometry Sphere { radius 0.3 } } }
+DEF ParentScript Script {
+  eventIn SFVec3f set_pos
+  eventOut SFVec3f pos_out
+  eventOut SFBool load_out
+  field SFInt32 step 0
+  url "javascript:
+    function initialize () { print ('parent initialize'); }
+    function set_pos (v) { if (Math.abs (v.x - 1) < 0.05) print ('parent got ' + v); pos_out = new SFVec3f (v.x, 1, 0); }
+    function prepareEvents (t) {
+      var e = t - 946684800;
+      if (step == 0 && e >= 0.5) { step = 1; print ('parent: load FALSE'); load_out = false; }
+      else if (step == 1 && e >= 0.7) { step = 2; print ('parent: load TRUE'); load_out = true; }
+    }
+  "
+}
+ROUTE ParentClock.fraction_changed TO Imp.set_fraction
+ROUTE Imp.pos_changed TO ParentBox.set_translation
+ROUTE Imp.pos_changed TO ParentScript.set_pos
+ROUTE ParentScript.pos_out TO InnerBox.set_translation
+ROUTE ParentScript.load_out TO Inl.set_load

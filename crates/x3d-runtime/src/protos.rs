@@ -97,7 +97,7 @@ impl Runtime {
     pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(), String> {
         if let Some(index) = self.scene.add_route(ctx, source, source_field, destination, destination_field)? {
             let r = self.scene.ctx(ctx).routes[index].clone();
-            self.add_field_interest((r.source_node, r.source_loc), (r.destination_node, r.destination_loc));
+            self.activate_route(&r);
         }
 
         Ok(())
@@ -111,7 +111,7 @@ impl Runtime {
             }
 
             for r in self.scene.contexts[c].routes.clone() {
-                self.add_field_interest((r.source_node, r.source_loc), (r.destination_node, r.destination_loc));
+                self.activate_route(&r);
             }
         }
     }

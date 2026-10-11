@@ -12,6 +12,30 @@ use x3d_fields::{FieldType, FieldValue, NodeId, access};
 pub type CtxId = usize;
 pub type ProtoId = usize;
 pub type ExternId = usize;
+pub type ImportedId = usize;
+pub type ExportedId = usize;
+
+/// X3DImportedNode: `IMPORT inline.exportedName AS importedName`.
+#[derive(Clone, Debug)]
+pub struct ImportedNode {
+    pub ctx: CtxId,
+    /// The Inline node.
+    pub inline: NodeId,
+    pub exported_name: String,
+    pub imported_name: String,
+    pub description: String,
+    /// The X3DImportedNodeInstance node that routes and USE refer to.
+    pub instance: NodeId,
+}
+
+/// X3DExportedNode: `EXPORT localName AS exportedName`.
+#[derive(Clone, Debug)]
+pub struct ExportedNode {
+    pub ctx: CtxId,
+    pub exported_name: String,
+    pub local: NodeId,
+    pub description: String,
+}
 
 /// An IS reference from a field inside a proto body to a field of the proto's interface.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -73,6 +97,9 @@ pub enum NodeKind {
     Placeholder,
     /// A runtime object that is not a node of the scene graph (the browser), never printed.
     Internal(&'static str),
+    /// X3DImportedNodeInstance: what `IMPORT` makes of the imported name. It has no fields of its
+    /// own; its fields are the ones of the exported node.
+    Imported(ImportedId),
 }
 
 #[derive(Clone, Debug)]
@@ -107,6 +134,15 @@ pub struct Route {
     /// Resolved fields (X3DRoute [_sourceField] / [_destinationField]).
     pub source_loc: FieldLoc,
     pub destination_loc: FieldLoc,
+    /// Unique id of the route (to find it from an interest callback).
+    pub id: usize,
+    /// The fields the route is connected to now. For a route between ordinary nodes it is the
+    /// pair of (node, loc) above; a route that ends at an imported node connects to the fields of
+    /// the exported node while the Inline is loaded, and to nothing otherwise.
+    pub conn: Option<((NodeId, FieldLoc), (NodeId, FieldLoc))>,
+    /// The field names as given, printed while the route is not connected (X3DRoute .getSourceField).
+    pub raw_source_field: String,
+    pub raw_destination_field: String,
 }
 
 #[derive(Clone, Debug)]
@@ -118,6 +154,10 @@ pub struct ExecutionContext {
     pub protos: InfoArray<ProtoId>,
     pub externprotos: InfoArray<ExternId>,
     pub routes: Vec<Route>,
+    /// IMPORT statements by imported name (X3DExecutionContext.importedNodes).
+    pub imported: InfoArray<ImportedId>,
+    /// EXPORT statements by exported name (X3DScene.exportedNodes); only a scene's root context has any.
+    pub exported: InfoArray<ExportedId>,
 }
 
 #[derive(Clone, Debug)]
@@ -148,6 +188,18 @@ pub enum FieldLoc {
     Priv(usize),
 }
 
+/// Scene-level data of a scene merged into another (an Inline's scene): what X3DScene keeps
+/// apart from its execution context.
+#[derive(Clone, Debug)]
+pub struct SceneInfo {
+    pub specification_version: String,
+    pub encoding: String,
+    pub world_url: String,
+    pub profile: Option<String>,
+    pub components: Vec<(String, i32)>,
+    pub meta: Vec<(String, String)>,
+}
+
 #[derive(Debug)]
 pub struct Scene {
     pub table: &'static NodeTable,
@@ -169,6 +221,11 @@ pub struct Scene {
     pub setup_order: Vec<NodeId>,
     /// Clone counts > 1 (X3DNode.getCloneCount), filled in by the runtime before printing.
     pub clone_counts: Option<std::collections::HashMap<NodeId, usize>>,
+    /// Scene data of the Inline scenes merged into this one, by root context (see [`Scene::merge_inline`]).
+    pub scene_infos: std::collections::HashMap<CtxId, SceneInfo>,
+    pub imported: Vec<ImportedNode>,
+    pub exported: Vec<ExportedNode>,
+    pub route_counter: usize,
 }
 
 pub const ROOT: CtxId = 0;
@@ -194,6 +251,8 @@ impl Scene {
                 protos: InfoArray::default(),
                 externprotos: InfoArray::default(),
                 routes: vec![],
+                imported: InfoArray::default(),
+                exported: InfoArray::default(),
             }],
             nodes: vec![],
             protos: vec![],
@@ -201,7 +260,72 @@ impl Scene {
             warnings: vec![],
             setup_order: vec![],
             clone_counts: None,
+            scene_infos: Default::default(),
+            imported: vec![],
+            exported: vec![],
+            route_counter: 0,
         }
+    }
+
+    // --- scene data of the scene that holds a context ---------------------------------------
+
+    /// The root context of the scene (X3DScene) that `ctx` belongs to: the nearest merged Inline
+    /// scene up the context chain, else the scene's own root.
+    pub fn scene_root(&self, ctx: CtxId) -> CtxId {
+        let mut c = ctx;
+
+        loop {
+            if self.scene_infos.contains_key(&c) {
+                return c;
+            }
+
+            match self.contexts[c].parent {
+                Some(p) => c = p,
+                None => return ROOT,
+            }
+        }
+    }
+
+    /// X3DExecutionContext.getWorldURL of a context.
+    pub fn world_url_of(&self, ctx: CtxId) -> &str {
+        match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.world_url,
+            None => &self.world_url,
+        }
+    }
+
+    /// X3DExecutionContext.getSpecificationVersion of a context.
+    pub fn spec_version_of(&self, ctx: CtxId) -> &str {
+        match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.specification_version,
+            None => &self.specification_version,
+        }
+    }
+
+    pub fn profile_of(&self, ctx: CtxId) -> Option<&str> {
+        match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => i.profile.as_deref(),
+            None => self.profile.as_deref(),
+        }
+    }
+
+    pub fn components_of(&self, ctx: CtxId) -> &[(String, i32)] {
+        match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.components,
+            None => &self.components,
+        }
+    }
+
+    pub fn meta_of(&self, ctx: CtxId) -> &[(String, String)] {
+        match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.meta,
+            None => &self.meta,
+        }
+    }
+
+    /// Is `ctx` the root context of an X3DScene (the world's or a merged Inline scene)?
+    pub fn is_scene_root(&self, ctx: CtxId) -> bool {
+        ctx == ROOT || self.scene_infos.contains_key(&ctx)
     }
 
     pub fn warn(&mut self, message: String) {
@@ -224,13 +348,18 @@ impl Scene {
 
     /// X3DScene.hasComponent: profile components or scene components.
     pub fn has_component(&self, name: &str) -> bool {
-        if let Some(p) = self.profile.as_deref().and_then(|p| self.table.profile(p)) {
+        self.has_component_in(ROOT, name)
+    }
+
+    /// X3DExecutionContext.hasComponent of the scene that holds `ctx`.
+    pub fn has_component_in(&self, ctx: CtxId, name: &str) -> bool {
+        if let Some(p) = self.profile_of(ctx).and_then(|p| self.table.profile(p)) {
             if p.components.iter().any(|c| c.0 == name) {
                 return true;
             }
         }
 
-        self.components.iter().any(|c| c.0 == name)
+        self.components_of(ctx).iter().any(|c| c.0 == name)
     }
 
     /// Concrete node classes registered in the browser once this scene's components are loaded:
@@ -287,6 +416,8 @@ impl Scene {
             protos: InfoArray::default(),
             externprotos: InfoArray::default(),
             routes: vec![],
+            imported: InfoArray::default(),
+            exported: InfoArray::default(),
         });
 
         self.contexts.len() - 1
@@ -325,14 +456,14 @@ impl Scene {
         }
 
         // String comparison, like X_ITE (`this .getSpecificationVersion () < from`).
-        let version = self.specification_version.as_str();
+        let version = self.spec_version_of(ctx);
 
         if version < ty.from.as_str() || version > ty.to.as_str() {
             return None;
         }
 
-        if !self.has_component(&ty.component) {
-            let url = self.world_url.clone();
+        if !self.has_component_in(ctx, &ty.component) {
+            let url = self.world_url_of(ctx).to_string();
             self.warn(format!("Node type '{type_name}' does not match component/profile statements in '{url}'."));
         }
 
@@ -341,7 +472,7 @@ impl Scene {
 
     pub fn instantiate_builtin(&mut self, ctx: CtxId, index: usize) -> NodeId {
         let ty = &self.table.types[index];
-        let variant = ty.variant(&self.specification_version);
+        let variant = ty.variant(self.spec_version_of(ctx));
         let fields = variant.fields.iter().map(|d| Field::new(&d.name, d.access, d.initial.clone())).collect();
 
         self.push_node(Node {
@@ -381,7 +512,7 @@ impl Scene {
                 return Some(self.instantiate_proto(ctx, proto));
             }
 
-            if self.contexts[c].outer == Outer::Scene && self.contexts[c].parent.is_none() {
+            if self.is_scene_root(c) {
                 break;
             }
 
@@ -429,6 +560,7 @@ impl Scene {
             // Placeholder extends X3DNode and inherits its static typeName.
             NodeKind::Placeholder => "X3DNode".to_string(),
             NodeKind::Internal(name) => name.to_string(),
+            NodeKind::Imported(_) => "X3DImportedNodeInstance".to_string(),
         }
     }
 
@@ -464,7 +596,7 @@ impl Scene {
 
     fn aliases(&self, id: NodeId) -> Option<&std::collections::HashMap<String, String>> {
         match &self.node(id).kind {
-            NodeKind::Builtin(i) => Some(&self.table.types[*i].variant(&self.specification_version).aliases),
+            NodeKind::Builtin(i) => Some(&self.table.types[*i].variant(self.spec_version_of(self.node(id).ctx)).aliases),
             _ => None,
         }
     }
@@ -523,7 +655,7 @@ impl Scene {
 
         match (&node.kind, loc) {
             (NodeKind::Builtin(t), FieldLoc::Pre(_)) => {
-                let def = self.table.types[*t].variant(&self.specification_version).fields.iter().find(|d| d.name == field.name);
+                let def = self.table.types[*t].variant(self.spec_version_of(node.ctx)).fields.iter().find(|d| d.name == field.name);
 
                 match def {
                     Some(d) => d.default.equals(&field.value),
@@ -575,11 +707,17 @@ impl Scene {
         self.contexts[ctx].named_nodes.remove(name);
     }
 
-    /// X3DParser.renameExistingNode.
+    /// X3DParser.renameExistingNode: an existing named node and an existing imported node of that
+    /// name get a unique name.
     pub fn rename_existing_node(&mut self, ctx: CtxId, name: &str) {
         if let Some(existing) = self.get_named_node(ctx, name) {
             let unique = self.get_unique_name(ctx, name);
             self.update_named_node(ctx, &unique, existing);
+        }
+
+        if self.contexts[ctx].imported.has(name) {
+            let unique = self.get_unique_import_name(ctx, name);
+            let _ = self.rename_imported_node(ctx, name, &unique);
         }
     }
 
@@ -663,56 +801,234 @@ impl Scene {
 
     // --- routes -----------------------------------------------------------------------------
 
+    /// Is the node an X3DImportedNodeInstance?
+    pub fn is_imported(&self, id: NodeId) -> bool {
+        matches!(self.node(id).kind, NodeKind::Imported(_))
+    }
+
     /// X3DExecutionContext.addRoute (with X3DRoute.checkFields). Returns an error message for
-    /// the cases where X_ITE throws.
+    /// the cases where X_ITE throws. A route that ends at an imported node is created
+    /// unconnected; the runtime connects it once the Inline provides the exported node.
     pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<Option<usize>, String> {
-        let src = self
-            .get_field(source, source_field)
-            .ok_or_else(|| format!("Unknown field '{source_field}' in node class {}.", self.type_name(source)))?;
-        let dst = self
-            .get_field(destination, destination_field)
-            .ok_or_else(|| format!("Unknown field '{destination_field}' in node class {}.", self.type_name(destination)))?;
+        let (src_imp, dst_imp) = (self.is_imported(source), self.is_imported(destination));
 
-        let (sf, df) = (self.field(source, src), self.field(destination, dst));
+        // X3DExecutionContext.getRoute: the fields of ordinary nodes must exist.
+        let src = if src_imp {
+            None
+        } else {
+            Some(self.get_field(source, source_field).ok_or_else(|| format!("Unknown field '{source_field}' in node class {}.", self.type_name(source)))?)
+        };
+        let dst = if dst_imp {
+            None
+        } else {
+            Some(self.get_field(destination, destination_field).ok_or_else(|| format!("Unknown field '{destination_field}' in node class {}.", self.type_name(destination)))?)
+        };
 
-        if sf.ty() != df.ty() {
-            return Err(format!(
-                "Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
-                sf.name, df.name
-            ));
+        // X3DRoute.checkFields.
+        if let (Some(src), Some(dst)) = (src, dst) {
+            let (sf, df) = (self.field(source, src), self.field(destination, dst));
+
+            if sf.ty() != df.ty() {
+                return Err(format!(
+                    "Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
+                    sf.name, df.name
+                ));
+            }
         }
 
-        if !access::is_output(sf.access) {
-            return Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name));
+        if let Some(src) = src {
+            let sf = self.field(source, src);
+
+            if !access::is_output(sf.access) {
+                return Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name));
+            }
         }
 
-        if !access::is_input(df.access) {
-            return Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name));
+        if let Some(dst) = dst {
+            let df = self.field(destination, dst);
+
+            if !access::is_input(df.access) {
+                return Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name));
+            }
         }
 
-        if self.contexts[ctx].routes.iter().any(|r| {
-            r.source_node == source && r.source_loc == src && r.destination_node == destination && r.destination_loc == dst
-        }) {
+        // The existing route with the same ends.
+        let duplicate = self.contexts[ctx].routes.iter().any(|r| {
+            r.source_node == source
+                && r.destination_node == destination
+                && match (src, r.conn) {
+                    (Some(loc), _) if !src_imp => r.source_loc == loc,
+                    _ => r.raw_source_field == source_field,
+                }
+                && match (dst, r.conn) {
+                    (Some(loc), _) if !dst_imp => r.destination_loc == loc,
+                    _ => r.raw_destination_field == destination_field,
+                }
+        });
+
+        if duplicate {
             return Ok(None);
         }
 
         // X3DRoute.getSourceField / getDestinationField.
-        let source_name = if sf.access == access::INPUT_OUTPUT { format!("{}_changed", sf.name) } else { sf.name.clone() };
-        let destination_name = if df.access == access::INPUT_OUTPUT { format!("set_{}", df.name) } else { df.name.clone() };
+        let (source_name, destination_name) = match (src, dst) {
+            (Some(s), Some(d)) => {
+                let (sf, df) = (self.field(source, s), self.field(destination, d));
+                (
+                    if sf.access == access::INPUT_OUTPUT { format!("{}_changed", sf.name) } else { sf.name.clone() },
+                    if df.access == access::INPUT_OUTPUT { format!("set_{}", df.name) } else { df.name.clone() },
+                )
+            }
+            _ => (source_field.to_string(), destination_field.to_string()),
+        };
 
-        self.field_mut(source, src).output_routes += 1;
-        self.field_mut(destination, dst).input_routes += 1;
+        let conn = match (src, dst) {
+            (Some(s), Some(d)) => {
+                self.field_mut(source, s).output_routes += 1;
+                self.field_mut(destination, d).input_routes += 1;
+                Some(((source, s), (destination, d)))
+            }
+            _ => None,
+        };
+
+        let id = self.route_counter;
+        self.route_counter += 1;
 
         self.contexts[ctx].routes.push(Route {
             source_node: source,
             source_field: source_name,
             destination_node: destination,
             destination_field: destination_name,
-            source_loc: src,
-            destination_loc: dst,
+            source_loc: src.unwrap_or(FieldLoc::Pre(0)),
+            destination_loc: dst.unwrap_or(FieldLoc::Pre(0)),
+            id,
+            conn,
+            raw_source_field: source_field.to_string(),
+            raw_destination_field: destination_field.to_string(),
         });
 
         Ok(Some(self.contexts[ctx].routes.len() - 1))
+    }
+
+    /// Where is the route with this id: (context, index).
+    pub fn find_route(&self, id: usize) -> Option<(CtxId, usize)> {
+        for (c, ctx) in self.contexts.iter().enumerate() {
+            if let Some(i) = ctx.routes.iter().position(|r| r.id == id) {
+                return Some((c, i));
+            }
+        }
+
+        None
+    }
+
+    // --- IMPORT / EXPORT ----------------------------------------------------------------------
+
+    /// X3DExecutionContext.getLocalNode: a named node, else an imported node instance.
+    pub fn get_local_node(&self, ctx: CtxId, name: &str) -> Option<NodeId> {
+        if let Some(n) = self.get_named_node(ctx, name) {
+            return Some(n);
+        }
+
+        self.contexts[ctx].imported.get(name).map(|i| self.imported[i].instance)
+    }
+
+    pub fn get_unique_import_name(&self, ctx: CtxId, name: &str) -> String {
+        let imported = &self.contexts[ctx].imported;
+        get_unique_name(|n| imported.has(n), name)
+    }
+
+    /// X3DExecutionContext.addImportedNode.
+    pub fn add_imported_node(&mut self, ctx: CtxId, inline: NodeId, exported_name: &str, imported_name: &str, description: &str) -> Result<ImportedId, String> {
+        if self.contexts[ctx].imported.has(imported_name) {
+            return Err(format!("Couldn't add imported node: imported name '{imported_name}' already in use."));
+        }
+
+        if self.type_name(inline) != "Inline" || !matches!(self.node(inline).kind, NodeKind::Builtin(_)) {
+            return Err("Node must be of type Inline node.".to_string());
+        }
+
+        if self.node(inline).ctx != ctx {
+            return Err("Couldn't update imported node: Inline node does not belong to this execution context.".to_string());
+        }
+
+        if exported_name.is_empty() {
+            return Err("Couldn't update imported node: exported name is empty.".to_string());
+        }
+
+        if imported_name.is_empty() {
+            return Err("Couldn't update imported node: imported name is empty.".to_string());
+        }
+
+        let id = self.imported.len();
+        let instance = self.push_node(Node {
+            kind: NodeKind::Imported(id),
+            ctx,
+            name: imported_name.to_string(),
+            fields: vec![],
+            user_fields: vec![],
+            private_fields: vec![],
+            can_user_defined_fields: false,
+        });
+
+        self.imported.push(ImportedNode {
+            ctx,
+            inline,
+            exported_name: exported_name.to_string(),
+            imported_name: imported_name.to_string(),
+            description: description.to_string(),
+            instance,
+        });
+        self.contexts[ctx].imported.add(imported_name, id).map_err(|e| e.to_string())?;
+        Ok(id)
+    }
+
+    /// X3DExecutionContext.renameImportedNode.
+    pub fn rename_imported_node(&mut self, ctx: CtxId, old: &str, new: &str) -> Result<(), String> {
+        let Some(id) = self.contexts[ctx].imported.get(old) else {
+            return Err("Couldn't rename imported node: imported node does not exists.".to_string());
+        };
+
+        if self.contexts[ctx].imported.has(new) {
+            return Err("Couldn't rename imported node: new imported name does already exists.".to_string());
+        }
+
+        let instance = self.imported[id].instance;
+
+        self.node_mut(instance).name = new.to_string();
+        self.imported[id].imported_name = new.to_string();
+        self.contexts[ctx].imported.update(old, new, id);
+        Ok(())
+    }
+
+    pub fn get_unique_export_name(&self, name: &str) -> String {
+        let exported = &self.contexts[ROOT].exported;
+        get_unique_name(|n| exported.has(n), name)
+    }
+
+    /// X3DScene.addExportedNode / updateExportedNode.
+    pub fn update_exported_node(&mut self, ctx: CtxId, exported_name: &str, local: NodeId, description: &str) -> Result<(), String> {
+        if self.is_imported(local) {
+            return Err("Couldn't update exported node: node cannot be of type X3DImportedNodeInstance.".to_string());
+        }
+
+        if self.node(local).ctx != ctx {
+            return Err("Couldn't update exported node: node does not belong to this execution context.".to_string());
+        }
+
+        if exported_name.is_empty() {
+            return Err("Couldn't update exported node: node exported name is empty.".to_string());
+        }
+
+        let id = self.exported.len();
+
+        self.exported.push(ExportedNode { ctx, exported_name: exported_name.to_string(), local, description: description.to_string() });
+        self.contexts[ctx].exported.update(exported_name, exported_name, id);
+        Ok(())
+    }
+
+    /// X3DScene.getExportedNode (name) → the local node.
+    pub fn get_exported_node(&self, ctx: CtxId, exported_name: &str) -> Option<NodeId> {
+        self.contexts[ctx].exported.get(exported_name).map(|e| self.exported[e].local)
     }
 
     /// X3DNode.hasRoutes.
@@ -745,6 +1061,22 @@ impl MergeMap {
 }
 
 impl Scene {
+    /// [`Scene::merge`] for the scene an Inline loaded: its scene data is kept per root context.
+    pub fn merge_inline(&mut self, other: Scene, parent: CtxId, inline: NodeId) -> MergeMap {
+        let info = SceneInfo {
+            specification_version: other.specification_version.clone(),
+            encoding: other.encoding.clone(),
+            world_url: other.world_url.clone(),
+            profile: other.profile.clone(),
+            components: other.components.clone(),
+            meta: other.meta.clone(),
+        };
+        let m = self.merge(other, parent, Some(inline));
+
+        self.scene_infos.insert(m.root_ctx, info);
+        m
+    }
+
     /// Append another scene (an X3DScene created at runtime, e.g. by createVrmlFromString or an
     /// Inline) to this one so both share one node arena. Its root context becomes a child of
     /// `parent` with `Outer::Inline (outer)`.
@@ -756,6 +1088,10 @@ impl Scene {
             extern_offset: self.externprotos.len(),
             root_ctx: self.contexts.len(),
         };
+
+        let imported_offset = self.imported.len();
+        let exported_offset = self.exported.len();
+        let route_offset = self.route_counter;
 
         let remap_value = |v: &mut FieldValue| match v {
             FieldValue::SFNode(Some(n)) => *n += m.node_offset,
@@ -777,6 +1113,10 @@ impl Scene {
 
         for node in &mut other.nodes {
             node.ctx += m.ctx_offset;
+
+            if let NodeKind::Imported(i) = &mut node.kind {
+                *i += imported_offset;
+            }
 
             if let NodeKind::Instance(p) = &mut node.kind {
                 *p = match *p {
@@ -807,11 +1147,31 @@ impl Scene {
             c.protos.map_values(|p| p + m.proto_offset);
             c.externprotos.map_values(|e| e + m.extern_offset);
 
+            c.imported.map_values(|i| i + imported_offset);
+            c.exported.map_values(|e| e + exported_offset);
+
             for r in &mut c.routes {
                 r.source_node += m.node_offset;
                 r.destination_node += m.node_offset;
+                r.id += route_offset;
+                r.conn = r.conn.map(|(a, b)| ((a.0 + m.node_offset, a.1), (b.0 + m.node_offset, b.1)));
             }
         }
+
+        for i in &mut other.imported {
+            i.ctx += m.ctx_offset;
+            i.inline += m.node_offset;
+            i.instance += m.node_offset;
+        }
+
+        for e in &mut other.exported {
+            e.ctx += m.ctx_offset;
+            e.local += m.node_offset;
+        }
+
+        self.route_counter += other.route_counter;
+        self.imported.append(&mut other.imported);
+        self.exported.append(&mut other.exported);
 
         for p in &mut other.protos {
             p.ctx += m.ctx_offset;

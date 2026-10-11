@@ -1,0 +1,10 @@
+#VRML V2.0 utf8
+# Parent: a Script of its own plus an Inline whose scene has a Script that animates its own geometry.
+DEF Inl Inline { url "basic-inner.wrl" }
+DEF ParentScript Script {
+  eventIn SFTime ping
+  url "javascript:
+    function initialize () { print ('parent initialize'); }
+    function ping (v) { print ('parent ping ' + v); }
+  "
+}

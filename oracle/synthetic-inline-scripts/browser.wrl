@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+# The Browser object and the execution context seen from a Script inside an Inline.
+DEF Inl Inline { url "browser-inner.wrl" }
+DEF ParentScript Script {
+  url "javascript:
+    function initialize () {
+      print ('parent time ' + Browser.getCurrentTime ());
+      print ('parent scene ' + Browser.currentScene.worldURL);
+      print ('parent roots ' + Browser.currentScene.rootNodes.length);
+    }
+  "
+}

@@ -373,7 +373,49 @@ impl<'a> Parser<'a> {
         self.comments();
 
         if self.keyword("EXPORT") {
-            return self.err("EXPORT is not supported by the Rust port yet (phase X4).");
+            if self.id() {
+                let local_name = self.result.clone();
+                let scene_ctx = ROOT;
+
+                // this .getScene () .getLocalNode (name)
+                let Some(node) = self.scene.get_local_node(scene_ctx, &local_name) else {
+                    return self.err(format!("Unknown named or imported node '{local_name}'."));
+                };
+
+                self.comments();
+
+                let exported_name = if self.keyword("AS") {
+                    if self.id() {
+                        self.result.clone()
+                    } else {
+                        return self.err("No name given after AS.");
+                    }
+                } else {
+                    local_name.clone()
+                };
+
+                let mut description = String::new();
+
+                self.comments();
+
+                if self.keyword("DESCRIPTION") && self.string() {
+                    description = self.value_string.clone();
+                }
+
+                // An existing export of that name moves to a unique name.
+                if let Some(existing) = self.scene.get_exported_node(scene_ctx, &exported_name) {
+                    let unique = self.scene.get_unique_export_name(&exported_name);
+                    let _ = self.scene.update_exported_node(scene_ctx, &unique, existing, "");
+                }
+
+                if let Err(e) = self.scene.update_exported_node(scene_ctx, &exported_name, node, &description) {
+                    return self.err(e);
+                }
+
+                return Ok(true);
+            }
+
+            return self.err("No name given after EXPORT.");
         }
 
         Ok(false)
@@ -384,13 +426,54 @@ impl<'a> Parser<'a> {
 
         if self.keyword("IMPORT") {
             if self.id() {
-                let name = self.result.clone();
+                let inline_name = self.result.clone();
+                let ctx = self.ctx();
 
-                if self.scene.get_named_node(self.ctx(), &name).is_none() {
-                    return self.err(format!("Named node '{name}' not found."));
+                // this .getExecutionContext () .getNamedNode (name)
+                let Some(inline) = self.scene.get_named_node(ctx, &inline_name) else {
+                    return self.err(format!("Named node '{inline_name}' not found."));
+                };
+
+                self.comments();
+
+                if self.keyword(".") {
+                    if self.id() {
+                        let exported_name = self.result.clone();
+
+                        self.comments();
+
+                        let imported_name = if self.keyword("AS") {
+                            if self.id() {
+                                self.result.clone()
+                            } else {
+                                return self.err("No name given after AS.");
+                            }
+                        } else {
+                            exported_name.clone()
+                        };
+
+                        let mut description = String::new();
+
+                        self.comments();
+
+                        if self.keyword("DESCRIPTION") && self.string() {
+                            description = self.value_string.clone();
+                        }
+
+                        // Rename existing node, then add the new imported node.
+                        self.scene.rename_existing_node(ctx, &imported_name);
+
+                        if let Err(e) = self.scene.add_imported_node(ctx, inline, &exported_name, &imported_name, &description) {
+                            return self.err(e);
+                        }
+
+                        return Ok(true);
+                    }
+
+                    return self.err("Expected exported node name.");
                 }
 
-                return self.err("IMPORT is not supported by the Rust port yet (phase X4).");
+                return self.err("Expected a '.' after exported node name.");
             }
 
             return self.err("No name given after IMPORT statement.");
@@ -451,7 +534,7 @@ impl<'a> Parser<'a> {
                 let name = self.result.clone();
                 let ctx = self.ctx();
 
-                if let Some(n) = self.scene.get_named_node(ctx, &name) {
+                if let Some(n) = self.scene.get_local_node(ctx, &name) {
                     return Ok(Stmt::Node(n));
                 }
 
@@ -785,9 +868,9 @@ impl<'a> Parser<'a> {
                                         let ctx = self.ctx();
                                         let line = self.line_number;
 
-                                        // getLocalNode: named node of this context (imports are not modelled).
-                                        let from = self.scene.get_named_node(ctx, &from_node_id);
-                                        let to = self.scene.get_named_node(ctx, &to_node_id);
+                                        // getLocalNode: a named node of this context or an imported node.
+                                        let from = self.scene.get_local_node(ctx, &from_node_id);
+                                        let to = self.scene.get_local_node(ctx, &to_node_id);
 
                                         let result = match (from, to) {
                                             (None, _) => Err(format!("Unknown named or imported node '{from_node_id}'.")),

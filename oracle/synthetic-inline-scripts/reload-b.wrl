@@ -1,0 +1,19 @@
+#VRML V2.0 utf8
+DEF ClockB TimeSensor { cycleInterval 2 loop TRUE }
+DEF ScriptB Script {
+  eventIn SFFloat set_fraction
+  eventOut SFVec3f pos
+  field SFFloat last -1
+  url "javascript:
+    function initialize () { print ('B initialize'); }
+    function set_fraction (f) {
+      pos = new SFVec3f (0, f * 2, 0);
+      var q = Math.floor (f * 10);
+      if (q != last) { last = q; print ('B fraction ' + q); }
+    }
+    function shutdown () { print ('B shutdown'); }
+  "
+}
+DEF MoverB Transform { children Shape { geometry Sphere { radius 0.5 } } }
+ROUTE ClockB.fraction_changed TO ScriptB.set_fraction
+ROUTE ScriptB.pos TO MoverB.set_translation

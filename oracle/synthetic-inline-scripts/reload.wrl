@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+# Parent drives an Inline: load FALSE at 0.2 s, TRUE at 0.4 s, a different url at 0.6 s, an empty url at 0.8 s.
+DEF Inl Inline { url "reload-a.wrl" }
+DEF Driver Script {
+  eventOut SFBool load_out
+  eventOut MFString url_out
+  field SFInt32 step 0
+  url "javascript:
+    function initialize () { print ('driver initialize'); }
+    function prepareEvents (t) {
+      var e = t - 946684800;
+      if (step == 0 && e >= 0.2) { step = 1; print ('driver: load FALSE'); load_out = false; }
+      else if (step == 1 && e >= 0.4) { step = 2; print ('driver: load TRUE'); load_out = true; }
+      else if (step == 2 && e >= 0.6) { step = 3; print ('driver: url b'); url_out = new MFString ('reload-b.wrl'); }
+      else if (step == 3 && e >= 0.8) { step = 4; print ('driver: url empty'); url_out = new MFString (); }
+    }
+    function shutdown () { print ('driver shutdown'); }
+  "
+}
+ROUTE Driver.load_out TO Inl.set_load
+ROUTE Driver.url_out TO Inl.set_url

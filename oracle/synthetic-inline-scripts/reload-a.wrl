@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+DEF ClockA TimeSensor { cycleInterval 1 loop TRUE }
+DEF ScriptA Script {
+  eventIn SFFloat set_fraction
+  eventOut SFVec3f pos
+  field SFFloat last -1
+  url "javascript:
+    function initialize () { print ('A initialize'); }
+    function set_fraction (f) {
+      pos = new SFVec3f (f * 2, 0, 0);
+      var q = Math.floor (f * 10);
+      if (q != last) { last = q; print ('A fraction ' + q); }
+    }
+    function prepareEvents (t) { if (Math.abs (t - 946684800 - 0.3) < 0.009) print ('A prepare ' + (t - 946684800)); }
+    function eventsProcessed () { if (last == 99) print ('A eventsProcessed'); }
+    function shutdown () { print ('A shutdown'); }
+  "
+}
+DEF MoverA Transform { children Shape { geometry Box { size 1 1 1 } } }
+ROUTE ClockA.fraction_changed TO ScriptA.set_fraction
+ROUTE ScriptA.pos TO MoverA.set_translation

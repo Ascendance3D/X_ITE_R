@@ -380,12 +380,11 @@ impl<'a> Builder<'a> {
             "Shape" => self.shape(sg, n, mv),
             "DirectionalLight" | "PointLight" | "SpotLight" => self.light(sg, n, ty, mv),
             "Inline" => {
-                // Inline.getInternalScene: the loaded scene's root nodes, traversed in its runtime.
-                if let Some(child) = sg.rt.inline_runtimes.get(&n) {
+                // Inline.getInternalScene: the loaded scene's root nodes.
+                if let Some(ctx) = sg.inline_scene(n) {
                     if sg.bool(n, "load", true) {
-                        let csg = Sg::new(child);
-                        for c in csg.roots() {
-                            self.display(&csg, c, mv, depth + 1);
+                        for c in sg.roots_of(ctx) {
+                            self.display(sg, c, mv, depth + 1);
                         }
                     }
                 }
@@ -515,7 +514,7 @@ impl<'a> Builder<'a> {
             "ImageTexture" => {
                 // X3DExecutionContext.getBaseURL: the world URL of the node's own scene (an
                 // Inline's scene has the Inline's resolved URL).
-                let base = sg.rt.scene.world_url.clone();
+                let base = sg.rt.scene.world_url_of(sg.rt.scene.node(n).ctx).to_string();
                 texture::load_image_texture(sg, n, &base, self.root.fetcher.as_ref()).map(Rc::new)
             }
             "PixelTexture" => texture::pixel_texture(sg, n).map(Rc::new),
@@ -798,7 +797,7 @@ impl<'a> Builder<'a> {
                     Some(t) => t,
                     None => {
                         let urls = sg.strings(b, &format!("{name}Url"));
-                        let t = texture::load_background_texture(&urls, &sg.rt.scene.world_url, self.root.fetcher.as_ref()).map(Rc::new);
+                        let t = texture::load_background_texture(&urls, sg.rt.scene.world_url_of(sg.rt.scene.node(b).ctx), self.root.fetcher.as_ref()).map(Rc::new);
 
                         if let Some(c) = self.cache.as_deref_mut() {
                             let frame = c.frame;

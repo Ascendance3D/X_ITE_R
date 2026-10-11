@@ -1,0 +1,22 @@
+#VRML V2.0 utf8
+DEF ClockP TimeSensor { cycleInterval 1 loop TRUE enabled FALSE }
+DEF SP Script {
+  eventIn SFFloat set_fraction
+  eventOut SFBool kick
+  eventOut SFVec3f pos
+  field SFFloat last -1
+  field SFBool dirty FALSE
+  field SFBool kicked FALSE
+  url "javascript:
+    function initialize () { print ('P initialize'); }
+    function prepareEvents (t) { if (!kicked && t >= 946684800.1) { kicked = TRUE; print ('P prepare'); kick = TRUE; } }
+    function set_fraction (f) { pos = new SFVec3f (f, 0, 0); var q = Math.floor (f * 4); if (q != last) { last = q; dirty = TRUE; print ('P fraction ' + q); } }
+    function eventsProcessed () { if (dirty) { dirty = FALSE; print ('P eventsProcessed'); } }
+    function shutdown () { print ('P shutdown'); }
+  "
+}
+DEF BoxP Transform { children Shape { geometry Box { size 1 1 1 } } }
+DEF InlA Inline { url "nested-a.wrl" }
+ROUTE SP.kick TO ClockP.set_enabled
+ROUTE ClockP.fraction_changed TO SP.set_fraction
+ROUTE SP.pos TO BoxP.set_translation

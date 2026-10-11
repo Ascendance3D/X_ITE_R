@@ -1,0 +1,32 @@
+#VRML V2.0 utf8
+DEF ClockB TimeSensor { cycleInterval 1 loop TRUE enabled FALSE }
+DEF B1 Script {
+  eventIn SFFloat set_fraction
+  eventOut SFBool kick
+  field SFFloat last -1
+  field SFBool dirty FALSE
+  field SFBool kicked FALSE
+  url "javascript:
+    function initialize () { print ('B1 initialize'); }
+    function prepareEvents (t) { if (!kicked && t >= 946684800.1) { kicked = TRUE; print ('B1 prepare'); kick = TRUE; } }
+    function set_fraction (f) { var q = Math.floor (f * 4); if (q != last) { last = q; dirty = TRUE; print ('B1 fraction ' + q); } }
+    function eventsProcessed () { if (dirty) { dirty = FALSE; print ('B1 eventsProcessed'); } }
+  "
+}
+DEF B2 Script {
+  eventIn SFFloat set_fraction
+  eventOut SFBool kick
+  field SFFloat last -1
+  field SFBool dirty FALSE
+  field SFBool kicked FALSE
+  url "javascript:
+    function initialize () { print ('B2 initialize'); }
+    function prepareEvents (t) { if (!kicked && t >= 946684800.1) { kicked = TRUE; print ('B2 prepare'); kick = TRUE; } }
+    function set_fraction (f) { var q = Math.floor (f * 4); if (q != last) { last = q; dirty = TRUE; print ('B2 fraction ' + q); } }
+    function eventsProcessed () { if (dirty) { dirty = FALSE; print ('B2 eventsProcessed'); } }
+  "
+}
+ROUTE B1.kick TO ClockB.set_enabled
+ROUTE B2.kick TO ClockB.set_enabled
+ROUTE ClockB.fraction_changed TO B1.set_fraction
+ROUTE ClockB.fraction_changed TO B2.set_fraction
