@@ -7,7 +7,8 @@
 //! Status (load errors, Browser.print, sensor descriptions, Anchor activations) is shown in the
 //! title bar and logged to stderr; there is no in-window text.
 //!
-//! Environment: `X3D_VIEW_NOVSYNC=1` presents without waiting for vertical sync;
+//! Environment: `X3D_VIEW_PRESENT=fifo|fiforelaxed|mailbox|immediate` picks the present mode
+//! (default `fifo`: strict vertical sync, never tears); `X3D_VIEW_NOVSYNC=1` is `immediate`;
 //! `X3D_VIEW_STATS=1` prints frame statistics on exit and when the window closes.
 
 use crate::embed::{EmbeddedViewer, FrameInfo, LoadOptions, realtime_now};
@@ -375,7 +376,17 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         .ok_or_else(|| format!("no usable surface format in {:?}", caps.formats))?;
     let view_format = surface_format.remove_srgb_suffix();
     let size = window.inner_size();
-    let present_mode = if std::env::var("X3D_VIEW_NOVSYNC").is_ok() { wgpu::PresentMode::AutoNoVsync } else { wgpu::PresentMode::AutoVsync };
+    // Strict FIFO by default. AutoVsync would pick FifoRelaxed where supported, which presents a
+    // late frame immediately and tears mid-scan — visible as a split picture while dragging.
+    let requested = match std::env::var("X3D_VIEW_PRESENT").as_deref() {
+        Ok("fiforelaxed") => wgpu::PresentMode::FifoRelaxed,
+        Ok("mailbox") => wgpu::PresentMode::Mailbox,
+        Ok("immediate") => wgpu::PresentMode::Immediate,
+        _ if std::env::var("X3D_VIEW_NOVSYNC").is_ok() => wgpu::PresentMode::Immediate,
+        _ => wgpu::PresentMode::Fifo,
+    };
+    // Fifo is always supported; fall back to it when the requested mode is not.
+    let present_mode = if caps.present_modes.contains(&requested) { requested } else { wgpu::PresentMode::Fifo };
     // The picture is opaque; do not let the compositor blend it with what is behind the window.
     let alpha_mode = if caps.alpha_modes.contains(&wgpu::CompositeAlphaMode::Opaque) { wgpu::CompositeAlphaMode::Opaque } else { caps.alpha_modes[0] };
     let config = wgpu::SurfaceConfiguration {
@@ -392,7 +403,7 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
     surface.configure(&device, &config);
 
     if std::env::var("X3D_VIEW_STATS").is_ok() {
-        eprintln!("adapter {} ({:?}, {:?}); surface {:?} -> view {:?}; present {:?}; alpha {:?} of {:?}", adapter_info.name, adapter_info.backend, adapter_info.device_type, surface_format, view_format, present_mode, alpha_mode, caps.alpha_modes);
+        eprintln!("adapter {} ({:?}, {:?}); surface {:?} -> view {:?}; present {:?} of {:?}; alpha {:?} of {:?}", adapter_info.name, adapter_info.backend, adapter_info.device_type, surface_format, view_format, present_mode, caps.present_modes, alpha_mode, caps.alpha_modes);
     }
 
     let mut viewer = EmbeddedViewer::new(device.clone(), queue.clone(), (config.width, config.height));
