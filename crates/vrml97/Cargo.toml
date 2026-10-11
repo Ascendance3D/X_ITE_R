@@ -1,0 +1,16 @@
+[package]
+name = "vrml97"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "MIT"
+description = "VRML97 / X3D classic-encoding parser and writer, a faithful Rust port of X_ITE's parser, field types and serializer"
+readme = "README.md"
+keywords = ["vrml", "vrml97", "x3d", "3d", "parser"]
+categories = ["parser-implementations", "graphics", "rendering::data-formats"]
+include = ["src/**/*.rs", "data/x_ite-nodes.json", "README.md", "LICENSE", "Cargo.toml"]
+
+[dependencies]
+libm = "0.2"
+serde_json = { version = "1", features = ["float_roundtrip"] }
+flate2 = "1"
