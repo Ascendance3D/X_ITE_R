@@ -148,6 +148,11 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
 - 2026-10-11: **C1–C3 done** — crates `cm-core`, `cm-modes` (toml mode as proof). 77 tests
   pass; 600 random edit sequences match real CM5 exactly (13,000 more in extra runs);
   toml tokens match on 427 inputs. View-dependent upstream tests are not ported yet (C5).
+- 2026-10-11: **C4 done (first set)** — javascript/json/typescript, xml/html, css/scss/less/gss,
+  htmlmixed, plus a **new VRML mode** (JS for real CM5 + Rust). 0 token and 0 indent mismatches
+  across ~37.7M callbacks; VRML mode checked on all 606 Mall item files. 174/174 upstream mode
+  tests pass. One known divergence: htmlmixed `<pre>` `Pass + n` (JS gives a string, Rust NaN).
+- Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
 ## Suggested order
 

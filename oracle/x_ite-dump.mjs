@@ -20,7 +20,13 @@ const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/ja
 
 const [ corpusArg, outArg ] = process .argv .slice (2);
 const corpus = normalize (join (process .cwd (), corpusArg));
-const files  = (await readdir (corpus)) .filter (f => f !== "PROVENANCE.json") .sort ();
+// Recursive, so corpora that keep their directory layout (corpus-items) work too.
+// For a flat corpus the relative path is just the file name, as before.
+const files  = (await readdir (corpus, { recursive: true, withFileTypes: true }))
+   .filter (d => d .isFile ())
+   .map (d => relative (corpus, join (d .parentPath, d .name)))
+   .filter (f => f !== "PROVENANCE.json" && (!f .includes ("/") || /\.(wrl|wrz)(\.gz)?$/i .test (f)))
+   .sort ();
 
 const server = createServer (async (req, res) =>
 {
