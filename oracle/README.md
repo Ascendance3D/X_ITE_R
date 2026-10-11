@@ -406,3 +406,63 @@ Ti/PCIe/SSE2, OpenGL 4.5.0)`), X_ITE pin `34cdf9f97`, Rust `e0f613e`. Threshold:
 at most 0.5% of pixels. For some even × odd level sizes the driver's `generateMipmap` uses a box
 shifted by one texel on the even side; which sizes is closed-driver behavior (2,048 measured
 pairs, no formula found). Full record and scripts: `evidence/npot-mipmaps-2026-10-11/README.md`.
+
+
+## Followers (2026-10-11): Chaser/Damper nodes, Chrome's Math and number formatting
+
+Ported: `crates/x3d-runtime/src/nodes/followers.rs` (Components/Followers/*, Browser/Followers/X3DArray*Template.js).
+`Kind` = getVector/equals/interpolate/step/assign per node type (scalar, Vector2/3, HSV color, Rotation4, arrays of
+vectors); `Chaser<K>` / `Damper<K>` = X3DChaserNode / X3DDamperNode. Floats: SFFloat, SFVec3f, SFRotation ... are JS doubles
+(no rounding); only MFVec3f/MFVec2f `value_changed` (Float32Array) is rounded to float32. An MF output sends no event when it
+is empty and was empty (the typed array setters add none). `X3DDamperNode.set_order__` is unreachable (initializeOnly) and
+throws in JS (`length` is block scoped), so it is not ported. The viewer's own `chaser.rs` is untouched.
+
+Test set `oracle/synthetic-followers/` (new, clean-room; `python3 -I oracle/tools/gen_followers.py` writes it; JSON
+run scripts in `scripts/`): `chasers` (15 chasers, durations 0.05-2.5, 320 frames), `dampers` (24 dampers, order 0..5,
+tau 0..1 and negative, tolerance), `arrays` (Coordinate/TexCoord2D, lengths 0..7, set_value with another length),
+`initial` (initialValue != initialDestination and equal), `order` (two followers writing one Transform, chains, damper
+into chaser: the prepareEvents Map order), `edge` (tolerance 0, tau < 0, order -2/9, duration 0/-1/0.01, NaN),
+`dampers30`, `frames-24`, `frames-quarter`, `frames-coarse` (Damper at other frame rates; Chaser buffer steps larger than one,
+`seconds >= 60`). Every value_changed goes to Transform/Material/TextureTransform/PointSet Coordinate/TextureCoordinate and to
+a tracer Script (event count, running full-precision checksum, the last value with all digits, frames at which isActive
+changed). A driver Script counts frames from timestamps and sends set_value / set_destination at fixed frames; TimeSensor
+bursts drive interpolators into set_destination.
+
+| check | command | result |
+| --- | --- | --- |
+| initial state at load (static dump) | `node oracle/x_ite-dump.mjs oracle/synthetic-followers oracle/synthetic-followers-baseline.json` then `x3d-run compare oracle/synthetic-followers-baseline.json oracle/synthetic-followers --logs` | 10/10 exact, 10/10 logs (baseline sha256 `5c42f698671e472e...`, two runs identical) |
+| every frame | `python3 -I oracle/tools/run_followers_suite.py --jobs 3` | 10 of 10 worlds: scene text exact at every dumped frame, poses 0, images within tolerance (threshold 8, 0.5%) |
+
+Oracle script keys (new, off by default): `"pinFrameRate": true` pins the SAI property `browser .currentFrameRate` to 1/dt
+before the world loads, in `x_ite-anim.mjs` and `x_ite-anim-sized.mjs`, and `x3d-drive` does the same
+(`Viewer3d::load_pinned`). Reason: the anim pages stub `advanceTime` and `getCurrentFrameRate`, but `X3DBrowser.currentFrameRate`
+is bound to the prototype method and returns the wall-clock rate of the page's early frames (71.4 in one probe, 60 from the
+stub): a Damper's `alpha = exp (-1 / currentFrameRate / tau)` would be non-deterministic. `Viewer3d::pinned_frame_rate = None`
+(the windowed viewer) uses the measured frame interval like X_ITE.
+
+Follower registration. `X3DFollowerNode.set_live__` adds the node to `browser .prepareEvents` only while
+`getLive () && isActive`. A freshly parsed scene is not live (`X3DScene .setLive (false)`); `replaceWorld` makes it live after
+the first frame has processed the init events. `Runtime::go_live` (end of `load_world`, and after an Inline's first frame)
+registers the active followers in initialization order. Before this, `acts` of a Damper whose first prepare ends the
+animation read `0- 0-` instead of the oracle's `0+ 0-` (the isActive event is read when processed).
+
+Two findings in shared code, both found from last-digit rotation axes in these traces (`0 0 1 ...` vs `0 0 0.999999999999999`):
+
+* **Chrome 155 `Math.sin/cos/tan/asin/acos/atan2/exp/log/log10` are correctly rounded.** Probed with 100,000 random inputs per
+  function (`Math.*` in headless Chrome, hex bits): equal to the `core-math` crate (CORE-MATH) in 100% and (acos, sin, cos, exp) to a 200-bit mpmath
+  reference in 40,000 of 40,000; glibc (Rust `f64::sin`, Python `math`) differs in 65-246 of 100,000 (log10: 4,026), node's
+  fdlibm in 3,300-12,100. `jsmath` Chrome flavor now calls `core_math`; the Node flavor is unchanged. Tests:
+  `crates/x3d-fields/tests/chrome_math.rs`. (Rotation4 set/slerp/inverse/mult/normalize and the OrientationChaser step then
+  match Chrome on 20,000 random inputs bit for bit.)
+* **ICU's `Intl.NumberFormat` is not "shortest digits, then round".** For doubles it builds an approximate decimal first
+  (`round (n * 10^fracLength)`, `DecimalQuantity::_setToDoubleFast`) and only converts to the shortest digits when the rounding
+  digit lies in the zone of uncertainty (`roundToMagnitude`). `0.9999999999999994` times 1e15 is exactly `...999.5`, so 15
+  significant digits print `1`, and 16 digits print `0.999999999999999`. `format.rs` ports the algorithm (ICU `main`
+  number_decimalquantity.cpp, HALF_UP, no nickel rounding); it equals Chrome on 62,100 + 250,000 values across exponents and
+  precisions 7, 12, 15, 16. Tests: `crates/x3d-fields/tests/chrome_format.rs`.
+
+Regression after the change (same commit): items2 296/296 exact and 296/296 logs; items 606/606; x0 47 exact + 3 known, logs
+50/50; x1 470 exact + 3 known + 25 rejected, logs 497/498; synthetic-x6 8/8 (logs 7/8, as before); shots items2 294/296 at 0x
+and `--msaa 4 --gl-samples` (the 2 NPOT files); clip suite 48 cases, 0 unexpected (1 known XFAIL); 46 x10 scripts (click, walk,
+examine, sensors with `--text-tol 1e-3`, plane-*, lookat-*, examine-dblclick-*, rotate-*) PASS; `cargo build --release
+--workspace` and `cargo test --release --workspace` green (409 tests).

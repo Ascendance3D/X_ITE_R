@@ -239,6 +239,25 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   `examine-dblclick{,-miss,-alt,-during-spin,-during-chaser,-then-drag,-drag-interrupt}`, all PASS; poses 0 to 1e-9 except the Alt
   case (dcenter 6.2e-6, dpos 3.1e-6: float32 GPU pointing buffer vs f64 ray cast, as in LOOKAT). Added to `tools/nightly.sh`
   (not installed). Ryan decided 2026-10-11 to keep nav::DEVELOPMENT = true (matches the src oracle).
+- 2026-10-11: **Followers component ported (X5/X10).** `crates/x3d-runtime/src/nodes/followers.rs` = Components/Followers
+  (X3DFollowerNode, X3DChaserNode, X3DDamperNode, the 14 nodes) + Browser/Followers/X3DArray{Follower,Chaser}Template for
+  Coordinate and TexCoord2D. The followers tick from the browser's `prepareEvents` interests (a Map: re-adding keeps the
+  position, so they run in the order they became active; they register only once the scene is live, `Runtime::go_live`, like
+  `scene .setLive (true)` after the load frames). The viewer's navigation chasers (`x3d-viewer/src/chaser.rs`) are unchanged.
+  Oracle: 10 synthetic worlds (`oracle/synthetic-followers/`, generator `oracle/tools/gen_followers.py`, runner
+  `oracle/tools/run_followers_suite.py`): all 14 nodes, durations, order 0..5, tau/tolerance variants, set_value jumps,
+  set_destination in flight, array lengths 0..7, activation order and chains, 24/30/60 fps and coarse frame intervals,
+  tolerance 0, negative tau/duration, duration 0 (NaN): scene text exact at every dumped frame (2,100+ frames), poses 0,
+  images within tolerance. Three infrastructure causes found on the way (details `oracle/README.md` "Followers"):
+  (1) **Chrome's `Math` is correctly rounded** (matches CORE-MATH on 100,000 inputs per function; glibc differs in 0.05-0.25%,
+  log10 4%): `jsmath` Chrome flavor now uses the `core-math` crate (new C build dependency of `x3d-fields`; ask Ryan before any
+  crates.io release); (2) **ICU's number-format fast path** (`Intl.NumberFormat` 15 digits prints 0.9999999999999994 as `1`):
+  `x3d-fields/src/format.rs` now ports `DecimalQuantity` (`_setToDoubleFast`, `roundToMagnitude`), 250,000 + 62,100 formatted
+  values identical to Chrome; (3) the anim oracle's `browser .currentFrameRate` (what Damper reads) is the page's wall-clock rate
+  (stubs only cover `getCurrentFrameRate`): script key `"pinFrameRate": true` pins it to 1/dt on both sides. Regression: items2
+  296/296 exact + 296/296 logs, items 606/606, x0 47 + 3 known, x1 470 + 3 known + 25 rejected, x6 8/8, synthetic-followers 10/10;
+  shots 294/296 at 0x and 4x (same 2 NPOT files); clip suite 48 cases, 0 unexpected (1 known XFAIL); 46 x10 scripts PASS;
+  `cargo test --release --workspace` all green.
 - Test inputs: Ryan's Mall items, **`oracle/corpus-items2/` (296 `.wrl`, live tree without `.edit.wrl`, qa folders and tmp/bak files; keys `oracle/items2-baseline.json`, `render-items2-baseline`, `render-msaa4-items2-baseline`) is the primary test set** (2026-10-11: scene text 296/296 exact, pictures 294/296 at 0x and 4x, the 2 misses are the known NVIDIA NPOT mipmap differences; details in `oracle/README.md`). The older `oracle/corpus-items/` (606 files, frozen earlier) is secondary and keeps its baselines.
 
 ## Published crates and release rule

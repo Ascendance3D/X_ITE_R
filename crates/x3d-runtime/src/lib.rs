@@ -79,6 +79,9 @@ pub enum Cb {
     // X3DFollowerNode / X3DChaserNode / X3DDamperNode
     FollowerSetValue,
     FollowerSetDestination,
+    FollowerSetDuration,
+    /// The browser's prepareEvents interest of an active, live follower.
+    FollowerPrepare,
     // Live frames (viewer): TimeSensor.set_prepare on timePrepareEvents, set_time on timeEvents.
     TimeSensorSetPrepare,
     TimeSensorSetTime,
@@ -198,6 +201,15 @@ pub struct Runtime {
     /// written. Lets a renderer notice which nodes changed without comparing field values.
     pub stamps: Vec<u64>,
     pub stamp_counter: u64,
+    /// `getBrowser () .currentFrameRate` (X3DDamperNode.prepareEvents). 60 until a frame loop sets it.
+    pub frame_rate: f64,
+    /// The scene has gone live after loading (X3DBrowser.replaceWorld: `scene .setLive (true)`
+    /// runs after the nodes were set up and their first events were processed). Followers
+    /// register their prepareEvents interest only while this is set.
+    pub scene_live: bool,
+    /// Follower nodes in the order they were initialized (the order of their `set_live__`
+    /// interests on the scene's live field).
+    pub followers: Vec<NodeId>,
     /// Process-unique id of this runtime (stable when an Inline's runtime moves in its map).
     pub uid: u64,
 }
@@ -231,6 +243,9 @@ impl Runtime {
             bind_counter: 0,
             stamps: vec![],
             stamp_counter: 0,
+            frame_rate: 60.0,
+            scene_live: false,
+            followers: vec![],
             uid: {
                 static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
                 NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
@@ -596,6 +611,22 @@ impl Runtime {
         self.frame();
         self.run_tasks();
         self.publish_clone_counts();
+        self.go_live();
+    }
+
+    /// `scene .setLive (true)`: every node's `set_live__` runs, in the order the nodes asked for
+    /// their live event. Followers that are active start ticking with the browser's
+    /// prepareEvents now, not when they were initialized.
+    pub fn go_live(&mut self) {
+        if !self.live || self.scene_live {
+            return;
+        }
+
+        self.scene_live = true;
+
+        for node in self.followers.clone() {
+            self.follower_set_live(node);
+        }
     }
 }
 

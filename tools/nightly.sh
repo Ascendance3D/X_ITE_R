@@ -98,6 +98,8 @@ step scene-items 600 "$R/x3d-run" compare oracle/items-baseline.json oracle/corp
 step scene-x0    600 "$R/x3d-run" compare oracle/x0-baseline.json oracle/corpus-x0 --known crates/x3d-script/tests/x0-known.tsv --logs
 step scene-x1    600 "$R/x3d-run" compare oracle/x1-baseline.json oracle/corpus-x1 --known crates/x3d-script/tests/x1-known.tsv --logs
 step scene-x6    600 "$R/x3d-run" compare oracle/synthetic-x6-baseline.json oracle/synthetic-x6 --known crates/x3d-script/tests/synthetic-x6-known.tsv --logs
+# Followers component (Chaser/Damper x 7 node types): initial state at load, synthetic worlds.
+step scene-followers 600 "$R/x3d-run" compare oracle/synthetic-followers-baseline.json oracle/synthetic-followers --known crates/x3d-script/tests/synthetic-followers-known.tsv --logs
 
 SHOTS=$OUT/shots; rm -rf "$SHOTS"
 step render-items2 900 bash -c "'$R/x3d-shot' batch oracle/render-items2 '$SHOTS/items2' && '$R/x3d-shot' compare oracle/render-items2-baseline '$SHOTS/items2'"
@@ -134,6 +136,9 @@ done
 for c in examine-dblclick examine-dblclick-miss examine-dblclick-alt examine-dblclick-during-spin examine-dblclick-during-chaser examine-dblclick-then-drag examine-dblclick-drag-interrupt; do
    step viewer-$c 600 python3 -I oracle/tools/x10_compare.py oracle/x10-scripts/examine-nav.wrl oracle/x10-scripts/$c.json "$V/$c" --target "$R"
 done
+# Followers: 10 synthetic worlds, scene text exact at every frame, poses 1e-4, images 8 / 0.5% (tools/gen_followers.py).
+step followers-anim 1800 python3 -I oracle/tools/run_followers_suite.py --jobs 3 --out "$V/followers" --target "$R"
+expect followers-anim "10 of 10 worlds pass"
 rm -rf "$V"
 
 step cm5-suite 900 node oracle/cm5-run.mjs

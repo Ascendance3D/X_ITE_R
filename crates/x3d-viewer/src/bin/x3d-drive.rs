@@ -81,7 +81,9 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     let (capture, dump) = (list("capture"), list("dump"));
     let events = script["events"].as_array().cloned().unwrap_or_default();
 
-    let mut v = match Viewer3d::load(file, oracle, t0, size.0, size.1) {
+    // `"pinFrameRate": true`: browser .currentFrameRate is 1 / dt (the oracle pins it the same way).
+    let pinned = script["pinFrameRate"].as_bool().unwrap_or(false).then(|| 1.0 / dt);
+    let mut v = match Viewer3d::load_pinned(file, oracle, t0, size.0, size.1, pinned) {
         Ok(v) => v,
         Err(e) => return json!({ "ok": false, "error": e }),
     };
