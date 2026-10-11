@@ -1,0 +1,98 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  14,
+  16,
+  33,
+  73
+ ],
+ "dump": [],
+ "frames": 73,
+ "events": [
+  {
+   "frame": 2,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 3,
+   "type": "mousemove",
+   "x": 251,
+   "y": 260
+  },
+  {
+   "frame": 4,
+   "type": "mousemove",
+   "x": 246,
+   "y": 264
+  },
+  {
+   "frame": 5,
+   "type": "mousemove",
+   "x": 241,
+   "y": 268
+  },
+  {
+   "frame": 6,
+   "type": "mousemove",
+   "x": 236,
+   "y": 272
+  },
+  {
+   "frame": 7,
+   "type": "mousemove",
+   "x": 231,
+   "y": 276
+  },
+  {
+   "frame": 8,
+   "type": "mousemove",
+   "x": 226,
+   "y": 280
+  },
+  {
+   "frame": 9,
+   "type": "mousemove",
+   "x": 221,
+   "y": 284
+  },
+  {
+   "frame": 10,
+   "type": "mousemove",
+   "x": 216,
+   "y": 288
+  },
+  {
+   "frame": 11,
+   "type": "mousemove",
+   "x": 211,
+   "y": 292
+  },
+  {
+   "frame": 12,
+   "type": "mousemove",
+   "x": 206,
+   "y": 296
+  },
+  {
+   "frame": 13,
+   "type": "mouseup",
+   "button": 0,
+   "x": 206,
+   "y": 296
+  },
+  {
+   "frame": 15,
+   "type": "dblclick",
+   "x": 200,
+   "y": 300
+  }
+ ]
+}

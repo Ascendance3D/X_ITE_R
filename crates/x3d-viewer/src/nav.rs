@@ -346,6 +346,12 @@ pub struct Examine {
     spin_ts: Option<(f64, f64)>,
     /// Non-straighten spinning is a prepareEvents interest.
     spin_prepare: bool,
+    touch_mode: i32,
+    touch1: Vector2,
+    touch2: Vector2,
+    /// `tapedTwice`, valid while Date.now () is before `tap_until` (the 300 ms setTimeout).
+    taped_twice: bool,
+    tap_until: f64,
 }
 
 impl Examine {
@@ -375,6 +381,11 @@ impl Examine {
             pending: vec![],
             spin_ts: None,
             spin_prepare: false,
+            touch_mode: 0,
+            touch1: Vector2::ZERO,
+            touch2: Vector2::ZERO,
+            taped_twice: false,
+            tap_until: 0.0,
         }
     }
 
@@ -440,8 +451,122 @@ impl Examine {
                 cx.vp.transition_stop();
                 self.zoom(SCROLL_FACTOR, delta_y, cx);
             }
-            // ExamineViewer.dblclick (lookAt) and its touch handlers are not ported yet.
-            Input::DblClick { .. } | Input::TouchStart(_) | Input::TouchMove(_) | Input::TouchEnd => {}
+            Input::DblClick { x, y } => self.dblclick(x, y, cx),
+            // The harness sends no touch events: these handlers have no oracle.
+            Input::TouchStart(t) => self.touchstart(t, cx),
+            Input::TouchMove(t) => self.touchmove(t, cx),
+            Input::TouchEnd => self.touchend(true, cx),
+        }
+    }
+
+    /// ExamineViewer.dblclick: disconnect, then lookAtPoint (Alt) or lookAtBBox, run by the caller.
+    fn dblclick(&mut self, x: f64, y: f64, cx: &mut Cx) {
+        self.disconnect(cx.env.date_now);
+        cx.requests.push(LookAtRequest { x, y, point: cx.env.alt, straighten: cx.env.straighten });
+    }
+
+    /// ExamineViewer.wheel after the pointer test (`event .zoomFactor || SCROLL_FACTOR`).
+    fn wheel(&mut self, zoom_factor: f64, delta_y: f64, x: f64, y: f64, cx: &mut Cx) {
+        if !in_rect(cx.env, x, y) {
+            return;
+        }
+
+        self.remove_spinning(cx.env.date_now);
+        cx.vp.transition_stop();
+        let zf = if zoom_factor != 0.0 && !zoom_factor.is_nan() { zoom_factor } else { SCROLL_FACTOR };
+        self.zoom(zf, delta_y, cx);
+    }
+
+    fn touchstart(&mut self, t: Touches, cx: &mut Cx) {
+        match t.n {
+            1 => {
+                // Start rotate (button 0).
+                self.mousedown(0, t.p[0].0, t.p[0].1, cx);
+
+                // Remember tap.
+                self.touch1 = Vector2::new(t.p[0].0, t.p[0].1);
+            }
+            2 => {
+                // End rotate (button 0).
+                self.touchend(false, cx);
+
+                // Start move (button 1).
+                let (x, y) = ((t.p[0].0 + t.p[1].0) / 2.0, (t.p[0].1 + t.p[1].1) / 2.0);
+                self.mousedown(1, x, y, cx);
+
+                // Start zoom (mouse wheel).
+                self.touch1 = Vector2::new(t.p[0].0, t.p[0].1);
+                self.touch2 = Vector2::new(t.p[1].0, t.p[1].1);
+            }
+            _ => {
+                // End move (button 1).
+                self.touchend(false, cx);
+            }
+        }
+    }
+
+    fn touchend(&mut self, spin: bool, cx: &mut Cx) {
+        match self.button {
+            0 => {
+                // End rotate (button 0).
+                self.mouseup(0, spin, cx);
+
+                // Start dblclick (button 0).
+                let now_ms = cx.env.date_now * 1000.0;
+
+                if self.taped_twice && now_ms < self.tap_until {
+                    let (x, y) = (self.touch1.x, self.touch1.y);
+                    self.dblclick(x, y, cx);
+                } else {
+                    self.taped_twice = true;
+                    self.tap_until = now_ms + 300.0;
+                }
+            }
+            1 => {
+                // End move (button 1).
+                self.touch_mode = 0;
+                self.mouseup(1, false, cx);
+            }
+            _ => {}
+        }
+    }
+
+    fn touchmove(&mut self, t: Touches, cx: &mut Cx) {
+        match t.n {
+            1 => self.mousemove(t.p[0].0, t.p[0].1, cx),
+            2 => {
+                let mut c1 = Vector2::new(t.p[0].0, t.p[0].1);
+                c1.subtract(&self.touch1).normalize();
+                let mut c2 = Vector2::new(t.p[1].0, t.p[1].1);
+                c2.subtract(&self.touch2).normalize();
+
+                let dot = c1.dot(&c2);
+                let (move_, zoom) = (dot > 0.7, dot < -0.7);
+                let mode = if self.touch_mode != 0 { self.touch_mode } else if move_ { 1 } else if zoom { 2 } else { 0 };
+                let (x, y) = ((t.p[0].0 + t.p[1].0) / 2.0, (t.p[0].1 + t.p[1].1) / 2.0);
+
+                match mode {
+                    1 => {
+                        self.touch_mode = 1;
+                        self.mousemove(x, y, cx);
+                    }
+                    2 => {
+                        self.touch_mode = 2;
+                        let distance1 = self.touch1.distance(&self.touch2);
+                        self.touch1 = Vector2::new(t.p[0].0, t.p[0].1);
+                        self.touch2 = Vector2::new(t.p[1].0, t.p[1].1);
+                        let delta = distance1 - self.touch1.distance(&self.touch2);
+
+                        // `window .innerWidth`: the canvas width here.
+                        self.wheel(delta.abs() / cx.env.viewport[2], delta, x, y, cx);
+                    }
+                    _ => {}
+                }
+
+                self.touch1 = Vector2::new(t.p[0].0, t.p[0].1);
+                self.touch2 = Vector2::new(t.p[1].0, t.p[1].1);
+            }
+            _ => {}
         }
     }
 
