@@ -443,9 +443,11 @@ impl Runtime {
         child.script_host = self.script_host.as_ref().and_then(|h| h.fork());
         child.live = self.live;
         child.now = self.now;
+        child.frame_rate = self.frame_rate;
         child.start();
         child.run_tasks();
         child.frame();
+        child.go_live();
 
         self.log.append(&mut child.log);
 

@@ -102,6 +102,13 @@ try
    await page .goto (`${base}/x_ite-pin/src/anim.html`);
    await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
 
+   // Script key "pinFrameRate": true pins the SAI property `browser .currentFrameRate` (what Followers'
+   // X3DDamperNode reads) to 1 / dt before the world loads. The page stubs advanceTime and
+   // getCurrentFrameRate, but the property is bound to the prototype method and would report the
+   // wall-clock rate of the page's early frames (non-deterministic). Off by default.
+   if (script .pinFrameRate)
+      await page .evaluate (rate => Object .defineProperty (document .getElementById ("c") .browser, "currentFrameRate", { get: () => rate, configurable: true }), 1 / Math .max (dt, 1e-9));
+
    const abs = resolve (fileArg);
    const url = `${base}/${relative (ROOT, abs) .split ("/") .map (encodeURIComponent) .join ("/")}`;
    const loaded = await page .evaluate (([u, t, d, w]) => window .load (u, t, d, w), [ url, t0, dt, warmup ]);

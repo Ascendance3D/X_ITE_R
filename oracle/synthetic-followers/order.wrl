@@ -1,0 +1,75 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Followers:1
+# Synthetic Followers world (order): activation order and chains. No archive or Mall content.
+Viewpoint { position 0 0 16 }
+DEF TICK TimeSensor { cycleInterval 1 loop TRUE }
+DEF A PositionChaser { duration 0.6 }
+DEF B PositionChaser { duration 1.4 }
+DEF D PositionDamper { order 2 tau 0.2 }
+DEF E PositionChaser { duration 0.4 }
+DEF SA ScalarChaser { duration 0.5 }
+DEF SB ScalarChaser { duration 0.5 }
+DEF SD ScalarDamper { order 1 tau 0.15 }
+Transform { translation -3 0 0 children DEF SHARED Transform { children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 } } geometry Box { size 0.8 0.8 0.8 } } } }
+Transform { translation 3 0 0 children DEF CHAINED Transform { children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.5 0.9 } } geometry Sphere { radius 0.5 } } } }
+Transform { translation 0 -3 0 children DEF DAMPED Transform { children Shape { appearance Appearance { material DEF SM Material { diffuseColor 0.3 0.8 0.4 } } geometry Cone { bottomRadius 0.5 height 1 } } } }
+DEF TR Script { eventIn SFBool aAct eventIn SFBool bAct eventIn SFBool dAct eventIn SFBool eAct eventIn SFBool saAct eventIn SFBool sbAct eventIn SFBool sdAct
+  field SFString acts "" url "ecmascript:
+function mark (c, v, ts) { acts = acts + c + Math.round ((ts - 946684800) * 60) + (v ? '+' : '-') + ' '; }
+function aAct (v, ts) { mark ('A', v, ts); }
+function bAct (v, ts) { mark ('B', v, ts); }
+function dAct (v, ts) { mark ('D', v, ts); }
+function eAct (v, ts) { mark ('E', v, ts); }
+function saAct (v, ts) { mark ('SA', v, ts); }
+function sbAct (v, ts) { mark ('SB', v, ts); }
+function sdAct (v, ts) { mark ('SD', v, ts); }
+" }
+DEF DRV Script { eventIn SFTime tick eventOut SFVec3f aDest eventOut SFVec3f bDest eventOut SFVec3f dDest eventOut SFVec3f eVal eventOut SFFloat saDest eventOut SFFloat sbDest eventOut SFFloat sdDest eventOut SFVec3f bVal field SFInt32 lastK -1
+  url "ecmascript:
+function tick (value, ts) {
+  var k = Math.round ((ts - 946684800) * 60);
+  if (k == lastK) return; lastK = k;
+  if (k == 5) { aDest = new SFVec3f (2, 1, 0); }
+  if (k == 6) { bDest = new SFVec3f (-2, 1, 0); }
+  if (k == 60) { bDest = new SFVec3f (2, -1, 0); }
+  if (k == 62) { aDest = new SFVec3f (-2, -1, 0); }
+  if (k == 120) { aDest = new SFVec3f (1, 1, 1); }
+  if (k == 120) { bDest = new SFVec3f (-1, -1, -1); }
+  if (k == 150) { bDest = new SFVec3f (0, 2, 0); }
+  if (k == 151) { aDest = new SFVec3f (0, -2, 0); }
+  if (k == 200) { dDest = new SFVec3f (1, 2, 3); }
+  if (k == 203) { eVal = new SFVec3f (-1, 0, 0); }
+  if (k == 240) { bVal = new SFVec3f (0, 0, 0); }
+  if (k == 10) { saDest = 1; }
+  if (k == 14) { sbDest = 0.5; }
+  if (k == 80) { sdDest = 1; }
+  if (k == 110) { saDest = 0; }
+  if (k == 112) { sdDest = 0; }
+  if (k == 170) { sbDest = 1; }
+  if (k == 230) { saDest = 0.5; }
+}"
+}
+ROUTE TICK.time TO DRV.tick
+ROUTE DRV.aDest TO A.set_destination
+ROUTE DRV.bDest TO B.set_destination
+ROUTE DRV.bVal TO B.set_value
+ROUTE A.value_changed TO SHARED.set_translation
+ROUTE B.value_changed TO SHARED.set_translation
+ROUTE DRV.dDest TO D.set_destination
+ROUTE D.value_changed TO E.set_destination
+ROUTE DRV.eVal TO E.set_value
+ROUTE E.value_changed TO CHAINED.set_translation
+ROUTE DRV.saDest TO SA.set_destination
+ROUTE SA.value_changed TO SB.set_destination
+ROUTE DRV.sbDest TO SB.set_destination
+ROUTE SB.value_changed TO SD.set_destination
+ROUTE SD.value_changed TO SM.set_shininess
+ROUTE SA.value_changed TO SM.set_transparency
+ROUTE A.isActive TO TR.aAct
+ROUTE B.isActive TO TR.bAct
+ROUTE D.isActive TO TR.dAct
+ROUTE E.isActive TO TR.eAct
+ROUTE SA.isActive TO TR.saAct
+ROUTE SB.isActive TO TR.sbAct
+ROUTE SD.isActive TO TR.sdAct

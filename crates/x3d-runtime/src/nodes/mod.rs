@@ -3,6 +3,7 @@
 //! rendering or a live scene is ported; see each module.
 
 pub mod event_utils;
+pub mod followers;
 pub mod interp;
 pub mod time;
 
@@ -17,6 +18,7 @@ pub enum State {
     ColorInterp { hsv: Vec<[f64; 3]> },
     Script(script::ScriptState),
     UrlObject(UrlState),
+    Follower(Box<dyn followers::Follower>),
 }
 
 /// X3DUrlObject load state (X3DConstants NOT_STARTED_STATE … FAILED_STATE).
@@ -89,6 +91,7 @@ impl Runtime {
             "IntegerSequencer" | "BooleanSequencer" => self.nrt_mut(node).state = State::Sequencer { index: -1 },
             "ColorInterpolator" => self.nrt_mut(node).state = State::ColorInterp { hsv: vec![] },
             "Script" => self.nrt_mut(node).state = State::Script(Default::default()),
+            n if followers::make(n).is_some() => self.nrt_mut(node).state = State::Follower(followers::make(n).unwrap()),
             "Inline" | "ImageTexture" | "MovieTexture" | "AudioClip" => self.nrt_mut(node).state = State::UrlObject(Default::default()),
             _ => {}
         }
@@ -153,6 +156,7 @@ impl Runtime {
                 self.interest(node, "keyValue", Cb::SequencerSetKey);
             }
             "Script" => self.script_initialize(node),
+            n if followers::make(n).is_some() => self.follower_initialize(node),
             "Inline" | "ImageTexture" | "MovieTexture" | "AudioClip" => self.inline_initialize(node),
             "Background" => {
                 self.interest(node, "set_bind", Cb::BindableSetBind);
@@ -311,7 +315,7 @@ impl Runtime {
             Cb::ScriptField(_) | Cb::ScriptEventsProcessed | Cb::ScriptPrepareEvents => self.script_interest(node, i.cb, k),
             Cb::GroupAddChildren => self.group_add_children(node),
             Cb::GroupRemoveChildren => self.group_remove_children(node),
-            Cb::FollowerSetValue | Cb::FollowerSetDestination => {}
+            Cb::FollowerSetValue | Cb::FollowerSetDestination | Cb::FollowerSetDuration | Cb::FollowerPrepare => self.follower_interest(node, i.cb),
             Cb::TimeSensorSetPrepare => self.time_sensor_set_prepare(node),
             Cb::TimeSensorSetTime => self.time_sensor_set_time(node),
             Cb::BindableSetBind => {

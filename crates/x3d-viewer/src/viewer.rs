@@ -71,6 +71,12 @@ pub struct Viewer3d {
     pub straighten: bool,
     /// X3DTimeContext.advanceOnlyTime on pointer events (a real clock); off for scripted runs.
     pub advance_only_time: bool,
+    /// `browser .currentFrameRate` as the scene's followers (X3DDamperNode tau) read it. `None`: the
+    /// measured frame interval (X3DTimeContext.advanceTime). Scripted oracle runs pin it to 1 / dt:
+    /// the oracle pages stub advanceTime and getCurrentFrameRate, but the SAI property
+    /// `currentFrameRate` still returns the wall-clock rate of the page's own early frames, so
+    /// oracle/x_ite-anim*.mjs pin that property for scripts with `"pinFrameRate": true`.
+    pub pinned_frame_rate: Option<f64>,
     gravity_speed: f64,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
     /// Geometry and textures kept between frames (rebuilt only when their nodes change).
@@ -103,6 +109,12 @@ impl Viewer3d {
     /// Load a world like the oracle's FileLoader (parse, setup, loads) but live, then bind the
     /// first bindables (X3DBrowser.replaceWorld → X3DWorld.bindBindables).
     pub fn load(file: &Path, oracle_root: Option<&Path>, t0: f64, width: u32, height: u32) -> Result<Viewer3d, String> {
+        Self::load_pinned(file, oracle_root, t0, width, height, None)
+    }
+
+    /// [`Viewer3d::load`] with `currentFrameRate` pinned (see [`Viewer3d::pinned_frame_rate`]) from
+    /// the first frame on, including the frame that finishes loading.
+    pub fn load_pinned(file: &Path, oracle_root: Option<&Path>, t0: f64, width: u32, height: u32, pinned_frame_rate: Option<f64>) -> Result<Viewer3d, String> {
         x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
         let file = std::fs::canonicalize(file).map_err(|e| format!("{}: {e}", file.display()))?;
@@ -121,9 +133,16 @@ impl Viewer3d {
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
         rt.live = true;
         rt.now = t0;
+
+        if let Some(rate) = pinned_frame_rate {
+            rt.frame_rate = rate;
+        }
+
         rt.load_world();
 
-        Ok(Self::from_runtime(rt, t0, width, height))
+        let mut v = Self::from_runtime(rt, t0, width, height);
+        v.pinned_frame_rate = pinned_frame_rate;
+        Ok(v)
     }
 
     pub fn from_runtime(rt: Runtime, t0: f64, width: u32, height: u32) -> Viewer3d {
@@ -144,6 +163,7 @@ impl Viewer3d {
             alt: false,
             straighten: true,
             advance_only_time: false,
+            pinned_frame_rate: None,
             gravity_speed: 0.0,
             geom_cache: HashMap::new(),
             render_cache: Default::default(),
@@ -310,8 +330,10 @@ impl Viewer3d {
 
     fn phase(&mut self, name: &str) {
         let now = self.time;
+        let rate = self.pinned_frame_rate.unwrap_or(self.frame_rate);
         self.for_each_rt(&mut |rt| {
             rt.now = now;
+            rt.frame_rate = rate;
             rt.process_phase(name);
         });
     }
