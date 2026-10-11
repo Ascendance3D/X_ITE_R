@@ -223,7 +223,7 @@ impl Walker<'_> {
         let inline = !path.is_empty();
 
         match ty {
-            "Viewpoint" if !inline => self.scan.viewpoints.push((me(), *mv)),
+            "Viewpoint" | "OrthoViewpoint" if !inline => self.scan.viewpoints.push((me(), *mv)),
             "NavigationInfo" if !inline => self.scan.navigation_infos.push(me()),
             "Background" if !inline => self.scan.backgrounds.push((me(), *mv)),
             "Fog" if !inline => self.scan.fogs.push(me()),

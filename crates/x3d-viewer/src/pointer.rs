@@ -28,6 +28,8 @@ pub struct Hit {
     pub normal: Vector3,
     pub tex_coord: Vector4,
     pub shape: Option<NodeRef>,
+    /// The hit shape's geometry bounding box in its local space (`hit .shapeNode .getBBox ()`).
+    pub bbox: Option<(Vector3, Vector3)>,
     pub anchors: Vec<NodeRef>,
 }
 
@@ -44,6 +46,7 @@ impl Default for Hit {
             normal: Vector3::ZERO,
             tex_coord: Vector4::ZERO,
             shape: None,
+            bbox: None,
             anchors: vec![],
         }
     }
@@ -244,6 +247,7 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
         hit.model_view = s.model_view;
         hit.sensors = s.sensors.clone();
         hit.shape = Some(s.shape.clone());
+        hit.bbox = Some((g.min, g.max));
         hit.anchors = s.anchors.clone();
     }
 

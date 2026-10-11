@@ -215,6 +215,22 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   size rule is closed-driver math with no found formula. Shifted levels here: 400×225, 25×14, 12×7
   and 254×169, 127×84, 63×42, 15×10. A size table would be a fudge, so the mipmap algorithm stays as
   in `e0f613e`. Evidence: `oracle/evidence/npot-mipmaps-2026-10-11/README.md`.
+- 2026-10-11: **PLANE and LOOKAT viewers ported (X10), plus OrthoViewpoint in the viewer.** `crates/x3d-viewer`: `nav/plane.rs`
+  (PlaneViewer.js), `nav/lookat.rs` (LookAtViewer.js), `lookat.rs` (X3DViewer.lookAtPoint / lookAtBBox, X3DViewpointNode.lookAt*,
+  OrthoViewpoint.lookAt*, Box3). The EXAMINE fallback for `PLANE` / `LOOKAT` is gone. Shared look-at code is in place for the
+  later Examine double-click step (not wired). OrthoViewpoint (fieldOfView extents + fieldOfViewOffset, projection, 1e4 far,
+  viewAll, transitions) was missing from the viewer and is now ported; scene text prints a legacy MFFloat `fieldOfView` as SFVec4f
+  like `OrthoViewpoint.convertFields`. 27 new x10 scripts (`oracle/x10-scripts/{plane,lookat}-*.json`, worlds `plane-nav`,
+  `lookat-nav`, `plane-ortho`, `lookat-ortho`, generator `oracle/tools/gen_x10_plane_lookat.py`), all PASS: poses 0 (24 scripts),
+  1.2e-7 (click-twice) and up to 1.6e-5 (the two Alt double clicks, see below), images 0 over. Harness: new `dblclick` event (both sides), pose now carries `fieldOfViewScale` / `fieldOfViewOffset`.
+  Regression: items2 296/296 exact + 296/296 logs; shots 294/296 at 0x and 4x (same 2 NPOT files); clip suite 48 cases, 0
+  unexpected (1 known XFAIL); click, walk, examine, sensors, 8 rotate scripts PASS; cargo test all ok. Findings (JS): PLANE pans
+  with the middle button or Alt + left (a plain left drag is a no-op, `mousedown` case 0 binds no `mousemove`); PlaneViewer
+  `dblclick` works only because `DEVELOPMENT.js` is `true` in `src/` (dist: `false`), kept as `nav::DEVELOPMENT`; LOOKAT has no
+  single-click lookAt, it is the double click. Open: touch handlers are ported but have no oracle (the harness sends no touch
+  events); Alt double click (lookAtPoint) differs from X_ITE by 6e-6 to 1.6e-5 because X_ITE reads the hit point from a float32 GPU
+  pointing buffer; static `x3d-shot` still ignores OrthoViewpoint; `x3d-view` maps a second left release within 500 ms and 4 px
+  to `dblclick` (not run in a window).
 - Test inputs: Ryan's Mall items, **`oracle/corpus-items2/` (296 `.wrl`, live tree without `.edit.wrl`, qa folders and tmp/bak files; keys `oracle/items2-baseline.json`, `render-items2-baseline`, `render-msaa4-items2-baseline`) is the primary test set** (2026-10-11: scene text 296/296 exact, pictures 294/296 at 0x and 4x, the 2 misses are the known NVIDIA NPOT mipmap differences; details in `oracle/README.md`). The older `oracle/corpus-items/` (606 files, frozen earlier) is secondary and keeps its baselines.
 
 ## Published crates and release rule

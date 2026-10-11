@@ -107,6 +107,9 @@ pub struct CameraOverride {
     pub fov: f64,
     pub near: f64,
     pub far: f64,
+    /// The viewpoint's projection matrix when it is not `perspective (fov, near, far)`
+    /// (OrthoViewpoint.getProjectionMatrixWithLimits).
+    pub projection: Option<Matrix4>,
     pub headlight: bool,
     pub viewpoint: Option<NodeId>,
     pub navigation_info: Option<NodeId>,
@@ -878,7 +881,7 @@ impl<'a> Builder<'a> {
             Some(o) => {
                 let mut view = o.camera_space;
                 view.inverse();
-                (view, perspective(o.fov, o.near, o.far, width as f64, height as f64), o.headlight, o.far)
+                (view, o.projection.unwrap_or_else(|| perspective(o.fov, o.near, o.far, width as f64, height as f64)), o.headlight, o.far)
             }
             None => (view, projection, headlight, far),
         };

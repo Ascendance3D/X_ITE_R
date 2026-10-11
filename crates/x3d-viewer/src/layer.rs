@@ -10,7 +10,8 @@ use std::collections::HashMap;
 use x3d_fields::{FieldValue, NodeId};
 use x3d_fields::math::{Matrix4, Rotation4, Vector3};
 use x3d_runtime::Runtime;
-use x3d_render::traverse::straighten;
+use x3d_render::traverse::{perspective, straighten};
+use crate::geom::Camera;
 
 /// The layer's default Viewpoint / NavigationInfo / Background / Fog (stack bottom).
 pub const DEFAULT: NodeId = NodeId::MAX;
@@ -167,6 +168,11 @@ pub struct VpBase {
     pub near_field: Option<f64>,
     pub far_field: Option<f64>,
     pub description: String,
+    /// OrthoViewpoint (Components/Navigation/OrthoViewpoint.js): `fieldOfView` is minimumX, minimumY,
+    /// maximumX, maximumY (an SFVec4f, or an MFFloat for specification versions up to 4.0:
+    /// `this ._fieldOfView [0] ?? -1` ...).
+    pub is_ortho: bool,
+    pub ortho_fov: [f64; 4],
 }
 
 impl VpBase {
@@ -183,11 +189,22 @@ impl VpBase {
                 near_field: None,
                 far_field: None,
                 description: String::new(),
+                is_ortho: false,
+                ortho_fov: [-1.0, -1.0, 1.0, 1.0],
             };
         }
 
         let sg = x3d_render::sg::Sg::new(rt);
         let ge0 = |v: f64| if v >= 0.0 { Some(v) } else { None };
+        let is_ortho = rt.builtin_name(n) == Some("OrthoViewpoint");
+        let ortho_fov = match sg.value(n, "fieldOfView") {
+            Some(FieldValue::SFVec4f(v)) if is_ortho => [v.x, v.y, v.z, v.w],
+            Some(FieldValue::MFFloat(v)) if is_ortho => {
+                let at = |i: usize, d: f64| v.get(i).map_or(d, |x| *x as f64);
+                [at(0, -1.0), at(1, -1.0), at(2, 1.0), at(3, 1.0)]
+            }
+            _ => [-1.0, -1.0, 1.0, 1.0],
+        };
 
         VpBase {
             position: sg.vec3(n, "position", Vector3::new(0.0, 0.0, 10.0)),
@@ -203,6 +220,8 @@ impl VpBase {
                 Some(FieldValue::SFString(s)) => s.clone(),
                 _ => String::new(),
             },
+            is_ortho,
+            ortho_fov,
         }
     }
 
@@ -222,6 +241,8 @@ pub struct Vp {
     pub scale_orientation_offset: Rotation4,
     pub center_of_rotation_offset: Vector3,
     pub field_of_view_scale: f64,
+    /// OrthoViewpoint ._fieldOfViewOffset.
+    pub field_of_view_offset: [f64; 4],
     /// X3DViewpointNode nearDistance / farDistance (set by lookAt / viewAll, else the field).
     pub near_override: Option<Option<f64>>,
     pub far_override: Option<Option<f64>>,
@@ -243,6 +264,7 @@ impl Default for Vp {
             scale_orientation_offset: Rotation4::identity(),
             center_of_rotation_offset: Vector3::ZERO,
             field_of_view_scale: 1.0,
+            field_of_view_offset: [0.0; 4],
             near_override: None,
             far_override: None,
             model: Matrix4::IDENTITY,
@@ -268,8 +290,17 @@ pub struct Transition {
     pub scale: (Vector3, Vector3),
     pub scale_orientation: (Rotation4, Rotation4),
     pub fov_scale: (f64, f64),
+    /// OrthoViewpoint fieldOfViewOffsetInterpolator 0..3 (key values at fraction 0 and 1).
+    pub fov_offset: Option<([f64; 4], [f64; 4])>,
     /// The NavigationInfo to notify when the transition completes (set_active__).
     pub nav_info: NodeId,
+    /// Whether `set_active__` is still an interest of the timeSensor's isActive when it stops
+    /// (a lookAt that interrupts a running transition loses it: its own stop event removes it).
+    pub notify: bool,
+    /// The TimeSensor was started from an input handler: `do_start` runs at the first event
+    /// processing of the next frame, where `startTime` is Date.now () of the event and the current
+    /// time is that frame's (set_start: offset = (time - startTime) / interval, cycle = time - fraction * interval).
+    pub lazy_start: bool,
 }
 
 /// EaseInEaseOut.interpolate with two keys.
@@ -335,6 +366,47 @@ impl Vp {
         if f > 0.0 && f < std::f64::consts::PI { f } else { std::f64::consts::FRAC_PI_4 }
     }
 
+    /// OrthoViewpoint.getUserMinimumX / Y, getUserMaximumX / Y (index 0..3).
+    pub fn user_extent(&self, base: &VpBase, i: usize) -> f64 {
+        (base.ortho_fov[i] + self.field_of_view_offset[i]) * self.field_of_view_scale
+    }
+
+    pub fn user_size_x(&self, base: &VpBase) -> f64 {
+        self.user_extent(base, 2) - self.user_extent(base, 0)
+    }
+
+    pub fn user_size_y(&self, base: &VpBase) -> f64 {
+        self.user_extent(base, 3) - self.user_extent(base, 1)
+    }
+
+    /// X3DViewpointNode.getMaxFarValue (OrthoViewpoint: 1e4).
+    pub fn max_far_value(base: &VpBase) -> f64 {
+        if base.is_ortho { 1e4 } else { max_far() }
+    }
+
+    /// Viewpoint / OrthoViewpoint.getProjectionMatrixWithLimits.
+    pub fn projection(&self, base: &VpBase, near: f64, far: f64, width: f64, height: f64) -> Matrix4 {
+        if !base.is_ortho {
+            return perspective(self.user_fov(base), near, far, width, height);
+        }
+
+        let ratio = width / height;
+        let (size_x, size_y) = (self.user_size_x(base), self.user_size_y(base));
+        let mut m = Matrix4::IDENTITY;
+
+        if ratio > size_x / size_y {
+            let center = (self.user_extent(base, 0) + self.user_extent(base, 2)) / 2.0;
+            let size1_2 = (size_y * ratio) / 2.0;
+            Camera::ortho(center - size1_2, center + size1_2, self.user_extent(base, 1), self.user_extent(base, 3), near, far, &mut m);
+        } else {
+            let center = (self.user_extent(base, 1) + self.user_extent(base, 3)) / 2.0;
+            let size1_2 = (size_x / ratio) / 2.0;
+            Camera::ortho(self.user_extent(base, 0), self.user_extent(base, 2), center - size1_2, center + size1_2, near, far, &mut m);
+        }
+
+        m
+    }
+
     pub fn near_distance(&self, base: &VpBase, nav: &NavInfo) -> f64 {
         let v = match self.near_override {
             Some(o) => o,
@@ -348,7 +420,7 @@ impl Vp {
             Some(o) => o,
             None => base.far_field,
         };
-        v.unwrap_or_else(|| if nav.far_value() != 0.0 { nav.far_value() } else { max_far() })
+        v.unwrap_or_else(|| if nav.far_value() != 0.0 { nav.far_value() } else { Self::max_far_value(base) })
     }
 
     /// X3DViewpointNode.update.
@@ -370,6 +442,7 @@ impl Vp {
         self.scale_orientation_offset = Rotation4::identity();
         self.center_of_rotation_offset = Vector3::ZERO;
         self.field_of_view_scale = 1.0;
+        self.field_of_view_offset = [0.0; 4];
         self.near_override = None;
         self.far_override = None;
         self.update(base);
@@ -407,24 +480,40 @@ impl Vp {
         Relative { position, orientation, scale, scale_orientation }
     }
 
-    fn start_transition(&mut self, now: f64, interval: f64, easing: bool, nav_info: NodeId, rel: &Relative, from_fov: Option<f64>, base: &VpBase) {
-        let (eo, ei) = if easing { (0.0, 1.0) } else { (0.0, 0.0) };
-        let (eo, ei) = if easing { (eo, ei) } else { (eo, ei) };
+    /// Viewpoint.setInterpolators / OrthoViewpoint.setInterpolators (called by transitionStart and
+    /// by lookAt with `from` = this viewpoint): sets the field of view scale (and the ortho offsets)
+    /// at once and returns the interpolator key values: (scale from, to), (offset from, to).
+    pub fn set_interpolators(&mut self, base: &VpBase, from: &FromState) -> ((f64, f64), Option<([f64; 4], [f64; 4])>) {
+        if !from.same {
+            self.field_of_view_scale = 1.0;
+            let offset = self.field_of_view_offset;
+            return ((1.0, 1.0), base.is_ortho.then_some((offset, offset)));
+        }
 
+        if base.is_ortho {
+            let mut offset = [0.0; 4];
+
+            for (i, o) in offset.iter_mut().enumerate() {
+                *o = from.user_extent[i] - base.ortho_fov[i];
+            }
+
+            let keys = (offset, self.field_of_view_offset);
+            self.field_of_view_offset = offset;
+            self.field_of_view_scale = from.fov_scale;
+            return ((from.fov_scale, 1.0), Some(keys));
+        }
+
+        let scale = from.user_fov / self.user_fov(base);
+        self.field_of_view_scale = scale;
+        ((scale, 1.0), None)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn start_transition(&mut self, now: f64, interval: f64, easing: bool, nav_info: NodeId, rel: &Relative, from: &FromState, base: &VpBase) {
         // ANIMATE: easeInEaseOut = [(0, 1), (1, 0)] → easeOut = [0].y = 1, easeIn = [1].x = 1.
         let (ease_out, ease_in) = if easing { (1.0, 1.0) } else { (0.0, 0.0) };
-        let _ = (eo, ei);
 
-        // Viewpoint.setInterpolators
-        let (fs_from, fs_to) = match from_fov {
-            Some(from) => {
-                let scale = from / self.user_fov_with_scale(base, rel);
-                (scale, 1.0)
-            }
-            None => (1.0, 1.0),
-        };
-
-        let t = Transition {
+        let mut t = Transition {
             start: now,
             interval,
             ease_out,
@@ -433,31 +522,40 @@ impl Vp {
             orientation: (rel.orientation, self.orientation_offset),
             scale: (rel.scale, self.scale_offset),
             scale_orientation: (rel.scale_orientation, self.scale_orientation_offset),
-            fov_scale: (fs_from, fs_to),
+            fov_scale: (1.0, 1.0),
+            fov_offset: None,
             nav_info,
+            notify: true,
+            lazy_start: false,
         };
 
         self.position_offset = rel.position;
         self.orientation_offset = rel.orientation;
         self.scale_offset = rel.scale;
         self.scale_orientation_offset = rel.scale_orientation;
-        self.field_of_view_scale = fs_from;
-        self.transition = Some(t);
-    }
 
-    fn user_fov_with_scale(&self, base: &VpBase, _rel: &Relative) -> f64 {
-        // `relative .fieldOfView / this .getUserFieldOfView ()` — getUserFieldOfView of the
-        // incoming viewpoint at its current scale (fieldOfViewScale is still 1 after reset).
-        let f = base.field_of_view * self.field_of_view_scale;
-        if f > 0.0 && f < std::f64::consts::PI { f } else { std::f64::consts::FRAC_PI_4 }
+        let (fov_scale, fov_offset) = self.set_interpolators(base, from);
+        t.fov_scale = fov_scale;
+        t.fov_offset = fov_offset;
+        self.transition = Some(t);
     }
 
     /// One frame of the transition. Returns `Some(nav_info)` when it just completed.
     pub fn tick_transition(&mut self, now: f64) -> Option<NodeId> {
-        let t = self.transition.clone()?;
+        let t = self.transition.as_mut()?;
+
+        if t.lazy_start {
+            // TimeSensor.set_start (offset = true): the sensor starts in the first event processing of
+            // this frame; cycle = currentTime - fract ((currentTime - startTime) / interval) * interval.
+            let offset = if t.interval != 0.0 { (now - t.start) / t.interval } else { 0.0 };
+            t.start = now - (offset % 1.0) * t.interval;
+            t.lazy_start = false;
+        }
+
+        let t = t.clone();
         let elapsed = now - t.start;
         let done = elapsed >= t.interval;
-        let f = if done { 1.0 } else if t.interval > 0.0 { (elapsed / t.interval).max(0.0) } else { 1.0 };
+        let f = if done { 1.0 } else if t.interval > 0.0 { ((elapsed / t.interval) % 1.0).max(0.0) } else { 1.0 };
         let w = ease(f, t.ease_out, t.ease_in);
 
         self.position_offset = lerp3(&t.position.0, &t.position.1, w);
@@ -466,9 +564,15 @@ impl Vp {
         self.scale_orientation_offset = slerp(&t.scale_orientation.0, &t.scale_orientation.1, w);
         self.field_of_view_scale = t.fov_scale.0 + (t.fov_scale.1 - t.fov_scale.0) * w;
 
+        if let Some((a, b)) = t.fov_offset {
+            for i in 0..4 {
+                self.field_of_view_offset[i] = a[i] + (b[i] - a[i]) * w;
+            }
+        }
+
         if done {
             self.transition = None;
-            return Some(t.nav_info);
+            return t.notify.then_some(t.nav_info);
         }
 
         None
@@ -479,6 +583,16 @@ impl Vp {
     pub fn transition_stop(&mut self) {
         self.transition = None;
     }
+}
+
+/// What the viewpoint a transition starts from contributes (`getRelativeTransformation`: its user
+/// field of view / user extents when it has the same constructor).
+#[derive(Clone, Debug)]
+pub struct FromState {
+    pub same: bool,
+    pub user_fov: f64,
+    pub user_extent: [f64; 4],
+    pub fov_scale: f64,
 }
 
 struct Relative {
@@ -788,7 +902,7 @@ impl Layer {
         self.transition_active.insert(nav, false);
     }
 
-    fn nav_start(&mut self, rt: &mut Runtime, nav: NodeId) {
+    pub(crate) fn nav_start(&mut self, rt: &mut Runtime, nav: NodeId) {
         if nav != DEFAULT {
             if let Some(k) = rt.private_field(nav, "transitionStart") {
                 rt.set_value(k, FieldValue::SFBool(true));
@@ -796,6 +910,18 @@ impl Layer {
         }
 
         self.transition_active.insert(nav, true);
+    }
+
+    /// `getRelativeTransformation`'s field of view part for a transition from `from` to a viewpoint with `base`.
+    fn from_state(&mut self, from: NodeId, from_base: &VpBase, base: &VpBase) -> FromState {
+        let f = self.vp(from);
+
+        FromState {
+            same: from_base.is_ortho == base.is_ortho,
+            user_fov: f.user_fov(from_base),
+            user_extent: std::array::from_fn(|i| f.user_extent(from_base, i)),
+            fov_scale: f.field_of_view_scale,
+        }
     }
 
     /// X3DViewpointNode.transitionStart.
@@ -814,7 +940,7 @@ impl Layer {
 
             self.vp(top).transition_description = "transitionStart".into();
 
-            let from_fov = self.vp(from).user_fov(&from_base);
+            let from_state = self.from_state(from, &from_base, &base);
             let rel = self.vp(top).relative(&base, &from_view);
 
             if !base.retain_user_offsets {
@@ -838,6 +964,11 @@ impl Layer {
                 kind = "TELEPORT".into();
             }
 
+            // `this .constructor !== fromViewpointNode .constructor`
+            if base.is_ortho != from_base.is_ortho {
+                kind = "TELEPORT".into();
+            }
+
             if kind == "TELEPORT" {
                 self.nav_complete(rt, nav_node);
                 return;
@@ -845,19 +976,19 @@ impl Layer {
 
             self.nav_start(rt, nav_node);
             let vp = self.vp(top);
-            vp.start_transition(now, nav.transition_time, kind == "ANIMATE", nav_node, &rel, Some(from_fov), &base);
+            vp.start_transition(now, nav.transition_time, kind == "ANIMATE", nav_node, &rel, &from_state, &base);
         } else {
             self.vp(top).transition_stop();
             self.nav_complete(rt, nav_node);
 
-            let from_fov = self.vp(from).user_fov(&from_base);
+            let from_state = self.from_state(from, &from_base, &base);
             let rel = self.vp(top).relative(&base, &from_view);
             let vp = self.vp(top);
             vp.position_offset = rel.position;
             vp.orientation_offset = rel.orientation;
             vp.scale_offset = rel.scale;
             vp.scale_orientation_offset = rel.scale_orientation;
-            vp.field_of_view_scale = from_fov / base.field_of_view.max(f64::MIN_POSITIVE);
+            vp.set_interpolators(&base, &from_state);
         }
     }
 
@@ -874,6 +1005,11 @@ impl Layer {
 
     /// X3DViewpointNode.getLookAtDistance (Viewpoint).
     pub fn look_at_distance(&self, base: &VpBase, vp: &Vp, viewport: (f64, f64), bbox_size: &Vector3) -> f64 {
+        if base.is_ortho {
+            // OrthoViewpoint.getLookAtDistance.
+            return bbox_size.norm() / 2.0 + 10.0;
+        }
+
         let (w, h) = viewport;
         let size = if w < h {
             if w / h < bbox_size.x / bbox_size.y { bbox_size.x } else { bbox_size.y * w / h }
@@ -884,6 +1020,21 @@ impl Layer {
         };
         let size = size * VIEW_ALL_SCALE_FACTOR;
         (size / 2.0) / (vp.user_fov(base) / 2.0).tan() + bbox_size.z / 2.0
+    }
+
+    /// OrthoViewpoint.getViewAllScale (`bbox .size` of the viewpoint-local box).
+    pub fn ortho_view_all_scale(&self, base: &VpBase, bbox_size: &Vector3) -> f64 {
+        let (width, height) = self.viewport;
+        let ratio = width / height;
+        let size_x = base.ortho_fov[2] - base.ortho_fov[0];
+        let size_y = base.ortho_fov[3] - base.ortho_fov[1];
+
+        let (sx, sy) = if ratio > size_x / size_y { (size_y * ratio, size_y) } else { (size_x, size_x / ratio) };
+        let scale_x = bbox_size.x / sx;
+        let scale_y = bbox_size.y / sy;
+        let scale = x3d_fields::jsmath::js_max(scale_x, scale_y);
+
+        scale * VIEW_ALL_SCALE_FACTOR
     }
 
     /// X3DViewpointNode.viewAll with the scene bounding box in world space.
@@ -933,7 +1084,18 @@ impl Layer {
         v.field_of_view_scale = 1.0;
         let near = distance * (0.125 / 10.0);
         v.near_override = Some(Some(near));
-        v.far_override = Some(Some(near * max_far() / 0.125));
+        v.far_override = Some(Some(near * Vp::max_far_value(base) / 0.125));
+
+        if base.is_ortho {
+            // OrthoViewpoint.viewAll
+            let scale = self.ortho_view_all_scale(base, &local.size());
+            let v = self.vp(n);
+
+            for i in 0..4 {
+                let e = v.user_extent(base, i);
+                v.field_of_view_offset[i] = e * scale - e;
+            }
+        }
     }
 }
 

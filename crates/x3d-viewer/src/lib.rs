@@ -4,6 +4,7 @@ pub mod collision;
 pub mod embed;
 pub mod geom;
 pub mod layer;
+pub mod lookat;
 pub mod nav;
 pub mod pointer;
 pub mod script;

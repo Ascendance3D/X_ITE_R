@@ -89,7 +89,18 @@ for k, a in js["poses"].items():
     dot = abs(sum(p * q for p, q in zip(qa, qb)))
     do = 2 * math.acos(min(1.0, dot))
     ok = dp <= tol and dc <= tol and do <= tol and a["viewer"] == b["viewer"] and (a["viewpoint"] == b["viewpoint"] or b["viewpoint"] == "<default>")
-    report(ok, f"pose frame {k}: |dpos| {dp:.2e} |dcenter| {dc:.2e} dangle {do:.2e} viewer {a['viewer']}/{b['viewer']} viewpoint {a['viewpoint']!r}/{b['viewpoint']!r}")
+    # fieldOfViewScale (PLANE zoom) and, for an OrthoViewpoint, fieldOfViewOffset (both sides report them).
+    extra = ""
+    if "fieldOfViewScale" in a or "fieldOfViewScale" in b:
+        ds = abs(a.get("fieldOfViewScale", math.nan) - b.get("fieldOfViewScale", math.nan))
+        ok = ok and ds <= tol
+        extra = f" |dfovScale| {ds:.2e}"
+    if a.get("fieldOfViewOffset") is not None or b.get("fieldOfViewOffset") is not None:
+        ao, bo = a.get("fieldOfViewOffset"), b.get("fieldOfViewOffset")
+        dfo = max(abs(p - q) for p, q in zip(ao, bo)) if ao is not None and bo is not None else math.nan
+        ok = ok and dfo <= tol
+        extra += f" |dfovOffset| {dfo:.2e}"
+    report(ok, f"pose frame {k}: |dpos| {dp:.2e} |dcenter| {dc:.2e} dangle {do:.2e}{extra} viewer {a['viewer']}/{b['viewer']} viewpoint {a['viewpoint']!r}/{b['viewpoint']!r}")
 
 if imgs:
     r = subprocess.run([os.path.join(target, "x3d-shot"), "compare", os.path.join(out, "js"), os.path.join(out, "rs"), "--threshold", "8", "--max-pct", "0.5"], capture_output=True, text=True, cwd=root)

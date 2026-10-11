@@ -1,0 +1,115 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  5,
+  12,
+  35
+ ],
+ "dump": [],
+ "frames": 43,
+ "events": [
+  {
+   "frame": 2,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 3,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 4,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 5,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 6,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 7,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 20,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 21,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 22,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 23,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 24,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 25,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 26,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  },
+  {
+   "frame": 27,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 300,
+   "y": 200
+  }
+ ]
+}
