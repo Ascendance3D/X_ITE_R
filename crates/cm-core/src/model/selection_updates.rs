@@ -136,6 +136,10 @@ pub(crate) fn set_selection_no_undo(doc: &Doc, sel: Sel, options: Option<&SelOpt
     };
     let skipped = skip_atomic_in_selection(doc, &sel, Some(bias), true);
     set_selection_inner(doc, skipped);
+    // `if (!(options && options.scroll === false) && doc.cm) ensureCursorVisible(doc.cm)`
+    if options.and_then(|o| o.scroll) != Some(false) && doc.inner().editor.is_some() {
+        doc.inner_mut().scroll_request = true;
+    }
 }
 
 fn set_selection_inner(doc: &Doc, sel: Sel) {

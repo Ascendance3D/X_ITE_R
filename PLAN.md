@@ -158,6 +158,10 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   Items 606/606 exact and 606/606 console logs; x0 47/47 exact (07-bookcase and
   43-villasantzip fixed) and 50/50 logs; x1 470/473 exact (3 wall-clock `Date` scripts)
   and 497/498 logs (1 render-time WASM trap). Known lists in `crates/x3d-script/tests/`.
+- 2026-10-11: **C5 done (first version)** — crate `cm-view`: native editor (winit + wgpu +
+  glyphon), binaries `cm-edit` and `cm-render`. 55 upstream view/command tests pass; 600
+  command sequences match real CM5 (0 unexplained). Gaps: bidi layout, folding, widgets,
+  overlays, find/replace, IME preedit, wrapping not browser-checked.
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
 ## Suggested order

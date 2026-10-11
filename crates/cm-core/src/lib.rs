@@ -19,7 +19,7 @@ pub mod pos;
 pub mod text;
 pub mod util;
 
-pub use model::doc::{Doc, DocOptions, EditorSemantics, LinkedDocOptions};
+pub use model::doc::{ChangeInfo, Doc, DocOptions, EditorSemantics, LinkedDocOptions};
 pub use model::history::{HistoryData, HistoryEventData, HistoryChangeData, HistorySize};
 pub use model::mark_text::{MarkOptions, Marker, MarkerFind, MarkerType, SharedTextMarker, TextMarker};
 pub use model::selection::{SelRange, Selection};

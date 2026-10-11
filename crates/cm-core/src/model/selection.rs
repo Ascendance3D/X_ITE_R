@@ -15,11 +15,14 @@ use crate::pos::{equal_cursor_pos, max_pos, min_pos, rcmp, Pos, PosRef};
 pub(crate) struct Range {
     pub anchor: PosRef,
     pub head: PosRef,
+    /// `range.goalColumn`, an expando property `moveV` (src/edit/methods.js) puts on
+    /// the JS `Range` object. Shared between clones, as JS object identity is.
+    pub goal_column: Rc<Cell<Option<f64>>>,
 }
 
 impl Range {
     pub fn new(anchor: PosRef, head: PosRef) -> Range {
-        Range { anchor, head }
+        Range { anchor, head, goal_column: Rc::new(Cell::new(None)) }
     }
     pub fn from(&self) -> PosRef {
         min_pos(&self.anchor, &self.head)
