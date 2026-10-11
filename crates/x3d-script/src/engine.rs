@@ -684,6 +684,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 eprintln!("print: {}", str_arg(ctx, a, 0));
             }
 
+            rt().prints.push(str_arg(ctx, a, 0));
+
             Ok(undefined)
         }
         "mathfn" => math_fn(ctx, &str_arg(ctx, a, 0)),
@@ -874,10 +876,17 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "bdescription" => Ok(rquickjs::String::from_str(ctx.clone(), &with_state(|s| s.description.clone()))?.into_value()),
         "bsetdescription" => {
             let d = str_arg(ctx, a, 0);
+            rt().description = d.clone();
             with_state(|s| s.description = d);
             Ok(undefined)
         }
         "time" => Ok(Value::new_number(ctx.clone(), rt().now)),
+        // Browser.nextViewpoint () and friends: queued for the viewer (X3DBrowser viewpoint API).
+        "brequest" => {
+            let r = str_arg(ctx, a, 0);
+            rt().browser_requests.push(r);
+            Ok(undefined)
+        }
         "specVersion" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.specification_version)?.into_value()),
         "worldURL" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.world_url)?.into_value()),
         "createVrml" => {

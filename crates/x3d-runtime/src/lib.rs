@@ -79,6 +79,20 @@ pub enum Cb {
     // X3DFollowerNode / X3DChaserNode / X3DDamperNode
     FollowerSetValue,
     FollowerSetDestination,
+    // Live frames (viewer): TimeSensor.set_prepare on timePrepareEvents, set_time on timeEvents.
+    TimeSensorSetPrepare,
+    TimeSensorSetTime,
+    // X3DBindableNode.set_bind__
+    BindableSetBind,
+}
+
+/// A pending `setTimeout` of X3DTimeDependentNode.addTimeout (virtual time).
+#[derive(Clone, Debug)]
+pub struct Timeout {
+    pub time: f64,
+    pub node: NodeId,
+    /// "start", "pause", "resume" or "stop".
+    pub name: &'static str,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -166,6 +180,20 @@ pub struct Runtime {
     pub scripts: Vec<NodeId>,
     /// Scenes loaded by Inline nodes (Inline node → its runtime), kept for rendering.
     pub inline_runtimes: HashMap<NodeId, Runtime>,
+    /// The scene is live (browser updating): TimeSensors tick on the browser's frames. The
+    /// oracle runs (dump.html, `update="false"`) leave this false.
+    pub live: bool,
+    /// X3DTimeDependentNode timeouts (setTimeout), fired by [`Runtime::fire_timeouts`].
+    pub timeouts: Vec<Timeout>,
+    /// Browser.print / Browser.println output (console.log in X_ITE).
+    pub prints: Vec<String>,
+    /// Browser.description (X3DBrowser.setDescription).
+    pub description: String,
+    /// Requests scripts made of the browser (Browser.nextViewpoint …), drained by the viewer.
+    pub browser_requests: Vec<String>,
+    /// Bump counter for X3DBindableNode.modificationCount.
+    pub bind_modifications: HashMap<NodeId, u64>,
+    pub bind_counter: u64,
 }
 
 impl Runtime {
@@ -188,6 +216,13 @@ impl Runtime {
             font_cache: HashMap::new(),
             scripts: vec![],
             inline_runtimes: HashMap::new(),
+            live: false,
+            timeouts: vec![],
+            prints: vec![],
+            description: String::new(),
+            browser_requests: vec![],
+            bind_modifications: HashMap::new(),
+            bind_counter: 0,
         };
 
         rt.browser_node = rt.create_internal_node("X3DBrowser");

@@ -22,6 +22,8 @@ pub struct TextureImage {
     pub repeat_t: bool,
     /// Textures smaller than getMinTextureSize (16) without TextureProperties: NEAREST, no mipmaps.
     pub nearest: bool,
+    /// Upload level 0 only (TextureProperties generateMipMaps FALSE: the Background face textures).
+    pub no_mipmaps: bool,
     pub url: String,
 }
 
@@ -37,6 +39,7 @@ impl TextureImage {
             repeat_s: true,
             repeat_t: true,
             nearest: true,
+            no_mipmaps: false,
             url: String::new(),
         }
     }
@@ -44,7 +47,7 @@ impl TextureImage {
 
 fn finish(width: u32, height: u32, rgba: Vec<u8>, flip_y: bool, repeat_s: bool, repeat_t: bool, url: String) -> TextureImage {
     let transparent = rgba.chunks_exact(4).any(|p| p[3] != 255);
-    TextureImage { width, height, rgba, transparent, flip_y, repeat_s, repeat_t, nearest: width.max(height) < 16, url }
+    TextureImage { width, height, rgba, transparent, flip_y, repeat_s, repeat_t, nearest: width.max(height) < 16, no_mipmaps: false, url }
 }
 
 /// ImageTexture.loadData: FileLoader URL fallback; a candidate that does not decode fails and
@@ -68,6 +71,32 @@ pub fn load_image_texture(sg: &Sg, n: NodeId, base: &str, fetcher: &dyn x3d_runt
         let img = img.to_rgba8();
         let (w, h) = img.dimensions();
         return Some(finish(w, h, img.into_raw(), true, repeat_s, repeat_t, resolved.to_string()));
+    }
+
+    None
+}
+
+/// The six private ImageTextures of Background (Background.initialize): the `xxxUrl` list is the
+/// texture's `url`, the browser's backgroundTextureProperties (X3DEnvironmentalEffectsContext.js:
+/// CLAMP_TO_EDGE, NICEST filters, generateMipMaps FALSE) replace the default TextureProperties,
+/// so there is no mipmap chain, no small-image NEAREST rule and no repeat.
+pub fn load_background_texture(urls: &[String], base: &str, fetcher: &dyn x3d_runtime::Fetcher) -> Option<TextureImage> {
+    let base = url::Url::parse(base).ok()?;
+
+    for candidate in urls {
+        if candidate.is_empty() {
+            continue;
+        }
+        let Ok(resolved) = base.join(candidate) else { continue };
+        let Ok(data) = fetcher.fetch(&resolved) else { continue };
+        let Ok(img) = image::load_from_memory(&data) else { continue };
+        let img = img.to_rgba8();
+        let (w, h) = img.dimensions();
+        let mut t = finish(w, h, img.into_raw(), true, false, false, resolved.to_string());
+
+        t.nearest = false;
+        t.no_mipmaps = true;
+        return Some(t);
     }
 
     None

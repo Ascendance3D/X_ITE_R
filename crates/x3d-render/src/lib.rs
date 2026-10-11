@@ -8,11 +8,13 @@
 //! [`compare`] measures images against the render oracle (oracle/x_ite-shot.mjs).
 
 pub mod compare;
+pub mod fog;
 pub mod geometry;
 pub mod gpu;
 pub mod load;
 pub mod sg;
 pub mod tess;
+pub mod text;
 pub mod texture;
 pub mod traverse;
 

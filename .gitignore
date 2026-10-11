@@ -8,3 +8,7 @@
 /oracle/items-baseline.json
 # X7 render answer key (16 MB of PNGs). Regenerable; sha256 of its index.json in oracle/README.md.
 /oracle/render-items-baseline/
+# X8 render answer key (synthetic Text/Fog/Background scenes). Regenerable; sha256 of its index.json in oracle/README.md.
+/oracle/render-synthetic-x8-baseline/
+# X8 Text oracle (15 MB). Regenerable with oracle/x_ite-text.mjs; sha256 in oracle/README.md.
+/oracle/x_ite-text.json

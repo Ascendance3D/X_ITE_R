@@ -66,6 +66,12 @@ struct FrameU {
     projection: [f32; 16],
     num_lights: [u32; 4],
     lights: [LightU; MAX_LIGHTS],
+    /// x3d_Fog: color rgb + type, visibilityStart / visibilityRange, matrix columns.
+    fog_color_type: [f32; 4],
+    fog_range: [f32; 4],
+    fog_m0: [f32; 4],
+    fog_m1: [f32; 4],
+    fog_m2: [f32; 4],
 }
 
 #[repr(C)]
@@ -195,7 +201,7 @@ impl Gpu {
     }
 
     fn upload_texture(&self, t: &TextureImage) -> wgpu::BindGroup {
-        let levels = mip_chain(t);
+        let levels = if t.no_mipmaps { vec![(t.width, t.height, t.rgba.clone())] } else { mip_chain(t) };
         let texture = self.device.create_texture(&wgpu::TextureDescriptor {
             label: Some("image"),
             size: wgpu::Extent3d { width: t.width, height: t.height, depth_or_array_layers: 1 },
@@ -259,6 +265,14 @@ impl Gpu {
             };
         }
 
+        if let Some(f) = &frame.fog {
+            fu.fog_color_type = [f.color[0], f.color[1], f.color[2], f.fog_type as f32];
+            fu.fog_range = [f.visibility_start, f.visibility_range, 0.0, 0.0];
+            fu.fog_m0 = [f.matrix[0], f.matrix[1], f.matrix[2], 0.0];
+            fu.fog_m1 = [f.matrix[3], f.matrix[4], f.matrix[5], 0.0];
+            fu.fog_m2 = [f.matrix[6], f.matrix[7], f.matrix[8], 0.0];
+        }
+
         let device = &self.device;
         use wgpu::util::DeviceExt;
         let frame_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor { label: Some("frame"), contents: bytemuck::bytes_of(&fu), usage: wgpu::BufferUsages::UNIFORM });
@@ -306,6 +320,38 @@ impl Gpu {
                     count: count as u32,
                     draw_index: draws.len() - 1,
                     texture: None,
+                });
+            }
+
+            // X3DBackgroundNode.drawCube: every loaded face, unlit white × texture, blended
+            // when the image has alpha, same cull/depth state as the sphere.
+            for face in &bg.faces {
+                let start = vertex_data.len() as u64 * 4;
+
+                for i in 0..6 {
+                    let p = &face.vertices[i * 4..i * 4 + 3];
+                    let t = &crate::traverse::FACE_TEX_COORDS[i * 4..i * 4 + 4];
+                    vertex_data.extend_from_slice(&[p[0], p[1], p[2], 0.0, 0.0, 0.0, t[0], t[1], t[2], t[3], 1.0, 1.0, 1.0, 1.0]);
+                }
+
+                let end = vertex_data.len() as u64 * 4;
+                let tp = Rc::as_ptr(&face.texture);
+
+                textures.entry(tp).or_insert_with(|| face.texture.clone());
+
+                let mut d: DrawU = bytemuck::Zeroable::zeroed();
+                d.model_view = f32x16(&bg.model_view);
+                d.texture_matrix = f32x16(&Matrix4::IDENTITY);
+                d.emissive_transparency = [1.0, 1.0, 1.0, 0.0];
+                d.flags = [0, 0, 0, 1];
+                d.flags2 = [face.texture.flip_y as u32, (!face.texture.transparent) as u32, 3, 1];
+                draws.push(d);
+                calls.push(Call {
+                    key: PipelineKey { topology: Topology::Triangles, cull: Cull::Back, ccw: true, blend: face.texture.transparent, depth_write: false, depth_test: false },
+                    vertex_range: (start, end),
+                    count: 6,
+                    draw_index: draws.len() - 1,
+                    texture: Some(tp),
                 });
             }
         }

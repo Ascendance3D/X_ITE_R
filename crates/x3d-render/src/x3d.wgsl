@@ -27,6 +27,13 @@ struct FrameUniforms {
     projection: mat4x4<f32>,
     num_lights: vec4<u32>,
     lights: array<Light, 8>,
+    // x3d_Fog: rgb color, type (0 none, 1 linear, 2 exponential); visibilityStart, visibilityRange;
+    // matrix (mat3 columns).
+    fog_color_type: vec4<f32>,
+    fog_range: vec4<f32>,
+    fog_m0: vec4<f32>,
+    fog_m1: vec4<f32>,
+    fog_m2: vec4<f32>,
 };
 
 struct DrawUniforms {
@@ -154,6 +161,20 @@ fn get_texture(in: VOut) -> vec4<f32> {
     return textureSample(tex, samp, st);
 }
 
+// Fog2.glsl getFogInterpolant: 0 is the fog color, 1 the material color.
+fn get_fog_interpolant(vertex: vec3<f32>) -> f32 {
+    let visibility_start = frame.fog_range.x;
+    let visibility_range = frame.fog_range.y - visibility_start;
+    let fog_matrix = mat3x3<f32>(frame.fog_m0.xyz, frame.fog_m1.xyz, frame.fog_m2.xyz);
+    let d_v = max(length(fog_matrix * vertex) - visibility_start, 0.0);
+
+    if (u32(frame.fog_color_type.w) == 1u) {
+        return max(visibility_range - d_v, 0.0) / visibility_range;
+    }
+
+    return exp(-d_v / max(visibility_range - d_v, 0.001));
+}
+
 @fragment
 fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) vec4<f32> {
     var final_color: vec4<f32>;
@@ -207,6 +228,11 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
 
     if (draw.flags2.y == 1u) {
         final_color.a = 1.0;
+    }
+
+    // Fragment2.glsl: finalColor .rgb = getFogColor (finalColor .rgb); the Background has no fog.
+    if (u32(frame.fog_color_type.w) != 0u && draw.flags2.w == 0u) {
+        final_color = vec4<f32>(mix(frame.fog_color_type.xyz, final_color.rgb, get_fog_interpolant(in.vertex)), final_color.a);
     }
 
     return final_color;

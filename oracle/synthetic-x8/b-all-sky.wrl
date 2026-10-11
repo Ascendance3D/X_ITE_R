@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 0 0 orientation 0 1 0 0.3 fieldOfView 1.5 }
+NavigationInfo { type "NONE" }
+Background { frontUrl "bg-front.png" backUrl "bg-back.png" leftUrl "bg-left.png" rightUrl "bg-right.png" topUrl "bg-top.png" bottomUrl "bg-bottom.png" skyColor [ 0.1 0.2 0.6, 0.6 0.7 0.9 ] skyAngle [ 1.5708 ] groundColor [ 0.3 0.25 0.2, 0.15 0.1 0.1 ] groundAngle [ 1.5708 ] }
+Transform { translation 0 -0.3 -4 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry Sphere { radius 0.4 } } }

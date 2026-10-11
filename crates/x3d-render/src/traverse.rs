@@ -3,8 +3,10 @@
 //! (X3DLayerNode.display, X3DGroupingNode.traverse, X3DTransformMatrix3DNode, Switch, LOD,
 //! Billboard, Inline, X3DShapeNode, X3DRenderObject.addDisplayShape, X3DLightNode.push).
 
+use crate::fog::{self, FogParams};
 use crate::geometry::{self, Colors, ElevationInput, ExtrusionInput, Geometry, IfsInput};
 use crate::sg::Sg;
+use crate::text;
 use crate::texture::{self, TextureImage};
 use std::collections::{BTreeSet, HashMap};
 use std::rc::Rc;
@@ -68,6 +70,16 @@ pub struct BackgroundParams {
     pub sphere: Vec<f32>,
     pub transparency: f64,
     pub model_view: Matrix4,
+    /// Face textures in draw order (X3DBackgroundNode.drawCube); empty without textures.
+    pub faces: Vec<BackgroundFace>,
+}
+
+/// One loaded Background / TextureBackground face (X3DBackgroundNode.textureBits).
+#[derive(Clone, Debug)]
+pub struct BackgroundFace {
+    /// Six vertices, xyzw (X3DBackgroundNode.transferRectangle).
+    pub vertices: [f32; 24],
+    pub texture: Rc<TextureImage>,
 }
 
 pub struct Frame {
@@ -76,6 +88,8 @@ pub struct Frame {
     pub items: Vec<DrawItem>,
     pub lights: Vec<LightParams>,
     pub background: Option<BackgroundParams>,
+    /// The bound Fog, if it draws fog (fogType != 0).
+    pub fog: Option<FogParams>,
     /// Node types encountered that the renderer does not draw.
     pub unsupported: BTreeSet<String>,
     pub viewpoint: Option<NodeId>,
@@ -83,11 +97,30 @@ pub struct Frame {
 
 pub const MAX_LIGHTS: usize = 8;
 
+/// Camera and bindable state supplied by an interactive viewer (x3d-viewer) instead of the
+/// "first node found" choice of the static render: the bound viewpoint's cameraSpaceMatrix
+/// (user position, orientation and model matrix), its user field of view, near/far values, the
+/// bound NavigationInfo headlight, and the bound Background and Fog.
+#[derive(Clone, Debug)]
+pub struct CameraOverride {
+    pub camera_space: Matrix4,
+    pub fov: f64,
+    pub near: f64,
+    pub far: f64,
+    pub headlight: bool,
+    pub viewpoint: Option<NodeId>,
+    pub navigation_info: Option<NodeId>,
+    pub background: Option<(NodeId, Matrix4)>,
+    pub fog: Option<NodeId>,
+}
+
 struct Bound {
     viewpoint: Option<(NodeId, Matrix4)>,
     navigation_info: Option<NodeId>,
     background: Option<(NodeId, Matrix4)>,
     fog: Option<NodeId>,
+    /// Model matrix of every Fog met by the CAMERA pass (Fog.traverse: modelMatrix).
+    fog_matrices: HashMap<NodeId, Matrix4>,
 }
 
 /// Runtime identity + node: Inline scenes live in their own runtimes with their own node ids.
@@ -105,6 +138,8 @@ pub struct Builder<'a> {
     pub unsupported: BTreeSet<String>,
     items: Vec<DrawItem>,
     lights: Vec<LightParams>,
+    /// Interactive camera (see [`CameraOverride`]); `None` for the oracle renders.
+    pub camera: Option<CameraOverride>,
 }
 
 /// Children-like fields of the grouping nodes.
@@ -141,7 +176,7 @@ const GROUPS: &[&str] = &["Group", "Transform", "Anchor", "Collision", "Billboar
 
 impl<'a> Builder<'a> {
     pub fn new(root: &'a x3d_runtime::Runtime) -> Self {
-        Builder { root, geometries: HashMap::new(), textures: HashMap::new(), unsupported: BTreeSet::new(), items: vec![], lights: vec![] }
+        Builder { root, geometries: HashMap::new(), textures: HashMap::new(), unsupported: BTreeSet::new(), items: vec![], lights: vec![], camera: None }
     }
 
     /// Transform: Matrix4.setTransform (translation, rotation, scale, scaleOrientation, center).
@@ -217,8 +252,14 @@ impl<'a> Builder<'a> {
         match ty {
             "Viewpoint" if bound.viewpoint.is_none() && !inline => bound.viewpoint = Some((n, *m)),
             "NavigationInfo" if bound.navigation_info.is_none() && !inline => bound.navigation_info = Some(n),
-            "Background" if bound.background.is_none() && !inline => bound.background = Some((n, *m)),
-            "Fog" if bound.fog.is_none() && !inline => bound.fog = Some(n),
+            "Background" | "TextureBackground" if bound.background.is_none() && !inline => bound.background = Some((n, *m)),
+            "Fog" if !inline => {
+                bound.fog_matrices.insert(n, *m);
+
+                if bound.fog.is_none() {
+                    bound.fog = Some(n);
+                }
+            }
             _ if GROUPS.contains(&ty) => {
                 let mut mm = *m;
                 if ty == "Transform" {
@@ -275,7 +316,7 @@ impl<'a> Builder<'a> {
                 }
             }
             // Nodes with no visual output.
-            "WorldInfo" | "Viewpoint" | "NavigationInfo" | "Background" | "TimeSensor" | "TouchSensor" | "PlaneSensor" | "SphereSensor"
+            "WorldInfo" | "Viewpoint" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "TimeSensor" | "TouchSensor" | "PlaneSensor" | "SphereSensor"
             | "CylinderSensor" | "ProximitySensor" | "VisibilitySensor" | "Script" | "PositionInterpolator" | "OrientationInterpolator"
             | "ColorInterpolator" | "ScalarInterpolator" | "CoordinateInterpolator" | "NormalInterpolator" | "Sound" | "AudioClip"
             | "BooleanFilter" | "BooleanToggle" | "BooleanTrigger" | "BooleanSequencer" | "IntegerSequencer" | "IntegerTrigger"
@@ -284,9 +325,6 @@ impl<'a> Builder<'a> {
             "Appearance" | "Material" | "ImageTexture" | "PixelTexture" | "MovieTexture" | "TextureTransform" | "Coordinate" | "Color"
             | "Normal" | "TextureCoordinate" | "FontStyle" | "Box" | "Sphere" | "Cone" | "Cylinder" | "IndexedFaceSet" | "IndexedLineSet"
             | "PointSet" | "ElevationGrid" | "Extrusion" | "Text" => {}
-            "Fog" => {
-                self.unsupported.insert("Fog".into());
-            }
             other => {
                 self.unsupported.insert(other.to_string());
             }
@@ -480,6 +518,7 @@ impl<'a> Builder<'a> {
                     normal_per_vertex: sg.bool(n, "normalPerVertex", true),
                 })
             }
+            "Text" => return text::text_geometry(sg, n, &mut self.unsupported),
             "Extrusion" => {
                 let orientation = sg.f64s(n, "orientation");
                 geometry::extrusion(&ExtrusionInput {
@@ -577,15 +616,57 @@ impl<'a> Builder<'a> {
         });
     }
 
+    /// X3DBackgroundNode.textureBits: the faces whose texture loaded. Background loads its six
+    /// private ImageTextures (backgroundTextureProperties); TextureBackground uses its
+    /// X3DTexture2DNode fields.
+    fn background_faces(&mut self, sg: &Sg, b: NodeId) -> Vec<BackgroundFace> {
+        let mut faces = vec![];
+        let textured = sg.type_name(b) == Some("TextureBackground");
+        let names = ["front", "back", "left", "right", "top", "bottom"];
+
+        for (i, name) in names.iter().enumerate() {
+            let texture = if textured {
+                match sg.node(b, &format!("{name}Texture")) {
+                    Some(t) => match sg.type_name(t) {
+                        Some("ImageTexture" | "PixelTexture") => self.texture(sg, t),
+                        Some(other) => {
+                            self.unsupported.insert(other.to_string());
+                            None
+                        }
+                        None => None,
+                    },
+                    None => None,
+                }
+            } else {
+                let urls = sg.strings(b, &format!("{name}Url"));
+
+                texture::load_background_texture(&urls, &sg.rt.scene.world_url, self.root.fetcher.as_ref()).map(Rc::new)
+            };
+
+            if let Some(texture) = texture {
+                faces.push(BackgroundFace { vertices: FACE_VERTICES[i], texture });
+            }
+        }
+
+        faces
+    }
+
     pub fn build(mut self, width: u32, height: u32) -> Frame {
         let root_sg = Sg::new(self.root);
         let sg = &root_sg;
         let roots = sg.roots();
 
         // CAMERA pass.
-        let mut bound = Bound { viewpoint: None, navigation_info: None, background: None, fog: None };
+        let mut bound = Bound { viewpoint: None, navigation_info: None, background: None, fog: None, fog_matrices: HashMap::new() };
         for r in &roots {
             self.camera(sg, *r, &Matrix4::IDENTITY, &mut bound, 0);
+        }
+
+        if let Some(o) = &self.camera {
+            bound.viewpoint = o.viewpoint.map(|v| (v, Matrix4::IDENTITY));
+            bound.navigation_info = o.navigation_info;
+            bound.background = o.background;
+            bound.fog = o.fog;
         }
 
         // NavigationInfo.set_type__: the active viewer.
@@ -629,6 +710,15 @@ impl<'a> Builder<'a> {
 
         let projection = perspective(fov, near, far, width as f64, height as f64);
 
+        let (view, projection, headlight, _far) = match &self.camera {
+            Some(o) => {
+                let mut view = o.camera_space;
+                view.inverse();
+                (view, perspective(o.fov, o.near, o.far, width as f64, height as f64), o.headlight, o.far)
+            }
+            None => (view, projection, headlight, far),
+        };
+
         // DISPLAY pass. NavigationInfo.enable pushes the headlight first.
         if headlight {
             self.lights.push(LightParams {
@@ -650,11 +740,11 @@ impl<'a> Builder<'a> {
             self.display(sg, *r, &view, 0);
         }
 
-        if bound.fog.is_some() {
-            self.unsupported.insert("Fog".into());
-        }
+        // X3DRenderObject.setGlobalFog: modelViewMatrix = fog modelMatrix × viewMatrix, inverted 3×3.
+        let fog = bound.fog.and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view));
 
-        let background = bound.background.and_then(|(b, m)| background_params(sg, b, &m, &view, far_max()));
+        let faces = bound.background.map(|(b, _)| self.background_faces(sg, b)).unwrap_or_default();
+        let background = bound.background.and_then(|(b, m)| background_params(sg, b, &m, &view, far_max(), faces));
 
         Frame {
             projection,
@@ -662,6 +752,7 @@ impl<'a> Builder<'a> {
             items: self.items,
             lights: self.lights,
             background,
+            fog,
             unsupported: self.unsupported,
             viewpoint: bound.viewpoint.map(|v| v.0),
         }
@@ -790,17 +881,11 @@ fn upper_bound(array: &[f64], value: f64) -> usize {
 }
 
 /// X3DBackgroundNode.build + display matrices.
-fn background_params(sg: &Sg, n: NodeId, model: &Matrix4, view: &Matrix4, far: f64) -> Option<BackgroundParams> {
+fn background_params(sg: &Sg, n: NodeId, model: &Matrix4, view: &Matrix4, far: f64, faces: Vec<BackgroundFace>) -> Option<BackgroundParams> {
+    // drawSphere returns early for transparency 1; drawCube still draws the loaded textures.
     let transparency = sg.f64(n, "transparency", 0.0).clamp(0.0, 1.0);
-    if transparency >= 1.0 {
+    if transparency >= 1.0 && faces.is_empty() {
         return None;
-    }
-
-    for f in ["frontUrl", "backUrl", "leftUrl", "rightUrl", "topUrl", "bottomUrl"] {
-        if !sg.strings(n, f).is_empty() {
-            // Background textures are not drawn yet; the sky/ground sphere still is.
-            break;
-        }
     }
 
     let sky_color = sg.f32s(n, "skyColor").chunks_exact(3).map(|c| [c[0], c[1], c[2]]).collect::<Vec<_>>();
@@ -906,7 +991,49 @@ fn background_params(sg: &Sg, n: NodeId, model: &Matrix4, view: &Matrix4, far: f
     mv.rotate(&rotation);
     mv.scale(&Vector3::new(far, far, far));
 
-    Some(BackgroundParams { colors, sphere, transparency, model_view: mv })
+    if transparency >= 1.0 {
+        colors.clear();
+        sphere.clear();
+    }
+
+    Some(BackgroundParams { colors, sphere, transparency, model_view: mv, faces })
+}
+
+/// X3DBackgroundNode.transferRectangle: the six face quads (front, back, left, right, top, bottom).
+#[rustfmt::skip]
+const FACE_VERTICES: [[f32; 24]; 6] = [
+    [ 1.,  1., -1., 1., -1.,  1., -1., 1., -1., -1., -1., 1.,  1.,  1., -1., 1., -1., -1., -1., 1.,  1., -1., -1., 1.],
+    [-1.,  1.,  1., 1.,  1.,  1.,  1., 1.,  1., -1.,  1., 1., -1.,  1.,  1., 1.,  1., -1.,  1., 1., -1., -1.,  1., 1.],
+    [-1.,  1., -1., 1., -1.,  1.,  1., 1., -1., -1.,  1., 1., -1.,  1., -1., 1., -1., -1.,  1., 1., -1., -1., -1., 1.],
+    [ 1.,  1.,  1., 1.,  1.,  1., -1., 1.,  1., -1., -1., 1.,  1.,  1.,  1., 1.,  1., -1., -1., 1.,  1., -1.,  1., 1.],
+    [ 1.,  1.,  1., 1., -1.,  1.,  1., 1., -1.,  1., -1., 1.,  1.,  1.,  1., 1., -1.,  1., -1., 1.,  1.,  1., -1., 1.],
+    [ 1., -1., -1., 1., -1., -1., -1., 1., -1., -1.,  1., 1.,  1., -1., -1., 1., -1., -1.,  1., 1.,  1., -1.,  1., 1.],
+];
+
+/// X3DBackgroundNode.drawCube texture coordinates for every face.
+pub const FACE_TEX_COORDS: [f32; 24] = [1., 1., 0., 1., 0., 1., 0., 1., 0., 0., 0., 1., 1., 1., 0., 1., 0., 0., 0., 1., 1., 0., 0., 1.];
+
+/// FogContainer.set / X3DFogObject: None when the fog does not draw (fogType 0).
+fn fog_params(sg: &Sg, f: NodeId, model: Option<&Matrix4>, view: &Matrix4) -> Option<FogParams> {
+    let type_field = match sg.value(f, "fogType") {
+        Some(x3d_fields::FieldValue::SFString(s)) => s.clone(),
+        _ => "LINEAR".to_string(),
+    };
+    let (fog_type, start, range) = fog::fog_type(&type_field, sg.f64(f, "visibilityStart", 0.0), sg.f64(f, "visibilityRange", 0.0), false);
+
+    if fog_type == 0 {
+        return None;
+    }
+
+    let mut mv = model.copied().unwrap_or(Matrix4::IDENTITY);
+    mv.mult_right(view);
+
+    let mut inv = mv.submatrix();
+    inv.inverse();
+
+    let c = sg.color(f, "color", [1.0, 1.0, 1.0]);
+
+    Some(FogParams { fog_type, color: [c[0] as f32, c[1] as f32, c[2] as f32], visibility_start: start as f32, visibility_range: range as f32, matrix: inv.0.map(|v| v as f32) })
 }
 
 /// Matrix4.getTransform (null, rotation): the rotation part of a matrix (polar decomposition

@@ -10,6 +10,7 @@ description = "X3D scene runtime: event engine, PROTO instancing, loading; porte
 x3d-fields = { path = "../x3d-fields" }
 x3d-scene = { path = "../x3d-scene" }
 x3d-parse = { path = "../x3d-parse" }
+x3d-text = { path = "../x3d-text" }
 url = "2"
 percent-encoding = "2"
 

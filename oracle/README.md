@@ -156,3 +156,21 @@ crate: up to 4–8 per channel, measured on corpus textures), 8-bit rounding of 
 varyings, and coverage of silhouette edge pixels and mip-level choice (Vulkan vs ANGLE/GL
 rasterization). With that threshold, 437 of 606 items have no pixel over at all, 598 have
 ≤ 0.05%, and all passing files have PSNR ≥ 35.0 dB and SSIM ≥ 0.994.
+
+## X8: Text, Fog, Background textures
+
+New files (nothing existing was edited): `tools/gen_synthetic_x8.py` writes `synthetic-x8/`
+(125 scenes plus their images: 68 `t-` Text, 23 `f-` Fog, 34 `b-` Background);
+`x_ite-text.mjs` -> `x_ite-text.json` (15 MB, gitignored, sha256 `fa34ba46d8e8fb98…`: font
+metrics, kerning, glyph outlines and the Text/FontStyle layouts with libtess triangles from
+the pinned X_ITE); `x_ite-fog.mjs` -> `x_ite-fog.json` (sha256 `6f61289ad66357b9…`: 40 Fog
+node results and 384 samples of the real `Fog2.glsl.js` interpolant evaluated on the GPU).
+
+| set | command | result |
+| --- | --- | --- |
+| `synthetic-x8/` | `node oracle/x_ite-shot.mjs oracle/synthetic-x8 <out> --size 512x512 --jobs 8` | 125 of 125; captured twice, all PNGs identical (sha256 of the sorted hashes `a451b855…`); only index.json differs, by a blob: URL uuid in one error message |
+| answer key | `render-synthetic-x8-baseline/` (2.3 MB, gitignored; `index.json` sha256 `c42b8bf184c60fb1…`) | |
+
+The Rust side: `x3d-shot batch oracle/synthetic-x8 <out> --size 512x512` then
+`x3d-shot compare render-synthetic-x8-baseline <out>`: 125 within tolerance, 0 over
+(worst file 0.007% over).
