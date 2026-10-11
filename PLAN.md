@@ -162,6 +162,11 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
   glyphon), binaries `cm-edit` and `cm-render`. 55 upstream view/command tests pass; 600
   command sequences match real CM5 (0 unexplained). Gaps: bidi layout, folding, widgets,
   overlays, find/replace, IME preedit, wrapping not browser-checked.
+- 2026-10-11: **X7 renderer core done** — crate `x3d-render` + `x3d-shot` (wgpu 30 on Vulkan,
+  offscreen, no window). Render oracle `oracle/x_ite-shot.mjs` (headless GPU Chrome, noise
+  floor 0). Within tolerance (RGB delta > 8 on ≤ 0.5% of pixels): items 604/606, x0 46/47
+  rendered (3 known rejections). Geometry 23/23 against the pinned JS. Gaps: Text, Fog,
+  MovieTexture, background textures, libtess (ear clipping instead), NVIDIA NPOT mipmaps.
 - Test inputs: Ryan's Mall items (`oracle/corpus-items/`) are the primary test set.
 
 ## Suggested order

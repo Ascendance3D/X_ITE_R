@@ -1,0 +1,23 @@
+[package]
+name = "x3d-render"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Offscreen wgpu renderer for X3D/VRML scenes, ported from X_ITE's renderer and WebGL2 shaders (MIT)."
+
+[dependencies]
+x3d-fields = { path = "../x3d-fields" }
+x3d-scene = { path = "../x3d-scene" }
+x3d-parse = { path = "../x3d-parse" }
+x3d-runtime = { path = "../x3d-runtime" }
+x3d-script = { path = "../x3d-script" }
+url = "2"
+wgpu = "30"
+pollster = "1"
+bytemuck = { version = "1", features = ["derive"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "bmp"] }
+serde_json = "1"
+sha2 = "0.10"
+
+[dev-dependencies]
