@@ -25,6 +25,7 @@ use crate::viewer::{UiEvent, Viewer3d};
 use std::path::{Path, PathBuf};
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use x3d_fields::NodeId;
+pub use x3d_render::gpu::DepthMode;
 use x3d_render::gpu::Renderer;
 
 /// X_ITE's default `Multisampling` rendering property (RenderingProperties.js).
@@ -120,6 +121,29 @@ impl EmbeddedViewer {
     /// Step to the next supported count (wraps to 1); returns the new count.
     pub fn cycle_multisampling(&mut self) -> u32 {
         self.renderer.cycle_sample_count()
+    }
+
+    /// Depth representation (default [`DepthMode::Standard`], X_ITE's). `Logarithmic` is X_ITE's
+    /// `LogarithmicDepthBuffer` property (far plane 1e10); `Reversed` is a beyond-X_ITE
+    /// reversed-Z 32-bit float depth buffer that removes most z-fighting of near-coplanar
+    /// surfaces. Set it before `load` so a "view all" far plane is computed for the mode.
+    pub fn set_depth_mode(&mut self, mode: DepthMode) {
+        self.renderer.set_depth_mode(mode);
+    }
+
+    pub fn depth_mode(&self) -> DepthMode {
+        self.renderer.depth_mode()
+    }
+
+    /// Standard -> Reversed -> Logarithmic -> Standard; returns the new mode.
+    pub fn cycle_depth_mode(&mut self) -> DepthMode {
+        let next = match self.renderer.depth_mode() {
+            DepthMode::Standard => DepthMode::Reversed,
+            DepthMode::Reversed => DepthMode::Logarithmic,
+            DepthMode::Logarithmic => DepthMode::Standard,
+        };
+        self.renderer.set_depth_mode(next);
+        next
     }
 
     /// The device features that make [`FrameInfo::gpu_ms`] available; add them to the device

@@ -348,7 +348,7 @@ impl Vp {
             Some(o) => o,
             None => base.far_field,
         };
-        v.unwrap_or_else(|| if nav.far_value() != 0.0 { nav.far_value() } else { MAX_FAR })
+        v.unwrap_or_else(|| if nav.far_value() != 0.0 { nav.far_value() } else { max_far() })
     }
 
     /// X3DViewpointNode.update.
@@ -489,7 +489,10 @@ struct Relative {
 }
 
 /// X3DViewpointNode.getMaxFarValue (no logarithmic depth buffer).
-pub const MAX_FAR: f64 = 1e5;
+/// X3DViewpointNode.getMaxFarValue (1e5, or 1e10 with the LogarithmicDepthBuffer property).
+pub fn max_far() -> f64 {
+    x3d_render::traverse::far_max()
+}
 
 /// An axis-aligned box in some space (Box3 reduced to what viewAll / lookAt need).
 #[derive(Clone, Copy, Debug)]
@@ -930,7 +933,7 @@ impl Layer {
         v.field_of_view_scale = 1.0;
         let near = distance * (0.125 / 10.0);
         v.near_override = Some(Some(near));
-        v.far_override = Some(Some(near * MAX_FAR / 0.125));
+        v.far_override = Some(Some(near * max_far() / 0.125));
     }
 }
 

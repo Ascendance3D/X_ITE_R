@@ -34,6 +34,8 @@ pub struct Options {
     pub size: (u32, u32),
     /// Requested multisampling (`--msaa N`); X_ITE's default 4 when `None`.
     pub msaa: Option<u32>,
+    /// `--depth standard|log|reversed`; X_ITE's standard depth buffer when `None`.
+    pub depth: Option<crate::embed::DepthMode>,
 }
 
 /// Everything that exists once the window does.
@@ -166,6 +168,12 @@ impl ViewerWindow {
                         eprintln!("multisampling {n}x");
                     }
                     self.update_title();
+                }
+                "z" | "Z" => {
+                    if let Some(g) = &mut self.gfx {
+                        let m = g.viewer.cycle_depth_mode();
+                        eprintln!("depth buffer {m:?}");
+                    }
                 }
                 "r" | "R" => {
                     if let Some(g) = &mut self.gfx {
@@ -412,6 +420,10 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
 
     if let Some(n) = opts.msaa {
         viewer.set_multisampling(n);
+    }
+
+    if let Some(m) = opts.depth {
+        viewer.set_depth_mode(m);
     }
 
     if std::env::var("X3D_VIEW_STATS").is_ok() {

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>X7 oracle: render one world and read back the pixels</title>
+<!-- Lives inside the pinned src/ so X_ITE resolves its assets/ the same way it does upstream.
+     dump.html is the parse oracle and stays untouched; this is the render oracle. -->
+<style>html, body { margin: 0; padding: 0; background: #000; }</style>
+<script src="../node_modules/libtess/libtess.cat.js"></script>
+<script src="../node_modules/@create3000/libgif/libgif.js"></script>
+<script src="../node_modules/apng-js/lib/index.js"></script>
+<!--
+   antialiased="false" logarithmicDepthBuffer="true"             -> RenderingProperties.Multisampling 0 (plain RGBA8 + DEPTH24 framebuffer)
+   preserveDrawingBuffer="true"    -> the default framebuffer survives compositing, so readPixels works between frames
+   splashScreen="false"            -> the canvas is never display:none while loading
+   contentScale="1"                -> framebuffer is exactly the CSS size
+   We read the WebGL drawing buffer with gl.readPixels, so DOM overlays (splash, notifications,
+   context menu, timings) can never end up in the image, whatever their state.
+-->
+<x3d-canvas id="c" antialiased="false" logarithmicDepthBuffer="true" preserveDrawingBuffer="true" splashScreen="false"
+   contextMenu="false" notifications="false" timings="false" contentScale="1"
+   style="display:block;width:512px;height:512px"></x3d-canvas>
+<script type="module">
+await import ("./x_ite.js");
+
+const FROZEN_TIME   = 946684800; // 2000-01-01T00:00:00Z, same as dump.html
+const canvasElement = document .getElementById ("c");
+const browser       = canvasElement .browser;
+
+browser .getCurrentTime = () => FROZEN_TIME;
+
+const X3D = window [Symbol .for ("X_ITE.X3D")];
+
+window .setSize = function (w, h)
+{
+   canvasElement .style .width  = w + "px";
+   canvasElement .style .height = h + "px";
+};
+
+window .info = function ()
+{
+   const gl  = browser .getContext ();
+   const ext = gl .getExtension ("WEBGL_debug_renderer_info");
+
+   return {
+      vendor:   ext ? gl .getParameter (ext .UNMASKED_VENDOR_WEBGL)   : gl .getParameter (gl .VENDOR),
+      renderer: ext ? gl .getParameter (ext .UNMASKED_RENDERER_WEBGL) : gl .getParameter (gl .RENDERER),
+      version:  gl .getParameter (gl .VERSION),
+      contextAttributes: gl .getContextAttributes (),
+      multisampling: browser .getRenderingProperty ("Multisampling"),
+      antialiased: browser .getRenderingProperty ("Antialiased"),
+      splashVisible: !browser .getSplashScreen () .classList .contains ("x_ite-private-hidden"),
+      canvasDisplay: getComputedStyle (browser .getCanvas ()) .display,
+      drawingBuffer: [ gl .drawingBufferWidth, gl .drawingBufferHeight ],
+      x_ite: X3D .getBrowser () .version ?? browser .version,
+   };
+};
+
+window .shot = async function (url, frames, settleMs)
+{
+   const log = [ ];
+   const orig = { };
+
+   for (const m of [ "error", "warn" ])
+   {
+      orig [m] = console [m];
+      console [m] = (... a) => { log .push (`${m}: ${a .map (String) .join (" ") .split ("\n") [0]}`); };
+   }
+
+   try
+   {
+      // loadURL resolves when the browser load count reaches 0 (textures, inlines, protos).
+      await browser .loadURL (new X3D .MFString (url));
+
+      // Let real time pass so frames actually paint (virtual time freezes X_ITE's WebGL).
+      for (let i = 0; i < frames; ++ i)
+         await browser .nextFrame ();
+
+      await new Promise (r => setTimeout (r, settleMs));
+
+      for (let i = 0; i < 2; ++ i)
+         await browser .nextFrame ();
+
+      const gl = browser .getContext ();
+      const w  = gl .drawingBufferWidth, h = gl .drawingBufferHeight;
+      const px = new Uint8Array (w * h * 4);
+      const fb = gl .getParameter (gl .FRAMEBUFFER_BINDING);
+
+      gl .bindFramebuffer (gl .FRAMEBUFFER, null);
+      gl .readPixels (0, 0, w, h, gl .RGBA, gl .UNSIGNED_BYTE, px);
+      gl .bindFramebuffer (gl .FRAMEBUFFER, fb);
+
+      // Base64 of the raw bottom-up RGBA rows; the runner flips and encodes PNG.
+      let bin = "";
+
+      for (let i = 0; i < px .length; i += 0x8000)
+         bin += String .fromCharCode .apply (null, px .subarray (i, i + 0x8000));
+
+      return { ok: true, width: w, height: h, rgba: btoa (bin), log: log .sort (),
+               splashVisible: !browser .getSplashScreen () .classList .contains ("x_ite-private-hidden"),
+               canvasDisplay: getComputedStyle (browser .getCanvas ()) .display };
+   }
+   catch (e)
+   {
+      return { ok: false, error: String (e ?.message ?? e) .split ("\n") [0], log: log .sort () };
+   }
+   finally
+   {
+      Object .assign (console, orig);
+   }
+};
+
+window .ready = true;
+</script>

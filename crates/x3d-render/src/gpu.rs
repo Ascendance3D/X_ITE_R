@@ -23,11 +23,44 @@ use std::rc::Rc;
 
 use wgpu::util::DeviceExt;
 use x3d_fields::math::{Matrix3, Matrix4};
+use x3d_fields::NodeId;
 
 const FLOATS_PER_VERTEX: usize = 14;
 
 /// MultiSampleFramebuffer: DEPTH_COMPONENT24.
 const DEPTH_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Depth24Plus;
+
+/// How depth is stored and compared.
+///
+/// `Standard` is X_ITE's default (DEPTH_COMPONENT24, `LESS_EQUAL`, perspective z/w).
+/// `Logarithmic` is X_ITE's `LogarithmicDepthBuffer` rendering property ported exactly
+/// (Logarithmic2.js: vertex `depth = 1 + gl_Position.w`, fragment
+/// `gl_FragDepth = log2 (depth) / log2 (far + 1)`; `getMaxFarValue` becomes 1e10), so it can be
+/// compared 1:1 with X_ITE run with `logarithmicDepthBuffer="true"`.
+/// `Reversed` is NOT in X_ITE: reversed-Z with a 32-bit float depth buffer, same near and far
+/// planes (so the visible volume is unchanged); beyond-X_ITE, viewer-only.
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
+pub enum DepthMode {
+    #[default]
+    Standard,
+    Logarithmic,
+    Reversed,
+}
+
+impl DepthMode {
+    pub fn parse(s: &str) -> Option<DepthMode> {
+        match s.to_ascii_lowercase().as_str() {
+            "standard" | "default" | "off" | "0" => Some(DepthMode::Standard),
+            "log" | "logarithmic" => Some(DepthMode::Logarithmic),
+            "reversed" | "reverse" | "reversed-z" | "reversez" => Some(DepthMode::Reversed),
+            _ => None,
+        }
+    }
+
+    fn depth_format(self) -> wgpu::TextureFormat {
+        if self == DepthMode::Reversed { wgpu::TextureFormat::Depth32Float } else { DEPTH_FORMAT }
+    }
+}
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 enum Topology {
@@ -183,6 +216,14 @@ pub struct Renderer {
     gl_sample_orientation: bool,
     /// True while `render_to_rgba` draws mirrored.
     flip_now: bool,
+    depth_mode: DepthMode,
+    /// Debug: draw (draw index + 1, triangle index) into the RGBA target instead of shading; see
+    /// [`Renderer::set_debug_ids`]. Never on in the oracle paths.
+    debug_ids: bool,
+    /// Shader for the non-default modes (`Logarithmic`, debug IDs), patched from `x3d.wgsl`.
+    alt_shader: Option<wgpu::ShaderModule>,
+    /// Debug IDs: per draw index, the geometry node and model-view matrix of the last `encode`.
+    debug_draws: Vec<Option<(NodeId, Matrix4)>>,
     /// Requested sample count (X_ITE's `Multisampling` rendering property); 0 and 1 mean none.
     requested_samples: u32,
     /// Sample counts the adapter supports for the color target and Depth24Plus, ascending, 1 first.
@@ -242,6 +283,82 @@ impl Renderer {
         if self.gl_sample_orientation != on {
             self.gl_sample_orientation = on;
         }
+    }
+
+    pub fn depth_mode(&self) -> DepthMode {
+        self.depth_mode
+    }
+
+    /// Choose the depth representation (see [`DepthMode`]). Also switches the process-wide
+    /// `LogarithmicDepthBuffer` property (far plane 1e10), so call it before the next frame is
+    /// built.
+    pub fn set_depth_mode(&mut self, mode: DepthMode) {
+        if self.depth_mode != mode {
+            self.depth_mode = mode;
+            crate::traverse::set_logarithmic_depth_buffer(mode == DepthMode::Logarithmic);
+            self.rebuild_shader_variant();
+        }
+    }
+
+    /// Debug: render object identity instead of shading. Each pixel of `render_to_rgba` is
+    /// `(draw index + 1) & 255, (draw index + 1) >> 8, triangle & 255, triangle >> 8` (RGBA);
+    /// background faces count as draws; no antialiasing or blending. Off by default and unused by
+    /// every oracle path. The mapping from draw index to node is [`Renderer::debug_draws`].
+    pub fn set_debug_ids(&mut self, on: bool) {
+        if self.debug_ids != on {
+            self.debug_ids = on;
+            self.rebuild_shader_variant();
+        }
+    }
+
+    /// Debug IDs: for each draw index of the last `encode`, the geometry node and model-view matrix
+    /// (`None` for background faces).
+    pub fn debug_draws(&self) -> &[Option<(NodeId, Matrix4)>] {
+        &self.debug_draws
+    }
+
+    fn rebuild_shader_variant(&mut self) {
+        self.pipelines.clear();
+        self.alt_shader = None;
+
+        if self.depth_mode == DepthMode::Standard && !self.debug_ids {
+            return;
+        }
+
+        let mut src = include_str!("x3d.wgsl").to_string();
+        fn patch(src: &mut String, a: &str, b: &str) {
+            assert_eq!(src.matches(a).count(), 1, "shader patch anchor {a:?}");
+            *src = src.replacen(a, b, 1);
+        }
+
+        if self.depth_mode == DepthMode::Logarithmic {
+            // Logarithmic2.js, called last in Vertex2.glsl.js main () and Fragment2.glsl.js main ().
+            patch(&mut src, "struct VOut {\n", "struct VOut {\n    @location(4) log_depth: f32,\n");
+            patch(&mut src, "    p.z = 0.5 * (p.z + p.w);\n    out.position = p;", "    p.z = 0.5 * (p.z + p.w);\n    out.position = p;\n    out.log_depth = 1.0 + p.w;");
+            patch(&mut src, "@fragment\nfn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) vec4<f32> {", "struct FOut {\n    @location(0) color: vec4<f32>,\n    @builtin(frag_depth) depth: f32,\n};\n\n@fragment\nfn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> FOut {");
+            let i = src.rfind("    return final_color;\n}").expect("fs_main return");
+            src.replace_range(i..i + "    return final_color;\n}".len(), "    // x3d_LogarithmicFarFactor1_2 travels in fog_range.z.\n    return FOut(final_color, log2(in.log_depth) * frame.fog_range.z);\n}");
+        }
+
+        if self.depth_mode == DepthMode::Reversed {
+            // The projection already yields WebGPU clip z (see `reverse_depth`).
+            patch(&mut src, "    p.z = 0.5 * (p.z + p.w);\n", "");
+        }
+
+        if self.debug_ids {
+            patch(&mut src, "struct VOut {\n", "struct VOut {\n    @location(5) @interpolate(flat) tri: u32,\n");
+            patch(&mut src, "fn vs_main(in: VIn) -> VOut {", "fn vs_main(in: VIn, @builtin(vertex_index) vi: u32) -> VOut {");
+            patch(&mut src, "    out.position = p;", "    out.position = p;\n    out.tri = vi / 3u;");
+            let color = "vec4<f32>(f32(id & 255u), f32((id >> 8u) & 255u), f32(in.tri & 255u), f32((in.tri >> 8u) & 255u)) / 255.0";
+
+            if self.depth_mode == DepthMode::Logarithmic {
+                src.push_str(&format!("\n@fragment\nfn fs_id(in: VOut) -> FOut {{\n    let id = u32(draw.diffuse_ambient.x);\n    return FOut({color}, log2(in.log_depth) * frame.fog_range.z);\n}}\n"));
+            } else {
+                src.push_str(&format!("\n@fragment\nfn fs_id(in: VOut) -> @location(0) vec4<f32> {{\n    let id = u32(draw.diffuse_ambient.x);\n    return {color};\n}}\n"));
+            }
+        }
+
+        self.alt_shader = Some(self.device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("x3d.wgsl variant"), source: wgpu::ShaderSource::Wgsl(src.into()) }));
     }
 
     /// Request a sample count: X_ITE's `Multisampling` rendering property (BrowserOptions
@@ -349,6 +466,10 @@ impl Renderer {
             msaa_color: None,
             gl_sample_orientation: false,
             flip_now: false,
+            depth_mode: DepthMode::Standard,
+            debug_ids: false,
+            alt_shader: None,
+            debug_draws: vec![],
             requested_samples: 1,
             supported_samples: vec![1, 4],
             offscreen: None,
@@ -427,7 +548,7 @@ impl Renderer {
 
     fn make_pipeline(&self, key: PipelineKey, format: wgpu::TextureFormat, samples: u32, flip: bool) -> wgpu::RenderPipeline {
         let attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4];
-        let blend = key.blend.then_some(wgpu::BlendState {
+        let blend = (key.blend && !self.debug_ids).then_some(wgpu::BlendState {
             // gl.blendFuncSeparate (SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ONE_MINUS_SRC_ALPHA)
             color: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::SrcAlpha, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
             alpha: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::One, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
@@ -436,7 +557,7 @@ impl Renderer {
             label: Some("x3d"),
             layout: Some(&self.layout),
             vertex: wgpu::VertexState {
-                module: &self.shader,
+                module: self.alt_shader.as_ref().unwrap_or(&self.shader),
                 entry_point: Some("vs_main"),
                 compilation_options: Default::default(),
                 buffers: &[Some(wgpu::VertexBufferLayout { array_stride: (FLOATS_PER_VERTEX * 4) as u64, step_mode: wgpu::VertexStepMode::Vertex, attributes: &attributes })],
@@ -456,16 +577,22 @@ impl Renderer {
                 ..Default::default()
             },
             depth_stencil: Some(wgpu::DepthStencilState {
-                format: DEPTH_FORMAT,
+                format: self.depth_mode.depth_format(),
                 depth_write_enabled: Some(key.depth_write),
-                depth_compare: Some(if key.depth_test { wgpu::CompareFunction::LessEqual } else { wgpu::CompareFunction::Always }),
+                depth_compare: Some(if !key.depth_test {
+                    wgpu::CompareFunction::Always
+                } else if self.depth_mode == DepthMode::Reversed {
+                    wgpu::CompareFunction::GreaterEqual
+                } else {
+                    wgpu::CompareFunction::LessEqual
+                }),
                 stencil: Default::default(),
                 bias: Default::default(),
             }),
             multisample: wgpu::MultisampleState { count: samples, mask: !0, alpha_to_coverage_enabled: false },
             fragment: Some(wgpu::FragmentState {
-                module: &self.shader,
-                entry_point: Some("fs_main"),
+                module: self.alt_shader.as_ref().unwrap_or(&self.shader),
+                entry_point: Some(if self.debug_ids { "fs_id" } else { "fs_main" }),
                 compilation_options: Default::default(),
                 targets: &[Some(wgpu::ColorTargetState { format, blend, write_mask: wgpu::ColorWrites::ALL })],
             }),
@@ -641,12 +768,18 @@ impl Renderer {
         self.frame_no += 1;
         self.stats = RenderStats::default();
         let frame_no = self.frame_no;
-        let samples = self.sample_count();
+        let samples = if self.debug_ids { 1 } else { self.sample_count() };
         let flip = self.flip_now;
 
         // --- frame uniforms
         let mut fu: FrameU = bytemuck::Zeroable::zeroed();
-        fu.projection = f32x16(&frame.projection);
+        let mut projection = frame.projection;
+
+        if self.depth_mode == DepthMode::Reversed {
+            reverse_depth(&mut projection);
+        }
+
+        fu.projection = f32x16(&projection);
 
         if flip {
             for i in [1, 5, 9, 13] {
@@ -677,6 +810,13 @@ impl Renderer {
             fu.fog_m2 = [f.matrix[6], f.matrix[7], f.matrix[8], 0.0];
         }
 
+        if self.depth_mode == DepthMode::Logarithmic {
+            // x3d_LogarithmicFarFactor1_2 = 1 / log2 (far + 1); far recovered from the perspective
+            // (or orthographic) projection of the frame.
+            let (_, far) = near_far(&frame.projection);
+            fu.fog_range[2] = (1.0 / (far + 1.0).log2()) as f32;
+        }
+
         self.queue.write_buffer(&self.frame_buffer, 0, bytemuck::bytes_of(&fu));
 
         // --- draw list in X3DRenderObject.drawShapes order
@@ -685,6 +825,7 @@ impl Renderer {
         let mut draws: Vec<DrawU> = Vec::with_capacity(frame.items.len() + 8);
         let mut calls = std::mem::take(&mut self.calls);
         calls.clear();
+        self.debug_draws.clear();
         let mut used_textures: Vec<Rc<TextureImage>> = vec![];
 
         if let Some(bg) = &frame.background {
@@ -702,6 +843,7 @@ impl Renderer {
             d.emissive_transparency = [1.0, 1.0, 1.0, bg.transparency as f32];
             d.flags = [0, 0, 1, 0];
             d.flags2 = [0, (bg.transparency == 0.0) as u32, 3, 1];
+            d.diffuse_ambient[0] = (draws.len() + 1) as f32;
             draws.push(d);
             if count > 0 {
                 calls.push(Call {
@@ -735,6 +877,7 @@ impl Renderer {
                 d.emissive_transparency = [1.0, 1.0, 1.0, 0.0];
                 d.flags = [0, 0, 0, 1];
                 d.flags2 = [face.texture.flip_y as u32, (!face.texture.transparent) as u32, 3, 1];
+                d.diffuse_ambient[0] = (draws.len() + 1) as f32;
                 draws.push(d);
                 calls.push(Call {
                     key: PipelineKey { topology: Topology::Triangles, cull: Cull::Back, ccw: true, blend: face.texture.transparent, depth_write: false, depth_test: false },
@@ -797,6 +940,11 @@ impl Renderer {
             let gouraud = m.shading == Shading::Gouraud;
             d.flags = [gouraud as u32, (gouraud && num_lights > 0) as u32, (!g.colors.is_empty()) as u32, item.texture.is_some() as u32];
             d.flags2 = [item.texture.as_ref().is_some_and(|t| t.flip_y) as u32, (!is_transparent) as u32, g.geometry_type as u32, 0];
+            if self.debug_ids {
+                d.diffuse_ambient[0] = (draws.len() + 1) as f32;
+                self.debug_draws.resize(draws.len() + 1, None);
+                self.debug_draws[draws.len()] = Some((item.geometry_node, item.model_view));
+            }
             draws.push(d);
             let draw_index = draws.len() - 1;
 
@@ -886,14 +1034,16 @@ impl Renderer {
         }
 
         // Depth buffer sized to the target.
-        if self.depth.as_ref().is_none_or(|d| d.2 != width || d.3 != height || d.4 != samples) {
+        let depth_format = self.depth_mode.depth_format();
+
+        if self.depth.as_ref().is_none_or(|d| d.2 != width || d.3 != height || d.4 != samples || d.0.format() != depth_format) {
             let texture = self.device.create_texture(&wgpu::TextureDescriptor {
                 label: Some("depth"),
                 size: wgpu::Extent3d { width, height, depth_or_array_layers: 1 },
                 mip_level_count: 1,
                 sample_count: samples,
                 dimension: wgpu::TextureDimension::D2,
-                format: DEPTH_FORMAT,
+                format: depth_format,
                 usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                 view_formats: &[],
             });
@@ -938,7 +1088,7 @@ impl Renderer {
                 })],
                 depth_stencil_attachment: Some(wgpu::RenderPassDepthStencilAttachment {
                     view: depth_view,
-                    depth_ops: Some(wgpu::Operations { load: wgpu::LoadOp::Clear(1.0), store: wgpu::StoreOp::Store }),
+                    depth_ops: Some(wgpu::Operations { load: wgpu::LoadOp::Clear(if self.depth_mode == DepthMode::Reversed { 0.0 } else { 1.0 }), store: wgpu::StoreOp::Store }),
                     stencil_ops: None,
                 }),
                 timestamp_writes,
@@ -1061,6 +1211,39 @@ impl Gpu {
     /// without timestamp support). For benchmarks.
     pub fn render_timed(&mut self, frame: &Frame, width: u32, height: u32) -> Option<f64> {
         self.renderer.render_offscreen_timed(frame, width, height)
+    }
+}
+
+/// Near and far of a projection built by `Camera.perspective` (column-major: z row at 10 and 14,
+/// w row -1 at 11) or `Camera.ortho`.
+fn near_far(p: &Matrix4) -> (f64, f64) {
+    let (c, d) = (p.0[10], p.0[14]);
+
+    if p.0[11] == -1.0 {
+        // c = -(f + n) / (f - n), d = -2 n f / (f - n)
+        let n = d / (c - 1.0);
+        (n, n * (c - 1.0) / (c + 1.0))
+    } else {
+        // c = -2 / (f - n), d = -(f + n) / (f - n)
+        let (n, f) = ((d + 1.0) / c, (d - 1.0) / c);
+        (n, f)
+    }
+}
+
+/// Reversed-Z: rewrite the z row so that z / w in [0, 1] (WebGPU clip space, the shader's
+/// 0.5 * (z + w) mapping is patched out) is 1 at the near plane and 0 at the far plane. The
+/// `n f / (f - n)` term carries the depth, so a 32-bit float keeps its relative precision.
+fn reverse_depth(p: &mut Matrix4) {
+    let (n, f) = near_far(p);
+
+    if p.0[11] == -1.0 {
+        // d_r = n f / ((f - n) z) - n / (f - n), z = -z_v = w
+        p.0[10] = n / (f - n);
+        p.0[14] = n * f / (f - n);
+    } else {
+        // d_r = (f + z_v) / (f - n), w = 1
+        p.0[10] = 1.0 / (f - n);
+        p.0[14] = f / (f - n);
     }
 }
 

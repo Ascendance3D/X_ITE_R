@@ -261,3 +261,38 @@ chaser (still writing `positionOffset`) and the zoom position chaser overlap, an
 zoom distance ends 0.5% different (frame 18 of the scripted case, pose delta 0.02, orientation
 identical). With the wheel after the rotation settled (or with no preceding drag) poses agree to
 1e-16. Repro: a rotate drag, release at frame 15, wheel from frame 17.
+
+
+## Depth fighting (2026-10-11): which triangles fight, X_ITE's LogarithmicDepthBuffer, reversed-Z
+
+Question: "tearing around the rim when dragging" on `render-items/antiques/chronos-orrery`. Answer
+(measured, see PLAN.md Status): two sources, both inherent to the item, and X_ITE flickers at the
+same pixels as the Rust viewer.
+
+New files (nothing existing edited): `crates/x3d-viewer/src/bin/x3d-zfight.rs` (debug ID-buffer
+render, `Renderer::set_debug_ids`, kept out of every default path: draw and triangle index per
+pixel, camera jitter, analytic depth of the two competing triangles), `x_ite-zfight.mjs` +
+`x_ite-pin/src/zfight.html` (the same jitter sequence in X_ITE, `--log-depth` turns on
+`LogarithmicDepthBuffer`), `tools/zfight_compare.py`, `x_ite-shot-log.mjs` + `x_ite-pin/src/shot-log.html`
+(shot.html with `logarithmicDepthBuffer="true"`), `synthetic-zfight/` (tilt-pair, far-range) with
+baselines `render-zfight-baseline/` (standard) and `render-zfight-log-baseline/` (log), and
+`x_ite-geometry-ring.{mjs,json}` (the orrery's closed-spine ring Extrusion against X_ITE:
+`crates/x3d-render/tests/geometry_ring.rs`, 300 vertices with caps, 288 without).
+
+```
+x3d-zfight <world> oracle/x10-scripts/msaa-orrery-zoom22.json --frames 1,59,142 --out /tmp/zf --n 12 [--depth standard|log|reversed]
+x3d-zfight ... --color-dir D --jitters j.json          # shaded PNGs, one per camera jitter
+node oracle/x_ite-zfight.mjs <world> <script> --frames 59 --jitters j.json --out D2 [--log-depth]   # one frame per run
+python3 -I oracle/tools/zfight_compare.py D D2 --frames 59
+```
+
+Use one frame per X_ITE run and only frames where the navigation chaser is idle (59, 142 of the
+zoom22 script): a chaser still running rewrites `positionOffset` and swallows the jitter.
+
+`x3d-shot ... --depth log|reversed` and `x3d-view --depth standard|log|reversed` (key `z` cycles)
+select the mode. `LogarithmicDepthBuffer` is ported exactly (Logarithmic2.js: vertex
+`depth = 1 + gl_Position.w`, fragment `gl_FragDepth = log2 (depth) / log2 (far + 1)`, far 1e10 from
+`getMaxFarValue`): render-items 604/606 against `x_ite-shot-log.mjs` (the same 2 files as standard),
+`synthetic-zfight` 2/2, and on the orrery pose pair the flicker pixels overlap 99% with X_ITE's
+(standard: 64%). Reversed-Z (`Depth32Float`, GreaterEqual, same near/far) is not in X_ITE and is
+checked only against its own properties (`crates/x3d-render/tests/depth.rs`).
