@@ -1,0 +1,6 @@
+# MSAA off (render-items2-baseline vs Rust e0f613e)
+FAIL    art/djascendance-live/djascendance-live.wrl.png  max  94  over   4843 ( 1.847%)  diff   9814  psnr  40.60  ssim 0.9979
+FAIL    art/rainbow-room/rainbow-room.wrl.png  max  82  over   6657 ( 2.539%)  diff  24386  psnr  39.10  ssim 0.9932
+# MSAA 4x --gl-samples (render-msaa4-items2-baseline vs Rust e0f613e)
+FAIL    art/djascendance-live/djascendance-live.wrl.png  max  94  over   4828 ( 1.842%)  diff  10062  psnr  40.60  ssim 0.9979
+FAIL    art/rainbow-room/rainbow-room.wrl.png  max  82  over   6671 ( 2.545%)  diff  24974  psnr  39.09  ssim 0.9932

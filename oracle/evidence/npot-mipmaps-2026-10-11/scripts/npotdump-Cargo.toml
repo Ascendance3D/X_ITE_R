@@ -1,0 +1,8 @@
+[package]
+name = "npotdump"
+version = "0.0.0"
+edition = "2021"
+[dependencies]
+x3d-render = { path = "/home/ryan/Projects/cybertown/X_ITE/scratch/rust-port/crates/x3d-render" }
+image = { version = "0.25", default-features = false, features = ["jpeg"] }
+[workspace]
