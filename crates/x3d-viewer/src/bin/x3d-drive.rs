@@ -7,7 +7,7 @@
 //! Script (JSON): { "size": [512, 512], "t0": 946684800, "dt": 0.016666666666666666, "frames": 60,
 //!   "events": [ { "frame": 1, "type": "mousedown", "button": 0, "x": 256, "y": 256 }, ... ],
 //!   "capture": [10, 60], "dump": [60] }
-//! Event types: mousedown, mouseup, mousemove, wheel (deltaY), key (Home, End, PageUp,
+//! Event types: mousedown, mouseup, mousemove, wheel (deltaY), dblclick, key (Home, End, PageUp,
 //! PageDown), mods (shift, ctrl, alt), viewer (name). Pointer coordinates are pixels with the
 //! origin at the bottom left of the canvas. "t" (seconds) offsets the event's Date.now ().
 
@@ -63,7 +63,13 @@ fn pose(v: &mut Viewer3d) -> Value {
     let (p, o, c) = v.user_pose();
     let bound = v.layer.viewpoint();
     let name = if bound == x3d_viewer::layer::DEFAULT { "<default>".to_string() } else { v.rt.scene.node(bound).name.clone() };
-    json!({ "position": vec3(&p), "orientation": rot(&o), "centerOfRotation": vec3(&c), "viewpoint": name, "viewer": v.viewer_kind() })
+    let (fov_scale, fov_offset) = v.field_of_view_state();
+    let mut j = json!({ "position": vec3(&p), "orientation": rot(&o), "centerOfRotation": vec3(&c), "viewpoint": name, "viewer": v.viewer_kind(), "fieldOfViewScale": fov_scale });
+    // OrthoViewpoint ._fieldOfViewOffset (the oracle reports it for an OrthoViewpoint only).
+    if let Some(o) = fov_offset {
+        j["fieldOfViewOffset"] = json!(o);
+    }
+    j
 }
 
 fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path>, warmup_override: Option<u64>) -> Value {

@@ -68,6 +68,8 @@ pub struct ViewerWindow {
     gfx: Option<Gfx>,
     mods: ModifiersState,
     cursor: (f64, f64),
+    /// Time and position of the previous left button release (the browser's click count for "dblclick").
+    last_left_up: Option<(std::time::Instant, f64, f64)>,
     frame: u64,
     shots: u32,
     last_title: String,
@@ -85,6 +87,7 @@ impl ViewerWindow {
             gfx: None,
             mods: ModifiersState::empty(),
             cursor: (0.0, 0.0),
+            last_left_up: None,
             frame: 0,
             shots: 0,
             last_title: String::new(),
@@ -496,6 +499,16 @@ impl ApplicationHandler for ViewerWindow {
                 };
                 let (x, y) = self.cursor;
                 self.input(if state == ElementState::Pressed { UiEvent::MouseDown { button: b, x, y } } else { UiEvent::MouseUp { button: b, x, y } });
+
+                // The second release of a double click fires the DOM "dblclick" event (LOOKAT, PLANE).
+                if b == 0 && state == ElementState::Released {
+                    let now = std::time::Instant::now();
+
+                    match self.last_left_up.take() {
+                        Some((t, px, py)) if now.duration_since(t).as_millis() < 500 && (px - x).abs() <= 4.0 && (py - y).abs() <= 4.0 => self.input(UiEvent::DblClick { x, y }),
+                        _ => self.last_left_up = Some((now, x, y)),
+                    }
+                }
             }
             WindowEvent::MouseWheel { delta, .. } => {
                 // DOM wheel events: deltaY > 0 scrolls down (zoom out); a notch is 100 px.

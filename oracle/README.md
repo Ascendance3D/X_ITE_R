@@ -277,6 +277,44 @@ off by 2.5e-2. Note for script authors: X_ITE's harness moves the mouse to a whe
 so a wheel inside a drag must sit on the current pointer position, or X_ITE also sees a rotate step.
 
 
+## PLANE and LOOKAT viewers, OrthoViewpoint (2026-10-11)
+
+Ported (crates/x3d-viewer): `nav/plane.rs` = Browser/Navigation/PlaneViewer.js, `nav/lookat.rs` = LookAtViewer.js (chasers tick
+in activation order, like `Examine`), `lookat.rs` = X3DViewer.lookAtPoint / lookAtBBox + X3DViewpointNode.lookAt* +
+OrthoViewpoint.lookAt* + Box3 (shared with the Examine double click, which is not wired yet), and OrthoViewpoint in the viewer
+(`layer.rs`: fieldOfView extents/offset, projection, max far 1e4, viewAll, transitions, `Vp::set_interpolators`). Look-at
+transitions start lazily (TimeSensor.set_start runs in the next frame's first event processing) and use float32 key values like
+the MF interpolator fields. Facts from the JS: PLANE pans with the middle button or Alt + left, a plain left drag does nothing;
+a LOOKAT/PLANE double click is the look at (PLANE only because `DEVELOPMENT.js` is `true` in `src/`); a wheel on a pan in
+progress must sit on the pointer (the harness moves the mouse there first).
+
+Harness (both sides, new event only): `{"type": "dblclick", "x", "y"}` = Playwright `mouse.dblclick` (move, down/up, down/up) on
+the oracle, mousemove + 2x (mousedown, mouseup) + `dblclick` in `x3d-drive`. Oracle poses also report `fieldOfViewScale`
+(and `fieldOfViewOffset` for an OrthoViewpoint); `x10_compare.py` compares them (same tolerance). The extra pose fields are read
+in `x_ite-anim*.mjs` through `canvas.browser`; `anim*.html` in the pin are untouched.
+
+Scripts (512x512, dt 1/30; `tools/gen_x10_plane_lookat.py` writes them; worlds are `x10-scripts/{plane,lookat}-nav.wrl`, an
+`#X3D V3.3` `{plane,lookat}-ortho.wrl` with `OrthoViewpoint { fieldOfView [ -5 -5 5 5 ] }`):
+
+| world | scripts |
+| --- | --- |
+| plane-nav | `plane-drag` (middle drag), `plane-drag-left` (no-op), `plane-drag-alt`, `plane-drag-multi` (6 moves/frame), `plane-wheel`, `plane-wheel-out` (fov-scale clamp), `plane-wheel-in-drag` |
+| plane-ortho | `plane-ortho`, `plane-ortho-drag`, `-drag-left`, `-drag-alt`, `-wheel` |
+| lookat-nav | `lookat-click` (double click on a shape), `-click-miss`, `-click-alt` (lookAtPoint), `-click-twice`, `-click-interrupt`, `lookat-drag`, `-drag-multi`, `-drag-then-click`, `lookat-wheel`, `-wheel-in-drag` |
+| lookat-ortho | `lookat-ortho-click`, `-click-miss`, `-click-alt`, `-click-twice`, `-click-interrupt` |
+
+```
+python3 -I oracle/tools/x10_compare.py oracle/x10-scripts/<world>.wrl oracle/x10-scripts/<script>.json /tmp/x10-plane/<script> --target target-viewer/release
+```
+
+Result: 27 of 27 PASS (scene text equal, images 0 over). Pose deltas: 0 for 24 scripts (`lookat-click-twice` 1.2e-7); the two
+Alt double clicks (`lookat-click-alt` 6.2e-6 center / 3.1e-6 position, `lookat-ortho-click-alt` 1.6e-5 center) differ because
+X_ITE reads the hit point from a float32 GPU pointing buffer and Rust ray-casts in f64 (the tolerance stays 1e-4). The same commit's regression run: items2 296/296 exact and 296/296 logs; render-items2 294/296 at 0x and
+`--msaa 4 --gl-samples` (the 2 known NPOT files); clip suite 48 cases, 0 unexpected (1 known XFAIL); click, walk, examine,
+sensors and the 8 rotate scripts PASS. Not covered by an oracle: the touch handlers of both viewers (no touch events in the
+harness), `x3d-view`'s double-click detection, static `x3d-shot` renders of OrthoViewpoint worlds (the static camera pass
+still takes only `Viewpoint`).
+
 ## Depth fighting (2026-10-11): which triangles fight, X_ITE's LogarithmicDepthBuffer, reversed-Z
 
 Question: "tearing around the rim when dragging" on `render-items/antiques/chronos-orrery`. Answer

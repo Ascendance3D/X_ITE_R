@@ -10,7 +10,13 @@ use crate::chaser::Chaser;
 use crate::geom::ViewVolume;
 use crate::layer::{NavInfo, Vp, VpBase};
 use x3d_fields::math::{Matrix4, Rotation4, Vector2, Vector3, Vector4};
-use x3d_render::traverse::{perspective, straighten};
+use x3d_render::traverse::straighten;
+
+mod lookat;
+mod plane;
+
+pub use lookat::LookAt;
+pub use plane::Plane;
 
 const SPIN_RELEASE_TIME: f64 = 20.0; // ms
 const SPIN_ANGLE: f64 = 2.0 * std::f64::consts::PI / 180.0;
@@ -38,7 +44,37 @@ pub enum Input {
     MouseMove { x: f64, y: f64 },
     /// WheelEvent.deltaY (negative = zoom in / roll).
     Wheel { delta_y: f64, x: f64, y: f64 },
+    /// The "dblclick" DOM event (after the second mouseup of a double click).
+    DblClick { x: f64, y: f64 },
+    /// touchstart / touchmove / touchend with `event .touches` (pageX, pageY in viewport pixels).
+    TouchStart(Touches),
+    TouchMove(Touches),
+    TouchEnd,
 }
+
+/// `event .touches` of a touch event (only the first two touches matter to the viewers).
+#[derive(Clone, Copy, Debug)]
+pub struct Touches {
+    pub n: usize,
+    pub p: [(f64, f64); 2],
+}
+
+/// X3DViewer.lookAtPoint / lookAtBBox, requested by a viewer's dblclick handler. The viewer
+/// calls `this .disconnect ()` first, then the browser picks at (x, y) and the viewpoint starts
+/// its lookAt transition (Viewer3d does that part, it owns the pointing device and the layer).
+#[derive(Clone, Copy, Debug)]
+pub struct LookAtRequest {
+    pub x: f64,
+    pub y: f64,
+    /// `browser .getAltKey ()`: look at the hit point instead of the hit shape's bounding box.
+    pub point: bool,
+    /// `getStraightenHorizon ()`.
+    pub straighten: bool,
+}
+
+/// DEVELOPMENT.js: `true` in the source tree the oracle loads (src/), replaced during the dist build.
+/// PlaneViewer.dblclick looks at only when it is true.
+pub const DEVELOPMENT: bool = true;
 
 /// Per-call environment (the browser's time, keys and viewport).
 #[derive(Clone, Copy, Debug)]
@@ -65,6 +101,8 @@ pub struct Cx<'a> {
     pub nav: &'a NavInfo,
     /// X3DLayerNode.constrainTranslation.
     pub constrain: &'a mut dyn FnMut(Vector3, &Vp) -> Vector3,
+    /// lookAt requests of dblclick handlers, executed by the caller after the event.
+    pub requests: Vec<LookAtRequest>,
 }
 
 fn mr(a: &Rotation4, b: &Rotation4) -> Rotation4 {
@@ -154,9 +192,14 @@ fn point_on_center_plane(cx: &Cx, x: f64, y: f64) -> Vector3 {
     let v = cx.env.viewport;
     let near = cx.vp.near_distance(cx.base, cx.nav);
     let far_v = cx.vp.far_distance(cx.base, cx.nav);
-    let proj = perspective(cx.vp.user_fov(cx.base), near, far_v, v[2], v[3]);
+    let proj = cx.vp.projection(cx.base, near, far_v, v[2], v[3]);
     let mut far = Vector3::ZERO;
     ViewVolume::unproject_point(x, y, 0.9, &Matrix4::IDENTITY, &proj, &Vector4::new(v[0], v[1], v[2], v[3]), &mut far);
+
+    if cx.base.is_ortho {
+        return Vector3::new(far.x, far.y, -distance_to_center(cx, None).norm());
+    }
+
     let mut direction = far;
     direction.normalize();
     let dist = distance_to_center(cx, None).norm();
@@ -171,6 +214,8 @@ pub enum Viewer {
     None,
     Examine(Box<Examine>),
     Fly(Box<Fly>),
+    Plane(Box<Plane>),
+    LookAt(Box<LookAt>),
 }
 
 impl Viewer {
@@ -179,8 +224,9 @@ impl Viewer {
             "NONE" => Viewer::None,
             "WALK" => Viewer::Fly(Box::new(Fly::new(true, now))),
             "FLY" => Viewer::Fly(Box::new(Fly::new(false, now))),
-            // PLANE and LOOKAT are not ported: they fall back to the ExamineViewer
-            // (NavigationInfo's default branch of X3DNavigationContext.set_viewer__).
+            "PLANE" => Viewer::Plane(Box::new(Plane::new())),
+            "LOOKAT" => Viewer::LookAt(Box::new(LookAt::new(now))),
+            // Unknown names: the default branch of X3DNavigationContext.set_viewer__.
             _ => {
                 let mut e = Examine::new(now);
                 e.set_active_viewpoint(cx);
@@ -200,6 +246,8 @@ impl Viewer {
                     "FLY"
                 }
             }
+            Viewer::Plane(_) => "PLANE",
+            Viewer::LookAt(_) => "LOOKAT",
         }
     }
 
@@ -216,6 +264,8 @@ impl Viewer {
             Viewer::None => false,
             Viewer::Examine(e) => e.is_active,
             Viewer::Fly(f) => f.is_active,
+            Viewer::Plane(p) => p.is_active,
+            Viewer::LookAt(l) => l.is_active,
         }
     }
 
@@ -224,6 +274,8 @@ impl Viewer {
             Viewer::None => {}
             Viewer::Examine(e) => e.input(ev, cx),
             Viewer::Fly(f) => f.input(ev, cx),
+            Viewer::Plane(p) => p.input(ev, cx),
+            Viewer::LookAt(l) => l.input(ev, cx),
         }
     }
 
@@ -233,6 +285,8 @@ impl Viewer {
             Viewer::None => {}
             Viewer::Examine(e) => e.prepare(cx),
             Viewer::Fly(f) => f.prepare(cx),
+            Viewer::Plane(_) => {}
+            Viewer::LookAt(l) => l.prepare(cx),
         }
     }
 
@@ -248,7 +302,8 @@ impl Viewer {
         match self {
             Viewer::Examine(e) => e.disconnect(now),
             Viewer::Fly(f) => f.disconnect(),
-            Viewer::None => {}
+            Viewer::LookAt(l) => l.disconnect(),
+            Viewer::Plane(_) | Viewer::None => {}
         }
     }
 }
@@ -385,6 +440,8 @@ impl Examine {
                 cx.vp.transition_stop();
                 self.zoom(SCROLL_FACTOR, delta_y, cx);
             }
+            // ExamineViewer.dblclick (lookAt) and its touch handlers are not ported yet.
+            Input::DblClick { .. } | Input::TouchStart(_) | Input::TouchMove(_) | Input::TouchEnd => {}
         }
     }
 
@@ -819,6 +876,8 @@ impl Fly {
                     self.add_roll(ROLL_ANGLE, cx);
                 }
             }
+            // The Fly / Walk viewers' touch handlers are not ported (they have no dblclick).
+            Input::DblClick { .. } | Input::TouchStart(_) | Input::TouchMove(_) | Input::TouchEnd => {}
         }
     }
 

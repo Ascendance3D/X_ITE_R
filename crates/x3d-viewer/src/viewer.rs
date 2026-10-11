@@ -5,7 +5,8 @@
 
 use crate::collision::{CShape, World};
 use crate::layer::{BBox, DEFAULT, Layer, NavInfo, VpBase, bbox_transform, factor_simple};
-use crate::nav::{Cx, Env, Input, Viewer};
+use crate::lookat::Box3;
+use crate::nav::{Cx, Env, Input, LookAtRequest, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
 use crate::walk::{NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan};
 use std::collections::HashMap;
@@ -14,7 +15,7 @@ use std::rc::Rc;
 use x3d_fields::math::{Matrix4, Rotation4, Vector3, Vector4};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_render::geometry::Geometry;
-use x3d_render::traverse::{Builder, CameraOverride, Frame, perspective};
+use x3d_render::traverse::{Builder, CameraOverride, Frame};
 use x3d_runtime::{LocalFetcher, Runtime};
 use x3d_script::compare::{ORACLE_PREFIX, encode_path};
 
@@ -36,6 +37,8 @@ pub enum UiEvent {
     MouseUp { button: u8, x: f64, y: f64 },
     MouseMove { x: f64, y: f64 },
     Wheel { delta_y: f64, x: f64, y: f64 },
+    /// The "dblclick" DOM event (the harness sends the two mousedown / mouseup pairs before it).
+    DblClick { x: f64, y: f64 },
     Key(Key),
     Mods { shift: bool, ctrl: bool, alt: bool },
 }
@@ -256,7 +259,7 @@ impl Viewer3d {
         let env = self.env();
         let vp = self.layer.vp(vp_node);
         let mut constrain = |t: Vector3, _: &crate::layer::Vp| t;
-        let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain };
+        let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain, requests: vec![] };
         self.nav.disconnect(env.date_now);
         self.nav = Viewer::new(kind, env.now, &mut cx);
     }
@@ -286,7 +289,7 @@ impl Viewer3d {
         let (near, far) = (vp.near_distance(&base, &nav), vp.far_distance(&base, &nav));
 
         PickCamera {
-            projection: perspective(vp.user_fov(&base), near, far, self.width as f64, self.height as f64),
+            projection: vp.projection(&base, near, far, self.width as f64, self.height as f64),
             viewport: Vector4::new(0.0, 0.0, self.width as f64, self.height as f64),
             view: vp.view,
             near,
@@ -395,7 +398,7 @@ impl Viewer3d {
             Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, WALL_FRICTION),
             None => t,
         };
-        let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain };
+        let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain, requests: vec![] };
         self.nav.prepare(&mut cx);
     }
 
@@ -433,7 +436,7 @@ impl Viewer3d {
             let env = self.env();
             let vp = self.layer.vp(self.layer.viewpoint());
             let mut constrain = |t: Vector3, _: &crate::layer::Vp| t;
-            let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain };
+            let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain, requests: vec![] };
             self.nav.active_viewpoint_changed(&mut cx);
         }
 
@@ -511,7 +514,7 @@ impl Viewer3d {
         let nav = self.nav_info();
         let vpv = self.layer.vp(vp_node).clone();
         let (near, far) = (vpv.near_distance(&base, &nav), vpv.far_distance(&base, &nav));
-        let proj = perspective(vpv.user_fov(&base), near, far, self.width as f64, self.height as f64);
+        let proj = vpv.projection(&base, near, far, self.width as f64, self.height as f64);
 
         for e in self.scan_display.proximity.clone() {
             let key = (e.node.path.to_vec(), e.node.node);
@@ -801,6 +804,7 @@ impl Viewer3d {
             UiEvent::MouseUp { button, x, y } => self.mouse_up(button, x, y),
             UiEvent::MouseMove { x, y } => self.mouse_move(x, y),
             UiEvent::Wheel { delta_y, x, y } => self.viewer_input(Input::Wheel { delta_y, x, y }),
+            UiEvent::DblClick { x, y } => self.viewer_input(Input::DblClick { x, y }),
         }
     }
 
@@ -816,8 +820,50 @@ impl Viewer3d {
             Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, WALL_FRICTION),
             None => t,
         };
-        let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain };
+        let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain, requests: vec![] };
         self.nav.input(&ev, &mut cx);
+        let requests = cx.requests;
+
+        for r in requests {
+            self.look_at_request(r);
+        }
+    }
+
+    /// X3DViewer.lookAtPoint / lookAtBBox: `browser .touch (x, y)` (false while the viewer is active or
+    /// nothing is hit), then the viewpoint's lookAt.
+    fn look_at_request(&mut self, r: LookAtRequest) {
+        if self.nav.is_active() {
+            return;
+        }
+
+        let hit = self.do_pick(r.x, r.y);
+
+        if !hit.id {
+            return;
+        }
+
+        let vp_node = self.layer.viewpoint();
+        let base = self.base();
+        let date_now = self.date_now;
+
+        if r.point {
+            self.layer.look_at_point(&mut self.rt, vp_node, &base, hit.point, r.straighten, date_now);
+        } else if let Some((min, max)) = hit.bbox {
+            // hit .modelViewMatrix is a Float32Array copy of the pointing context's matrix.
+            let mut mv = hit.model_view;
+            mv.0 = mv.0.map(|v| v as f32 as f64);
+            let camera_space = self.layer.vp(vp_node).camera_space;
+            let mut bbox = Box3::from_extents(&min, &max);
+            bbox.mult_right(&mv).mult_right(&camera_space);
+            self.layer.look_at_bbox(&mut self.rt, vp_node, &base, &bbox, r.straighten, date_now);
+        }
+    }
+
+    /// The bound viewpoint's fieldOfViewScale and, for an OrthoViewpoint, its fieldOfViewOffset.
+    pub fn field_of_view_state(&mut self) -> (f64, Option<[f64; 4]>) {
+        let base = self.base();
+        let vp = self.layer.vp(self.layer.viewpoint());
+        (vp.field_of_view_scale, base.is_ortho.then_some(vp.field_of_view_offset))
     }
 
     fn has_sensors(&self) -> bool {
@@ -918,6 +964,7 @@ impl Viewer3d {
             fov: vp.user_fov(&base),
             near: vp.near_distance(&base, &nav),
             far: vp.far_distance(&base, &nav),
+            projection: base.is_ortho.then(|| vp.projection(&base, vp.near_distance(&base, &nav), vp.far_distance(&base, &nav), self.width as f64, self.height as f64)),
             headlight: nav.headlight,
             viewpoint: (vp_node != DEFAULT).then_some(vp_node),
             navigation_info: (nav_node != DEFAULT).then_some(nav_node),

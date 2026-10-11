@@ -132,6 +132,7 @@ try
             case "mouseup":   await page .mouse .move (e .x, H - e .y); await page .mouse .up ({ button: mouseButton (e .button) }); break;
             case "mousemove": await page .mouse .move (e .x, H - e .y); break;
             case "wheel":     await page .mouse .move (e .x, H - e .y); await page .mouse .wheel (0, e .deltaY); break;
+            case "dblclick":  await page .mouse .dblclick (e .x, H - e .y); break; // move, down/up (clickCount 1), down/up (clickCount 2): the browser fires "dblclick"
             case "viewer":    await page .evaluate (n => window .setViewer (n), e .name); break;
             case "key":       await page .keyboard .press (e .key); break;
             case "mods":
@@ -148,7 +149,18 @@ try
       await page .evaluate (t => window .step (t), t0 + k * dt);
 
       if (capture .has (k) || dump .has (k) || k === frames)
-         result .poses [k] = await page .evaluate (() => window .pose ());
+         result .poses [k] = await page .evaluate (() =>
+         {
+            // fieldOfViewScale / fieldOfViewOffset (PLANE zoom, OrthoViewpoint) are read from the page's browser object;
+            // anim.html (inside the read-only pin) is untouched.
+            const vp = document .getElementById ("c") .browser .getActiveViewpoint ();
+
+            return Object .assign (window .pose (),
+            {
+               fieldOfViewScale: vp ._fieldOfViewScale .getValue (),
+               fieldOfViewOffset: vp ._fieldOfViewOffset ? Array .from (vp ._fieldOfViewOffset .getValue ()) : undefined,
+            });
+         });
 
       if (dump .has (k) || k === frames)
          result .vrml [k] = await page .evaluate (() => window .vrml ());
