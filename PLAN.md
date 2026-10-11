@@ -142,6 +142,12 @@ X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
 
 - 2026-10-11: **C0 done** — 1483 CodeMirror tests pass headless. **X0 done** —
   X_ITE dump is stable on 50 corpus files (47 parse, 3 rejected). See `oracle/README.md`.
+- 2026-10-11: **X1–X2 done** — crates `x3d-fields`, `x3d-scene`, `x3d-parse`. Corpus: 45/47
+  byte-exact, 3/3 rejections reproduced; 2 one-line diffs need Script + events (X5+X6),
+  listed in `crates/x3d-parse/tests/x0-known.tsv`.
+- 2026-10-11: **C1–C3 done** — crates `cm-core`, `cm-modes` (toml mode as proof). 77 tests
+  pass; 600 random edit sequences match real CM5 exactly (13,000 more in extra runs);
+  toml tokens match on 427 inputs. View-dependent upstream tests are not ported yet (C5).
 
 ## Suggested order
 

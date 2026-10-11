@@ -1,0 +1,4 @@
+# Mismatches against oracle/x0-baseline.json that need runtime behavior outside X1-X2.
+# Format: <file><TAB><phase><TAB><one-line cause>
+07-bookcase.wrl	X5+X6	TimeSensor spazz_init (loop TRUE) emits cycleTime at startup; ROUTE runs Script cycle(), whose count++ turns field count 0 into 1
+43-villasantzip.wrl	X5+X6	TimeSensor Timer1 fraction_changed is routed to Script WaterInterpolator1, which sends new_translation (NaN 10) to TextureTransform Water1.translation
