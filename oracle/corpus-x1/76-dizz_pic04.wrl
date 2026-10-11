@@ -1,0 +1,159 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "ubbrella"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ translation -0.39431 -0.39431 0.0
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_GROUND0 Transform {
+     translation -0.10748 0.85172 0.0
+     children [
+      DEF GROUND0 Group {
+       children [
+        DEF dad_Cylinder1 Transform {
+         translation 0.0 -1.75 0.0
+         scale 0.444 0.444 0.444
+         children [
+          DEF Cylinder1 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "sset_ct.jpg"
+            }
+            material DEF Red_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 1.0 0.0 0.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cone1 Transform {
+         translation 0.0 -0.096 0.042
+         children [
+          DEF Cone1 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "sset_ct.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Cone {
+            height 0.500
+            bottomRadius 2.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder4 Transform {
+         translation 1.02372 -1.88188 0.0
+         scale 0.307 0.307 0.307
+         children [
+          DEF Cylinder4 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "sset_ct.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder5 Transform {
+         translation 0.00628 -1.8756 1.03
+         scale 0.307 0.307 0.307
+         children [
+          DEF Cylinder5 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "sset_ct.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder6 Transform {
+         translation -0.01256 -1.8756 -1.03
+         scale 0.307 0.307 0.307
+         children [
+          DEF Cylinder6 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "sset_ct.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder2 Transform {
+         translation 0.0 -0.785 0.01
+         children [
+          DEF Cylinder2 Shape {
+           appearance Appearance {
+            material DEF Shiny_White_mat Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 0.50196 0.50196 0.50196
+             emissiveColor 0.50196 0.50196 0.50196
+             specularColor 0.50196 0.50196 0.50196
+            }
+           }
+           geometry Cylinder {
+            height 1.200
+            radius 0.050
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder3 Transform {
+         translation -0.993 -1.882 -0.022
+         scale 0.307 0.307 0.307
+         children [
+          DEF Cylinder3 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "sset_ct.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 1.000
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

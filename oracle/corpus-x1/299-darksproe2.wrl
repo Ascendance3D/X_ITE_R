@@ -1,0 +1,135 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "darksproesmall"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Group1 Transform {
+     translation -0.47 -1.6 0.361
+     scale 0.05 0.05 0.05
+     children [
+      DEF Group1 Group {
+       children [
+        DEF dad_Sphere1 Transform {
+         translation 9.04131 -2.27446 -6.71953
+         scale 1.1 1.1 1.1
+         children [
+          DEF Sphere1 Shape {
+           appearance Appearance {
+            material DEF Shiny_Black_mat Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 0.15294 0.15294 0.15294
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Sphere {
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cone1 Transform {
+         translation 9.08431 -1.43146 -6.71953
+         children [
+          DEF Cone1 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cone {
+            height 2.000
+            bottomRadius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cone3 Transform {
+         translation 9.08431 -3.20446 -6.71953
+         rotation -0.0 0.0 -1.0 3.142
+         children [
+          DEF Cone3 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cone {
+            height 2.000
+            bottomRadius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cone2 Transform {
+         translation 8.11806 -2.26421 -6.71953
+         rotation 0.013 -0.0 1.0 1.571
+         children [
+          DEF Cone2 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cone {
+            height 2.000
+            bottomRadius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cone6 Transform {
+         translation 9.90831 -2.20246 -6.71953
+         rotation 0.0 0.0 -1.0 1.571
+         children [
+          DEF Cone6 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cone {
+            height 2.000
+            bottomRadius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cone4 Transform {
+         translation 9.02931 -2.23046 -5.78853
+         rotation 1.0 0.0 0.0 1.571
+         children [
+          DEF Cone4 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cone {
+            height 2.000
+            bottomRadius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cone5 Transform {
+         translation 9.08431 -2.20246 -7.59728
+         rotation -1.0 -0.001 0.001 1.571
+         children [
+          DEF Cone5 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cone {
+            height 2.000
+            bottomRadius 1.000
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

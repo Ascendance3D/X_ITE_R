@@ -1,0 +1,1660 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "ACE_-_Television"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+  "This VRML World was created with Spazz3D a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_ALL Transform {
+     translation -0.6567 -0.49352 -0.60287
+     scale 0.71699 0.71699 0.71699
+     children [
+      DEF ALL Group {
+       children [
+        DEF dad_VID1 Transform {
+         translation 1.57787 -1.41808 0.09898
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VID1 Shape {
+           appearance Appearance {
+            material DEF Shiny_Blue Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 0.0 0.0 0.31765
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 1.0
+            }
+           }
+           geometry Box {
+            size 0.118 0.491 0.43
+           }
+          }
+         ]
+        }
+        DEF dad_VID3 Transform {
+         translation 1.31663 -1.40763 0.1611
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VID3 Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Box {
+            size 0.118 0.491 0.43
+           }
+          }
+         ]
+        }
+        DEF dad_ViD4 Transform {
+         translation 1.18109 -1.41328 0.11027
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF ViD4 Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Box {
+            size 0.118 0.491 0.43
+           }
+          }
+         ]
+        }
+        DEF dad_VID5 Transform {
+         translation 1.0512 -1.41893 0.14416
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VID5 Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Box {
+            size 0.118 0.491 0.43
+           }
+          }
+         ]
+        }
+        DEF dad_VID2 Transform {
+         translation 1.44633 -1.41901 0.15508
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VID2 Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Box {
+            size 0.118 0.491 0.43
+           }
+          }
+         ]
+        }
+        DEF dad_TV_Stand Transform {
+         translation 0.84505 -0.67256 0.04433
+         scale 0.69752 0.69752 0.69752
+         children [
+          DEF TV_Stand Shape {
+           appearance Appearance {
+            material DEF Black Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.14118 0.14118 0.14118
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 1.0 0.1 0.8
+           }
+          }
+         ]
+        }
+        DEF dad_TV_Base Transform {
+         translation 0.859 -0.12012 0.57095
+         scale 0.69752 0.69752 0.69752
+         children [
+          DEF TV_Base Shape {
+           appearance Appearance {
+            material DEF Purple Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.16078 0.16078 0.16078
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            ccw TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.76335 0.74328 -1.24074
+              -0.76060 0.74085 -0.24075
+              0.73939 0.74594 -0.24487
+              0.73663 0.74838 -1.24486
+              -0.67500 0.67500 -0.24114
+              0.67500 0.67500 -0.24486
+              0.74447 -0.75404 -0.24853
+              0.67500 -0.67500 -0.24814
+              -0.67500 -0.67500 -0.24443
+              -0.75552 -0.75913 -0.24441
+              0.74171 -0.75161 -1.24852
+              -0.75827 -0.75670 -1.24440
+              -0.67500 0.67500 -0.37500
+              0.67500 0.67500 -0.37500
+              0.67500 -0.67500 -0.37500
+              -0.67500 -0.67500 -0.37500
+             ]
+            }
+            coordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              1 4 2 -1 
+              2 4 5 -1 
+              2 5 6 -1 
+              6 5 7 -1 
+              6 7 8 -1 
+              9 6 8 -1 
+              9 8 4 -1 
+              9 4 1 -1 
+              2 6 10 3 
+              -1 3 10 11 
+              0 -1 0 11 
+              9 1 -1 6 
+              9 11 10 -1 
+              4 12 13 5 
+              -1 14 7 5 
+              13 -1 15 14 
+              13 12 -1 8 
+              15 12 4 -1 
+              15 8 7 14 
+              -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_TV_Arial Transform {
+         translation 0.83528 0.35907 0.07362
+         scale 0.69752 0.69752 0.69752
+         children [
+          DEF TV_Arial Shape {
+           appearance Appearance {
+            material USE Black
+           }
+           geometry Sphere {
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_TV_Back Transform {
+         translation 0.85219 -0.1015 -0.18209
+         scale 0.69752 0.69752 0.69752
+         children [
+          DEF TV_Back Shape {
+           appearance Appearance {
+            material USE Black
+           }
+           geometry Sphere {
+            radius 0.700
+           }
+          }
+         ]
+        }
+        DEF dad_TV_Screen Transform {
+         translation 0.85202 -0.12361 0.22777
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF TV_Screen Shape {
+           appearance Appearance {
+            material DEF Shiny_Black Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 0.50588 0.50588 0.50588
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 0.811 0.811 0.2
+           }
+          }
+         ]
+        }
+        DEF dad_PS_Cord2 Transform {
+         translation 1.35729 -1.71952 0.85482
+         rotation -1.0 0.0 0.0 1.571
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF PS_Cord2 Shape {
+           appearance Appearance {
+            material USE Purple
+           }
+           geometry Cylinder {
+            height 0.814
+            radius 0.010
+           }
+          }
+         ]
+        }
+        DEF dad_PS_Cord3 Transform {
+         translation 1.1699 -1.71091 2.08901
+         rotation -1.0 0.0 0.0 1.571
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF PS_Cord3 Shape {
+           appearance Appearance {
+            material USE Purple
+           }
+           geometry Cylinder {
+            height 0.476
+            radius 0.010
+           }
+          }
+         ]
+        }
+        DEF dad_PS_Cord1 Transform {
+         translation 1.38783 -1.71931 0.88337
+         rotation -1.0 0.0 0.0 1.571
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF PS_Cord1 Shape {
+           appearance Appearance {
+            material USE Purple
+           }
+           geometry Cylinder {
+            height 0.814
+            radius 0.010
+           }
+          }
+         ]
+        }
+        DEF dad_PS_Button3 Transform {
+         translation 0.8005 -1.62691 1.48807
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF PS_Button3 Shape {
+           appearance Appearance {
+            material DEF Red Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 1.0 0.0 0.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Sphere {
+            radius 0.020
+           }
+          }
+         ]
+        }
+        DEF dad_PS_Button1 Transform {
+         translation 1.24959 -1.64091 1.74439
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF PS_Button1 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Sphere {
+            radius 0.040
+           }
+          }
+         ]
+        }
+        DEF dad_PS_Cord4 Transform {
+         translation 0.69151 -1.72004 1.9038
+         rotation -0.96 -0.197 -0.197 1.611
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF PS_Cord4 Shape {
+           appearance Appearance {
+            material USE Purple
+           }
+           geometry Cylinder {
+            height 0.476
+            radius 0.010
+           }
+          }
+         ]
+        }
+        DEF dad_PS_Button2 Transform {
+         translation 0.79834 -1.64091 1.5753
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF PS_Button2 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Sphere {
+            radius 0.050
+           }
+          }
+         ]
+        }
+        DEF dad_VCR_Tape_Insert Transform {
+         translation 0.84774 -0.86263 0.35517
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VCR_Tape_Insert Shape {
+           appearance Appearance {
+            material DEF Shiny_Green Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             transparency 0.600
+             diffuseColor 0.0 0.42353 0.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 1.0 0.0
+            }
+           }
+           geometry Box {
+            size 0.547 0.065 0.1
+           }
+          }
+         ]
+        }
+        DEF dad_VCR_Button3 Transform {
+         translation 0.87514 -0.93992 0.34955
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VCR_Button3 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.04 0.027 0.1
+           }
+          }
+         ]
+        }
+        DEF dad_VCR_Volume Transform {
+         translation 1.25914 -0.89171 0.37133
+         rotation -1.0 0.0 0.0 1.571
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VCR_Volume Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.100
+            radius 0.050
+           }
+          }
+         ]
+        }
+        DEF dad_VCR_Button1 Transform {
+         translation 0.72712 -0.9391 0.38317
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VCR_Button1 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.04 0.027 0.1
+           }
+          }
+         ]
+        }
+        DEF dad_VCR_Base Transform {
+         translation 0.87402 -0.8877 -0.04606
+         scale 1.15989 1.15989 1.15989
+         children [
+          DEF VCR_Base Shape {
+           appearance Appearance {
+            material USE Black
+           }
+           geometry Box {
+            size 0.93 0.179 0.75
+           }
+          }
+         ]
+        }
+        DEF dad_VCR_Button2 Transform {
+         translation 0.99356 -0.94411 0.36707
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VCR_Button2 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.04 0.027 0.1
+           }
+          }
+         ]
+        }
+        DEF dad_Button10 Transform {
+         translation 1.55652 -0.66455 0.293
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button10 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.1 0.01 0.04
+           }
+          }
+         ]
+        }
+        DEF dad_Button5 Transform {
+         translation 1.49728 -0.67101 -0.01932
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button5 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.040
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button9 Transform {
+         translation 1.55704 -0.67047 0.11308
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button9 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.030
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button7 Transform {
+         translation 1.62096 -0.67043 -0.01937
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button7 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.040
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button8 Transform {
+         translation 1.61913 -0.66478 0.1069
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button8 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.030
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button6 Transform {
+         translation 1.56049 -0.67043 -0.01871
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button6 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.040
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button11 Transform {
+         translation 1.55652 -0.66455 -0.08609
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button11 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.1 0.01 0.04
+           }
+          }
+         ]
+        }
+        DEF dad_Remote_Base Transform {
+         translation 1.55867 -0.68932 0.14223
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Remote_Base Shape {
+           appearance Appearance {
+            material DEF Blue Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0.0 0.0 1.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 0.2 0.03 0.5
+           }
+          }
+         ]
+        }
+        DEF dad_Button3 Transform {
+         translation 1.55975 -0.67101 0.04745
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button3 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.040
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button1 Transform {
+         translation 1.5031 -0.67043 0.11099
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button1 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.030
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button12 Transform {
+         translation 1.55113 -0.66993 0.1853
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button12 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.1 0.01 0.04
+           }
+          }
+         ]
+        }
+        DEF dad_Button2 Transform {
+         translation 1.50375 -0.67101 0.04745
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button2 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.040
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Button4 Transform {
+         translation 1.61628 -0.67043 0.04869
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Button4 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Cylinder {
+            height 0.040
+            radius 0.023
+           }
+          }
+         ]
+        }
+        DEF dad_Left_Handle Transform {
+         translation 1.04616 -1.71459 2.40332
+         rotation -0.972 -0.165 -0.165 1.571
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Left_Handle Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Cylinder {
+            height 0.100
+            radius 0.030
+           }
+          }
+         ]
+        }
+        DEF dad_Right_Handle Transform {
+         translation 1.26496 -1.71662 2.39796
+         rotation -0.949 0.224 0.224 1.614
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Right_Handle Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Cylinder {
+            height 0.100
+            radius 0.030
+           }
+          }
+         ]
+        }
+        DEF dad_Left_Handle0 Transform {
+         translation 0.40399 -1.71344 2.16632
+         rotation -0.972 -0.165 -0.165 1.571
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Left_Handle0 Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Cylinder {
+            height 0.100
+            radius 0.030
+           }
+          }
+         ]
+        }
+        DEF dad_Right_Handle0 Transform {
+         translation 0.63286 -1.71297 2.16093
+         rotation -0.949 0.224 0.224 1.614
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF Right_Handle0 Shape {
+           appearance Appearance {
+            material USE Shiny_Blue
+           }
+           geometry Cylinder {
+            height 0.100
+            radius 0.030
+           }
+          }
+         ]
+        }
+        DEF dad_CD_3 Transform {
+         translation 0.33303 -1.51058 0.0714
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF CD_3 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.327 0.041 0.33
+           }
+          }
+         ]
+        }
+        DEF dad_CD_4 Transform {
+         translation 0.32247 -1.55429 0.0714
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF CD_4 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.327 0.041 0.33
+           }
+          }
+         ]
+        }
+        DEF dad_CD_2 Transform {
+         translation 0.3225 -1.46406 0.0714
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF CD_2 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.327 0.041 0.33
+           }
+          }
+         ]
+        }
+        DEF dad_CD_6 Transform {
+         translation 0.32798 -1.64732 -0.00382
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF CD_6 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.327 0.041 0.33
+           }
+          }
+         ]
+        }
+        DEF dad_CD_5 Transform {
+         translation 0.33403 -1.59963 0.0714
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF CD_5 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.327 0.041 0.33
+           }
+          }
+         ]
+        }
+        DEF dad_CD_1 Transform {
+         translation 0.34488 -1.41904 0.0714
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF CD_1 Shape {
+           appearance Appearance {
+            material USE Red
+           }
+           geometry Box {
+            size 0.327 0.041 0.33
+           }
+          }
+         ]
+        }
+        DEF dad_Group2 Transform {
+         translation -0.5716 -2.58 1.02196
+         children [
+          DEF Group2 Group {
+           children [
+            DEF dad_PS_Top Transform {
+             translation 1.68 0.944 0.462
+             scale 1.07696 1.07696 1.07696
+             children [
+              DEF PS_Top Shape {
+               appearance Appearance {
+                material DEF PS_LID Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 0.27451 0.27451 0.27451
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 1.0 1.0
+                }
+               }
+               geometry Cylinder {
+                height 0.040
+                radius 0.200
+               }
+              }
+             ]
+            }
+            DEF dad_PS_Base Transform {
+             translation 1.67041 0.88955 0.45857
+             rotation 0.0 -1.0 0.0 0.385
+             scale 1.07696 1.07696 1.07696
+             children [
+              DEF PS_Base Shape {
+               appearance Appearance {
+                material USE Shiny_Black
+               }
+               geometry Box {
+                size 0.629 0.113 0.537
+               }
+              }
+             ]
+            }
+            DEF dad_Base Transform {
+             translation 1.733 0.85824 1.35658
+             scale 1.07696 1.07696 1.07696
+             children [
+              DEF Base Shape {
+               appearance Appearance {
+                material USE Shiny_Blue
+               }
+               geometry Box {
+                size 0.247 0.04 0.076
+               }
+              }
+             ]
+            }
+            DEF dad_Base0 Transform {
+             translation 1.10107 0.8594 1.11958
+             scale 1.07696 1.07696 1.07696
+             children [
+              DEF Base0 Shape {
+               appearance Appearance {
+                material USE Shiny_Blue
+               }
+               geometry Box {
+                size 0.247 0.04 0.076
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_VCR_Shelf Transform {
+         translation 0.87151 -0.99149 -0.0503
+         scale 1.07696 1.07696 1.07696
+         children [
+          DEF VCR_Shelf Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "wood.jpg"
+            }
+            material USE Shiny_Blue
+           }
+           geometry Box {
+            size 1.6 0.01 0.95
+           }
+          }
+         ]
+        }
+        DEF dad_Cabinet_Base Transform {
+         translation 0.887 -1.228 0.175
+         scale 0.696 0.696 0.696
+         children [
+          DEF Cabinet_Base Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "Wood.jpg"
+            }
+            material USE Shiny_Black
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            ccw TRUE
+            convex FALSE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -1.26297 0.75223 -1.06735
+              -1.26986 0.75063 0.43264
+              1.23011 0.74646 0.44411
+              1.23700 0.74805 -1.05587
+              -1.27235 -0.74937 0.43103
+              -1.15000 -0.65000 0.43169
+              -1.15000 0.65000 0.43308
+              1.15000 0.65000 0.44364
+              1.22762 -0.75354 0.44250
+              1.15000 -0.65000 0.44226
+              1.23450 -0.75194 -1.05748
+              -1.26547 -0.74777 -1.06896
+              -1.15000 0.65000 -1.00000
+              1.15000 0.65000 -1.00000
+              1.15000 -0.65000 -1.00000
+              -1.15000 -0.65000 -1.00000
+             ]
+            }
+            texCoord TextureCoordinate {
+             point [
+               0.000 1.000 0.000 0.000 
+               1.000 0.000 1.000 1.000 
+               0.049 0.066 0.048 0.933 
+               0.968 0.936 0.969 0.069 
+               0.000 0.283 1.000 0.278 
+               0.279 0.000 0.278 1.000 
+               0.716 0.000 0.717 1.000 
+               0.000 0.716 1.000 0.721 
+             ]
+            }
+            coordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              4 5 1 -1 
+              1 5 6 -1 
+              1 6 2 -1 
+              2 6 7 -1 
+              2 7 8 -1 
+              8 7 9 -1 
+              8 9 5 -1 
+              5 4 8 -1 
+              2 8 10 -1 
+              2 10 3 -1 
+              3 10 11 0 
+              -1 0 11 4 
+              -1 0 4 1 
+              -1 8 4 11 
+              10 -1 6 12 
+              13 7 -1 14 
+              9 7 13 -1 
+              15 14 13 12 
+              -1 5 15 12 
+              6 -1 15 5 
+              9 14 -1 
+            ]
+            texCoordIndex [
+              0 1 2 -1 
+              0 2 3 -1 
+              1 4 0 -1 
+              0 4 5 -1 
+              0 5 3 -1 
+              3 5 6 -1 
+              3 6 2 -1 
+              2 6 7 -1 
+              2 7 4 -1 
+              4 1 2 -1 
+              0 1 2 -1 
+              0 2 3 -1 
+              0 1 2 3 
+              -1 0 1 2 
+              -1 0 2 3 
+              -1 3 0 1 
+              2 -1 8 0 
+              3 9 -1 2 
+              10 11 3 -1 
+              2 1 0 3 
+              -1 12 1 0 
+              13 -1 1 14 
+              15 2 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Group3 Transform {
+         translation -0.80429 0.81768 0.60684
+         scale 1.46724 1.46724 1.46724
+         children [
+          DEF Group3 Group {
+           children [
+            DEF dad_TV_Arial_Nob1 Transform {
+             translation 0.89354 0.16283 -0.36436
+             scale 0.47539 0.47539 0.47539
+             children [
+              DEF TV_Arial_Nob1 Shape {
+               appearance Appearance {
+                material DEF Shiny_Yellow Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 transparency 0.600
+                 diffuseColor 0.71765 0.71765 0.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 1.0 1.0 0.0
+                }
+               }
+               geometry Sphere {
+                radius 0.050
+               }
+              }
+             ]
+            }
+            DEF dad_TV_Arial1 Transform {
+             translation 0.99956 -0.02162 -0.36199
+             rotation -0.183 0.622 0.761 0.682
+             scale 0.47539 0.47539 0.47539
+             children [
+              DEF TV_Arial1 Shape {
+               appearance Appearance {
+                material USE Shiny_Black
+               }
+               geometry Cylinder {
+                height 0.900
+                radius 0.020
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Group4 Transform {
+         translation -0.32726 0.81768 1.94562
+         scale 1.46724 1.46724 1.46724
+         children [
+          DEF Group4 Group {
+           children [
+            DEF dad_TV_Arial2 Transform {
+             translation 0.89026 0.0012 -1.28108
+             rotation 0.138 0.769 -0.624 0.562
+             scale 0.47539 0.47539 0.47539
+             children [
+              DEF TV_Arial2 Shape {
+               appearance Appearance {
+                material USE Shiny_Black
+               }
+               geometry Cylinder {
+                height 0.900
+                radius 0.020
+               }
+              }
+             ]
+            }
+            DEF dad_TV_Arial_Nob2 Transform {
+             translation 0.97013 0.21037 -1.28251
+             scale 0.47539 0.47539 0.47539
+             children [
+              DEF TV_Arial_Nob2 Shape {
+               appearance Appearance {
+                material USE Shiny_Yellow
+               }
+               geometry IndexedFaceSet {
+                solid TRUE
+                ccw TRUE
+                convex FALSE
+                creaseAngle 0.524
+                coord Coordinate {
+                 point [
+                  0.00000 -0.04619 -0.01913
+                  0.00732 -0.04619 -0.01768
+                  0.00000 -0.05000 0.00000
+                  0.01353 -0.04619 -0.01353
+                  0.01768 -0.04619 -0.00732
+                  0.01913 -0.04619 0.00000
+                  0.01768 -0.04619 0.00732
+                  0.01353 -0.04619 0.01353
+                  0.00732 -0.04619 0.01768
+                  0.00000 -0.04619 0.01913
+                  -0.00732 -0.04619 0.01768
+                  -0.01353 -0.04619 0.01353
+                  -0.01768 -0.04619 0.00732
+                  -0.01913 -0.04619 0.00000
+                  -0.01768 -0.04619 -0.00732
+                  -0.01353 -0.04619 -0.01353
+                  -0.00732 -0.04619 -0.01768
+                  0.00732 0.04619 -0.01768
+                  0.00000 0.04619 -0.01913
+                  0.00000 0.05000 0.00000
+                  0.01353 0.04619 -0.01353
+                  0.01768 0.04619 -0.00732
+                  0.01913 0.04619 0.00000
+                  0.01768 0.04619 0.00732
+                  0.01353 0.04619 0.01353
+                  0.00732 0.04619 0.01768
+                  0.00000 0.04619 0.01913
+                  -0.00732 0.04619 0.01768
+                  -0.01353 0.04619 0.01353
+                  -0.01768 0.04619 0.00732
+                  -0.01913 0.04619 0.00000
+                  -0.01768 0.04619 -0.00732
+                  -0.01353 0.04619 -0.01353
+                  -0.00732 0.04619 -0.01768
+                  0.00000 -0.03536 -0.03536
+                  0.01353 -0.03536 -0.03266
+                  0.02500 -0.03536 -0.02500
+                  0.03266 -0.03536 -0.01353
+                  0.03536 -0.03536 0.00000
+                  0.03266 -0.03536 0.01353
+                  0.02500 -0.03536 0.02500
+                  0.01353 -0.03536 0.03266
+                  0.00000 -0.03536 0.03536
+                  -0.01353 -0.03536 0.03266
+                  -0.02500 -0.03536 0.02500
+                  -0.03266 -0.03536 0.01353
+                  -0.03536 -0.03536 0.00000
+                  -0.03266 -0.03536 -0.01353
+                  -0.02500 -0.03536 -0.02500
+                  -0.01353 -0.03536 -0.03266
+                  0.00000 -0.01913 -0.04619
+                  0.01768 -0.01913 -0.04268
+                  0.03266 -0.01913 -0.03266
+                  0.04268 -0.01913 -0.01768
+                  0.04619 -0.01913 0.00000
+                  0.04268 -0.01913 0.01768
+                  0.03266 -0.01913 0.03266
+                  0.01768 -0.01913 0.04268
+                  0.00000 -0.01913 0.04619
+                  -0.01768 -0.01913 0.04268
+                  -0.03266 -0.01913 0.03266
+                  -0.04268 -0.01913 0.01768
+                  -0.04619 -0.01913 0.00000
+                  -0.04268 -0.01913 -0.01768
+                  -0.03266 -0.01913 -0.03266
+                  -0.01768 -0.01913 -0.04268
+                  0.00000 0.00000 -0.05000
+                  0.01913 0.00000 -0.04619
+                  0.03536 0.00000 -0.03536
+                  0.04619 0.00000 -0.01913
+                  0.05000 0.00000 0.00000
+                  0.04619 0.00000 0.01913
+                  0.03536 0.00000 0.03536
+                  0.01913 0.00000 0.04619
+                  0.00000 0.00000 0.05000
+                  -0.01913 0.00000 0.04619
+                  -0.03536 0.00000 0.03536
+                  -0.04619 0.00000 0.01913
+                  -0.05000 0.00000 0.00000
+                  -0.04619 0.00000 -0.01913
+                  -0.03536 0.00000 -0.03536
+                  -0.01913 0.00000 -0.04619
+                  0.00000 0.01913 -0.04619
+                  0.01768 0.01913 -0.04268
+                  0.03266 0.01913 -0.03266
+                  0.04268 0.01913 -0.01768
+                  0.04619 0.01913 0.00000
+                  0.04268 0.01913 0.01768
+                  0.03266 0.01913 0.03266
+                  0.01768 0.01913 0.04268
+                  0.00000 0.01913 0.04619
+                  -0.01768 0.01913 0.04268
+                  -0.03266 0.01913 0.03266
+                  -0.04268 0.01913 0.01768
+                  -0.04619 0.01913 0.00000
+                  -0.04268 0.01913 -0.01768
+                  -0.03266 0.01913 -0.03266
+                  -0.01768 0.01913 -0.04268
+                  0.00000 0.03536 -0.03536
+                  0.01353 0.03536 -0.03266
+                  0.02500 0.03536 -0.02500
+                  0.03266 0.03536 -0.01353
+                  0.03536 0.03536 0.00000
+                  0.03266 0.03536 0.01353
+                  0.02500 0.03536 0.02500
+                  0.01353 0.03536 0.03266
+                  0.00000 0.03536 0.03536
+                  -0.01353 0.03536 0.03266
+                  -0.02500 0.03536 0.02500
+                  -0.03266 0.03536 0.01353
+                  -0.03536 0.03536 0.00000
+                  -0.03266 0.03536 -0.01353
+                  -0.02500 0.03536 -0.02500
+                  -0.01353 0.03536 -0.03266
+                 ]
+                }
+                coordIndex [
+                  0 1 2 -1 
+                  1 3 2 -1 
+                  3 4 2 -1 
+                  4 5 2 -1 
+                  5 6 2 -1 
+                  6 7 2 -1 
+                  7 8 2 -1 
+                  8 9 2 -1 
+                  9 10 2 -1 
+                  10 11 2 -1 
+                  11 12 2 -1 
+                  12 13 2 -1 
+                  13 14 2 -1 
+                  14 15 2 -1 
+                  15 16 2 -1 
+                  16 0 2 -1 
+                  17 18 19 -1 
+                  20 17 19 -1 
+                  21 20 19 -1 
+                  22 21 19 -1 
+                  23 22 19 -1 
+                  24 23 19 -1 
+                  25 24 19 -1 
+                  26 25 19 -1 
+                  27 26 19 -1 
+                  28 27 19 -1 
+                  29 28 19 -1 
+                  30 29 19 -1 
+                  31 30 19 -1 
+                  32 31 19 -1 
+                  33 32 19 -1 
+                  18 33 19 -1 
+                  0 34 35 -1 
+                  0 35 1 -1 
+                  1 35 36 -1 
+                  1 36 3 -1 
+                  3 36 37 -1 
+                  3 37 4 -1 
+                  4 37 38 -1 
+                  4 38 5 -1 
+                  5 38 39 -1 
+                  5 39 6 -1 
+                  6 39 40 -1 
+                  6 40 7 -1 
+                  7 40 41 -1 
+                  7 41 8 -1 
+                  8 41 42 -1 
+                  8 42 9 -1 
+                  9 42 43 -1 
+                  9 43 10 -1 
+                  10 43 44 -1 
+                  10 44 11 -1 
+                  11 44 45 -1 
+                  11 45 12 -1 
+                  12 45 46 -1 
+                  12 46 13 -1 
+                  13 46 47 -1 
+                  13 47 14 -1 
+                  14 47 48 -1 
+                  14 48 15 -1 
+                  15 48 49 -1 
+                  15 49 16 -1 
+                  16 49 34 -1 
+                  16 34 0 -1 
+                  34 50 51 -1 
+                  34 51 35 -1 
+                  35 51 52 -1 
+                  35 52 36 -1 
+                  36 52 53 -1 
+                  36 53 37 -1 
+                  37 53 54 -1 
+                  37 54 38 -1 
+                  38 54 55 -1 
+                  38 55 39 -1 
+                  39 55 56 -1 
+                  39 56 40 -1 
+                  40 56 57 -1 
+                  40 57 41 -1 
+                  41 57 58 -1 
+                  41 58 42 -1 
+                  42 58 59 -1 
+                  42 59 43 -1 
+                  43 59 60 -1 
+                  43 60 44 -1 
+                  44 60 61 -1 
+                  44 61 45 -1 
+                  45 61 62 -1 
+                  45 62 46 -1 
+                  46 62 63 -1 
+                  46 63 47 -1 
+                  47 63 64 -1 
+                  47 64 48 -1 
+                  48 64 65 -1 
+                  48 65 49 -1 
+                  49 65 50 -1 
+                  49 50 34 -1 
+                  50 66 67 -1 
+                  50 67 51 -1 
+                  51 67 68 -1 
+                  51 68 52 -1 
+                  52 68 69 -1 
+                  52 69 53 -1 
+                  53 69 70 -1 
+                  53 70 54 -1 
+                  54 70 71 -1 
+                  54 71 55 -1 
+                  55 71 72 -1 
+                  55 72 56 -1 
+                  56 72 73 -1 
+                  56 73 57 -1 
+                  57 73 74 -1 
+                  57 74 58 -1 
+                  58 74 75 -1 
+                  58 75 59 -1 
+                  59 75 76 -1 
+                  59 76 60 -1 
+                  60 76 77 -1 
+                  60 77 61 -1 
+                  61 77 78 -1 
+                  61 78 62 -1 
+                  62 78 79 -1 
+                  62 79 63 -1 
+                  63 79 80 -1 
+                  63 80 64 -1 
+                  64 80 81 -1 
+                  64 81 65 -1 
+                  65 81 66 -1 
+                  65 66 50 -1 
+                  66 82 83 -1 
+                  66 83 67 -1 
+                  67 83 84 -1 
+                  67 84 68 -1 
+                  68 84 85 -1 
+                  68 85 69 -1 
+                  69 85 86 -1 
+                  69 86 70 -1 
+                  70 86 87 -1 
+                  70 87 71 -1 
+                  71 87 88 -1 
+                  71 88 72 -1 
+                  72 88 89 -1 
+                  72 89 73 -1 
+                  73 89 90 -1 
+                  73 90 74 -1 
+                  74 90 91 -1 
+                  74 91 75 -1 
+                  75 91 92 -1 
+                  75 92 76 -1 
+                  76 92 93 -1 
+                  76 93 77 -1 
+                  77 93 94 -1 
+                  77 94 78 -1 
+                  78 94 95 -1 
+                  78 95 79 -1 
+                  79 95 96 -1 
+                  79 96 80 -1 
+                  80 96 97 -1 
+                  80 97 81 -1 
+                  81 97 82 -1 
+                  81 82 66 -1 
+                  82 98 99 -1 
+                  82 99 83 -1 
+                  83 99 100 -1 
+                  83 100 84 -1 
+                  84 100 101 -1 
+                  84 101 85 -1 
+                  85 101 102 -1 
+                  85 102 86 -1 
+                  86 102 103 -1 
+                  86 103 87 -1 
+                  87 103 104 -1 
+                  87 104 88 -1 
+                  88 104 105 -1 
+                  88 105 89 -1 
+                  89 105 106 -1 
+                  89 106 90 -1 
+                  90 106 107 -1 
+                  90 107 91 -1 
+                  91 107 108 -1 
+                  91 108 92 -1 
+                  92 108 109 -1 
+                  92 109 93 -1 
+                  93 109 110 -1 
+                  93 110 94 -1 
+                  94 110 111 -1 
+                  94 111 95 -1 
+                  95 111 112 -1 
+                  95 112 96 -1 
+                  96 112 113 -1 
+                  96 113 97 -1 
+                  97 113 98 -1 
+                  97 98 82 -1 
+                  98 18 17 -1 
+                  98 17 99 -1 
+                  99 17 20 -1 
+                  99 20 100 -1 
+                  100 20 21 -1 
+                  100 21 101 -1 
+                  101 21 22 -1 
+                  101 22 102 -1 
+                  102 22 23 -1 
+                  102 23 103 -1 
+                  103 23 24 -1 
+                  103 24 104 -1 
+                  104 24 25 -1 
+                  104 25 105 -1 
+                  105 25 26 -1 
+                  105 26 106 -1 
+                  106 26 27 -1 
+                  106 27 107 -1 
+                  107 27 28 -1 
+                  107 28 108 -1 
+                  108 28 29 -1 
+                  108 29 109 -1 
+                  109 29 30 -1 
+                  109 30 110 -1 
+                  110 30 31 -1 
+                  110 31 111 -1 
+                  111 31 32 -1 
+                  111 32 112 -1 
+                  112 32 33 -1 
+                  112 33 113 -1 
+                  113 33 18 -1 
+                  113 18 98 -1 
+                ]
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+    DEF dad_LEFT_DOOR Transform {
+     translation -0.59602 -1.41475 0.0
+     children [
+      DEF LEFT_DOOR Group {
+       children [
+        DEF dad_Door_Left Transform {
+         translation 0.263 0.041 -0.283
+         scale 0.77217 0.77217 0.77217
+         children [
+          DEF Door_Left Shape {
+           appearance Appearance {
+            material DEF Shiny_Rust Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             transparency 0.500
+             diffuseColor 0.0 0.0 1.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.69 0.47 0.46
+            }
+           }
+           geometry Box {
+            size 0.75 0.9 0.03
+           }
+          }
+         ]
+        }
+        DEF dad_Left_Door_Handle Transform {
+         translation 0.49767 0.0501 -0.26182
+         rotation -1.0 0.0 0.0 1.571
+         scale 0.77217 0.77217 0.77217
+         children [
+          DEF Left_Door_Handle Shape {
+           appearance Appearance {
+            material DEF Shiny_Cyan Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 0.23137 0.23137 0.23137
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 1.0 1.0
+            }
+           }
+           geometry Cylinder {
+            height 0.030
+            radius 0.030
+           }
+          }
+         ]
+        }
+        DEF Sensor2 TouchSensor {
+        }
+       ]
+      }
+     ]
+    }
+    DEF dad_RIGHT_DOOR Transform {
+     translation 0.54578 -1.41475 0.0
+     children [
+      DEF RIGHT_DOOR Group {
+       children [
+        DEF dad_Door_Right Transform {
+         translation -0.28651 0.03969 -0.28682
+         scale 0.77217 0.77217 0.77217
+         children [
+          DEF Door_Right Shape {
+           appearance Appearance {
+            material USE Shiny_Rust
+           }
+           geometry Box {
+            size 0.75 0.9 0.03
+           }
+          }
+         ]
+        }
+        DEF dad_Right_Door_Handle Transform {
+         translation -0.52974 0.04973 -0.25903
+         rotation -1.0 0.0 0.0 1.571
+         scale 0.77217 0.77217 0.77217
+         children [
+          DEF Right_Door_Handle Shape {
+           appearance Appearance {
+            material USE Shiny_Cyan
+           }
+           geometry Cylinder {
+            height 0.030
+            radius 0.030
+           }
+          }
+         ]
+        }
+        DEF Sensor1 TouchSensor {
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
+DEF Animation2 TimeSensor {
+ cycleInterval 5.000
+ loop FALSE
+ startTime  -1
+}
+DEF Animation2_pos0 PositionInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ -0.59602 -1.41475 0.0
+ -0.87562 -1.41026 -0.14763
+ -0.84151 -1.40577 -0.46133
+ -0.88023 -1.41026 -0.15224
+ -0.59602 -1.41475 0.0
+ ]
+}
+DEF Animation2_rot0 OrientationInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ 0.004 -1.0 0.0 0.0
+ 0.004 -1.0 0.0 1.175
+ 0.004 -1.0 0.0 2.35
+ 0.004 -1.0 0.0 1.175
+ 0.004 -1.0 0.0 0.0
+ ]
+}
+
+DEF Animation1 TimeSensor {
+ cycleInterval 5.000
+ loop FALSE
+ startTime  -1
+}
+DEF Animation1_pos0 PositionInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ 0.54578 -1.41475 0.0
+ 0.78759 -1.41949 -0.09919
+ 0.80248 -1.425 -0.43004
+ 0.7922 -1.41949 -0.1038
+ 0.54578 -1.41475 0.0
+ ]
+}
+DEF Animation1_rot0 OrientationInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ 0.015 1.0 -0.001 0.0
+ 0.016 1.0 0.0 0.891
+ 0.013 1.0 -0.003 2.157
+ 0.016 1.0 0.0 0.891
+ 0.015 1.0 -0.001 0.0
+ ]
+}
+
+DEF Script_Animation2 Script {
+  field    SFNode      tproc     USE  Animation2
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime toggle
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function toggle( stime ) {
+  if( state )
+  {
+   state = FALSE;
+   pause = stime - tproc.startTime_changed;
+   tproc.enabled = FALSE;
+  }
+  else
+  {
+   state = TRUE;
+   tproc.set_startTime = stime - pause;
+   tproc.enabled = TRUE;
+   pause = 0;
+  }
+ }
+ "
+}
+DEF Script_Animation1 Script {
+  field    SFNode      tproc     USE  Animation1
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime toggle
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function toggle( stime ) {
+  if( state )
+  {
+   state = FALSE;
+   pause = stime - tproc.startTime_changed;
+   tproc.enabled = FALSE;
+  }
+  else
+  {
+   state = TRUE;
+   tproc.set_startTime = stime - pause;
+   tproc.enabled = TRUE;
+   pause = 0;
+  }
+ }
+ "
+}
+ROUTE Sensor2.touchTime TO Script_Animation2.toggle
+ROUTE Sensor1.touchTime TO Script_Animation1.toggle
+ROUTE Animation2.fraction_changed TO Animation2_pos0.set_fraction
+ROUTE Animation2_pos0.value_changed TO dad_LEFT_DOOR.set_translation
+ROUTE Animation2.fraction_changed TO Animation2_rot0.set_fraction
+ROUTE Animation2_rot0.value_changed TO dad_LEFT_DOOR.set_rotation
+ROUTE Animation2.isActive TO Script_Animation2.activated
+ROUTE Animation2.cycleTime TO Script_Animation2.cycle
+ROUTE Animation1.fraction_changed TO Animation1_pos0.set_fraction
+ROUTE Animation1_pos0.value_changed TO dad_RIGHT_DOOR.set_translation
+ROUTE Animation1.fraction_changed TO Animation1_rot0.set_fraction
+ROUTE Animation1_rot0.value_changed TO dad_RIGHT_DOOR.set_rotation
+ROUTE Animation1.isActive TO Script_Animation1.activated
+ROUTE Animation1.cycleTime TO Script_Animation1.cycle

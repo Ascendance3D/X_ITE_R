@@ -1,0 +1,335 @@
+#VRML V2.0 utf8
+WorldInfo { title "Animated Lonely Goldfish" info ["(C)2003 Char aka Fire-Valkyrie"]}
+
+#world transform 
+Transform { scale 0.5 0.5 0.5 translation 0 -1.75 0 children [
+DEF Fish_VS1 VisibilitySensor {
+center 0 2 0
+size 2 4 2 }
+DEF Fish_PS1 ProximitySensor {
+center 0 2 0
+size 10 4 10 
+enabled FALSE }
+#goldfish
+DEF GoldFishSwim Transform { rotation 0 1 0 0 children [ 
+DEF GoldFishGulp Transform { translation 0 0.3 0.35 rotation 0 1 0 1 children [
+Shape { appearance Appearance { material DEF scale_gold Material {
+diffuseColor 1 0.5 0 emissiveColor 0.1 0.05 0 shininess 1 specularColor 1 1 0 }
+texture PixelTexture { image 2 20 3 
+0xff7700 0xff9900 	0xff9900 0xff7700 	0xff7700 0xff9900 	0xff9900 0xff7700 
+0xff7700 0xff9900 	0xff9900 0xff7700 	0xff9933 0xffcc99 	0xffcc99 0xff9933 
+0xff9933 0xffcc99 	0xffcc99 0xff9933 	0xff9933 0xffcc99 	0xffcc99 0xff9933 
+0xff9933 0xffcc99 	0xffcc99 0xff9933 	0xff7700 0xff9900 	0xff9900 0xff7700 
+0xff7700 0xff9900 	0xff9900 0xff7700 	0xff7700 0xff9900 	0xff9900 0xff7700 }
+textureTransform TextureTransform { scale 10 1 rotation 1.57 }}
+geometry Extrusion { 
+crossSection [ -0.1 0, -0.07 0.07, 0 0.1, 0.07 0.07, 0.1 0, 0.07 -0.07, 0 -0.1, -0.07 -0.07, -0.1 0, ]
+spine [ 0 0.005 0, 0 0.0025 -0.01, 0 0 -0.025, 0 0 -0.035, 0 0 -0.045, 0 0 -0.055, 0 0 -0.065, 0 0 -0.075, 
+0 0 -0.085, 0 0 -0.095, 0 0 -0.105, 0 0 -0.115, 0 0 -0.125, ]
+scale [ 0 0, 0.15 0.15, 0.3 0.3, 0.38 0.38, 0.45 0.45, 0.48 0.48, 0.5 0.5, 0.48 0.48, 0.45 0.45, 0.38 0.38, 
+0.25 0.1, 0.15 0.05, 0.1 0, ]
+solid TRUE creaseAngle 1.6 }}
+#eyes
+Transform { translation 0.015 0.01 -0.015 rotation -0.5 1 0 0.75 children [
+DEF Eye Group { children [
+Transform { scale 1 1 0.5 children [
+Shape { appearance Appearance { material Material {
+diffuseColor 1 0.5 0 emissiveColor 0.1 0.05 0 shininess 1 specularColor 1 1 0 }}
+geometry Sphere { radius 0.0075 }} ]}
+Transform { translation 0 -0.0005 0.001 rotation 1 0 0 1.57 children [
+Shape { appearance Appearance { material DEF shiny_black Material {
+diffuseColor 0.1 0.05 0 shininess 1 specularColor 1 0.5 0 }
+texture PixelTexture { image 1 7 3  
+0x000000 0x000000 0x000000 0x000000 0xffcc99 0x000000 0x000000 }}
+geometry Sphere { radius 0.005 }} ]}
+]} ]}
+Transform { translation -0.015 0.01 -0.015 rotation -0.5 -1 0 0.75 children [ USE Eye ]}
+#fins
+DEF RF_Fin Transform { translation 0.0345 -0.01 -0.035 rotation 0 -1 -1 0.8 children [
+DEF Right_Fin Shape { appearance Appearance { material DEF fin_gold Material {
+diffuseColor 0.9 0.4 0.2 emissiveColor 0.09 0.04 0.02 shininess 1 specularColor 1 0.5 0 transparency 0.2 }
+texture DEF fin_ptx PixelTexture { image 2 5 3
+0xffaa88 0xff7744
+0xff9966 0xee6633
+0xff8844 0xdd5522
+0xff7722 0xcc4411
+0xff6600 0xcc3300 }
+textureTransform TextureTransform { rotation -1.1 scale 15 1 translation 0 -0.6 }}
+geometry IndexedFaceSet { coord Coordinate { point [
+0 0 0, 0.01 0 0.005, 0.02 -0.005 0.005, 0.03 -0.0125 0.002, 0.04 -0.02 -0.005, 0.045 -0.025 -0.01, 
+0.04 -0.02 -0.02, 0.03 -0.0125 -0.03, 0.02 -0.005 -0.03, 0.01 0 -0.025, 0 0 -0.01, ]}
+coordIndex [
+0,1,9,10,-1, 1,2,8,9,-1, 2,3,7,8,-1, 3,4,6,7,-1, 4,5,6,-1, ]
+solid FALSE creaseAngle 1.6 }} ]}
+DEF RR_Fin Transform { translation 0.0375 -0.03 -0.065 rotation 0 0.35 -1 1 children [ USE Right_Fin ]}
+DEF LF_Fin Transform { translation -0.0345 -0.01 -0.035 rotation 0 1 1 0.8 children [
+DEF Left_Fin Shape { appearance Appearance {
+material USE fin_gold 
+texture USE fin_ptx
+textureTransform TextureTransform { rotation 1.1 scale 15 1 translation 0 -0.4 }}
+geometry IndexedFaceSet { coord Coordinate { point [
+0 0 0, -0.01 0 0.005, -0.02 -0.005 0.005, -0.03 -0.0125 0.002, -0.04 -0.02 -0.005, -0.045 -0.025 -0.01, 
+-0.04 -0.02 -0.02, -0.03 -0.0125 -0.03, -0.02 -0.005 -0.03, -0.01 0 -0.025, 0 0 -0.01, ]}
+coordIndex [
+0,1,9,10,-1, 1,2,8,9,-1, 2,3,7,8,-1, 3,4,6,7,-1, 4,5,6,-1, ]
+solid FALSE creaseAngle 1.6 }} ]}
+DEF LR_Fin Transform { translation -0.0375 -0.03 -0.065 rotation 0 -0.35 1 1 children [ USE Left_Fin ]}
+DEF BackFin Shape { appearance Appearance {
+material USE fin_gold 
+texture USE fin_ptx
+textureTransform TextureTransform { rotation 2.6 scale 15 1 translation 0 -0.4 }}
+geometry IndexedFaceSet { coord DEF B_Fin_Coords Coordinate { point [
+0 0.045 -0.045, 0 0.048 -0.055, 0 0.05 -0.065, 0 0.048 -0.075, 
+0 0.045 -0.085, 0 0.038 -0.095, 0 0.025 -0.105, 
+0.003 0.07 -0.06, -0.003 0.064 -0.0665, 0.003 0.061 -0.075, -0.003 0.058 -0.085, 
+0.003 0.0535 -0.095, -0.003 0.044 -0.104, 0.003 0.033 -0.107, ]}
+coordIndex [ 
+0,1,7,-1, 1,8,7,-1, 1,2,8,-1, 2,9,8,-1, 2,3,9,-1, 3,10,9,-1, 3,4,10,-1, 4,11,10,-1, 4,5,11,-1, 5,12,11,-1, 
+5,6,12,-1, 6,13,12,-1, ]
+solid FALSE creaseAngle 1.6 }}
+Transform { scale 2 2 2 translation 0 0 -0.125 children [
+DEF Tail_Fin Transform { rotation 0 1 0 0 children [
+DEF TailFin Shape { appearance Appearance {
+material USE fin_gold 
+texture USE fin_ptx
+textureTransform TextureTransform { scale 25 1 }} 
+geometry IndexedFaceSet { coord Coordinate { point [
+0 0.005 0, 0.005 0.0175 -0.01, 0.009 0.0225 -0.0175, 0.011 0.027 -0.03, 0.012 0.027 -0.032, 
+0.012 0.025 -0.035, 0.012 0.02 -0.032, 0.008 0.005 -0.025, 0.005 0 -0.023, 0.008 -0.005 -0.025, 
+0.012 -0.02 -0.032, 0.012 -0.025 -0.035, 0.012 -0.027 -0.032, 0.011 -0.027 -0.03, 0.009 -0.0225 -0.0175, 
+0.005 -0.0175 -0.01, 0 -0.005 0, ]}
+coordIndex [ 
+0,16,8,-1, 0,8,7,-1, 0,7,1,-1, 1,7,2,-1, 2,7,6,-1, 2,6,3,-1, 3,6,5,-1, 3,5,4,-1, 
+16,9,8,-1, 16,15,9,-1, 15,14,9,-1, 14,10,9,-1, 14,13,10,-1, 13,11,10,-1, 13,12,11,-1, ]
+solid FALSE creaseAngle 1.6 }}
+Transform { rotation 0 0 1 3.14 children [ USE TailFin ]} ]} ]}
+#air bubble
+DEF Bubble Transform { translation 0 0 0 scale 0 0 0 children [ 
+Shape { appearance DEF water Appearance { 
+material Material { diffuseColor 0.5 0.75 0.65 emissiveColor 0.05 0.075 0.065 
+shininess 1 specularColor 0 0.7 0.8 transparency 0.6 }
+texture PixelTexture { image 1 1 3 0x55cccc }}
+geometry Sphere { radius 0.0075 }} ]}
+]} ]}#end GoldFish transforms
+
+#Bowl
+Transform { scale 1.5 1.75 1.5 children [
+DEF bowl_T TouchSensor {}
+Shape { appearance Appearance { 
+material Material { diffuseColor 0.5 0.5 0.5 emissiveColor 0.05 0.05 0.05 
+shininess 1 specularColor 0 0.7 0.8 transparency 0.6 }
+texture PixelTexture { image 1 1 3 
+0x7799cc }}
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0 0, 0 0.02 0, 0 0.04 0, 0 0.06 0, 0 0.08 0, 0 0.10 0, 0 0.12 0, 0 0.14 0, 0 0.16 0, 0 0.18 0, 0 0.20 0, 
+0 0.22 0, 0 0.24 0, 0 0.26 0, 0 0.28 0, 0 0.30 0, 0 0.32 0, 0 0.34 0, 0 0.36 0, 0 0.38 0, 0 0.40 0, ]
+scale [ 2.5 2.5, 2.9 2.9, 3.1 3.1, 3.3 3.3, 3.42 3.42, 3.5 3.5, 3.55 3.55, 3.59 3.59, 3.62 3.62, 3.64 3.64, 
+3.64 3.64, 3.62 3.62, 3.59 3.59, 3.55 3.55, 3.5 3.5, 3.42 3.42, 3.3 3.3, 3.1 3.1, 2.92 2.92, 2.98 2.98, 3.1 3.1, ]
+solid FALSE creaseAngle 1.6 endCap FALSE }} 
+#water surface
+Shape { appearance Appearance { 
+material Material { diffuseColor 0.5 0.75 0.65 emissiveColor 0.05 0.075 0.065 
+shininess 1 specularColor 0 0.7 0.8 transparency 0.6 }
+texture PixelTexture { image 1 1 3 0x55cccc }}
+geometry IndexedFaceSet { coord Coordinate { point [
+-0.34 0.3 0, -0.306 0.3 0.136, -0.238 0.3 0.238, -0.136 0.3 0.306, 0 0.3 0.34, 0.136 0.3 0.306, 
+0.238 0.3 0.238, 0.306 0.3 0.136, 0.34 0.3 0, 0.306 0.3 -0.136, 0.238 0.3 -0.238, 0.136 0.3 -0.306, 
+0 0.3 -0.34, -0.136 0.3 -0.306, -0.238 0.3 -0.238, -0.306 0.3 -0.136, ]}
+coordIndex [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,-1, ]
+solid FALSE creaseAngle 1.6 }}
+#bottom gravel
+Shape { appearance DEF gravel Appearance { material Material { 
+diffuseColor 0.85 0.75 0.65 }
+texture ImageTexture { url "goldfish_gravel.jpg" }
+textureTransform TextureTransform { scale 10 10 }}
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0.01 0, 0 0.02 0, 0 0.04 0, ]
+scale [ 2.5 2.5, 2.8 2.8, 3 3, ]
+solid TRUE creaseAngle 1.6  }}
+]}
+Transform { translation 0 0.07 0.04 scale 1 0.5 1 children [
+Shape { appearance USE gravel 
+geometry DEF stone Sphere { radius 0.05 }} ]}
+Transform { translation 0.05 0.07 -0.04 scale 1 0.5 2 rotation 0 1 0 0.6 children [
+Shape { appearance USE gravel 
+geometry USE stone } ]}
+Transform { translation -0.09 0.08 0.07 scale 1 0.75 1.5 rotation 1 -0.5 1 1.2 children [
+Shape { appearance USE gravel 
+geometry USE stone } ]}
+
+#plants
+Transform { translation -0.03 0.07 -0.03 children [
+DEF Plant1 Transform { rotation 1 0 0 0 children [
+Shape { appearance DEF dark_green Appearance { material Material {
+diffuseColor 0.2 0.4 0.2 specularColor 0.2 0.5 0.2 }}
+geometry Extrusion { crossSection [ -0.01 0.005, 0 0, 0.01 0.005, ]
+spine [ 0 0 0, 0 0.2 0.05, 0 0.28 0.075, 0 0.34 0.1, 0 0.38 0.13, 0 0.41 0.17, 0 0.43 0.22, 0 0.45 0.3, ]
+scale [ 0 0, 0.5 0.5, 1 1, 1 1, 1 1, 1 1, 0.5 0.5, 0 0, ]
+orientation [ 0 1 0 1.57 ]
+solid FALSE creaseAngle 1.6 endCap FALSE beginCap FALSE }} ]} ]}
+Transform { translation -0.025 0.07 -0.03 rotation 0 1 0 0.2 children [ USE Plant1 ]}
+Transform { translation -0.02 0.07 -0.03 rotation 0 1 0 0.5 children [ USE Plant1 ]}
+Transform { translation -0.035 0.07 -0.03 rotation 0 -1 0 0.25 children [ USE Plant1 ]}
+Transform { translation -0.04 0.07 -0.03 rotation 0 -1 0 0.55 children [ USE Plant1 ]}
+Transform { translation -0.045 0.07 -0.035 rotation 0 -1 0 1 children [ USE Plant1 ]}
+Transform { translation -0.05 0.07 -0.04 rotation 0 -1 0 1.25 children [ USE Plant1 ]}
+Transform { translation -0.01 0.07 -0.04 children [
+DEF Plant2 Transform { rotation 1 0 0 0 children [
+Shape { appearance USE dark_green 
+geometry Extrusion { crossSection [ -0.01 0.0025, 0 0, 0.01 0.0025, ]
+spine [ 0 0 0, 0 0.05 -0.02, 0 0.1 -0.05, 0 0.12 -0.08, 0 0.12 -0.13, 0 0.1 -0.17, 0 0.08 -0.2, ]
+scale [ 0 0, 1 1, 2 2, 2.5 2.5, 2 2, 1 1, 0 0, ]
+orientation [ 0 1 0 -1.57 ]
+solid FALSE creaseAngle 1.6 endCap FALSE beginCap FALSE }} ]} ]}
+Transform { translation -0.005 0.07 -0.04 rotation 0 -1 0 0.75 scale 0.8 0.8 0.8 children [ USE Plant2 ]}
+Transform { translation -0.015 0.07 -0.04 rotation 0 1 0 0.65 scale 1.1 1.1 1.1 children [ USE Plant2 ]}
+Transform { translation -0.02 0.07 -0.035 rotation 0 1 0 1.3 children [ USE Plant2 ]}
+Transform { translation -0.025 0.07 -0.03 rotation 0 1 0 2 children [ USE Plant2 ]}
+]}#end world transform
+
+#fin animation
+DEF fins_TS TimeSensor {
+cycleInterval 4
+loop TRUE 
+startTime -1 stopTime 0 }
+
+DEF RF_Fin_OI OrientationInterpolator {
+key [ 0 0.33 0.67 1 ]
+keyValue [ 0 -1 -1 0.8, 0 -0.25 -1 1.2, 0 -1 -0.5 0.2, 0 -1 -1 0.8, ]}
+
+DEF LF_Fin_OI OrientationInterpolator {
+key [ 0 0.33 0.67 1 ]
+keyValue [ 0 1 1 0.8, 0 0.25 1 1.2, 0 1 0.5 0.2, 0 1 1 0.8, ]}
+
+DEF RR_Fin_OI OrientationInterpolator {
+key [ 0 0.5 1 ]
+keyValue [ 0 0.35 -1 1, 0 0.35 -1 0.5, 0 0.35 -1 1, ]}
+
+DEF LR_Fin_OI OrientationInterpolator {
+key [ 0 0.5 1 ]
+keyValue [ 0 -0.35 1 1, 0 -0.35 1 0.5, 0 -0.35 1 1, ]}
+
+DEF B_Fin_CI CoordinateInterpolator {
+key [ 0 0.5 1 ]
+keyValue [
+0 0.045 -0.045, 0 0.048 -0.055, 0 0.05 -0.065, 0 0.048 -0.075, 
+0 0.045 -0.085, 0 0.038 -0.095, 0 0.025 -0.105, 
+0.003 0.07 -0.06, -0.003 0.064 -0.0665, 0.003 0.061 -0.075, -0.003 0.058 -0.085, 
+0.003 0.0535 -0.095, -0.003 0.044 -0.104, 0.003 0.033 -0.107,
+#
+0 0.045 -0.045, 0 0.048 -0.055, 0 0.05 -0.065, 0 0.048 -0.075, 
+0 0.045 -0.085, 0 0.038 -0.095, 0 0.025 -0.105, 
+-0.003 0.07 -0.06, 0.003 0.064 -0.0665, -0.003 0.061 -0.075, 0.003 0.058 -0.085, 
+-0.003 0.0535 -0.095, 0.003 0.044 -0.104, -0.003 0.033 -0.107,
+#
+0 0.045 -0.045, 0 0.048 -0.055, 0 0.05 -0.065, 0 0.048 -0.075, 
+0 0.045 -0.085, 0 0.038 -0.095, 0 0.025 -0.105, 
+0.003 0.07 -0.06, -0.003 0.064 -0.0665, 0.003 0.061 -0.075, -0.003 0.058 -0.085, 
+0.003 0.0535 -0.095, -0.003 0.044 -0.104, 0.003 0.033 -0.107, ]}
+
+DEF Tail_Fin_OI OrientationInterpolator {
+key [ 0 0.33 0.67 1 ]
+keyValue [ 0 1 0 0, 0 -1 0 0.35, 0 -1 0 -0.35, 0 1 0 0,  ]}
+
+ROUTE Fish_VS1.enterTime TO fins_TS.set_startTime
+ROUTE Fish_VS1.exitTime TO fins_TS.set_stopTime
+ROUTE fins_TS.fraction_changed TO RF_Fin_OI.set_fraction
+ROUTE RF_Fin_OI.value_changed TO RF_Fin.set_rotation
+ROUTE fins_TS.fraction_changed TO LF_Fin_OI.set_fraction
+ROUTE LF_Fin_OI.value_changed TO LF_Fin.set_rotation
+ROUTE fins_TS.fraction_changed TO RR_Fin_OI.set_fraction
+ROUTE RR_Fin_OI.value_changed TO RR_Fin.set_rotation
+ROUTE fins_TS.fraction_changed TO LR_Fin_OI.set_fraction
+ROUTE LR_Fin_OI.value_changed TO LR_Fin.set_rotation
+ROUTE fins_TS.fraction_changed TO B_Fin_CI.set_fraction
+ROUTE B_Fin_CI.value_changed TO B_Fin_Coords.set_point
+ROUTE fins_TS.fraction_changed TO Tail_Fin_OI.set_fraction
+ROUTE Tail_Fin_OI.value_changed TO Tail_Fin.set_rotation
+#end fin anims
+
+#fish animation
+#fish swims
+DEF FishSwim_TS TimeSensor {
+cycleInterval 30
+loop TRUE 
+startTime -1 stopTime 0 }
+
+DEF FishSwim_OI OrientationInterpolator {
+key [ 0 0.5 1 ]
+keyValue [ 0 1 0 0, 0 1 0 3.14, 0 1 0 6.28 ]}
+
+ROUTE Fish_PS1.enterTime TO FishSwim_TS.startTime
+ROUTE Fish_PS1.exitTime TO FishSwim_TS.stopTime
+ROUTE FishSwim_TS.fraction_changed TO FishSwim_OI.set_fraction
+ROUTE FishSwim_OI.value_changed TO GoldFishSwim.set_rotation
+
+#fish surfaces
+DEF FishGulp_TS TimeSensor { 
+cycleInterval 12
+loop FALSE }
+
+DEF FishGulp_PI PositionInterpolator { 
+key [ 0 0.4 0.8 1 ]
+keyValue [ 0 0.3 0.35, 0 0.5 0.35, 0 0.3 0.35, 0 0.3 0.35 ]}
+DEF FishGulp_OI OrientationInterpolator { 
+key [ 0 0.4 0.8 1 ]
+keyValue [ 0 1 0 1, -1 1 0 1, 0 1 0 1, 0 1 0 1, ]}
+
+DEF Bubble_PI PositionInterpolator { 
+key [ 0 0.8 0.85 0.9 0.95 1 ]
+keyValue [ 0 0 0, 0 0 0, 0 0.05 0, 0.01 0.15 -0.02, -0.01 0.16 -0.05, 0 0 0, ]}
+DEF Bubble_PI_scale PositionInterpolator { 
+key [ 0 0.8 0.85 0.9 0.95 0.96 1 ]
+keyValue [ 0 0 0, 0 0 0, 1 1 1, 1.5 1.5 1.5, 2 2 2, 0 0 0, 0 0 0, ]}
+
+ROUTE bowl_T.touchTime TO FishGulp_TS.startTime
+ROUTE FishGulp_TS.fraction_changed TO FishGulp_PI.set_fraction
+ROUTE FishGulp_TS.fraction_changed TO FishGulp_OI.set_fraction
+ROUTE FishGulp_PI.value_changed TO GoldFishGulp.set_translation
+ROUTE FishGulp_OI.value_changed TO GoldFishGulp.set_rotation
+
+ROUTE FishGulp_TS.fraction_changed TO Bubble_PI.set_fraction
+ROUTE FishGulp_TS.fraction_changed TO Bubble_PI_scale.set_fraction
+ROUTE Bubble_PI.value_changed TO Bubble.set_translation
+ROUTE Bubble_PI_scale.value_changed TO Bubble.set_scale
+
+#plants animation
+#both plants move when bowl is touched and fish swims to surface:
+DEF Plants_TSa TimeSensor {
+cycleInterval 3
+loop TRUE
+enabled FALSE }
+
+DEF Plant1_OI OrientationInterpolator {
+key [ 0 0.5 1 ]
+keyValue [ 1 0 0 0, 1 0 0 0.1, 1 0 0 0, ]}
+DEF Plant2_OI OrientationInterpolator {
+key [ 0 0.5 1 ]
+keyValue [ 1 0 0 0, -1 0 0 0.2, 1 0 0 0, ]}
+
+ROUTE Plants_TSa.fraction_changed TO Plant1_OI.set_fraction
+ROUTE Plant1_OI.value_changed TO Plant1.set_rotation
+ROUTE Plants_TSa.fraction_changed TO Plant2_OI.set_fraction
+ROUTE Plant2_OI.value_changed TO Plant2.set_rotation
+
+#smaller plant moves slightly, when viewer is close:
+DEF Plants_TSb TimeSensor {
+cycleInterval 5
+loop TRUE
+startTime -1 stopTime 0 }
+
+DEF Plant2_OIb OrientationInterpolator {
+key [ 0 0.5 1 ]
+keyValue [ 1 0 0 0, -1 0 0 0.1, 1 0 0 0, ]}
+
+ROUTE Fish_VS1.enterTime TO Plants_TSb.set_startTime
+ROUTE Fish_VS1.exitTime TO Plants_TSb.set_stopTime
+ROUTE Plants_TSb.fraction_changed TO Plant2_OIb.set_fraction
+ROUTE Plant2_OIb.value_changed TO Plant2.set_rotation
+
+ROUTE FishGulp_TS.isActive TO Plants_TSa.enabled
+ROUTE Fish_VS1.isActive TO Fish_PS1.enabled

@@ -1,0 +1,13 @@
+#VRML V2.0 utf8
+
+# Produced by 3D Studio MAX VRML97 exporter, Version 3, Revision 1,31
+# Date: Mon Dec 13 14:42:37 1999
+
+DEF Kamera01 Viewpoint {
+position -39.5 17 79.8
+orientation 0.377 0.923 0.0807 -0.5
+fieldOfView 0.602
+description "Kamera01"
+}
+DEF ROOT Transform {
+}

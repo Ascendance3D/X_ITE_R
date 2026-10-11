@@ -1,0 +1,404 @@
+#VRML V2.0 utf8
+#Alien Cybernaut Builder Arrives by Morning.star Feb 18 2003  
+#In Celebration of my new Apprentice Builder Title
+Transform { translation 0 0.5 -2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.05 0.1 0.1
+shininess 1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5 }
+texture PixelTexture { 
+image 8 2 1 0xCC 0x99 0x66 0x99 0xCC 0x99 0x66 0x99
+            0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF
+}
+textureTransform TextureTransform {
+scale 16 4 }}
+geometry Sphere { radius 1 }} 
+]}
+
+DEF Wing1 Transform { translation 0 -0.1 -2
+rotation 0 1.75 0 1.57 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0 0.35 0.5
+emissiveColor 0.2 0.2 0.2
+specularColor 0.01 0.01 0.01
+shininess 1 }
+texture PixelTexture { 
+image 8 1 1 0xCC 0x99 0x66 0x99 0xCC 0x99 0x66 0x99 }
+textureTransform TextureTransform {
+scale 128 1 }}
+geometry Extrusion { 
+creaseAngle 1.57 
+endCap TRUE 
+solid TRUE 
+crossSection [ 
+1 0, 0.92 -0.38, 
+0.71 -0.71, 0.38 -0.92, 
+0 -1, -0.38 -0.92, 
+-0.71 -0.71, -0.92 -0.38, 
+-1 0, -0.92 0.38, 
+-0.71 0.71, -0.38 0.92, 
+0 1, 0.38 0.92, 
+0.71 0.71, 0.92 0.38, 
+1 0 ] 
+spine [ 
+0 0 0, 0 0.15 0, 
+0 0.3 0, 0 0.45 0, 
+0 0.6 0, 0 0.75 0,
+0 0.9 0, 
+] 
+scale [ 
+0.01 0.01, 0.5 0.5, 1.6 1.6, 2 2, 1.6 1.6, 0.5 0.5, 0.01 0.01 
+]} 
+}
+]}
+DEF PS1 ProximitySensor { center 0 -0.1 -2 size 30 10 30
+enabled TRUE }, 
+DEF Clock1 TimeSensor { 
+cycleInterval 40
+loop TRUE }, 
+DEF WingPath1 OrientationInterpolator { 
+key [ 0, 0.5, 1.0 ] 
+keyValue [ 
+0 1 0 0, 
+0 1 0 -3.14,
+0 1 0 -6.28 ]},
+ROUTE PS1.enterTime TO Clock1.set_startTime
+ROUTE PS1.exitTime TO Clock1.set_stopTime
+ROUTE Clock1.fraction_changed TO WingPath1.set_fraction
+ROUTE WingPath1.value_changed TO Wing1.set_rotation
+
+DEF Band2 Transform { translation 0 0.349 -2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0 0 0
+specularColor 0 0.35 0.5
+emissiveColor 0 0 0
+shininess 1
+transparency 0.1 }
+texture PixelTexture { 
+image 8 1 1 0xCC 0x99 0x66 0x99 0xCC 0x99 0x66 0x99 }
+textureTransform TextureTransform {
+scale 128 1 }}
+geometry Cylinder { 
+radius 1.9
+height 0.09
+top FALSE
+side TRUE
+bottom FALSE }} 
+]}
+DEF PS2 ProximitySensor { center 0 0.349 -2 size 30 10 30
+enabled TRUE }, 
+DEF Clock2 TimeSensor { 
+cycleInterval 20
+loop TRUE }, 
+DEF BandPath2 OrientationInterpolator { 
+key [ 0, 0.5, 1.0 ] 
+keyValue [ 
+0 1 0 0, 
+0 1 0 -3.14,
+0 1 0 -6.28 ]},
+ROUTE PS2.enterTime TO Clock2.set_startTime
+ROUTE PS2.exitTime TO Clock2.set_stopTime
+ROUTE Clock2.fraction_changed TO BandPath2.set_fraction
+ROUTE BandPath2.value_changed TO Band2.set_rotation
+
+DEF Band3 Transform { translation 0 0.349 -2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0 0 0
+specularColor 0 0.2 0.8
+emissiveColor 0 0 0
+shininess 1
+transparency 0.1 }
+texture PixelTexture { 
+image 8 1 1 0xCC 0x99 0x66 0x99 0xCC 0x99 0x66 0x99 }
+textureTransform TextureTransform {
+scale 128 1 }}
+geometry Cylinder { 
+radius 1.74
+height 0.2
+top FALSE
+side TRUE
+bottom FALSE }} 
+]}
+DEF PS3 ProximitySensor { center 0 0.349 -2 size 30 10 30
+enabled TRUE }, 
+DEF Clock3 TimeSensor { 
+cycleInterval 10
+loop TRUE }, 
+DEF BandPath3 OrientationInterpolator { 
+key [ 0, 0.5, 1.0 ] 
+keyValue [ 
+0 1 0 0, 
+0 1 0 -3.14,
+0 1 0 -6.28 ]},
+ROUTE PS3.enterTime TO Clock3.set_startTime
+ROUTE PS3.exitTime TO Clock3.set_stopTime
+ROUTE Clock3.fraction_changed TO BandPath3.set_fraction
+ROUTE BandPath3.value_changed TO Band3.set_rotation
+
+Transform { translation 0 0.7 -2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0 0 0
+specularColor 0 0.6 0.8
+emissiveColor 0 0 0
+shininess 1
+transparency 0.6 }}
+geometry Cylinder { 
+radius 1.25
+height 0.4
+top TRUE
+side TRUE
+bottom FALSE }} 
+]}
+#legs
+Transform { translation -0.5 -1 -1.5
+rotation -0.2 0 -0.2 0.2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }}
+geometry Cylinder {
+height 1.5
+radius 0.05 }}
+]}
+Transform { translation 0.5 -1 -1.5
+rotation -0.2 0 0.2 0.2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }}
+geometry Cylinder {
+height 1.5
+radius 0.05 }}
+]}
+Transform { translation -0.5 -1 -2.5
+rotation 0.2 0 -0.2 0.2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }}
+geometry Cylinder {
+height 1.5
+radius 0.05 }}
+]}
+Transform { translation 0.5 -1 -2.5
+rotation 0.2 0 0.2 0.2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }}
+geometry Cylinder {
+height 1.5
+radius 0.05 }}
+]}
+#feet
+Transform { translation -0.6 -1.71 -1.4 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }
+textureTransform TextureTransform {
+scale 1 1 }}
+geometry Cone {
+height 0.06
+bottomRadius 0.2 }}
+]}
+Transform { translation 0.6 -1.71 -1.4 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }
+textureTransform TextureTransform {
+scale 1 1 }}
+geometry Cone {
+height 0.06
+bottomRadius 0.2 }}
+]}
+Transform { translation -0.6 -1.71 -2.6 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }
+textureTransform TextureTransform {
+scale 1 1 }}
+geometry Cone {
+height 0.06
+bottomRadius 0.2 }}
+]}
+Transform { translation 0.6 -1.71 -2.6 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5
+shininess 1 }
+texture PixelTexture { 
+image 6 1 1 0xCC 0x99 0x66 0xCC 0x99 0x66 }
+textureTransform TextureTransform {
+scale 1 1 }}
+geometry Cone {
+height 0.06
+bottomRadius 0.2 }}
+]}
+#aliens
+DEF Aliens4 Transform { translation 0 0.55 -2 children [
+Shape { 
+appearance Appearance { 
+material Material {}
+texture ImageTexture { url "aliens1.gif" }
+textureTransform TextureTransform {
+scale 10 1 }}
+geometry Cylinder { 
+radius 1.2
+height 0.6
+top FALSE
+side TRUE
+bottom FALSE }} 
+]}
+DEF PS4 ProximitySensor { center 0 0.55 -2 size 30 10 30
+enabled TRUE }, 
+DEF Clock4 TimeSensor { 
+cycleInterval 80
+loop TRUE }, 
+DEF AliensPath4 OrientationInterpolator { 
+key [ 0, 0.5, 1.0 ] 
+keyValue [ 
+0 1 0 0, 
+0 1 0 -3.14,
+0 1 0 -6.28 ]},
+ROUTE PS4.enterTime TO Clock4.set_startTime
+ROUTE PS4.exitTime TO Clock4.set_stopTime
+ROUTE Clock4.fraction_changed TO AliensPath4.set_fraction
+ROUTE AliensPath4.value_changed TO Aliens4.set_rotation
+
+#boosterandtail
+Transform { translation 0 -0.49 -2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.05 0.1 0.1
+shininess 1
+emissiveColor 0.2 0.2 0.2
+specularColor 0 0.35 0.5 }
+texture PixelTexture { 
+image 1 2 1 0xCC 
+            0x99 }}
+geometry Cylinder { 
+radius 0.4
+height 0.2
+top FALSE
+side TRUE
+bottom FALSE }} 
+]}
+
+DEF Fuel5 Transform { translation 0 -0.8 -2 children [
+Shape { 
+appearance Appearance { 
+material Material { 
+shininess 1
+transparency 0.75 }
+texture ImageTexture { url "aliens1.gif" }
+textureTransform TextureTransform {
+scale 1 0.5 }}
+geometry Cone { 
+bottomRadius 0.25
+height 1.5
+side TRUE
+bottom FALSE }} 
+]}
+DEF PS5 ProximitySensor { center 0 -0.8 -2 size 30 10 30
+enabled TRUE }, 
+DEF Clock5 TimeSensor { 
+cycleInterval 0.35
+loop TRUE }, 
+DEF FuelPath5 PositionInterpolator { 
+key [ 0, 0.3, 0.55, 0.75, 1.0 ] 
+keyValue [ 
+0 -0.8 -2, 0 -0.2 -2, 
+0 -0.6 -2, 0 -0.1 -2,
+0 -0.8 -2 ]},
+
+ROUTE PS5.enterTime TO Clock5.set_startTime
+ROUTE PS5.exitTime TO Clock5.set_stopTime
+ROUTE Clock5.fraction_changed TO FuelPath5.set_fraction
+ROUTE FuelPath5.value_changed TO Fuel5.set_translation
+
+#antenna
+Transform { translation 0 1.6 -2 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.3 0.3 0.3 
+specularColor 0 0.35 0.5
+shininess 1
+transparency 0.6 }}
+geometry Cone { 
+bottomRadius 0.06
+height 0.4
+side TRUE
+bottom FALSE }} 
+]}
+#newapprenticebuilderjoinscrew
+DEF AB6 Transform { translation 0 0.55 -1.3 children [
+Shape { 
+appearance Appearance { 
+material Material {}
+texture ImageTexture { url "aliens1.gif" }
+textureTransform TextureTransform {
+scale 0.2 1 }}
+geometry Box { size 0.16 0.6 0.001 }} 
+]}
+DEF PS6 ProximitySensor { center 0 0.55 -1 size 30 10 30
+enabled TRUE }, 
+DEF Clock6 TimeSensor { 
+cycleInterval 16
+loop TRUE }, 
+DEF ABPath6 PositionInterpolator { 
+key [ 0, 0.33, 0.66, 1.0 ] 
+keyValue [ 
+0 0.55 -1.3, 0 0.55 -0.8, 
+0 0.55 -0.8, 0 0.55 -1.3 ]},
+
+ROUTE PS6.enterTime TO Clock6.set_startTime
+ROUTE PS6.exitTime TO Clock6.set_stopTime
+ROUTE Clock6.fraction_changed TO ABPath6.set_fraction
+ROUTE ABPath6.value_changed TO AB6.set_translation
+
+Transform { translation 0 0.55 -1.1 children [
+Shape { 
+appearance Appearance { 
+material Material { diffuseColor 0.1 0.1 0.1 
+specularColor 0 0.35 0.5 }}
+geometry Box { size 0.2 0.62 0.2 }} 
+]}

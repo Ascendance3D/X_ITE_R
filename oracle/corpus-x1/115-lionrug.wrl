@@ -1,0 +1,41 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "lion rug"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+  "10-20-2000"
+  "copyright Janeasha"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_rug Transform {
+     translation 0.0 -1.7 -0.5
+     scale 1.4566 1.4566 1.4566
+     children [
+      DEF rug Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url "lion.jpg"
+        }
+        material DEF Rust Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 0.69 0.47 0.46
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 2.09 0.05 1.6
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

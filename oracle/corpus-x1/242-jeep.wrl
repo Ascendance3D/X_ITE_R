@@ -1,0 +1,266 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "jeep"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_cab Transform {
+     translation 0.0 -1.112 -0.126
+     scale 0.62439 0.4 0.54655
+     children [
+      DEF cab Shape {
+       appearance Appearance {
+        material DEF jeep_top Material {
+         ambientIntensity 0.000
+         shininess 0.100
+         diffuseColor 0.60392 0.60392 0.30588
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 1.0 1.0 1.0
+       }
+      }
+     ]
+    }
+    DEF dad_windsheild Transform {
+     translation 0.0 -1.028 0.083
+     scale 0.417 0.173 0.173
+     children [
+      DEF windsheild Shape {
+       appearance Appearance {
+        material DEF Shiny_Cyan Material {
+         ambientIntensity 0.200
+         shininess 0.100
+         diffuseColor 0.0 1.0 1.0
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 1.0 1.0
+        }
+       }
+       geometry Box {
+        size 1.0 1.0 1.0
+       }
+      }
+     ]
+    }
+    DEF dad_headlight1 Transform {
+     translation 0.1678 -1.23756 0.37756
+     rotation 0.999 0.048 0.007 1.626
+     scale 0.05831 0.05831 0.05831
+     children [
+      DEF headlight1 Shape {
+       appearance Appearance {
+        material DEF headlight_yellow Material {
+         ambientIntensity 0.900
+         shininess 0.100
+         diffuseColor 0.93333 0.98431 0.0
+         emissiveColor 1.0 1.0 0.50196
+         specularColor 0.93333 0.98431 0.0
+        }
+       }
+       geometry Cylinder {
+        height 2.000
+        radius 1.000
+       }
+      }
+     ]
+    }
+    DEF dad_headlight2 Transform {
+     translation -0.18949 -1.23851 0.37698
+     rotation -0.997 0.077 0.0 1.613
+     scale 0.05831 0.05831 0.05831
+     children [
+      DEF headlight2 Shape {
+       appearance Appearance {
+        material USE headlight_yellow
+       }
+       geometry Cylinder {
+        height 2.000
+        radius 1.000
+       }
+      }
+     ]
+    }
+    DEF dad_rearbumper Transform {
+     translation 0.0 -1.38495 -0.3789
+     scale 0.68111 0.11214 0.10647
+     children [
+      DEF rearbumper Shape {
+       appearance Appearance {
+        material DEF silver Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 0.50196 0.50196 0.50196
+         emissiveColor 0.0 0.0 0.0
+         specularColor 1.0 1.0 1.0
+        }
+       }
+       geometry Box {
+        size 1.0 1.0 1.0
+       }
+      }
+     ]
+    }
+    DEF dad_breaklight2 Transform {
+     translation -0.21044 -1.22773 -0.36707
+     scale 0.1224 0.1224 0.1224
+     children [
+      DEF breaklight2 Shape {
+       appearance Appearance {
+        material DEF Shiny_Red Material {
+         ambientIntensity 0.200
+         shininess 0.100
+         diffuseColor 1.0 0.0 0.0
+         emissiveColor 0.0 0.0 0.0
+         specularColor 1.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 1.0 0.5 1.0
+       }
+      }
+     ]
+    }
+    DEF dad_brakelight1 Transform {
+     translation 0.219 -1.228 -0.358
+     scale 0.1224 0.1224 0.1224
+     children [
+      DEF brakelight1 Shape {
+       appearance Appearance {
+        material USE Shiny_Red
+       }
+       geometry Box {
+        size 1.0 0.5 1.0
+       }
+      }
+     ]
+    }
+    DEF dad_wheel1 Transform {
+     translation -0.316 -1.438 -0.211
+     rotation 0.0 0.0 1.0 1.57
+     scale 0.116 0.06 0.111
+     children [
+      DEF wheel1 Shape {
+       appearance Appearance {
+        material DEF wheel Material {
+         ambientIntensity 0.000
+         shininess 0.200
+         diffuseColor 0.17255 0.17255 0.17255
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Cylinder {
+        height 2.000
+        radius 1.000
+       }
+      }
+     ]
+    }
+    DEF dad_wheel2 Transform {
+     translation 0.32512 -1.43712 0.16751
+     rotation 0.0 0.0 1.0 1.57
+     scale 0.116 0.06 0.111
+     children [
+      DEF wheel2 Shape {
+       appearance Appearance {
+        material USE wheel
+       }
+       geometry Cylinder {
+        height 2.000
+        radius 1.000
+       }
+      }
+     ]
+    }
+    DEF dad_wheel3 Transform {
+     translation -0.31463 -1.43712 0.178
+     rotation 0.0 0.0 1.0 1.57
+     scale 0.116 0.06 0.111
+     children [
+      DEF wheel3 Shape {
+       appearance Appearance {
+        material USE wheel
+       }
+       geometry Cylinder {
+        height 2.000
+        radius 1.000
+       }
+      }
+     ]
+    }
+    DEF dad_wheel4 Transform {
+     translation 0.32512 -1.43712 -0.22054
+     rotation 0.0 0.0 1.0 1.57
+     scale 0.116 0.06 0.111
+     children [
+      DEF wheel4 Shape {
+       appearance Appearance {
+        material USE wheel
+       }
+       geometry Cylinder {
+        height 2.000
+        radius 1.000
+       }
+      }
+     ]
+    }
+    DEF dad_frontbumper Transform {
+     translation -0.01454 -1.40949 0.377
+     scale 0.681 0.06 0.106
+     children [
+      DEF frontbumper Shape {
+       appearance Appearance {
+        material USE silver
+       }
+       geometry Box {
+        size 1.0 1.0 1.0
+       }
+      }
+     ]
+    }
+    DEF dad_base Transform {
+     translation 0.0 -1.30049 0.0
+     scale 0.63945 0.276 0.80669
+     children [
+      DEF base Shape {
+       appearance Appearance {
+        material DEF jeep Material {
+         ambientIntensity 0.000
+         shininess 0.100
+         diffuseColor 0.50196 0.50196 0.25098
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.69 0.47 0.46
+        }
+       }
+       geometry Box {
+        size 1.0 1.0 1.0
+       }
+      }
+     ]
+    }
+    DEF dad_grill Transform {
+     translation -0.0061 -1.33471 0.39854
+     scale 0.38424 0.189 0.043
+     children [
+      DEF grill Shape {
+       appearance Appearance {
+        material USE silver
+       }
+       geometry Box {
+        size 1.0 1.0 1.0
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

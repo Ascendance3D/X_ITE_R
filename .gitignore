@@ -3,3 +3,6 @@
 /upstream/
 /oracle/cm5-build/node_modules/
 /oracle/x_ite-pin/node_modules
+# Large oracle baselines (86 MB, 228 MB). Regenerable; sha256 recorded in oracle/README.md.
+/oracle/x1-baseline.json
+/oracle/items-baseline.json

@@ -1,0 +1,461 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "Snowbuddies"
+ info ["This Web3D World was created with Vizx3D, a Web3D authoring tool"
+ "www.vizx3d.com"
+ "This Web3D World was created with Vizx3D a Web3D authoring tool"
+ "www.vizx3d.com"
+ "Cimelia"
+ "November 2004"
+ "Unlimited"
+ "50cc"]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Group1 Transform {
+     translation -.105 -.845 0
+     scale .5 .5 .5
+     children [
+      DEF Group1 Group {
+       children [
+        DEF dad_Sphere10 Transform {
+         translation .22582 .39728 1.44762
+         children [
+          DEF Sphere10 Shape {
+           appearance Appearance {
+            material DEF Black_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 0 0 0
+            }
+           }
+           geometry Sphere {
+            radius 0.049
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere1 Transform {
+         translation .01315 -1.11037 1.074
+         children [
+          DEF Sphere1 Shape {
+           appearance Appearance {
+            material DEF Shiny_White_mat Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 1 1 1
+             specularColor 1 1 1
+            }
+           }
+           geometry Sphere {
+            radius 0.689
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere3 Transform {
+         translation .03015 -.28037 1.088
+         children [
+          DEF Sphere3 Shape {
+           appearance Appearance {
+            material USE Shiny_White_mat
+           }
+           geometry Sphere {
+            radius 0.545
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere4 Transform {
+         translation .03915 .45463 1.092
+         children [
+          DEF Sphere4 Shape {
+           appearance Appearance {
+            material USE Shiny_White_mat
+           }
+           geometry Sphere {
+            radius 0.432
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder1 Transform {
+         translation .85215 .06563 .885
+         rotation .862 -.506 -0 2.885
+         children [
+          DEF Cylinder1 Shape {
+           appearance Appearance {
+            material DEF Shiny_Black_mat Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor .24706 .24706 .24706
+            }
+           }
+           geometry Cylinder {
+            height 0.941
+            radius 0.035
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere5 Transform {
+         translation -.11685 .60963 1.443
+         children [
+          DEF Sphere5 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.056
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere7 Transform {
+         translation -.13985 .38963 1.447
+         children [
+          DEF Sphere7 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.050
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere6 Transform {
+         translation .16015 .61163 1.445
+         children [
+          DEF Sphere6 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.056
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere9 Transform {
+         translation .11031 .3052 1.44767
+         children [
+          DEF Sphere9 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.049
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder4 Transform {
+         translation .00604 .77441 1.111
+         children [
+          DEF Cylinder4 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.040
+            radius 0.570
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder5 Transform {
+         translation .044 1.062 1.103
+         children [
+          DEF Cylinder5 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.556
+            radius 0.311
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere11 Transform {
+         translation .02981 -.14275 1.60469
+         children [
+          DEF Sphere11 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.049
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere12 Transform {
+         translation .03 -.392 1.603
+         children [
+          DEF Sphere12 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.049
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere13 Transform {
+         translation .02315 -.79337 1.646
+         children [
+          DEF Sphere13 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.049
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere14 Transform {
+         translation .02315 -1.09637 1.745
+         children [
+          DEF Sphere14 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.048
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere15 Transform {
+         translation 1.05015 -1.50037 1.262
+         children [
+          DEF Sphere15 Shape {
+           appearance Appearance {
+            material USE Shiny_White_mat
+           }
+           geometry Sphere {
+            radius 0.247
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere16 Transform {
+         translation 1.04915 -1.15737 1.251
+         children [
+          DEF Sphere16 Shape {
+           appearance Appearance {
+            material USE Shiny_White_mat
+           }
+           geometry Sphere {
+            radius 0.199
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere17 Transform {
+         translation 1.05015 -.89337 1.251
+         children [
+          DEF Sphere17 Shape {
+           appearance Appearance {
+            material USE Shiny_White_mat
+           }
+           geometry Sphere {
+            radius 0.153
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere22 Transform {
+         translation 1.11315 -.85637 1.409
+         children [
+          DEF Sphere22 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere23 Transform {
+         translation .98315 -.92937 1.389
+         children [
+          DEF Sphere23 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere24 Transform {
+         translation 1.03315 -.96237 1.383
+         children [
+          DEF Sphere24 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere25 Transform {
+         translation 1.09315 -.95637 1.383
+         children [
+          DEF Sphere25 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder8 Transform {
+         translation 1.26315 -1.09437 1.198
+         rotation .946 -.325 -0 2.67
+         children [
+          DEF Cylinder8 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.438
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder9 Transform {
+         translation .83215 -1.04837 1.264
+         rotation .014 -.188 -.982 2.464
+         children [
+          DEF Cylinder9 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.309
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder11 Transform {
+         translation 1.13315 -.70237 1.247
+         rotation -.219 -.976 0 2.904
+         children [
+          DEF Cylinder11 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.179
+            radius 0.113
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder2 Transform {
+         translation -.80185 .01063 .897
+         rotation -.227 -.038 .973 1.321
+         children [
+          DEF Cylinder2 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.939
+            radius 0.027
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere8 Transform {
+         translation -.02685 .30563 1.482
+         children [
+          DEF Sphere8 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.049
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere21 Transform {
+         translation .99115 -.85337 1.402
+         children [
+          DEF Sphere21 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere26 Transform {
+         translation 1.13597 -.92823 1.37674
+         children [
+          DEF Sphere26 Shape {
+           appearance Appearance {
+            material USE Black_mat
+           }
+           geometry Sphere {
+            radius 0.014
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder10 Transform {
+         translation 1.09515 -.77837 1.252
+         rotation -.198 -.98 -0 3.068
+         children [
+          DEF Cylinder10 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.017
+            radius 0.184
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder3 Transform {
+         translation -.019 -1.776 1.068
+         children [
+          DEF Cylinder3 Shape {
+           appearance Appearance {
+            material USE Shiny_Black_mat
+           }
+           geometry Cylinder {
+            height 0.084
+            radius 1.583
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

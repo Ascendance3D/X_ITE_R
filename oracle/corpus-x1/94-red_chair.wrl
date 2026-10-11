@@ -1,0 +1,227 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "green_chair"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+  "This VRML World was created with Spazz3D a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Import_Base Transform {
+     children [
+      DEF Import_Base Group {
+       children [
+        DEF dad_GROUND0 Transform {
+         children [
+          DEF GROUND0 Group {
+           children [
+            DEF dad_Group1 Transform {
+             translation -2.66484 -1.50032 -0.60677
+             children [
+              DEF Group1 Group {
+               children [
+                DEF dad_Box1 Transform {
+                 translation 2.294 -0.005 0.0
+                 children [
+                  DEF Box1 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "red2.jpg"
+                    }
+                    material DEF Red Material {
+                     ambientIntensity 0.200
+                     shininess 0.200
+                     diffuseColor 1.0 0.0 0.0
+                     emissiveColor 0.0 0.0 0.0
+                     specularColor 0.0 0.0 0.0
+                    }
+                   }
+                   geometry Box {
+                    size 0.75 0.5 0.5
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Cylinder5 Transform {
+                 translation 1.91829 0.39675 0.057
+                 rotation 1.0 0.004 -0.005 1.571
+                 children [
+                  DEF Cylinder5 Shape {
+                   appearance Appearance {
+                    material USE Red
+                   }
+                   geometry Cylinder {
+                    height 0.450
+                    radius 0.150
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Cylinder1 Transform {
+                 translation 2.65284 0.40198 0.057
+                 rotation 1.0 0.004 -0.006 1.571
+                 children [
+                  DEF Cylinder1 Shape {
+                   appearance Appearance {
+                    material USE Red
+                   }
+                   geometry Cylinder {
+                    height 0.450
+                    radius 0.150
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Cone1 Transform {
+                 translation 3.15361 0.00198 0.0
+                 rotation -1.0 0.0 0.0 3.142
+                 children [
+                  DEF Cone1 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "red2.jpg"
+                    }
+                    material USE Red
+                   }
+                   geometry Cone {
+                    height 0.500
+                    bottomRadius 0.250
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Cylinder2 Transform {
+                 translation 3.13343 0.27833 0.0
+                 children [
+                  DEF Cylinder2 Shape {
+                   appearance Appearance {
+                    material USE Red
+                   }
+                   geometry Cylinder {
+                    height 0.150
+                    radius 0.350
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Box2 Transform {
+                 translation 2.29429 0.48175 -0.21
+                 rotation -0.997 -0.077 0.0 0.128
+                 children [
+                  DEF Box2 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "red2.jpg"
+                    }
+                    material DEF Shiny_Green Material {
+                     ambientIntensity 0.200
+                     shininess 0.100
+                     diffuseColor 0.0 1.0 0.0
+                     emissiveColor 0.0 0.0 0.0
+                     specularColor 0.0 1.0 0.0
+                    }
+                   }
+                   geometry Box {
+                    size 0.75 0.5 0.15
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Box3 Transform {
+                 translation 3.13934 0.40531 0.0
+                 children [
+                  DEF Box3 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "red2.jpg"
+                    }
+                    material DEF Rust Material {
+                     ambientIntensity 0.200
+                     shininess 0.200
+                     diffuseColor 0.69 0.47 0.46
+                     emissiveColor 0.0 0.0 0.0
+                     specularColor 0.0 0.0 0.0
+                    }
+                   }
+                   geometry Box {
+                    size 0.15 0.1 0.1
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Cylinder4 Transform {
+                 translation 3.13467 0.63002 0.0
+                 children [
+                  DEF Cylinder4 Shape {
+                   appearance Appearance {
+                    material USE Rust
+                   }
+                   geometry Cylinder {
+                    height 0.350
+                    radius 0.035
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Cone2 Transform {
+                 translation 3.13467 0.92788 0.0
+                 children [
+                  DEF Cone2 Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url "red2.jpg"
+                    }
+                    material USE Rust
+                   }
+                   geometry Cone {
+                    height 0.250
+                    bottomRadius 0.200
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Wizard_Group Transform {
+                 translation 3.12384 0.92901 0.002
+                 scale 0.052 0.052 0.052
+                 children [
+                  DEF Wizard_Group Group {
+                   children [
+                   ]
+                  }
+                 ]
+                }
+                DEF dad_Cylinder3 Transform {
+                 translation 3.15712 -0.20281 0.0
+                 children [
+                  DEF Cylinder3 Shape {
+                   appearance Appearance {
+                    material USE Red
+                   }
+                   geometry Cylinder {
+                    height 0.100
+                    radius 0.100
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

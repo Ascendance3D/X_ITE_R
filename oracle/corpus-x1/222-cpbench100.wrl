@@ -1,0 +1,157 @@
+#VRML V2.0 utf8
+
+Viewpoint{position 0 0 100}
+NavigationInfo{type "NONE"}
+
+Transform{children[
+	DEF TOUCH TouchSensor{}
+	Transform{translation -30 20 20 scale 10 10 10
+	children Shape{geometry DEF MESSAGE Text{string "CPBench V1.00"}}}
+	DEF OBJ1 Transform{translation -20 -10 0
+	children DEF SW1 Switch{whichChoice 0 choice[Inline{url "takuya.wrl"}
+		Transform{translation 0 -30 20
+		children Shape{appearance Appearance{material Material{diffuseColor .8 .4 .4}}
+		geometry Sphere{radius 10}}}]}}
+	DEF OBJ2 Transform{translation 20 10 0
+	children DEF SW2 Switch{whichChoice 0 choice Inline{url "shrinen.wrl"}}}
+	DEF OBJ3 Transform{translation 20 -20 0
+	children DEF SW3 Switch{whichChoice 0 choice Inline{url "shrine.wrl"}}}
+]}
+
+PROTO Control[
+eventIn SFTime touchTime
+eventOut MFString mesStr
+eventOut SFVec3f objPos1
+eventOut SFVec3f objPos2
+eventOut SFVec3f objPos3
+eventOut SFVec3f objScale2
+eventOut SFVec3f objScale3
+eventOut SFTime startTime1
+eventOut SFTime startTime2
+eventOut SFTime startTime3
+eventIn SFFloat inFrac1
+eventIn SFFloat inFrac2
+eventIn SFFloat inFrac3
+eventOut SFFloat outFrac1
+eventOut SFFloat outFrac2
+eventOut SFFloat outFrac3
+eventIn SFBool endBench1
+eventIn SFBool endBench2
+eventIn SFBool endBench3
+eventOut SFBool objRot1
+eventOut SFBool objRot2
+eventOut SFBool objRot3
+eventOut SFInt32 sw1
+eventOut SFInt32 sw2
+eventOut SFInt32 sw3
+]{Script{
+eventIn SFTime touchTime IS touchTime
+eventOut MFString mesStr IS mesStr
+eventOut SFVec3f objPos1 IS objPos1
+eventOut SFVec3f objPos2 IS objPos2
+eventOut SFVec3f objPos3 IS objPos3
+eventOut SFVec3f objScale2 IS objScale2
+eventOut SFVec3f objScale3 IS objScale3
+eventOut SFTime startTime1 IS startTime1
+eventOut SFTime startTime2 IS startTime2
+eventOut SFTime startTime3 IS startTime3
+eventIn SFFloat inFrac1 IS inFrac1
+eventIn SFFloat inFrac2 IS inFrac2
+eventIn SFFloat inFrac3 IS inFrac3
+eventOut SFFloat outFrac1 IS outFrac1
+eventOut SFFloat outFrac2 IS outFrac2
+eventOut SFFloat outFrac3 IS outFrac3
+eventIn SFBool endBench1 IS endBench1
+eventIn SFBool endBench2 IS endBench2
+eventIn SFBool endBench3 IS endBench3
+eventOut SFBool objRot1 IS objRot1
+eventOut SFBool objRot2 IS objRot2
+eventOut SFBool objRot3 IS objRot3
+eventOut SFInt32 sw1 IS sw1
+eventOut SFInt32 sw2 IS sw2
+eventOut SFInt32 sw3 IS sw3
+field SFNode timeNode TimeSensor{loop TRUE}
+field SFVec3f homePos 0 0 0
+field SFVec3f shrineScale 2 2 2
+field SFInt32 count1 0
+field SFInt32 count2 0
+field SFInt32 count3 0
+url["vrmlscript:
+function inFrac1(val){outFrac1=val;count1++;}
+function inFrac2(val){outFrac2=val;count2++;}
+function inFrac3(val){outFrac3=val;count3++;}
+function touchTime(val){
+	count1=count2=count3=0;
+	sw1=0;sw2=-1;sw3=-1;
+	objPos1=objPos2=objPos3=homePos;
+	objScale2=objScale3=shrineScale;
+	mesStr[0]=mesStr[1]=mesStr[2]=mesStr[3]=\"\";
+	objRot1=true;
+	objRot2=objRot3=false;
+	startTime1=timeNode.time;
+}
+function endBench1(val){if(val==false){
+	objRot1=objRot3=false;
+	objRot2=true;
+	sw1=sw3=-1;sw2=0;
+	startTime2=timeNode.time;
+}}
+function endBench2(val){if(val==false){
+	objRot1=objRot2=false;
+	objRot3=true;
+	sw1=sw2=-1;sw3=0;
+	startTime3=timeNode.time;
+}}
+function endBench3(val){if(val==false){
+	objRot2=false;
+	sw1=1;sw2=sw3=-1;
+	mesStr[0]=\"test1=\"+count1+\" points\";
+	mesStr[1]=\"test2=\"+count2+\" points\";
+	mesStr[2]=\"test3=\"+count3+\" points\";
+	mesStr[3]=\"Total=\"+(count1+count2+count3)+\" points\";
+}}
+"]
+}}
+DEF SCRIPT Control{}
+
+DEF TIME1 TimeSensor{cycleInterval 10}
+DEF TIME2 TimeSensor{cycleInterval 10}
+DEF TIME3 TimeSensor{cycleInterval 10}
+DEF TROT1 TimeSensor{cycleInterval 2.5 loop TRUE enabled FALSE}
+DEF TROT2 TimeSensor{cycleInterval 2.5 loop TRUE enabled FALSE}
+DEF TROT3 TimeSensor{cycleInterval 2.5 loop TRUE enabled FALSE}
+DEF ROT1 OrientationInterpolator{key[0,.5,1] keyValue[0 1 0 -3.14,0 1 0 0, 0 1 0 3.14]}
+DEF ROT2 OrientationInterpolator{key[0,.5,1] keyValue[0 0 1 -3.14,0 0 1 0, 0 0 1 3.14]}
+DEF ROT3 OrientationInterpolator{key[0,.5,1] keyValue[0 0 1 -3.14,0 0 1 0, 0 0 1 3.14]}
+
+ROUTE TOUCH.touchTime TO SCRIPT.touchTime
+ROUTE SCRIPT.mesStr TO MESSAGE.string
+ROUTE SCRIPT.objPos1 TO OBJ1.translation
+ROUTE SCRIPT.objPos2 TO OBJ2.translation
+ROUTE SCRIPT.objPos3 TO OBJ3.translation
+ROUTE SCRIPT.objScale2 TO OBJ2.scale
+ROUTE SCRIPT.objScale3 TO OBJ3.scale
+ROUTE SCRIPT.startTime1 TO TIME1.startTime
+ROUTE SCRIPT.startTime2 TO TIME2.startTime
+ROUTE SCRIPT.startTime3 TO TIME3.startTime
+ROUTE SCRIPT.startTime1 TO TROT1.startTime
+ROUTE SCRIPT.startTime2 TO TROT2.startTime
+ROUTE SCRIPT.startTime3 TO TROT3.startTime
+ROUTE TIME1.isActive TO SCRIPT.endBench1
+ROUTE TIME2.isActive TO SCRIPT.endBench2
+ROUTE TIME3.isActive TO SCRIPT.endBench3
+ROUTE TROT1.fraction_changed TO SCRIPT.inFrac1
+ROUTE TROT2.fraction_changed TO SCRIPT.inFrac2
+ROUTE TROT3.fraction_changed TO SCRIPT.inFrac3
+ROUTE SCRIPT.outFrac1 TO ROT1.set_fraction
+ROUTE SCRIPT.outFrac2 TO ROT2.set_fraction
+ROUTE SCRIPT.outFrac3 TO ROT3.set_fraction
+ROUTE ROT1.value_changed TO OBJ1.rotation
+ROUTE ROT2.value_changed TO OBJ2.rotation
+ROUTE ROT3.value_changed TO OBJ3.rotation
+ROUTE SCRIPT.objRot1 TO TROT1.enabled
+ROUTE SCRIPT.objRot2 TO TROT2.enabled
+ROUTE SCRIPT.objRot3 TO TROT3.enabled
+ROUTE SCRIPT.sw1 TO SW1.whichChoice
+ROUTE SCRIPT.sw2 TO SW2.whichChoice
+ROUTE SCRIPT.sw3 TO SW3.whichChoice

@@ -1,0 +1,110 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "Spazz3D"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Group1 Transform {
+     translation 0.0 -1.55 0.0
+     children [
+      DEF Group1 Group {
+       children [
+        DEF dad_Box2 Transform {
+         children [
+          DEF Box2 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "cashtext.jpg"
+            }
+            material DEF Red_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 1.0 0.0 0.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 0.8 0.4 0.025
+           }
+          }
+         ]
+        }
+        DEF dad_Box3 Transform {
+         translation -0.5 0.3 -0.05
+         children [
+          DEF Box3 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "cashtext.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.8 0.4 0.025
+           }
+          }
+         ]
+        }
+        DEF dad_Box4 Transform {
+         translation 0.5 0.3 -0.05
+         children [
+          DEF Box4 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "cashtext.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.8 0.4 0.025
+           }
+          }
+         ]
+        }
+        DEF dad_Box5 Transform {
+         translation -0.991 0.571 -0.1
+         children [
+          DEF Box5 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "cashtext.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.8 0.4 0.025
+           }
+          }
+         ]
+        }
+        DEF dad_Box1 Transform {
+         translation 0.991 0.571 -0.1
+         children [
+          DEF Box1 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "cashtext.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.8 0.4 0.025
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

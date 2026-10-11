@@ -1,0 +1,456 @@
+#VRML V2.0 utf8
+WorldInfo { title "White Lotus - Japanese Dining Table" info ["(C)2002 Char aka Fire-Valkyrie"]}
+
+#world transform 
+Transform { translation 0 -1.75 -0.5 children [
+
+Shape { appearance Appearance { material Material {
+diffuseColor 0.25 0.1 0.05 }
+texture ImageTexture { url "japtabletex.jpg" }
+textureTransform TextureTransform { scale 0.5 2 rotation -1.57 }}
+geometry Extrusion { 
+crossSection [ 
+-1 -0.7, -1.05 -0.65, -1.05 0.65, -1 0.7, 1 0.7, 1.05 0.65, 1.05 -0.65, 1 -0.7, -1 -0.7, ]
+spine [ 
+0 0.36 0, 0 0.38 0, 0 0.4 0, 0 0.42 0, 0 0.44 0, 0 0.46 0, 0 0.48 0, 0 0.5 0, 0 0.52 0, 0 0.54 0, 0 0.56 0, ]
+scale [ 1 1, 1 1, 0.98 0.97, 1.01 1.005, 1.015 1.008, 1.015 1.008, 1.01 1.005, 0.98 0.97, 0.98 0.97, 1 1, 1 1, ]
+creaseAngle 1.5 }}
+
+Transform { rotation 0 1 0 0.785 translation -0.93 0.03 0.58 children [
+DEF Table_Leg Shape { appearance Appearance { material Material {
+diffuseColor 0.25 0.1 0.05 }
+texture ImageTexture { url "japtabletex.jpg" }
+textureTransform TextureTransform { scale 0.5 2 }}
+geometry Extrusion { 
+crossSection [ 
+0 -0.05, -0.05 0, 0 0.05, 0.05 0, 0 -0.05, ]
+spine [ 
+0.03 0.04 0, 0 0.05 0, -0.03 0.06 0, -0.048 0.09 0, -0.06 0.12 0, -0.07 0.15 0, -0.07 0.19 0, -0.06 0.23 0, 
+-0.048 0.27 0, -0.03 0.3 0, 0.01 0.33 0, 0.04 0.34 0, 0.075 0.35 0, 0.12 0.355 0, 0.16 0.36 0, 0.19 0.365 0, 
+0.23 0.37 0, ]
+scale [ 0 0, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 2 2, 1.5 1.5, 0 0, ]
+creaseAngle 1 }}
+]}
+Transform { rotation 0 1 0 -0.785 translation -0.93 0.03 -0.58 children [ USE Table_Leg ]}
+Transform { rotation 0 1 0 2.355 translation 0.93 0.03 0.58 children [ USE Table_Leg ]}
+Transform { rotation 0 1 0 -2.355 translation 0.93 0.03 -0.58 children [ USE Table_Leg ]}
+
+#pillows
+Transform { translation -0.5 0.08 1 children [
+DEF Pillow Transform { scale 1.2 1 1.2 children [
+DEF half_Pillow Shape { appearance Appearance { material Material { diffuseColor 0.25 0 0 }
+texture ImageTexture { url "japtabletex.jpg" }
+textureTransform TextureTransform { scale 0.5 1 translation 1 0 }}
+geometry IndexedFaceSet { coord Coordinate { point [
+-0.3 0 -0.3, -0.29 0 -0.1, -0.29 0 0.1, -0.3 0 0.3, -0.1 0 0.29, 0.1 0 0.29, 
+0.3 0 0.3, 0.29 0 0.1, 0.29 0 -0.1, 0.3 0 -0.3, 0.1 0 -0.29, -0.1 0 -0.29, 
+-0.21 0.05 -0.21, -0.21 0.05 0, -0.21 0.05 0.21, 0 0.05 0.21, 0.21 0.05 0.21, 0.21 0.05 0, 0.21 0.05 -0.21, 0 0.05 -0.21, 
+-0.1 0.08 -0.1, -0.1 0.08 0.1, 0.1 0.08 0.1, 0.1 0.08 -0.1, ]}
+coordIndex [
+0,1,12,-1, 1,13,12,-1, 1,2,13,-1, 2,14,13,-1, 2,3,14,-1, 3,4,14,-1, 4,15,14,-1, 4,5,15,-1, 5,16,15,-1, 5,6,16,-1, 
+6,7,16,-1, 7,17,16,-1, 7,8,17,-1, 8,18,17,-1, 8,9,18,-1, 9,10,18,-1, 10,19,18,-1, 10,11,19,-1, 11,12,19,-1, 11,0,12,-1, 
+12,13,20,-1, 13,21,20,-1, 13,14,21,-1, 14,15,21,-1, 15,22,21,-1, 15,16,22,-1, 16,17,22,-1, 17,23,22,-1, 17,18,23,-1, 18,19,23,-1, 19,20,23,-1, 19,12,20,-1, 20,21,22,-1, 20,22,23,-1, ]
+solid TRUE creaseAngle 1.5 }}
+Transform { rotation 1 0 0 3.14 children [ USE half_Pillow ]}
+]} ]} #end pillow and transform
+Transform { translation 0.5 0.08 1 rotation 0 1 0 0.1 children [ USE Pillow ]}
+Transform { translation -0.52 0.08 -0.975 children [ USE Pillow ]}
+Transform { translation 0.5 0.08 -1 children [ USE Pillow ]}
+
+Transform { translation -0.45 0.56 0.45 children [
+DEF Food_set Group { children [
+Transform { translation -0.075 0.005 0.075 children [
+DEF Rice_bowl Transform { scale 0.8 0.8 0.8 children [
+Shape { appearance Appearance { material Material { 
+diffuseColor 0.6 0.2 0.065 shininess 0.1 specularColor 0.8 0.6 0.2 }
+texture DEF pTex_a PixelTexture { image 7 20 3 
+0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 
+0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 
+0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 
+0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 
+0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 
+0x993311 0x993311 0x000000 0x000000 0x000000 0x993311 0x993311 
+0x993311 0x993311 0x993311 0x000000 0x993311 0x993311 0x993311 
+0x993311 0x993311 0x000000 0x000000 0x000000 0x993311 0x993311 
+0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 
+0x993311 0x993311 0x000000 0x000000 0x000000 0x993311 0x993311 
+0x993311 0x993311 0x000000 0x993311 0x000000 0x993311 0x993311 
+0x993311 0x993311 0x000000 0x000000 0x000000 0x993311 0x993311 
+0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 
+0x993311 0x993311 0x000000 0x000000 0x000000 0x993311 0x993311 
+0x993311 0x993311 0x993311 0x000000 0x993311 0x993311 0x993311 
+0x993311 0x993311 0x000000 0x000000 0x000000 0x993311 0x993311 
+0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 
+0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 0x993311 
+0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 
+0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 0x000000 
+}
+textureTransform TextureTransform { scale 20 1 }}
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0 0, 0 0.01 0, 0 0.02 0, 0 0.03 0, 0 0.04 0, 0 0.05 0, 0 0.06 0, 0 0.07 0, 0 0.08 0, 0 0.09 0, 
+0 0.10 0, 0 0.11 0, 0 0.12 0, ] 
+scale [ 0.6 0.6, 0.65 0.65, 0.84 0.84, 0.97 0.97, 1.07 1.07, 1.16 1.16, 1.24 1.24, 1.3 1.3, 1.35 1.35, 
+1.4 1.4, 1.45 1.45, 1.48 1.48, 1.5 1.5, ]
+solid FALSE creaseAngle 1.6 endCap FALSE beginCap FALSE }}
+
+Shape { appearance DEF plain_black Appearance { material Material { 
+diffuseColor 0 0 0 shininess 0.1 specularColor 0.4 0.3 0.2 }}
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0.01 0, 0 0.015 0, 0 0.02 0, ] 
+scale [ 0 0, 0.6 0.6, 0.84 0.84, ]
+solid FALSE creaseAngle 1.6 endCap FALSE beginCap FALSE }}
+]}
+
+#chopsticks
+Transform { translation 0.22 0 -0.1 children [
+Shape { appearance USE plain_black 
+geometry Extrusion {
+crossSection [ 
+-0.03 -0.05, -0.05 -0.03, -0.05 0.03, -0.03 0.05, 0.03 0.05, 0.05 0.03, 0.05 -0.03, 0.03 -0.05, -0.03 -0.05, ]
+spine [ -0.03 0 0, -0.03 0 0, -0.02 0.012 0, -0.008 0.02 0, 0.008 0.02 0, 0.02 0.012 0, 0.03 0 0, 0.03 0 0, ] 
+scale [ 0 0, 0.1 0.15, 0.17 0.2, 0.2 0.2, 0.2 0.2, 0.17 0.2, 0.1 0.15, 0 0, ]
+solid TRUE creaseAngle 1.6 }}
+Shape { appearance Appearance { material Material { 
+diffuseColor 0.6 0.2 0.065 shininess 0.1 specularColor 0.8 0.6 0.2 }}
+geometry Extrusion {
+crossSection [ 
+-0.03 -0.05, -0.05 -0.03, -0.05 0.03, -0.03 0.05, 0.03 0.05, 0.05 0.03, 0.05 -0.03, 0.03 -0.05, -0.03 -0.05, ]
+spine [ -0.045 0.025 0, -0.04 0.025 0, 0.04 0.025 0, 0.045 0.025 0, ] 
+scale [ 0 0, 0.15 0.25, 0.15 0.25, 0 0, ]
+solid TRUE creaseAngle 1.6 }}
+
+Transform { translation -0.01 0.04 -0.02 rotation 1 0 0 1.725 children [
+DEF Chopstick Shape { appearance Appearance { material Material { 
+diffuseColor 0.8 0.7 0.6 }
+texture PixelTexture { image 5 72 3 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99  
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99  
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0x000000 0x000000 0x000000 0xccbb99  
+0xccbb99 0xccbb99 0x000000 0xccbb99 0xccbb99 
+0xccbb99 0x000000 0x000000 0x000000 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0x000000 0x000000 0x000000 0xccbb99  
+0xccbb99 0x000000 0xccbb99 0x000000 0xccbb99 
+0xccbb99 0x000000 0x000000 0x000000 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0x000000 0x000000 0x000000 0xccbb99  
+0xccbb99 0xccbb99 0x000000 0xccbb99 0xccbb99 
+0xccbb99 0x000000 0x000000 0x000000 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+0xccbb99 0xccbb99 0xccbb99 0xccbb99 0xccbb99 
+}
+textureTransform TextureTransform { scale 4 1 }}
+geometry Extrusion { 
+crossSection [ -0.01 -0.01, -0.01 0.01, 0.01 0.01, 0.01 -0.01, -0.01 -0.01, ]
+spine [ 0 0 0, 0 0.01 0, 0 0.02 0, 0 0.03 0, 0 0.04 0, 0 0.05 0, 0 0.06 0, 0 0.07 0, 0 0.08 0, 0 0.09 0, 
+0 0.1 0, 0 0.11 0, 0 0.12 0, 0 0.13 0, 0 0.14 0, 0 0.15 0, 0 0.16 0, 0 0.17 0, 0 0.18 0, 0 0.19 0, 
+0 0.2 0, 0 0.21 0, 0 0.22 0, 0 0.23 0, 0 0.233 0, ]
+scale [ 0 0, 0.28 0.28, 0.29 0.29, 0.3 0.3, 0.31 0.31, 0.32 0.32, 0.33 0.33, 0.34 0.34, 0.35 0.35, 0.36 0.36, 
+0.37 0.37, 0.38 0.38, 0.39 0.39, 0.4 0.4, 0.41 0.41, 0.42 0.42, 0.43 0.43, 0.44 0.44, 0.45 0.45, 0.46 0.46, 
+0.47 0.47, 0.48 0.48, 0.49 0.49, 0.5 0.5, 0 0, ]
+creaseAngle 1.57 }}
+Transform { translation 0.02 0 0 children [ USE Chopstick ]}
+]} ]}
+
+#cup
+Transform { translation 0.22 0 -0.2 children [
+Shape { appearance Appearance { material Material { 
+diffuseColor 0.6 0.2 0.065 shininess 0.1 specularColor 0.8 0.6 0.2 }
+texture USE pTex_a 
+textureTransform TextureTransform { scale 12 1 }}
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0.01 0, 0 0.02 0, 0 0.03 0, 0 0.04 0, 0 0.05 0, 0 0.06 0, 0 0.07 0, 0 0.08 0, 0 0.09 0, 
+0 0.10 0, 0 0.11 0, 0 0.12 0, ] 
+scale [ 0.35 0.35, 0.45 0.45, 0.46 0.46, 0.47 0.47, 0.48 0.48, 0.47 0.47, 0.48 0.48, 0.49 0.49, 
+0.5 0.5, 0.5 0.5, 0.49 0.49, 0.48 0.48, ]
+solid FALSE creaseAngle 1.6 endCap FALSE beginCap FALSE }}
+
+Shape { appearance USE plain_black 
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0 0, 0 0.01 0, ] 
+scale [ 0.35 0.35, 0.35 0.35, ]
+solid FALSE creaseAngle 1.6 }}
+]} 
+]}
+#mat
+Shape { appearance Appearance { material Material { 
+diffuseColor 0.2 0.25 0.2 }
+texture DEF bamboo_pTex PixelTexture { image 3 7 3 
+0x223322 0x001111 0x223322
+0x223322 0x001111 0x223322
+0x223322 0x001111 0x223322
+0x333333 0x333333 0x333333
+0x223322 0x001111 0x223322
+0x223322 0x001111 0x223322
+0x223322 0x001111 0x223322
+}
+textureTransform TextureTransform { scale 30 11 rotation 1.57 }}
+geometry Extrusion {
+crossSection [ 
+-0.03 -0.05, -0.05 -0.03, -0.05 0.03, -0.03 0.05, 0.03 0.05, 0.05 0.03, 0.05 -0.03, 0.03 -0.05, -0.03 -0.05, ]
+spine [ -0.32 0 0, -0.28 0.005 0, -0.24 0.005 0, -0.2 0.002 0, -0.16 0 0, -0.12 0 0, -0.08 0 0, -0.04 0 0, 
+0 0 0, 0.04 0 0, 0.08 0 0, 0.12 0 0, 0.16 0 0, 0.2 0 0, 0.24 0.002 0, 0.28 0.005 0, 0.32 0 0, ] 
+scale [ 0.05 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 
+0.1 4.5, 0.1 4.5, 0.1 4.5, 0.1 4.5, 0.05 4.5, ]
+solid TRUE creaseAngle 1.6 }}
+]}#end food set
+
+Transform { translation 0.9 0 0 children [ USE Food_set ]}
+Transform { translation 0 0 -0.9 rotation 0 1 0 3.14 children [ USE Food_set ]}
+Transform { translation 0.9 0 -0.9 rotation 0 1 0 3.14 children [ USE Food_set ]}
+
+#runner
+Shape { appearance Appearance { material Material { 
+diffuseColor 0.2 0.25 0.2 }
+texture USE bamboo_pTex
+textureTransform TextureTransform { scale 150 11.1 rotation 1.57 }}
+geometry Extrusion {
+crossSection [ 
+-0.03 -0.05, -0.05 -0.03, -0.05 0.03, -0.03 0.05, 0.03 0.05, 0.05 0.03, 0.05 -0.03, 0.03 -0.05, -0.03 -0.05, ]
+spine [ -0.62 -0.5 -0.45, -0.62 -0.4 -0.45, -0.62 -0.3 -0.45, -0.62 -0.2 -0.45, -0.62 -0.1 -0.45, 
+-0.6 0 -0.45, -0.5 0 -0.45, -0.4 0 -0.45, -0.3 0 -0.45, -0.2 0 -0.45, -0.1 0 -0.45, 0 0 -0.45, 0.1 0 -0.45, 
+0.2 0 -0.45, 0.3 0 -0.45, 0.4 0 -0.45, 0.5 0 -0.45, 0.6 0 -0.45, 0.7 0 -0.45, 0.8 0 -0.45, 0.9 0 -0.45, 1 0 -0.45, 
+1.1 0 -0.45, 1.2 0 -0.45, 1.3 0 -0.45, 1.4 0 -0.45, 1.5 0 -0.45, 
+1.52 -0.1 -0.45, 1.52 -0.2 -0.45, 1.52 -0.3 -0.45, 1.52 -0.4 -0.45, 1.52 -0.5 -0.45, ] 
+scale [ 0.03 3.5, ]
+solid TRUE creaseAngle 1.6 }}
+
+
+#lotus
+Transform { translation 0.45 0 -0.45 children [
+Transform { translation 0 0.03 0 children [
+DEF Petal Shape { appearance Appearance { material Material { 
+diffuseColor 0.9 0.9 0.8 shininess 0.1 specularColor 0.9 0.9 1 }}
+geometry Extrusion {
+crossSection [ 
+-0.05 0.025, -0.04 0.015, -0.03 0.01, -0.015 0.003, 0 0, 0.015 0.003, 0.03 0.01, 0.04 0.015, 0.05 0.025, ]
+spine [ 0 0 0, 0.015 0.018 0, 0.025 0.037 0, 0.036 0.06 0, 0.045 0.08 0, 0.05 0.105 0, 0.055 0.13 0, ]
+scale [0.2 0.2, 0.5 0.5, 0.7 0.7, 0.8 0.8, 0.8 0.8, 0.6 0.6, 0 0,]
+orientation [ 0 1 0 -1.57 ]
+creaseAngle 1.6 solid FALSE beginCap FALSE endCap FALSE}}
+Transform { rotation 0 1 0 1.57 children [ USE Petal 
+Transform { rotation 0 1 0 1.57 children [ USE Petal
+Transform { rotation 0 1 0 1.57 children [ USE Petal ]} ]} ]}
+Transform { rotation 0 1 0 0.785 children [ 
+DEF Petal_b Transform { rotation 0 0 1 -0.45 children [ USE Petal ]}
+Transform { rotation 0 1 0 1.57 children [ USE Petal_b 
+Transform { rotation 0 1 0 1.57 children [ USE Petal_b
+Transform { rotation 0 1 0 1.57 children [ USE Petal_b ]} ]} ]} ]}
+DEF Petal_c Transform { rotation 0 0 1 -0.75 children [ USE Petal ]}
+Transform { rotation 0 1 0 1.57 children [ USE Petal_c 
+Transform { rotation 0 1 0 1.57 children [ USE Petal_c
+Transform { rotation 0 1 0 1.57 children [ USE Petal_c ]} ]} ]}
+]}#end lotus flower
+#flower bowl
+DEF round_legged_bowl Group { children [
+Shape { appearance USE plain_black 
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0.01 0, 0 0.02 0, 0 0.03 0, 0 0.04 0, 0 0.05 0, ] 
+scale [ 0 0, 0.6 0.6, 0.79 0.79, 0.9 0.9, 1 1, ]
+solid FALSE creaseAngle 1.6 endCap FALSE beginCap FALSE }}
+Transform { translation -0.035 0.01 0.035 children [
+DEF round_leg Shape { appearance USE plain_black 
+geometry Sphere { radius 0.01 }} ]}
+Transform { translation 0.035 0.01 0.035 children [ USE round_leg ]}
+Transform { translation -0.035 0.01 -0.035 children [ USE round_leg ]}
+Transform { translation 0.035 0.01 -0.035 children [ USE round_leg ]}
+]} ]}#end roundlegged bowl group and lotus transform
+
+Transform { translation 0.45 0 -0.1 children [ USE round_legged_bowl ]}
+Transform { translation 0.45 0 -0.8 children [ USE round_legged_bowl ]}
+
+#jars
+Transform { translation 1.2 0.003 -0.45 scale 1.5 1.5 1.5 children [
+DEF Jar Shape { appearance USE plain_black 
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0 0, 0 0.02 0, 0 0.04 0, 0 0.06 0, 0 0.08 0, 0 0.1 0, 0 0.12 0, 0 0.14 0, 0 0.16 0, 0 0.18 0, ] 
+scale [ 0.5 0.5, 0.5 0.5, 0.5 0.5, 0.5 0.5, 0.5 0.5, 0.49 0.49, 0.45 0.45, 0.35 0.35, 0.325 0.325, 0.4 0.4, ]
+solid FALSE creaseAngle 1.6 endCap FALSE }}
+]}
+Transform { translation 1.08 0.003 -0.38 scale 0.8 0.8 0.8 children [ USE Jar ]}
+Transform { translation -0.3 0.003 -0.45 scale 1.5 1.5 1.5 children [ USE Rice_bowl 
+Shape { appearance Appearance { material Material {
+diffuseColor 0.8 0.8 0.6 }
+texture PixelTexture { image 5 5 3
+0x999988 0xddddbb 0xddddbb 0x666644 0xddddbb 
+0x999988 0xddddbb 0x999977 0xddddbb 0xddddbb 
+0x999988 0xddddbb 0x999988 0xddddbb 0x999988 
+0xddddbb 0xddddbb 0x999977 0xddddbb 0xddddbb 
+0xddddbb 0x999977 0x999977 0xddddbb 0x999977
+}
+textureTransform TextureTransform { scale 30 5 }}
+geometry Extrusion { 
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0.064 0, 0 0.072 0, 0 0.085 0, 0 0.09 0, 0 0.1 0, 0 0.112 0, 0 0.115 0, ] 
+scale [ 1.07 1.07, 1.05 1.05, 0.9 0.9, 0.8 0.8, 0.5 0.5, 0.3 0.3, 0 0, ]
+creaseAngle 1.6 }}
+]}
+
+Transform { translation 0.22 0 -0.5 scale 0.6 0.6 0.6 children [ USE round_legged_bowl
+Transform { translation 0 0.045 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.4 0.6 0.2 }
+texture PixelTexture { image 3 3 3
+0x669933 0x999933 0x669933 
+0x999933 0x669933 0x669933 
+0x669933 0x669933 0x557722 
+}
+textureTransform TextureTransform { scale 12 8 }}
+geometry Cone { bottom FALSE bottomRadius 0.07 height 0.03 }} ]}
+]}
+
+Transform { translation 0 0 -0.4 children [
+DEF small_bowl Group { children [ Shape { appearance Appearance { material Material { 
+diffuseColor 0.5 0.1 0 shininess 0.1 specularColor 0.6 0.4 0 }}
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0.003 0, 0 0.01 0, 0 0.02 0, 0 0.03 0, 0 0.04 0, 0 0.05 0, 0 0.06 0, 0 0.07 0, 0 0.08 0, 0 0.09 0, ] 
+scale [ 0.4 0.4, 0.45 0.45, 0.64 0.64, 0.77 0.77, 0.87 0.87, 0.96 0.96, 1.04 1.04, 1.1 1.1, 1.15 1.15, 
+1.2 1.2, ]
+solid FALSE creaseAngle 1.6 endCap FALSE }}
+
+#food things
+DEF sauce_a Shape { appearance Appearance { material Material { 
+diffuseColor 0.3 0.1 0 specularColor 0.4 0.1 0 }}
+geometry Extrusion {
+crossSection [ -0.1 0, -0.09 0.04, -0.07 0.07, -0.04 0.09, 0 0.1, 0.04 0.09, 0.07 0.07, 0.09 0.04, 0.1 0, 
+0.09 -0.04, 0.07 -0.07, 0.04 -0.09, 0 -0.1, -0.04 -0.09, -0.07 -0.07, -0.09 -0.04, -0.1 0, ]
+spine [ 0 0.04 0, 0 0.05 0, ] 
+scale [ 0.85 0.85, 0.94 0.94, ]
+creaseAngle 1.6 }}
+
+Transform { translation -0.03 0.05 0.02 children [
+DEF round_a Shape { appearance Appearance { material Material {
+diffuseColor 0.7 0.35 0.3 shininess 0.1 specularColor 0.4 0.1 0 }
+texture PixelTexture { image 3 1 3
+0xaa5544 0xaa5544 0xcc7766 }
+textureTransform TextureTransform { scale 12 10 }}
+geometry Sphere { radius 0.012 }} ]}
+
+Transform { translation 0 0.05 0 rotation 0 0 1 -0.5 children [
+DEF ring_a Shape { appearance Appearance { material Material {
+diffuseColor 0.7 0.75 0.3 transparency 0.2 shininess 1 specularColor 0.9 0.9 0.7 }
+texture PixelTexture { image 3 1 3
+0xbbbf44 0xbbbf44 0xcccf88 }
+textureTransform TextureTransform { scale 15 2 }}
+geometry Cylinder { radius 0.02 height 0.005 top FALSE bottom FALSE }} ]}
+
+Transform { translation 0.04 0.0475 0.005 rotation 0 0 1 -0.1 children [
+DEF slice_a Group { children [
+Shape { appearance Appearance { material Material {
+diffuseColor 0.45 0.35 0 shininess 0.1 specularColor 0.4 0.1 0 }}
+geometry Cylinder { radius 0.025 height 0.01 top FALSE bottom FALSE }} 
+Shape { appearance Appearance { material Material {
+diffuseColor 0.75 0.7 0.2 transparency 0.1 shininess 0.1 specularColor 0.4 0.1 0 }
+texture PixelTexture { image 1 1 3
+0xbbaa33 }
+textureTransform TextureTransform { scale 15 15 }}
+geometry Cylinder { radius 0.025 height 0.01 side FALSE }} 
+]} ]}
+
+Transform { translation -0.03 0.045 -0.02 rotation 1 0 -1 0.75 children [
+DEF cube_a Shape { appearance Appearance { material Material {
+diffuseColor 0.35 0.05 0 shininess 0.1 specularColor 0.4 0.1 0 }
+texture PixelTexture { image 3 1 3
+0x551100 0x662200 0x551100 }
+textureTransform TextureTransform { scale 12 2 }}
+geometry Box { size 0.03 0.01 0.02 }} ]}
+
+Transform { translation -0.01 0.035 -0.035 rotation 1 0 0 1.6 children [ USE slice_a ]}
+Transform { translation -0.055 0.04 0.045 rotation 1 0 1 -0.7 children [ USE slice_a ]}
+Transform { translation 0.03 0.045 0.065 rotation -1 0 0.5 0.7 children [ USE slice_a ]}
+Transform { translation 0.04 0.04 -0.04 rotation 1 0 1 0.5 children [ USE slice_a ]}
+Transform { translation -0.045 0.035 0 rotation 0 0 1 -1 children [ USE slice_a ]}
+
+Transform { translation -0.07 0.045 0 rotation 0 1 -0.5 1.5 children [ USE cube_a ]}
+Transform { translation -0.025 0.05 -0.05 rotation -0.5 0 1 1.5 children [ USE cube_a ]}
+Transform { translation 0.015 0.05 -0.05 rotation 0 -1 0.5 0.5 children [ USE cube_a ]}
+Transform { translation 0.01 0.05 0.03 children [ USE cube_a ]}
+Transform { translation -0.025 0.0475 0.065 rotation 0 1 0.2 -0.8 children [ USE cube_a ]}
+
+Transform { translation -0.055 0.0475 -0.045 rotation 1 0 2 0.8 children [ USE round_a ]}
+Transform { translation 0.02 0.0425 0.055 rotation 1 1 0 1 children [ USE round_a ]}
+Transform { translation 0.04 0.044 -0.03 rotation 1 -1 0 2 children [ USE round_a ]}
+
+Transform { translation -0.005 0.04 0.05 rotation 1 0.6 0 -1.4 children [ USE ring_a ]}
+Transform { translation -0.04 0.037 0.03 rotation 1 -0.6 0 -1.4 children [ USE ring_a ]}
+Transform { translation 0.01 0.042 -0.06 rotation 1 0 0 1 children [ USE ring_a ]}
+Transform { translation 0.065 0.04 0.01 rotation 0 0 1 1 children [ USE ring_a ]}
+Transform { translation 0.0675 0.04 0.01 rotation 0 0 1 1 scale 1.2 1 1.2 children [ USE ring_a ]}
+]} ]} #end small bowl group and transform
+Transform { translation 0.8 0 -0.45 children [ USE small_bowl ]}
+]} #end setting
+
+]}#end world transform

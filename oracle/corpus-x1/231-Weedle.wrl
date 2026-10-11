@@ -1,0 +1,810 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "Weedle"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Weedle Transform {
+     translation 0.0 -1.585 0.0
+     scale 0.5 0.5 0.5
+     children [
+      DEF Weedle Group {
+       children [
+        DEF dad_Sphere5 Transform {
+         translation -0.554 0.331 0.0
+         children [
+          DEF Sphere5 Shape {
+           appearance Appearance {
+            material DEF Shiny_White_mat Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 1.0 1.0 1.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 1.0 1.0 1.0
+            }
+           }
+           geometry IndexedFaceSet {
+            solid TRUE
+            creaseAngle 0.524
+            coord Coordinate {
+             point [
+              -0.02993 0.09019 -0.04983
+              -0.02930 0.28288 -0.00041
+              -0.01160 0.09879 -0.04403
+              -0.01910 0.09640 -0.04612
+              0.00312 0.10334 -0.03289
+              0.00000 0.10303 -0.03505
+              -0.00767 0.10163 -0.04057
+              0.01274 0.10560 -0.01757
+              0.00942 0.10511 -0.02273
+              0.01599 0.10682 0.00004
+              0.01598 0.10682 -0.00000
+              0.01475 0.10683 -0.00611
+              0.01342 0.10623 -0.01342
+              0.01287 0.10557 0.01769
+              0.01352 0.10620 0.01352
+              0.01481 0.10681 0.00613
+              0.00335 0.10328 0.03311
+              0.00952 0.10505 0.02299
+              -0.01130 0.09855 0.04445
+              -0.00712 0.10163 0.04068
+              -0.00000 0.10294 0.03547
+              -0.02966 0.08996 0.05043
+              -0.01937 0.09593 0.04677
+              -0.04955 0.08342 0.04826
+              -0.04833 0.08409 0.04833
+              -0.06794 0.07528 0.03859
+              -0.06533 0.07778 0.03954
+              -0.08236 0.06432 0.02222
+              -0.07344 0.07522 0.03042
+              -0.08676 0.06421 0.00046
+              -0.08238 0.06456 -0.02128
+              -0.08655 0.06466 -0.00000
+              -0.06796 0.07605 -0.03765
+              -0.07291 0.07609 -0.03020
+              -0.04977 0.08356 -0.04755
+              -0.06613 0.07778 -0.03835
+              -0.04768 0.08470 -0.04768
+              0.00000 -0.10163 -0.04210
+              0.01611 -0.10163 -0.03889
+              0.00000 -0.11000 0.00000
+              0.02977 -0.10163 -0.02977
+              0.03889 -0.10163 -0.01611
+              0.04210 -0.10163 0.00000
+              0.03889 -0.10163 0.01611
+              0.02977 -0.10163 0.02977
+              0.01611 -0.10163 0.03889
+              -0.00000 -0.10163 0.04210
+              -0.01611 -0.10163 0.03889
+              -0.02977 -0.10163 0.02977
+              -0.03889 -0.10163 0.01611
+              -0.04210 -0.10163 -0.00000
+              -0.03889 -0.10163 -0.01611
+              -0.02977 -0.10163 -0.02977
+              -0.01611 -0.10163 -0.03889
+              0.01611 0.10163 -0.03889
+              0.00000 0.10163 -0.04210
+              0.02977 0.10163 -0.02977
+              0.03889 0.10163 -0.01611
+              0.04210 0.10163 0.00000
+              0.03889 0.10163 0.01611
+              0.02977 0.10163 0.02977
+              0.01611 0.10163 0.03889
+              -0.00000 0.10163 0.04210
+              0.00000 -0.07778 -0.07778
+              0.02977 -0.07778 -0.07186
+              0.05500 -0.07778 -0.05500
+              0.07186 -0.07778 -0.02977
+              0.07778 -0.07778 0.00000
+              0.07186 -0.07778 0.02977
+              0.05500 -0.07778 0.05500
+              0.02977 -0.07778 0.07186
+              -0.00000 -0.07778 0.07778
+              -0.02977 -0.07778 0.07186
+              -0.05500 -0.07778 0.05500
+              -0.07186 -0.07778 0.02977
+              -0.07778 -0.07778 -0.00000
+              -0.07186 -0.07778 -0.02977
+              -0.05500 -0.07778 -0.05500
+              -0.02977 -0.07778 -0.07186
+              0.00000 -0.04210 -0.10163
+              0.03889 -0.04210 -0.09389
+              0.07186 -0.04210 -0.07186
+              0.09389 -0.04210 -0.03889
+              0.10163 -0.04210 0.00000
+              0.09389 -0.04210 0.03889
+              0.07186 -0.04210 0.07186
+              0.03889 -0.04210 0.09389
+              -0.00000 -0.04210 0.10163
+              -0.03889 -0.04210 0.09389
+              -0.07186 -0.04210 0.07186
+              -0.09389 -0.04210 0.03889
+              -0.10163 -0.04210 -0.00000
+              -0.09389 -0.04210 -0.03889
+              -0.07186 -0.04210 -0.07186
+              -0.03889 -0.04210 -0.09389
+              0.00000 0.00000 -0.11000
+              0.04210 0.00000 -0.10163
+              0.07778 0.00000 -0.07778
+              0.10163 0.00000 -0.04210
+              0.11000 0.00000 0.00000
+              0.10163 0.00000 0.04210
+              0.07778 0.00000 0.07778
+              0.04210 0.00000 0.10163
+              -0.00000 0.00000 0.11000
+              -0.04210 0.00000 0.10163
+              -0.07778 0.00000 0.07778
+              -0.10163 0.00000 0.04210
+              -0.11000 0.00000 -0.00000
+              -0.10163 0.00000 -0.04210
+              -0.07778 0.00000 -0.07778
+              -0.04210 0.00000 -0.10163
+              0.00000 0.04210 -0.10163
+              0.03889 0.04210 -0.09389
+              0.07186 0.04210 -0.07186
+              0.09389 0.04210 -0.03889
+              0.10163 0.04210 0.00000
+              0.09389 0.04210 0.03889
+              0.07186 0.04210 0.07186
+              0.03889 0.04210 0.09389
+              -0.00000 0.04210 0.10163
+              -0.03889 0.04210 0.09389
+              -0.07186 0.04210 0.07186
+              -0.09389 0.04210 0.03889
+              -0.10163 0.04210 -0.00000
+              -0.09389 0.04210 -0.03889
+              -0.07186 0.04210 -0.07186
+              -0.03889 0.04210 -0.09389
+              0.00000 0.07778 -0.07778
+              0.02977 0.07778 -0.07186
+              0.05500 0.07778 -0.05500
+              0.07186 0.07778 -0.02977
+              0.07778 0.07778 0.00000
+              0.07186 0.07778 0.02977
+              0.05500 0.07778 0.05500
+              0.02977 0.07778 0.07186
+              -0.00000 0.07778 0.07778
+              -0.02977 0.07778 0.07186
+              -0.05500 0.07778 0.05500
+              -0.05500 0.07778 -0.05500
+              -0.02977 0.07778 -0.07186
+             ]
+            }
+            coordIndex [
+              3 0 1 -1 
+              3 1 2 -1 
+              1 4 5 -1 
+              1 5 6 -1 
+              1 6 2 -1 
+              8 4 1 -1 
+              8 1 7 -1 
+              1 9 10 -1 
+              1 10 11 -1 
+              1 11 12 -1 
+              1 12 7 -1 
+              1 13 14 -1 
+              1 14 15 -1 
+              1 15 9 -1 
+              1 16 17 -1 
+              1 17 13 -1 
+              1 18 19 -1 
+              1 19 20 -1 
+              1 20 16 -1 
+              1 21 22 -1 
+              1 22 18 -1 
+              1 23 24 -1 
+              1 24 21 -1 
+              1 25 26 -1 
+              1 26 23 -1 
+              1 27 28 -1 
+              1 28 25 -1 
+              27 1 29 -1 
+              1 30 31 -1 
+              1 31 29 -1 
+              1 32 33 -1 
+              1 33 30 -1 
+              35 32 1 -1 
+              35 1 34 -1 
+              36 34 1 -1 
+              36 1 0 -1 
+              37 38 39 -1 
+              38 40 39 -1 
+              40 41 39 -1 
+              41 42 39 -1 
+              42 43 39 -1 
+              43 44 39 -1 
+              44 45 39 -1 
+              45 46 39 -1 
+              46 47 39 -1 
+              47 48 39 -1 
+              48 49 39 -1 
+              49 50 39 -1 
+              50 51 39 -1 
+              51 52 39 -1 
+              52 53 39 -1 
+              53 37 39 -1 
+              54 55 5 -1 
+              54 5 4 -1 
+              54 4 8 -1 
+              56 54 8 -1 
+              56 8 7 -1 
+              56 7 12 -1 
+              57 56 12 -1 
+              57 12 11 -1 
+              58 57 11 -1 
+              58 11 10 -1 
+              59 58 10 -1 
+              59 10 9 -1 
+              59 9 15 -1 
+              60 59 15 -1 
+              60 15 14 -1 
+              61 60 14 -1 
+              61 14 13 -1 
+              61 13 17 -1 
+              62 61 17 -1 
+              62 17 16 -1 
+              62 16 20 -1 
+              19 62 20 -1 
+              55 6 5 -1 
+              37 63 64 -1 
+              37 64 38 -1 
+              38 64 65 -1 
+              38 65 40 -1 
+              40 65 66 -1 
+              40 66 41 -1 
+              41 66 67 -1 
+              41 67 42 -1 
+              42 67 68 -1 
+              42 68 43 -1 
+              43 68 69 -1 
+              43 69 44 -1 
+              44 69 70 -1 
+              44 70 45 -1 
+              45 70 71 -1 
+              45 71 46 -1 
+              46 71 72 -1 
+              46 72 47 -1 
+              47 72 73 -1 
+              47 73 48 -1 
+              48 73 74 -1 
+              48 74 49 -1 
+              49 74 75 -1 
+              49 75 50 -1 
+              50 75 76 -1 
+              50 76 51 -1 
+              51 76 77 -1 
+              51 77 52 -1 
+              52 77 78 -1 
+              52 78 53 -1 
+              53 78 63 -1 
+              53 63 37 -1 
+              63 79 80 -1 
+              63 80 64 -1 
+              64 80 81 -1 
+              64 81 65 -1 
+              65 81 82 -1 
+              65 82 66 -1 
+              66 82 83 -1 
+              66 83 67 -1 
+              67 83 84 -1 
+              67 84 68 -1 
+              68 84 85 -1 
+              68 85 69 -1 
+              69 85 86 -1 
+              69 86 70 -1 
+              70 86 87 -1 
+              70 87 71 -1 
+              71 87 88 -1 
+              71 88 72 -1 
+              72 88 89 -1 
+              72 89 73 -1 
+              73 89 90 -1 
+              73 90 74 -1 
+              74 90 91 -1 
+              74 91 75 -1 
+              75 91 92 -1 
+              75 92 76 -1 
+              76 92 93 -1 
+              76 93 77 -1 
+              77 93 94 -1 
+              77 94 78 -1 
+              78 94 79 -1 
+              78 79 63 -1 
+              79 95 96 -1 
+              79 96 80 -1 
+              80 96 97 -1 
+              80 97 81 -1 
+              81 97 98 -1 
+              81 98 82 -1 
+              82 98 99 -1 
+              82 99 83 -1 
+              83 99 100 -1 
+              83 100 84 -1 
+              84 100 101 -1 
+              84 101 85 -1 
+              85 101 102 -1 
+              85 102 86 -1 
+              86 102 103 -1 
+              86 103 87 -1 
+              87 103 104 -1 
+              87 104 88 -1 
+              88 104 105 -1 
+              88 105 89 -1 
+              89 105 106 -1 
+              89 106 90 -1 
+              90 106 107 -1 
+              90 107 91 -1 
+              91 107 108 -1 
+              91 108 92 -1 
+              92 108 109 -1 
+              92 109 93 -1 
+              93 109 110 -1 
+              93 110 94 -1 
+              94 110 95 -1 
+              94 95 79 -1 
+              95 111 112 -1 
+              95 112 96 -1 
+              96 112 113 -1 
+              96 113 97 -1 
+              97 113 114 -1 
+              97 114 98 -1 
+              98 114 115 -1 
+              98 115 99 -1 
+              99 115 116 -1 
+              99 116 100 -1 
+              100 116 117 -1 
+              100 117 101 -1 
+              101 117 118 -1 
+              101 118 102 -1 
+              102 118 119 -1 
+              102 119 103 -1 
+              103 119 120 -1 
+              103 120 104 -1 
+              104 120 121 -1 
+              104 121 105 -1 
+              105 121 122 -1 
+              105 122 106 -1 
+              106 122 123 -1 
+              106 123 107 -1 
+              107 123 124 -1 
+              107 124 108 -1 
+              108 124 125 -1 
+              108 125 109 -1 
+              109 125 126 -1 
+              109 126 110 -1 
+              110 126 111 -1 
+              110 111 95 -1 
+              111 127 128 -1 
+              111 128 112 -1 
+              112 128 129 -1 
+              112 129 113 -1 
+              113 129 130 -1 
+              113 130 114 -1 
+              114 130 131 -1 
+              114 131 115 -1 
+              115 131 132 -1 
+              115 132 116 -1 
+              116 132 133 -1 
+              116 133 117 -1 
+              117 133 134 -1 
+              117 134 118 -1 
+              118 134 135 -1 
+              118 135 119 -1 
+              119 135 136 -1 
+              119 136 120 -1 
+              120 136 137 -1 
+              120 137 121 -1 
+              121 137 26 -1 
+              121 26 25 -1 
+              121 25 28 -1 
+              121 28 122 -1 
+              123 122 27 -1 
+              123 27 29 -1 
+              123 29 31 -1 
+              27 122 28 -1 
+              124 123 31 -1 
+              124 31 30 -1 
+              124 30 33 -1 
+              124 33 32 -1 
+              124 32 35 -1 
+              124 35 138 -1 
+              124 138 125 -1 
+              125 138 139 -1 
+              125 139 126 -1 
+              126 139 127 -1 
+              126 127 111 -1 
+              127 55 54 -1 
+              127 54 128 -1 
+              128 54 56 -1 
+              128 56 129 -1 
+              129 56 57 -1 
+              129 57 130 -1 
+              130 57 58 -1 
+              130 58 131 -1 
+              131 58 59 -1 
+              131 59 132 -1 
+              132 59 60 -1 
+              132 60 133 -1 
+              133 60 61 -1 
+              133 61 134 -1 
+              134 61 62 -1 
+              134 62 135 -1 
+              135 62 19 -1 
+              135 19 18 -1 
+              135 18 22 -1 
+              135 22 136 -1 
+              136 22 21 -1 
+              136 21 24 -1 
+              136 24 137 -1 
+              137 24 23 -1 
+              137 23 26 -1 
+              34 36 138 -1 
+              34 138 35 -1 
+              0 3 139 -1 
+              0 139 138 -1 
+              0 138 36 -1 
+              139 3 2 -1 
+              139 2 6 -1 
+              139 6 55 -1 
+              139 55 127 -1 
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Body Transform {
+         children [
+          DEF Body Group {
+           children [
+            DEF dad_Sphere6 Transform {
+             children [
+              DEF Sphere6 Shape {
+               appearance Appearance {
+                material DEF Shiny_Rust_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 0.69 0.47 0.46
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.69 0.47 0.46
+                }
+               }
+               geometry Sphere {
+                radius 0.250
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere7 Transform {
+             translation 0.4 0.0 0.0
+             children [
+              DEF Sphere7 Shape {
+               appearance Appearance {
+                material USE Shiny_Rust_mat
+               }
+               geometry Sphere {
+                radius 0.250
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere8 Transform {
+             translation 0.8 0.0 0.0
+             children [
+              DEF Sphere8 Shape {
+               appearance Appearance {
+                material USE Shiny_Rust_mat
+               }
+               geometry Sphere {
+                radius 0.250
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere9 Transform {
+             translation -0.37 0.15 0.0
+             children [
+              DEF Sphere9 Shape {
+               appearance Appearance {
+                material USE Shiny_Rust_mat
+               }
+               geometry Sphere {
+                radius 0.200
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere10 Transform {
+             translation 1.098 0.263 0.0
+             children [
+              DEF Sphere10 Shape {
+               appearance Appearance {
+                material USE Shiny_Rust_mat
+               }
+               geometry Sphere {
+                radius 0.300
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere11 Transform {
+             translation 1.37246 0.56377 0.0
+             children [
+              DEF Sphere11 Shape {
+               appearance Appearance {
+                material USE Shiny_Rust_mat
+               }
+               geometry Sphere {
+                radius 0.300
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere1 Transform {
+             translation 1.59 0.983 0.0
+             children [
+              DEF Sphere1 Shape {
+               appearance Appearance {
+                material USE Shiny_Rust_mat
+               }
+               geometry Sphere {
+                radius 0.400
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Head_parts Transform {
+         children [
+          DEF Head_parts Group {
+           children [
+            DEF dad_Cone1 Transform {
+             translation 1.6 1.5 0.0
+             children [
+              DEF Cone1 Shape {
+               appearance Appearance {
+                material USE Shiny_White_mat
+               }
+               geometry Cone {
+                height 0.500
+                bottomRadius 0.150
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere2 Transform {
+             translation 2.0 1.0 0.0
+             scale 0.5 1.0 1.3
+             children [
+              DEF Sphere2 Shape {
+               appearance Appearance {
+                material DEF Shiny_Yellow_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 1.0 1.0 0.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 1.0 1.0 0.0
+                }
+               }
+               geometry Sphere {
+                radius 0.100
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere12 Transform {
+             translation 1.875 1.16 0.165
+             children [
+              DEF Sphere12 Shape {
+               appearance Appearance {
+                material DEF Shiny_Green_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 0.0 1.0 0.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 1.0 0.0
+                }
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere13 Transform {
+             translation 1.875 1.16 -0.165
+             children [
+              DEF Sphere13 Shape {
+               appearance Appearance {
+                material USE Shiny_Green_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere4 Transform {
+             translation 1.887 0.775 -0.007
+             scale 1.0 0.8 1.5
+             children [
+              DEF Sphere4 Shape {
+               appearance Appearance {
+                material DEF Shiny_Black_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.100
+                 diffuseColor 0.0 0.0 0.0
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 0.0 0.0
+                }
+               }
+               geometry Sphere {
+                radius 0.080
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Feet Transform {
+         children [
+          DEF Feet Group {
+           children [
+            DEF dad_Sphere14 Transform {
+             translation 1.62 0.5 0.15
+             children [
+              DEF Sphere14 Shape {
+               appearance Appearance {
+                material DEF Purple_mat Material {
+                 ambientIntensity 0.200
+                 shininess 0.200
+                 diffuseColor 0.9176 0.0 0.874
+                 emissiveColor 0.0 0.0 0.0
+                 specularColor 0.0 0.0 0.0
+                }
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15 Transform {
+             translation 1.62 0.5 -0.15
+             children [
+              DEF Sphere15 Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15b Transform {
+             translation 1.3 0.1 -0.15
+             children [
+              DEF Sphere15b Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15o Transform {
+             translation 1.3 0.1 0.15
+             children [
+              DEF Sphere15o Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15bs Transform {
+             translation 0.8 -0.25 0.15
+             children [
+              DEF Sphere15bs Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15u Transform {
+             translation 0.8 -0.25 -0.15
+             children [
+              DEF Sphere15u Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15r Transform {
+             translation 0.4 -0.25 0.15
+             children [
+              DEF Sphere15r Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15s Transform {
+             translation 0.4 -0.25 -0.15
+             children [
+              DEF Sphere15s Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere15e Transform {
+             translation 0.0 -0.25 -0.15
+             children [
+              DEF Sphere15e Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+            DEF dad_Sphere3 Transform {
+             translation 0.0 -0.25 0.15
+             children [
+              DEF Sphere3 Shape {
+               appearance Appearance {
+                material USE Purple_mat
+               }
+               geometry Sphere {
+                radius 0.090
+               }
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

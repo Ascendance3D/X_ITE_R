@@ -1,0 +1,3506 @@
+{
+ "source": "recon/index sample, ordered by sha256",
+ "eligible": 7005,
+ "files": [
+  {
+   "file": "00-89chevy4.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5a/9/89chevy4.wrl",
+   "sha256": "0014d4fab4caf964e360218a2601d4ca3ab1dfdf1c8b5e7817c35c53ed357a28",
+   "compression": "gzip"
+  },
+  {
+   "file": "01-jail.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/places/jail/vrml/jail.wrl",
+   "sha256": "008b6e01dbbcd727f0c33f5519c25477d720ab7cae8a08f258e6cdcb850390af",
+   "compression": "gzip"
+  },
+  {
+   "file": "02-coffee.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/8d/1/coffee.wrl",
+   "sha256": "0115782b5368e37243a7ace003ae631104da79ac6ebaa44931e16eceae91ea19",
+   "compression": "gzip"
+  },
+  {
+   "file": "03-av.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/A/a0/00/00/08/av.wrl",
+   "sha256": "0187d39b0c78211bd0901411bd7fa7414568d19e633fb269f30b008586db20e2",
+   "compression": "gzip"
+  },
+  {
+   "file": "04-Nice2.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/60/3/Nice2.wrl",
+   "sha256": "021b133355bd26161d1cc9b081473e718031b0bbd8395a3d28b5b463dc4ca56e",
+   "compression": "gzip"
+  },
+  {
+   "file": "05-whiterocket.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/65/5/whiterocket.wrl",
+   "sha256": "02cf5a09c4977875d3e54e1211704d9377ec43d91ad0df9f74c54ecb13a4a117",
+   "compression": "gzip"
+  },
+  {
+   "file": "06-exampleD.13.1.wrl",
+   "root": "wbct",
+   "rel": "specs/iso-14772-vrml97/raw/part1/exampleD.13.1.wrl",
+   "sha256": "0334f8a024f13d57e9b7cd4d431d8feba3f901c2fb15357b498dc5125fdb3bb0",
+   "compression": "plain"
+  },
+  {
+   "file": "07-xtree.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/12/dd/6/xtree.wrl",
+   "sha256": "03b043e17e2c805e909026b3868c87bc1c08b10b1b5d0f45c3762bac90803664",
+   "compression": "plain"
+  },
+  {
+   "file": "08-billboardtree.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Nature_Wedding/vrml/billboardtree.wrl",
+   "sha256": "0415a9bc4e24b6b132719cd880835f9d927cda73313d95735c053f6b53dcfc4b",
+   "compression": "gzip"
+  },
+  {
+   "file": "09-tomiko.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/info/avatars/tomiko.wrl",
+   "sha256": "048f7b7a7962fd3dd0c34ca3d8b075ad38758a73cf5ca63f3a286444111d7b14",
+   "compression": "gzip"
+  },
+  {
+   "file": "10-Sears_stove.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/60/2/Sears_stove.wrl",
+   "sha256": "050fc9ce5ecc5293bbd9728a0af6adf4f4f291725a9aea5e798f914bd31a513f",
+   "compression": "gzip"
+  },
+  {
+   "file": "11-blkcftbl.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/05/e/blkcftbl.wrl",
+   "sha256": "0584c7994df000aee5c79e3153ab3f0798b09d6ba786fd7783089d348aed0927",
+   "compression": "plain"
+  },
+  {
+   "file": "12-stage.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/13/f/stage.wrl",
+   "sha256": "05eb6c4f1e0cd733bbbe370adf83e980b02c90d96a0c3220582de6a00c24dcbc",
+   "compression": "gzip"
+  },
+  {
+   "file": "13-monkey.wrl",
+   "root": "wbct",
+   "rel": "items/monkey-3e2385/monkey.wrl",
+   "sha256": "06611f55be689e8cab823c887d09eb1b3854be51cacd102df3cfc8ede8ed0b2f",
+   "compression": "plain"
+  },
+  {
+   "file": "14-object1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/vrml/objects/object1/object1.wrl",
+   "sha256": "06cc2e198e58a28c850b671fa7eb24a8b3490104139d5b09c67fc9eeb38737c2",
+   "compression": "gzip"
+  },
+  {
+   "file": "15-directory.wrl",
+   "root": "wbct",
+   "rel": "3d/places/suburbs/directory.wrl",
+   "sha256": "07234177ad8f2bf64f27341b29b06ef3e034cf13e36e5105ef4f149bdc70e8c7",
+   "compression": "plain"
+  },
+  {
+   "file": "16-briefng2.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/IrishSpace/armstrng/briefng2.wrl",
+   "sha256": "07a14eb65049942c60a037fe8b514a37580b609f26776c6fb19ef13b7eccce30",
+   "compression": "gzip"
+  },
+  {
+   "file": "17-snowglobe.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/f6/b/snowglobe.wrl",
+   "sha256": "0818d2e16cd68aeadd8196a41e5122f881d94fda3d45167437bcfd53955aea47",
+   "compression": "plain"
+  },
+  {
+   "file": "18-beam.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/places/hi-tek/vrml/beam.wrl",
+   "sha256": "088a090b9da840263bbe16e21424d405bd7c302c36edfc2a0a54b6265d187133",
+   "compression": "gzip"
+  },
+  {
+   "file": "19-fish.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Tragoz_Lair/vrml/fish.wrl",
+   "sha256": "092322763a60ddee26d3eed1309eb07a9d9fe061b80fa8ea7a49e94fae354725",
+   "compression": "gzip"
+  },
+  {
+   "file": "20-Brass_Bed.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/23/2/Brass_Bed.wrl",
+   "sha256": "09a8bdea77c414d9b2a90cbb831fd3e28cbab15383056edd53294567429ba0f1",
+   "compression": "gzip"
+  },
+  {
+   "file": "21-charm.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0b/7c/2/charm.wrl",
+   "sha256": "0a4d281cab1fc5d98cfa71f7f4f08955efcf9ed0da7c012acaef9c7f9a800195",
+   "compression": "gzip"
+  },
+  {
+   "file": "22-cad_manutec_compress_r2_link4_1.geo.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.robotic.dlr.de/STUDENTS/Martin.Rohrmeier/robot/cad_manutec_compress_r2_link4_1.geo.wrl",
+   "sha256": "0ac11e05975e9356a4bca2983a7b50b528f8b7f84444afa4feab9280fc1e225a",
+   "compression": "plain"
+  },
+  {
+   "file": "23-snobell2zip.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/12/d9/d/snobell2zip.wrl",
+   "sha256": "0b1d107683f15f67468831426d125959fad00cb63cde6c6066cee7ab143cc080",
+   "compression": "gzip"
+  },
+  {
+   "file": "24-STNCHAIR.WRL",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/26/b/STNCHAIR.WRL",
+   "sha256": "0b7854d6e5f73481475bd8265a3137cd85eac64973422ef92ed18f00f7899cf6",
+   "compression": "gzip"
+  },
+  {
+   "file": "25-Wills rockgarden.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/68/c/Wills rockgarden.wrl",
+   "sha256": "0c2fd9fc10b69556f11fb6a63bbb9b30367ce8c0d37f04b072eeab93e8ce6290",
+   "compression": "gzip"
+  },
+  {
+   "file": "26-ottoman.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/c0/5/ottoman.wrl",
+   "sha256": "0cb424140fc1848efe3b99313c0d78ee7ffe95c025707ee2148c24e76e309205",
+   "compression": "plain"
+  },
+  {
+   "file": "27-photorobo.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/71/9/photorobo.wrl",
+   "sha256": "0cf5fa9fef11cfdd90ba823da8aa0ff71ab0af406ea7f62db221cc6cf1633157",
+   "compression": "gzip"
+  },
+  {
+   "file": "28-alienszip.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0a/c5/c/alienszip.wrl",
+   "sha256": "0d698be31fb139738eb83433e5fc39de823b147245b43ab6251d2c10005562f5",
+   "compression": "plain"
+  },
+  {
+   "file": "29-Treasure_Hunt_Script_Test.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Treasure_Hunt_Script_Test/vrml/Treasure_Hunt_Script_Test.wrl",
+   "sha256": "0df3775556f4ec8e2ad7fddb0d8321aef51051821e5d20ec4f3a1b9ee085ea0e",
+   "compression": "gzip"
+  },
+  {
+   "file": "30-kitchen.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/07/3f/5/kitchen.wrl",
+   "sha256": "0e8db537c380a396865f56a24e5a5faa751963759a58e447114026c4941af1b9",
+   "compression": "plain"
+  },
+  {
+   "file": "31-zporsmagn.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/a2/7/zporsmagn.wrl",
+   "sha256": "0f3ab81cb6f8ebdb189e9daf4c757083957d01349f2971bd7fdd1f1e6d406597",
+   "compression": "gzip"
+  },
+  {
+   "file": "32-HadesTheDragon2GzipCX.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbobjects/SO/c0/00/00/01/f/HadesTheDragon2GzipCX.wrl",
+   "sha256": "0fefbe5932a77b77b4fd9342133e43adbd331f3eb3547c424470eb7b7b5791dd",
+   "compression": "gzip"
+  },
+  {
+   "file": "33-zilbed.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/91/7/zilbed.wrl",
+   "sha256": "103c2e65e6599eaf2c78b56207e8956b0ec9f661c31cab7897066a15554e1dd3",
+   "compression": "plain"
+  },
+  {
+   "file": "34-av0x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/2f/av0x.wrl",
+   "sha256": "10a6b54f4813cf0d089bb8cf153dea1086ac4c7093d618aef8e711cb1f5c14b7",
+   "compression": "gzip"
+  },
+  {
+   "file": "35-entertaincentr.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/98/9/entertaincentr.wrl",
+   "sha256": "10e133361cedf61bc4c270813982dfb683318e5db4f9aab7cc39d383d515cf16",
+   "compression": "gzip"
+  },
+  {
+   "file": "36-McLeod_Gallery.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/McLeod_Gallery/vrml/McLeod_Gallery.wrl",
+   "sha256": "117e96ac3cff2b8cc09a422bda7d238a6326e1a21160f3fbd38d93d74a058d05",
+   "compression": "gzip"
+  },
+  {
+   "file": "37-pyth7.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/pyth7.wrl",
+   "sha256": "11e86841547833710fe11b11edf225defc9e73d0aa2cc032451bdd6e5ceef008",
+   "compression": "plain"
+  },
+  {
+   "file": "38-pilotv3.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/40/9/pilotv3.wrl",
+   "sha256": "12484d9b2578741a31724ca0300466b2c5507cad8cbd7406554d39d6af84640d",
+   "compression": "plain"
+  },
+  {
+   "file": "39-us-iron_and_stone1.wrl",
+   "root": "wbct",
+   "rel": "items/us-iron_and_stone1-38bfcf/us-iron_and_stone1.wrl",
+   "sha256": "129fa0767f2de3d391ddc84b9861b09b2b4ec80587a4f8ba0414485b1b130313",
+   "compression": "plain"
+  },
+  {
+   "file": "40-antiquechair2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/69/e/antiquechair2.wrl",
+   "sha256": "1308f192194d796bd1b01c47a13524a1896af5f6e5ec3c102a7d7101a7e9ac2b",
+   "compression": "gzip"
+  },
+  {
+   "file": "41-ChampagneTableBlue.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/7a/8/ChampagneTableBlue.wrl",
+   "sha256": "140618138451c62cbf8309b74fa1c8e246307e2e00841b7e40649b4da8d90c0e",
+   "compression": "gzip"
+  },
+  {
+   "file": "42-gogoalien.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/vrml/test/inteltest/nightclub/useravatars/gogoalien.wrl",
+   "sha256": "147319dfcd6b24096a5a8e79417bf4a8b28a6347c67e66e40719a6c03357c8c1",
+   "compression": "gzip"
+  },
+  {
+   "file": "43-creepwall.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/d1/a/creepwall.wrl",
+   "sha256": "1536fd7a2c454c2c30e2a529144978b3edd4d7dbae80f99f1cac5cf2988ac8fe",
+   "compression": "plain"
+  },
+  {
+   "file": "44-bunny.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/3dplanets.com_8080/commserv/community/dbobjects/SO/c0/00/00/15/e/bunny.wrl",
+   "sha256": "15958c3fb6355b0e16ee11eefad9122a5d45b67d926c478fd4797628c5c24d62",
+   "compression": "gzip"
+  },
+  {
+   "file": "45-blue demon.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/8f/3/blue demon.wrl",
+   "sha256": "15f88b909e410d7497a1017f142906ee3d44cbad844c70771b7e5a98bdb94cb8",
+   "compression": "gzip"
+  },
+  {
+   "file": "46-suburbs.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/places/suburbs/suburbs/vrml/suburbs.wrl",
+   "sha256": "168a6847a0105c7c714ae694e22fd65d8f46a2030a6805e5c3b310b1ed87770d",
+   "compression": "plain"
+  },
+  {
+   "file": "47-SwordofHate.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/01/ce/4/SwordofHate.wrl",
+   "sha256": "172cf4c6d4edd744e3820f2098d352d70fbb9f0fdf08097500ed4bd6f97fc2ca",
+   "compression": "gzip"
+  },
+  {
+   "file": "48-movies.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/places/movies/vrml/movies.wrl",
+   "sha256": "1786949c9209ed48b4dfdb262b95eb29ae95533b5bff61051ae7a328f3f89da0",
+   "compression": "gzip"
+  },
+  {
+   "file": "49-wrap2.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/wbghall/vrml/Room2/wrap2.wrl",
+   "sha256": "180381844750c060ff1d2f8862df82e6767191147fae3c8baad392d420adc1c7",
+   "compression": "gzip"
+  },
+  {
+   "file": "50-Susan2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0b/c1/1/Susan2.wrl",
+   "sha256": "18b9360a975527d4f1fb8c8c3c24d5afb101b76cd15011474e5d9104ef7b1b39",
+   "compression": "gzip"
+  },
+  {
+   "file": "51-dream.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0d/4a/6/dream.wrl",
+   "sha256": "1951ae616bd4914efbd7da56d27331b905da427b49b242cbf5c406f83521279e",
+   "compression": "gzip"
+  },
+  {
+   "file": "52-kandi.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/objects/lights/kandi.wrl",
+   "sha256": "19db4d707534af5b026f90621dd419ce651eb3cea72dda6c3966073282242851",
+   "compression": "gzip"
+  },
+  {
+   "file": "53-starthousehelp.wrl",
+   "root": "wbct",
+   "rel": "3d/places/iwosmall/vrml/starthousehelp.wrl",
+   "sha256": "1a6ef8de6ab132bee3f3a3ca96322a550b912acea35f9da41a6a7388d427e2a3",
+   "compression": "plain"
+  },
+  {
+   "file": "54-MerryGoRound.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/27/e/MerryGoRound.wrl",
+   "sha256": "1b31ddb5290625a4a51768748d01908dd5b278a1694a80767acde419579d18b8",
+   "compression": "gzip"
+  },
+  {
+   "file": "55-movie4.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Mardi_Gras_Parade/vrml/movie4.wrl",
+   "sha256": "1b902f48ad60916655552f963905a80e7d29b4222d9a05d19fe7bdfa2fd0469f",
+   "compression": "gzip"
+  },
+  {
+   "file": "56-repulsor_a.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/places/ne_game/vrml/weapons/repulsor_a.wrl",
+   "sha256": "1c155b07eeb81dc2cb8bdb33a62d1e67d131c5ea7a0fc5c67a728d8ec0985643",
+   "compression": "gzip"
+  },
+  {
+   "file": "57-Radar.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/74/6/Radar.wrl",
+   "sha256": "1c62d1a8d0033695a6e6f1c40205d67527e2ae3e17b228ee14ab9424a4a800e6",
+   "compression": "gzip"
+  },
+  {
+   "file": "58-autumn_leaves.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0c/bc/5/autumn_leaves.wrl",
+   "sha256": "1cec159aff38d752a38ee53ce5a2c2c672ec04dab9f58559b0aec98129d6c1a5",
+   "compression": "plain"
+  },
+  {
+   "file": "59-iggy.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/4a/d/iggy.wrl",
+   "sha256": "1d843d6e325f821ad351a879048db9d911bc8f6fc67b9633d64f0959e04eb5ca",
+   "compression": "gzip"
+  },
+  {
+   "file": "60-kue.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw-colonycity/www.colonycity.com/info/avatars/kue.wrl",
+   "sha256": "1e2641f15a0eaf6c034e7b26fba7e7717ecc5f5e4626641dddea8c8a8b872942",
+   "compression": "gzip"
+  },
+  {
+   "file": "61-shared.wrl.txt",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.de/products/sdk/client/doc/examples/shared/shared.wrl.txt",
+   "sha256": "1e75ac4b9f0f3224eee2926d34f1930bbca9dfb95b25607259706d637ae159e9",
+   "compression": "plain"
+  },
+  {
+   "file": "62-av0.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/38/av0.wrl",
+   "sha256": "1f190d6f8e91a01577f84116daeb13a03a51b0f55d1b494171d6a0b330d61662",
+   "compression": "gzip"
+  },
+  {
+   "file": "63-hermes.wrl",
+   "root": "wbct",
+   "rel": "3d/info/avatars/hermes.wrl",
+   "sha256": "1f9b3866aa10242106288bf3f04ac102a6555a33ef88d8028a85dd3b6757fa8e",
+   "compression": "plain"
+  },
+  {
+   "file": "64-WovForm.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.wovencroft.com/VRML/Avatars/WovForm.wrl",
+   "sha256": "1ffbcd35b9ca428cb379cac3ff43e4542e640d1bde08e210f132d1c1a8609909",
+   "compression": "gzip"
+  },
+  {
+   "file": "65-av1x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/93/av1x.wrl",
+   "sha256": "207757a7ecdd875b3c0a6a813ce54ac701ac8e5eef9c4cd5001b19c99b48dc89",
+   "compression": "gzip"
+  },
+  {
+   "file": "66-blueglassuni.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0b/f8/9/blueglassuni.wrl",
+   "sha256": "216488ba8adb815b1fb7a9e791fc0c734fcef7f8fba3478537b1f0d6a10e234e",
+   "compression": "plain"
+  },
+  {
+   "file": "67-berge3.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/vrml/objects/bilder/berge3.wrl",
+   "sha256": "21e4cd89289d83a1d58d3f40f0a6e430021098ce8cb39d6fa3eea33f9a24bef3",
+   "compression": "gzip"
+  },
+  {
+   "file": "68-av0.wrl",
+   "root": "wbct",
+   "rel": "3d/dbavatars/M/00/03/f8/c3/av0.wrl",
+   "sha256": "223d1639074194576e877e6d9442299a4574cb68cf2b3dbe2c2c83f6908cf90a",
+   "compression": "plain"
+  },
+  {
+   "file": "69-computer2.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/74/3/computer2.wrl",
+   "sha256": "22b8ac122dde56d9a86bfb173f5877a2a4b4ea82ca9ad54b98d1841a50ccf1b9",
+   "compression": "gzip"
+  },
+  {
+   "file": "70-bookcase.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/22/0/bookcase.wrl",
+   "sha256": "2339aac1fd6d4e5852102455808e04870b609db114f35130ad45f70aacb22197",
+   "compression": "plain"
+  },
+  {
+   "file": "71-vase1.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/03/72/6/vase1.wrl",
+   "sha256": "2398649860a2dabe7a6dc4982a021d57708f66bb5c0b80d2533722a7ad2d1044",
+   "compression": "plain"
+  },
+  {
+   "file": "72-pool table.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6b/e/pool table.wrl",
+   "sha256": "24124328a5810098034fad1ab2588ca596f4442f3894a9667931b9a9c003e9d1",
+   "compression": "gzip"
+  },
+  {
+   "file": "73-WOFormula.wrl",
+   "root": "wbct",
+   "rel": "items/WOFormula-8623ee/WOFormula.wrl",
+   "sha256": "2484c50cbac63f7a9909e98a3e51d89982fd4b82cdc368d4862c464174d50ba0",
+   "compression": "plain"
+  },
+  {
+   "file": "74-lamp.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/9f/8/lamp.wrl",
+   "sha256": "2502ded98c3622e42b79781b0ae81cd4914186b238943aa93a1da97fc9b1e83a",
+   "compression": "plain"
+  },
+  {
+   "file": "75-planetcheck.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/51/6/planetcheck.wrl",
+   "sha256": "258a70988ee0704d1a945ca459db5bcb0d00625afc33c24bbbc8cb7f3109a294",
+   "compression": "gzip"
+  },
+  {
+   "file": "76-dizz_pic04.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/2e/f/dizz_pic04.wrl",
+   "sha256": "25ccfbcab71a7ff42805348447ddbb6ac1b58fe1b65f17ec7a1bb1ce00d28927",
+   "compression": "plain"
+  },
+  {
+   "file": "77-stairs_chsl_gz.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Shrine_of_Saint_Sandroux/vrml/stairs_chsl_gz.wrl",
+   "sha256": "2639f943133f4264eb2e6e10929a2fea22b135e5b31b2865c7ecbcecdf7fda60",
+   "compression": "gzip"
+  },
+  {
+   "file": "78-av6.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/3f/av6.wrl",
+   "sha256": "2694b03271fa1c46b665cf7d7c6e7c17a62b08b1ffc91c6cfb6a09a5e4cc9bd9",
+   "compression": "gzip"
+  },
+  {
+   "file": "79-Room14.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/wbghall/vrml/Room14/Room14.wrl",
+   "sha256": "27422e6e63fe79cf4fd4dd8260d4b93780900d2cad12e546a8f6fcaef028495e",
+   "compression": "gzip"
+  },
+  {
+   "file": "80-fairie_statue.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6c/c/fairie_statue.wrl",
+   "sha256": "27af056c6a4f445c3fe306d3b94e02864d4b8055d2f7124de520db3eb406eddb",
+   "compression": "gzip"
+  },
+  {
+   "file": "81-WeWishYouCaroler.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/8d/4/WeWishYouCaroler.wrl",
+   "sha256": "286b27ac8ae1f0360867243dbc2334120369f60b83187759b9c8c8f47c64c4db",
+   "compression": "gzip"
+  },
+  {
+   "file": "82-twins.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0a/f5/c/twins.wrl",
+   "sha256": "28c0b87072532339e97e6e145c4b83de5365235f704957db170f7afd9cbe35a3",
+   "compression": "gzip"
+  },
+  {
+   "file": "83-midwayfishy.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/05/a4/c/midwayfishy.wrl",
+   "sha256": "29009586e08744f405b6896e6524092e88f38ac9dc0f3dc278167c1c95bd7935",
+   "compression": "gzip"
+  },
+  {
+   "file": "84-malfalcn.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/03/73/0/malfalcn.wrl",
+   "sha256": "2992d3b3857636a1a2f8c5c038a226bfda6135b30d757045a6779c95a1a9f425",
+   "compression": "plain"
+  },
+  {
+   "file": "85-christmastree.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0c/f2/1/christmastree.wrl",
+   "sha256": "2a411907037c766dc26cbb5a9445de4fa916ac9f22ad71cc1c81c6eae7d25b55",
+   "compression": "gzip"
+  },
+  {
+   "file": "86-VampiressDoll.wrl",
+   "root": "wbct",
+   "rel": "items/VampiressDoll-85b68d/VampiressDoll.wrl",
+   "sha256": "2ad035db1553924fde8cdbd4ae1a8a67315b6be14e567a59e45532d72dad95f5",
+   "compression": "plain"
+  },
+  {
+   "file": "87-weaver_anime_final_fixed2.wrl",
+   "root": "wbct",
+   "rel": "items/weaver_anime_final_fixed2-647e3d/weaver_anime_final_fixed2.wrl",
+   "sha256": "2b35914eb73d1669e4c21a4aa20bb0d33e1318eb8cd302e95487860ed41d4895",
+   "compression": "plain"
+  },
+  {
+   "file": "88-test3.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/66/9/test3.wrl",
+   "sha256": "2b8b1ab7ad6a4c2300dbf87ef5812afc3db8a947a73364d5a4b4e048abe8c4a0",
+   "compression": "plain"
+  },
+  {
+   "file": "89-office_chair.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/25/d/office_chair.wrl",
+   "sha256": "2c11ad16ecbe2bd4fb51adbcfe3fac0036f01573ef8110a23f7d3f696abf44f3",
+   "compression": "gzip"
+  },
+  {
+   "file": "90-midwayjugs.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/05/9e/a/midwayjugs.wrl",
+   "sha256": "2c8541734245814ad7354639c4d354e1b1ae3d6ec265acfa8a4977be4a23fad3",
+   "compression": "plain"
+  },
+  {
+   "file": "91-Stereo.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5b/5/Stereo.wrl",
+   "sha256": "2cf49a87b4f952eafc9263c79b67d533c3682965cd8b826360743d10f60ac9a7",
+   "compression": "gzip"
+  },
+  {
+   "file": "92-Bed_with_blue_quilt_II.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/f0/a/Bed_with_blue_quilt_II.wrl",
+   "sha256": "2d5a95961d848ee6da22f7d439e725d5bfa580d4e79111aa46bb26804f0b9b48",
+   "compression": "plain"
+  },
+  {
+   "file": "93-Jack.rsd.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/65/d/Jack.rsd.wrl",
+   "sha256": "2dc675ca64af81d38505fbb719c1cbe8962d1b7454ccc54d4d8cc8a8a82936d4",
+   "compression": "plain"
+  },
+  {
+   "file": "94-red_chair.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/13/a/red_chair.wrl",
+   "sha256": "2e6c7035c1f4a1196b6bf63fcbe60ac3e3c0e460b9494ae875eb29d38015261f",
+   "compression": "plain"
+  },
+  {
+   "file": "95-Room9.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/wbghall/vrml/Room9/Room9.wrl",
+   "sha256": "2f18ffee5f199143477f940bf99e5618596c8b90bd2442a5dce7235f4126895b",
+   "compression": "gzip"
+  },
+  {
+   "file": "96-jmpfish1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/05/8a/0/jmpfish1.wrl",
+   "sha256": "2f564a8c35f45144071a088ff686808207ccb80109b9f0ab9c659f5e653627d8",
+   "compression": "gzip"
+  },
+  {
+   "file": "97-rattycrate1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/2f/4/rattycrate1.wrl",
+   "sha256": "2fff616deee2d20663b0fc69c413c7aaa5d8a03162026f5052b35728566dbd01",
+   "compression": "gzip"
+  },
+  {
+   "file": "98-trampoline.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0d/69/c/trampoline.wrl",
+   "sha256": "30989ec865302a449875069de0b8257c01b5a4b30aec76b97992e3dce5b115e5",
+   "compression": "plain"
+  },
+  {
+   "file": "99-gandola2.wrl",
+   "root": "wbct",
+   "rel": "items/gandola2-abfbdb/gandola2.wrl",
+   "sha256": "314d4da15b0b89052e5908b11bd8a33484af429c505732a4d516220b7117d9ff",
+   "compression": "plain"
+  },
+  {
+   "file": "100-Cash_Register.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/26/8/Cash_Register.wrl",
+   "sha256": "31dd9946787d1bb6f3217d1257ddba97a07e0570194080a2e96ae7c0bebe36b5",
+   "compression": "gzip"
+  },
+  {
+   "file": "101-Kings_bed1.wrl",
+   "root": "wbct",
+   "rel": "items/Kings_bed1-cea98f/Kings_bed1.wrl",
+   "sha256": "32387df7affd872213ad1253afc6c9ceef54d5baac7c072007da8b39c9e2715e",
+   "compression": "plain"
+  },
+  {
+   "file": "102-myavatar.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/avatars/myavatar.wrl",
+   "sha256": "32e5a6a526273477c041f949dbdbd7620f5e72a3ed16aa04d0b4ccf481744c5e",
+   "compression": "gzip"
+  },
+  {
+   "file": "103-token.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/8c/c/token.wrl",
+   "sha256": "333ecaf23c477bbc5b4ad4c0dcca72657ddb1a67e99a345a348202d0d148e138",
+   "compression": "plain"
+  },
+  {
+   "file": "104-Glass of beer 2.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5e/8/Glass of beer 2.wrl",
+   "sha256": "33c3e4a00682c25304f3dd0d8d0c30cdbc13d928bdfee48d51df467e938af1f1",
+   "compression": "plain"
+  },
+  {
+   "file": "105-sky_kitchen.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/88/7/sky_kitchen.wrl",
+   "sha256": "3471a150e2227763f00aa01b82045412527ee1bf93ef2a573f5d6affa79903e2",
+   "compression": "gzip"
+  },
+  {
+   "file": "106-Phonograph.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/08/c/Phonograph.wrl",
+   "sha256": "34ea3fa45e0371cd461111bc62a3c3c5a24b7023d17d471f34c3c34d516e3f3d",
+   "compression": "gzip"
+  },
+  {
+   "file": "107-_moondial.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/moondial/vrml/_moondial.wrl",
+   "sha256": "3562f5d8320d37fc47cacef40aa072dffbd42c4103943650d7222cb900cccd86",
+   "compression": "gzip"
+  },
+  {
+   "file": "108-bed1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1c/6/bed1.wrl",
+   "sha256": "35b58aef408e8977f5b039537b47127e8d26cfb8fc199f27b245c9ea6541224f",
+   "compression": "gzip"
+  },
+  {
+   "file": "109-doubleminttwist2_chsl_gz.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Shrine_of_Saint_Sandroux/vrml/doubleminttwist2_chsl_gz.wrl",
+   "sha256": "3660e1ffd35daddd83587577b11cf1c88f3ef75be3a9262ee4476254a608be67",
+   "compression": "gzip"
+  },
+  {
+   "file": "110-swan.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Taj_Mahal/vrml/swan.wrl",
+   "sha256": "371de27b1e43421fd161653feb6f7a85830d67a88f1f9f1ca542bdf7eeb85602",
+   "compression": "gzip"
+  },
+  {
+   "file": "111-mf2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/08/e6/f/mf2.wrl",
+   "sha256": "37ae844b614e22d5c45082c1b92dfb45faaad92b52948f8eb0ce0a5b623f82b5",
+   "compression": "plain"
+  },
+  {
+   "file": "112-koo-koo.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/9e/5/koo-koo.wrl",
+   "sha256": "3826fd84ba91a298a0770f56d46089820a9862b507bea9b2ac8e391338fb1383",
+   "compression": "gzip"
+  },
+  {
+   "file": "113-MyPoorPuppy.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0b/0d/0/MyPoorPuppy.wrl",
+   "sha256": "3884289d113fc9277b1e62002601f8324579f06d22dd2879a6dd12d6a3dec832",
+   "compression": "plain"
+  },
+  {
+   "file": "114-srchest.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/14/4/srchest.wrl",
+   "sha256": "38d871115dca9285ecf9094071793b9e4877582e23703ee7fb82a985ba5f281b",
+   "compression": "gzip"
+  },
+  {
+   "file": "115-lionrug.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/89/d/lionrug.wrl",
+   "sha256": "393c37eab03b7e4fdb4da679500e35432137e43974037717aa6cdaa778f874af",
+   "compression": "plain"
+  },
+  {
+   "file": "116-portal3.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/portal3/vrml/portal3.wrl",
+   "sha256": "39b32e652907a5590bfb9ec21d3b52dc0ba75fd713058771b80697ae2c447eec",
+   "compression": "gzip"
+  },
+  {
+   "file": "117-stocking.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0d/17/9/stocking.wrl",
+   "sha256": "3a201534f8221231984d034c64107855098615a33bad8448495d26e211eaf562",
+   "compression": "gzip"
+  },
+  {
+   "file": "118-amyskitty.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/98/2/amyskitty.wrl",
+   "sha256": "3a710761c983b3122e2b1b0880fcfef26bdfeedc9d4cd57bbf692316bfea4554",
+   "compression": "plain"
+  },
+  {
+   "file": "119-hypocrates.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/hypocrates.wrl",
+   "sha256": "3ae6588005b26cb046f1eeb88316bf92a0b87fe6a9105ecf6070831967da719e",
+   "compression": "plain"
+  },
+  {
+   "file": "120-chair.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6b/7/chair.wrl",
+   "sha256": "3b480e0c4fd2384c03da51cda26e54b47e3922a60c3f4f064848fe246dbfda9d",
+   "compression": "gzip"
+  },
+  {
+   "file": "121-bluebirdlounge.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/07/d3/b/bluebirdlounge.wrl",
+   "sha256": "3b9208e8316880eeb9423478f6f4259dcd8c557ac941f1d2426255ae2afacdb7",
+   "compression": "gzip"
+  },
+  {
+   "file": "122-brockzip.wrl",
+   "root": "wbct",
+   "rel": "items/brockzip-b6c2e1/brockzip.wrl",
+   "sha256": "3c3c353c3defb346229a2f1c74d66f2301c51baaba355024e46756073368ec24",
+   "compression": "plain"
+  },
+  {
+   "file": "123-ctfighter.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/a4/9/ctfighter.wrl",
+   "sha256": "3ce6e9555c45273ce995ac3d702a8d50d52d754b62094bc6af0eec379f7cc2c4",
+   "compression": "gzip"
+  },
+  {
+   "file": "124-wrap10.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/wbghall/vrml/Room10/wrap10.wrl",
+   "sha256": "3d6fb2b9b6e3f80ea3ce9924b12455b642f475cad0e5f0c2cd7cbeaa454d8ab9",
+   "compression": "gzip"
+  },
+  {
+   "file": "125-shapesofart.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/45/c/shapesofart.wrl",
+   "sha256": "3df1cddd179958401865661c10e34ab573cfb8a9418e116643cbe55abbbb034e",
+   "compression": "plain"
+  },
+  {
+   "file": "126-brockzip.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/11/2f/b/brockzip.wrl",
+   "sha256": "3e403ee05b71acb887937ada06a866f4aaa2a3f06fb029e8e71fdb425d826fe3",
+   "compression": "gzip"
+  },
+  {
+   "file": "127-lightsaber.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/59/0/lightsaber.wrl",
+   "sha256": "3ea537ddb240e56c963de793aa583b883d906a9e425ebc6be8d620e0963e853a",
+   "compression": "gzip"
+  },
+  {
+   "file": "128-PeaceShroom.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/12/24/9/PeaceShroom.wrl",
+   "sha256": "3f0e97f286f6f9795c17a3b2162c1e46f1e226ed75d8bf0754fc4da50fee310b",
+   "compression": "gzip"
+  },
+  {
+   "file": "129-ChampagneTableBlue.wrl",
+   "root": "wbct",
+   "rel": "items/ChampagneTableBlue-558624/ChampagneTableBlue.wrl",
+   "sha256": "3fadbb070c7d85b836d69460fec6dd0b85e4eea8acca1f27d2793566c6d2f14f",
+   "compression": "plain"
+  },
+  {
+   "file": "130-purpatio4ch.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.icity.co.il/commserv/community/dbobjects/SO/c0/00/01/12/8/purpatio4ch.wrl",
+   "sha256": "402ff33e25a5919f120cb52e008cca8eaeb68416fdb6d29defa493b797e62372",
+   "compression": "gzip"
+  },
+  {
+   "file": "131-ricearmoire.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/05/a3/d/ricearmoire.wrl",
+   "sha256": "40dd87214add3be709cbc9a5722c2c7530eb5b00b6b6b52d7867fd54ffec51e6",
+   "compression": "gzip"
+  },
+  {
+   "file": "132-desk.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/01/e5/0/desk.wrl",
+   "sha256": "41b16c4f89a4cb730415693665bb58c2185dbdaa6603d8f1dd97936766fd8e2c",
+   "compression": "gzip"
+  },
+  {
+   "file": "133-Display.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/ef/b/Display.wrl",
+   "sha256": "4289ae597ee526de548e8774ef619b91431b08efe54f5113989994c25486d55a",
+   "compression": "plain"
+  },
+  {
+   "file": "134-goldfish.wrl",
+   "root": "wbct",
+   "rel": "items/goldfish-609279/goldfish.wrl",
+   "sha256": "43384e63aed753bcf2dd9ffb77f718e7d7473f50c716fd657f3fe21f26d793d0",
+   "compression": "plain"
+  },
+  {
+   "file": "135-tmpung2.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/home/vrml/home/006/tmpung2.wrl",
+   "sha256": "43c3f6984143ab67616b36f429535a591237fe7b8c8327f0937639b1dfd4514a",
+   "compression": "plain"
+  },
+  {
+   "file": "136-keshlilyzip.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0f/e2/c/keshlilyzip.wrl",
+   "sha256": "4438e14abd3e7406846481eb15bca9e07d4ff3d0a0848a331d455c44bb7f96f0",
+   "compression": "plain"
+  },
+  {
+   "file": "137-md.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/76/c/md.wrl",
+   "sha256": "44b1f5a6b7c515d3fb7357ab3c4bebce737784ce332da8ab726951b8e3e20aca",
+   "compression": "plain"
+  },
+  {
+   "file": "138-drophandler.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/support/developerguide/developer/contact/3d/vrml/demo/event/drop/drophandler.wrl",
+   "sha256": "454614fe330f20cde7295b2aafe0ff15a9c131c3c92de9ea9f3ed6c02a0953db",
+   "compression": "plain"
+  },
+  {
+   "file": "139-cup.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/e9/a/cup.wrl",
+   "sha256": "45beeae5fd9c2327dd6685e1fa182baafc44d596f24f086b48b52bc64e33169c",
+   "compression": "plain"
+  },
+  {
+   "file": "140-club_proto.wrl",
+   "root": "skatefm",
+   "rel": "club_proto.wrl",
+   "sha256": "4613b95220bc79079ea5264f2fca905b0ee43eafd4194cebb66942804050245e",
+   "compression": "gzip"
+  },
+  {
+   "file": "141-ferrarip.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/af/2/ferrarip.wrl",
+   "sha256": "46a7f7441dd3b772e5d48b3c0acef538700cf029d96a5feaae57e234ba706b22",
+   "compression": "plain"
+  },
+  {
+   "file": "142-alarm1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1d/5/alarm1.wrl",
+   "sha256": "47322ad8ac81499e36d0dec49c781999ea2f2a3265c3cb3917d62bd7f46e0bc9",
+   "compression": "gzip"
+  },
+  {
+   "file": "143-Treasure_Hunt_Script_Test.wrl",
+   "root": "wbct",
+   "rel": "homes/Treasure_Hunt_Script_Test-495a68/Treasure_Hunt_Script_Test.wrl",
+   "sha256": "47ba4f20624eb8433ffad64bb7f7fa45e3209abe1a3a9d8e0bc8daeada92579c",
+   "compression": "gzip"
+  },
+  {
+   "file": "144-citi1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.geocities.com/bandstandbox_2000/citi1.wrl",
+   "sha256": "4816015a41b0ea0c8279fc6d7cf14b3ca9fff601cdbe363b50919056fd6105a1",
+   "compression": "gzip"
+  },
+  {
+   "file": "145-VR_Computer.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/01/11/8/VR_Computer.wrl",
+   "sha256": "4890127a4fb16f70e736a0925ec6d3b6184ae567cc109aeb9989c94a2f9f3e68",
+   "compression": "gzip"
+  },
+  {
+   "file": "146-outdoorcanopy.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/92/1/outdoorcanopy.wrl",
+   "sha256": "4926da55d2e4f995d1c480178c4d9172de9dc5c6517339bf5b0e5670260a2a2a",
+   "compression": "gzip"
+  },
+  {
+   "file": "147-cliptron.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/9e/5/cliptron.wrl",
+   "sha256": "49b821dea925dd8227c78a653e3f5fcd1afa3dedc774e5ae869c61982d3ee3e0",
+   "compression": "plain"
+  },
+  {
+   "file": "148-forestgladekitchen_2.wrl",
+   "root": "wbct",
+   "rel": "items/forestgladekitchen_2-7d2eab/forestgladekitchen_2.wrl",
+   "sha256": "4a0ef9a867437df80f82d1c7147f41e6fd92b9c5eaa7134b24899ca97813306b",
+   "compression": "plain"
+  },
+  {
+   "file": "149-Sisko1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/46/8/Sisko1.wrl",
+   "sha256": "4a9a7d2b2347ba2192171eedd8515d029516ea712d810bc96e7bfc9dba5e193c",
+   "compression": "plain"
+  },
+  {
+   "file": "150-sign.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0c/f8/e/sign.wrl",
+   "sha256": "4b188af0b43e053fea70da69ad8afb52e8282f2d23090f997ffb560c9e2da1a7",
+   "compression": "plain"
+  },
+  {
+   "file": "151-newcat.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/27/2/newcat.wrl",
+   "sha256": "4b7d1f125228ee4db9c828617197a185ab6f6f1538c11ff2057ad8449057fe41",
+   "compression": "gzip"
+  },
+  {
+   "file": "152-fangswrl.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/a4/0/fangswrl.wrl",
+   "sha256": "4be866af79018f3cb20dc8dd03efc9011fc6c37b31db01442f8be03e8946f4f3",
+   "compression": "plain"
+  },
+  {
+   "file": "153-hugelava.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/a4/f/hugelava.wrl",
+   "sha256": "4c7b1905b68bfc20cead5dd59f8444e4eaed39c352ddf4fb19514a6874a7864c",
+   "compression": "gzip"
+  },
+  {
+   "file": "154-Pyramids_Of_Giza.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Pyramids_Of_Giza/vrml/Pyramids_Of_Giza.wrl",
+   "sha256": "4d0bbbcedf8b18f63aa2df595d1044f0ef5159006f280b02c4b6823ac1c3cd7b",
+   "compression": "gzip"
+  },
+  {
+   "file": "155-nrbhead.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/developer/contact/3d/nurbs/samples/3dsmax/nrbhead.wrl",
+   "sha256": "4d8dde649cf855e93dca6c61f55af214678bc0601d456ec5d88067f0cad79017",
+   "compression": "plain"
+  },
+  {
+   "file": "156-taz.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/blake.prohosting.com/taz30/taz.wrl",
+   "sha256": "4df1a540f8ec5e4bc0b98eeb6387a1e513fb4736de2a845c6ddd882cc145c483",
+   "compression": "gzip"
+  },
+  {
+   "file": "157-av0x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/01/cb/av0x.wrl",
+   "sha256": "4e71af06ab0e3f936965aa84ae99334e696d39a6b44cc0f3675fc90b479d2275",
+   "compression": "gzip"
+  },
+  {
+   "file": "158-great_grandfather_clock.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/46/4/great_grandfather_clock.wrl",
+   "sha256": "4ed71bc807fb18eb587ffbe73858d0c1de9d9052dde15d2a8e59c7897607b058",
+   "compression": "gzip"
+  },
+  {
+   "file": "159-trashcan2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/08/eb/7/trashcan2.wrl",
+   "sha256": "4f75a1fa283a85204da34392e12d3f23629f0aad0f64a9403f5042889d1cea40",
+   "compression": "plain"
+  },
+  {
+   "file": "160-couch1_1er.wrl",
+   "root": "wbct",
+   "rel": "3d/vrml/objects/sitzmoebel/couch1_1er.wrl",
+   "sha256": "50018f9846aa4119cf864cdc62eaa658126641ea126645f23beb51ebd9f773e9",
+   "compression": "plain"
+  },
+  {
+   "file": "161-nt.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/nt.wrl",
+   "sha256": "5078d8af4fff5b8f10312da17c29754058f43d69d779a06170471f3fa93fd637",
+   "compression": "plain"
+  },
+  {
+   "file": "162-forestFAIRY2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/81/c/forestFAIRY2.wrl",
+   "sha256": "50e32153a23991de419bfaab36a403947828b423b10e46976d72bdaaf21822c7",
+   "compression": "gzip"
+  },
+  {
+   "file": "163-ladysbthrm_2.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/86/0/ladysbthrm_2.wrl",
+   "sha256": "518b2c20bb60c1913cb84b52259646918198a19969a4b6286fb16972d85cbf10",
+   "compression": "plain"
+  },
+  {
+   "file": "164-plantz_proto.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/28/6/plantz_proto.wrl",
+   "sha256": "52537c7d8adfb616c082882b75e365faa7b5db23bc3aa18ecb97c07728887f21",
+   "compression": "gzip"
+  },
+  {
+   "file": "165-ThunderSword.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbobjects/SO/c0/00/00/0b/e/ThunderSword.wrl",
+   "sha256": "52dba8d51d79e640fdce76e9fb039246dfb4915549153052538298a0c62878b6",
+   "compression": "gzip"
+  },
+  {
+   "file": "166-wizardmale.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/avatars/wizards/wizardmale.wrl",
+   "sha256": "535bffbea204229a3e4b2355ee616d34ebbe8f2e6af23d9e9c367ad61b6c9de2",
+   "compression": "gzip"
+  },
+  {
+   "file": "167-Toilet.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/11/8/Toilet.wrl",
+   "sha256": "53e32bbd9d9d4e4e23647274e60e74e6616d7829ec81223c3b3f41f6ff30ea44",
+   "compression": "gzip"
+  },
+  {
+   "file": "168-gv.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Mardi_Gras_Parade/vrml/gv.wrl",
+   "sha256": "5490a5203b28de7cf39c443fb29f36e48f2a539a043e071b1407ede60f2c95d8",
+   "compression": "gzip"
+  },
+  {
+   "file": "169-Red Ball.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/81/8/Red Ball.wrl",
+   "sha256": "550178da6bed9398f0f536968544a0acf703d24593057b191c8f9ca58f212956",
+   "compression": "plain"
+  },
+  {
+   "file": "170-av0x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/01/b8/av0x.wrl",
+   "sha256": "558902e9a0446384ec45bf066f2a8923e85d562a828776f81a8a0c43810a3ae7",
+   "compression": "gzip"
+  },
+  {
+   "file": "171-welcome.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/9c/8/welcome.wrl",
+   "sha256": "55d59b9ea6a756b760f3ecc55171d2c4ef9cc1e12f20829b9ae1fdf1ba27ab8c",
+   "compression": "gzip"
+  },
+  {
+   "file": "172-index.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.de/samples/contact/ui/venus_complex/index.wrl",
+   "sha256": "568c9497aea8c67d41ea0321486237ad4f45be81305aa399ab6d604d49eb7547",
+   "compression": "plain"
+  },
+  {
+   "file": "173-av0x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/01/04/av0x.wrl",
+   "sha256": "5725330cdcaf1f76d14b1f5ca1e51f08444be11f0168040b25d8136f11a3d94f",
+   "compression": "gzip"
+  },
+  {
+   "file": "174-SilentRunningDrone1-88.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/9a/8/SilentRunningDrone1-88.wrl",
+   "sha256": "579a3a466f8d77ed1d91bca27a161cb12dcbae9fdc5d4c8fcae653f097f943d7",
+   "compression": "plain"
+  },
+  {
+   "file": "175-neostand2.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/b7/6/neostand2.wrl",
+   "sha256": "580e45527d105e02f4e13694c5e012db52e96b462f76b7a3ec6a09b8a832ea4b",
+   "compression": "plain"
+  },
+  {
+   "file": "176-Spazzfirewroks(1).wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/83/f/Spazzfirewroks(1).wrl",
+   "sha256": "58a0fa845ef23d4cb2e8439bed76683ec661a03e6d7c57470fdecf7968bb0721",
+   "compression": "plain"
+  },
+  {
+   "file": "177-CelestialEntertainUnit.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/ef/d/CelestialEntertainUnit.wrl",
+   "sha256": "591c6360d8b1b955f69dbea6344fa0c0d357dc5f99cd711b70646a017666bfc3",
+   "compression": "plain"
+  },
+  {
+   "file": "178-av0.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/02/29/av0.wrl",
+   "sha256": "597bdbe4b4d7db1c4bb66dfaf2dab81f7ef607c6b35fdf9f5c6105244daf293a",
+   "compression": "gzip"
+  },
+  {
+   "file": "179-jailpris_000821_pm.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/places/jail/vrml/jailpris_000821_pm.wrl",
+   "sha256": "5a0c79da4e73d33c72b1e277bcb27b7b604e2bb9dc7d22f8f47a91574d6bd6f3",
+   "compression": "gzip"
+  },
+  {
+   "file": "180-example2.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.com/samples/blaxxun3d/jsInterfacing/example2.wrl",
+   "sha256": "5a8aeec0851d2af5d9ebcf85a04ccadd221fbd6dee4f4bafda61ac39e8032774",
+   "compression": "gzip"
+  },
+  {
+   "file": "181-Xander.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/55/2/Xander.wrl",
+   "sha256": "5b192a23c3be889ac49c57ab3bd388863ef8a555e02eac392685c2d840cca255",
+   "compression": "gzip"
+  },
+  {
+   "file": "182-b2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/places/ne_0/vrml/b2.wrl",
+   "sha256": "5bb15bc6c421f7fb781621fb900a485f41afd37b45ed7933922c931780e1c921",
+   "compression": "gzip"
+  },
+  {
+   "file": "183-stonehengealtar.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/ec/9/stonehengealtar.wrl",
+   "sha256": "5c35cc1ce66356f32a791ed90286cdee36a81b2f659df74033f283b555f1839b",
+   "compression": "plain"
+  },
+  {
+   "file": "184-office2.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1f/2/office2.wrl",
+   "sha256": "5cb25304d07f2a02f011fc8138d791c4d99c337754c1a463be64c2af7a2424b1",
+   "compression": "gzip"
+  },
+  {
+   "file": "185-tmp.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1f/8/tmp.wrl",
+   "sha256": "5d6b7d68495689d4a567f6ac86ff15a74500fc7b3a73bafc3732d1b4eeff3701",
+   "compression": "plain"
+  },
+  {
+   "file": "186-table.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/8e/5/table.wrl",
+   "sha256": "5de7d4b79b31f3347eaea505d3aa033822d4dde76336b694daac5fddc93199b9",
+   "compression": "plain"
+  },
+  {
+   "file": "187-Scorp1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/05/41/2/Scorp1.wrl",
+   "sha256": "5e34ddab5557016510c1cfdede7e96f53994c81bdd157e6ebe5b71d6e2f6df64",
+   "compression": "gzip"
+  },
+  {
+   "file": "188-banner.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/92/9/banner.wrl",
+   "sha256": "5eb279997c5d4b6145f0d3e52547569c8a907792c9eae0ee1e34433053767cc5",
+   "compression": "gzip"
+  },
+  {
+   "file": "189-gothicchalice.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/11/4e/7/gothicchalice.wrl",
+   "sha256": "5f22b3443706ef9eaab6bec2bbdffddc06e249657fe29e5fd474714bbfe6c2e1",
+   "compression": "gzip"
+  },
+  {
+   "file": "190-helpman.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/helpman.wrl",
+   "sha256": "5fa2f535a4400be6115fee04c3b0d2b7c4f56e59fe1a9e9efbab9a2dc94015d5",
+   "compression": "plain"
+  },
+  {
+   "file": "191-jazzjackrabbit.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/e4/a/jazzjackrabbit.wrl",
+   "sha256": "603e97568c78cb938ea663fe93c96c6f1d50b0f2cf5c413102f9b6109c46865d",
+   "compression": "plain"
+  },
+  {
+   "file": "192-ship.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5f/e/ship.wrl",
+   "sha256": "60a8c2d2e3308bff44511f66980c3bf5349064caa2eb79b9328d12d28c1bef61",
+   "compression": "gzip"
+  },
+  {
+   "file": "193-Herculeshead.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/e9/d/Herculeshead.wrl",
+   "sha256": "61388ccde32f6145801bddb57a40af701e30f98c2fa4a463b920eb9bf72ea806",
+   "compression": "plain"
+  },
+  {
+   "file": "194-festive.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0d/31/2/festive.wrl",
+   "sha256": "61d185cbf32ac2aa47e4aba56c6dd5742fc7ebe14081a442c6715fb791627daf",
+   "compression": "gzip"
+  },
+  {
+   "file": "195-PFC_Frog.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5a/c/PFC_Frog.wrl",
+   "sha256": "622a9ca7f4ef1d88cd45e92a4874876d04737796d03690686fd609f450c0e7bf",
+   "compression": "gzip"
+  },
+  {
+   "file": "196-welcome.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/12/6/welcome.wrl",
+   "sha256": "62aa5d4ee44b1ee8ff7453b931b31ff8cfca69011b1a05a61836b164cc8b9a75",
+   "compression": "plain"
+  },
+  {
+   "file": "197-coolpink.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/05/25/7/coolpink.wrl",
+   "sha256": "6349bdd8b6ec81a8f4f92ec44a1e7e58b6df8ac891b544b52107aa85de77fa3d",
+   "compression": "gzip"
+  },
+  {
+   "file": "198-ricepaper.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/60/4/ricepaper.wrl",
+   "sha256": "63a6ac32cf9db15af75e12b88bec056454bd8212c50b254e9c6dded9ab117962",
+   "compression": "gzip"
+  },
+  {
+   "file": "199-xmas.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0f/61/f/xmas.wrl",
+   "sha256": "643356875e6b15f98eb59acb4010a8cc77a7a0f52f6b77be4ef81f3c47fac9be",
+   "compression": "plain"
+  },
+  {
+   "file": "200-ic_exleb.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.icity.co.il/commserv/community/places/ictcenter/vrml/ic_exleb.wrl",
+   "sha256": "64913d9022cb2f6399f6dd7b307ae2c87c4b459d9a95deca6c31e21c9783dab7",
+   "compression": "gzip"
+  },
+  {
+   "file": "201-phenomenatheater.wrl",
+   "root": "wbct",
+   "rel": "items/phenomenatheater-aabf79/phenomenatheater.wrl",
+   "sha256": "65246b34757cadda601b755e7b9d272ec280c5ccf5d6f61fe275d07eca6e55af",
+   "compression": "plain"
+  },
+  {
+   "file": "202-dream.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0d/4a/6/dream.wrl",
+   "sha256": "65ab1280b1fd584e12680c2a1205b17a40a795dd2041e6a5809acef205af8aac",
+   "compression": "plain"
+  },
+  {
+   "file": "203-hop2.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/vrml/avatars/hop2.wrl",
+   "sha256": "6614ee306790222df92f3599b6587b416a15c6dcbbab858a611f18d5eb25d193",
+   "compression": "gzip"
+  },
+  {
+   "file": "204-Doorprox.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5b/d/Doorprox.wrl",
+   "sha256": "665913f5c2e7551af8efd0ac8978cfd6ade992b42097a9215a779ad4fe4820aa",
+   "compression": "plain"
+  },
+  {
+   "file": "205-goldcandleholder.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/e3/6/goldcandleholder.wrl",
+   "sha256": "6695603ae7515f4551da93637d44dc4567e4b3905025c853d78a5805cea2ff20",
+   "compression": "gzip"
+  },
+  {
+   "file": "206-pyrodragon.wrl",
+   "root": "wbct",
+   "rel": "items/pyrodragon-ce8756/pyrodragon.wrl",
+   "sha256": "66fdf163c0c2bb8cf8316c481b01877d54d5b28fd0f9f4926349303dd3489322",
+   "compression": "plain"
+  },
+  {
+   "file": "207-rdmarbcftbl.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/06/c/rdmarbcftbl.wrl",
+   "sha256": "67a92d466fc61253e0ec4e5eb64ec7bf6ea6c822c0ee050414f8eb406f56728c",
+   "compression": "gzip"
+  },
+  {
+   "file": "208-Torch.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/0e/b/Torch.wrl",
+   "sha256": "682e29626de174265bc7ad55e4538f53496a24a9844fa4367bb89019fd56d9c5",
+   "compression": "plain"
+  },
+  {
+   "file": "209-greg2.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/vrml/avatars/greg2.wrl",
+   "sha256": "68acffd04aef254904ee19eb673ab395621c7685ff38897ebd536b340444af37",
+   "compression": "gzip"
+  },
+  {
+   "file": "210-fairydefensesys.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/81/a/fairydefensesys.wrl",
+   "sha256": "690d40d6179821721c4cfd4297bc3dad3a074f019d6b1f4aa2e831922dbf8029",
+   "compression": "plain"
+  },
+  {
+   "file": "211-Party_Ballons.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/26/d/Party_Ballons.wrl",
+   "sha256": "69a1ee7a0becdeb0d91219c8d5acfebe962fbf35509068a52d42583561f1d7fc",
+   "compression": "gzip"
+  },
+  {
+   "file": "212-tunnel_layer.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/developer/contact/3d/vrml/demo/layer/tunnel_layer.wrl",
+   "sha256": "6a169d9475b007cc0086de42afc6c84a7acf99f0c15eb323da0f5b50c5502c0c",
+   "compression": "gzip"
+  },
+  {
+   "file": "213-picture4x3_proto.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/80/a/picture4x3_proto.wrl",
+   "sha256": "6aacab08fc7c3e667b5e0bfa658e333b7b2dd2a9cbb434856fd4158aacb43c8d",
+   "compression": "plain"
+  },
+  {
+   "file": "214-tragicdance.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/09/8c/d/tragicdance.wrl",
+   "sha256": "6b697013b0ef31abdf81df1b48baf7361e9b684c872b6906408579ff6eaecbe4",
+   "compression": "gzip"
+  },
+  {
+   "file": "215-Shunshim.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/13/7f/e/Shunshim.wrl",
+   "sha256": "6bdad277b3112a981a2e7489f1e5ace6f84f45abb026041249ea5ce44c15e0ad",
+   "compression": "gzip"
+  },
+  {
+   "file": "216-woodenbench.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/96/2/woodenbench.wrl",
+   "sha256": "6c21b8e010fe8b8eef7dd4b7f6171a359a862412d64461b97effdb6f6dfbe4a4",
+   "compression": "plain"
+  },
+  {
+   "file": "217-world.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.de/samples/blaxxun3d/java_eai/dyn3d/vrml/world.wrl",
+   "sha256": "6cc3b95e1f78e406adcdf5baaa88b841e6de30bbce50ad28f07119f8d3b4d776",
+   "compression": "plain"
+  },
+  {
+   "file": "218-cscream.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/a3/a/cscream.wrl",
+   "sha256": "6d32456da36050ddc6edf7cf7a694054a25018e64afe92c65f3741afbda2e4bf",
+   "compression": "gzip"
+  },
+  {
+   "file": "219-Ultimate_Pool.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/08/d5/c/Ultimate_Pool.wrl",
+   "sha256": "6db8a3172038eaa4de49a0455a12602d6b2d215871c11b80cfdf9552b3a15b04",
+   "compression": "gzip"
+  },
+  {
+   "file": "220-temp_bots-bases.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/places/ne_0/vrml/no_cache/temp_bots-bases.wrl",
+   "sha256": "6e5dd749d735c0037cbb563106c77ebb6b39a54bf0eba3e20206588c711667b6",
+   "compression": "plain"
+  },
+  {
+   "file": "221-cad_manutec_compress_rollj2_6.geo.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.robotic.dlr.de/STUDENTS/Martin.Rohrmeier/robot/cad_manutec_compress_rollj2_6.geo.wrl",
+   "sha256": "6ef2e6c6d28914b8d3c216dce2f8ec667896356005c08587782ca9f469b62b56",
+   "compression": "plain"
+  },
+  {
+   "file": "222-cpbench100.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.com/developer/contact/3d/bench/cpb100-e/wrl/cpbench100.wrl",
+   "sha256": "6f416b513c821160c195c3f1044c16a7abcf31d8f62470b55590bd8a373c6765",
+   "compression": "plain"
+  },
+  {
+   "file": "223-heavenzip.wrl",
+   "root": "wbct",
+   "rel": "items/heavenzip-835b2f/heavenzip.wrl",
+   "sha256": "6fc72f23a86dff7c3b01e3f1fe89764d7f82f738ade66d1a83278e1c2a805fd7",
+   "compression": "plain"
+  },
+  {
+   "file": "224-spazztmp_2.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/03/d4/2/spazztmp_2.wrl",
+   "sha256": "7032f4bcaed2ce6b18070e33c339b5bfff5ca08addd6537cc8c939e55c0b20cd",
+   "compression": "plain"
+  },
+  {
+   "file": "225-avx.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/A/a0/00/00/07/avx.wrl",
+   "sha256": "7097ae3d5607a0e511c44eace1ffc8a6f23029d1926aaff4ce6f8ee60b6228de",
+   "compression": "gzip"
+  },
+  {
+   "file": "226-sword_1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1e/1/sword_1.wrl",
+   "sha256": "710899a64e7a99f8691dbe0b467fd4d22b94d4f0ea6e4dd8fd16ac4f3418d869",
+   "compression": "gzip"
+  },
+  {
+   "file": "227-GothicEndTable.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0d/79/2/GothicEndTable.wrl",
+   "sha256": "717be6f0d9547bf763446bcb1f02419f8c76953f6c921d915249c5ed325323cd",
+   "compression": "plain"
+  },
+  {
+   "file": "228-Table.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/aa/4/Table.wrl",
+   "sha256": "721c6d8f3bc4c2d4c044d991fa1960fd8a9ed21e16f206ef294f5b107a7c8f02",
+   "compression": "gzip"
+  },
+  {
+   "file": "229-hooptie.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/05/16/3/hooptie.wrl",
+   "sha256": "726c74354446dc34b8c1d2b0f1ec3303491b843993730314ceac1429629999a4",
+   "compression": "plain"
+  },
+  {
+   "file": "230-dragon.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0d/4e/3/dragon.wrl",
+   "sha256": "72dcf56dae0ab5dc14c8e63aab996b487ea1a903681546364faf1dc0796551ff",
+   "compression": "gzip"
+  },
+  {
+   "file": "231-Weedle.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/a2/6/Weedle.wrl",
+   "sha256": "7351436b931ecd8e08aeb07df986eec92f2240de7940a78c9739f63703d555e5",
+   "compression": "plain"
+  },
+  {
+   "file": "232-angel_love.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/9f/8/angel_love.wrl",
+   "sha256": "73b331d9e10ce8f2610848980994aac3bf348bb797f82378053a1850a85e9121",
+   "compression": "plain"
+  },
+  {
+   "file": "233-hutch.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/3b/5/hutch.wrl",
+   "sha256": "7459dbd56b8a271bc192905ede37a0c34793839ecd8df0b339d87fb065c14b4f",
+   "compression": "gzip"
+  },
+  {
+   "file": "234-Tupper_ware_oranges.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/a9/e/Tupper_ware_oranges.wrl",
+   "sha256": "750425aef71b6aa80920c4d9edfb66c2f6f062419f37b5817ee6bdda768def3b",
+   "compression": "plain"
+  },
+  {
+   "file": "235-webdocmemorial.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/14/57/0/webdocmemorial.wrl",
+   "sha256": "7576a97a61533c393e0efa2c162e6623ad0170d43037a97688a5041723d1dada",
+   "compression": "plain"
+  },
+  {
+   "file": "236-av5.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/43/av5.wrl",
+   "sha256": "75f1f80213719d8a059f5d360b334b699dfb3c3c3d4493205236c6f07aaeed8b",
+   "compression": "gzip"
+  },
+  {
+   "file": "237-spectrum-lamp.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/00/e2/7/spectrum-lamp.wrl",
+   "sha256": "768d91556542f0274173da670076e7233bf10497a8604d9d91da22769e97dfd4",
+   "compression": "gzip"
+  },
+  {
+   "file": "238-BlJediCrystal.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/9c/9/BlJediCrystal.wrl",
+   "sha256": "77038937d88d84fe348ddc2174d7f4a6b706338ca13f2e264f0bb8fd73ca9e94",
+   "compression": "plain"
+  },
+  {
+   "file": "239-darthmaul.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5c/d/darthmaul.wrl",
+   "sha256": "779ea9c0855200a8a232acfdb1c249abcf7c157473782a2209c4c4d143e32296",
+   "compression": "gzip"
+  },
+  {
+   "file": "240-pickup.wrl",
+   "root": "wbct",
+   "rel": "items/pickup-5e37b2/pickup.wrl",
+   "sha256": "78587633759d409a256f94a60a3c28d07a726fdbfbd4ca63cd0658c3193bd607",
+   "compression": "plain"
+  },
+  {
+   "file": "241-arcade_game.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/13/b/arcade_game.wrl",
+   "sha256": "78b12635252541ef0ed842003c624ab297f70352d42de5bd155774a1c237cd03",
+   "compression": "gzip"
+  },
+  {
+   "file": "242-jeep.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/52/f/jeep.wrl",
+   "sha256": "79651299b93a442f2845ee44a89b3505a54e6c93525e47e2717e5708e14fa11b",
+   "compression": "plain"
+  },
+  {
+   "file": "243-Rose_pic_Framed.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5d/b/Rose_pic_Framed.wrl",
+   "sha256": "79ce96e6166fd2a306d500e67bac66a6b187cdf522ab2aff95b532a6da5ec8e0",
+   "compression": "gzip"
+  },
+  {
+   "file": "244-tardis666.wrl",
+   "root": "wbct",
+   "rel": "items/tardis666-3ccfec/tardis666.wrl",
+   "sha256": "7a8ff00afa3c306983562b6be3eab3240ade2774c9fa1b09adaea359a584596d",
+   "compression": "plain"
+  },
+  {
+   "file": "245-blue.wrl",
+   "root": "wbct",
+   "rel": "items/blue-85fa92/blue.wrl",
+   "sha256": "7af64fe355082a3a5183f4bad9dd1a48c7b291f2d16de903e359fea4915c689b",
+   "compression": "plain"
+  },
+  {
+   "file": "246-av1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbavatars/M/00/02/a5/f0/av1.wrl",
+   "sha256": "7b7802675314a62338af7c42ffd20a6208a18e3296219cc2de679e08b323084a",
+   "compression": "gzip"
+  },
+  {
+   "file": "247-portal2.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/portal2/vrml/portal2.wrl",
+   "sha256": "7bfb29769d58124462e06617ec3ac265879f5345b72aef4ee3c351380278eed6",
+   "compression": "gzip"
+  },
+  {
+   "file": "248-Spazzfountian1.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/46/0/Spazzfountian1.wrl",
+   "sha256": "7c6fb4d75415fbd0b2e434417e486ba3bf649761a8fd0e4fc707db5422c8a7f4",
+   "compression": "plain"
+  },
+  {
+   "file": "249-heavenzip.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0b/a8/e/heavenzip.wrl",
+   "sha256": "7cc9fdbf01905758e21fd8103fa8c7b439166ffb98a8be62c7ac80e2a7fb2d44",
+   "compression": "gzip"
+  },
+  {
+   "file": "250-srchest.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/14/4/srchest.wrl",
+   "sha256": "7d2e7cf301aaf1807561b693604a698093a9ebf40b4ca4b74231da9ecbea1d58",
+   "compression": "plain"
+  },
+  {
+   "file": "251-alarmclock.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/60/c/alarmclock.wrl",
+   "sha256": "7daa60bb23a189bfe3d0d1d719f744e40482fcaf597fa4106af7820f3f4537b1",
+   "compression": "gzip"
+  },
+  {
+   "file": "252-PokeScr1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/19/c/PokeScr1.wrl",
+   "sha256": "7e37fdd7810f2a60d0b85da3055fc358c87e0ba05d54631944aef01a122c716e",
+   "compression": "gzip"
+  },
+  {
+   "file": "253-excelsior.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/01/78/1/excelsior.wrl",
+   "sha256": "7ec2ca3382b46e71ed8ccbfcfa632ed4ad17d187bd526436265841deebe85ea2",
+   "compression": "gzip"
+  },
+  {
+   "file": "254-crystalt.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbobjects/SO/c0/00/00/0a/3/crystalt.wrl",
+   "sha256": "7f10ea6dabbbe144e01751d354bffed06be86d34cd24af3e45ace8d7b9db8f64",
+   "compression": "gzip"
+  },
+  {
+   "file": "255-ringneck.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/06/6a/a/ringneck.wrl",
+   "sha256": "7f8e07eaee9aa1c092a4ea6725083592928971a3a12310c55e71294e538c68c9",
+   "compression": "plain"
+  },
+  {
+   "file": "256-texturefont_mt.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.com/samples/contact/fontstyle/texturefont_mt.wrl",
+   "sha256": "803113e721ebe642f65d900b26760bd012b797da3e600549c3c02e5710cd69a6",
+   "compression": "plain"
+  },
+  {
+   "file": "257-gatebathzip.wrl",
+   "root": "wbct",
+   "rel": "items/gatebathzip-3cd20c/gatebathzip.wrl",
+   "sha256": "80de3b0387f2c630cb997f5289b53864e79db29087b911eb873b728e2cd5aa6d",
+   "compression": "plain"
+  },
+  {
+   "file": "258-sofabed.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/72/b/sofabed.wrl",
+   "sha256": "814245787f4162a345bd1e166742f3e98c37c60287f2b70c059663bf6d7ecb15",
+   "compression": "gzip"
+  },
+  {
+   "file": "259-SeaDragonT.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbobjects/SO/c0/00/00/01/a/SeaDragonT.wrl",
+   "sha256": "818b3dced1240d430eb7b003b7941ff4d39dd8745a3b0a9fcc56c874f2709bf0",
+   "compression": "gzip"
+  },
+  {
+   "file": "260-avx.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/A/a0/00/00/06/avx.wrl",
+   "sha256": "81f3dacdc6302cf7bf2ad5f47ee1165aad16d6771b84859b6af94433682f5b81",
+   "compression": "gzip"
+  },
+  {
+   "file": "261-barchair1.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/8b/a/barchair1.wrl",
+   "sha256": "825b38ee80a4d6e4cbe64487ae24e29684edccd030d1d9fbfd5b993505a4f1a8",
+   "compression": "plain"
+  },
+  {
+   "file": "262-largeitems.wrl",
+   "root": "wbct",
+   "rel": "3d/places/shop/vrml/largeitems/largeitems.wrl",
+   "sha256": "82c728d1728fdcfab3a51d4791495f1a8bc06f320043726c2479eda9a1eb277f",
+   "compression": "plain"
+  },
+  {
+   "file": "263-snowglobe.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/f6/b/snowglobe.wrl",
+   "sha256": "83449b18c23cff24f023e166ee4363973c13125159e100731ad98280abe21d67",
+   "compression": "gzip"
+  },
+  {
+   "file": "264-dinette.wrl",
+   "root": "wbct",
+   "rel": "items/dinette-862e2d/dinette.wrl",
+   "sha256": "83c725bcde1c5dcb2d1f82824208dc3885913de569a6582aa26b54a2b1a9a5e2",
+   "compression": "plain"
+  },
+  {
+   "file": "265-tardis666.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/09/0f/e/tardis666.wrl",
+   "sha256": "84893dab0d020b68edd7103c367326669fdb6370e228bc7766c08764f7c30d7f",
+   "compression": "gzip"
+  },
+  {
+   "file": "266-SpiralTree.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0d/1a/f/SpiralTree.wrl",
+   "sha256": "84e83a60e4811c24bbc44e07f23c366d1a83f416a698357b9b376d468462c9bb",
+   "compression": "gzip"
+  },
+  {
+   "file": "267-engine_ok.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/IrishSpace/saoirse/engine_ok.wrl",
+   "sha256": "8562ddc8edb21c8661a86eff5f8bae40b7978812b1bfea49b57db168bec5a9c5",
+   "compression": "gzip"
+  },
+  {
+   "file": "268-tlamp.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/08/5/tlamp.wrl",
+   "sha256": "85d9b3a376227c28471f31eb8169ce12b2ad487ad4be373b31e3afee7226d66c",
+   "compression": "gzip"
+  },
+  {
+   "file": "269-milfpv2zip.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/0c/5d/6/milfpv2zip.wrl",
+   "sha256": "86b7a5032b9a15b2e0a2869148bf4d05a765880741b63021db14df9fac78c94c",
+   "compression": "gzip"
+  },
+  {
+   "file": "270-firstknight.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/88/6/firstknight.wrl",
+   "sha256": "870a8d20ccbf10a8000f04dd9fb4211bf0b5102c225784060154e2165ccdcabf",
+   "compression": "gzip"
+  },
+  {
+   "file": "271-fairy.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/24/8/fairy.wrl",
+   "sha256": "87abbd222e36bb67b1e7ae256b6c9e8bdc19b52d51b5024917868f1ba32996be",
+   "compression": "plain"
+  },
+  {
+   "file": "272-av.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/A/a0/00/00/09/av.wrl",
+   "sha256": "883a5db4ce411eedadd81cf19be89689960e2ede0dd37c37b3b61062a7ee8b0a",
+   "compression": "gzip"
+  },
+  {
+   "file": "273-stgtable.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/64/c/stgtable.wrl",
+   "sha256": "8895e0eb3309f71d450ecbdda9663f75141fb22f24031d5b94b6f603f4d60be6",
+   "compression": "gzip"
+  },
+  {
+   "file": "274-meerkats.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/0b/a2/2/meerkats.wrl",
+   "sha256": "891208676a02bbbe9816ecf43b8eeee1ed6c4cdca94ae137924c0e154400733e",
+   "compression": "gzip"
+  },
+  {
+   "file": "275-stain_divider.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/eb/c/stain_divider.wrl",
+   "sha256": "899db966f5704818d7b7fe318201611ef8de90b1d546a5a5804734e4b9f346eb",
+   "compression": "plain"
+  },
+  {
+   "file": "276-index.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.de/samples/contact/ui/beamto/index.wrl",
+   "sha256": "8a01f1310641c42dd5be13e1de4e60bc73c29ffdb0db4adf56bf53062ed17996",
+   "compression": "gzip"
+  },
+  {
+   "file": "277-mowtron.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/94/1/mowtron.wrl",
+   "sha256": "8a6ce87ca132562530da69f0d01f992ea0751e5a4c7658160ee49baa8ebf26e7",
+   "compression": "gzip"
+  },
+  {
+   "file": "278-DividerC.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/39/c/DividerC.wrl",
+   "sha256": "8aaef5ca33d1f78743b4e8bea126df98529ed94acec617b6ca1c54aad83a789e",
+   "compression": "plain"
+  },
+  {
+   "file": "279-freyaposter.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/89/2/freyaposter.wrl",
+   "sha256": "8b26fa62fb31b05d779260244ec994fa488af7b16e9b5c2f03e8c587b1d4f1ea",
+   "compression": "plain"
+  },
+  {
+   "file": "280-venus_gradient.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.com/developer/contact/3d/vrml/demo/texcoordGen/venus_gradient.wrl",
+   "sha256": "8bd1e04bf0dabefb3a5881649aca8ce15a90b498c8a38976d139e3375ea51c1a",
+   "compression": "plain"
+  },
+  {
+   "file": "281-itemselection.wrl",
+   "root": "wbct",
+   "rel": "3d/places/iwosmall/vrml/itemselection.wrl",
+   "sha256": "8cc0fd9d178d8b4bcadbc1ca1a7e05ed094e81e168ec1a9f15b6a22f99e14c2f",
+   "compression": "plain"
+  },
+  {
+   "file": "282-fred.wrl",
+   "root": "wbct",
+   "rel": "3d/info/avatars/fred.wrl",
+   "sha256": "8d5745a6f4b72507754dc4708f65e5648b0ea838c4581a2d3c4560c568411a2b",
+   "compression": "plain"
+  },
+  {
+   "file": "283-lava.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/86/e/lava.wrl",
+   "sha256": "8e0d97338386027ccf25a6ee2751df15d7b45052c697960243e741a63a01140a",
+   "compression": "gzip"
+  },
+  {
+   "file": "284-frauorange.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/vrml/avatars/frauorange.wrl",
+   "sha256": "8ec7ecc5a1eca4911a60c18f506a16821ad36ffe9e1fd553aad8ea7f8223b75b",
+   "compression": "gzip"
+  },
+  {
+   "file": "285-Kitchen.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/68/5/Kitchen.wrl",
+   "sha256": "8f3470d3d783670e31fa263c2865b3ae885b79de91ad74a337a8d1f51e00a8bc",
+   "compression": "gzip"
+  },
+  {
+   "file": "286-wagonfinal.wrl",
+   "root": "wbct",
+   "rel": "items/wagonfinal-bbc988/wagonfinal.wrl",
+   "sha256": "8fcb66a90cdd20623159c768733feaba3554b150a4c325f5c2176e1f6ef5be1f",
+   "compression": "plain"
+  },
+  {
+   "file": "287-roommate_mike.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/45/4/roommate_mike.wrl",
+   "sha256": "90826ef14fb40de43bcdb7b6f776f5d9fbc3827f4a19a6304bbf0249f4afe439",
+   "compression": "gzip"
+  },
+  {
+   "file": "288-pingpong.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/84/2/pingpong.wrl",
+   "sha256": "9113b6e885457ae870d185bc409aab7221952c7bd92ec6bbae3808a2a6066dc7",
+   "compression": "gzip"
+  },
+  {
+   "file": "289-Entertainment_Center.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6e/e/Entertainment_Center.wrl",
+   "sha256": "917bf64440805b4f50673eb8c2b52d0f0ec326ed08c2735e1d7a3b9c2942c668",
+   "compression": "gzip"
+  },
+  {
+   "file": "290-av0.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/02/e8/av0.wrl",
+   "sha256": "923b7ad0d63a66f13ca5bacbdcf0d07dcaf5503d00c229d8f71d8371c9f723f5",
+   "compression": "gzip"
+  },
+  {
+   "file": "291-pool.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6f/8/pool.wrl",
+   "sha256": "92d589a3f227098e34ab45f2ee511ab41319796b26cdfaf77d8939f91be94429",
+   "compression": "gzip"
+  },
+  {
+   "file": "292-av__q__action_avtext_ar_bluecyl_fe_bluecyl_ha_bluecyl_he_bluecyl_inline_1_lb_bluecyl_ub_bluecyl.pl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/cgi-bin/avatarden/av__q__action_avtext_ar_bluecyl_fe_bluecyl_ha_bluecyl_he_bluecyl_inline_1_lb_bluecyl_ub_bluecyl.pl",
+   "sha256": "937934bc566e39ad7030f50e633b17d48a5d7b0d89e98d0c7e78b2bbad0d7a3f",
+   "compression": "plain"
+  },
+  {
+   "file": "293-tmp.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/20/2/tmp.wrl",
+   "sha256": "93f281e51e7e49e143c6bd9b6d7a1313e236f2d903a3c39698968833ecb21def",
+   "compression": "plain"
+  },
+  {
+   "file": "294-MoodRose.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/89/8/MoodRose.wrl",
+   "sha256": "9451429322bcfc24825e0aa06d1b6a3cb10986a241d5344b91ff6480f7d65c8d",
+   "compression": "plain"
+  },
+  {
+   "file": "295-TVSet.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/69/b/TVSet.wrl",
+   "sha256": "94e1cd4af161842dd92bf2e996ca86df6ed8f760b14636b7ca919c1d3d512032",
+   "compression": "gzip"
+  },
+  {
+   "file": "296-artistic_fireplace.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/54/5/artistic_fireplace.wrl",
+   "sha256": "953b27a51338328afc415433d52541fbadb60f82792018b186520b5d24a9f22c",
+   "compression": "gzip"
+  },
+  {
+   "file": "297-superspeaker.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/4d/c/superspeaker.wrl",
+   "sha256": "9582b09a71796711615c87af4f1fd1a255dbb865c9e1da81c9d26dfeb6164ff8",
+   "compression": "plain"
+  },
+  {
+   "file": "298-history3.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/94/9/history3.wrl",
+   "sha256": "95e18903c5dca24e2884b30c9df4c4326e56f6f2a6eeb6b634e79ac8361fc6be",
+   "compression": "gzip"
+  },
+  {
+   "file": "299-darksproe2.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/5b/4/darksproe2.wrl",
+   "sha256": "965b31352ccaab013a59426b35f88c0ba70b43fb70b14ffda042ee0be5fc0046",
+   "compression": "plain"
+  },
+  {
+   "file": "300-drag1red.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/a4/b/drag1red.wrl",
+   "sha256": "96efc7fa9357ab60fa18e30f722ca405cba3d73c649c9fd718314667e4995f4b",
+   "compression": "gzip"
+  },
+  {
+   "file": "301-classic.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/4f/6/classic.wrl",
+   "sha256": "97ab496759a077678aff5ef411b3eadd4f928df0eb8bed0ab21642c0893263e1",
+   "compression": "gzip"
+  },
+  {
+   "file": "302-vwbugold.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/99/1/vwbugold.wrl",
+   "sha256": "984ef3e6e033a1e43e8519422e778b3bc042b224d13d1d268a91e0faecd15e3d",
+   "compression": "plain"
+  },
+  {
+   "file": "303-dovepet.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/05/cf/f/dovepet.wrl",
+   "sha256": "98cee58a5633b8a692f7714935c3414321e3bc84b13e9c041d0a1f06f1c1b57c",
+   "compression": "gzip"
+  },
+  {
+   "file": "304-graveyard1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6a/9/graveyard1.wrl",
+   "sha256": "996a53ae5ac3b6c215773562dcc5b56525c5a1c21b09f7a8412b4c6c19a376af",
+   "compression": "gzip"
+  },
+  {
+   "file": "305-Spazzfountian1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/08/46/0/Spazzfountian1.wrl",
+   "sha256": "9a00508f44576b5e4680a622ebd56f839e77046bf28b468a71b5a8710880489e",
+   "compression": "gzip"
+  },
+  {
+   "file": "306-av1x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/3f/av1x.wrl",
+   "sha256": "9a8bb05d33bef1153513aa193e88ca022b5c6d305d578338583704979bc0d113",
+   "compression": "gzip"
+  },
+  {
+   "file": "307-light1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/58/0/light1.wrl",
+   "sha256": "9b295f8404f1ab5a5c7ceefab4b545d74ac7e65039192959ac7480c7de455a75",
+   "compression": "gzip"
+  },
+  {
+   "file": "308-vwbugold.wrl",
+   "root": "wbct",
+   "rel": "items/vwbugold-a9c0c9/vwbugold.wrl",
+   "sha256": "9b94d3c242a81f31105b211b3325b2bd325de57b3fcf9557039492a1ec04b1eb",
+   "compression": "plain"
+  },
+  {
+   "file": "309-PinballMachine.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/2c/b/PinballMachine.wrl",
+   "sha256": "9c18cdcb5cd50c51e27972bb2893169476403247f454f8ad34f3daa085392eb0",
+   "compression": "gzip"
+  },
+  {
+   "file": "310-av0.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbavatars/M/00/09/3f/bf/av0.wrl",
+   "sha256": "9cc22e8a10310dbc6a6277bc26b7f13669dac35f27e1945eef1f9bfeb988c303",
+   "compression": "gzip"
+  },
+  {
+   "file": "311-Refridgerator.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/73/8/Refridgerator.wrl",
+   "sha256": "9d2cbb6fde99cb2c85edbe75fb662904b476c6d95427cdd4e5f5bfde4647b070",
+   "compression": "gzip"
+  },
+  {
+   "file": "312-r2d2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/6f/e/r2d2.wrl",
+   "sha256": "9d94045b83b1158d56b6b684664427743f52bf6a4325b5e2c04cb457944b2e6a",
+   "compression": "gzip"
+  },
+  {
+   "file": "313-butterfly_rug.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0c/b0/9/butterfly_rug.wrl",
+   "sha256": "9e22f345d48973ca2e5fa7fbff7cde3a570e972deae7129bf3e5d4a26488f15f",
+   "compression": "plain"
+  },
+  {
+   "file": "314-Unicorn_3.wrl",
+   "root": "wbct",
+   "rel": "items/Unicorn_3-107313/Unicorn_3.wrl",
+   "sha256": "9ec5a83c904315ab89f13fd6911b7eace086ea030743ba61a248c46a8803425d",
+   "compression": "plain"
+  },
+  {
+   "file": "315-meerkats.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0b/a2/2/meerkats.wrl",
+   "sha256": "9f0da274b487620504126effda6f0b93da6e2cbeb3562d31f362fd97e6e04b3d",
+   "compression": "plain"
+  },
+  {
+   "file": "316-av0x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/01/b4/av0x.wrl",
+   "sha256": "9f82cb2544b71af2fecfbc58ad7531507897e7fdd3bffc3716303a798d4f760c",
+   "compression": "gzip"
+  },
+  {
+   "file": "317-HarleyVCX.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbobjects/SO/c0/00/00/0b/9/HarleyVCX.wrl",
+   "sha256": "a01deb878999ba66511e1a076716f27434808fc1838e324ec773ca6a593e7990",
+   "compression": "gzip"
+  },
+  {
+   "file": "318-couch1.wrl",
+   "root": "skatefm",
+   "rel": "couch1.wrl",
+   "sha256": "a0b0a5bb27be7d48fb7055011c30d5304080262d90ff555679c712b84ef18ef3",
+   "compression": "gzip"
+  },
+  {
+   "file": "319-nautkraktank3.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/05/fc/b/nautkraktank3.wrl",
+   "sha256": "a143e1067265d72d9f6b94bc6eda5ae95582a3dedb32917f9e8a7738d68e1b82",
+   "compression": "gzip"
+  },
+  {
+   "file": "320-canisters3.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/00/e1/6/canisters3.wrl",
+   "sha256": "a1e5bd23fbc5b5e917b7b2f629d2606ae59dc1261dec3002fb539232f059278d",
+   "compression": "gzip"
+  },
+  {
+   "file": "321-snowman.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0f/43/d/snowman.wrl",
+   "sha256": "a2b1dea8058b1e5b9e6142128976eb5a97eaaee91ac86dc1e4aebd85369dc699",
+   "compression": "plain"
+  },
+  {
+   "file": "322-drums12.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/8d/5/drums12.wrl",
+   "sha256": "a34b168c116f53653be5d8f86b971d38af50a8618ffb1d4eea6a129a3a861202",
+   "compression": "gzip"
+  },
+  {
+   "file": "323-splatter.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/99/f/splatter.wrl",
+   "sha256": "a3d07f6f0b5f85dca26498ad6996773199715edebcb91f1d53dae870e2947adf",
+   "compression": "gzip"
+  },
+  {
+   "file": "324-dragon.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0a/c7/5/dragon.wrl",
+   "sha256": "a47f73f10fb8bef9eb726f7d5dacf6a6b62c10bb135d055981db883d5b6eddb6",
+   "compression": "plain"
+  },
+  {
+   "file": "325-gestures.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.com/bxx/vrml/protos/gestures.wrl",
+   "sha256": "a532374e188bfa516b2296f2219fdd62f2d9665f4c2e63bf55b75b3749599a35",
+   "compression": "gzip"
+  },
+  {
+   "file": "326-sofagroup.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/9f/9/sofagroup.wrl",
+   "sha256": "a5b2af9f0c58b0f25a39548e1ba256e220ab261cfdc0b117c578768c617b93bd",
+   "compression": "gzip"
+  },
+  {
+   "file": "327-DBZ.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/72/6/DBZ.wrl",
+   "sha256": "a6594297bfe237ebbec789af6d00480a086850391c72b6b539681091ff70a7f6",
+   "compression": "gzip"
+  },
+  {
+   "file": "328-Refrigerator.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/06/9/Refrigerator.wrl",
+   "sha256": "a6ea1a091469a0ae5d6fd426c503d87add0ef5c670a00f7644955dde0286d82f",
+   "compression": "plain"
+  },
+  {
+   "file": "329-gazebo.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/9e/b/gazebo.wrl",
+   "sha256": "a7867fd8e1a4fd6c36ff032cd9b8afd695c8304f738fafa716b05c874b46fd97",
+   "compression": "gzip"
+  },
+  {
+   "file": "330-Drinkthingy.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/12/d/Drinkthingy.wrl",
+   "sha256": "a7f66a0ec974c024c6f9376205d39e9f7cdb99236e06b84f270df346615f4931",
+   "compression": "gzip"
+  },
+  {
+   "file": "331-couch.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0d/66/d/couch.wrl",
+   "sha256": "a86efcbbf923db4117f7d92971d51a6400de5aba8810b2bcb8de904308c899d2",
+   "compression": "gzip"
+  },
+  {
+   "file": "332-lavalmpred.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/07/8f/5/lavalmpred.wrl",
+   "sha256": "a8b2a55e83f4c44b44cb922dd6a774ee83abf46056e73c6bf08997c6adb7a542",
+   "compression": "gzip"
+  },
+  {
+   "file": "333-Deluxe_Cabnet.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/35/9/Deluxe_Cabnet.wrl",
+   "sha256": "a94ab2f44375e9b7e5a548bf385798fbbabb0f89e74d450c230b72a4bb5cfaac",
+   "compression": "gzip"
+  },
+  {
+   "file": "334-firezstarbed.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/dc/1/firezstarbed.wrl",
+   "sha256": "a9c0a7693ac3d70a69740147a1c26d8cbce09eebf87d8d54721177574b1c16c3",
+   "compression": "plain"
+  },
+  {
+   "file": "335-romantic_isle.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/romantic_isle/vrml/romantic_isle.wrl",
+   "sha256": "aa719287e4302c6a0b0d7b23a6921c573812a1c5594abc8608c45a71fe026008",
+   "compression": "gzip"
+  },
+  {
+   "file": "336-PinballMachine.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/39/5/PinballMachine.wrl",
+   "sha256": "aaeb2fea9f6c3516cad9f3b174509e42ff1595a13b6194572b4c6039abb77466",
+   "compression": "gzip"
+  },
+  {
+   "file": "337-gargoyle.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/95/2/gargoyle.wrl",
+   "sha256": "ab9b51cffb3af7e3c5be4cb7111fff87755c3e0274bbeb40954c55f458b19c38",
+   "compression": "gzip"
+  },
+  {
+   "file": "338-giftbear2.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0a/dc/2/giftbear2.wrl",
+   "sha256": "ac2185e6d6eb9ee66de131e1968783e330af60b42f525fad1ef068667270ada5",
+   "compression": "plain"
+  },
+  {
+   "file": "339-RollieChairByNeovalis.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/01/e7/d/RollieChairByNeovalis.wrl",
+   "sha256": "acc90ea93d27f8833cc4ea370779a67546421d509b5da3e1d28601e595ef850e",
+   "compression": "gzip"
+  },
+  {
+   "file": "340-pearlbunny.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/e9/7/pearlbunny.wrl",
+   "sha256": "ad1fa70c2bd1787966dd261b60f2b2178b461ccf794f21e37ebbdb3778cfbf03",
+   "compression": "plain"
+  },
+  {
+   "file": "341-TV_Set.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/23/5/TV_Set.wrl",
+   "sha256": "ad87c081d379343f8c932f92ba61b3e2a8412b9e0c4af55cd30ace233740a8a3",
+   "compression": "gzip"
+  },
+  {
+   "file": "342-alien2.wrl",
+   "root": "wbct",
+   "rel": "items/alien2-cfa8f7/alien2.wrl",
+   "sha256": "ae491cb21ccc5d97c9895e32f0d58b1b0a6c902edc7b34486bdf503f48ace528",
+   "compression": "plain"
+  },
+  {
+   "file": "343-elf.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/36/3/elf.wrl",
+   "sha256": "aed961e36c662e3729a7120a479e0d4316d45b533805680c2ebc00418c2db887",
+   "compression": "gzip"
+  },
+  {
+   "file": "344-celestrialpatioset.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/af/6/celestrialpatioset.wrl",
+   "sha256": "af6819cd0dc964fc9bbfb5b9290ad89d81ea329075d5e8c41662316d8b486889",
+   "compression": "plain"
+  },
+  {
+   "file": "345-jap_table.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/09/ba/e/jap_table.wrl",
+   "sha256": "afe610ca0718eb4156a35c2c1f52a9a7570830df5d3803fc73c6c4f63c97b95c",
+   "compression": "plain"
+  },
+  {
+   "file": "346-BloodMoonRedo.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbobjects/SO/c0/00/00/09/3/BloodMoonRedo.wrl",
+   "sha256": "b053675b3a789e0662b2a8ee8c4f42db6876996a93b0afd96b59bfd58977209c",
+   "compression": "gzip"
+  },
+  {
+   "file": "347-electric.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/38/e/electric.wrl",
+   "sha256": "b0b38e7b16a55362aee3c5865dab8b2eda66d73b1d0f10ed6a0f7c69d0cbbc5b",
+   "compression": "gzip"
+  },
+  {
+   "file": "348-Dragonstaff_2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/89/1/Dragonstaff_2.wrl",
+   "sha256": "b1481b62390d58aefb145ca98f82d7d7aaada4fa812aea2176377076f7f061fd",
+   "compression": "gzip"
+  },
+  {
+   "file": "349-queen.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/13/85/a/queen.wrl",
+   "sha256": "b1b6c80eab7418dd31c2d5b90a0d44e9c82f17e444404538afdc8668f8f8452a",
+   "compression": "plain"
+  },
+  {
+   "file": "350-veggies.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/10/3d/7/veggies.wrl",
+   "sha256": "b24b1e67ed28a578584a19e72fa3fcaddf70c84a803e0c966a96fa6a10b178c1",
+   "compression": "plain"
+  },
+  {
+   "file": "351-vase.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/48/3/vase.wrl",
+   "sha256": "b2a29e2af48cb7bc1b9c118733edce35ddfb125a5fd177879d68ae8acb28ddfa",
+   "compression": "plain"
+  },
+  {
+   "file": "352-joelle.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/0d/4b/4/joelle.wrl",
+   "sha256": "b2fdc6cf755dfde9e4d280b724e600945eb3ff2ea298b4c6a5b7b5b275c6738c",
+   "compression": "gzip"
+  },
+  {
+   "file": "353-dock.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/worlds/twbeach/vrml/dock.wrl",
+   "sha256": "b35cecdaccf027ef7b909544b0f5c9c5bb74e430f7c9fdc49670dc95fa90755b",
+   "compression": "gzip"
+  },
+  {
+   "file": "354-rosetta.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/96/4/rosetta.wrl",
+   "sha256": "b3d65c0cd49d31dbfc32e01a62ddc11dd46c555be6e530da9445b2291836dad2",
+   "compression": "gzip"
+  },
+  {
+   "file": "355-gabriel.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/2b/e/gabriel.wrl",
+   "sha256": "b490755a022e56598e32650c8f602fd529974d43bc1c6e441794e7cf3e656c26",
+   "compression": "gzip"
+  },
+  {
+   "file": "356-dutchy_2.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/c1/0/dutchy_2.wrl",
+   "sha256": "b50e2cbbd9e4c6c6d533bf7ced877d85ffdc9f98383580069364061c1a585156",
+   "compression": "plain"
+  },
+  {
+   "file": "357-world3.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/worlds/twbeach/vrml/world3.wrl",
+   "sha256": "b57a6f3f03531919a83c0561ac786a6fbbadf3f7a7be231f7573dfbb166178da",
+   "compression": "gzip"
+  },
+  {
+   "file": "358-beamstation.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/80/5/beamstation.wrl",
+   "sha256": "b5e01fbe6f72d77083b7ef1a6b096a4d39d47e237e6bceb3bcd24b8b24a2d132",
+   "compression": "gzip"
+  },
+  {
+   "file": "359-Dogy1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/58/3/Dogy1.wrl",
+   "sha256": "b629a43ef6a971b8368cfb61ebfce7d3eb9fd2599b41b9420448da48af7a47cb",
+   "compression": "plain"
+  },
+  {
+   "file": "360-Mountain.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/3c/5/Mountain.wrl",
+   "sha256": "b6d76f567e3cc82c3bdeff680b0984ab63f951fb2cbce61713699137f84e4b5e",
+   "compression": "gzip"
+  },
+  {
+   "file": "361-home.wrl",
+   "root": "wbct",
+   "rel": "3d/home/0108000000000000/property/vrml/000/home.wrl",
+   "sha256": "b78cd55daae38f273e26c15eb0e3ae2f0879a33d5f0a15eff8d0eba1d39c7cc7",
+   "compression": "plain"
+  },
+  {
+   "file": "362-pictures.wrl",
+   "root": "wbct",
+   "rel": "homes/Cyberaxis-d4a086/Cyberaxis/vrml/pictures.wrl",
+   "sha256": "b828353b376908bf71c0595a179f5c91e4d502bebc9e347b5dd9e3b39d4e12c2",
+   "compression": "gzip"
+  },
+  {
+   "file": "363-Tableandchairs.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/53/2/Tableandchairs.wrl",
+   "sha256": "b8a4de1ce0fb4c659cf6952c19a184da5f458f5938adfd79bf7a29fd8a7e5576",
+   "compression": "plain"
+  },
+  {
+   "file": "364-Graveyard.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/75/a/Graveyard.wrl",
+   "sha256": "b97e8443c6d9c873c480298bf341d32ba0e3e3dfc465e698aa63cd2fec146c97",
+   "compression": "gzip"
+  },
+  {
+   "file": "365-pink kitchen set.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/18/0/pink kitchen set.wrl",
+   "sha256": "ba155478781ab2fab01bf1a824cc9cc2540f5175b2210abc178ef09e43d1839e",
+   "compression": "gzip"
+  },
+  {
+   "file": "366-doctragoz.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/doctragoz.wrl",
+   "sha256": "baabb353b4726306677799d18f8196e7cc1ee8c2e53dfc42ad0a01e243ef4b98",
+   "compression": "plain"
+  },
+  {
+   "file": "367-4.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.icity.co.il/commserv/community/dbobjects/SO/c0/00/00/bd/9/4.wrl",
+   "sha256": "bb46d6d13581c34e95e797878523a15ae406228056a704ec97a49e1334585e07",
+   "compression": "gzip"
+  },
+  {
+   "file": "368-jupiter.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/IrishSpace/jupeview/jupiter.wrl",
+   "sha256": "bbb99b1d205520a6f36a5fb1442eb9558916840a11cf620f998cdb2bbd7611a2",
+   "compression": "gzip"
+  },
+  {
+   "file": "369-benchlotus.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/32/9/benchlotus.wrl",
+   "sha256": "bc5a0f4e184fc341aa3590b7b0d688c9968eebaf2b4aa3ae93fe3ff85dd5ff05",
+   "compression": "gzip"
+  },
+  {
+   "file": "370-sink.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/ab/1/sink.wrl",
+   "sha256": "bcd35202b321b993e152195df6db275e17c47d03ef66b6ffd5846bd45d17439b",
+   "compression": "plain"
+  },
+  {
+   "file": "371-table.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/48/6/table.wrl",
+   "sha256": "bd5d40939733fdb05dbe75fb4429c3d951c7275662241ffd30945e5e6094417a",
+   "compression": "plain"
+  },
+  {
+   "file": "372-tree.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/www.blaxxun.de/support/developerguide/developer/avatars/tree.wrl",
+   "sha256": "bdc734e740b4b1c57163a9dbee35eb5112f2944f408d41dbbea7e6f00c45aa54",
+   "compression": "plain"
+  },
+  {
+   "file": "373-palmtree.wrl",
+   "root": "wbct",
+   "rel": "items/palmtree-89493f/palmtree.wrl",
+   "sha256": "be7ddeddd49278b8f72d9afbaf198dff0efa9e8c46bf32719a83874c1457a72b",
+   "compression": "plain"
+  },
+  {
+   "file": "374-fireplace.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/76/0/fireplace.wrl",
+   "sha256": "bee67fd82d34ef6b4ace5944c35b7e56bfdcf45c29678a90f25a259135c7f634",
+   "compression": "gzip"
+  },
+  {
+   "file": "375-wavepool.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/01/eb/8/wavepool.wrl",
+   "sha256": "bf587b5a65c8549e52b7e2633e0b7d479adfd790c5850c3b4fff3ba76cccf335",
+   "compression": "gzip"
+  },
+  {
+   "file": "376-htrshldwcoa.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/a7/4/htrshldwcoa.wrl",
+   "sha256": "bfae07bc5249a04c0e9395413c9380f5e38ab8bd89450f5df80960c02aed0f05",
+   "compression": "gzip"
+  },
+  {
+   "file": "377-blacktub.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/84/6/blacktub.wrl",
+   "sha256": "c03a7d6bea327a947b2f8a29b4957f5bdf32b29e3ec80465f90f1b59428e3205",
+   "compression": "gzip"
+  },
+  {
+   "file": "378-texgen_mona.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.de/samples/contact/multitexturing/texcoordGen/texgen_mona.wrl",
+   "sha256": "c0a28a6ed8b743b4b94fe0b72df0b4675d1337fef96e3a03c9c986cfd74c91f8",
+   "compression": "gzip"
+  },
+  {
+   "file": "379-ifs_lightmap.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.de/samples/contact/multitexturing/multitexture/ifs_lightmap.wrl",
+   "sha256": "c13102c3699220f2762a3229d8f3a4c2252c9b051c3cd1b351ac2ffd73589806",
+   "compression": "plain"
+  },
+  {
+   "file": "380-RedCarpet.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.icity.co.il/commserv/community/dbobjects/SO/c0/00/01/3e/a/RedCarpet.wrl",
+   "sha256": "c194ec62ab16480aac61d28584593939323738cb9461e8847cb27d1adc70c1b1",
+   "compression": "gzip"
+  },
+  {
+   "file": "381-av0.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/02/c4/av0.wrl",
+   "sha256": "c2209c6cf1b94d1c8023279b08c8fe381a77cc7ef507648f36e851af89f276e5",
+   "compression": "gzip"
+  },
+  {
+   "file": "382-fountain4.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/88/8/fountain4.wrl",
+   "sha256": "c2ce3c044f1406035d82cdd7d851926d57a9fbf70c29c6f8391603a581febd8f",
+   "compression": "plain"
+  },
+  {
+   "file": "383-ToxicallySweetsJustifier.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/03/89/9/ToxicallySweetsJustifier.wrl",
+   "sha256": "c360eecf828ac207c900844e63c8099689a3deb761c8381e3a3362570fd62981",
+   "compression": "plain"
+  },
+  {
+   "file": "384-wrap4.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/wbghall/vrml/Room4/wrap4.wrl",
+   "sha256": "c3d02fdab9f5e392baa783e05904fceefee800793b9d95b7169c99d28b1aed1c",
+   "compression": "gzip"
+  },
+  {
+   "file": "385-LaundryCombo.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/55/e/LaundryCombo.wrl",
+   "sha256": "c44d633580fd61131324d1b73793ab42f0e034555edc267e5346fb0d65a489c7",
+   "compression": "gzip"
+  },
+  {
+   "file": "386-scifispacetrophy4.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6c/0/scifispacetrophy4.wrl",
+   "sha256": "c4dea8b15482d900c155118e5bd5b48843659efbe449417bfd1f66365be11f1f",
+   "compression": "plain"
+  },
+  {
+   "file": "387-av__q__action_bxxtext_ar_bluecyl_fe_bluecyl_ha_bluecyl_he_bluecyl_lb_bluecyl_ub_bluecyl.pl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.com/cgi-bin/avatarden/av__q__action_bxxtext_ar_bluecyl_fe_bluecyl_ha_bluecyl_he_bluecyl_lb_bluecyl_ub_bluecyl.pl",
+   "sha256": "c57e0ebf53f0127cd564c89d27b9f2b5e507214079a105a57e7a72dd7e4d33ce",
+   "compression": "plain"
+  },
+  {
+   "file": "388-mermaid_encounter_vrml.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0b/6a/d/mermaid_encounter_vrml.wrl",
+   "sha256": "c5c095950ed69bb238c19a22693f39d95a5b7d8bd568625d1ae6b28ca5738d2f",
+   "compression": "gzip"
+  },
+  {
+   "file": "389-lefty.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/places/no_cache/suburbs/Stonehenge/lefty.wrl",
+   "sha256": "c61714b1bf62d9580a32f415cb0a0f8274deb6ad16c8a69e89ba3174e8670673",
+   "compression": "gzip"
+  },
+  {
+   "file": "390-Caution.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1f/4/Caution.wrl",
+   "sha256": "c65997fe393c27dd9194112ebe14ac7d9283217c519fa0a401a5e3eb5e696d2e",
+   "compression": "plain"
+  },
+  {
+   "file": "391-VRSpace.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/vrspace.dyndns.org_8080/vrspace/VRSpace.wrl",
+   "sha256": "c706367e055957367332ae733284d00bc57be1edf96b32ad576396f7ea5ea832",
+   "compression": "plain"
+  },
+  {
+   "file": "392-vampressyacht.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/0d/9e/3/vampressyacht.wrl",
+   "sha256": "c78d1f21c494cf242e5805c849e34bbaa7d1ddc93b4f05d4fc2435aeda16f6f3",
+   "compression": "gzip"
+  },
+  {
+   "file": "393-wl.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/47/e/wl.wrl",
+   "sha256": "c825262676f5a70c17bee40d1ab8e171c688f6d34a9a4831d09d53b97c7ac8cc",
+   "compression": "plain"
+  },
+  {
+   "file": "394-Unicorn_3.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0c/d2/e/Unicorn_3.wrl",
+   "sha256": "c8bc38e55634e1378f6303eccf26c01fdbba0d4d8cc791a9db6e086dd06eea35",
+   "compression": "plain"
+  },
+  {
+   "file": "395-sword_1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/94/6/sword_1.wrl",
+   "sha256": "c90974568f5b7c4cea4c2cc81413282a2c5669fc21dc0af14b516489cc60504a",
+   "compression": "gzip"
+  },
+  {
+   "file": "396-check.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/extracted/p60-linux/csbin/community/templates/object/check.wrl",
+   "sha256": "c9a513230709ea019574f943ad855f0ef3207ddb95b58f906980a1a9086be30a",
+   "compression": "plain"
+  },
+  {
+   "file": "397-female_receptionist.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/45/1/female_receptionist.wrl",
+   "sha256": "ca641136452a553782e1c325213a3be4e657164e2d99043e7b26ae24c3e92f35",
+   "compression": "gzip"
+  },
+  {
+   "file": "398-trophy_ace_gold.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/0a/e1/4/trophy_ace_gold.wrl",
+   "sha256": "cafdefd0359e6f6e866fc9bcb88162a1f6ca91736174e9e5765e08904bb38936",
+   "compression": "gzip"
+  },
+  {
+   "file": "399-art_deco_bed.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/45/6/art_deco_bed.wrl",
+   "sha256": "cb90c84ad0ece81e1016487a23877f3ed63e14fb9e6ca6f7e531eb3f7692370a",
+   "compression": "gzip"
+  },
+  {
+   "file": "400-car3.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/03/f9/d/car3.wrl",
+   "sha256": "cc337ef8462a9ea583524641d827b54eefe2b4f84f917174b368c57ce536f2d3",
+   "compression": "plain"
+  },
+  {
+   "file": "401-jp.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/a5/5/jp.wrl",
+   "sha256": "ccb94f43f4ed9f938085fbde18648f6587638b8249e2b222e62881081e532aa4",
+   "compression": "plain"
+  },
+  {
+   "file": "402-root.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw/external/developer.blaxxun.de/developer/contact/3d/eai/samples/TileWorld/root.wrl",
+   "sha256": "cd4a1232c364c9f93c26fa733cf46ae356156430f52d60fdadb22e42fbb8191a",
+   "compression": "plain"
+  },
+  {
+   "file": "403-jj5b.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/IrishSpace/jj/jj5b.wrl",
+   "sha256": "cdd194d3732844ab7db69c8ed0f299ef73e2c63b4414897e6c2a26494a1b1aa0",
+   "compression": "gzip"
+  },
+  {
+   "file": "404-cleo.wrl",
+   "root": "wbct",
+   "rel": "worlds-raw-colonycity/www.colonycity.com/info/avatars/cleo.wrl",
+   "sha256": "ce3aca96295ab531bd124dc83b9309ab5802e69832138dd9c9ddfb0704d85d39",
+   "compression": "gzip"
+  },
+  {
+   "file": "405-Spazz3D3.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/19/4/Spazz3D3.wrl",
+   "sha256": "ceb311b47a56e5b439e3c8271c9411f4787d7e2910de46b85f49b32753b50d0c",
+   "compression": "gzip"
+  },
+  {
+   "file": "406-serpent-staff.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/16/1/serpent-staff.wrl",
+   "sha256": "cf39280eade4909ca0c4f82269ce71a5f2ece62989e21fdc3094e61bbfda060c",
+   "compression": "plain"
+  },
+  {
+   "file": "407-Tiger.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/67/6/Tiger.wrl",
+   "sha256": "cfa95cc50dfaf0ee5a562924aa448b6fd0bafafd30ec3e876bbd517c7da9f6a0",
+   "compression": "gzip"
+  },
+  {
+   "file": "408-royaldinette.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/worlds/ccastle/vrml/royaldinette.wrl",
+   "sha256": "d029174e10ae6f99602274f21082bd60dfdae1e3f73cad18ddbf79f15bf510ef",
+   "compression": "gzip"
+  },
+  {
+   "file": "409-castle.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/9a/0/castle.wrl",
+   "sha256": "d08691333dc93594a540c02fbd45245dfb50483c76b0b8abd469e2bebfe9e045",
+   "compression": "gzip"
+  },
+  {
+   "file": "410-Fclock.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/22/2/Fclock.wrl",
+   "sha256": "d112f6c650ec77ac88e9856f3d0a2d219b5b706559e8568e5adb376defa38319",
+   "compression": "gzip"
+  },
+  {
+   "file": "411-oven.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/13/6/oven.wrl",
+   "sha256": "d1cc3ce2a56d5d70188d530b34b3f9dbfc986d494b2a6c7b963b6968f3848f16",
+   "compression": "plain"
+  },
+  {
+   "file": "412-ld.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/39/3/ld.wrl",
+   "sha256": "d2535b11ff13be5dd637cabcbad5c462663f0bedb4d00446c58f0bb172cc4f58",
+   "compression": "gzip"
+  },
+  {
+   "file": "413-Oak_Dresser.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/37/5/Oak_Dresser.wrl",
+   "sha256": "d2d6619fab9a6cbc8f98637b99fc1e657d37fe1762eb8f8400b8794868fd1149",
+   "compression": "plain"
+  },
+  {
+   "file": "414-bunny.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/4c/8/bunny.wrl",
+   "sha256": "d3553f869d2045a17e0d4c6c6a97864c5efc11ea14c96f8b892ed915101151f9",
+   "compression": "plain"
+  },
+  {
+   "file": "415-av1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbavatars/M/00/07/29/61/av1.wrl",
+   "sha256": "d3d1c4d44e138c4cd83fd8b9dab97b38ec39f6720ed1e8fd755388b0b9cd795d",
+   "compression": "gzip"
+  },
+  {
+   "file": "416-lightbeams.wrl",
+   "root": "wbct",
+   "rel": "flashpoint-archive/extracted/c42fd483-cc21-45d1-a7c6-9735b850e480/content/e_lobby/lightbeams.wrl",
+   "sha256": "d45e8eafc6a08c95d9805d98e57db9bdfbc7777ae0a1a54e584cc77e1b8b854e",
+   "compression": "gzip"
+  },
+  {
+   "file": "417-sinred2.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbobjects/SO/c0/00/00/07/c/sinred2.wrl",
+   "sha256": "d4d7720c5a529b078271ca04715da91d284631f5b67c06a055194b1fee7e239e",
+   "compression": "gzip"
+  },
+  {
+   "file": "418-pizza.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/9d/b/pizza.wrl",
+   "sha256": "d521e0efca1ec008b2b190088e8866f537ff2204c3c3763b1305d8dd50f2f655",
+   "compression": "plain"
+  },
+  {
+   "file": "419-logo.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/9e/7/logo.wrl",
+   "sha256": "d5960704423265d8813e0ebfc239dae2af2f3efb46498267ebad32b27df597c6",
+   "compression": "gzip"
+  },
+  {
+   "file": "420-taharutben1.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/planet.nana.co.il/avstore/taharutben1.wrl",
+   "sha256": "d5ffd9d2e471e04d6358fb3637b68ebfe3be97d40860b130b3ee3bd1256c1a23",
+   "compression": "gzip"
+  },
+  {
+   "file": "421-blue_chair.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5a/5/blue_chair.wrl",
+   "sha256": "d696fbd00dd6092c7a326994f29c0592665cf408ecf22aafb7cda9850feb480a",
+   "compression": "gzip"
+  },
+  {
+   "file": "422-portie.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.icity.co.il/commserv/community/avatars/bots/portie.wrl",
+   "sha256": "d6eed401ef1761d07fb93501d698eaf494568ebe20e33aa2b76054b85abd4c51",
+   "compression": "gzip"
+  },
+  {
+   "file": "423-bed.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1a/d/bed.wrl",
+   "sha256": "d76120654ee88961e548131e0cc641da4c8a247dc0569cd85e3d0485ab6e7298",
+   "compression": "gzip"
+  },
+  {
+   "file": "424-BON.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/04/8c/d/BON.wrl",
+   "sha256": "d832136b5603903ee873eea278a49f6571a9db935da920b8adcbb6aef424f8eb",
+   "compression": "gzip"
+  },
+  {
+   "file": "425-sonyablue.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/29/9/sonyablue.wrl",
+   "sha256": "d8ce4b36fd37faa71324d5b5ffefee56d7190f7267cf91200da42da26f4e5dab",
+   "compression": "gzip"
+  },
+  {
+   "file": "426-section-o-fence.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/82/b/section-o-fence.wrl",
+   "sha256": "d9439bb8ce148db6ea01287b2daf34b7dd6fac3eeb59c1576933bdab15d267db",
+   "compression": "gzip"
+  },
+  {
+   "file": "427-Television.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/8c/2/Television.wrl",
+   "sha256": "d99b842fc9db33b451f862c5c0b3547f1aad7ba8a8e08846eceac3659333281a",
+   "compression": "plain"
+  },
+  {
+   "file": "428-dj.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/worlds/disco/vrml/dj.wrl",
+   "sha256": "da108f9c7264f40dfca05b25bc62868e3303d7aa055867ac434ce5ac8f95c287",
+   "compression": "gzip"
+  },
+  {
+   "file": "429-laz_welcome.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/82/a/laz_welcome.wrl",
+   "sha256": "da86af3fb151e8864cf51f7746c862bef2e9b76ba8fcb101af172e4cf8b365b5",
+   "compression": "gzip"
+  },
+  {
+   "file": "430-villasantzip.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/deshom/dbobjects/SO/c0/00/0b/92/1/villasantzip.wrl",
+   "sha256": "dafb52643d6a356fd4cb44fa11e9204cc4263515af6a8a297310a6f28c464435",
+   "compression": "gzip"
+  },
+  {
+   "file": "431-Camera.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/a0/9/Camera.wrl",
+   "sha256": "db76abac79e8281b2927b6202d5810b62705a9a7bb409972125364f4cf611391",
+   "compression": "plain"
+  },
+  {
+   "file": "432-TV_Closet.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.icity.co.il/commserv/community/dbobjects/SO/c0/00/01/08/2/TV_Closet.wrl",
+   "sha256": "dbcc5f58884d8dd92714df1b17b96d97f28d26d5a87d3d0ad1431c871d58b54c",
+   "compression": "gzip"
+  },
+  {
+   "file": "433-asiangirl_flower.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/ed/6/asiangirl_flower.wrl",
+   "sha256": "dc540f633212666d6b0ad00ca73a67802712259058f6693a857808e9aeb74dde",
+   "compression": "plain"
+  },
+  {
+   "file": "434-marblewalltablebrn.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/01/9a/4/marblewalltablebrn.wrl",
+   "sha256": "dcbc639e68d8c70be24fe3c824c40feee4215539e7a4a7399ec2dfd130a9ad47",
+   "compression": "plain"
+  },
+  {
+   "file": "435-armom.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/02/2d/f/armom.wrl",
+   "sha256": "dd376ae254af509c24e88a4b657f65644ea70e05163e2a5a4512fc5e35dc2b3e",
+   "compression": "gzip"
+  },
+  {
+   "file": "436-Radar.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/74/7/Radar.wrl",
+   "sha256": "de0c8d9f7e111de2e983dac969d908419ab4b256dfb03fed28eac540e324ed5d",
+   "compression": "gzip"
+  },
+  {
+   "file": "437-revolvr.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/99/6/revolvr.wrl",
+   "sha256": "de74aa32145353563fdda53a1a7b6a27e72d0a295bd4021ec58609d9216a4547",
+   "compression": "gzip"
+  },
+  {
+   "file": "438-leadsled.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/6f/d/leadsled.wrl",
+   "sha256": "deab9fb4cf05375c5c6cd77e6d3da62121d3fabe7dd57b38a0f1615f2d46d217",
+   "compression": "plain"
+  },
+  {
+   "file": "439-PikachuThing.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/17/9/PikachuThing.wrl",
+   "sha256": "df47cbd0d4307c5adaa0bcbbe5b99db298a9df39c5d5409a006910ebcbae83bd",
+   "compression": "gzip"
+  },
+  {
+   "file": "440-proto.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/common/proto.wrl",
+   "sha256": "e00aaae9615d58014d04a96acd307ef0b60346f3db1a83185599b238a582f8c7",
+   "compression": "gzip"
+  },
+  {
+   "file": "441-dancers.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Radio/vrml/dancers.wrl",
+   "sha256": "e0ac9fbc0fb078add5eef3e3a0117633840bdeb1696f6bdf51cd9839f6dd7ca9",
+   "compression": "gzip"
+  },
+  {
+   "file": "442-Doc_s_MazeEXP9.wrl.gz",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Harbinger_of_Spring_Maze2/vrml/Doc_s_MazeEXP9.wrl.gz",
+   "sha256": "e11126b1dfaea7bc052f973bb1b7f974d79d58eaf6f0cff6bf189658a9c42750",
+   "compression": "gzip"
+  },
+  {
+   "file": "443-Tea_Time.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/a4/7/Tea_Time.wrl",
+   "sha256": "e173fae4e80c5fb5b57919cd11a40800676e994aa23459f403980d61c45a0b2f",
+   "compression": "plain"
+  },
+  {
+   "file": "444-entcenter.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/03/88/7/entcenter.wrl",
+   "sha256": "e24a0ddf646975f741004df905f9787b785a12756747b23b82b9badf9be0c7fe",
+   "compression": "plain"
+  },
+  {
+   "file": "445-GrJediCyrstal.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/9a/e/GrJediCyrstal.wrl",
+   "sha256": "e2c5c51b230c74a1701b56f9a52d9c7f67afea30480769988ebe4e979bda530c",
+   "compression": "plain"
+  },
+  {
+   "file": "446-bed.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/02/48/5/bed.wrl",
+   "sha256": "e330441fad6e67deaff6578f1f86e1bef8a3e59588c2fc7b7439fa5990d59e8e",
+   "compression": "plain"
+  },
+  {
+   "file": "447-av4.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/0e/av4.wrl",
+   "sha256": "e38af3e876464249f963facbf244b250a6b7e423df399e3ab745f08bf99ecc6e",
+   "compression": "gzip"
+  },
+  {
+   "file": "448-twistbr.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/0c/44/8/twistbr.wrl",
+   "sha256": "e3e881971faff29cd262dfe83da5ea14614f3461f48cb46a24f45c17e7fd9ed5",
+   "compression": "gzip"
+  },
+  {
+   "file": "449-Copvan.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/07/e6/4/Copvan.wrl",
+   "sha256": "e4680c33266b44df476aff7526cc018141f5d5b376661f5aea00f67059b4a5d9",
+   "compression": "gzip"
+  },
+  {
+   "file": "450-cash.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/07/69/6/cash.wrl",
+   "sha256": "e4bfbd1b7294954d5f7c7d6b83906e2f76bcce8ef1f7b56f775a9248bb4f2ba6",
+   "compression": "plain"
+  },
+  {
+   "file": "451-circle.wrl",
+   "root": "wbct",
+   "rel": "shared-site/places/suburbs/circle.wrl",
+   "sha256": "e54bbe8a4b0928050a4f4b7227110522d61b824d35caa2dca93f39193dbd8834",
+   "compression": "plain"
+  },
+  {
+   "file": "452-artistic_fireplace.wrl",
+   "root": "wbct",
+   "rel": "items/artistic_fireplace-49f2f3/artistic_fireplace.wrl",
+   "sha256": "e5c5a0384ae1c8a374ddee0d604f2be7e972065d8a222c23f183c72902e99c19",
+   "compression": "plain"
+  },
+  {
+   "file": "453-av0x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/02/e6/av0x.wrl",
+   "sha256": "e64e638bdb957ff6cb31d02d45e11c488b3b6061457799a403b2bf6db2b96bbb",
+   "compression": "gzip"
+  },
+  {
+   "file": "454-av1x.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/01/cb/av1x.wrl",
+   "sha256": "e6bb94af973b1d6adad79ca10f3fcd9c9f973661bd6a81cfa11f02102750b1cc",
+   "compression": "gzip"
+  },
+  {
+   "file": "455-road.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Point_Worlds/vrml/road.wrl",
+   "sha256": "e757a736bb80cc342644773dc7b6b5d4a10b6cc53ae513e33e347157dcfccaee",
+   "compression": "gzip"
+  },
+  {
+   "file": "456-7rave.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.angelfire.com/de3/cyberlady2002/avatars/7rave.wrl",
+   "sha256": "e7b40d6a246844e50dff8666a969c1a790d2ceb6c054325cb261c80419a3735f",
+   "compression": "gzip"
+  },
+  {
+   "file": "457-stgtable.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/58/d/stgtable.wrl",
+   "sha256": "e87737a1ee171c16ba5c01079f960eff7eaf14e368bc00917b8eca70dcd295c6",
+   "compression": "gzip"
+  },
+  {
+   "file": "458-picture3x4_proto.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/00/80/b/picture3x4_proto.wrl",
+   "sha256": "e8f5af60f21c3a022a5eea08a28f2345bb03229f6b1f0f05da34458702f8380f",
+   "compression": "plain"
+  },
+  {
+   "file": "459-officelamp.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/92/b/officelamp.wrl",
+   "sha256": "e9b65a36e5b747a01d63ec34cfc76e77c25ee88f6a19685b6ef549d907ea8e94",
+   "compression": "gzip"
+  },
+  {
+   "file": "460-av0.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/bf/av0.wrl",
+   "sha256": "ea234598c7fe41c2205161d0227455190bc653ce1bf52d3dd8b6b1de696a4b42",
+   "compression": "gzip"
+  },
+  {
+   "file": "461-av1.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/f5/av1.wrl",
+   "sha256": "eaa3d798c89551ef781ba9cbb10cbc28868625800f400dbfe151dcd8729ce061",
+   "compression": "gzip"
+  },
+  {
+   "file": "462-GClock.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/06/61/4/GClock.wrl",
+   "sha256": "eb2b9dc443a22d3b77243ebbcfefc35cb7a3ce417acbb138477e67a26a23bf4a",
+   "compression": "gzip"
+  },
+  {
+   "file": "463-blackwidowjew.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/0d/17/8/blackwidowjew.wrl",
+   "sha256": "ebb8471199a3aaa8faa05404eb3e67c4bdeb06ece545695ceb7feec08e5e15d0",
+   "compression": "gzip"
+  },
+  {
+   "file": "464-welcomemat.wrl",
+   "root": "wbct",
+   "rel": "items/welcomemat-efba1c/welcomemat.wrl",
+   "sha256": "ec6131aa1ff7dce8d8ed37a4529c8e3997b23dbd56a28e1d14b0a4106e66171c",
+   "compression": "plain"
+  },
+  {
+   "file": "465-stuffedduck2.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/63/c/stuffedduck2.wrl",
+   "sha256": "ecf2843c01e85b9acf576bd1e64ede2956faf3858a7fc26e73bc56001dcadd27",
+   "compression": "gzip"
+  },
+  {
+   "file": "466-trio.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/86/1/trio.wrl",
+   "sha256": "ed97db838bd38c6f8ee90d73a481ca7371d27c65d5fbe54ad653e72cbf5723d3",
+   "compression": "gzip"
+  },
+  {
+   "file": "467-wwf2.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/5b/4/wwf2.wrl",
+   "sha256": "ee385bffb66fecb5c757d50fec581728fb5f6f229fd6df874eeca0656d220ef5",
+   "compression": "gzip"
+  },
+  {
+   "file": "468-Lamp1.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/8b/b/Lamp1.wrl",
+   "sha256": "eeb2096c0e4226acb0cffaa61f03396a61f32f401f3f2dec3fd34e59ceea82f0",
+   "compression": "gzip"
+  },
+  {
+   "file": "469-warning.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/a7/b/warning.wrl",
+   "sha256": "ef049ca33f2e30e5d641324117116191fa60c1753d32a5f54d2883ba63285256",
+   "compression": "gzip"
+  },
+  {
+   "file": "470-Birthday bird.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/48/8/Birthday bird.wrl",
+   "sha256": "efb32ede9e46ddc61bebe8ae01cd3ec07564816a2c01779882c0e99b07174da4",
+   "compression": "gzip"
+  },
+  {
+   "file": "471-portal7.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/portal7/vrml/portal7.wrl",
+   "sha256": "eff564c3ef374eef4e24a198370eee6a9dec55aaed08b4a5fd386fa06946a812",
+   "compression": "plain"
+  },
+  {
+   "file": "472-av0.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/7c/av0.wrl",
+   "sha256": "f08e1647c1b5e1f838b8af706d73c495415bd5ae457d18fc7f9d051e17cb697f",
+   "compression": "gzip"
+  },
+  {
+   "file": "473-landdrag.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/08/e8/e/landdrag.wrl",
+   "sha256": "f1072f513040b1cfa47a572848fefcb4b31b54d54b3c51b587c21d87e55f3dcb",
+   "compression": "plain"
+  },
+  {
+   "file": "474-Phonograch.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/92/7/Phonograch.wrl",
+   "sha256": "f1a24cdcd77216eca93db97a3dfbe386e3b5ab3300e6c6541a9b2cfa2d1d951b",
+   "compression": "plain"
+  },
+  {
+   "file": "475-vault.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/9e/1/vault.wrl",
+   "sha256": "f2291debb3f6f00390176ddda33e0ea05a2bb0f6c65efa44af8c97a005e9b3f5",
+   "compression": "gzip"
+  },
+  {
+   "file": "476-kalsculp1zip.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/10/eb/4/kalsculp1zip.wrl",
+   "sha256": "f2a6132297756f95e63d14bfad4da90542d2bea200f65a1f0f6452afe6ee214d",
+   "compression": "gzip"
+  },
+  {
+   "file": "477-beautifulnitemare.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/12/9b/6/beautifulnitemare.wrl",
+   "sha256": "f31989d27ec5423963588380ba49c5d510411e163e5cfd873ef470e7dda67e14",
+   "compression": "gzip"
+  },
+  {
+   "file": "478-SdpLargePlant.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/07/c6/2/SdpLargePlant.wrl",
+   "sha256": "f395aea39cf4466585b808f1276b9aa537c723b141c43a33f02fa9c5da0a92a1",
+   "compression": "gzip"
+  },
+  {
+   "file": "479-Parachutedropb.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/05/80/3/Parachutedropb.wrl",
+   "sha256": "f414d402702b86cc09e5e8f3d274853cbeb9a4c161921a14c4617c5627907aa4",
+   "compression": "gzip"
+  },
+  {
+   "file": "480-lib.wrl",
+   "root": "wbct",
+   "rel": "flashpoint-archive/extracted/e9878c73-669e-4cbc-beb5-751f63b5275a/content/www.cybertown.com/places/library/vrml/lib.wrl",
+   "sha256": "f4856184c2bcd8c3fee286803cfcf8ddb2867d795e4a1512b7595c73588915e3",
+   "compression": "gzip"
+  },
+  {
+   "file": "481-cad_manutec_compress_r2_link5_1.geo.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.robotic.dlr.de/STUDENTS/Martin.Rohrmeier/robot/cad_manutec_compress_r2_link5_1.geo.wrl",
+   "sha256": "f4eb070e3c722bd3a7abc3649676f213280d2f6341b2d89687318c85d68c3b3e",
+   "compression": "plain"
+  },
+  {
+   "file": "482-newscene.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/worlds/twbeach/vrml/newscene.wrl",
+   "sha256": "f567c5a4fcdbc62407a339ea2f9a06c46f2e5b5292eb7f18ccace4bc75577696",
+   "compression": "gzip"
+  },
+  {
+   "file": "483-av1.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/02/02/av1.wrl",
+   "sha256": "f629b2f793ba9c99459f2f588f66ec3724d3c3a8f3290e0b685e4be76a177492",
+   "compression": "gzip"
+  },
+  {
+   "file": "484-sapo.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/08/9c/4/sapo.wrl",
+   "sha256": "f6bc76ec611d63281531fc2164312ac2f2bf392d29882dbe7897d61bd768462f",
+   "compression": "gzip"
+  },
+  {
+   "file": "485-ryanzzz0.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/ryanzzz0.wrl",
+   "sha256": "f75ae1d770913977002860d8bf3e8967122c154d9b5f28658da140b1fc9b6164",
+   "compression": "plain"
+  },
+  {
+   "file": "486-bearflot.wrl",
+   "root": "skatefm",
+   "rel": "suburbs/suburbs/Mardi_Gras_Parade/vrml/bearflot.wrl",
+   "sha256": "f7ed3f8355ca1842a63a0c44219ee61459f33dd520d7f8b6c0b82b9b3da31264",
+   "compression": "gzip"
+  },
+  {
+   "file": "487-dogcrate1.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/04/37/6/dogcrate1.wrl",
+   "sha256": "f88294c9d2ea137907efe38a2aa217c3aed0b53b398354d1e698c5416d20f082",
+   "compression": "plain"
+  },
+  {
+   "file": "488-fan.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/6a/7/fan.wrl",
+   "sha256": "f917e606c529c113fc4489659b9d7370d2c68780effbaf48c7381b82392a8f0e",
+   "compression": "plain"
+  },
+  {
+   "file": "489-PikaRadio.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/19/5/PikaRadio.wrl",
+   "sha256": "f9e029413016e416abb67f25e7fc7400fe2804b6bb5ba828508e36002da9ac61",
+   "compression": "gzip"
+  },
+  {
+   "file": "490-big-safe.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/BxxCache/www.cybertown.com/dbobjects/SO/c0/00/01/3f/5/big-safe.wrl",
+   "sha256": "fa30a51bc07b3dcb0819ff491bac0338e2c5af014c1d105f824285e19e599e59",
+   "compression": "gzip"
+  },
+  {
+   "file": "491-bar2.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/01/67/e/bar2.wrl",
+   "sha256": "fab21ea59f62f05a4965aa62c2836d783528b464543dd5b69d7c26489a4488c2",
+   "compression": "gzip"
+  },
+  {
+   "file": "492-av0.wrl",
+   "root": "wbct",
+   "rel": "blaxxun-platform/vrml/dbavatars/M/00/00/00/2d/av0.wrl",
+   "sha256": "fb3d315c58b5b16b21e32ee588c2bb2a8084d3e253b8314e957495f0c8e96313",
+   "compression": "gzip"
+  },
+  {
+   "file": "493-dawgrocks.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/03/6f/c/dawgrocks.wrl",
+   "sha256": "fbcfbd9604aa045cd4d6a3eb05e9a45110019dc21f6656538e05b52b1b476629",
+   "compression": "gzip"
+  },
+  {
+   "file": "494-snowman.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/8d/c/snowman.wrl",
+   "sha256": "fc8a813f5f4ea87cb06695d006778ef68cf4e366d9bb000c6b06fb6e10eb7af9",
+   "compression": "gzip"
+  },
+  {
+   "file": "495-DgnChair.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/1b/5/DgnChair.wrl",
+   "sha256": "fd23a1b3610182894e933bef9a666b816a8119e4d77eab1102e280ff4dd3b760",
+   "compression": "gzip"
+  },
+  {
+   "file": "496-straight.wrl",
+   "root": "wbct",
+   "rel": "sego-archive-files/cybertown_assets_sanitized/dbobjects/SO/c0/00/08/ec/c/straight.wrl",
+   "sha256": "fda740a64ee63f096aeedce365cf77fd68bf8ce1d0e57a3350b37e3efc15a336",
+   "compression": "gzip"
+  },
+  {
+   "file": "497-fpole.wrl",
+   "root": "wbct",
+   "rel": "3d/dbobjects/SO/c0/00/0a/f9/5/fpole.wrl",
+   "sha256": "fe8136b4d051f64fce204eea1d983c5c35f2e3e2649b715de6fae64558f35cca",
+   "compression": "plain"
+  },
+  {
+   "file": "498-xmashouse.wrl",
+   "root": "skatefm",
+   "rel": "dbobjects/dbobjects/SO/c0/00/00/85/5/xmashouse.wrl",
+   "sha256": "fef90e7aec4f93674448af9ce26e1beb329c8a24da27aa6b29eed87e1127cf0f",
+   "compression": "gzip"
+  },
+  {
+   "file": "499-movie1.wrl",
+   "root": "wbct",
+   "rel": "3d/places/movies/vrml/movie1.wrl",
+   "sha256": "ff8602506c043994ee440da99f0bc32eedaf43fe93a6803a847c74f0acdeedfc",
+   "compression": "plain"
+  }
+ ]
+}

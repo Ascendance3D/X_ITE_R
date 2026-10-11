@@ -1,0 +1,160 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "us-iron_and_stone1"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+  "This VRML World was created with Spazz3D a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Import_Base Transform {
+     children [
+      DEF Import_Base Group {
+       children [
+        DEF dad_GROUND0 Transform {
+         children [
+          DEF GROUND0 Group {
+           children [
+            DEF dad_Group1 Transform {
+             translation 0.0 -1.151 0.0
+             children [
+              DEF Group1 Group {
+               children [
+                DEF dad_Swept_Surface2 Transform {
+                 translation -0.60351 -0.49875 0.0
+                 rotation 0.0 1.0 0.0 3.142
+                 children [
+                  DEF Swept_Surface2 Shape {
+                   appearance Appearance {
+                    material DEF Shiny_Black Material {
+                     ambientIntensity 0.200
+                     shininess 0.100
+                     diffuseColor 0.18431 0.18431 0.18431
+                     emissiveColor 0.0 0.0 0.0
+                     specularColor 0.22745 0.20392 0.5451
+                    }
+                   }
+                   geometry Extrusion {
+                    creaseAngle 0.524
+                    convex FALSE
+                    crossSection [
+                      -0.00008 0.00028
+                      0.07925 0.00028
+                      0.07925 -0.02301
+                      0.05742 -0.00918
+                      0.02612 -0.00918
+                      -0.00008 0.00028
+                    ]
+                    spine [
+                      0.00887 -0.00622 0.0
+                      0.00869 0.99538 0.0
+                    ]
+                    orientation [
+                      0.0 0.0 -1.0 0.786
+                      0.0 0.0 1.0 0.785
+                    ]
+                    scale [
+                      1.0 1.0
+                      1.0 1.0
+                    ]
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Swept_Surface1 Transform {
+                 translation 0.37949 -0.49875 0.0
+                 rotation -0.707 0.707 0.0 3.142
+                 children [
+                  DEF Swept_Surface1 Shape {
+                   appearance Appearance {
+                    material USE Shiny_Black
+                   }
+                   geometry Extrusion {
+                    creaseAngle 0.524
+                    convex FALSE
+                    crossSection [
+                      -0.00008 0.00028
+                      0.07925 0.00028
+                      0.07925 -0.02301
+                      0.05742 -0.00918
+                      0.02612 -0.00918
+                      -0.00008 0.00028
+                    ]
+                    spine [
+                      0.00694 -0.25097 0.00341
+                      0.00511 0.99205 0.0
+                    ]
+                    orientation [
+                      0.003 0.001 -1.0 0.787
+                      0.003 -0.001 1.0 0.784
+                    ]
+                    scale [
+                      1.0 1.0
+                      1.0 1.0
+                    ]
+                   }
+                  }
+                 ]
+                }
+                DEF dad_dad_Swept_Surface2 Transform {
+                 translation 0.62249 0.48925 -0.004
+                 rotation -1.0 0.0 0.0 3.142
+                 children [
+                  USE Swept_Surface2
+                 ]
+                }
+                DEF dad_dad_Swept_Surface1 Transform {
+                 translation -0.36151 0.48925 0.0
+                 rotation 0.707 0.708 0.0 3.142
+                 children [
+                  USE Swept_Surface1
+                 ]
+                }
+                DEF dad_Canvas Transform {
+                 translation 0.01149 -0.00575 0.0
+                 children [
+                  DEF Canvas Shape {
+                   appearance Appearance {
+                    texture ImageTexture {
+                     url [
+                      "us-iron_and_stone1.jpg"
+                      "us-iron_and_stone1.jpg"
+                     ]
+                    }
+                    textureTransform TextureTransform {
+                    }
+                    material DEF Blue Material {
+                     ambientIntensity 0.200
+                     shininess 0.400
+                     diffuseColor 0.0 0.0 1.0
+                     emissiveColor 0.2 0.2 0.2
+                     specularColor 0.0 0.0 0.5
+                    }
+                   }
+                   geometry Box {
+                    size 1.25 1.0 0.01
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

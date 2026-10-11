@@ -1,0 +1,409 @@
+#VRML V2.0 utf8
+Transform {
+scale .1 .1 .1 
+children [
+Transform {children [
+  Transform{translation 0 50 0 scale 0.7529535999999998 1 0.7529535999999998 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Sphere {radius 50}}]}
+  Transform{translation 0 100 0 children [
+]}]}
+  Transform{scale .9 .9 .9 children [
+  Transform{scale .9 .9 .9 children [
+  Transform{translation 0 100 0 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM1:wave,1 0 0,10,20
+  DEF ANIM1-XForm Transform{children [
+  DEF ANIM1-Touch TouchSensor{},
+  DEF ANIM1-Timer TimeSensor {loop TRUE cycleInterval 10},
+  DEF ANIM1-Int Script {
+  eventIn SFFloat set_fraction 
+  field   SFRotation base 1 0 0 0 
+  field   SFFloat angle 0.17453292519943295 
+  field   SFFloat wavelength 20
+  field   SFFloat twpi 6.283185
+  field   SFFloat i 0
+  field   SFFloat step 0
+  field   MFFloat currVal [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+  field   MFFloat newVal [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+  eventOut SFRotation value0_changed 
+  eventOut SFRotation value1_changed 
+  eventOut SFRotation value2_changed 
+  eventOut SFRotation value3_changed 
+  eventOut SFRotation value4_changed 
+  eventOut SFRotation value5_changed 
+  eventOut SFRotation value6_changed 
+  eventOut SFRotation value7_changed 
+  eventOut SFRotation value8_changed 
+  eventOut SFRotation value9_changed 
+  eventOut SFRotation value10_changed 
+  eventOut SFRotation value11_changed 
+  eventOut SFRotation value12_changed 
+  eventOut SFRotation value13_changed 
+  eventOut SFRotation value14_changed 
+  eventOut SFRotation value15_changed 
+  eventOut SFRotation value16_changed 
+  eventOut SFRotation value17_changed 
+  eventOut SFRotation value18_changed 
+  eventOut SFRotation value19_changed 
+  url "vrmlscript:
+  function update(i,moveangle){
+    newVal[i] += moveangle; newVal[i+1] -= (moveangle*2); newVal[i+2] += moveangle;
+    currVal[i] = newVal[i];
+  }
+  function set_fraction(val){
+  update(0,(angle*Math.cos(step*twpi/wavelength))-currVal[0]);
+  for(i=1; i<20; i++) {
+    if(currVal[i] != 0) {
+      update(i,-(newVal[i]/2));
+      }
+    currVal[i] = newVal[i];
+    }
+  value0_changed = new SFRotation(base[0], base[1], base[2], currVal[0]);
+  value1_changed = new SFRotation(base[0], base[1], base[2], currVal[1]);
+  value2_changed = new SFRotation(base[0], base[1], base[2], currVal[2]);
+  value3_changed = new SFRotation(base[0], base[1], base[2], currVal[3]);
+  value4_changed = new SFRotation(base[0], base[1], base[2], currVal[4]);
+  value5_changed = new SFRotation(base[0], base[1], base[2], currVal[5]);
+  value6_changed = new SFRotation(base[0], base[1], base[2], currVal[6]);
+  value7_changed = new SFRotation(base[0], base[1], base[2], currVal[7]);
+  value8_changed = new SFRotation(base[0], base[1], base[2], currVal[8]);
+  value9_changed = new SFRotation(base[0], base[1], base[2], currVal[9]);
+  value10_changed = new SFRotation(base[0], base[1], base[2], currVal[10]);
+  value11_changed = new SFRotation(base[0], base[1], base[2], currVal[11]);
+  value12_changed = new SFRotation(base[0], base[1], base[2], currVal[12]);
+  value13_changed = new SFRotation(base[0], base[1], base[2], currVal[13]);
+  value14_changed = new SFRotation(base[0], base[1], base[2], currVal[14]);
+  value15_changed = new SFRotation(base[0], base[1], base[2], currVal[15]);
+  value16_changed = new SFRotation(base[0], base[1], base[2], currVal[16]);
+  value17_changed = new SFRotation(base[0], base[1], base[2], currVal[17]);
+  value18_changed = new SFRotation(base[0], base[1], base[2], currVal[18]);
+  value19_changed = new SFRotation(base[0], base[1], base[2], currVal[19]);
+  step+=1;
+  }
+  "},
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM2:wave,1 0 0,10,20
+  DEF ANIM2-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM3:wave,1 0 0,10,20
+  DEF ANIM3-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM4:wave,1 0 0,10,20
+  DEF ANIM4-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM5:wave,1 0 0,10,20
+  DEF ANIM5-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM6:wave,1 0 0,10,20
+  DEF ANIM6-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM7:wave,1 0 0,10,20
+  DEF ANIM7-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM8:wave,1 0 0,10,20
+  DEF ANIM8-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM9:wave,1 0 0,10,20
+  DEF ANIM9-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM10:wave,1 0 0,10,20
+  DEF ANIM10-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM11:wave,1 0 0,10,20
+  DEF ANIM11-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM12:wave,1 0 0,10,20
+  DEF ANIM12-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM13:wave,1 0 0,10,20
+  DEF ANIM13-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM14:wave,1 0 0,10,20
+  DEF ANIM14-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM15:wave,1 0 0,10,20
+  DEF ANIM15-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM16:wave,1 0 0,10,20
+  DEF ANIM16-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM17:wave,1 0 0,10,20
+  DEF ANIM17-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM18:wave,1 0 0,10,20
+  DEF ANIM18-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM19:wave,1 0 0,10,20
+  DEF ANIM19-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM20:wave,1 0 0,10,20
+  DEF ANIM20-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM21:wave,1 0 0,10,20
+  DEF ANIM21-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM22:wave,1 0 0,10,20
+  DEF ANIM22-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM23:wave,1 0 0,10,20
+  DEF ANIM23-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM24:wave,1 0 0,10,20
+  DEF ANIM24-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM25:wave,1 0 0,10,20
+  DEF ANIM25-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM26:wave,1 0 0,10,20
+  DEF ANIM26-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM27:wave,1 0 0,10,20
+  DEF ANIM27-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM28:wave,1 0 0,10,20
+  DEF ANIM28-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM29:wave,1 0 0,10,20
+  DEF ANIM29-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM30:wave,1 0 0,10,20
+  DEF ANIM30-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM31:wave,1 0 0,10,20
+  DEF ANIM31-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM32:wave,1 0 0,10,20
+  DEF ANIM32-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM33:wave,1 0 0,10,20
+  DEF ANIM33-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM34:wave,1 0 0,10,20
+  DEF ANIM34-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM35:wave,1 0 0,10,20
+  DEF ANIM35-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM36:wave,1 0 0,10,20
+  DEF ANIM36-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM37:wave,1 0 0,10,20
+  DEF ANIM37-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM38:wave,1 0 0,10,20
+  DEF ANIM38-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM39:wave,1 0 0,10,20
+  DEF ANIM39-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM40:wave,1 0 0,10,20
+  DEF ANIM40-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM41:wave,1 0 0,10,20
+  DEF ANIM41-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM42:wave,1 0 0,10,20
+  DEF ANIM42-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+  Transform{rotation 0 1 0 0.39269908169872414 children [
+Transform {children [
+  Transform{rotation 1 0 0 0.39269908169872414 children [
+# 1/ANIM43:wave,1 0 0,10,20
+  DEF ANIM43-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 2/ANIM44:wave,1 0 0,10,20
+  DEF ANIM44-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 1 0.54 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 3/ANIM45:wave,1 0 0,10,20
+  DEF ANIM45-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.9199999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 4/ANIM46:wave,1 0 0,10,20
+  DEF ANIM46-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0.3799999999999999 1 0}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 5/ANIM47:wave,1 0 0,10,20
+  DEF ANIM47-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.16000000000000014}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+# 6/ANIM48:wave,1 0 0,10,20
+  DEF ANIM48-XForm Transform{children [
+  Transform{translation 0 50 0 children [Shape {appearance Appearance {material Material {diffuseColor 0 1 0.6999999999999997}}geometry Box {size 10 100 10}}]}
+  Transform{translation 0 100 0 children [
+  Transform{scale .9 .9 .9 children [
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}
+ROUTE ANIM1-Touch.touchTime TO ANIM1-Timer.set_startTime
+ROUTE ANIM1-Timer.fraction_changed TO ANIM1-Int.set_fraction
+ROUTE ANIM1-Int.value1_changed TO ANIM1-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM2-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM3-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM4-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM5-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM6-XForm.set_rotation
+ROUTE ANIM1-Int.value1_changed TO ANIM7-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM8-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM9-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM10-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM11-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM12-XForm.set_rotation
+ROUTE ANIM1-Int.value1_changed TO ANIM13-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM14-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM15-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM16-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM17-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM18-XForm.set_rotation
+ROUTE ANIM1-Int.value1_changed TO ANIM19-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM20-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM21-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM22-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM23-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM24-XForm.set_rotation
+ROUTE ANIM1-Int.value1_changed TO ANIM25-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM26-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM27-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM28-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM29-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM30-XForm.set_rotation
+ROUTE ANIM1-Int.value1_changed TO ANIM31-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM32-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM33-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM34-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM35-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM36-XForm.set_rotation
+ROUTE ANIM1-Int.value1_changed TO ANIM37-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM38-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM39-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM40-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM41-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM42-XForm.set_rotation
+ROUTE ANIM1-Int.value1_changed TO ANIM43-XForm.set_rotation
+ROUTE ANIM1-Int.value2_changed TO ANIM44-XForm.set_rotation
+ROUTE ANIM1-Int.value3_changed TO ANIM45-XForm.set_rotation
+ROUTE ANIM1-Int.value4_changed TO ANIM46-XForm.set_rotation
+ROUTE ANIM1-Int.value5_changed TO ANIM47-XForm.set_rotation
+ROUTE ANIM1-Int.value6_changed TO ANIM48-XForm.set_rotation
+

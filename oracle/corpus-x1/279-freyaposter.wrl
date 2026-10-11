@@ -1,0 +1,107 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "Nancy - an H-Anim compliant avatar by 3Name3D"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+  "Copyright (c) 1997. 3Name3D / Yglesias Wallock Divekar Inc."
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Cylinder2 Transform {
+     translation 0.0 -0.01 0.0
+     rotation 0.0 0.0 -1.0 1.57
+     children [
+      DEF Cylinder2 Shape {
+       appearance Appearance {
+        material DEF Shiny_White_mat Material {
+         ambientIntensity 0.200
+         shininess 0.100
+         diffuseColor 0.64706 0.01961 0.36863
+         emissiveColor 0.0 0.0 0.0
+         specularColor 1.0 1.0 1.0
+        }
+       }
+       geometry Cylinder {
+        height 1.320
+        radius 0.020
+       }
+      }
+     ]
+    }
+    DEF dad_Cylinder1 Transform {
+     translation 0.0 -1.55 0.0
+     rotation 0.0 0.0 -1.0 1.57
+     children [
+      DEF Cylinder1 Shape {
+       appearance Appearance {
+        material USE Shiny_White_mat
+       }
+       geometry Cylinder {
+        height 1.320
+        radius 0.020
+       }
+      }
+     ]
+    }
+    DEF dad_Box1 Transform {
+     translation 0.0 -0.762 0.0
+     children [
+      DEF Box1 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url "freyaposter.jpg"
+        }
+        material DEF White_mat Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 1.0 1.0 1.0
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 1.184 1.537 0.01
+       }
+      }
+     ]
+    }
+    DEF dad_Cylinder4 Transform {
+     translation 0.30223 0.35448 0.0
+     rotation -0.169 -0.061 -0.984 2.425
+     scale 0.636 0.636 0.636
+     children [
+      DEF Cylinder4 Shape {
+       appearance Appearance {
+        material USE White_mat
+       }
+       geometry Cylinder {
+        height 1.500
+        radius 0.010
+       }
+      }
+     ]
+    }
+    DEF dad_Cylinder3 Transform {
+     translation -0.31738 0.35405 0.0
+     rotation 0.909 -0.34 0.241 2.969
+     scale 0.636 0.636 0.636
+     children [
+      DEF Cylinder3 Shape {
+       appearance Appearance {
+        material USE White_mat
+       }
+       geometry Cylinder {
+        height 1.500
+        radius 0.010
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

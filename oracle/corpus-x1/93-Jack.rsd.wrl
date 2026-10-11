@@ -1,0 +1,69 @@
+#VRML V2.0 utf8
+
+#RenderSoft VRML Editor was used to create this file
+
+Transform {
+	children [
+		Viewpoint {
+			position  2.994 0.414 3.915
+			orientation -0.043 0.283 -0.086 0.608
+			fieldOfView  0.785
+		}
+		DirectionalLight {
+			intensity  0.0
+			ambientIntensity  1.000
+			color  1.000 1.000 1.000
+			direction  1.000 1.000 -1.000
+		}
+		Transform {
+			children [
+				Transform {
+					scale  0.300 0.300 0.300
+					rotation  -0.006 0.211 0.002 0.425
+
+					children [
+						Shape {
+							appearance Appearance {
+									material  Material {
+											ambientIntensity 0.200
+											diffuseColor  0.800 0.800 0.800
+											shininess  0.000
+									         }
+									texture DEF _texture9 ImageTexture {
+										url  "Pumpkin.bmp"
+									        }
+							           }
+							geometry Sphere {
+									radius  1.000
+							         }
+						}
+					]
+				}
+			]
+		}
+		Transform {
+			children [
+				Transform {
+					scale  0.120 0.130 0.090
+					translation  0.055 0.360 0.024
+
+					children [
+						Shape {
+							appearance Appearance {
+									material  Material {
+											ambientIntensity 0.200
+											diffuseColor  0.000 1.000 0.000
+											shininess  0.000
+									         }
+							           }
+							geometry Cylinder {
+									radius  1.000
+									height  2.000
+							         }
+						}
+					]
+				}
+			]
+		}
+	]
+}

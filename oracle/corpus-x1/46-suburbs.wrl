@@ -1,0 +1,202 @@
+#VRML V2.0 utf8
+
+EXTERNPROTO Portal[
+field SFVec3f translation 
+field SFRotation rotation 
+field SFVec3f scale 
+field SFString viewpointDescription 
+field MFString directoryURL
+]"/places/suburbs/Aportal.wrl"#Portal
+
+
+DEF dad_Light1 Transform {
+ translation 0.0 3.01 0.0
+ children [
+  DEF Light1 PointLight {
+   ambientIntensity 0.000
+   intensity 1.000
+   radius 100.000
+   attenuation 1.0 0.0 0.0
+   color 1.0 1.0 1.0
+   on TRUE
+  }
+ ]
+}
+
+
+####### If editing this portal, change only viepoint Description and corresponding wrl file ######
+
+DEF Link0 Portal{
+translation 0 0 0
+rotation -.707 0 0 1.57
+viewpointDescription "Portal Directory"
+directoryURL ["/places/suburbs/directory.wrl"]
+}
+
+DEF Link1 Portal{
+translation -0.131 0 -0.109
+rotation -0.672 0.219 0.219 1.67
+viewpointDescription "Guy & Imagica's Worlds"
+directoryURL ["/places/suburbs/guy.wrl"]
+}
+
+DEF Link2 Portal{
+translation -0.225 0 0.0886
+rotation -0.572 0.416 0.416 1.92
+viewpointDescription "Mr Phillip's Worlds"
+directoryURL ["/places/suburbs/mrphillip.wrl"]
+}
+
+DEF Link3 Portal{
+translation -0.372 0 -0.341
+rotation -0.416 0.572 0.572 2.28
+viewpointDescription "World Builder's Guild"
+directoryURL ["/places/suburbs/WorldBuildersGuild.wrl"]
+}
+
+DEF Link4 Portal{
+translation -0.509 0 -0.0528
+rotation -0.219 0.672 0.672 2.7
+viewpointDescription "Stan Ogdens Neck's Worlds"
+directoryURL ["/places/suburbs/stanogdensneck.wrl"]
+}
+DEF Link5 Portal{
+translation 0 0 0.128
+rotation 0 0.707 0.707 3.14
+viewpointDescription "Hermetic Cab's Worlds"
+directoryURL ["/places/suburbs/hermeticcab.wrl"]
+}
+DEF Link6 Portal{
+translation 0.482 0 0
+rotation 0.219 0.672 0.672 3.58
+viewpointDescription "Cym's Worlds"
+directoryURL ["/places/suburbs/cym.wrl"]
+}
+DEF Link7 Portal{
+translation 0.392 0 -0.385
+rotation 0.416 0.572 0.572 4
+	viewpointDescription "Lawman451" 
+directoryURL ["/places/suburbs/lawman451.wrl"]
+
+# viewpointDescription "Night Wonder's Worlds"
+# directoryURL ["/places/suburbs/nightwonder.wrl"]
+}
+DEF Link8 Portal{
+translation 0.16 0 -0.0212
+rotation -0.572 -0.416 -0.416 1.92
+viewpointDescription "Paden's Worlds"
+directoryURL["/places/suburbs/paden.wrl"]
+}
+DEF Link9 Portal{
+translation 0.171 0 -0.169
+rotation -0.672 -0.219 -0.219 1.67
+viewpointDescription "Zen Swede's Worlds"
+directoryURL ["/places/suburbs/zenswede.wrl"]
+}
+
+
+########   If Editing Portal World, stop here  ########
+
+
+
+
+NavigationInfo {
+	avatarSize       [ 0.25, 1.75, 0.75 ] 
+	headlight        TRUE                
+	speed            2.0               
+	type             "WALK"            
+	visibilityLimit  350.0               
+	                                     
+}
+
+Viewpoint {
+fieldOfView   1.2
+jump           TRUE      
+orientation    0 0 1  0    
+position       0 3.2 0     
+description    "Portal 1 Entry"     
+}
+
+
+
+Background{
+skyColor[
+0 0 0
+0 0 0
+0 0 .25
+]
+skyAngle[
+1.309 1.571
+]
+groundColor[
+0 0 0
+0 0 0
+0 0 .25
+]
+groundAngle[
+1.309 1.571
+]
+}
+
+
+Transform {
+children [
+NavigationInfo {
+headlight TRUE
+}
+DEF lights Transform{
+rotation 0 0 0 0
+children[
+DEF InfLight DirectionalLight {
+color 1 1 1
+intensity 0.847
+on TRUE
+direction 0.577 -0.577 -0.577
+}
+DEF InfLight_1 DirectionalLight {
+color 1 1 1
+intensity 0.8
+on TRUE
+direction -0.577 -0.577 0.577
+}
+DEF InfLight_2 DirectionalLight {
+color 1 1 1
+intensity 0.6
+on TRUE
+direction 0 0.707 -0.707
+}
+DEF InfLight_3 DirectionalLight {
+color 1 1 1
+intensity 0.698
+on TRUE
+direction 0.707 3.09e-008 0.707
+}
+]
+}#end lights
+
+]
+}
+
+Inline{
+url["/places/suburbs/gears.wrl"]
+}
+
+
+
+
+
+Transform{
+children[
+Inline {
+	url                   
+	[
+		"/places/suburbs/circle.wrl"
+	]
+	bboxCenter   0  0  0       # field        SFVec3f
+	bboxSize    -1 -1 -1       # field        SFVec3f
+}
+
+
+]
+}
+

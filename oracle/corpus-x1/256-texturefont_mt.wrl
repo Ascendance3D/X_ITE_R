@@ -1,0 +1,43 @@
+#VRML V2.0 utf8
+
+Shape {
+	appearance Appearance 
+	{
+		material Material {
+			diffuseColor  0 0 0
+			emissiveColor  1.0 0.9 0.9
+		}
+		texture MultiTexture {
+			materialColor TRUE 
+			mode ["MODULATE" "MODULATE"]
+			texture [
+				DEF FONTT ImageTexture { url "font512.gif" repeatS FALSE repeatT FALSE }
+				ImageTexture { url "glass.png"  }
+			]
+			textureTransform [
+				TextureTransform {} 
+				DEF TX2 TextureTransform { scale 1 1 } 
+			]
+		}
+
+		material Material {
+			diffuseColor 1 1 1
+		}
+	}
+	geometry Text {
+		string [ "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"]
+		fontStyle FontStyle {
+			family ["TEXTURE"]
+			#family ["SANS"]
+			#family ["TYPEWRITER"]
+			justify "LEFT"
+		}
+	}
+}
+DEF	TS TimeSensor { loop TRUE }
+
+DEF	PSIP PositionInterpolator2D {
+	keyValue [ 0 0, 1 0]
+}	
+ROUTE TS.fraction TO PSIP.set_fraction
+ROUTE PSIP.value TO TX2.translation

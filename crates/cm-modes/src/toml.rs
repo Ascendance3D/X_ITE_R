@@ -11,7 +11,7 @@ use std::rc::Rc;
 
 use cm_core::util::string_stream::{RegexMatch, StringStream};
 
-use crate::{MimeTarget, Mode, Registry, State};
+use crate::{JsArg, MimeTarget, Mode, Registry, State};
 
 /// The JS state object `{inString, stringType, lhs, inArray}`.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -75,7 +75,7 @@ impl Mode for TomlMode {
         "toml"
     }
 
-    fn start_state(&self, _a1: i64, _a2: i64) -> Option<State> {
+    fn start_state(&self, _a1: JsArg, _a2: JsArg) -> Option<State> {
         Some(State::new(TomlState { in_string: false, string_type: None, lhs: true, in_array: 0 }))
     }
 
@@ -147,7 +147,7 @@ impl Mode for TomlMode {
 
 /// `CodeMirror.defineMode("toml", ...)` and `defineMIME('text/x-toml', 'toml')`.
 pub fn register(r: &mut Registry) {
-    r.define_mode("toml", Rc::new(|_, _| Rc::new(TomlMode) as Rc<dyn Mode>));
+    r.define_mode("toml", Rc::new(|_, _, _| Rc::new(TomlMode) as Rc<dyn Mode>));
     r.define_mime("text/x-toml", MimeTarget::Name("toml".into()));
 }
 

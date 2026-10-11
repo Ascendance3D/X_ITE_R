@@ -1,0 +1,1477 @@
+#VRML V2.0 utf8
+
+#blaxxun interactive - Intel NURBS export
+#exported by 3D Studio Max 3D
+
+
+EXTERNPROTO NurbsSurface [
+field        SFInt32  uDimension 
+field        SFInt32  vDimension 
+field        MFFloat  uKnot  
+field        MFFloat  vKnot 
+field        SFInt32  uOrder 
+field        SFInt32  vOrder 
+exposedField MFVec3f  controlPoint
+exposedField MFFloat  weight
+exposedField SFInt32  uTessellation
+exposedField SFInt32  vTessellation
+exposedField SFNode   texCoord
+field        SFBool   ccw
+field        SFBool   solid
+]
+[
+	"urn:inet:blaxxun.com:node:NurbsSurface",
+	"nurbs.wrl#NurbsSurface"  # for local testing
+	"http://www.blaxxun.com/vrml/protos/nurbs.wrl#NurbsSurface"
+]
+
+NavigationInfo {
+	type ["EXAMINE","ANY"]
+
+}
+Background {skyColor 0.1 0.1 0.3}
+
+
+Transform { # Szenenstamm
+rotation 1 0 0 -1.505
+scale .01 .01 .01	
+	children[
+		Transform {
+			children[
+				Shape {
+					geometry NurbsSurface {
+						solid FALSE
+						#node Head type 22 IsClosedInU 0 IsClosedInV 0 FlipNormals 0 
+						#surface U Loft Surface 02 gen mapping 0 tex surface 1 
+						uOrder 4 
+						vOrder 4 
+						vDimension 31 
+						uDimension 14 
+						vKnot [
+							 0, 0, 0, 0, 7.8067, 15.8611,
+							 23.9646, 31.9407, 39.9497, 48.0503, 56.1291, 64.0826,
+							 71.947, 79.7392, 87.8411, 96.4487, 104.869, 112.284,
+							 119.718, 128.144, 136.753, 144.855, 152.653, 160.518,
+							 168.473, 176.552, 184.652, 192.663, 200.62, 208.736,
+							 216.811, 224.624, 224.624, 224.624, 224.624,
+						]
+						uKnot [
+							 0, -3.20036e-006, -3.20036e-006, -3.20036e-006, 7.77656, 14.9074,
+							 21.4442, 27.532, 33.4271, 39.6544, 46.1582, 52.6232,
+							 58.9027, 65.4471, 72.0209, 72.0209, 72.0209, 72.0209,
+						]
+						controlPoint [
+							596.921 467.02 292.071,#0 U Loft Surface 02_CV_0_13
+							596.94 457.626 305.536,#1 U Loft Surface 02_CV_0_12
+							596.972 437.306 329.564,#2 U Loft Surface 02_CV_0_11
+							596.998 401.938 357.192,#3 U Loft Surface 02_CV_0_10
+							597.002 361.543 376.568,#4 U Loft Surface 02_CV_0_9
+							596.982 317.045 386.673,#5 U Loft Surface 02_CV_0_8
+							596.947 268.748 387.488,#6 U Loft Surface 02_CV_0_7
+							596.862 210.768 383.927,#7 U Loft Surface 02_CV_0_6
+							596.879 151.999 371.005,#8 U Loft Surface 02_CV_0_5
+							596.36 96.6863 328.819,#9 U Loft Surface 02_CV_0_4
+							596.653 60.5764 275.717,#10 U Loft Surface 02_CV_0_3
+							600.255 54.6191 180.714,#11 U Loft Surface 02_CV_0_2
+							598.128 52.3313 175.933,#12 U Loft Surface 02_CV_0_1
+							596.622 53.4554 179.298,#13 U Loft Surface 02_CV_0_0
+
+							620.069 467.048 291.885,#14 U Loft Surface 02_CV_1_13
+							620.252 457.653 305.389,#15 U Loft Surface 02_CV_1_12
+							620.537 437.333 329.484,#16 U Loft Surface 02_CV_1_11
+							620.733 401.968 357.175,#17 U Loft Surface 02_CV_1_10
+							620.709 361.581 376.576,#18 U Loft Surface 02_CV_1_9
+							620.406 317.088 386.685,#19 U Loft Surface 02_CV_1_8
+							619.846 268.798 387.483,#20 U Loft Surface 02_CV_1_7
+							619.196 210.84 383.797,#21 U Loft Surface 02_CV_1_6
+							618.536 152.102 370.711,#22 U Loft Surface 02_CV_1_5
+							615.509 96.7012 328.803,#23 U Loft Surface 02_CV_1_4
+							613.911 60.5532 275.859,#24 U Loft Surface 02_CV_1_3
+							616.848 54.5343 180.79,#25 U Loft Surface 02_CV_1_2
+							613.719 52.4196 176.083,#26 U Loft Surface 02_CV_1_1
+							611.711 53.6602 179.486,#27 U Loft Surface 02_CV_1_0
+
+							645.154 474.75 259.519,#28 U Loft Surface 02_CV_2_13
+							647.751 466.184 276.018,#29 U Loft Surface 02_CV_2_12
+							652.412 447.291 305.627,#30 U Loft Surface 02_CV_2_11
+							657.838 413.329 340.055,#31 U Loft Surface 02_CV_2_10
+							661.723 373.573 364.599,#32 U Loft Surface 02_CV_2_9
+							663.932 329.141 378.622,#33 U Loft Surface 02_CV_2_8
+							664.523 280.309 382.085,#34 U Loft Surface 02_CV_2_7
+							663.843 220.416 378.191,#35 U Loft Surface 02_CV_2_6
+							662.161 158.802 363.41,#36 U Loft Surface 02_CV_2_5
+							653.809 105.282 326.644,#37 U Loft Surface 02_CV_2_4
+							647.941 68.5012 276.213,#38 U Loft Surface 02_CV_2_3
+							667.831 24.651 197.647,#39 U Loft Surface 02_CV_2_2
+							633.548 71.0917 165.489,#40 U Loft Surface 02_CV_2_1
+							611.152 104.945 150.465,#41 U Loft Surface 02_CV_2_0
+
+							648.991 490.275 166.379,#42 U Loft Surface 02_CV_3_13
+							657.912 485.074 190.287,#43 U Loft Surface 02_CV_3_12
+							674.164 472.129 233.589,#44 U Loft Surface 02_CV_3_11
+							693.804 444.573 284.91,#45 U Loft Surface 02_CV_3_10
+							708.735 408.601 322.546,#46 U Loft Surface 02_CV_3_9
+							718.801 365.966 346.826,#47 U Loft Surface 02_CV_3_8
+							724.134 316.84 357.686,#48 U Loft Surface 02_CV_3_7
+							724.814 252.075 353.885,#49 U Loft Surface 02_CV_3_6
+							722.142 182.361 335.953,#50 U Loft Surface 02_CV_3_5
+							706.391 135.554 313.904,#51 U Loft Surface 02_CV_3_4
+							695.499 96.0105 273.847,#52 U Loft Surface 02_CV_3_3
+							718.313 37.0721 199.162,#53 U Loft Surface 02_CV_3_2
+							678.084 70.4982 171.971,#54 U Loft Surface 02_CV_3_1
+							652.08 96.5904 159.351,#55 U Loft Surface 02_CV_3_0
+
+							652.17 488.138 86.3307,#56 U Loft Surface 02_CV_4_13
+							666.093 487.904 113.82,#57 U Loft Surface 02_CV_4_12
+							691.52 483.992 163.882,#58 U Loft Surface 02_CV_4_11
+							722.408 467.125 223.909,#59 U Loft Surface 02_CV_4_10
+							746.063 438.889 268.682,#60 U Loft Surface 02_CV_4_9
+							762.405 401.61 299.35,#61 U Loft Surface 02_CV_4_8
+							771.593 355.423 315.796,#62 U Loft Surface 02_CV_4_7
+							773.207 288.656 313.172,#63 U Loft Surface 02_CV_4_6
+							769.309 214.073 294.985,#64 U Loft Surface 02_CV_4_5
+							750.534 173.025 290.546,#65 U Loft Surface 02_CV_4_4
+							736.267 134.192 263.831,#66 U Loft Surface 02_CV_4_3
+							746.544 85.409 194.026,#67 U Loft Surface 02_CV_4_2
+							718.23 89.8568 175.799,#68 U Loft Surface 02_CV_4_1
+							700.541 96.8503 167.942,#69 U Loft Surface 02_CV_4_0
+
+							660.408 468.32 25.4997,#70 U Loft Surface 02_CV_5_13
+							677.258 472.517 51.9665,#71 U Loft Surface 02_CV_5_12
+							707.998 476.943 100.448,#72 U Loft Surface 02_CV_5_11
+							745.145 470.953 159.407,#73 U Loft Surface 02_CV_5_10
+							773.295 451.942 204.357,#74 U Loft Surface 02_CV_5_9
+							792.687 422.395 236.797,#75 U Loft Surface 02_CV_5_8
+							803.459 382.458 256.558,#76 U Loft Surface 02_CV_5_7
+							803.792 319.645 257.396,#77 U Loft Surface 02_CV_5_6
+							796.92 247.634 243.607,#78 U Loft Surface 02_CV_5_5
+							780.886 210.478 254.393,#79 U Loft Surface 02_CV_5_4
+							766.736 174.893 240.513,#80 U Loft Surface 02_CV_5_3
+							764.697 139.68 181.038,#81 U Loft Surface 02_CV_5_2
+							747.792 129.309 166.83,#82 U Loft Surface 02_CV_5_1
+							737.856 126.082 160.403,#83 U Loft Surface 02_CV_5_0
+
+							664.531 441.853 -36.8969,#84 U Loft Surface 02_CV_6_13
+							682.697 448.47 -12.5018,#85 U Loft Surface 02_CV_6_12
+							715.801 457.791 32.4918,#86 U Loft Surface 02_CV_6_11
+							755.577 459.405 88.1685,#87 U Loft Surface 02_CV_6_10
+							785.368 448.304 131.773,#88 U Loft Surface 02_CV_6_9
+							805.839 426.672 164.878,#89 U Loft Surface 02_CV_6_8
+							817.101 394.649 187.277,#90 U Loft Surface 02_CV_6_7
+							815.464 341.212 192.561,#91 U Loft Surface 02_CV_6_6
+							805.666 278.572 184.829,#92 U Loft Surface 02_CV_6_5
+							796.013 244.673 206.421,#93 U Loft Surface 02_CV_6_4
+							785.617 211.844 202.769,#94 U Loft Surface 02_CV_6_3
+							778.264 187.742 154.091,#95 U Loft Surface 02_CV_6_2
+							769.743 164.331 142.981,#96 U Loft Surface 02_CV_6_1
+							765.146 152.139 137.544,#97 U Loft Surface 02_CV_6_0
+
+							663.276 414.469 -108.28,#98 U Loft Surface 02_CV_7_13
+							680.568 421.736 -84.4213,#99 U Loft Surface 02_CV_7_12
+							712.159 432.836 -40.2125,#100 U Loft Surface 02_CV_7_11
+							750.315 438.713 15.1226,#101 U Loft Surface 02_CV_7_10
+							779.104 433.56 59.2045,#102 U Loft Surface 02_CV_7_9
+							799.386 418.992 93.7073,#103 U Loft Surface 02_CV_7_8
+							811.232 395.12 118.413,#104 U Loft Surface 02_CV_7_7
+							810.226 353.76 126.492,#105 U Loft Surface 02_CV_7_6
+							801.396 304.031 122.328,#106 U Loft Surface 02_CV_7_5
+							799.015 273.724 150.901,#107 U Loft Surface 02_CV_7_4
+							793.748 242.971 154.24,#108 U Loft Surface 02_CV_7_3
+							789.552 221.557 119.613,#109 U Loft Surface 02_CV_7_2
+							780.117 192.17 102.083,#110 U Loft Surface 02_CV_7_1
+							774.492 175.887 91.5958,#111 U Loft Surface 02_CV_7_0
+
+							667.866 385.377 -177.935,#112 U Loft Surface 02_CV_8_13
+							681.52 392.472 -154.06,#113 U Loft Surface 02_CV_8_12
+							706.618 403.84 -109.715,#114 U Loft Surface 02_CV_8_11
+							737.409 412.12 -53.876,#115 U Loft Surface 02_CV_8_10
+							761.216 411.463 -8.9915,#116 U Loft Surface 02_CV_8_9
+							778.837 402.915 26.6285,#117 U Loft Surface 02_CV_8_8
+							790.286 386.53 52.7984,#118 U Loft Surface 02_CV_8_7
+							791.719 357.088 62.4515,#119 U Loft Surface 02_CV_8_6
+							787.018 320.257 60.5407,#120 U Loft Surface 02_CV_8_5
+							791.937 294.777 90.7874,#121 U Loft Surface 02_CV_8_4
+							791.963 266.016 98.5416,#122 U Loft Surface 02_CV_8_3
+							793.261 242.982 75.0473,#123 U Loft Surface 02_CV_8_2
+							779.056 209.387 59.2694,#124 U Loft Surface 02_CV_8_1
+							769.826 190.295 49.2766,#125 U Loft Surface 02_CV_8_0
+
+							688.476 351.922 -233.306,#126 U Loft Surface 02_CV_9_13
+							697.373 360.365 -211.386,#127 U Loft Surface 02_CV_9_12
+							713.764 374.556 -170.488,#128 U Loft Surface 02_CV_9_11
+							733.923 387.514 -118.348,#129 U Loft Surface 02_CV_9_10
+							749.523 392.007 -75.6442,#130 U Loft Surface 02_CV_9_9
+							761.372 388.896 -40.9727,#131 U Loft Surface 02_CV_9_8
+							769.431 378.19 -14.4714,#132 U Loft Surface 02_CV_9_7
+							770.077 355.767 -2.09386,#133 U Loft Surface 02_CV_9_6
+							766.44 325.737 0.518306,#134 U Loft Surface 02_CV_9_5
+							776.927 305.367 28.9386,#135 U Loft Surface 02_CV_9_4
+							781.071 278.424 39.5007,#136 U Loft Surface 02_CV_9_3
+							783.897 248.083 27.7546,#137 U Loft Surface 02_CV_9_2
+							770.308 218.183 14.7631,#138 U Loft Surface 02_CV_9_1
+							761.159 201.582 6.02018,#139 U Loft Surface 02_CV_9_0
+
+							748.363 313.059 -254.485,#140 U Loft Surface 02_CV_10_13
+							749.686 324.439 -238.58,#141 U Loft Surface 02_CV_10_12
+							751.975 344.138 -208.558,#142 U Loft Surface 02_CV_10_11
+							754.12 364.225 -169.119,#143 U Loft Surface 02_CV_10_10
+							754.846 374.693 -135.421,#144 U Loft Surface 02_CV_10_9
+							754.956 376.523 -106.585,#145 U Loft Surface 02_CV_10_8
+							754.375 369.747 -82.7335,#146 U Loft Surface 02_CV_10_7
+							749.678 349.571 -67.4083,#147 U Loft Surface 02_CV_10_6
+							743.419 320.984 -58.4107,#148 U Loft Surface 02_CV_10_5
+							755.744 302.65 -31.9226,#149 U Loft Surface 02_CV_10_4
+							762.129 278.421 -19.0146,#150 U Loft Surface 02_CV_10_3
+							760.5 249.383 -20.1696,#151 U Loft Surface 02_CV_10_2
+							758.424 226.409 -32.1169,#152 U Loft Surface 02_CV_10_1
+							756.714 214.066 -40.6692,#153 U Loft Surface 02_CV_10_0
+
+							799.194 264.871 -267.907,#154 U Loft Surface 02_CV_11_13
+							793.186 278.899 -257.561,#155 U Loft Surface 02_CV_11_12
+							781.936 303.597 -237.733,#156 U Loft Surface 02_CV_11_11
+							767.307 330.336 -210.82,#157 U Loft Surface 02_CV_11_10
+							754.886 346.649 -186.878,#158 U Loft Surface 02_CV_11_9
+							744.897 353.307 -165.045,#159 U Loft Surface 02_CV_11_8
+							737.286 350.453 -145.468,#160 U Loft Surface 02_CV_11_7
+							731.259 333.729 -131.487,#161 U Loft Surface 02_CV_11_6
+							727.033 308.849 -121.362,#162 U Loft Surface 02_CV_11_5
+							731.822 284.802 -90.3931,#163 U Loft Surface 02_CV_11_4
+							735.123 262.026 -72.1496,#164 U Loft Surface 02_CV_11_3
+							732.647 252.811 -68.2145,#165 U Loft Surface 02_CV_11_2
+							737.761 227.042 -74.7576,#166 U Loft Surface 02_CV_11_1
+							740.932 212.177 -80.3241,#167 U Loft Surface 02_CV_11_0
+
+							799.893 208.022 -296.021,#168 U Loft Surface 02_CV_12_13
+							789.774 220.402 -287.653,#169 U Loft Surface 02_CV_12_12
+							771.196 242.634 -271.611,#170 U Loft Surface 02_CV_12_11
+							748.572 268.529 -250.028,#171 U Loft Surface 02_CV_12_10
+							731.342 287.069 -231.162,#172 U Loft Surface 02_CV_12_9
+							718.575 297.7 -213.557,#173 U Loft Surface 02_CV_12_8
+							710.295 300.713 -197.39,#174 U Loft Surface 02_CV_12_7
+							710.781 297.276 -188.672,#175 U Loft Surface 02_CV_12_6
+							716.116 289.292 -183.385,#176 U Loft Surface 02_CV_12_5
+							706.025 251.126 -143.025,#177 U Loft Surface 02_CV_12_4
+							701.805 226.684 -116.619,#178 U Loft Surface 02_CV_12_3
+							704.112 244.76 -108.52,#179 U Loft Surface 02_CV_12_2
+							707.573 212.835 -107.252,#180 U Loft Surface 02_CV_12_1
+							710.018 193.243 -108.432,#181 U Loft Surface 02_CV_12_0
+
+							752.855 151.759 -334.203,#182 U Loft Surface 02_CV_13_13
+							742.992 159.907 -326.444,#183 U Loft Surface 02_CV_13_12
+							725.114 174.936 -311.462,#184 U Loft Surface 02_CV_13_11
+							704.295 194.048 -290.979,#185 U Loft Surface 02_CV_13_10
+							689.731 209.963 -272.716,#186 U Loft Surface 02_CV_13_9
+							679.815 221.273 -255.274,#187 U Loft Surface 02_CV_13_8
+							674.623 228.268 -238.774,#188 U Loft Surface 02_CV_13_7
+							681.379 236.164 -229.227,#189 U Loft Surface 02_CV_13_6
+							693.86 242.908 -222.02,#190 U Loft Surface 02_CV_13_5
+							675.197 205.359 -182.671,#191 U Loft Surface 02_CV_13_4
+							666.345 184.37 -152.571,#192 U Loft Surface 02_CV_13_3
+							672.75 210.033 -131.671,#193 U Loft Surface 02_CV_13_2
+							672.023 180.82 -126.339,#194 U Loft Surface 02_CV_13_1
+							671.936 162.512 -125.534,#195 U Loft Surface 02_CV_13_0
+
+							680.437 109.363 -365.317,#196 U Loft Surface 02_CV_14_13
+							674.621 115.495 -359.462,#197 U Loft Surface 02_CV_14_12
+							664.119 126.799 -347.531,#198 U Loft Surface 02_CV_14_11
+							652.038 140.941 -328.982,#199 U Loft Surface 02_CV_14_10
+							643.798 152.312 -309.784,#200 U Loft Surface 02_CV_14_9
+							638.368 160.658 -289.913,#201 U Loft Surface 02_CV_14_8
+							635.796 166.05 -269.328,#202 U Loft Surface 02_CV_14_7
+							640.711 169.333 -248.342,#203 U Loft Surface 02_CV_14_6
+							649.123 170.422 -226.219,#204 U Loft Surface 02_CV_14_5
+							637.429 160.639 -204.545,#205 U Loft Surface 02_CV_14_4
+							631.823 152.973 -179.154,#206 U Loft Surface 02_CV_14_3
+							637.033 160.183 -138.086,#207 U Loft Surface 02_CV_14_2
+							634.429 140.62 -132.931,#208 U Loft Surface 02_CV_14_1
+							632.951 128.249 -132.563,#209 U Loft Surface 02_CV_14_0
+
+							593.192 91.774 -379.675,#210 U Loft Surface 02_CV_15_13
+							593.393 97.0268 -374.819,#211 U Loft Surface 02_CV_15_12
+							593.769 106.646 -364.444,#212 U Loft Surface 02_CV_15_11
+							594.227 118.286 -346.654,#213 U Loft Surface 02_CV_15_10
+							594.564 127.06 -326.495,#214 U Loft Surface 02_CV_15_9
+							594.869 133.444 -304.833,#215 U Loft Surface 02_CV_15_8
+							595.128 137.379 -281.53,#216 U Loft Surface 02_CV_15_7
+							594.993 136.903 -253.174,#217 U Loft Surface 02_CV_15_6
+							594.663 133.339 -221.653,#218 U Loft Surface 02_CV_15_5
+							596.591 139.173 -211.516,#219 U Loft Surface 02_CV_15_4
+							597.497 138.513 -189.969,#220 U Loft Surface 02_CV_15_3
+							598.198 134.08 -138.535,#221 U Loft Surface 02_CV_15_2
+							595.807 119.402 -133.414,#222 U Loft Surface 02_CV_15_1
+							594.179 110.091 -133.141,#223 U Loft Surface 02_CV_15_0
+
+							506.174 110.566 -364.678,#224 U Loft Surface 02_CV_16_13
+							512.354 115.861 -358.873,#225 U Loft Surface 02_CV_16_12
+							523.531 125.764 -347.038,#226 U Loft Surface 02_CV_16_11
+							536.413 138.76 -328.613,#227 U Loft Surface 02_CV_16_10
+							545.21 150.025 -309.517,#228 U Loft Surface 02_CV_16_9
+							551.154 158.792 -289.745,#229 U Loft Surface 02_CV_16_8
+							554.161 165.167 -269.252,#230 U Loft Surface 02_CV_16_7
+							548.823 172.244 -248.282,#231 U Loft Surface 02_CV_16_6
+							539.542 178.104 -226.125,#232 U Loft Surface 02_CV_16_5
+							555.655 161.9 -204.938,#233 U Loft Surface 02_CV_16_4
+							563.19 150.732 -179.729,#234 U Loft Surface 02_CV_16_3
+							558.226 155.594 -138.753,#235 U Loft Surface 02_CV_16_2
+							556.601 140.793 -132.861,#236 U Loft Surface 02_CV_16_1
+							555.21 131.804 -132.001,#237 U Loft Surface 02_CV_16_0
+
+							434.337 153.497 -333.456,#238 U Loft Surface 02_CV_17_13
+							444.455 160.912 -326.051,#239 U Loft Surface 02_CV_17_12
+							462.8 174.7 -311.67,#240 U Loft Surface 02_CV_17_11
+							484.14 192.741 -291.712,#241 U Loft Surface 02_CV_17_10
+							499 208.448 -273.561,#242 U Loft Surface 02_CV_17_9
+							509.229 219.98 -256.029,#243 U Loft Surface 02_CV_17_8
+							514.706 227.654 -239.219,#244 U Loft Surface 02_CV_17_7
+							507.299 238.592 -228.235,#245 U Loft Surface 02_CV_17_6
+							493.646 249.159 -219.149,#246 U Loft Surface 02_CV_17_5
+							517.711 206.1 -182.75,#247 U Loft Surface 02_CV_17_4
+							528.685 181.852 -154.055,#248 U Loft Surface 02_CV_17_3
+							520.324 203.437 -133.04,#249 U Loft Surface 02_CV_17_2
+							517.996 180.065 -126.173,#250 U Loft Surface 02_CV_17_1
+							516.029 165.873 -124.286,#251 U Loft Surface 02_CV_17_0
+
+							388.136 209.81 -295.409,#252 U Loft Surface 02_CV_18_13
+							398.584 221.771 -287.558,#253 U Loft Surface 02_CV_18_12
+							417.724 243.276 -272.385,#254 U Loft Surface 02_CV_18_11
+							440.798 268.468 -251.515,#255 U Loft Surface 02_CV_18_10
+							458.02 286.725 -232.721,#256 U Loft Surface 02_CV_18_9
+							470.719 297.282 -214.879,#257 U Loft Surface 02_CV_18_8
+							478.809 300.446 -198.138,#258 U Loft Surface 02_CV_18_7
+							476.434 298.311 -187.069,#259 U Loft Surface 02_CV_18_6
+							468.397 292.017 -178.766,#260 U Loft Surface 02_CV_18_5
+							486.209 250.964 -142.944,#261 U Loft Surface 02_CV_18_4
+							493.548 224.793 -118.799,#262 U Loft Surface 02_CV_18_3
+							487.138 240.264 -110.628,#263 U Loft Surface 02_CV_18_2
+							481.896 212.024 -107.379,#264 U Loft Surface 02_CV_18_1
+							478.222 195.009 -107.133,#265 U Loft Surface 02_CV_18_0
+
+							389.9 266.262 -267.433,#266 U Loft Surface 02_CV_19_13
+							396.377 280.048 -257.533,#267 U Loft Surface 02_CV_19_12
+							408.392 304.315 -238.453,#268 U Loft Surface 02_CV_19_11
+							423.502 330.594 -212.139,#269 U Loft Surface 02_CV_19_10
+							435.643 346.646 -188.218,#270 U Loft Surface 02_CV_19_9
+							445.164 353.151 -166.154,#271 U Loft Surface 02_CV_19_8
+							452.045 350.259 -146.061,#272 U Loft Surface 02_CV_19_7
+							454.738 334.007 -129.908,#273 U Loft Surface 02_CV_19_6
+							454.52 309.802 -116.981,#274 U Loft Surface 02_CV_19_5
+							459.651 284.407 -90.6294,#275 U Loft Surface 02_CV_19_4
+							460.629 260.912 -74.6312,#276 U Loft Surface 02_CV_19_3
+							458.6 251.209 -70.2132,#277 U Loft Surface 02_CV_19_2
+							451.669 226.55 -75.0071,#278 U Loft Surface 02_CV_19_1
+							447.184 212.466 -79.3108,#279 U Loft Surface 02_CV_19_0
+
+							441.291 313.844 -253.631,#280 U Loft Surface 02_CV_20_13
+							440.399 325.132 -238.148,#281 U Loft Surface 02_CV_20_12
+							438.807 344.661 -208.837,#282 U Loft Surface 02_CV_20_11
+							437.061 364.536 -169.989,#283 U Loft Surface 02_CV_20_10
+							435.997 374.837 -136.352,#284 U Loft Surface 02_CV_20_9
+							435.371 376.534 -107.36,#285 U Loft Surface 02_CV_20_8
+							435.19 369.658 -83.0988,#286 U Loft Surface 02_CV_20_7
+							436.572 349.468 -65.8223,#287 U Loft Surface 02_CV_20_6
+							438.499 320.918 -54.2354,#288 U Loft Surface 02_CV_20_5
+							435.631 302.346 -32.4872,#289 U Loft Surface 02_CV_20_4
+							433.594 278.02 -21.6895,#290 U Loft Surface 02_CV_20_3
+							434.607 248.957 -20.9794,#291 U Loft Surface 02_CV_20_2
+							430.828 226.253 -32.0933,#292 U Loft Surface 02_CV_20_1
+							428.486 214.091 -40.0266,#293 U Loft Surface 02_CV_20_0
+
+							501.366 352.323 -231.665,#294 U Loft Surface 02_CV_21_13
+							492.703 360.82 -210.283,#295 U Loft Surface 02_CV_21_12
+							476.695 375.091 -170.301,#296 U Loft Surface 02_CV_21_11
+							456.773 388.069 -118.957,#297 U Loft Surface 02_CV_21_10
+							441.013 392.47 -76.4151,#298 U Loft Surface 02_CV_21_9
+							428.957 389.215 -41.6303,#299 U Loft Surface 02_CV_21_8
+							420.608 378.311 -14.6994,#300 U Loft Surface 02_CV_21_7
+							418.121 355.369 -0.0761619,#301 U Loft Surface 02_CV_21_6
+							419.419 324.741 5.57359,#302 U Loft Surface 02_CV_21_5
+							414.974 304.976 28.3617,#303 U Loft Surface 02_CV_21_4
+							414.192 278.485 36.5632,#304 U Loft Surface 02_CV_21_3
+							418.052 248.201 28.2074,#305 U Loft Surface 02_CV_21_2
+							420.278 218.798 15.2274,#306 U Loft Surface 02_CV_21_1
+							421.653 202.488 6.54111,#307 U Loft Surface 02_CV_21_0
+
+							523.736 385.611 -176.479,#308 U Loft Surface 02_CV_22_13
+							510.185 392.876 -153.143,#309 U Loft Surface 02_CV_22_12
+							485.256 404.521 -109.706,#310 U Loft Surface 02_CV_22_11
+							454.568 412.996 -54.6023,#311 U Loft Surface 02_CV_22_10
+							430.686 412.296 -9.75875,#312 U Loft Surface 02_CV_22_9
+							412.98 403.58 26.0981,#313 U Loft Surface 02_CV_22_8
+							401.44 386.9 52.8337,#314 U Loft Surface 02_CV_22_7
+							399.094 356.515 65.0962,#315 U Loft Surface 02_CV_22_6
+							402.896 318.537 66.699,#316 U Loft Surface 02_CV_22_5
+							400.341 294.37 90.3308,#317 U Loft Surface 02_CV_22_4
+							402.964 266.403 95.4013,#318 U Loft Surface 02_CV_22_3
+							412.273 243.587 76.1384,#319 U Loft Surface 02_CV_22_2
+							417.263 209.876 60.5189,#320 U Loft Surface 02_CV_22_1
+							420.03 190.65 50.6724,#321 U Loft Surface 02_CV_22_0
+
+							530.12 414.671 -107.29,#322 U Loft Surface 02_CV_23_13
+							513.084 422.222 -83.9544,#323 U Loft Surface 02_CV_23_12
+							481.921 433.79 -40.61,#324 U Loft Surface 02_CV_23_11
+							444.113 440.024 14.1069,#325 U Loft Surface 02_CV_23_10
+							415.354 434.857 58.327,#326 U Loft Surface 02_CV_23_9
+							394.932 420.077 93.2478,#327 U Loft Surface 02_CV_23_8
+							382.794 395.781 118.709,#328 U Loft Surface 02_CV_23_7
+							382.571 353.031 129.847,#329 U Loft Surface 02_CV_23_6
+							390.161 301.537 129.732,#330 U Loft Surface 02_CV_23_5
+							393.583 273.335 150.748,#331 U Loft Surface 02_CV_23_4
+							400.927 243.526 150.938,#332 U Loft Surface 02_CV_23_3
+							412.479 221.228 120.769,#333 U Loft Surface 02_CV_23_2
+							418.992 191.7 103.54,#334 U Loft Surface 02_CV_23_1
+							422.362 175.292 93.3143,#335 U Loft Surface 02_CV_23_0
+
+							529.572 442.031 -36.2192,#336 U Loft Surface 02_CV_24_13
+							511.826 448.911 -12.2826,#337 U Loft Surface 02_CV_24_12
+							479.417 458.661 31.9681,#338 U Loft Surface 02_CV_24_11
+							440.183 460.581 87.1847,#339 U Loft Surface 02_CV_24_10
+							410.393 449.419 131.063,#340 U Loft Surface 02_CV_24_9
+							389.622 427.543 164.689,#341 U Loft Surface 02_CV_24_8
+							377.756 395.074 187.911,#342 U Loft Surface 02_CV_24_7
+							377.378 340.209 196.347,#343 U Loft Surface 02_CV_24_6
+							384.797 275.694 192.709,#344 U Loft Surface 02_CV_24_5
+							396.702 244.384 206.575,#345 U Loft Surface 02_CV_24_4
+							408.919 212.44 199.454,#346 U Loft Surface 02_CV_24_3
+							419.404 184.251 156.397,#347 U Loft Surface 02_CV_24_2
+							426.152 163.656 142.614,#348 U Loft Surface 02_CV_24_1
+							429.387 153.355 135.501,#349 U Loft Surface 02_CV_24_0
+
+							532.61 468.483 26.1566,#350 U Loft Surface 02_CV_25_13
+							516.21 472.806 52.2362,#351 U Loft Surface 02_CV_25_12
+							486.218 477.422 100.097,#352 U Loft Surface 02_CV_25_11
+							449.651 471.501 158.706,#353 U Loft Surface 02_CV_25_10
+							421.489 452.312 203.963,#354 U Loft Surface 02_CV_25_9
+							401.793 422.504 236.915,#355 U Loft Surface 02_CV_25_8
+							390.399 382.197 257.441,#356 U Loft Surface 02_CV_25_7
+							387.836 318.271 261.188,#357 U Loft Surface 02_CV_25_6
+							391.922 244.728 251.141,#358 U Loft Surface 02_CV_25_5
+							411.63 210.333 254.73,#359 U Loft Surface 02_CV_25_4
+							427.765 175.386 237.502,#360 U Loft Surface 02_CV_25_3
+							431.749 137.973 179.628,#361 U Loft Surface 02_CV_25_2
+							444.906 125.488 167.855,#362 U Loft Surface 02_CV_25_1
+							452.229 120.922 163.172,#363 U Loft Surface 02_CV_25_0
+
+							539.063 488.221 87.2628,#364 U Loft Surface 02_CV_26_13
+							525.567 487.965 114.397,#365 U Loft Surface 02_CV_26_12
+							500.869 483.995 163.881,#366 U Loft Surface 02_CV_26_11
+							470.63 466.964 223.537,#367 U Loft Surface 02_CV_26_10
+							447.141 438.469 268.499,#368 U Loft Surface 02_CV_26_9
+							430.729 400.95 299.54,#369 U Loft Surface 02_CV_26_8
+							421.222 354.522 316.58,#370 U Loft Surface 02_CV_26_7
+							417.93 287.072 316.355,#371 U Loft Surface 02_CV_26_6
+							419.741 211.564 301.218,#372 U Loft Surface 02_CV_26_5
+							441.726 172.812 290.986,#373 U Loft Surface 02_CV_26_4
+							458.09 134.682 261.328,#374 U Loft Surface 02_CV_26_3
+							452.071 83.9554 191.581,#375 U Loft Surface 02_CV_26_2
+							475.188 87.7077 175.79,#376 U Loft Surface 02_CV_26_1
+							489.247 94.2661 169.699,#377 U Loft Surface 02_CV_26_0
+
+							541.986 490.201 167.6,#378 U Loft Surface 02_CV_27_13
+							533.409 484.932 191.184,#379 U Loft Surface 02_CV_27_12
+							517.76 471.857 233.94,#380 U Loft Surface 02_CV_27_11
+							498.734 444.103 284.829,#381 U Loft Surface 02_CV_27_10
+							484.104 407.918 322.459,#382 U Loft Surface 02_CV_27_9
+							474.161 365.124 346.903,#383 U Loft Surface 02_CV_27_8
+							468.78 315.884 358.115,#384 U Loft Surface 02_CV_27_7
+							467.207 250.775 355.977,#385 U Loft Surface 02_CV_27_6
+							468.883 180.656 340.14,#386 U Loft Surface 02_CV_27_5
+							485.88 135.244 314.296,#387 U Loft Surface 02_CV_27_4
+							498.473 96.4695 272.044,#388 U Loft Surface 02_CV_27_3
+							482.793 35.1336 198.762,#389 U Loft Surface 02_CV_27_2
+							517.645 71.8779 169.556,#390 U Loft Surface 02_CV_27_1
+							539.839 100.139 155.735,#391 U Loft Surface 02_CV_27_0
+
+							547.707 474.603 260.529,#392 U Loft Surface 02_CV_28_13
+							545.249 466.018 276.814,#393 U Loft Surface 02_CV_28_12
+							540.829 447.091 306.054,#394 U Loft Surface 02_CV_28_11
+							535.647 413.07 340.145,#395 U Loft Surface 02_CV_28_10
+							531.887 373.243 364.589,#396 U Loft Surface 02_CV_28_9
+							529.711 328.759 378.621,#397 U Loft Surface 02_CV_28_8
+							529.082 279.888 382.213,#398 U Loft Surface 02_CV_28_7
+							529.413 219.85 379.119,#399 U Loft Surface 02_CV_28_6
+							530.882 158.051 365.376,#400 U Loft Surface 02_CV_28_5
+							538.748 105.162 326.786,#401 U Loft Surface 02_CV_28_4
+							545.554 68.6644 275.341,#402 U Loft Surface 02_CV_28_3
+							533.387 26.5275 196.043,#403 U Loft Surface 02_CV_28_2
+							562.794 69.8341 165.283,#404 U Loft Surface 02_CV_28_1
+							581.737 101.589 151.252,#405 U Loft Surface 02_CV_28_0
+
+							573.772 466.993 292.256,#406 U Loft Surface 02_CV_29_13
+							573.628 457.599 305.682,#407 U Loft Surface 02_CV_29_12
+							573.407 437.278 329.644,#408 U Loft Surface 02_CV_29_11
+							573.263 401.907 357.208,#409 U Loft Surface 02_CV_29_10
+							573.296 361.505 376.561,#410 U Loft Surface 02_CV_29_9
+							573.558 317.001 386.661,#411 U Loft Surface 02_CV_29_8
+							574.048 268.699 387.493,#412 U Loft Surface 02_CV_29_7
+							574.527 210.696 384.058,#413 U Loft Surface 02_CV_29_6
+							575.223 151.896 371.298,#414 U Loft Surface 02_CV_29_5
+							577.212 96.6714 328.834,#415 U Loft Surface 02_CV_29_4
+							579.395 60.5995 275.575,#416 U Loft Surface 02_CV_29_3
+							583.662 54.7039 180.637,#417 U Loft Surface 02_CV_29_2
+							582.538 52.2429 175.784,#418 U Loft Surface 02_CV_29_1
+							581.534 53.2507 179.11,#419 U Loft Surface 02_CV_29_0
+
+							596.921 467.02 292.071,#420 U Loft Surface 02_CV_30_13
+							596.94 457.626 305.536,#421 U Loft Surface 02_CV_30_12
+							596.972 437.306 329.564,#422 U Loft Surface 02_CV_30_11
+							596.998 401.938 357.192,#423 U Loft Surface 02_CV_30_10
+							597.002 361.543 376.568,#424 U Loft Surface 02_CV_30_9
+							596.982 317.045 386.673,#425 U Loft Surface 02_CV_30_8
+							596.947 268.748 387.488,#426 U Loft Surface 02_CV_30_7
+							596.862 210.768 383.927,#427 U Loft Surface 02_CV_30_6
+							596.879 151.999 371.005,#428 U Loft Surface 02_CV_30_5
+							596.36 96.6863 328.819,#429 U Loft Surface 02_CV_30_4
+							596.653 60.5764 275.717,#430 U Loft Surface 02_CV_30_3
+							600.255 54.6191 180.714,#431 U Loft Surface 02_CV_30_2
+							598.128 52.3313 175.933,#432 U Loft Surface 02_CV_30_1
+							596.622 53.4554 179.298,#433 U Loft Surface 02_CV_30_0
+
+						]
+					}#end of NurbsSurface
+					appearance Appearance {
+						material Material {
+							#Material #8
+							diffuseColor 0.545098 0.227451 0.0509804
+							specularColor 0.9 0.9 0.9
+							shininess 0.16
+						}
+					}
+				}#end of Shape
+				Shape {
+					geometry NurbsSurface {
+						solid FALSE
+						#node Head type 22 IsClosedInU 0 IsClosedInV 0 FlipNormals 0 
+						#surface U Loft Surface 04 gen mapping 1 tex surface 1 
+						uOrder 4 
+						vOrder 4 
+						vDimension 43 
+						uDimension 18 
+						vKnot [
+							 0, 0, 0, 0, 4.53981, 9.61803,
+							 14.4217, 19.1521, 24.0409, 28.8255, 33.6486, 38.4572,
+							 43.2107, 47.8908, 52.5725, 57.3292, 62.0765, 66.7633,
+							 71.5247, 76.4452, 81.4985, 86.5998, 91.6462, 96.5764,
+							 101.488, 106.481, 111.511, 116.508, 121.413, 126.213,
+							 130.96, 135.724, 140.487, 145.167, 149.856, 154.619,
+							 159.403, 164.236, 169.037, 173.906, 178.622, 183.455,
+							 188.531, 193.068, 193.068, 193.068, 193.068,
+						]
+						uKnot [
+							 0, 0, 0, 0, 3.8607, 7.64789,
+							 11.353, 15.193, 19.0551, 22.5825, 26.3437, 30.2918,
+							 34.2382, 38.0484, 41.7896, 45.563, 49.3837, 53.2705,
+							 57.2404, 57.2404, 57.2404, 57.2404,
+						]
+						controlPoint [
+							597.708 3.56055 13.0987,#0 U Loft Surface 04_CV_0_0
+							598.003 5.73023 18.5023,#1 U Loft Surface 04_CV_0_1
+							598.337 9.14789 28.2993,#2 U Loft Surface 04_CV_0_2
+							597.084 17.8861 40.9221,#3 U Loft Surface 04_CV_0_3
+							595.257 24.1776 51.1055,#4 U Loft Surface 04_CV_0_4
+							595.575 -4.31714 48.9081,#5 U Loft Surface 04_CV_0_5
+							595.888 -30.6512 47.7084,#6 U Loft Surface 04_CV_0_6
+							595.701 -34.7468 57.2357,#7 U Loft Surface 04_CV_0_7
+							595.444 -29.2828 72.0654,#8 U Loft Surface 04_CV_0_8
+							595.186 -17.7395 89.8475,#9 U Loft Surface 04_CV_0_9
+							594.99 -4.43535 107.6,#10 U Loft Surface 04_CV_0_10
+							594.983 5.31526 122.172,#11 U Loft Surface 04_CV_0_11
+							595.123 13.1762 134.532,#12 U Loft Surface 04_CV_0_12
+							595.345 22.4307 146.765,#13 U Loft Surface 04_CV_0_13
+							595.669 32.0426 158.214,#14 U Loft Surface 04_CV_0_14
+							596.089 42.3893 169.118,#15 U Loft Surface 04_CV_0_15
+							596.434 49.6967 175.972,#16 U Loft Surface 04_CV_0_16
+							596.622 53.4554 179.298,#17 U Loft Surface 04_CV_0_17
+
+							600.667 3.56659 13.0953,#18 U Loft Surface 04_CV_1_0
+							601.1 5.71943 18.5302,#19 U Loft Surface 04_CV_1_1
+							601.74 9.1129 28.3688,#20 U Loft Surface 04_CV_1_2
+							600.943 17.8661 40.8956,#21 U Loft Surface 04_CV_1_3
+							599.649 24.1935 50.9341,#22 U Loft Surface 04_CV_1_4
+							601.104 -4.27816 48.8472,#23 U Loft Surface 04_CV_1_5
+							602.524 -30.5944 47.7442,#24 U Loft Surface 04_CV_1_6
+							603.109 -34.7253 57.2259,#25 U Loft Surface 04_CV_1_7
+							603.507 -29.337 71.9411,#26 U Loft Surface 04_CV_1_8
+							603.799 -17.8826 89.5837,#27 U Loft Surface 04_CV_1_9
+							604.067 -4.64591 107.225,#28 U Loft Surface 04_CV_1_10
+							604.481 5.08809 121.768,#29 U Loft Surface 04_CV_1_11
+							604.986 12.9746 134.164,#30 U Loft Surface 04_CV_1_12
+							605.495 22.2751 146.462,#31 U Loft Surface 04_CV_1_13
+							606.034 31.9602 158.017,#32 U Loft Surface 04_CV_1_14
+							606.595 42.4049 169.063,#33 U Loft Surface 04_CV_1_15
+							606.985 49.7946 176.038,#34 U Loft Surface 04_CV_1_16
+							607.184 53.5988 179.43,#35 U Loft Surface 04_CV_1_17
+
+							606.828 4.4611 12.8223,#36 U Loft Surface 04_CV_2_0
+							607.606 6.52944 18.1632,#37 U Loft Surface 04_CV_2_1
+							608.901 9.87346 27.886,#38 U Loft Surface 04_CV_2_2
+							608.783 18.6739 40.3138,#39 U Loft Surface 04_CV_2_3
+							608.049 25.4033 50.3935,#40 U Loft Surface 04_CV_2_4
+							611.01 -1.18741 49.863,#41 U Loft Surface 04_CV_2_5
+							613.679 -25.4366 50.0142,#42 U Loft Surface 04_CV_2_6
+							614.309 -27.6546 59.04,#43 U Loft Surface 04_CV_2_7
+							614.007 -20.126 72.336,#44 U Loft Surface 04_CV_2_8
+							613.206 -6.46721 87.9932,#45 U Loft Surface 04_CV_2_9
+							612.424 8.82856 103.586,#46 U Loft Surface 04_CV_2_10
+							612.25 20.3667 116.526,#47 U Loft Surface 04_CV_2_11
+							612.503 29.8312 127.608,#48 U Loft Surface 04_CV_2_12
+							612.803 40.5916 138.54,#49 U Loft Surface 04_CV_2_13
+							613.27 51.5845 148.782,#50 U Loft Surface 04_CV_2_14
+							613.861 63.1972 158.53,#51 U Loft Surface 04_CV_2_15
+							614.347 71.2698 164.659,#52 U Loft Surface 04_CV_2_16
+							614.612 75.3915 167.632,#53 U Loft Surface 04_CV_2_17
+
+							616.485 7.92079 11.705,#54 U Loft Surface 04_CV_3_0
+							617.903 9.77492 16.554,#55 U Loft Surface 04_CV_3_1
+							620.244 13.0515 25.6161,#56 U Loft Surface 04_CV_3_2
+							620.761 21.9475 37.9282,#57 U Loft Surface 04_CV_3_3
+							620.022 29.7929 48.6185,#58 U Loft Surface 04_CV_3_4
+							622.802 9.98296 52.1245,#59 U Loft Surface 04_CV_3_5
+							624.976 -7.34306 55.7569,#60 U Loft Surface 04_CV_3_6
+							624.061 -4.26059 64.5727,#61 U Loft Surface 04_CV_3_7
+							621.252 8.66658 75.6826,#62 U Loft Surface 04_CV_3_8
+							617.664 27.2936 87.9441,#63 U Loft Surface 04_CV_3_9
+							614.678 46.4489 99.9095,#64 U Loft Surface 04_CV_3_10
+							613.58 60.4539 110.011,#65 U Loft Surface 04_CV_3_11
+							613.983 71.0608 118.732,#66 U Loft Surface 04_CV_3_12
+							614.979 81.9647 127.099,#67 U Loft Surface 04_CV_3_13
+							616.855 92 134.787,#68 U Loft Surface 04_CV_3_14
+							619.505 101.591 141.914,#69 U Loft Surface 04_CV_3_15
+							621.812 107.598 146.267,#70 U Loft Surface 04_CV_3_16
+							623.099 110.509 148.345,#71 U Loft Surface 04_CV_3_17
+
+							626.248 12.969 9.97099,#72 U Loft Surface 04_CV_4_0
+							628.344 14.5858 14.0953,#73 U Loft Surface 04_CV_4_1
+							631.717 17.8116 22.111,#74 U Loft Surface 04_CV_4_2
+							632.809 26.802 34.1258,#75 U Loft Surface 04_CV_4_3
+							631.875 35.8115 45.5256,#76 U Loft Surface 04_CV_4_4
+							631.827 25.1677 52.3485,#77 U Loft Surface 04_CV_4_5
+							631.513 16.346 59.2859,#78 U Loft Surface 04_CV_4_6
+							630.158 23.6298 69.266,#79 U Loft Surface 04_CV_4_7
+							627.752 39.3885 80.5796,#80 U Loft Surface 04_CV_4_8
+							625.403 59.1616 92.5573,#81 U Loft Surface 04_CV_4_9
+							624.466 77.3709 104.359,#82 U Loft Surface 04_CV_4_10
+							626.042 88.4443 115.067,#83 U Loft Surface 04_CV_4_11
+							629.808 94.0778 124.965,#84 U Loft Surface 04_CV_4_12
+							634.928 98.0665 134.649,#85 U Loft Surface 04_CV_4_13
+							641.665 99.2139 143.933,#86 U Loft Surface 04_CV_4_14
+							649.924 97.9551 152.885,#87 U Loft Surface 04_CV_4_15
+							656.464 95.4192 158.617,#88 U Loft Surface 04_CV_4_16
+							659.993 93.7303 161.424,#89 U Loft Surface 04_CV_4_17
+
+							635.806 19.0762 7.711,#90 U Loft Surface 04_CV_5_0
+							638.527 20.4999 11.002,#91 U Loft Surface 04_CV_5_1
+							642.842 23.7096 17.6998,#92 U Loft Surface 04_CV_5_2
+							644.799 32.7291 28.9815,#93 U Loft Surface 04_CV_5_3
+							644.068 42.5456 40.4738,#94 U Loft Surface 04_CV_5_4
+							639.365 41.4817 49.3759,#95 U Loft Surface 04_CV_5_5
+							635.15 41.0021 58.2542,#96 U Loft Surface 04_CV_5_6
+							635.543 47.2558 67.3263,#97 U Loft Surface 04_CV_5_7
+							638.12 56.6956 76.0444,#98 U Loft Surface 04_CV_5_8
+							642.36 67.5413 84.8239,#99 U Loft Surface 04_CV_5_9
+							647.558 77.6021 94.2089,#100 U Loft Surface 04_CV_5_10
+							652.827 84.5905 104.542,#101 U Loft Surface 04_CV_5_11
+							658.445 89.2068 115.729,#102 U Loft Surface 04_CV_5_12
+							664.954 92.9772 127.468,#103 U Loft Surface 04_CV_5_13
+							672.182 95.4203 139.854,#104 U Loft Surface 04_CV_5_14
+							680.192 96.7113 152.854,#105 U Loft Surface 04_CV_5_15
+							686.04 96.7666 161.936,#106 U Loft Surface 04_CV_5_16
+							689.091 96.5942 166.581,#107 U Loft Surface 04_CV_5_17
+
+							644.846 25.7132 5.01595,#108 U Loft Surface 04_CV_6_0
+							648.131 27.0191 7.41563,#109 U Loft Surface 04_CV_6_1
+							653.274 30.2371 12.5064,#110 U Loft Surface 04_CV_6_2
+							656.415 39.3052 22.9298,#111 U Loft Surface 04_CV_6_3
+							656.249 49.6457 34.0032,#112 U Loft Surface 04_CV_6_4
+							644.972 55.2267 39.0227,#113 U Loft Surface 04_CV_6_5
+							635.236 60.452 44.4771,#114 U Loft Surface 04_CV_6_6
+							638.017 64.7254 52.2722,#115 U Loft Surface 04_CV_6_7
+							647.512 67.5554 60.6985,#116 U Loft Surface 04_CV_6_8
+							660.858 69.8389 69.9285,#117 U Loft Surface 04_CV_6_9
+							674.391 72.7703 80.2183,#118 U Loft Surface 04_CV_6_10
+							684.38 77.1946 91.5032,#119 U Loft Surface 04_CV_6_11
+							691.967 82.87 103.817,#120 U Loft Surface 04_CV_6_12
+							699.663 89.1064 117.098,#121 U Loft Surface 04_CV_6_13
+							706.677 96.1209 131.365,#122 U Loft Surface 04_CV_6_14
+							713.297 103.835 146.612,#123 U Loft Surface 04_CV_6_15
+							717.386 109.46 157.43,#124 U Loft Surface 04_CV_6_16
+							719.352 112.393 163.003,#125 U Loft Surface 04_CV_6_17
+
+							653.058 32.3502 1.97674,#126 U Loft Surface 04_CV_7_0
+							656.857 33.6339 3.4586,#127 U Loft Surface 04_CV_7_1
+							662.969 36.8559 7.01598,#128 U Loft Surface 04_CV_7_2
+							666.661 46.1596 15.5339,#129 U Loft Surface 04_CV_7_3
+							666.964 56.837 25.4721,#130 U Loft Surface 04_CV_7_4
+							658.477 62.88 33.765,#131 U Loft Surface 04_CV_7_5
+							651.549 68.539 42.3518,#132 U Loft Surface 04_CV_7_6
+							656.896 72.4597 49.9916,#133 U Loft Surface 04_CV_7_7
+							669.242 74.3469 56.7328,#134 U Loft Surface 04_CV_7_8
+							685.353 75.5851 63.5406,#135 U Loft Surface 04_CV_7_9
+							701.077 77.9882 71.6721,#136 U Loft Surface 04_CV_7_10
+							712.384 82.9203 82.1132,#137 U Loft Surface 04_CV_7_11
+							720.497 89.986 94.5758,#138 U Loft Surface 04_CV_7_12
+							728.195 98.1086 108.299,#139 U Loft Surface 04_CV_7_13
+							734.603 107.627 123.523,#140 U Loft Surface 04_CV_7_14
+							740.039 118.418 140.161,#141 U Loft Surface 04_CV_7_15
+							742.947 126.487 152.213,#142 U Loft Surface 04_CV_7_16
+							744.224 130.739 158.479,#143 U Loft Surface 04_CV_7_17
+
+							660.131 38.4589 -1.3158,#144 U Loft Surface 04_CV_8_0
+							664.402 39.8427 -0.741681,#145 U Loft Surface 04_CV_8_1
+							671.525 43.1819 1.33431,#146 U Loft Surface 04_CV_8_2
+							675.38 52.5966 7.25301,#147 U Loft Surface 04_CV_8_3
+							676.026 63.2488 15.4457,#148 U Loft Surface 04_CV_8_4
+							675.49 67.2224 30.5897,#149 U Loft Surface 04_CV_8_5
+							675.867 71.2735 45.4859,#150 U Loft Surface 04_CV_8_6
+							683.336 76.3942 53.5242,#151 U Loft Surface 04_CV_8_7
+							695.418 81.1917 58.0181,#152 U Loft Surface 04_CV_8_8
+							709.789 86.1815 60.9878,#153 U Loft Surface 04_CV_8_9
+							723.428 92.0767 65.0104,#154 U Loft Surface 04_CV_8_10
+							733.622 99.209 72.6017,#155 U Loft Surface 04_CV_8_11
+							741.182 107.494 82.998,#156 U Loft Surface 04_CV_8_12
+							748.057 116.581 94.4682,#157 U Loft Surface 04_CV_8_13
+							753.633 126.58 107.558,#158 U Loft Surface 04_CV_8_14
+							758.131 137.45 122.069,#159 U Loft Surface 04_CV_8_15
+							760.365 145.287 132.732,#160 U Loft Surface 04_CV_8_16
+							761.293 149.353 138.31,#161 U Loft Surface 04_CV_8_17
+
+							665.752 43.5064 -4.77065,#162 U Loft Surface 04_CV_9_0
+							670.455 45.128 -5.05699,#163 U Loft Surface 04_CV_9_1
+							678.48 48.8231 -4.49281,#164 U Loft Surface 04_CV_9_2
+							682.516 57.8519 -1.30013,#165 U Loft Surface 04_CV_9_3
+							683.411 67.9662 4.73673,#166 U Loft Surface 04_CV_9_4
+							689.515 71.8674 23.8217,#167 U Loft Surface 04_CV_9_5
+							695.847 76.3509 42.3866,#168 U Loft Surface 04_CV_9_6
+							704.247 84.6551 50.7392,#169 U Loft Surface 04_CV_9_7
+							714.719 94.8343 54.3228,#170 U Loft Surface 04_CV_9_8
+							726.053 105.974 55.4409,#171 U Loft Surface 04_CV_9_9
+							736.619 116.963 57.0143,#172 U Loft Surface 04_CV_9_10
+							745.177 126.61 62.1487,#173 U Loft Surface 04_CV_9_11
+							752.089 135.282 69.8895,#174 U Loft Surface 04_CV_9_12
+							758.324 143.762 78.1866,#175 U Loft Surface 04_CV_9_13
+							763.577 151.805 87.6865,#176 U Loft Surface 04_CV_9_14
+							767.96 159.499 98.1539,#177 U Loft Surface 04_CV_9_15
+							770.277 164.377 105.827,#178 U Loft Surface 04_CV_9_16
+							771.285 166.754 109.836,#179 U Loft Surface 04_CV_9_17
+
+							669.614 46.9727 -8.29731,#180 U Loft Surface 04_CV_10_0
+							674.73 49.014 -9.36538,#181 U Loft Surface 04_CV_10_1
+							683.484 53.4176 -10.3672,#182 U Loft Surface 04_CV_10_2
+							687.885 61.3327 -9.68003,#183 U Loft Surface 04_CV_10_3
+							688.878 70.1618 -6.08401,#184 U Loft Surface 04_CV_10_4
+							696.604 78.731 10.6213,#185 U Loft Surface 04_CV_10_5
+							704.255 87.9153 27.0952,#186 U Loft Surface 04_CV_10_6
+							712.486 99.8427 34.777,#187 U Loft Surface 04_CV_10_7
+							721.917 114.015 38.8104,#188 U Loft Surface 04_CV_10_8
+							731.751 128.876 40.7848,#189 U Loft Surface 04_CV_10_9
+							740.87 142.465 42.7136,#190 U Loft Surface 04_CV_10_10
+							748.533 153.149 46.9404,#191 U Loft Surface 04_CV_10_11
+							754.95 161.409 52.736,#192 U Loft Surface 04_CV_10_12
+							760.747 168.467 58.6175,#193 U Loft Surface 04_CV_10_13
+							765.728 173.94 65.0526,#194 U Loft Surface 04_CV_10_14
+							769.963 177.965 71.8711,#195 U Loft Surface 04_CV_10_15
+							772.274 179.655 76.7086,#196 U Loft Surface 04_CV_10_16
+							773.302 180.252 79.1991,#197 U Loft Surface 04_CV_10_17
+
+							671.401 48.3185 -11.8045,#198 U Loft Surface 04_CV_11_0
+							676.905 50.9628 -13.535,#199 U Loft Surface 04_CV_11_1
+							686.273 56.3315 -16.0144,#200 U Loft Surface 04_CV_11_2
+							690.888 62.7247 -17.7862,#201 U Loft Surface 04_CV_11_3
+							691.675 69.5715 -16.9651,#202 U Loft Surface 04_CV_11_4
+							699.245 83.5894 -5.67764,#203 U Loft Surface 04_CV_11_5
+							706.563 98.0329 5.84871,#204 U Loft Surface 04_CV_11_6
+							714.087 112.556 11.6437,#205 U Loft Surface 04_CV_11_7
+							722.47 128.705 15.5344,#206 U Loft Surface 04_CV_11_8
+							731.113 144.914 18.3034,#207 U Loft Surface 04_CV_11_9
+							739.147 159.162 20.9412,#208 U Loft Surface 04_CV_11_10
+							746.038 170.092 24.7892,#209 U Loft Surface 04_CV_11_11
+							751.933 178.086 29.4227,#210 U Loft Surface 04_CV_11_12
+							757.305 184.29 34.0471,#211 U Loft Surface 04_CV_11_13
+							762.005 188.344 38.9133,#212 U Loft Surface 04_CV_11_14
+							766.087 190.377 43.9299,#213 U Loft Surface 04_CV_11_15
+							768.386 190.359 47.394,#214 U Loft Surface 04_CV_11_16
+							769.429 190.007 49.1554,#215 U Loft Surface 04_CV_11_17
+
+							670.788 46.9878 -15.2003,#216 U Loft Surface 04_CV_12_0
+							676.626 50.3862 -17.426,#217 U Loft Surface 04_CV_12_1
+							686.534 56.8186 -21.1287,#218 U Loft Surface 04_CV_12_2
+							690.866 61.6924 -25.5366,#219 U Loft Surface 04_CV_12_3
+							691.034 66.0261 -27.8972,#220 U Loft Surface 04_CV_12_4
+							700.44 81.5656 -21.2834,#221 U Loft Surface 04_CV_12_5
+							709.25 97.5077 -14.2014,#222 U Loft Surface 04_CV_12_6
+							716.159 112.448 -11.4458,#223 U Loft Surface 04_CV_12_7
+							722.745 128.788 -9.94951,#224 U Loft Surface 04_CV_12_8
+							729.02 145.139 -9.01855,#225 U Loft Surface 04_CV_12_9
+							734.871 159.664 -7.78308,#226 U Loft Surface 04_CV_12_10
+							740.508 171.295 -5.10298,#227 U Loft Surface 04_CV_12_11
+							745.853 180.324 -1.33794,#228 U Loft Surface 04_CV_12_12
+							750.867 187.732 2.82708,#229 U Loft Surface 04_CV_12_13
+							755.563 193.21 7.60835,#230 U Loft Surface 04_CV_12_14
+							759.937 196.87 12.9271,#231 U Loft Surface 04_CV_12_15
+							762.639 198.074 16.8479,#232 U Loft Surface 04_CV_12_16
+							763.936 198.368 18.9016,#233 U Loft Surface 04_CV_12_17
+
+							668.006 43.507 -18.4359,#234 U Loft Surface 04_CV_13_0
+							674.023 47.6104 -20.9828,#235 U Loft Surface 04_CV_13_1
+							684.235 54.9404 -25.6286,#236 U Loft Surface 04_CV_13_2
+							687.976 58.4583 -32.8223,#237 U Loft Surface 04_CV_13_3
+							687.446 60.2533 -38.6787,#238 U Loft Surface 04_CV_13_4
+							699.697 74.1448 -35.9086,#239 U Loft Surface 04_CV_13_5
+							711.097 88.6188 -32.5545,#240 U Loft Surface 04_CV_13_6
+							718.503 102.64 -32.8275,#241 U Loft Surface 04_CV_13_7
+							724.681 118.392 -34.0523,#242 U Loft Surface 04_CV_13_8
+							729.98 134.639 -35.4793,#243 U Loft Surface 04_CV_13_9
+							734.694 149.708 -36.1841,#244 U Loft Surface 04_CV_13_10
+							739.537 162.645 -35.0315,#245 U Loft Surface 04_CV_13_11
+							744.274 173.708 -32.3768,#246 U Loft Surface 04_CV_13_12
+							748.555 183.784 -28.9221,#247 U Loft Surface 04_CV_13_13
+							752.49 192.594 -24.446,#248 U Loft Surface 04_CV_13_14
+							756.038 200.239 -19.029,#249 U Loft Surface 04_CV_13_15
+							758.155 204.538 -14.7733,#250 U Loft Surface 04_CV_13_16
+							759.151 206.489 -12.4849,#251 U Loft Surface 04_CV_13_17
+
+							663.291 38.4123 -21.4631,#252 U Loft Surface 04_CV_14_0
+							669.275 43.0516 -24.166,#253 U Loft Surface 04_CV_14_1
+							679.462 50.9742 -29.4769,#254 U Loft Surface 04_CV_14_2
+							682.468 53.3549 -39.5481,#255 U Loft Surface 04_CV_14_3
+							681.361 52.8926 -49.0944,#256 U Loft Surface 04_CV_14_4
+							696.469 63.1594 -49.3549,#257 U Loft Surface 04_CV_14_5
+							710.686 74.3406 -48.9326,#258 U Loft Surface 04_CV_14_6
+							719.856 86.7871 -51.476,#259 U Loft Surface 04_CV_14_7
+							727.73 101.737 -54.4929,#260 U Loft Surface 04_CV_14_8
+							734.413 118.011 -57.3986,#261 U Loft Surface 04_CV_14_9
+							739.883 133.984 -59.5004,#262 U Loft Surface 04_CV_14_10
+							744.75 148.615 -59.8614,#263 U Loft Surface 04_CV_14_11
+							748.802 162.196 -58.7779,#264 U Loft Surface 04_CV_14_12
+							751.828 175.625 -56.8067,#265 U Loft Surface 04_CV_14_13
+							753.897 188.62 -53.772,#266 U Loft Surface 04_CV_14_14
+							754.983 201.284 -49.7378,#267 U Loft Surface 04_CV_14_15
+							755.058 209.484 -46.3685,#268 U Loft Surface 04_CV_14_16
+							754.932 213.524 -44.5143,#269 U Loft Surface 04_CV_14_17
+
+							656.89 32.2644 -24.2347,#270 U Loft Surface 04_CV_15_0
+							662.694 37.3386 -26.9749,#271 U Loft Surface 04_CV_15_1
+							672.571 45.7144 -32.7421,#272 U Loft Surface 04_CV_15_2
+							674.834 46.9424 -45.6464,#273 U Loft Surface 04_CV_15_3
+							673.16 44.3345 -58.8886,#274 U Loft Surface 04_CV_15_4
+							689.753 51.7504 -61.7289,#275 U Loft Surface 04_CV_15_5
+							705.456 60.2436 -63.755,#276 U Loft Surface 04_CV_15_6
+							715.586 70.7792 -67.9877,#277 U Loft Surface 04_CV_15_7
+							724.475 84.0346 -72.0545,#278 U Loft Surface 04_CV_15_8
+							732.002 99.125 -75.6632,#279 U Loft Surface 04_CV_15_9
+							737.851 114.777 -78.5179,#280 U Loft Surface 04_CV_15_10
+							742.485 130.16 -79.9997,#281 U Loft Surface 04_CV_15_11
+							745.729 145.508 -80.3112,#282 U Loft Surface 04_CV_15_12
+							747.523 161.529 -79.7677,#283 U Loft Surface 04_CV_15_13
+							747.888 178.001 -78.2694,#284 U Loft Surface 04_CV_15_14
+							746.815 195.004 -75.8527,#285 U Loft Surface 04_CV_15_15
+							745.142 206.676 -73.6216,#286 U Loft Surface 04_CV_15_16
+							744.067 212.597 -72.3513,#287 U Loft Surface 04_CV_15_17
+
+							649.049 25.6162 -26.7029,#288 U Loft Surface 04_CV_16_0
+							654.537 31.0191 -29.3937,#289 U Loft Surface 04_CV_16_1
+							663.843 39.7186 -35.45,#290 U Loft Surface 04_CV_16_2
+							665.404 39.7782 -51.0431,#291 U Loft Surface 04_CV_16_3
+							663.182 35.1891 -67.8371,#292 U Loft Surface 04_CV_16_4
+							679.658 41.0682 -72.8758,#293 U Loft Surface 04_CV_16_5
+							695.256 47.9814 -76.9289,#294 U Loft Surface 04_CV_16_6
+							705.22 56.5248 -82.3087,#295 U Loft Surface 04_CV_16_7
+							714.019 67.3731 -86.7427,#296 U Loft Surface 04_CV_16_8
+							721.412 80.1539 -90.3283,#297 U Loft Surface 04_CV_16_9
+							726.926 94.2228 -93.2917,#298 U Loft Surface 04_CV_16_10
+							730.926 109.259 -95.4276,#299 U Loft Surface 04_CV_16_11
+							733.262 125.348 -96.8173,#300 U Loft Surface 04_CV_16_12
+							733.963 142.809 -97.4594,#301 U Loft Surface 04_CV_16_13
+							733.021 161.542 -97.3538,#302 U Loft Surface 04_CV_16_14
+							730.439 181.583 -96.5007,#303 U Loft Surface 04_CV_16_15
+							727.623 195.808 -95.4337,#304 U Loft Surface 04_CV_16_16
+							725.942 203.137 -94.7756,#305 U Loft Surface 04_CV_16_17
+
+							640.008 19.0206 -28.8194,#306 U Loft Surface 04_CV_17_0
+							645.058 24.6284 -31.4041,#307 U Loft Surface 04_CV_17_1
+							653.556 33.4941 -37.6188,#308 U Loft Surface 04_CV_17_2
+							654.461 32.447 -55.6647,#309 U Loft Surface 04_CV_17_3
+							651.74 26.1428 -75.7261,#310 U Loft Surface 04_CV_17_4
+							666.78 31.4493 -82.5514,#311 U Loft Surface 04_CV_17_5
+							680.977 37.6087 -88.1989,#312 U Loft Surface 04_CV_17_6
+							689.91 44.254 -94.2733,#313 U Loft Surface 04_CV_17_7
+							697.806 52.4227 -98.5726,#314 U Loft Surface 04_CV_17_8
+							704.365 62.3316 -101.624,#315 U Loft Surface 04_CV_17_9
+							709.052 74.0664 -104.229,#316 U Loft Surface 04_CV_17_10
+							712.142 87.947 -106.63,#317 U Loft Surface 04_CV_17_11
+							713.514 103.868 -108.778,#318 U Loft Surface 04_CV_17_12
+							713.249 121.682 -110.324,#319 U Loft Surface 04_CV_17_13
+							711.323 141.436 -111.379,#320 U Loft Surface 04_CV_17_14
+							707.744 163.112 -111.902,#321 U Loft Surface 04_CV_17_15
+							704.254 178.849 -111.904,#322 U Loft Surface 04_CV_17_16
+							702.233 187.039 -111.819,#323 U Loft Surface 04_CV_17_17
+
+							630.013 13.0165 -30.5378,#324 U Loft Surface 04_CV_18_0
+							634.519 18.7131 -32.9923,#325 U Loft Surface 04_CV_18_1
+							642.013 27.5986 -39.2763,#326 U Loft Surface 04_CV_18_2
+							642.304 25.568 -59.4396,#327 U Loft Surface 04_CV_18_3
+							639.136 17.8711 -82.3349,#328 U Loft Surface 04_CV_18_4
+							651.712 23.2759 -90.5424,#329 U Loft Surface 04_CV_18_5
+							663.502 29.2677 -97.3766,#330 U Loft Surface 04_CV_18_6
+							670.695 34.2673 -103.808,#331 U Loft Surface 04_CV_18_7
+							676.978 39.8783 -107.676,#332 U Loft Surface 04_CV_18_8
+							682.091 46.8512 -109.919,#333 U Loft Surface 04_CV_18_9
+							685.563 55.9359 -111.881,#334 U Loft Surface 04_CV_18_10
+							687.632 68.0683 -114.231,#335 U Loft Surface 04_CV_18_11
+							688.193 82.9571 -116.794,#336 U Loft Surface 04_CV_18_12
+							687.319 100.02 -118.895,#337 U Loft Surface 04_CV_18_13
+							684.987 119.442 -120.745,#338 U Loft Surface 04_CV_18_14
+							681.205 141.155 -122.269,#339 U Loft Surface 04_CV_18_15
+							677.716 157.171 -123.083,#340 U Loft Surface 04_CV_18_16
+							675.729 165.565 -123.44,#341 U Loft Surface 04_CV_18_17
+
+							619.306 8.15469 -31.8105,#342 U Loft Surface 04_CV_19_0
+							623.183 13.8231 -34.1434,#343 U Loft Surface 04_CV_19_1
+							629.517 22.579 -40.449,#344 U Loft Surface 04_CV_19_2
+							629.229 19.7515 -62.2966,#345 U Loft Surface 04_CV_19_3
+							625.676 11.0509 -87.4455,#346 U Loft Surface 04_CV_19_4
+							635.065 16.8873 -96.6305,#347 U Loft Surface 04_CV_19_5
+							643.755 23.0297 -104.265,#348 U Loft Surface 04_CV_19_6
+							648.695 26.7681 -110.822,#349 U Loft Surface 04_CV_19_7
+							652.831 30.2982 -114.159,#350 U Loft Surface 04_CV_19_8
+							656.04 34.7512 -115.548,#351 U Loft Surface 04_CV_19_9
+							658.041 41.3517 -116.779,#352 U Loft Surface 04_CV_19_10
+							659.105 51.5022 -118.867,#353 U Loft Surface 04_CV_19_11
+							659.125 64.7697 -121.536,#354 U Loft Surface 04_CV_19_12
+							658.098 80.252 -123.844,#355 U Loft Surface 04_CV_19_13
+							656.025 98.2336 -126.085,#356 U Loft Surface 04_CV_19_14
+							652.905 118.611 -128.154,#357 U Loft Surface 04_CV_19_15
+							650.127 133.815 -129.44,#358 U Loft Surface 04_CV_19_16
+							648.564 141.821 -130.059,#359 U Loft Surface 04_CV_19_17
+
+							608.131 5.05344 -32.5839,#360 U Loft Surface 04_CV_20_0
+							611.309 10.5378 -34.8376,#361 U Loft Surface 04_CV_20_1
+							616.363 18.9518 -41.1608,#362 U Loft Surface 04_CV_20_2
+							615.532 15.5606 -64.1672,#363 U Loft Surface 04_CV_20_3
+							611.665 6.33755 -90.8474,#364 U Loft Surface 04_CV_20_4
+							617.415 12.648 -100.607,#365 U Loft Surface 04_CV_20_5
+							622.573 19.0568 -108.678,#366 U Loft Surface 04_CV_20_6
+							624.949 22.0193 -115.219,#367 U Loft Surface 04_CV_20_7
+							626.612 24.1984 -118.079,#368 U Loft Surface 04_CV_20_8
+							627.642 26.9331 -118.758,#369 U Loft Surface 04_CV_20_9
+							628.03 31.7108 -119.356,#370 U Loft Surface 04_CV_20_10
+							628.128 40.2105 -121.119,#371 U Loft Surface 04_CV_20_11
+							627.814 51.9144 -123.704,#372 U Loft Surface 04_CV_20_12
+							626.964 65.7367 -125.985,#373 U Loft Surface 04_CV_20_13
+							625.618 82.02 -128.316,#374 U Loft Surface 04_CV_20_14
+							623.762 100.64 -130.569,#375 U Loft Surface 04_CV_20_15
+							622.188 114.637 -132.045,#376 U Loft Surface 04_CV_20_16
+							621.316 122.03 -132.776,#377 U Loft Surface 04_CV_20_17
+
+							596.731 4.16525 -32.8189,#378 U Loft Surface 04_CV_21_0
+							599.158 9.3578 -35.0657,#379 U Loft Surface 04_CV_21_1
+							602.848 17.2944 -41.4388,#380 U Loft Surface 04_CV_21_2
+							601.509 13.6573 -64.9749,#381 U Loft Surface 04_CV_21_3
+							597.409 4.43663 -92.3128,#382 U Loft Surface 04_CV_21_4
+							599.366 10.9489 -102.235,#383 U Loft Surface 04_CV_21_5
+							600.847 17.5072 -110.4,#384 U Loft Surface 04_CV_21_6
+							600.559 20.2421 -116.869,#385 U Loft Surface 04_CV_21_7
+							599.643 21.9971 -119.459,#386 U Loft Surface 04_CV_21_8
+							598.402 24.1559 -119.77,#387 U Loft Surface 04_CV_21_9
+							597.137 28.2674 -120.029,#388 U Loft Surface 04_CV_21_10
+							596.297 36.0826 -121.578,#389 U Loft Surface 04_CV_21_11
+							595.739 47.0613 -124.047,#390 U Loft Surface 04_CV_21_12
+							595.204 60.0723 -126.233,#391 U Loft Surface 04_CV_21_13
+							594.774 75.4726 -128.514,#392 U Loft Surface 04_CV_21_14
+							594.419 93.1321 -130.753,#393 U Loft Surface 04_CV_21_15
+							594.239 106.439 -132.248,#394 U Loft Surface 04_CV_21_16
+							594.163 113.475 -132.994,#395 U Loft Surface 04_CV_21_17
+
+							585.35 5.87235 -32.4824,#396 U Loft Surface 04_CV_22_0
+							586.99 10.7499 -34.8229,#397 U Loft Surface 04_CV_22_1
+							589.272 18.2074 -41.3114,#398 U Loft Surface 04_CV_22_2
+							587.455 14.7431 -64.6401,#399 U Loft Surface 04_CV_22_3
+							583.215 6.07385 -91.6065,#400 U Loft Surface 04_CV_22_4
+							581.526 12.1954 -101.268,#401 U Loft Surface 04_CV_22_5
+							579.478 18.5473 -109.2,#402 U Loft Surface 04_CV_22_6
+							576.644 21.6424 -115.622,#403 U Loft Surface 04_CV_22_7
+							573.269 24.054 -118.3,#404 U Loft Surface 04_CV_22_8
+							569.857 27.0828 -118.775,#405 U Loft Surface 04_CV_22_9
+							566.992 32.1827 -119.195,#406 U Loft Surface 04_CV_22_10
+							565.201 40.985 -120.835,#407 U Loft Surface 04_CV_22_11
+							564.327 52.9868 -123.346,#408 U Loft Surface 04_CV_22_12
+							563.991 67.1308 -125.573,#409 U Loft Surface 04_CV_22_13
+							564.311 83.7503 -127.879,#410 U Loft Surface 04_CV_22_14
+							565.244 102.724 -130.134,#411 U Loft Surface 04_CV_22_15
+							566.284 116.969 -131.63,#412 U Loft Surface 04_CV_22_16
+							566.908 124.489 -132.376,#413 U Loft Surface 04_CV_22_17
+
+							574.227 9.57049 -31.6273,#414 U Loft Surface 04_CV_23_0
+							575.068 14.1671 -34.1298,#415 U Loft Surface 04_CV_23_1
+							575.935 21.2361 -40.7561,#416 U Loft Surface 04_CV_23_2
+							573.663 18.304 -63.2154,#417 U Loft Surface 04_CV_23_3
+							569.355 10.6114 -88.9,#418 U Loft Surface 04_CV_23_4
+							564.355 16.1159 -97.8812,#419 U Loft Surface 04_CV_23_5
+							559.102 22.1545 -105.23,#420 U Loft Surface 04_CV_23_6
+							553.963 26.1435 -111.551,#421 U Loft Surface 04_CV_23_7
+							548.372 30.1132 -114.534,#422 U Loft Surface 04_CV_23_8
+							542.992 35.1094 -115.526,#423 U Loft Surface 04_CV_23_9
+							538.624 42.2763 -116.414,#424 U Loft Surface 04_CV_23_10
+							535.843 52.9133 -118.264,#425 U Loft Surface 04_CV_23_11
+							534.485 66.6196 -120.788,#426 U Loft Surface 04_CV_23_12
+							534.082 82.5565 -122.991,#427 U Loft Surface 04_CV_23_13
+							534.78 100.988 -125.185,#428 U Loft Surface 04_CV_23_14
+							536.527 121.819 -127.258,#429 U Loft Surface 04_CV_23_15
+							538.401 137.326 -128.583,#430 U Loft Surface 04_CV_23_16
+							539.516 145.484 -129.23,#431 U Loft Surface 04_CV_23_17
+
+							563.601 14.6916 -30.303,#432 U Loft Surface 04_CV_24_0
+							563.654 19.0702 -33.0045,#433 U Loft Surface 04_CV_24_1
+							563.141 25.8876 -39.7499,#434 U Loft Surface 04_CV_24_2
+							560.423 23.7798 -60.7572,#435 U Loft Surface 04_CV_24_3
+							556.103 17.3856 -84.374,#436 U Loft Surface 04_CV_24_4
+							548.295 22.3969 -92.2668,#437 U Loft Surface 04_CV_24_5
+							540.324 28.2644 -98.6718,#438 U Loft Surface 04_CV_24_6
+							533.236 33.607 -104.749,#439 U Loft Surface 04_CV_24_7
+							525.793 39.8143 -108.101,#440 U Loft Surface 04_CV_24_8
+							518.746 47.4983 -109.771,#441 U Loft Surface 04_CV_24_9
+							513.031 57.2673 -111.241,#442 U Loft Surface 04_CV_24_10
+							509.219 69.8955 -113.253,#443 U Loft Surface 04_CV_24_11
+							507.154 85.1413 -115.612,#444 U Loft Surface 04_CV_24_12
+							506.324 102.527 -117.573,#445 U Loft Surface 04_CV_24_13
+							506.89 122.205 -119.369,#446 U Loft Surface 04_CV_24_14
+							508.792 144.118 -120.916,#447 U Loft Surface 04_CV_24_15
+							510.965 160.229 -121.799,#448 U Loft Surface 04_CV_24_16
+							512.277 168.66 -122.203,#449 U Loft Surface 04_CV_24_17
+
+							553.713 20.7618 -28.551,#450 U Loft Surface 04_CV_25_0
+							553.009 24.944 -31.4583,#451 U Loft Surface 04_CV_25_1
+							551.189 31.5793 -38.2673,#452 U Loft Surface 04_CV_25_2
+							548.031 30.5016 -57.3306,#453 U Loft Surface 04_CV_25_3
+							543.734 25.6732 -78.232,#454 U Loft Surface 04_CV_25_4
+							533.737 30.5882 -84.6596,#455 U Loft Surface 04_CV_25_5
+							523.646 36.6346 -89.766,#456 U Loft Surface 04_CV_25_6
+							515.059 43.686 -95.3698,#457 U Loft Surface 04_CV_25_7
+							506.228 52.5454 -98.9834,#458 U Loft Surface 04_CV_25_8
+							497.913 63.2524 -101.28,#459 U Loft Surface 04_CV_25_9
+							491.079 75.7062 -103.248,#460 U Loft Surface 04_CV_25_10
+							486.238 90.0245 -105.239,#461 U Loft Surface 04_CV_25_11
+							483.256 106.163 -107.173,#462 U Loft Surface 04_CV_25_12
+							481.631 124.11 -108.604,#463 U Loft Surface 04_CV_25_13
+							481.521 143.868 -109.67,#464 U Loft Surface 04_CV_25_14
+							482.87 165.437 -110.322,#465 U Loft Surface 04_CV_25_15
+							484.753 181.024 -110.491,#466 U Loft Surface 04_CV_25_16
+							485.94 189.119 -110.509,#467 U Loft Surface 04_CV_25_17
+
+							544.803 27.2672 -26.416,#468 U Loft Surface 04_CV_26_0
+							543.396 31.2611 -29.5054,#469 U Loft Surface 04_CV_26_1
+							540.383 37.7656 -36.2833,#470 U Loft Surface 04_CV_26_2
+							536.775 37.836 -52.9966,#471 U Loft Surface 04_CV_26_3
+							532.519 34.7673 -70.6676,#472 U Loft Surface 04_CV_26_4
+							521.142 40.4244 -75.285,#473 U Loft Surface 04_CV_26_5
+							509.726 47.3667 -78.7456,#474 U Loft Surface 04_CV_26_6
+							500.208 56.3489 -83.5426,#475 U Loft Surface 04_CV_26_7
+							490.556 67.8663 -87.108,#476 U Loft Surface 04_CV_26_8
+							481.463 81.3771 -89.737,#477 U Loft Surface 04_CV_26_9
+							473.83 96.0601 -91.9101,#478 U Loft Surface 04_CV_26_10
+							468.066 111.408 -93.5788,#479 U Loft Surface 04_CV_26_11
+							464.069 127.563 -94.7812,#480 U Loft Surface 04_CV_26_12
+							461.397 144.969 -95.3765,#481 U Loft Surface 04_CV_26_13
+							460.188 163.488 -95.4084,#482 U Loft Surface 04_CV_26_14
+							460.392 183.168 -94.8614,#483 U Loft Surface 04_CV_26_15
+							461.48 197.053 -94.114,#484 U Loft Surface 04_CV_26_16
+							462.262 204.187 -93.6446,#485 U Loft Surface 04_CV_26_17
+
+							537.112 33.686 -23.9435,#486 U Loft Surface 04_CV_27_0
+							535.08 37.4908 -27.1597,#487 U Loft Surface 04_CV_27_1
+							531.029 43.9055 -33.7724,#488 U Loft Surface 04_CV_27_2
+							526.947 45.1546 -47.8149,#489 U Loft Surface 04_CV_27_3
+							522.727 43.9644 -61.8729,#490 U Loft Surface 04_CV_27_4
+							510.99 51.68 -64.3643,#491 U Loft Surface 04_CV_27_5
+							499.258 60.6419 -65.8395,#492 U Loft Surface 04_CV_27_6
+							489.486 71.6213 -69.3886,#493 U Loft Surface 04_CV_27_7
+							479.649 85.3265 -72.3886,#494 U Loft Surface 04_CV_27_8
+							470.327 100.8 -74.8094,#495 U Loft Surface 04_CV_27_9
+							462.29 116.71 -76.6892,#496 U Loft Surface 04_CV_27_10
+							455.839 132.167 -77.6369,#497 U Loft Surface 04_CV_27_11
+							450.903 147.422 -77.7908,#498 U Loft Surface 04_CV_27_12
+							447.121 163.225 -77.2753,#499 U Loft Surface 04_CV_27_13
+							444.607 179.34 -76.0507,#500 U Loft Surface 04_CV_27_14
+							443.32 195.852 -74.1316,#501 U Loft Surface 04_CV_27_15
+							443.288 207.108 -72.3862,#502 U Loft Surface 04_CV_27_16
+							443.479 212.798 -71.3971,#503 U Loft Surface 04_CV_27_17
+
+							530.877 39.5122 -21.1781,#504 U Loft Surface 04_CV_28_0
+							528.318 43.1184 -24.437,#505 U Loft Surface 04_CV_28_1
+							523.412 49.4564 -30.7134,#506 U Loft Surface 04_CV_28_2
+							518.848 51.8698 -41.8503,#507 U Loft Surface 04_CV_28_3
+							514.655 52.6021 -52.0437,#508 U Loft Surface 04_CV_28_4
+							503.469 63.4231 -52.089,#509 U Loft Surface 04_CV_28_5
+							492.339 75.2623 -51.2205,#510 U Loft Surface 04_CV_28_6
+							483.014 88.1008 -52.9934,#511 U Loft Surface 04_CV_28_7
+							473.712 103.319 -54.7506,#512 U Loft Surface 04_CV_28_8
+							464.832 119.734 -56.2382,#513 U Loft Surface 04_CV_28_9
+							456.922 135.743 -57.1812,#514 U Loft Surface 04_CV_28_10
+							450.132 150.332 -56.9509,#515 U Loft Surface 04_CV_28_11
+							444.436 163.783 -55.7547,#516 U Loft Surface 04_CV_28_12
+							439.598 176.981 -53.9031,#517 U Loft Surface 04_CV_28_13
+							435.691 189.647 -51.2978,#518 U Loft Surface 04_CV_28_14
+							432.689 201.883 -47.9746,#519 U Loft Surface 04_CV_28_15
+							431.297 209.731 -45.273,#520 U Loft Surface 04_CV_28_16
+							430.753 213.579 -43.8009,#521 U Loft Surface 04_CV_28_17
+
+							526.339 44.2341 -18.1647,#522 U Loft Surface 04_CV_29_0
+							523.37 47.6189 -21.3513,#523 U Loft Surface 04_CV_29_1
+							517.821 53.8471 -27.0801,#524 U Loft Surface 04_CV_29_2
+							512.798 57.4135 -35.1678,#525 U Loft Surface 04_CV_29_3
+							508.605 60.0656 -41.3833,#526 U Loft Surface 04_CV_29_4
+							498.606 74.2543 -38.5869,#527 U Loft Surface 04_CV_29_5
+							488.71 89.1102 -34.9518,#528 U Loft Surface 04_CV_29_6
+							480.255 103.401 -34.3988,#529 U Loft Surface 04_CV_29_7
+							471.877 119.368 -34.2115,#530 U Loft Surface 04_CV_29_8
+							463.791 135.768 -34.0314,#531 U Loft Surface 04_CV_29_9
+							456.318 150.932 -33.4238,#532 U Loft Surface 04_CV_29_10
+							449.488 163.912 -31.6394,#533 U Loft Surface 04_CV_29_11
+							443.306 174.965 -28.9209,#534 U Loft Surface 04_CV_29_12
+							437.653 184.974 -25.6728,#535 U Loft Surface 04_CV_29_13
+							432.568 193.662 -21.7671,#536 U Loft Surface 04_CV_29_14
+							428.036 201.129 -17.2507,#537 U Loft Surface 04_CV_29_15
+							425.387 205.272 -13.8226,#538 U Loft Surface 04_CV_29_16
+							424.156 207.135 -12.0046,#539 U Loft Surface 04_CV_29_17
+
+							523.749 47.3145 -14.9469,#540 U Loft Surface 04_CV_30_0
+							520.53 50.4118 -17.9082,#541 U Loft Surface 04_CV_30_1
+							514.589 56.38 -22.8227,#542 U Loft Surface 04_CV_30_2
+							509.184 61.2356 -27.831,#543 U Loft Surface 04_CV_30_3
+							504.872 65.885 -30.1174,#544 U Loft Surface 04_CV_30_4
+							496.061 81.6109 -23.8274,#545 U Loft Surface 04_CV_30_5
+							487.277 97.7702 -16.7898,#546 U Loft Surface 04_CV_30_6
+							478.857 112.796 -13.2615,#547 U Loft Surface 04_CV_30_7
+							469.991 129.153 -10.3291,#548 U Loft Surface 04_CV_30_8
+							461.146 145.479 -7.7168,#549 U Loft Surface 04_CV_30_9
+							452.959 159.984 -5.07262,#550 U Loft Surface 04_CV_30_10
+							445.793 171.639 -1.69612,#551 U Loft Surface 04_CV_30_11
+							439.549 180.722 2.18313,#552 U Loft Surface 04_CV_30_12
+							433.891 188.187 6.20605,#553 U Loft Surface 04_CV_30_13
+							428.925 193.734 10.4863,#554 U Loft Surface 04_CV_30_14
+							424.611 197.473 14.9822,#555 U Loft Surface 04_CV_30_15
+							422.179 198.736 18.1322,#556 U Loft Surface 04_CV_30_16
+							421.073 199.061 19.7451,#557 U Loft Surface 04_CV_30_17
+
+							523.33 48.2744 -11.5711,#558 U Loft Surface 04_CV_31_0
+							520.016 51.0518 -14.1346,#559 U Loft Surface 04_CV_31_1
+							513.916 56.6204 -17.9477,#560 U Loft Surface 04_CV_31_2
+							508.291 62.8674 -19.9107,#561 U Loft Surface 04_CV_31_3
+							503.821 69.4097 -18.4479,#562 U Loft Surface 04_CV_31_4
+							495.637 83.7323 -7.90073,#563 U Loft Surface 04_CV_31_5
+							487.359 98.4292 3.17934,#564 U Loft Surface 04_CV_31_6
+							478.329 112.845 9.61404,#565 U Loft Surface 04_CV_31_7
+							468.151 128.702 14.8458,#566 U Loft Surface 04_CV_31_8
+							457.735 144.543 19.2443,#567 U Loft Surface 04_CV_31_9
+							448.277 158.488 23.2973,#568 U Loft Surface 04_CV_31_10
+							440.643 169.311 27.8805,#569 U Loft Surface 04_CV_31_11
+							434.585 177.356 32.709,#570 U Loft Surface 04_CV_31_12
+							429.404 183.675 37.3183,#571 U Loft Surface 04_CV_31_13
+							425.319 187.938 41.8554,#572 U Loft Surface 04_CV_31_14
+							422.25 190.263 46.2666,#573 U Loft Surface 04_CV_31_15
+							420.899 190.496 49.1348,#574 U Loft Surface 04_CV_31_16
+							420.397 190.284 50.5505,#575 U Loft Surface 04_CV_31_17
+
+							525.291 46.6576 -8.0845,#576 U Loft Surface 04_CV_32_0
+							522.01 49.1487 -10.0665,#577 U Loft Surface 04_CV_32_1
+							515.948 54.24 -12.4859,#578 U Loft Surface 04_CV_32_2
+							510.359 61.8787 -11.4793,#579 U Loft Surface 04_CV_32_3
+							505.84 69.9227 -6.56706,#580 U Loft Surface 04_CV_32_4
+							497.189 79.1159 9.03725,#581 U Loft Surface 04_CV_32_5
+							488.424 88.7916 24.6962,#582 U Loft Surface 04_CV_32_6
+							478.919 100.492 32.8708,#583 U Loft Surface 04_CV_32_7
+							468.174 114.074 38.0933,#584 U Loft Surface 04_CV_32_8
+							457.208 128.196 41.5596,#585 U Loft Surface 04_CV_32_9
+							447.359 141.151 44.8138,#586 U Loft Surface 04_CV_32_10
+							439.593 151.567 49.7228,#587 U Loft Surface 04_CV_32_11
+							433.632 159.847 55.7026,#588 U Loft Surface 04_CV_32_12
+							428.696 167.036 61.5931,#589 U Loft Surface 04_CV_32_13
+							425.03 172.806 67.7604,#590 U Loft Surface 04_CV_32_14
+							422.547 177.275 74.0713,#591 U Loft Surface 04_CV_32_15
+							421.697 179.361 78.4025,#592 U Loft Surface 04_CV_32_16
+							421.474 180.183 80.5982,#593 U Loft Surface 04_CV_32_17
+
+							529.297 43.0271 -4.57995,#594 U Loft Surface 04_CV_33_0
+							526.147 45.3009 -5.83736,#595 U Loft Surface 04_CV_33_1
+							520.341 49.9844 -6.72367,#596 U Loft Surface 04_CV_33_2
+							514.816 58.6437 -2.68766,#597 U Loft Surface 04_CV_33_3
+							510.34 67.635 5.36067,#598 U Loft Surface 04_CV_33_4
+							503.166 72.0029 23.374,#599 U Loft Surface 04_CV_33_5
+							495.7 76.8244 41.1014,#600 U Loft Surface 04_CV_33_6
+							486.343 84.9211 49.8937,#601 U Loft Surface 04_CV_33_7
+							475.152 94.656 54.4953,#602 U Loft Surface 04_CV_33_8
+							463.399 105.264 56.8614,#603 U Loft Surface 04_CV_33_9
+							452.736 115.801 59.5095,#604 U Loft Surface 04_CV_33_10
+							444.46 125.266 65.1036,#605 U Loft Surface 04_CV_33_11
+							438.192 133.966 72.8251,#606 U Loft Surface 04_CV_33_12
+							432.932 142.563 80.9126,#607 U Loft Surface 04_CV_33_13
+							428.995 150.85 89.9217,#608 U Loft Surface 04_CV_33_14
+							426.267 158.901 99.6503,#609 U Loft Surface 04_CV_33_15
+							425.278 164.096 106.659,#610 U Loft Surface 04_CV_33_16
+							424.99 166.651 110.292,#611 U Loft Surface 04_CV_33_17
+
+							535.03 37.913 -1.14876,#612 U Loft Surface 04_CV_34_0
+							532.093 40.0472 -1.57194,#613 U Loft Surface 04_CV_34_1
+							526.813 44.5068 -0.93373,#614 U Loft Surface 04_CV_34_2
+							521.097 53.4918 6.33349,#615 U Loft Surface 04_CV_34_3
+							516.676 62.822 17.1793,#616 U Loft Surface 04_CV_34_4
+							516.248 66.7161 31.2432,#617 U Loft Surface 04_CV_34_5
+							514.919 70.6474 45.2542,#618 U Loft Surface 04_CV_34_6
+							506.87 75.8264 53.7671,#619 U Loft Surface 04_CV_34_7
+							494.696 80.9098 59.2806,#620 U Loft Surface 04_CV_34_8
+							480.576 86.2925 63.456,#621 U Loft Surface 04_CV_34_9
+							467.293 92.5093 68.4598,#622 U Loft Surface 04_CV_34_10
+							457.419 99.7713 76.34,#623 U Loft Surface 04_CV_34_11
+							450.18 108.029 86.4776,#624 U Loft Surface 04_CV_34_12
+							443.757 117.03 97.442,#625 U Loft Surface 04_CV_34_13
+							438.723 126.855 109.684,#626 U Loft Surface 04_CV_34_14
+							434.87 137.475 123.04,#627 U Loft Surface 04_CV_34_15
+							433.132 145.091 132.722,#628 U Loft Surface 04_CV_34_16
+							432.47 149.032 137.756,#629 U Loft Surface 04_CV_34_17
+
+							542.191 31.8085 2.11937,#630 U Loft Surface 04_CV_35_0
+							539.553 33.8572 2.61507,#631 U Loft Surface 04_CV_35_1
+							534.997 38.2137 4.78351,#632 U Loft Surface 04_CV_35_2
+							529.02 47.0243 15.1113,#633 U Loft Surface 04_CV_35_3
+							524.675 56.2921 28.2129,#634 U Loft Surface 04_CV_35_4
+							532.937 62.1192 34.851,#635 U Loft Surface 04_CV_35_5
+							539.648 67.5684 42.0035,#636 U Loft Surface 04_CV_35_6
+							534.077 71.8375 50.1022,#637 U Loft Surface 04_CV_35_7
+							521.94 74.5852 58.0535,#638 U Loft Surface 04_CV_35_8
+							506.271 76.8749 66.3577,#639 U Loft Surface 04_CV_35_9
+							490.908 80.0872 75.7332,#640 U Loft Surface 04_CV_35_10
+							479.731 85.25 86.5459,#641 U Loft Surface 04_CV_35_11
+							471.557 92.0662 98.6998,#642 U Loft Surface 04_CV_35_12
+							463.759 99.7193 111.831,#643 U Loft Surface 04_CV_35_13
+							457.166 108.466 126.053,#644 U Loft Surface 04_CV_35_14
+							451.478 118.214 141.325,#645 U Loft Surface 04_CV_35_15
+							448.352 125.399 152.216,#646 U Loft Surface 04_CV_35_16
+							446.953 129.163 157.838,#647 U Loft Surface 04_CV_35_17
+
+							550.468 25.2315 5.13367,#648 U Loft Surface 04_CV_36_0
+							548.206 27.2473 6.6028,#649 U Loft Surface 04_CV_36_1
+							544.385 31.5137 10.4072,#650 U Loft Surface 04_CV_36_2
+							538.605 40.0466 22.9465,#651 U Loft Surface 04_CV_36_3
+							534.488 48.9996 37.4602,#652 U Loft Surface 04_CV_36_4
+							546.083 54.4589 40.2865,#653 U Loft Surface 04_CV_36_5
+							556.143 59.5673 43.8181,#654 U Loft Surface 04_CV_36_6
+							553.365 64.4612 51.9404,#655 U Loft Surface 04_CV_36_7
+							544.245 68.6021 61.5404,#656 U Loft Surface 04_CV_36_8
+							531.421 72.3755 72.3573,#657 U Loft Surface 04_CV_36_9
+							518.218 76.3022 84.1525,#658 U Loft Surface 04_CV_36_10
+							508.227 80.7001 96.2357,#659 U Loft Surface 04_CV_36_11
+							500.343 85.4814 108.837,#660 U Loft Surface 04_CV_36_12
+							492.211 90.3629 122.278,#661 U Loft Surface 04_CV_36_13
+							484.575 95.4336 136.456,#662 U Loft Surface 04_CV_36_14
+							477.163 100.661 151.409,#663 U Loft Surface 04_CV_36_15
+							472.429 104.258 161.886,#664 U Loft Surface 04_CV_36_16
+							470.112 106.084 167.252,#665 U Loft Surface 04_CV_36_17
+
+							559.555 18.6913 7.80372,#666 U Loft Surface 04_CV_37_0
+							557.742 20.7164 10.2703,#667 U Loft Surface 04_CV_37_1
+							554.536 24.8095 15.8581,#668 U Loft Surface 04_CV_37_2
+							549.767 33.3019 29.2876,#669 U Loft Surface 04_CV_37_3
+							546.098 41.8703 44.1531,#670 U Loft Surface 04_CV_37_4
+							550.568 40.7401 51.1878,#671 U Loft Surface 04_CV_37_5
+							554.669 40.2595 58.363,#672 U Loft Surface 04_CV_37_6
+							554.369 47.1587 67.6149,#673 U Loft Surface 04_CV_37_7
+							552.576 57.8543 77.1486,#674 U Loft Surface 04_CV_37_8
+							549.443 70.1789 87.0118,#675 U Loft Surface 04_CV_37_9
+							545.152 81.4277 97.3335,#676 U Loft Surface 04_CV_37_10
+							540.277 88.9127 107.919,#677 U Loft Surface 04_CV_37_11
+							534.624 93.4513 118.842,#678 U Loft Surface 04_CV_37_12
+							527.935 96.8792 130.128,#679 U Loft Surface 04_CV_37_13
+							520.292 98.6177 141.769,#680 U Loft Surface 04_CV_37_14
+							511.665 98.8772 153.769,#681 U Loft Surface 04_CV_37_15
+							505.264 98.0195 162.007,#682 U Loft Surface 04_CV_37_16
+							501.901 97.3345 166.185,#683 U Loft Surface 04_CV_37_17
+
+							569.142 12.6997 10.039,#684 U Loft Surface 04_CV_38_0
+							567.849 14.7709 13.5051,#685 U Loft Surface 04_CV_38_1
+							565.42 18.6589 20.647,#686 U Loft Surface 04_CV_38_2
+							561.449 27.2035 34.555,#687 U Loft Surface 04_CV_38_3
+							558.027 35.2039 48.8377,#688 U Loft Surface 04_CV_38_4
+							558.05 24.56 54.046,#689 U Loft Surface 04_CV_38_5
+							558.449 15.7593 59.4484,#690 U Loft Surface 04_CV_38_6
+							559.87 23.3111 69.2661,#691 U Loft Surface 04_CV_38_7
+							562.914 39.6292 80.7651,#692 U Loft Surface 04_CV_38_8
+							566.166 60.082 93.0853,#693 U Loft Surface 04_CV_38_9
+							567.82 78.8568 105.189,#694 U Loft Surface 04_CV_38_10
+							566.54 90.2112 115.828,#695 U Loft Surface 04_CV_38_11
+							562.709 95.8903 125.392,#696 U Loft Surface 04_CV_38_12
+							557.397 99.826 134.66,#697 U Loft Surface 04_CV_38_13
+							550.266 100.779 143.387,#698 U Loft Surface 04_CV_38_14
+							541.438 99.199 151.663,#699 U Loft Surface 04_CV_38_15
+							534.397 96.362 156.86,#700 U Loft Surface 04_CV_38_16
+							530.587 94.5006 159.379,#701 U Loft Surface 04_CV_38_17
+
+							578.923 7.76784 11.7491,#702 U Loft Surface 04_CV_39_0
+							578.201 9.90717 16.1596,#703 U Loft Surface 04_CV_39_1
+							576.658 13.5969 24.6438,#704 U Loft Surface 04_CV_39_2
+							573.387 22.2001 38.2778,#705 U Loft Surface 04_CV_39_3
+							570.048 29.3929 50.9655,#706 U Loft Surface 04_CV_39_4
+							567.506 9.55067 53.2701,#707 U Loft Surface 04_CV_39_5
+							565.646 -7.80587 55.797,#708 U Loft Surface 04_CV_39_6
+							566.517 -4.50435 64.667,#709 U Loft Surface 04_CV_39_7
+							569.612 8.90153 76.2129,#710 U Loft Surface 04_CV_39_8
+							573.659 28.0751 89.0859,#711 U Loft Surface 04_CV_39_9
+							577.029 47.5908 101.607,#712 U Loft Surface 04_CV_39_10
+							578.365 61.5758 111.897,#713 U Loft Surface 04_CV_39_11
+							578.068 71.8389 120.537,#714 U Loft Surface 04_CV_39_12
+							577.151 82.227 128.739,#715 U Loft Surface 04_CV_39_13
+							575.296 91.5267 136.12,#716 U Loft Surface 04_CV_39_14
+							572.618 100.18 142.821,#717 U Loft Surface 04_CV_39_15
+							570.259 105.423 146.804,#718 U Loft Surface 04_CV_39_16
+							568.938 107.916 148.676,#719 U Loft Surface 04_CV_39_17
+
+							588.588 4.40694 12.8434,#720 U Loft Surface 04_CV_40_0
+							588.423 6.59642 17.9785,#721 U Loft Surface 04_CV_40_1
+							587.823 10.115 27.4303,#722 U Loft Surface 04_CV_40_2
+							585.366 18.7947 40.4933,#723 U Loft Surface 04_CV_40_3
+							582.337 25.2522 51.5289,#724 U Loft Surface 04_CV_40_4
+							579.903 -1.42361 50.3485,#725 U Loft Surface 04_CV_40_5
+							577.787 -25.732 49.9137,#726 U Loft Surface 04_CV_40_6
+							576.904 -27.7726 59.1077,#727 U Loft Surface 04_CV_40_7
+							576.954 -19.872 72.8967,#728 U Loft Surface 04_CV_40_8
+							577.561 -5.77149 89.1673,#729 U Loft Surface 04_CV_40_9
+							578.229 9.87285 105.249,#730 U Loft Surface 04_CV_40_10
+							578.53 21.5336 118.29,#731 U Loft Surface 04_CV_40_11
+							578.592 30.9338 129.166,#732 U Loft Surface 04_CV_40_12
+							578.728 41.5434 139.757,#733 U Loft Surface 04_CV_40_13
+							578.839 52.2672 149.471,#734 U Loft Surface 04_CV_40_14
+							578.961 63.5042 158.523,#735 U Loft Surface 04_CV_40_15
+							579.042 71.2528 164.071,#736 U Loft Surface 04_CV_40_16
+							579.083 75.1942 166.724,#737 U Loft Surface 04_CV_40_17
+
+							594.75 3.55452 13.1021,#738 U Loft Surface 04_CV_41_0
+							594.906 5.74103 18.4743,#739 U Loft Surface 04_CV_41_1
+							594.934 9.18287 28.2297,#740 U Loft Surface 04_CV_41_2
+							593.225 17.906 40.9485,#741 U Loft Surface 04_CV_41_3
+							590.865 24.1617 51.277,#742 U Loft Surface 04_CV_41_4
+							590.045 -4.35613 48.9691,#743 U Loft Surface 04_CV_41_5
+							589.251 -30.708 47.6726,#744 U Loft Surface 04_CV_41_6
+							588.293 -34.7684 57.2456,#745 U Loft Surface 04_CV_41_7
+							587.382 -29.2287 72.1896,#746 U Loft Surface 04_CV_41_8
+							586.572 -17.5963 90.1112,#747 U Loft Surface 04_CV_41_9
+							585.913 -4.22478 107.975,#748 U Loft Surface 04_CV_41_10
+							585.484 5.54243 122.577,#749 U Loft Surface 04_CV_41_11
+							585.259 13.3778 134.9,#750 U Loft Surface 04_CV_41_12
+							585.195 22.5864 147.068,#751 U Loft Surface 04_CV_41_13
+							585.304 32.1251 158.411,#752 U Loft Surface 04_CV_41_14
+							585.583 42.3738 169.172,#753 U Loft Surface 04_CV_41_15
+							585.882 49.5988 175.907,#754 U Loft Surface 04_CV_41_16
+							586.06 53.3121 179.166,#755 U Loft Surface 04_CV_41_17
+
+							597.708 3.56055 13.0987,#756 U Loft Surface 04_CV_42_0
+							598.003 5.73023 18.5023,#757 U Loft Surface 04_CV_42_1
+							598.337 9.14789 28.2993,#758 U Loft Surface 04_CV_42_2
+							597.084 17.8861 40.9221,#759 U Loft Surface 04_CV_42_3
+							595.257 24.1776 51.1055,#760 U Loft Surface 04_CV_42_4
+							595.575 -4.31714 48.9081,#761 U Loft Surface 04_CV_42_5
+							595.888 -30.6512 47.7084,#762 U Loft Surface 04_CV_42_6
+							595.701 -34.7468 57.2357,#763 U Loft Surface 04_CV_42_7
+							595.444 -29.2828 72.0654,#764 U Loft Surface 04_CV_42_8
+							595.186 -17.7395 89.8475,#765 U Loft Surface 04_CV_42_9
+							594.99 -4.43535 107.6,#766 U Loft Surface 04_CV_42_10
+							594.983 5.31526 122.172,#767 U Loft Surface 04_CV_42_11
+							595.123 13.1762 134.532,#768 U Loft Surface 04_CV_42_12
+							595.345 22.4307 146.765,#769 U Loft Surface 04_CV_42_13
+							595.669 32.0426 158.214,#770 U Loft Surface 04_CV_42_14
+							596.089 42.3893 169.118,#771 U Loft Surface 04_CV_42_15
+							596.434 49.6967 175.972,#772 U Loft Surface 04_CV_42_16
+							596.622 53.4554 179.298,#773 U Loft Surface 04_CV_42_17
+
+						]
+					}#end of NurbsSurface
+					appearance Appearance {
+						material Material {
+							#Material #8
+							diffuseColor 0.545098 0.227451 0.0509804
+							specularColor 0.9 0.9 0.9
+							shininess 0.16
+						}
+					}
+				}#end of Shape
+				Shape {
+					geometry NurbsSurface {
+						solid FALSE
+						#node Head type 22 IsClosedInU 0 IsClosedInV 0 FlipNormals 1 
+						#surface Blend Surface 01 gen mapping 1 tex surface 1 
+						uOrder 4 
+						vOrder 4 
+						vDimension 10 
+						uDimension 4 
+						vKnot [
+							 0, 0, 0, 0, 0.251408, 0.2524,
+							 0.492393, 0.505093, 0.74688, 0.750293, 1, 1,
+							 1, 1,
+						]
+						uKnot [
+							 0, 0, 0, 0, 1, 1,
+							 1, 1,
+						]
+						controlPoint [
+							597.708 3.56055 13.0987,#0 Blend Surface 01_CV_0_0
+							597.529 5.49626 6.67571,#1 Blend Surface 01_CV_0_1
+							597.349 7.43199 0.252699,#2 Blend Surface 01_CV_0_2
+							597.17 9.3677 -6.17031,#3 Blend Surface 01_CV_0_3
+
+							627.464 3.62127 13.0644,#4 Blend Surface 01_CV_1_0
+							626.017 5.51109 6.62893,#5 Blend Surface 01_CV_1_1
+							624.571 7.40091 0.19351,#6 Blend Surface 01_CV_1_2
+							623.125 9.29073 -6.24191,#7 Blend Surface 01_CV_1_3
+
+							669.657 48.4786 -0.483189,#8 Blend Surface 01_CV_2_0
+							667.501 47.8523 -3.65568,#9 Blend Surface 01_CV_2_1
+							665.345 47.226 -6.82817,#10 Blend Surface 01_CV_2_2
+							663.188 46.5998 -10.0007,#11 Blend Surface 01_CV_2_3
+
+							672.359 47.282 -23.0897,#12 Blend Surface 01_CV_3_0
+							670.81 47.2559 -19.8263,#13 Blend Surface 01_CV_3_1
+							669.261 47.2298 -16.5628,#14 Blend Surface 01_CV_3_2
+							667.712 47.2038 -13.2993,#15 Blend Surface 01_CV_3_3
+
+							634.747 3.38657 -32.8256,#16 Blend Surface 01_CV_4_0
+							634.373 6.16663 -26.2146,#17 Blend Surface 01_CV_4_1
+							633.999 8.94667 -19.6036,#18 Blend Surface 01_CV_4_2
+							633.626 11.7267 -12.9926,#19 Blend Surface 01_CV_4_3
+
+							559.595 5.72328 -32.6373,#20 Blend Surface 01_CV_5_0
+							561.094 6.82962 -26.0015,#21 Blend Surface 01_CV_5_1
+							562.594 7.93595 -19.3657,#22 Blend Surface 01_CV_5_2
+							564.094 9.04229 -12.7299,#23 Blend Surface 01_CV_5_3
+
+							521.567 48.5508 -22.8704,#24 Blend Surface 01_CV_6_0
+							523.774 47.8455 -19.5443,#25 Blend Surface 01_CV_6_1
+							525.981 47.1403 -16.2183,#26 Blend Surface 01_CV_6_2
+							528.189 46.435 -12.8922,#27 Blend Surface 01_CV_6_3
+
+							525.871 47.1526 -0.26108,#28 Blend Surface 01_CV_7_0
+							527.672 47.2333 -3.39305,#29 Blend Surface 01_CV_7_1
+							529.473 47.3139 -6.52501,#30 Blend Surface 01_CV_7_2
+							531.274 47.3945 -9.65698,#31 Blend Surface 01_CV_7_3
+
+							568.154 3.50024 13.1329,#32 Blend Surface 01_CV_8_0
+							569.233 5.48155 6.72217,#33 Blend Surface 01_CV_8_1
+							570.312 7.46285 0.311487,#34 Blend Surface 01_CV_8_2
+							571.39 9.44415 -6.0992,#35 Blend Surface 01_CV_8_3
+
+							597.708 3.56055 13.0987,#36 Blend Surface 01_CV_9_0
+							597.529 5.49626 6.67571,#37 Blend Surface 01_CV_9_1
+							597.349 7.43199 0.252699,#38 Blend Surface 01_CV_9_2
+							597.17 9.3677 -6.17031,#39 Blend Surface 01_CV_9_3
+
+						]
+					}#end of NurbsSurface
+					appearance Appearance {
+						material Material {
+							#Material #8
+							diffuseColor 0.545098 0.227451 0.0509804
+							specularColor 0.9 0.9 0.9
+							shininess 0.16
+						}
+					}
+				}#end of Shape
+			]
+		}#end of Transform
+	]
+}#end of Group

@@ -1,0 +1,1302 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "DividerC"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_GroundScale Transform {
+     translation 0.0 -1.75 0.0
+     children [
+      DEF GroundScale Group {
+       children [
+        DEF dad_Whole Transform {
+         translation 0.0 1.35 0.0
+         children [
+          DEF Whole Group {
+           children [
+            DEF dad_Panel Transform {
+             translation -1.25 -0.95 0.0
+             rotation 0.0 1.0 0.0 0.349
+             children [
+              DEF Panel Group {
+               children [
+                DEF dad_LatticeFrame Transform {
+                 children [
+                  DEF LatticeFrame Group {
+                   children [
+                    DEF dad_LatticeFrameFullV Transform {
+                     translation -0.6 0.95 0.0
+                     children [
+                      DEF LatticeFrameFullV Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.1
+                         translation 0.0 3.0
+                        }
+                        material DEF Red_mat Material {
+                         ambientIntensity 0.200
+                         shininess 0.200
+                         diffuseColor 0.6 0.05 0.0
+                         emissiveColor 0.0 0.0 0.0
+                         specularColor 0.0 0.0 0.0
+                        }
+                       }
+                       geometry Cylinder {
+                        height 1.900
+                        radius 0.015
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_LatticeFrameFullH Transform {
+                     translation 0.0 1.9 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      DEF LatticeFrameFullH Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.1
+                         translation 0.0 3.0
+                        }
+                        material USE Red_mat
+                       }
+                       geometry Cylinder {
+                        height 1.200
+                        radius 0.015
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_LatticeFramePartH Transform {
+                     translation -0.45 1.3 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      DEF LatticeFramePartH Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.1
+                         translation 0.0 3.0
+                        }
+                        material USE Red_mat
+                       }
+                       geometry Cylinder {
+                        height 0.300
+                        radius 0.015
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_LatticeFramePartH2 Transform {
+                     translation -0.55 1.0 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      DEF LatticeFramePartH2 Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.1
+                         translation 0.0 3.0
+                        }
+                        material USE Red_mat
+                       }
+                       geometry Cylinder {
+                        height 0.150
+                        radius 0.015
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_Reference5 Transform {
+                     translation 0.0 1.6 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFrameFullH
+                     ]
+                    }
+                    DEF dad_Reference6 Transform {
+                     translation 0.0 0.3 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFrameFullH
+                     ]
+                    }
+                    DEF dad_Reference7 Transform {
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFrameFullH
+                     ]
+                    }
+                    DEF dad_Reference8 Transform {
+                     translation 0.6 0.95 0.0
+                     children [
+                      USE LatticeFrameFullV
+                     ]
+                    }
+                    DEF dad_Reference12 Transform {
+                     translation 0.45 1.3 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFramePartH
+                     ]
+                    }
+                    DEF dad_Reference13 Transform {
+                     translation -0.45 0.6 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFramePartH
+                     ]
+                    }
+                    DEF dad_Reference14 Transform {
+                     translation 0.45 0.6 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFramePartH
+                     ]
+                    }
+                    DEF dad_Reference15 Transform {
+                     translation -0.55 0.9 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFramePartH2
+                     ]
+                    }
+                    DEF dad_Reference16 Transform {
+                     translation 0.55 1.0 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFramePartH2
+                     ]
+                    }
+                    DEF dad_Reference17 Transform {
+                     translation 0.55 0.9 0.0
+                     rotation 0.0 0.0 1.0 1.571
+                     children [
+                      USE LatticeFramePartH2
+                     ]
+                    }
+                    DEF dad_LatticeFramePartV Transform {
+                     translation -0.3 1.625 0.0
+                     children [
+                      DEF LatticeFramePartV Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.1
+                         translation 0.0 3.0
+                        }
+                        material USE Red_mat
+                       }
+                       geometry Cylinder {
+                        height 0.600
+                        radius 0.015
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_LatticeFramePartV2 Transform {
+                     translation 0.0 1.65 0.0
+                     children [
+                      DEF LatticeFramePartV2 Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.1
+                         translation 0.0 3.0
+                        }
+                        material USE Red_mat
+                       }
+                       geometry Cylinder {
+                        height 0.500
+                        radius 0.015
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_Reference18 Transform {
+                     translation 0.3 1.625 0.0
+                     children [
+                      USE LatticeFramePartV
+                     ]
+                    }
+                    DEF dad_Reference19 Transform {
+                     translation -0.3 0.275 0.0
+                     children [
+                      USE LatticeFramePartV
+                     ]
+                    }
+                    DEF dad_Reference20 Transform {
+                     translation 0.3 0.275 0.0
+                     children [
+                      USE LatticeFramePartV
+                     ]
+                    }
+                    DEF dad_Reference21 Transform {
+                     translation 0.0 0.25 0.0
+                     children [
+                      USE LatticeFramePartV2
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+                DEF dad_PanelFrame Transform {
+                 translation 0.0 -0.375 0.0
+                 children [
+                  DEF PanelFrame Group {
+                   children [
+                    DEF dad_FrameSqV Transform {
+                     translation -0.625 1.325 0.0
+                     children [
+                      DEF FrameSqV Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.4
+                         translation 0.0 0.1
+                        }
+                        material USE Red_mat
+                       }
+                       geometry Box {
+                        size 0.05 2.7 0.05
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_FrameSqH Transform {
+                     translation 0.0 2.65 0.0
+                     children [
+                      DEF FrameSqH Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.4
+                         translation 0.0 0.1
+                        }
+                        material USE Red_mat
+                       }
+                       geometry Box {
+                        size 1.21 0.05 0.05
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_PictureTop2 Transform {
+                     translation 0.0 2.475 0.0
+                     children [
+                      DEF PictureTop2 Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.27
+                         translation 0.0 2.38
+                        }
+                        material DEF Yellow_mat Material {
+                         ambientIntensity 0.200
+                         shininess 0.200
+                         diffuseColor 0.7 0.6 0.5
+                         emissiveColor 0.0 0.0 0.0
+                         specularColor 0.0 0.0 0.0
+                        }
+                       }
+                       geometry Box {
+                        size 1.21 0.305 0.02
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_PictureBottom2 Transform {
+                     translation 0.0 0.175 0.0
+                     children [
+                      DEF PictureBottom2 Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.27
+                         translation 0.0 2.38
+                        }
+                        material USE Yellow_mat
+                       }
+                       geometry Box {
+                        size 1.21 0.305 0.02
+                       }
+                      }
+                     ]
+                    }
+                    DEF dad_Reference1 Transform {
+                     translation 0.625 1.325 0.0
+                     children [
+                      USE FrameSqV
+                     ]
+                    }
+                    DEF dad_Reference2 Transform {
+                     translation 0.0 2.3 0.0
+                     children [
+                      USE FrameSqH
+                     ]
+                    }
+                    DEF dad_Reference3 Transform {
+                     translation 0.0 0.35 0.0
+                     children [
+                      USE FrameSqH
+                     ]
+                    }
+                    DEF dad_Reference4 Transform {
+                     children [
+                      USE FrameSqH
+                     ]
+                    }
+                    DEF dad_Revolution1 Transform {
+                     translation 0.0 1.325 -0.025
+                     rotation 1.0 0.0 0.0 1.571
+                     children [
+                      DEF Revolution1 Shape {
+                       appearance Appearance {
+                        texture ImageTexture {
+                         url "Divide.jpg"
+                        }
+                        textureTransform TextureTransform {
+                         scale 1.0 0.4
+                         translation 0.0 0.1
+                        }
+                        material USE Red_mat
+                       }
+                       geometry IndexedFaceSet {
+                        solid TRUE
+                        creaseAngle 0.524
+                        coord Coordinate {
+                         point [
+                           0.45 0.05 0.0
+                           0.45 0.0 0.0
+                           0.5 0.0 0.0
+                           0.5 0.05 0.0
+                           0.45 0.05 0.0
+                           0.4111 0.05 -0.18303
+                           0.4111 0.0 -0.18303
+                           0.45677 0.0 -0.20337
+                           0.45677 0.05 -0.20337
+                           0.4111 0.05 -0.18303
+                           0.30111 0.05 -0.33442
+                           0.30111 0.0 -0.33442
+                           0.33457 0.0 -0.37157
+                           0.33457 0.05 -0.37157
+                           0.30111 0.05 -0.33442
+                           0.13906 0.05 -0.42798
+                           0.13906 0.0 -0.42798
+                           0.15451 0.0 -0.47553
+                           0.15451 0.05 -0.47553
+                           0.13906 0.05 -0.42798
+                           -0.04704 0.05 -0.44753
+                           -0.04704 0.0 -0.44753
+                           -0.05226 0.0 -0.49726
+                           -0.05226 0.05 -0.49726
+                           -0.04704 0.05 -0.44753
+                           -0.225 0.05 -0.38971
+                           -0.225 0.0 -0.38971
+                           -0.25 0.0 -0.43301
+                           -0.25 0.05 -0.43301
+                           -0.225 0.05 -0.38971
+                           -0.36406 0.05 -0.2645
+                           -0.36406 0.0 -0.2645
+                           -0.40451 0.0 -0.29389
+                           -0.40451 0.05 -0.29389
+                           -0.36406 0.05 -0.2645
+                           -0.44017 0.05 -0.09356
+                           -0.44017 0.0 -0.09356
+                           -0.48907 0.0 -0.10396
+                           -0.48907 0.05 -0.10396
+                           -0.44017 0.05 -0.09356
+                           -0.44017 0.05 0.09356
+                           -0.44017 0.0 0.09356
+                           -0.48907 0.0 0.10396
+                           -0.48907 0.05 0.10396
+                           -0.44017 0.05 0.09356
+                           -0.36406 0.05 0.2645
+                           -0.36406 0.0 0.2645
+                           -0.40451 0.0 0.29389
+                           -0.40451 0.05 0.29389
+                           -0.36406 0.05 0.2645
+                           -0.225 0.05 0.38971
+                           -0.225 0.0 0.38971
+                           -0.25 0.0 0.43301
+                           -0.25 0.05 0.43301
+                           -0.225 0.05 0.38971
+                           -0.04704 0.05 0.44753
+                           -0.04704 0.0 0.44753
+                           -0.05226 0.0 0.49726
+                           -0.05226 0.05 0.49726
+                           -0.04704 0.05 0.44753
+                           0.13906 0.05 0.42798
+                           0.13906 0.0 0.42798
+                           0.15451 0.0 0.47553
+                           0.15451 0.05 0.47553
+                           0.13906 0.05 0.42798
+                           0.30111 0.05 0.33442
+                           0.30111 0.0 0.33442
+                           0.33457 0.0 0.37157
+                           0.33457 0.05 0.37157
+                           0.30111 0.05 0.33442
+                           0.4111 0.05 0.18303
+                           0.4111 0.0 0.18303
+                           0.45677 0.0 0.20337
+                           0.45677 0.05 0.20337
+                           0.4111 0.05 0.18303
+                           0.45 0.05 -0.0
+                           0.45 0.0 -0.0
+                           0.5 0.0 -0.0
+                           0.5 0.05 -0.0
+                           0.45 0.05 -0.0
+                         ]
+                        }
+                        texCoord TextureCoordinate {
+                         point [
+                           0.0 0.0
+                           0.0 0.25
+                           0.0 0.5
+                           0.0 0.75
+                           0.0 1.0
+                           0.06667 0.0
+                           0.06667 0.25
+                           0.06667 0.5
+                           0.06667 0.75
+                           0.06667 1.0
+                           0.13333 0.0
+                           0.13333 0.25
+                           0.13333 0.5
+                           0.13333 0.75
+                           0.13333 1.0
+                           0.2 0.0
+                           0.2 0.25
+                           0.2 0.5
+                           0.2 0.75
+                           0.2 1.0
+                           0.26667 0.0
+                           0.26667 0.25
+                           0.26667 0.5
+                           0.26667 0.75
+                           0.26667 1.0
+                           0.33333 0.0
+                           0.33333 0.25
+                           0.33333 0.5
+                           0.33333 0.75
+                           0.33333 1.0
+                           0.4 0.0
+                           0.4 0.25
+                           0.4 0.5
+                           0.4 0.75
+                           0.4 1.0
+                           0.46667 0.0
+                           0.46667 0.25
+                           0.46667 0.5
+                           0.46667 0.75
+                           0.46667 1.0
+                           0.53333 0.0
+                           0.53333 0.25
+                           0.53333 0.5
+                           0.53333 0.75
+                           0.53333 1.0
+                           0.6 0.0
+                           0.6 0.25
+                           0.6 0.5
+                           0.6 0.75
+                           0.6 1.0
+                           0.66667 0.0
+                           0.66667 0.25
+                           0.66667 0.5
+                           0.66667 0.75
+                           0.66667 1.0
+                           0.73333 0.0
+                           0.73333 0.25
+                           0.73333 0.5
+                           0.73333 0.75
+                           0.73333 1.0
+                           0.8 0.0
+                           0.8 0.25
+                           0.8 0.5
+                           0.8 0.75
+                           0.8 1.0
+                           0.86667 0.0
+                           0.86667 0.25
+                           0.86667 0.5
+                           0.86667 0.75
+                           0.86667 1.0
+                           0.93333 0.0
+                           0.93333 0.25
+                           0.93333 0.5
+                           0.93333 0.75
+                           0.93333 1.0
+                           1.0 0.0
+                           1.0 0.25
+                           1.0 0.5
+                           1.0 0.75
+                           1.0 1.0
+                         ]
+                        }
+                        coordIndex [
+                          0 5 6 -1 
+                          0 6 1 -1 
+                          1 6 7 -1 
+                          1 7 2 -1 
+                          2 7 8 -1 
+                          2 8 3 -1 
+                          3 8 9 -1 
+                          3 9 4 -1 
+                          5 10 11 -1 
+                          5 11 6 -1 
+                          6 11 12 -1 
+                          6 12 7 -1 
+                          7 12 13 -1 
+                          7 13 8 -1 
+                          8 13 14 -1 
+                          8 14 9 -1 
+                          10 15 16 -1 
+                          10 16 11 -1 
+                          11 16 17 -1 
+                          11 17 12 -1 
+                          12 17 18 -1 
+                          12 18 13 -1 
+                          13 18 19 -1 
+                          13 19 14 -1 
+                          15 20 21 -1 
+                          15 21 16 -1 
+                          16 21 22 -1 
+                          16 22 17 -1 
+                          17 22 23 -1 
+                          17 23 18 -1 
+                          18 23 24 -1 
+                          18 24 19 -1 
+                          20 25 26 -1 
+                          20 26 21 -1 
+                          21 26 27 -1 
+                          21 27 22 -1 
+                          22 27 28 -1 
+                          22 28 23 -1 
+                          23 28 29 -1 
+                          23 29 24 -1 
+                          25 30 31 -1 
+                          25 31 26 -1 
+                          26 31 32 -1 
+                          26 32 27 -1 
+                          27 32 33 -1 
+                          27 33 28 -1 
+                          28 33 34 -1 
+                          28 34 29 -1 
+                          30 35 36 -1 
+                          30 36 31 -1 
+                          31 36 37 -1 
+                          31 37 32 -1 
+                          32 37 38 -1 
+                          32 38 33 -1 
+                          33 38 39 -1 
+                          33 39 34 -1 
+                          35 40 41 -1 
+                          35 41 36 -1 
+                          36 41 42 -1 
+                          36 42 37 -1 
+                          37 42 43 -1 
+                          37 43 38 -1 
+                          38 43 44 -1 
+                          38 44 39 -1 
+                          40 45 46 -1 
+                          40 46 41 -1 
+                          41 46 47 -1 
+                          41 47 42 -1 
+                          42 47 48 -1 
+                          42 48 43 -1 
+                          43 48 49 -1 
+                          43 49 44 -1 
+                          45 50 51 -1 
+                          45 51 46 -1 
+                          46 51 52 -1 
+                          46 52 47 -1 
+                          47 52 53 -1 
+                          47 53 48 -1 
+                          48 53 54 -1 
+                          48 54 49 -1 
+                          50 55 56 -1 
+                          50 56 51 -1 
+                          51 56 57 -1 
+                          51 57 52 -1 
+                          52 57 58 -1 
+                          52 58 53 -1 
+                          53 58 59 -1 
+                          53 59 54 -1 
+                          55 60 61 -1 
+                          55 61 56 -1 
+                          56 61 62 -1 
+                          56 62 57 -1 
+                          57 62 63 -1 
+                          57 63 58 -1 
+                          58 63 64 -1 
+                          58 64 59 -1 
+                          60 65 66 -1 
+                          60 66 61 -1 
+                          61 66 67 -1 
+                          61 67 62 -1 
+                          62 67 68 -1 
+                          62 68 63 -1 
+                          63 68 69 -1 
+                          63 69 64 -1 
+                          65 70 71 -1 
+                          65 71 66 -1 
+                          66 71 72 -1 
+                          66 72 67 -1 
+                          67 72 73 -1 
+                          67 73 68 -1 
+                          68 73 74 -1 
+                          68 74 69 -1 
+                          70 75 76 -1 
+                          70 76 71 -1 
+                          71 76 77 -1 
+                          71 77 72 -1 
+                          72 77 78 -1 
+                          72 78 73 -1 
+                          73 78 79 -1 
+                          73 79 74 -1 
+                        ]
+                        texCoordIndex [
+                          0 5 6 -1 
+                          0 6 1 -1 
+                          1 6 7 -1 
+                          1 7 2 -1 
+                          2 7 8 -1 
+                          2 8 3 -1 
+                          3 8 9 -1 
+                          3 9 4 -1 
+                          5 10 11 -1 
+                          5 11 6 -1 
+                          6 11 12 -1 
+                          6 12 7 -1 
+                          7 12 13 -1 
+                          7 13 8 -1 
+                          8 13 14 -1 
+                          8 14 9 -1 
+                          10 15 16 -1 
+                          10 16 11 -1 
+                          11 16 17 -1 
+                          11 17 12 -1 
+                          12 17 18 -1 
+                          12 18 13 -1 
+                          13 18 19 -1 
+                          13 19 14 -1 
+                          15 20 21 -1 
+                          15 21 16 -1 
+                          16 21 22 -1 
+                          16 22 17 -1 
+                          17 22 23 -1 
+                          17 23 18 -1 
+                          18 23 24 -1 
+                          18 24 19 -1 
+                          20 25 26 -1 
+                          20 26 21 -1 
+                          21 26 27 -1 
+                          21 27 22 -1 
+                          22 27 28 -1 
+                          22 28 23 -1 
+                          23 28 29 -1 
+                          23 29 24 -1 
+                          25 30 31 -1 
+                          25 31 26 -1 
+                          26 31 32 -1 
+                          26 32 27 -1 
+                          27 32 33 -1 
+                          27 33 28 -1 
+                          28 33 34 -1 
+                          28 34 29 -1 
+                          30 35 36 -1 
+                          30 36 31 -1 
+                          31 36 37 -1 
+                          31 37 32 -1 
+                          32 37 38 -1 
+                          32 38 33 -1 
+                          33 38 39 -1 
+                          33 39 34 -1 
+                          35 40 41 -1 
+                          35 41 36 -1 
+                          36 41 42 -1 
+                          36 42 37 -1 
+                          37 42 43 -1 
+                          37 43 38 -1 
+                          38 43 44 -1 
+                          38 44 39 -1 
+                          40 45 46 -1 
+                          40 46 41 -1 
+                          41 46 47 -1 
+                          41 47 42 -1 
+                          42 47 48 -1 
+                          42 48 43 -1 
+                          43 48 49 -1 
+                          43 49 44 -1 
+                          45 50 51 -1 
+                          45 51 46 -1 
+                          46 51 52 -1 
+                          46 52 47 -1 
+                          47 52 53 -1 
+                          47 53 48 -1 
+                          48 53 54 -1 
+                          48 54 49 -1 
+                          50 55 56 -1 
+                          50 56 51 -1 
+                          51 56 57 -1 
+                          51 57 52 -1 
+                          52 57 58 -1 
+                          52 58 53 -1 
+                          53 58 59 -1 
+                          53 59 54 -1 
+                          55 60 61 -1 
+                          55 61 56 -1 
+                          56 61 62 -1 
+                          56 62 57 -1 
+                          57 62 63 -1 
+                          57 63 58 -1 
+                          58 63 64 -1 
+                          58 64 59 -1 
+                          60 65 66 -1 
+                          60 66 61 -1 
+                          61 66 67 -1 
+                          61 67 62 -1 
+                          62 67 68 -1 
+                          62 68 63 -1 
+                          63 68 69 -1 
+                          63 69 64 -1 
+                          65 70 71 -1 
+                          65 71 66 -1 
+                          66 71 72 -1 
+                          66 72 67 -1 
+                          67 72 73 -1 
+                          67 73 68 -1 
+                          68 73 74 -1 
+                          68 74 69 -1 
+                          70 75 76 -1 
+                          70 76 71 -1 
+                          71 76 77 -1 
+                          71 77 72 -1 
+                          72 77 78 -1 
+                          72 78 73 -1 
+                          73 78 79 -1 
+                          73 79 74 -1 
+                        ]
+                       }
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+                DEF dad_LatticeInners Transform {
+                 children [
+                  DEF LatticeInners Group {
+                   children [
+                    DEF dad_LatticeSquareRow Transform {
+                     translation 0.0 1.75 0.0
+                     children [
+                      DEF LatticeSquareRow Group {
+                       children [
+                        DEF dad_LatticeSquare Transform {
+                         translation -0.45 0.0 0.0
+                         children [
+                          DEF LatticeSquare Group {
+                           children [
+                            DEF dad_LatticeWorkA Transform {
+                             translation -0.05 0.05 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              DEF LatticeWorkA Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.200
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                            DEF dad_LatticeWorkB Transform {
+                             translation 0.05 -0.05 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              DEF LatticeWorkB Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.200
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                            DEF dad_LatticeWorkC Transform {
+                             translation -0.05 -0.05 0.0
+                             children [
+                              DEF LatticeWorkC Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.200
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                            DEF dad_LatticeWorkD Transform {
+                             translation 0.05 0.05 0.0
+                             children [
+                              DEF LatticeWorkD Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.200
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                        DEF dad_Reference9 Transform {
+                         translation -0.15 0.0 0.0
+                         children [
+                          USE LatticeSquare
+                         ]
+                        }
+                        DEF dad_Reference10 Transform {
+                         translation 0.15 0.0 0.0
+                         children [
+                          USE LatticeSquare
+                         ]
+                        }
+                        DEF dad_Reference11 Transform {
+                         translation 0.45 0.0 0.0
+                         children [
+                          USE LatticeSquare
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                    DEF dad_Reference22 Transform {
+                     translation 0.0 0.149 0.0
+                     children [
+                      USE LatticeSquareRow
+                     ]
+                    }
+                    DEF dad_LatticeSquareRowEnds Transform {
+                     translation 0.0 1.45 0.0
+                     children [
+                      DEF LatticeSquareRowEnds Group {
+                       children [
+                        DEF dad_Reference27 Transform {
+                         translation -0.45 0.0 0.0
+                         children [
+                          USE LatticeSquare
+                         ]
+                        }
+                        DEF dad_Reference28 Transform {
+                         translation 0.45 0.0 0.0
+                         children [
+                          USE LatticeSquare
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                    DEF dad_Reference23 Transform {
+                     translation 0.0 0.45 0.0
+                     children [
+                      USE LatticeSquareRowEnds
+                     ]
+                    }
+                    DEF dad_LatticeBits Transform {
+                     children [
+                      DEF LatticeBits Group {
+                       children [
+                        DEF dad_BigBits Transform {
+                         translation 1.35 1.35 0.0
+                         children [
+                          DEF BigBits Group {
+                           children [
+                            DEF dad_Reference24 Transform {
+                             translation -1.55 0.15 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkA
+                             ]
+                            }
+                            DEF dad_Reference25 Transform {
+                             translation -1.25 0.15 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkA
+                             ]
+                            }
+                            DEF dad_Reference26 Transform {
+                             translation -1.85 -0.15 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkA
+                             ]
+                            }
+                            DEF dad_Reference36 Transform {
+                             translation -0.85 -0.65 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkB
+                             ]
+                            }
+                            DEF dad_Reference37 Transform {
+                             translation -1.45 -0.95 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkB
+                             ]
+                            }
+                            DEF dad_Reference38 Transform {
+                             translation -1.15 -0.95 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkB
+                             ]
+                            }
+                            DEF dad_Reference29 Transform {
+                             translation -1.85 -0.25 0.0
+                             children [
+                              USE LatticeWorkC
+                             ]
+                            }
+                            DEF dad_Reference30 Transform {
+                             translation -1.85 -0.65 0.0
+                             children [
+                              USE LatticeWorkC
+                             ]
+                            }
+                            DEF dad_Reference31 Transform {
+                             translation -1.55 -0.95 0.0
+                             children [
+                              USE LatticeWorkC
+                             ]
+                            }
+                            DEF dad_Reference32 Transform {
+                             translation -1.25 -0.95 0.0
+                             children [
+                              USE LatticeWorkC
+                             ]
+                            }
+                            DEF dad_Reference33 Transform {
+                             translation -0.85 -0.15 0.0
+                             children [
+                              USE LatticeWorkD
+                             ]
+                            }
+                            DEF dad_Reference35 Transform {
+                             translation -0.85 -0.55 0.0
+                             children [
+                              USE LatticeWorkD
+                             ]
+                            }
+                            DEF dad_Reference39 Transform {
+                             translation -1.15 0.15 0.0
+                             children [
+                              USE LatticeWorkD
+                             ]
+                            }
+                            DEF dad_Reference40 Transform {
+                             translation -1.45 0.15 0.0
+                             children [
+                              USE LatticeWorkD
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                        DEF dad_IttleBits Transform {
+                         children [
+                          DEF IttleBits Group {
+                           children [
+                            DEF dad_LatticeWorkV10 Transform {
+                             translation -0.2 1.45 0.0
+                             children [
+                              DEF LatticeWorkV10 Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.100
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                            DEF dad_Reference41 Transform {
+                             translation 0.1 1.45 0.0
+                             children [
+                              USE LatticeWorkV10
+                             ]
+                            }
+                            DEF dad_Reference42 Transform {
+                             translation -0.1 0.45 0.0
+                             children [
+                              USE LatticeWorkV10
+                             ]
+                            }
+                            DEF dad_Reference43 Transform {
+                             translation 0.2 0.45 0.0
+                             children [
+                              USE LatticeWorkV10
+                             ]
+                            }
+                            DEF dad_LatticeWorkH15 Transform {
+                             translation -0.525 0.8 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              DEF LatticeWorkH15 Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.150
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                            DEF dad_Reference44 Transform {
+                             translation 0.525 1.1 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkH15
+                             ]
+                            }
+                            DEF dad_LatticeWorkH10 Transform {
+                             translation -0.45 0.7 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              DEF LatticeWorkH10 Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.100
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                            DEF dad_Reference45 Transform {
+                             translation 0.45 1.2 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkH10
+                             ]
+                            }
+                            DEF dad_Reference46 Transform {
+                             translation 0.25 1.4 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkH10
+                             ]
+                            }
+                            DEF dad_Reference47 Transform {
+                             translation -0.25 0.5 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkH10
+                             ]
+                            }
+                            DEF dad_LatticeWorkH5 Transform {
+                             translation -0.475 1.1 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              DEF LatticeWorkH5 Shape {
+                               appearance Appearance {
+                                texture ImageTexture {
+                                 url "Divide.jpg"
+                                }
+                                textureTransform TextureTransform {
+                                 scale 1.0 0.1
+                                 translation 0.0 3.0
+                                }
+                                material USE Red_mat
+                               }
+                               geometry Cylinder {
+                                height 0.050
+                                radius 0.015
+                               }
+                              }
+                             ]
+                            }
+                            DEF dad_Reference48 Transform {
+                             translation 0.475 0.8 0.0
+                             rotation 0.0 0.0 1.0 1.571
+                             children [
+                              USE LatticeWorkH5
+                             ]
+                            }
+                            DEF dad_Reference49 Transform {
+                             translation -0.4 1.25 0.0
+                             children [
+                              USE LatticeWorkV10
+                             ]
+                            }
+                            DEF dad_Reference50 Transform {
+                             translation 0.4 0.65 0.0
+                             children [
+                              USE LatticeWorkV10
+                             ]
+                            }
+                           ]
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+            DEF dad_Reference51 Transform {
+             translation 0.0 -0.95 0.0
+             rotation 0.0 -1.0 0.0 0.349
+             children [
+              USE Panel
+             ]
+            }
+            DEF dad_Reference52 Transform {
+             translation 1.25 -0.95 0.0
+             rotation 0.0 1.0 0.0 0.349
+             children [
+              USE Panel
+             ]
+            }
+            DEF dad_Hinge Transform {
+             translation -0.625 0.0 -0.225
+             children [
+              DEF Hinge Shape {
+               appearance Appearance {
+                texture ImageTexture {
+                 url "Divide.jpg"
+                }
+                textureTransform TextureTransform {
+                 scale 1.0 0.4
+                 translation 0.0 0.1
+                }
+                material USE Red_mat
+               }
+               geometry Cylinder {
+                height 2.650
+                radius 0.020
+               }
+              }
+             ]
+            }
+            DEF dad_Reference53 Transform {
+             translation 0.625 0.0 0.225
+             children [
+              USE Hinge
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

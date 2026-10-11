@@ -1,0 +1,78 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "Fractal Carpet"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 2 authoring tool"
+  "www.spazz3d.com"
+  "Mr. Phillip"
+  "mr_phillip@msn.com"
+  "http//www.geocities.com/BourbonStreet/1855"
+ ]
+}
+DEF dad_GROUND Transform {
+ bboxSize 2.06 2.09841 7.3751
+ bboxCenter 0.0 -0.70136 2.08014
+ children [
+  DEF GROUND Group {
+   bboxSize 2.06 2.09841 7.3751
+   bboxCenter 0.0 -0.70136 2.08014
+   children [
+    DEF dad_Box1 Transform {
+     translation 0.0 -1.69 0.0
+     bboxSize 1.545 0.0412 2.575
+     bboxCenter 0.0 0.0 0.0
+     children [
+      DEF Box1 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url [
+          "blue_burst.jpg"
+          "http://www.spyglassvr.com/mr_phillip/blue_burst.jpg"
+         ]
+        }
+        textureTransform TextureTransform {
+         scale 2.0 2.0
+        }
+        material DEF Red Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 1.0 0.0 0.0
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 1.5 0.04 2.5
+       }
+      }
+     ]
+    }
+    DEF dad_Box2 Transform {
+     translation 0.0 -1.7 0.0
+     bboxSize 2.06 0.0412 3.09
+     bboxCenter 0.0 0.0 0.0
+     children [
+      DEF Box2 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url [
+          "blue_burst2.jpg"
+          "http://www.spyglassvr.com/mr_phillip/blue_burst2.jpg"
+         ]
+        }
+        textureTransform TextureTransform {
+         scale 4.0 4.0
+        }
+        material USE Red
+       }
+       geometry Box {
+        size 2.0 0.04 3.0
+       }
+      }
+     ]
+    }
+
+   ]
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+#VRML V2.0 utf8
+
+WorldInfo { title "Brock" 
+info [
+"(c) Wurd"
+"May 2006"
+"1/51"
+"4000cc"]}
+
+#canvas
+Transform { translation 0 0.02 0 children [
+Shape {
+appearance Appearance { material Material {}
+texture ImageTexture { url "brock.jpg" }}
+geometry Box { size 4 3.5 0.02 }}
+]}
+
+#frameTB
+Transform {children [
+Transform { translation 0 -1.73 0 children [
+DEF Frame1 Shape { appearance Appearance { material Material {}
+texture ImageTexture { url "brock.jpg"}
+textureTransform TextureTransform { rotation 1.57 scale 0.001 0.001 }}
+geometry Box { size 4 0.04 0.1}}
+]}
+Transform {translation 0 1.77 0 children USE Frame1}
+]}
+
+#frameS
+Transform {children [
+Transform { translation -2 0.02 0 children [
+DEF Frame2 Shape { appearance Appearance { material Material {}
+texture ImageTexture { url "brock.jpg"}
+textureTransform TextureTransform { rotation 1.57 scale 0.001 0.001 }}
+geometry Box { size 0.04 3.54 0.1}}
+]}
+Transform {translation 2 0.02 0 children USE Frame2}
+]}

@@ -1,0 +1,26 @@
+#VRML V2.0 utf8
+ Transform {
+ translation 0 1 0
+ children [
+ Shape {
+ appearance DEF Manilla Appearance { material Material {
+ diffuseColor 1 1 0.7 } }
+ geometry Box { size 1 2 1 } }
+ Transform {
+ translation 0 0.5 0.55
+ children [
+ Shape {
+ appearance USE Manilla
+ geometry Box { size 0.8 0.6 0.1 } }
+ Transform {
+ translation 0 -0.9 0
+ children [
+ Shape {
+ appearance USE Manilla
+ geometry Box { size 0.8 1 0.1 } }
+ Transform {
+ translation 0.2 0.25 0.1
+ children [
+ Shape {
+ appearance Appearance { material Material { diffuseColor 0 0 0 } }
+ geometry Box { size 0.1 0.35 0.1 } } ] } ] } ] } ] }

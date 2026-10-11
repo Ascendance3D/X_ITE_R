@@ -1,0 +1,137 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "bed"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Box1 Transform {
+     translation 0.06475 -1.494 -1.65231
+     children [
+      DEF Box1 Shape {
+       appearance Appearance {
+        material DEF Purple_mat Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 0.9176 0.0 0.874
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 2.0 0.5 3.0
+       }
+      }
+     ]
+    }
+    DEF dad_Box2 Transform {
+     translation 0.06377 -1.37786 -3.21367
+     children [
+      DEF Box2 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url "wood.jpg"
+        }
+        material DEF Red_mat Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 1.0 0.0 0.0
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 2.25 0.75 0.125
+       }
+      }
+     ]
+    }
+    DEF dad_Sphere2 Transform {
+     translation -0.99084 -0.88801 -3.20769
+     children [
+      DEF Sphere2 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url "wood.jpg"
+        }
+        material USE Red_mat
+       }
+       geometry Sphere {
+        radius 0.110
+       }
+      }
+     ]
+    }
+    DEF dad_Sphere3 Transform {
+     translation 1.12636 -0.88801 -3.21407
+     children [
+      DEF Sphere3 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url "wood.jpg"
+        }
+        material USE Red_mat
+       }
+       geometry Sphere {
+        radius 0.110
+       }
+      }
+     ]
+    }
+    DEF dad_Box3 Transform {
+     translation 0.05739 -1.41428 -0.08928
+     children [
+      DEF Box3 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url "wood.jpg"
+        }
+        material USE Red_mat
+       }
+       geometry Box {
+        size 2.2 0.7 0.125
+       }
+      }
+     ]
+    }
+    DEF dad_Box4 Transform {
+     translation 0.50592 -1.18774 -2.83789
+     children [
+      DEF Box4 Shape {
+       appearance Appearance {
+        material DEF White_mat Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 1.0 1.0 1.0
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 0.75 0.111 0.5
+       }
+      }
+     ]
+    }
+    DEF dad_Box5 Transform {
+     translation -0.37187 -1.188 -2.838
+     children [
+      DEF Box5 Shape {
+       appearance Appearance {
+        material USE White_mat
+       }
+       geometry Box {
+        size 0.75 0.111 0.5
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

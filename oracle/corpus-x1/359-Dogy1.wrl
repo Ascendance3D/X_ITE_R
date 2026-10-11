@@ -1,0 +1,922 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "DogyStyle2"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Sound1 Transform {
+     translation 0.11675 1.55632 -0.21819
+     children [
+      DEF Sound1 Sound {
+       source DEF AClip_Sound1 AudioClip {
+        url "Bark2.wav"
+        pitch  1.000
+        loop   FALSE
+        startTime -1
+        stopTime  0
+       }
+       intensity  1.000
+       priority   0.000
+       minBack    10.000
+       minFront   10.000
+       maxBack    500.000
+       maxFront   500.000
+      }
+     ]
+    }
+    DEF Sensor1 TouchSensor {
+    }
+    DEF Sensor2 TouchSensor {
+    }
+    DEF Sensor3 TouchSensor {
+    }
+    DEF Sensor4 TouchSensor {
+    }
+    DEF Sensor5 TouchSensor {
+    }
+    DEF dad_Group6 Transform {
+     translation -4.86103 0.33025 -4.08567
+     rotation 0.059 0.996 -0.064 1.466
+     children [
+      DEF Group6 Group {
+       children [
+        DEF dad_Wizard_Group Transform {
+         translation -0.34628 -0.65671 1.78529
+         children [
+          DEF Wizard_Group Group {
+           children [
+            DEF dad_Group1 Transform {
+             children [
+              DEF Group1 Group {
+               children [
+                DEF dad_Wizard_Group0 Transform {
+                 translation -0.388 1.62 3.433
+                 rotation 0.045 -0.995 0.094 1.636
+                 scale 0.06855 0.06855 0.06855
+                 children [
+                  DEF Wizard_Group0 Group {
+                   children [
+                    DEF dad_Sphere3 Transform {
+                     children [
+                      DEF Sphere3 Shape {
+                       appearance Appearance {
+                        material DEF Black Material {
+                         ambientIntensity 0.200
+                         shininess 0.200
+                         diffuseColor 0.0 0.0 0.0
+                         emissiveColor 0.0 0.0 0.0
+                         specularColor 0.0 0.0 0.0
+                        }
+                       }
+                       geometry Sphere {
+                        radius 1.000
+                       }
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+                DEF dad_Wizard_Group1 Transform {
+                 translation -0.59901 1.84748 3.02302
+                 rotation 0.045 -0.995 0.094 1.636
+                 scale 0.04896 0.04896 0.04896
+                 children [
+                  DEF Wizard_Group1 Group {
+                   children [
+                    DEF dad_Sphere9 Transform {
+                     children [
+                      DEF Sphere9 Shape {
+                       appearance Appearance {
+                        material DEF Shiny_Black Material {
+                         ambientIntensity 0.200
+                         shininess 0.100
+                         diffuseColor 0.0 0.0 0.0
+                         emissiveColor 0.0 0.0 0.0
+                         specularColor 0.0 0.0 0.0
+                        }
+                       }
+                       geometry Sphere {
+                        radius 1.000
+                       }
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+                DEF dad_Wizard_Group2 Transform {
+                 translation -0.17983 1.88443 3.05757
+                 rotation 0.045 -0.995 0.094 1.636
+                 scale 0.04896 0.04896 0.04896
+                 children [
+                  DEF Wizard_Group2 Group {
+                   children [
+                    DEF dad_Sphere5 Transform {
+                     children [
+                      DEF Sphere5 Shape {
+                       appearance Appearance {
+                        material USE Shiny_Black
+                       }
+                       geometry Sphere {
+                        radius 1.000
+                       }
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+                DEF dad_Extrusion8 Transform {
+                 translation -0.59174 0.96461 2.20762
+                 rotation 0.992 -0.121 0.019 1.578
+                 scale 0.61203 0.61203 0.61203
+                 children [
+                  DEF Extrusion8 Shape {
+                   appearance Appearance {
+                    material DEF Rust Material {
+                     ambientIntensity 0.200
+                     shininess 0.200
+                     diffuseColor 0.69 0.47 0.46
+                     emissiveColor 0.0 0.0 0.0
+                     specularColor 0.0 0.0 0.0
+                    }
+                   }
+                   geometry Extrusion {
+                    creaseAngle 0.524
+                    convex FALSE
+                    crossSection [
+                      0.11905 -1.71429
+                      -0.35714 -1.71429
+                      -0.59524 -1.71429
+                      -0.90476 -1.28571
+                      -0.83333 -0.7619
+                      -0.92857 -0.30952
+                      -0.78571 -0.14286
+                      -0.61905 -0.28571
+                      -0.59524 -0.71429
+                      -0.61905 -1.2381
+                      -0.45238 -1.45238
+                      0.09524 -1.45238
+                      0.28571 -1.52381
+                      0.11905 -1.71429
+                    ]
+                    spine [
+                      0.0 0.0 0.0
+                      0.0 1.0 0.0
+                    ]
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Extrusion9 Transform {
+                 translation 0.09518 0.99417 2.85201
+                 rotation -0.052 0.714 -0.698 2.875
+                 scale 0.61203 0.61203 0.61203
+                 children [
+                  DEF Extrusion9 Shape {
+                   appearance Appearance {
+                    material USE Rust
+                   }
+                   geometry Extrusion {
+                    creaseAngle 0.524
+                    convex FALSE
+                    crossSection [
+                      0.11905 -1.71429
+                      -0.35714 -1.71429
+                      -0.59524 -1.71429
+                      -0.90476 -1.28571
+                      -0.83333 -0.7619
+                      -0.92857 -0.30952
+                      -0.78571 -0.14286
+                      -0.61905 -0.28571
+                      -0.59524 -0.71429
+                      -0.61905 -1.2381
+                      -0.45238 -1.45238
+                      0.09524 -1.45238
+                      0.28571 -1.52381
+                      0.11905 -1.71429
+                    ]
+                    spine [
+                      0.0 0.0 0.0
+                      0.0 1.0 0.0
+                    ]
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Sphere2 Transform {
+                 translation -0.32167 1.5307 2.50792
+                 rotation 0.045 -0.995 0.094 1.636
+                 scale 0.61203 0.61203 0.61203
+                 children [
+                  DEF Sphere2 Shape {
+                   appearance Appearance {
+                    material USE Rust
+                   }
+                   geometry Sphere {
+                    radius 1.000
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Sphere1 Transform {
+                 translation -0.33769 1.38415 3.16878
+                 rotation 0.045 -0.995 0.094 1.636
+                 scale 0.35701 0.35701 0.35701
+                 children [
+                  DEF Sphere1 Shape {
+                   appearance Appearance {
+                    material USE Rust
+                   }
+                   geometry Sphere {
+                    radius 1.000
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Sphere4 Transform {
+                 translation -0.57112 1.80939 2.91063
+                 rotation 0.045 -0.995 0.094 1.636
+                 scale 0.14138 0.14138 0.14138
+                 children [
+                  DEF Sphere4 Shape {
+                   appearance Appearance {
+                    material DEF Shiny_White Material {
+                     ambientIntensity 0.200
+                     shininess 0.100
+                     diffuseColor 1.0 1.0 1.0
+                     emissiveColor 0.0 0.0 0.0
+                     specularColor 1.0 1.0 1.0
+                    }
+                   }
+                   geometry Sphere {
+                    radius 1.000
+                   }
+                  }
+                 ]
+                }
+                DEF dad_Sphere8 Transform {
+                 translation -0.19591 1.85071 2.93501
+                 rotation 0.045 -0.995 0.094 1.636
+                 scale 0.14138 0.14138 0.14138
+                 children [
+                  DEF Sphere8 Shape {
+                   appearance Appearance {
+                    material USE Shiny_White
+                   }
+                   geometry Sphere {
+                    radius 1.000
+                   }
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+        DEF dad_Cylinder5 Transform {
+         translation -0.61084 0.68289 3.67648
+         rotation 0.478 -0.84 -0.257 1.325
+         scale 0.4622 0.4622 0.4622
+         children [
+          DEF Cylinder5 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder7 Transform {
+         translation -0.94439 -0.36873 4.05018
+         rotation -0.507 -0.834 0.218 1.362
+         scale 0.4622 0.4622 0.4622
+         children [
+          DEF Cylinder7 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder8 Transform {
+         translation -0.23659 -0.36862 4.02552
+         rotation -0.529 -0.765 0.366 1.315
+         scale 0.4622 0.4622 0.4622
+         children [
+          DEF Cylinder8 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_Extrusion1 Transform {
+         translation -0.54454 -1.00315 2.89268
+         rotation 0.563 -0.534 0.631 1.814
+         scale 0.61203 0.61203 0.61203
+         children [
+          DEF Extrusion1 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Extrusion {
+            creaseAngle 0.524
+            convex FALSE
+            crossSection [
+              0.04762 -0.88095
+              -0.2619 -0.80952
+              -0.61905 -0.80952
+              -0.88095 -1.14286
+              -0.80952 -1.54762
+              -1.11905 -1.19048
+              -0.7381 -0.59524
+              -0.30952 -0.54762
+              0.11905 -0.61905
+              0.04762 -0.88095
+            ]
+            spine [
+              0.0 0.0 0.0
+              0.0 0.1 0.0
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder9 Transform {
+         translation -1.01532 -0.4488 3.15697
+         rotation -0.341 -0.047 0.939 1.421
+         scale 0.4622 0.4622 0.4622
+         children [
+          DEF Cylinder9 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder10 Transform {
+         translation -1.37384 -0.56542 3.20587
+         rotation -0.578 -0.768 0.276 1.494
+         scale 0.46208 0.46208 0.46208
+         children [
+          DEF Cylinder10 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Cylinder {
+            height 1.500
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere11 Transform {
+         translation -1.34619 -0.39649 2.98947
+         rotation 0.045 -0.995 0.094 1.636
+         scale 0.20132 0.20132 0.20132
+         children [
+          DEF Sphere11 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Sphere {
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder11 Transform {
+         translation -0.1732 -0.49677 3.10999
+         rotation -0.159 0.168 0.973 1.912
+         scale 0.4622 0.4622 0.4622
+         children [
+          DEF Cylinder11 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Cylinder {
+            height 2.000
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_Cylinder4 Transform {
+         translation 0.246 -0.53281 3.26199
+         rotation -0.5 -0.739 0.452 1.424
+         scale 0.46208 0.46208 0.46208
+         children [
+          DEF Cylinder4 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Cylinder {
+            height 1.500
+            radius 0.300
+           }
+          }
+         ]
+        }
+        DEF dad_Extrusion5 Transform {
+         translation -0.75084 -0.54894 4.55899
+         rotation 1.0 -0.009 -0.021 2.671
+         scale 0.29622 0.29622 0.29622
+         children [
+          DEF Extrusion5 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Extrusion {
+            creaseAngle 0.524
+            convex FALSE
+            crossSection [
+              -0.38095 1.47619
+              -0.14286 1.04762
+              -0.14286 0.19048
+              -0.35714 -0.35714
+              -0.61905 0.07143
+              -0.80952 -0.61905
+              -0.97619 0.11905
+              -1.09524 -0.35714
+              -1.38095 0.2619
+              -1.38095 1.04762
+              -0.95238 1.47619
+              -0.38095 1.47619
+            ]
+            spine [
+              0.0 0.0 0.0
+              0.0 0.5 0.0
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Extrusion7 Transform {
+         translation 0.4606 -0.67769 3.65021
+         rotation 1.0 -0.018 0.005 3.054
+         scale 0.3897 0.3897 0.3897
+         children [
+          DEF Extrusion7 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Extrusion {
+            creaseAngle 0.524
+            convex FALSE
+            crossSection [
+              -0.2381 0.57143
+              0.02381 0.04762
+              0.02381 -0.57143
+              -0.16667 -1.16667
+              -0.33333 -0.71429
+              -0.38095 -1.38095
+              -0.61905 -0.71429
+              -0.61905 -1.14286
+              -0.90476 -0.59524
+              -0.90476 0.02381
+              -0.57143 0.57143
+              -0.2381 0.57143
+            ]
+            spine [
+              0.0 0.0 0.0
+              0.0 0.3 0.0
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Extrusion4 Transform {
+         translation 0.02512 -0.55033 4.59074
+         rotation 1.0 -0.02 0.005 2.669
+         scale 0.29622 0.29622 0.29622
+         children [
+          DEF Extrusion4 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Extrusion {
+            creaseAngle 0.524
+            convex FALSE
+            crossSection [
+              -0.38095 1.47619
+              -0.14286 1.04762
+              -0.14286 0.19048
+              -0.35714 -0.35714
+              -0.61905 0.07143
+              -0.80952 -0.61905
+              -0.97619 0.11905
+              -1.09524 -0.35714
+              -1.38095 0.2619
+              -1.38095 1.04762
+              -0.95238 1.47619
+              -0.38095 1.47619
+            ]
+            spine [
+              0.0 0.0 0.0
+              0.0 0.5 0.0
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Extrusion6 Transform {
+         translation -1.23676 -0.72438 3.58905
+         rotation 1.0 0.021 0.022 3.132
+         scale 0.3897 0.3897 0.3897
+         children [
+          DEF Extrusion6 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Extrusion {
+            creaseAngle 0.524
+            convex FALSE
+            crossSection [
+              -0.2381 0.57143
+              0.02381 0.04762
+              0.02381 -0.57143
+              -0.16667 -1.16667
+              -0.33333 -0.71429
+              -0.38095 -1.38095
+              -0.61905 -0.71429
+              -0.61905 -1.14286
+              -0.90476 -0.59524
+              -0.90476 0.02381
+              -0.57143 0.57143
+              -0.2381 0.57143
+            ]
+            spine [
+              0.0 0.0 0.0
+              0.0 0.3 0.0
+            ]
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere7 Transform {
+         translation 0.25384 -0.3718 3.02248
+         rotation 0.045 -0.995 0.094 1.636
+         scale 0.20132 0.20132 0.20132
+         children [
+          DEF Sphere7 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Sphere {
+            radius 1.000
+           }
+          }
+         ]
+        }
+        DEF dad_Revolution2 Transform {
+         translation -0.42088 -1.1166 2.54328
+         rotation 0.011 0.951 0.308 2.727
+         scale 0.51977 0.51977 0.51977
+         children [
+          DEF Revolution2 Shape {
+           appearance Appearance {
+            material USE Rust
+           }
+           geometry Extrusion {
+            solid FALSE
+            creaseAngle 0.524
+            crossSection [
+              0.0 3.85714
+              -0.52381 3.85714
+              -1.02381 3.69048
+              -1.2381 3.21429
+              -1.2381 2.11905
+              -1.2381 1.54762
+              -1.0 1.07143
+              -0.47619 0.92857
+              0.0 0.92857
+            ]
+            orientation [
+              -1.0 0.0 0.0 1.571
+              -0.958 -0.204 -0.204 1.614
+              -0.846 -0.377 -0.377 1.737
+              -0.697 -0.507 -0.507 1.924
+              -0.537 -0.596 -0.596 2.156
+              -0.378 -0.655 -0.655 2.419
+              -0.224 -0.689 -0.689 2.701
+              -0.074 -0.705 -0.705 2.994
+              -0.074 0.705 0.705 2.994
+              -0.224 0.689 0.689 2.701
+              -0.378 0.655 0.655 2.419
+              -0.537 0.596 0.596 2.156
+              -0.697 0.507 0.507 1.924
+              -0.846 0.377 0.377 1.737
+              -0.958 0.204 0.204 1.614
+              -1.0 0.0 0.0 1.571
+            ]
+            spine [
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+              0.0 0.0 0.0
+            ]
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
+DEF Wizard0 TimeSensor {
+ cycleInterval 3.000
+ loop FALSE
+ startTime  -1
+}
+DEF Wizard0_scl0 PositionInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ 1.0 1.0 1.0
+ 1.0 1.0 1.5
+ 1.0 1.0 2.0
+ 1.0 1.0 1.5
+ 1.0 1.0 1.0
+ ]
+}
+
+DEF Wizard1 TimeSensor {
+ cycleInterval 3.000
+ loop TRUE
+ startTime  -1
+}
+DEF Wizard1_scl0 PositionInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ 1.0 1.0 1.0
+ 1.15 1.15 1.15
+ 1.3 1.3 1.3
+ 1.15 1.15 1.15
+ 1.0 1.0 1.0
+ ]
+}
+
+DEF Wizard2 TimeSensor {
+ cycleInterval 3.000
+ loop TRUE
+ startTime  -1
+}
+DEF Wizard2_scl0 PositionInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ 1.0 1.0 1.0
+ 1.15 1.15 1.15
+ 1.3 1.3 1.3
+ 1.15 1.15 1.15
+ 1.0 1.0 1.0
+ ]
+}
+
+DEF Wizard TimeSensor {
+ cycleInterval 3.000
+ loop FALSE
+ startTime  -1
+}
+DEF Wizard_pos0 PositionInterpolator {
+ key [ 0.0 0.25 0.5 0.75 1.0]
+ keyValue [
+ 0.0 0.0 0.0
+ 0.0 0.15 0.0
+ 0.0 0.3 0.0
+ 0.0 0.15 0.0
+ 0.0 0.0 0.0
+ ]
+}
+
+DEF Script_Wizard0 Script {
+  field    SFNode      tproc     USE  Wizard0
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime startAt0
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function startAt0( stime ) {
+  state = TRUE;
+  tproc.set_startTime = stime;
+  tproc.enabled = TRUE;
+  pause = 0;
+ }
+ "
+}
+DEF Script_Wizard1 Script {
+  field    SFNode      tproc     USE  Wizard1
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime startAt0
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function startAt0( stime ) {
+  state = TRUE;
+  tproc.set_startTime = stime;
+  tproc.enabled = TRUE;
+  pause = 0;
+ }
+ "
+}
+DEF Script_Wizard2 Script {
+  field    SFNode      tproc     USE  Wizard2
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime startAt0
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function startAt0( stime ) {
+  state = TRUE;
+  tproc.set_startTime = stime;
+  tproc.enabled = TRUE;
+  pause = 0;
+ }
+ "
+}
+DEF Script_Wizard Script {
+  field    SFNode      tproc     USE  Wizard
+ field    SFBool state     FALSE
+ field    SFTime pause     0
+ eventIn  SFTime startAt0
+ eventOut SFTime triggerStart
+ eventOut SFTime triggerStop
+ eventOut SFTime triggerStartInt
+ eventIn  SFBool activated
+ eventIn  SFTime cycle
+ directOutput TRUE
+ url "vrmlscript:
+ function activated( active, curtime ) {
+  if( active ) {
+   triggerStart = curtime;
+   state = TRUE;
+  }
+  else {
+   triggerStop = curtime;
+   state = FALSE;
+  }
+ }
+ function cycle( curtime ) {
+  triggerStartInt = curtime;
+ }
+ function startAt0( stime ) {
+  state = TRUE;
+  tproc.set_startTime = stime;
+  tproc.enabled = TRUE;
+  pause = 0;
+ }
+ "
+}
+DEF Script_Sound1 Script {
+  field    SFNode      snd     USE  AClip_Sound1
+field    SFBool      state     FALSE
+field    SFTime      pause     0
+eventIn  SFTime      startAt0
+directOutput         TRUE
+url "vrmlscript:
+ function startAt0( stime ) {
+ state = TRUE;
+ snd.set_startTime = stime;
+ snd.set_stopTime = 0;
+ }
+"
+}
+DEF spazz_init TimeSensor {
+  cycleInterval 0.5
+  loop TRUE
+  startTime  0
+}
+DEF Script_spazz_init Script {
+  field    SFNode      tproc     USE  spazz_init
+  field    SFInt32     count  0
+  eventOut SFTime      triggerStart
+  eventIn  SFTime      cycle
+  directOutput         TRUE
+  url "vrmlscript:
+   function cycle( curtime ) {
+    if(count++ > 5) {
+      triggerStart = curtime;
+      tproc.enabled = FALSE;
+   }}
+   "
+}
+ROUTE spazz_init.cycleTime TO Script_spazz_init.cycle
+ROUTE Script_spazz_init.triggerStart TO Script_Wizard1.startAt0
+ROUTE Script_spazz_init.triggerStart TO Script_Wizard2.startAt0
+ROUTE Sensor1.touchTime TO Script_Sound1.startAt0
+ROUTE Sensor2.touchTime TO Script_Wizard0.startAt0
+ROUTE Sensor5.touchTime TO Script_Wizard.startAt0
+ROUTE Wizard0.fraction_changed TO Wizard0_scl0.set_fraction
+ROUTE Wizard0_scl0.value_changed TO dad_Sphere3.set_scale
+ROUTE Wizard0.isActive TO Script_Wizard0.activated
+ROUTE Wizard0.cycleTime TO Script_Wizard0.cycle
+ROUTE Wizard1.fraction_changed TO Wizard1_scl0.set_fraction
+ROUTE Wizard1_scl0.value_changed TO dad_Sphere9.set_scale
+ROUTE Wizard1.isActive TO Script_Wizard1.activated
+ROUTE Wizard1.cycleTime TO Script_Wizard1.cycle
+ROUTE Wizard2.fraction_changed TO Wizard2_scl0.set_fraction
+ROUTE Wizard2_scl0.value_changed TO dad_Sphere5.set_scale
+ROUTE Wizard2.isActive TO Script_Wizard2.activated
+ROUTE Wizard2.cycleTime TO Script_Wizard2.cycle
+ROUTE Wizard.fraction_changed TO Wizard_pos0.set_fraction
+ROUTE Wizard_pos0.value_changed TO dad_Group1.set_translation
+ROUTE Wizard.isActive TO Script_Wizard.activated
+ROUTE Wizard.cycleTime TO Script_Wizard.cycle

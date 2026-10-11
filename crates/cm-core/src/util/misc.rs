@@ -16,8 +16,13 @@ pub fn count_column(s: &[u16], end: Option<usize>, tab_size: i64, start_index: u
     };
     let mut i = start_index;
     let mut n = start_value;
+    // The JS `indexOf("\t", i)` scans to the end of the line; a tab at or past `end`
+    // takes the same branch as no tab, so the scan stops at `end`. Same results, but
+    // linear instead of quadratic when modes ask `column()` all along one long line
+    // (C4: javascript `pushlex` on single-line JSON files).
+    let limit = (end.max(0) as usize).min(s.len());
     loop {
-        let next_tab = index_of(s, &[0x09], i).map(|x| x as i64).unwrap_or(-1);
+        let next_tab = if i < limit { s[i..limit].iter().position(|&c| c == 0x09).map(|p| (p + i) as i64).unwrap_or(-1) } else { -1 };
         if next_tab < 0 || next_tab >= end {
             return n + (end - i as i64);
         }

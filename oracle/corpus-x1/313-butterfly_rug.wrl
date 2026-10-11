@@ -1,0 +1,53 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "Butterfly Rug"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+  "Created by zoozee "
+  "1st of October 2003"
+  "Unlimited"
+  "400 cc"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Group1 Transform {
+     translation 0.0 -1.75 0.0
+     rotation 0.316 0.0 0.949 0.001
+     children [
+      DEF Group1 Group {
+       children [
+        DEF dad_Box_top Transform {
+         translation 0.0 0.044 -2.521
+         rotation 0.0 -1.0 0.0 6.283
+         children [
+          DEF Box_top Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "butterfly_rug.jpg"
+            }
+            material DEF White_mat Material {
+             ambientIntensity 0.200
+             shininess 0.200
+             diffuseColor 1.0 1.0 1.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 9.0 0.05 7.0
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

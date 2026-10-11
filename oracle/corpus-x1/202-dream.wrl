@@ -1,0 +1,38 @@
+#VRML V2.0 utf8
+WorldInfo {
+	title "Midwinter Dream"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"	"Midwinter Dream created by sylphie unlimited uploaded Dec 18 2003 at 500cc"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Box1 Transform {
+     translation 0.0 0.5 0.0
+     children [
+      DEF Box1 Shape {
+       appearance Appearance {
+        texture ImageTexture {
+         url "dream.jpg"
+        }
+        material DEF Red_mat Material {
+         ambientIntensity 0.200
+         shininess 0.200
+         diffuseColor 1.0 0.0 0.0
+         emissiveColor 0.0 0.0 0.0
+         specularColor 0.0 0.0 0.0
+        }
+       }
+       geometry Box {
+        size 4.5 4.5 0.01
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,3448 @@
+#VRML V2.0 utf8
+# (Created by: Lazerous with VRCreator, wordpad and Chisel)
+# (inspired by Smilingangel who tries way too hard to impress dutchboy2)
+# (Pretty soon the mall staff will be making my items if they keep dictating scale and proportion to me!)
+
+
+
+DEF NewGroup Transform {
+translation 2.874380e-003 -1.70355 -1.713842e-004
+rotation 0 0 -1 0
+scale 0.22163 0.22163 0.22163
+children [
+DEF __ph_00001_NewGroup Transform {
+rotation 0 0 -1 0
+children [
+DEF winwal6 Transform {
+translation 2.30499 1.13845 0.58134
+rotation 0 -1 0 0.28
+scale 0.80264 0.51705 0.52588
+children [
+Transform {
+translation 2.635059e-008 -3.121826e-007 -3.383470e-007
+rotation 0 0 -1 0
+scale 0.35 0.35 0.35
+children [
+DEF window Transform {
+translation 9.800000e-004 0.37555 3.480000e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0 0.49804 0.49804
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.31348 -2.50488 -1.31494 -.31348 -2.50488 -1.56958 -.31348 2.4292
+-1.56958 -.31348 2.4292 -1.31494 .31323 -2.50488 -1.31494 .31323 -2.50488
+-1.56958 .31323 2.4292 -1.56958 .31323 2.4292 -1.31494 -.31348 -2.50488 1.55371
+-.31348 -2.50488 1.29883 -.31348 2.4292 1.29883 -.31348 2.4292 1.55371 .31323
+-2.50488 1.55371 .31323 -2.50488 1.29883 .31323 2.4292 1.29883 .31323 2.4292
+1.55371 -.43091 2.64893 1.76172 -.43091 2.23852 1.76172 -.43091 2.23852 -1.76172
+-.43091 2.64893 -1.76172 .43091 2.64893 1.76172 .43091 2.23852 1.76172 .43091
+2.23852 -1.76172 .43091 2.64893 -1.76172 -.43091 -2.23852 1.76172 -.43091
+-2.64893 1.76172 -.43091 -2.64893 -1.76172 -.43091 -2.23852 -1.76172 .43091
+-2.23852 1.76172 .43091 -2.64893 1.76172 .43091 -2.64893 -1.76172 .43091 -2.23852
+-1.76172 -.19971 -.05908 1.40015 .19971 .29248 1.40015 .19971 -.05908 1.40015
+-.19971 .29248 1.40015 .19971 -.05908 -1.37695 -.19971 -.05908 -1.37695 .19971
+.29248 -1.37695 -.19971 .29248 -1.37695 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 0 4 5 -1 0 5 1 -1 1 5 6 -1 1 6 2 -1 2 6 7 -1
+2 7 3 -1 3 7 4 -1 3 4 0 -1 4 7 6 -1 4 6 5 -1 8 9 10 -1 8 10 11 -1 8 12 13
+-1 8 13 9 -1 9 13 14 -1 9 14 10 -1 10 14 15 -1 10 15 11 -1 11 15 12 -1 11 12
+8 -1 12 15 14 -1 12 14 13 -1 16 17 18 -1 16 18 19 -1 16 20 21 -1 16 21 17
+-1 17 21 22 -1 17 22 18 -1 18 22 23 -1 18 23 19 -1 19 23 20 -1 19 20 16 -1 20
+23 22 -1 20 22 21 -1 24 25 26 -1 24 26 27 -1 24 28 29 -1 24 29 25 -1 25 29 30
+-1 25 30 26 -1 26 30 31 -1 26 31 27 -1 27 31 28 -1 27 28 24 -1 28 31 30 -1 28
+30 29 -1 32 33 34 -1 32 35 33 -1 32 36 37 -1 32 34 36 -1 34 38 36 -1 34 33 38
+-1 33 39 38 -1 33 35 39 -1 35 37 39 -1 35 32 37 -1 37 38 39 -1 37 36 38 -1
+]
+}
+}
+]
+}
+DEF square Transform {
+translation -0.3975 0.32052 -0.0151
+rotation 0 1 0 1.56631
+scale 1.45446 2.44904 0.25806
+children [
+DEF back Transform {
+translation 0.01274 -1 1.8399
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 1 1 1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -4 1 -5 0 -5 0 -4 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+DEF square Transform {
+translation 0.16476 0.4317 -0.03267
+rotation 0 1 0 1.56631
+scale 1.45446 2.44904 0.25806
+children [
+DEF back Transform {
+translation -1.606356e-010 -1 1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0 0 0.49804
+transparency 0.3
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -4 1 -5 0 -5 0 -4 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF front Transform {
+translation 1.249947e-012 -1 -1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0 0 0.49804
+transparency 0.50196
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -4 1 -5 0 -5 0 -4 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+DEF base21 Transform {
+translation -1.161918e-003 -0.39268 2.14863
+rotation 0 1 0 0.02
+scale 1.69891 2.0299 0.76025
+children [
+Transform {
+translation 1.104589e-007 -1.773246e-007 -4.720597e-007
+rotation 0 -1 0 3.14159
+scale 0.025 0.025 0.025
+children [
+Transform {
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0 0.49804 0.49804
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 10.5002 34.9976 -23.3744 10.5002 3.99783 -23.3736 10.5002 3.99846
+-.01777 10.5002 34.9983 -.01856 -10.4995 3.99846 -.01777 -10.4995 34.9983
+-.01856 -10.4995 3.99783 -23.3736 -10.4995 34.9976 -23.3744 9.87519 34.3732
+-.64351 9.87519 4.62341 -.64279 9.87519 4.62282 -23.3737 9.87519 34.3727 -23.3744
+-9.87446 34.3732 -.64351 -9.87446 4.62341 -.64279 -9.87446 34.3727 -23.3744
+-9.87446 4.62282 -23.3737 ] }
+coordIndex [ 0 1 2 -1 0 2 3 -1 3 2 4 -1 3 4 5 -1 5 4 6 -1 5 6 7 -1 7 0 3 -1
+7 3 5 -1 4 2 1 -1 4 1 6 -1 8 9 10 -1 8 10 11 -1 12 13 9 -1 12 9 8 -1 14 15 13
+-1 14 13 12 -1 12 8 11 -1 12 11 14 -1 15 10 9 -1 15 9 13 -1 11 10 1 -1 11 1
+0 -1 15 14 7 -1 15 7 6 -1 14 11 0 -1 14 0 7 -1 10 15 6 -1 10 6 1 -1 ]
+}
+}
+]
+}
+]
+}
+Transform {
+translation -2.416399e-003 0.35383 -5.63616
+rotation 0 0 -1 0
+scale 1.10288 0.92305 2.46457
+children [
+DEF square Transform {
+translation 2.683925e-003 0.14388 2.44249
+rotation 0 0 -1 0
+scale 0.23495 0.41364 0.36894
+children [
+DEF back Transform {
+translation 0 -1 1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -5 1 -6 0 -6 0 -5 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF front Transform {
+translation 0 -1 -1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0 0 0
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ .07379 -2 .25 -2 .75 -2 .92621 -2 ] } coordIndex
+[ 0 1 2 -1 2 3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+DEF cylinderDual Transform {
+translation 0.01461 9.53323 2.61012
+rotation 1 0 0 1.57
+scale 0.76501 0.85839 0.76501
+children [
+DEF center Transform {
+translation 1.192093e-007 -1 -1.311302e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.49804 0.49804 0.49804
+shininess 0.7
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 1 0 .866 1 -.5 1 0 0 .866 0 -.5 .5 1 -.866 .5 0 -.866 0 1 -1 0 0
+-1 -.5 1 -.866 -.5 0 -.866 -.866 1 -.5 -.866 0 -.5 -1 1 0 -1 0 0 -.866 1 .5
+-.866 0 .5 -.5 1 .866 -.5 0 .866 0 1 1 0 0 1 .5 1 .866 .5 0 .866 .866 1 .5
+.866 0 .5 .5 2 0 .433 2 -.25 .5 1 0 .433 1 -.25 .25 2 -.433 .25 1 -.433 0
+2 -.5 0 1 -.5 -.25 2 -.433 -.25 1 -.433 -.433 2 -.25 -.433 1 -.25 -.5 2 0
+-.5 1 0 -.433 2 .25 -.433 1 .25 -.25 2 .433 -.25 1 .433 0 2 .5 0 1 .5 .25
+2 .433 .25 1 .433 .433 2 .25 .433 1 .25 ]
+}
+texCoord
+TextureCoordinate { point [ .75 -5.5 .8333 -5.5 .75 -6 .8333 -6 .9167 -5.5
+.9167 -6 -.08333 -5.5 0 -5.5 -.08333 -6 0 -6 .08333 -5.5 .08333 -6 .1667 -5.5
+.1667 -6 .25 -5.5 .25 -6 .3333 -5.5 .3333 -6 .4167 -5.5 .4167 -6 .5 -5.5 .5
+-6 .5833 -5.5 .5833 -6 .6667 -5.5 .6667 -6 .75 -5 .8333 -5 .9167 -5 -.08333
+-5 0 -5 .08333 -5 .1667 -5 .25 -5 .3333 -5 .4167 -5 .5 -5 .5833 -5 .6667 -5
+] } coordIndex [ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 4 6 5 -1 6 7 5 -1 6 8 7
+-1 8 9 7 -1 8 10 9 -1 10 11 9 -1 10 12 11 -1 12 13 11 -1 12 14 13 -1 14 15 13
+-1 14 16 15 -1 16 17 15 -1 16 18 17 -1 18 19 17 -1 18 20 19 -1 20 21 19 -1 20
+22 21 -1 22 23 21 -1 22 0 23 -1 0 2 23 -1 24 25 26 -1 25 27 26 -1 25 28 27
+-1 28 29 27 -1 28 30 29 -1 30 31 29 -1 30 32 31 -1 32 33 31 -1 32 34 33 -1 34
+35 33 -1 34 36 35 -1 36 37 35 -1 36 38 37 -1 38 39 37 -1 38 40 39 -1 40 41 39
+-1 40 42 41 -1 42 43 41 -1 42 44 43 -1 44 45 43 -1 44 46 45 -1 46 47 45 -1 46
+24 47 -1 24 26 47 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 6 7 8 -1 7 9 8 -1 7 10 9 -1 10 11 9
+-1 10 12 11 -1 12 13 11 -1 12 14 13 -1 14 15 13 -1 14 16 15 -1 16 17 15 -1 16
+18 17 -1 18 19 17 -1 18 20 19 -1 20 21 19 -1 20 22 21 -1 22 23 21 -1 22 24 23
+-1 24 25 23 -1 24 0 25 -1 0 2 25 -1 26 27 0 -1 27 1 0 -1 27 28 1 -1 28 4 1
+-1 29 30 6 -1 30 7 6 -1 30 31 7 -1 31 10 7 -1 31 32 10 -1 32 12 10 -1 32 33
+12 -1 33 14 12 -1 33 34 14 -1 34 16 14 -1 34 35 16 -1 35 18 16 -1 35 36 18
+-1 36 20 18 -1 36 37 20 -1 37 22 20 -1 37 38 22 -1 38 24 22 -1 38 26 24 -1 26
+0 24 -1 ]
+}
+}
+]
+}
+DEF centerMain Transform {
+translation 1.192093e-007 -1 -1.311302e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.7
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .5 1 0 .433 1 -.25 1 1 0 .866 1 -.5 .25 1 -.433 .5 1 -.866 0 1 -.5
+0 1 -1 -.25 1 -.433 -.5 1 -.866 -.433 1 -.25 -.866 1 -.5 -.5 1 0 -1 1 0 -.433
+1 .25 -.866 1 .5 -.25 1 .433 -.5 1 .866 0 1 .5 0 1 1 .25 1 .433 .5 1 .866
+.433 1 .25 .866 1 .5 1 0 0 .866 0 -.5 0 0 0 .5 0 -.866 0 0 -1 -.5 0 -.866
+-.866 0 -.5 -1 0 0 -.866 0 .5 -.5 0 .866 0 0 1 .5 0 .866 .866 0 .5 .433 2
+-.25 .5 2 0 0 2 0 .25 2 -.433 0 2 -.5 -.25 2 -.433 -.433 2 -.25 -.5 2 0 -.433
+2 .25 -.25 2 .433 0 2 .5 .25 2 .433 .433 2 .25 ]
+}
+texCoord
+TextureCoordinate { point [ .25 -5.5 .2835 -5.625 0 -5.5 .06699 -5.75 .375
+-5.7165 .25 -5.93301 .5 -5.75 .5 -6 .625 -5.7165 .75 -5.93301 .7165 -5.625
+.933 -5.75 .75 -5.5 1 -5.5 .7165 -5.375 .933 -5.25 .625 -5.2835 .75 -5.067
+.5 -5.25 .5 -5 .375 -5.2835 .25 -5.067 .2835 -5.375 .06699 -5.25 .5 -5.5 ]
+} coordIndex [ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 4 6 5 -1 6 7 5 -1 6 8 7
+-1 8 9 7 -1 8 10 9 -1 10 11 9 -1 10 12 11 -1 12 13 11 -1 12 14 13 -1 14 15 13
+-1 14 16 15 -1 16 17 15 -1 16 18 17 -1 18 19 17 -1 18 20 19 -1 20 21 19 -1 20
+22 21 -1 22 23 21 -1 22 0 23 -1 0 2 23 -1 24 25 26 -1 25 27 26 -1 27 28 26
+-1 28 29 26 -1 29 30 26 -1 30 31 26 -1 31 32 26 -1 32 33 26 -1 33 34 26 -1 34
+35 26 -1 35 36 26 -1 36 24 26 -1 37 38 39 -1 40 37 39 -1 41 40 39 -1 42 41 39
+-1 43 42 39 -1 44 43 39 -1 45 44 39 -1 46 45 39 -1 47 46 39 -1 48 47 39 -1 49
+48 39 -1 38 49 39 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 4 6 5 -1 6 7 5 -1 6 8 7 -1 8 9 7 -1 8
+10 9 -1 10 11 9 -1 10 12 11 -1 12 13 11 -1 12 14 13 -1 14 15 13 -1 14 16 15
+-1 16 17 15 -1 16 18 17 -1 18 19 17 -1 18 20 19 -1 20 21 19 -1 20 22 21 -1 22
+23 21 -1 22 0 23 -1 0 2 23 -1 2 3 24 -1 3 5 24 -1 5 7 24 -1 7 9 24 -1 9 11 24
+-1 11 13 24 -1 13 15 24 -1 15 17 24 -1 17 19 24 -1 19 21 24 -1 21 23 24 -1 23
+2 24 -1 1 0 24 -1 4 1 24 -1 6 4 24 -1 8 6 24 -1 10 8 24 -1 12 10 24 -1 14 12
+24 -1 16 14 24 -1 18 16 24 -1 20 18 24 -1 22 20 24 -1 0 22 24 -1 ]
+}
+}
+]
+}
+]
+}
+DEF chest Transform {
+translation 1.209938e-003 9.60709 4.224770e-004
+rotation 0 0 -1 0
+scale 2.12422 1.31483 2.12422
+children [
+DEF main Transform {
+translation -2.384188e-007 -1 -2.384188e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .2141 2 -1 .2141 2 1 -.2141 2 1 -.2141 2 -1 1 1 -1 1 0 -1 1 0 1 1
+1 1 -1 1 1 -1 0 1 -1 0 -1 -1 1 -1 .9259 1.5 -1 .9259 1.5 1 -.9259 1.5 1 -.9259
+1.5 -1 .708 1.8 -1 .708 1.8 1 -.708 1.8 1 -.708 1.8 -1 ]
+}
+texCoord
+TextureCoordinate { point [ -9.834e-004 -5 .999 -5 -9.835e-004 -5 -9.834e-004
+-5.4995 -9.834e-004 -5.99958 .999 -5.99958 .999 -5.4995 .999 -5.5002 .999
+-6.00031 -9.836e-004 -6.00031 -9.836e-004 -5.5002 -9.834e-004 -5.2495 .999
+-5.2495 .999 -5.2501 -9.835e-004 -5.2501 -9.834e-004 -5.0995 .999 -5.0995
+.999 -5.1 -9.835e-004 -5.1 ] } coordIndex [ 0 1 2 -1 2 3 0 -1 4 5 6 -1 6 7 4
+-1 8 9 10 -1 10 11 8 -1 12 4 7 -1 7 13 12 -1 14 8 11 -1 11 15 14 -1 16 12 13
+-1 13 17 16 -1 18 14 15 -1 15 19 18 -1 0 16 17 -1 17 1 0 -1 2 18 19 -1 19 3
+2 -1 ] texCoordIndex
+[ 0 1 1 -1 1 2 0 -1 3 4 5 -1 5 6 3 -1 7 8 9 -1 9 10 7 -1 11 3 6 -1 6 12 11
+-1 13 7 10 -1 10 14 13 -1 15 11 12 -1 12 16 15 -1 17 13 14 -1 14 18 17 -1 0
+15 16 -1 16 1 0 -1 1 17 18 -1 18 2 1 -1 ]
+}
+}
+]
+}
+DEF front Transform {
+translation -2.384188e-007 -1 -2.384188e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0 0.49804 0.49804
+shininess 0.05
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 1 1 1 0 1 -1 0 1 -1 1 1 .9259 1.5 1 -.9259 1.5 1 .708 1.8 1 -.708
+1.8 1 .2141 2 1 -.2141 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1.002 -5.4983 1.002 -5.99831 1.598e-003 -5.99831
+1.598e-003 -5.4983 .9646 -5.2483 .03864 -5.2483 .8556 -5.0983 .1476 -5.0983
+.6087 -4.998 .3945 -4.998 ] } coordIndex [ 0 1 2 -1 2 3 0 -1 4 0 3 -1 3 5 4
+-1 6 4 5 -1 5 7 6 -1 8 6 7 -1 7 9 8 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 4 0 3 -1 3 5 4 -1 6 4 5 -1 5 7 6 -1 8 6 7 -1 7 9 8 -1
+]
+}
+}
+]
+}
+DEF back Transform {
+translation -2.384188e-007 -1 -2.384188e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0 0.49804 0.49804
+shininess 0.05
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 1 -1 -1 0 -1 1 0 -1 1 1 -1 -.9259 1.5 -1 .9259 1.5 -1 -.708 1.8
+-1 .708 1.8 -1 -.2141 2 -1 .2141 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1.598e-003 -5.4983 1.598e-003 -5.99831 1.002 -5.99831
+1.002 -5.4983 .03864 -5.2483 .9646 -5.2483 .1476 -5.0983 .8556 -5.0983 .3945
+-4.998 .6087 -4.998 ] } coordIndex [ 0 1 2 -1 2 3 0 -1 4 0 3 -1 3 5 4 -1 6 4
+5 -1 5 7 6 -1 8 6 7 -1 7 9 8 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 4 0 3 -1 3 5 4 -1 6 4 5 -1 5 7 6 -1 8 6 7 -1 7 9 8 -1
+]
+}
+}
+]
+}
+DEF bottom Transform {
+translation -2.384188e-007 -1 -2.384188e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 -1 -1 0 -1 -1 0 1 1 0 1 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -5 1 -5 1 -6 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+DEF keyBoardKey Transform {
+translation 1.208862e-003 8.31041 0.01645
+rotation 0 0 -1 0
+scale 2.82115 6.04885 2.82115
+children [
+DEF front Transform {
+translation -3.576279e-007 -1 3.576279e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .7463 .997 .7463 1 0 1 -1 0 1 -.7463 .997 .7463 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -5 1 -6 0 -6 0 -5 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation -3.576279e-007 -1 3.576279e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .7463 .997 -.7463 .7463 .997 .7463 -.7463 .997 .7463 -.7463 .997 -.7463
+]
+}
+texCoord
+TextureCoordinate { point [ 1 -5 1 -6 0 -6 0 -5 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF left Transform {
+translation -3.576279e-007 -1 3.576279e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.7463 .997 .7463 -1 0 1 -1 0 -1 -.7463 .997 -.7463 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -5 1 -6 0 -6 0 -5 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF right Transform {
+translation -3.576279e-007 -1 3.576279e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .7463 .997 -.7463 1 0 -1 1 0 1 .7463 .997 .7463 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -5 1 -6 0 -6 0 -5 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF back Transform {
+translation -3.576279e-007 -1 3.576279e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.7463 .997 -.7463 -1 0 -1 1 0 -1 .7463 .997 -.7463 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -5 1 -6 0 -6 0 -5 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF bottom01 Transform {
+translation -3.576279e-007 -1 3.576279e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 -1 -1 0 -1 -1 0 1 1 0 1 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -5 1 -5 1 -6 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+DEF Cylinder48Polygons Transform {
+translation 1.209418e-003 1.13441 0.01645
+rotation 0 0 -1 0
+scale 2.38658 1.2811 2.38658
+children [
+DEF Cylinder48PolygonsMain Transform {
+translation 5.960464e-008 -1 -2.980232e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 0 .866 2 -.5 1 0 0 .866 0 -.5 .5 2 -.866 .5 0 -.866 0 2 -1 0 0
+-1 -.5 2 -.866 -.5 0 -.866 -.866 2 -.5 -.866 0 -.5 -1 2 0 -1 0 0 -.866 2 .5
+-.866 0 .5 -.5 2 .866 -.5 0 .866 0 2 1 0 0 1 .5 2 .866 .5 0 .866 .866 2 .5
+.866 0 .5 ]
+}
+texCoord
+TextureCoordinate { point [ .75 -5 .8333 -5 .75 -6 .8333 -6 .9167 -5 .9167
+-6 -.08333 -5 0 -5 -.08333 -6 0 -6 .08333 -5 .08333 -6 .1667 -5 .1667 -6 .25
+-5 .25 -6 .3333 -5 .3333 -6 .4167 -5 .4167 -6 .5 -5 .5 -6 .5833 -5 .5833 -6
+.6667 -5 .6667 -6 ] } coordIndex [ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 4 6 5
+-1 6 7 5 -1 6 8 7 -1 8 9 7 -1 8 10 9 -1 10 11 9 -1 10 12 11 -1 12 13 11 -1 12
+14 13 -1 14 15 13 -1 14 16 15 -1 16 17 15 -1 16 18 17 -1 18 19 17 -1 18 20 19
+-1 20 21 19 -1 20 22 21 -1 22 23 21 -1 22 0 23 -1 0 2 23 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 6 7 8 -1 7 9 8 -1 7 10 9 -1 10 11 9
+-1 10 12 11 -1 12 13 11 -1 12 14 13 -1 14 15 13 -1 14 16 15 -1 16 17 15 -1 16
+18 17 -1 18 19 17 -1 18 20 19 -1 20 21 19 -1 20 22 21 -1 22 23 21 -1 22 24 23
+-1 24 25 23 -1 24 0 25 -1 0 2 25 -1 ]
+}
+}
+]
+}
+DEF bottom Transform {
+translation 5.960464e-008 -1 -2.980232e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 0 .866 0 -.5 0 0 0 .5 0 -.866 0 0 -1 -.5 0 -.866 -.866 0 -.5 -1
+0 0 -.866 0 .5 -.5 0 .866 0 0 1 .5 0 .866 .866 0 .5 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -5.5 .06699 -5.75 .5 -5.5 .25 -5.93301 .5 -6
+.75 -5.93301 .933 -5.75 1 -5.5 .933 -5.25 .75 -5.067 .5 -5 .25 -5.067 .06699
+-5.25 ] } coordIndex [ 0 1 2 -1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2
+-1 7 8 2 -1 8 9 2 -1 9 10 2 -1 10 11 2 -1 11 12 2 -1 12 0 2 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2 -1 7 8 2 -1 8 9 2 -1 9
+10 2 -1 10 11 2 -1 11 12 2 -1 12 0 2 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation 5.960464e-008 -1 -2.980232e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+shininess 0.05
+}
+texture ImageTexture { url "shingle02.jpg" }
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .866 2 -.5 1 2 0 0 2 0 .5 2 -.866 0 2 -1 -.5 2 -.866 -.866 2 -.5 -1
+2 0 -.866 2 .5 -.5 2 .866 0 2 1 .5 2 .866 .866 2 .5 ]
+}
+texCoord
+TextureCoordinate { point [ .06699 -5.75 0 -5.5 .5 -5.5 .25 -5.93301 .5 -6
+.75 -5.93301 .933 -5.75 1 -5.5 .933 -5.25 .75 -5.067 .5 -5 .25 -5.067 .06699
+-5.25 ] } coordIndex [ 0 1 2 -1 3 0 2 -1 4 3 2 -1 5 4 2 -1 6 5 2 -1 7 6 2
+-1 8 7 2 -1 9 8 2 -1 10 9 2 -1 11 10 2 -1 12 11 2 -1 1 12 2 -1 ] texCoordIndex
+[ 0 1 2 -1 3 0 2 -1 4 3 2 -1 5 4 2 -1 6 5 2 -1 7 6 2 -1 8 7 2 -1 9 8 2 -1 10
+9 2 -1 11 10 2 -1 12 11 2 -1 1 12 2 -1 ]
+}
+}
+]
+}
+]
+}
+DEF NewGroup Transform {
+translation 0.02364 9.52129 3.62034
+rotation -0.85503 0.36684 -0.36655 1.726
+scale 0.91968 1.63077 0.91968
+children [
+DEF BLADES_platanim_animator Transform {
+translation 9.536743e-007 -1.192093e-007 0
+rotation 0 0 -1 0
+children [
+DEF Cylinder48Polygons Transform {
+translation -3.017796e-003 0.89785 -0.01178
+rotation 0 0 -1 0
+scale 0.15256 1.06025 0.15256
+children [
+DEF Cylinder48PolygonsMain Transform {
+translation -4.768372e-007 -1 5.960464e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 0.2 0.2 0.2
+diffuseColor 0.49804 0.49804 0.49804
+shininess 0.3
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 0 .866 2 -.5 1 0 0 .866 0 -.5 .5 2 -.866 .5 0 -.866 0 2 -1 0 0
+-1 -.5 2 -.866 -.5 0 -.866 -.866 2 -.5 -.866 0 -.5 -1 2 0 -1 0 0 -.866 2 .5
+-.866 0 .5 -.5 2 .866 -.5 0 .866 0 2 1 0 0 1 .5 2 .866 .5 0 .866 .866 2 .5
+.866 0 .5 ]
+}
+texCoord
+TextureCoordinate { point [ .75 -6 .8333 -6 .75 -7 .8333 -7 .9167 -6 .9167
+-7 -.08333 -6 0 -6 -.08333 -7 0 -7 .08333 -6 .08333 -7 .1667 -6 .1667 -7 .25
+-6 .25 -7 .3333 -6 .3333 -7 .4167 -6 .4167 -7 .5 -6 .5 -7 .5833 -6 .5833 -7
+.6667 -6 .6667 -7 ] } coordIndex [ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 4 6 5
+-1 6 7 5 -1 6 8 7 -1 8 9 7 -1 8 10 9 -1 10 11 9 -1 10 12 11 -1 12 13 11 -1 12
+14 13 -1 14 15 13 -1 14 16 15 -1 16 17 15 -1 16 18 17 -1 18 19 17 -1 18 20 19
+-1 20 21 19 -1 20 22 21 -1 22 23 21 -1 22 0 23 -1 0 2 23 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 6 7 8 -1 7 9 8 -1 7 10 9 -1 10 11 9
+-1 10 12 11 -1 12 13 11 -1 12 14 13 -1 14 15 13 -1 14 16 15 -1 16 17 15 -1 16
+18 17 -1 18 19 17 -1 18 20 19 -1 20 21 19 -1 20 22 21 -1 22 23 21 -1 22 24 23
+-1 24 25 23 -1 24 0 25 -1 0 2 25 -1 ]
+}
+}
+]
+}
+DEF bottom Transform {
+translation -4.768372e-007 -1 5.960464e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 0.2 0.2 0.2
+diffuseColor 0.49804 0.49804 0.49804
+shininess 0.3
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 0 .866 0 -.5 0 0 0 .5 0 -.866 0 0 -1 -.5 0 -.866 -.866 0 -.5 -1
+0 0 -.866 0 .5 -.5 0 .866 0 0 1 .5 0 .866 .866 0 .5 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -6.5 .06699 -6.75 .5 -6.5 .25 -6.93301 .5 -7
+.75 -6.93301 .933 -6.75 1 -6.5 .933 -6.25 .75 -6.067 .5 -6 .25 -6.067 .06699
+-6.25 ] } coordIndex [ 0 1 2 -1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2
+-1 7 8 2 -1 8 9 2 -1 9 10 2 -1 10 11 2 -1 11 12 2 -1 12 0 2 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2 -1 7 8 2 -1 8 9 2 -1 9
+10 2 -1 10 11 2 -1 11 12 2 -1 12 0 2 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation -4.768372e-007 -1 5.960464e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 0.2 0.2 0.2
+diffuseColor 0.49804 0.49804 0.49804
+shininess 0.3
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .866 2 -.5 1 2 0 0 2 0 .5 2 -.866 0 2 -1 -.5 2 -.866 -.866 2 -.5 -1
+2 0 -.866 2 .5 -.5 2 .866 0 2 1 .5 2 .866 .866 2 .5 ]
+}
+texCoord
+TextureCoordinate { point [ .06699 -6.75 0 -6.5 .5 -6.5 .25 -6.93301 .5 -7
+.75 -6.93301 .933 -6.75 1 -6.5 .933 -6.25 .75 -6.067 .5 -6 .25 -6.067 .06699
+-6.25 ] } coordIndex [ 0 1 2 -1 3 0 2 -1 4 3 2 -1 5 4 2 -1 6 5 2 -1 7 6 2
+-1 8 7 2 -1 9 8 2 -1 10 9 2 -1 11 10 2 -1 12 11 2 -1 1 12 2 -1 ] texCoordIndex
+[ 0 1 2 -1 3 0 2 -1 4 3 2 -1 5 4 2 -1 6 5 2 -1 7 6 2 -1 8 7 2 -1 9 8 2 -1 10
+9 2 -1 11 10 2 -1 12 11 2 -1 1 12 2 -1 ]
+}
+}
+]
+}
+]
+}
+DEF NewGroup Transform {
+translation -1.151941e-004 -0.25641 3.727810e-004
+rotation 0 0 -1 0
+scale 1.66471 1.66471 1.66471
+children [
+DEF NewGroup Transform {
+translation -0.0288 0.0563 -2.49608
+rotation 0.70385 5.654487e-004 -0.71035 3.14271
+scale 0.2287 0.30756 0.2287
+children [
+DEF NewGroup Transform {
+rotation -1 0 0 .3
+children [
+DEF square Transform {
+translation 3.8773 7.818724e-003 -0.72986
+rotation 1 -1.509955e-007 1.509955e-007 4.71239
+scale 6.87859 0.65364 0.18175
+children [
+DEF back Transform {
+translation 1.879471e-009 -1 1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF front Transform {
+translation 1.879471e-009 -1 -1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+DEF bigBookcase Transform {
+translation 3.88268 2.458330e-003 -0.66501
+rotation -1 1.509955e-007 -1.509955e-007 1.5708
+scale 5.27127 0.7809 0.15374
+children [
+DEF bkcs0008 Transform {
+translation -1.149327e-008 -1.254252e-008 3.149485e-008
+rotation 0 0 -1 0
+scale 0.25 0.25 0.25
+children [
+DEF VERT07 Transform {
+translation 3.90022 0.2496 8.000192e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT06 Transform {
+translation 2.60456 0.24363 8.000206e-003
+rotation 0 0 -1 0
+scale 1 0.99195 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT05 Transform {
+translation 1.30891 0.27016 8.000177e-003
+rotation 0 0 -1 0
+scale 1 0.98387 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT04 Transform {
+translation 0.01326 0.24844 8.000019e-003
+rotation 0 0 -1 0
+scale 1 0.99049 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 1 1 1
+diffuseColor 0.6 0.47451 0.2902
+ambientIntensity 0
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT03 Transform {
+translation -1.28239 0.25888 7.999943e-003
+rotation 0 0 -1 0
+scale 1 0.98731 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT02 Transform {
+translation -2.57805 0.24366 7.999978e-003
+rotation 0 0 -1 0
+scale 1 0.99194 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT01 Transform {
+translation -3.8737 0.24957 8.000142e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF BOTTOM Transform {
+translation -0.0103 -3.01338 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF04 Transform {
+translation -0.0103 -1.73372 8.000189e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF03 Transform {
+translation -0.0103 -0.43807 8.000299e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF02 Transform {
+translation -0.0103 0.85771 8.000145e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF01 Transform {
+translation -0.0103 2.15336 7.999891e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF TOP Transform {
+translation -0.0103 3.50175 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF RIGHTSIDE Transform {
+translation 5.19649 0.26101 0.01228
+rotation 0 0 -1 0
+scale 1 0.98666 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF LEFTSIDE Transform {
+translation -5.21586 0.29256 0.01228
+rotation 0 0 -1 0
+scale 1 0.97705 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+DEF Cube12Polygons Transform {
+translation -1.188916e-011 2.584576e-009 -7.352900e-009
+rotation 0 0 -1 0
+scale 10.77962 0.05865 0.05793
+children [
+DEF front Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 2 1 -1 2 1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF left Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 1 -1 0 1 -1 0 -1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF right Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 0 -1 1 0 1 1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF back Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF bottom Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 -1 -1 0 -1 -1 0 1 1 0 1 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -6 1 -6 1 -7 0 -7 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+DEF NewGroup Transform {
+translation 2.48587 0.05226 -5.570141e-003
+rotation 1 -7.555782e-008 7.555782e-008 3.14318
+scale 0.2287 0.30756 0.2287
+children [
+DEF NewGroup Transform {
+rotation -1 0 0 .3
+children [
+DEF square Transform {
+translation 3.8773 7.818721e-003 -0.72986
+rotation -1 1.509955e-007 -1.509955e-007 1.5708
+scale 6.87859 0.65364 0.18175
+children [
+DEF back Transform {
+translation 1.243450e-014 -1 1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF front Transform {
+translation 1.243450e-014 -1 -1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+DEF bigBookcase Transform {
+translation 3.88268 2.458323e-003 -0.66501
+rotation -1 1.509955e-007 -1.509955e-007 1.5708
+scale 5.27127 0.7809 0.15374
+children [
+DEF bkcs0008 Transform {
+translation -1.396984e-009 -1.490116e-008 -4.470348e-008
+rotation 0 0 -1 0
+scale 0.25 0.25 0.25
+children [
+DEF VERT07 Transform {
+translation 3.90022 0.2496 8.000000e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT06 Transform {
+translation 2.60456 0.24363 8.000000e-003
+rotation 0 0 -1 0
+scale 1 0.99195 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT05 Transform {
+translation 1.30891 0.27016 8.000000e-003
+rotation 0 0 -1 0
+scale 1 0.98387 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT04 Transform {
+translation 0.01326 0.24844 8.000000e-003
+rotation 0 0 -1 0
+scale 1 0.99049 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT03 Transform {
+translation -1.28239 0.25888 8.000000e-003
+rotation 0 0 -1 0
+scale 1 0.98731 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT02 Transform {
+translation -2.57805 0.24366 8.000000e-003
+rotation 0 0 -1 0
+scale 1 0.99194 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT01 Transform {
+translation -3.8737 0.24957 8.000000e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF BOTTOM Transform {
+translation -0.0103 -3.01338 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF04 Transform {
+translation -0.0103 -1.73372 8.000000e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF03 Transform {
+translation -0.0103 -0.43807 8.000000e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF02 Transform {
+translation -0.0103 0.85771 8.000000e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF01 Transform {
+translation -0.0103 2.15336 8.000000e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF TOP Transform {
+translation -0.0103 3.50175 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF RIGHTSIDE Transform {
+translation 5.19649 0.26101 0.01228
+rotation 0 0 -1 0
+scale 1 0.98666 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF LEFTSIDE Transform {
+translation -5.21586 0.29256 0.01228
+rotation 0 0 -1 0
+scale 1 0.97705 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+DEF Cube12Polygons Transform {
+rotation 0 0 -1 0
+scale 10.77963 0.05865 0.05793
+children [
+DEF front Transform {
+translation 3.552714e-014 -1 -2.978118e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation 3.552714e-014 -1 -2.978118e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 2 1 -1 2 1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF left Transform {
+translation 3.552714e-014 -1 -2.978118e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 1 -1 0 1 -1 0 -1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF right Transform {
+translation 3.552714e-014 -1 -2.978118e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 0 -1 1 0 1 1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF back Transform {
+translation 3.552714e-014 -1 -2.978118e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF bottom Transform {
+translation 3.552714e-014 -1 -2.978118e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 -1 -1 0 -1 -1 0 1 1 0 1 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -6 1 -6 1 -7 0 -7 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+DEF NewGroup Transform {
+translation 0.0233 0.04862 2.50662
+rotation -0.70739 5.626233e-004 -0.70683 3.14047
+scale 0.2287 0.30756 0.2287
+children [
+DEF NewGroup Transform {
+rotation -1 0 0 .3
+children [
+DEF square Transform {
+translation 3.8773 7.818724e-003 -0.72986
+rotation 1 -1.509955e-007 1.509955e-007 4.71239
+scale 6.87859 0.65364 0.18175
+children [
+DEF back Transform {
+translation 1.879471e-009 -1 1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF front Transform {
+translation 1.879471e-009 -1 -1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+DEF bigBookcase Transform {
+translation 3.88268 2.458330e-003 -0.66501
+rotation -1 1.509955e-007 -1.509955e-007 1.5708
+scale 5.27127 0.7809 0.15374
+children [
+DEF bkcs0008 Transform {
+translation -1.149327e-008 -1.254252e-008 3.149485e-008
+rotation 0 0 -1 0
+scale 0.25 0.25 0.25
+children [
+DEF VERT07 Transform {
+translation 3.90022 0.2496 8.000192e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT06 Transform {
+translation 2.60456 0.24363 8.000206e-003
+rotation 0 0 -1 0
+scale 1 0.99195 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT05 Transform {
+translation 1.30891 0.27016 8.000177e-003
+rotation 0 0 -1 0
+scale 1 0.98387 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT04 Transform {
+translation 0.01326 0.24844 8.000019e-003
+rotation 0 0 -1 0
+scale 1 0.99049 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT03 Transform {
+translation -1.28239 0.25888 7.999943e-003
+rotation 0 0 -1 0
+scale 1 0.98731 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT02 Transform {
+translation -2.57805 0.24366 7.999978e-003
+rotation 0 0 -1 0
+scale 1 0.99194 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT01 Transform {
+translation -3.8737 0.24957 8.000142e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF BOTTOM Transform {
+translation -0.0103 -3.01338 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF04 Transform {
+translation -0.0103 -1.73372 8.000189e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF03 Transform {
+translation -0.0103 -0.43807 8.000299e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF02 Transform {
+translation -0.0103 0.85771 8.000145e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF01 Transform {
+translation -0.0103 2.15336 7.999891e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF TOP Transform {
+translation -0.0103 3.50175 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF RIGHTSIDE Transform {
+translation 5.19649 0.26101 0.01228
+rotation 0 0 -1 0
+scale 1 0.98666 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF LEFTSIDE Transform {
+translation -5.21586 0.29256 0.01228
+rotation 0 0 -1 0
+scale 1 0.97705 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+DEF Cube12Polygons Transform {
+translation -1.188916e-011 2.584576e-009 -7.352900e-009
+rotation 0 0 -1 0
+scale 10.77962 0.05865 0.05793
+children [
+DEF front Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 2 1 -1 2 1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF left Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 1 -1 0 1 -1 0 -1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF right Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 0 -1 1 0 1 1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF back Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF bottom Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 -1 -1 0 -1 -1 0 1 1 0 1 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -6 1 -6 1 -7 0 -7 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+DEF NewGroup Transform {
+translation -2.49909 0.05233 -2.414345e-003
+rotation 4.203623e-003 7.960474e-004 -0.99999 3.1416
+scale 0.2287 0.30756 0.2287
+children [
+DEF NewGroup Transform {
+rotation -1 0 0 .3
+children [
+DEF square Transform {
+translation 3.8773 7.818724e-003 -0.72986
+rotation 1 -1.509955e-007 1.509955e-007 4.71239
+scale 6.87859 0.65364 0.18175
+children [
+DEF back Transform {
+translation 1.879471e-009 -1 1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF front Transform {
+translation 1.879471e-009 -1 -1
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.24706 0.24706 0
+transparency 0.3
+shininess 0.1
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+DEF bigBookcase Transform {
+translation 3.88268 2.458330e-003 -0.66501
+rotation -1 1.509955e-007 -1.509955e-007 1.5708
+scale 5.27127 0.7809 0.15374
+children [
+DEF bkcs0008 Transform {
+translation -1.149327e-008 -1.254252e-008 3.149485e-008
+rotation 0 0 -1 0
+scale 0.25 0.25 0.25
+children [
+DEF VERT07 Transform {
+translation 3.90022 0.2496 8.000192e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT06 Transform {
+translation 2.60456 0.24363 8.000206e-003
+rotation 0 0 -1 0
+scale 1 0.99195 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT05 Transform {
+translation 1.30891 0.27016 8.000177e-003
+rotation 0 0 -1 0
+scale 1 0.98387 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT04 Transform {
+translation 0.01326 0.24844 8.000019e-003
+rotation 0 0 -1 0
+scale 1 0.99049 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT03 Transform {
+translation -1.28239 0.25888 7.999943e-003
+rotation 0 0 -1 0
+scale 1 0.98731 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT02 Transform {
+translation -2.57805 0.24366 7.999978e-003
+rotation 0 0 -1 0
+scale 1 0.99194 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF VERT01 Transform {
+translation -3.8737 0.24957 8.000142e-003
+rotation 0 0 -1 0
+scale 1 0.99014 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05298 -3.28345 .84668 .05298 3.28345 .84668 .05298 -3.28345 .84668
+-.05298 3.28345 .84668 .05298 -3.28345 -.84668 -.05298 -3.28345 -.84668 .05298
+3.28345 -.84668 -.05298 3.28345 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF BOTTOM Transform {
+translation -0.0103 -3.01338 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF04 Transform {
+translation -0.0103 -1.73372 8.000189e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF03 Transform {
+translation -0.0103 -0.43807 8.000299e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05273 .84668 -5.20825 .05273 .84668 5.20825 .05273 .84668
+-5.20825 -.05273 .84668 5.20825 .05273 -.84668 5.20825 -.05273 -.84668 -5.20825
+.05273 -.84668 -5.20825 -.05273 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF02 Transform {
+translation -0.0103 0.85771 8.000145e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF SHELF01 Transform {
+translation -0.0103 2.15336 7.999891e-003
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .84668 -5.20825 .05298 .84668 5.20825 .05298 .84668
+-5.20825 -.05298 .84668 5.20825 .05298 -.84668 5.20825 -.05298 -.84668 -5.20825
+.05298 -.84668 -5.20825 -.05298 -.84668 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF TOP Transform {
+translation -0.0103 3.50175 0.01228
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 5.20825 -.05298 .85107 -5.20825 .05298 .85107 5.20825 .05298 .85107
+-5.20825 -.05298 .85107 5.20825 .05298 -.85107 5.20825 -.05298 -.85107 -5.20825
+.05298 -.85107 -5.20825 -.05298 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF RIGHTSIDE Transform {
+translation 5.19649 0.26101 0.01228
+rotation 0 0 -1 0
+scale 1 0.98666 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+DEF LEFTSIDE Transform {
+translation -5.21586 0.29256 0.01228
+rotation 0 0 -1 0
+scale 1 0.97705 1
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -.05273 -3.28345 .85107 .05273 3.28345 .85107 .05273 -3.28345 .85107
+-.05273 3.28345 .85107 .05273 -3.28345 -.85107 -.05273 -3.28345 -.85107 .05273
+3.28345 -.85107 -.05273 3.28345 -.85107 ] }
+coordIndex [ 0 1 2 -1 0 3 1 -1 0 4 5 -1 0 2 4 -1 2 6 4 -1 2 1 6 -1 1 7 6 -1
+1 3 7 -1 3 5 7 -1 3 0 5 -1 5 6 7 -1 5 4 6 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+DEF Cube12Polygons Transform {
+translation -1.188916e-011 2.584576e-009 -7.352900e-009
+rotation 0 0 -1 0
+scale 10.77962 0.05865 0.05793
+children [
+DEF front Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 1 1 0 1 -1 0 1 -1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 2 1 -1 2 1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF left Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 1 -1 0 1 -1 0 -1 -1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF right Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 -1 1 0 -1 1 0 1 1 2 1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF back Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ -1 2 -1 -1 0 -1 1 0 -1 1 2 -1 ]
+}
+texCoord
+TextureCoordinate { point [ 1 -6 1 -7 0 -7 0 -6 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+DEF bottom Transform {
+translation -1.968203e-012 -1 -3.402927e-006
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+diffuseColor 0.6 0.4 0.2902
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 -1 -1 0 -1 -1 0 1 1 0 1 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -6 1 -6 1 -7 0 -7 ] } coordIndex [ 0 1 2 -1 2
+3 0 -1 ] texCoordIndex
+[ 0 1 2 -1 2 3 0 -1 ]
+}
+}
+]
+}
+]
+}
+]
+}
+]
+}
+DEF Cylinder48Polygons Transform {
+translation -1.834549e-003 0.04922 -6.997627e-005
+rotation 0.99995 -8.061994e-006 9.999780e-003 3.14319
+scale 0.32314 0.05467 0.32314
+children [
+DEF Cylinder48PolygonsMain Transform {
+translation -4.172325e-007 -1 1.788140e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 0.5 0.5 0.5
+diffuseColor 0.24706 0.24706 0
+shininess 0.7
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 2 0 .866 2 -.5 1 0 0 .866 0 -.5 .5 2 -.866 .5 0 -.866 0 2 -1 0 0
+-1 -.5 2 -.866 -.5 0 -.866 -.866 2 -.5 -.866 0 -.5 -1 2 0 -1 0 0 -.866 2 .5
+-.866 0 .5 -.5 2 .866 -.5 0 .866 0 2 1 0 0 1 .5 2 .866 .5 0 .866 .866 2 .5
+.866 0 .5 ]
+}
+texCoord
+TextureCoordinate { point [ .75 -6 .8333 -6 .75 -7 .8333 -7 .9167 -6 .9167
+-7 -.08333 -6 0 -6 -.08333 -7 0 -7 .08333 -6 .08333 -7 .1667 -6 .1667 -7 .25
+-6 .25 -7 .3333 -6 .3333 -7 .4167 -6 .4167 -7 .5 -6 .5 -7 .5833 -6 .5833 -7
+.6667 -6 .6667 -7 ] } coordIndex [ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 4 6 5
+-1 6 7 5 -1 6 8 7 -1 8 9 7 -1 8 10 9 -1 10 11 9 -1 10 12 11 -1 12 13 11 -1 12
+14 13 -1 14 15 13 -1 14 16 15 -1 16 17 15 -1 16 18 17 -1 18 19 17 -1 18 20 19
+-1 20 21 19 -1 20 22 21 -1 22 23 21 -1 22 0 23 -1 0 2 23 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 1 4 3 -1 4 5 3 -1 6 7 8 -1 7 9 8 -1 7 10 9 -1 10 11 9
+-1 10 12 11 -1 12 13 11 -1 12 14 13 -1 14 15 13 -1 14 16 15 -1 16 17 15 -1 16
+18 17 -1 18 19 17 -1 18 20 19 -1 20 21 19 -1 20 22 21 -1 22 23 21 -1 22 24 23
+-1 24 25 23 -1 24 0 25 -1 0 2 25 -1 ]
+}
+}
+]
+}
+DEF bottom Transform {
+translation -4.172325e-007 -1 1.788140e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 0.5 0.5 0.5
+diffuseColor 0.24706 0.24706 0
+shininess 0.7
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 0 .866 0 -.5 0 0 0 .5 0 -.866 0 0 -1 -.5 0 -.866 -.866 0 -.5 -1
+0 0 -.866 0 .5 -.5 0 .866 0 0 1 .5 0 .866 .866 0 .5 ]
+}
+texCoord
+TextureCoordinate { point [ 0 -6.5 .06699 -6.75 .5 -6.5 .25 -6.93301 .5 -7
+.75 -6.93301 .933 -6.75 1 -6.5 .933 -6.25 .75 -6.067 .5 -6 .25 -6.067 .06699
+-6.25 ] } coordIndex [ 0 1 2 -1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2
+-1 7 8 2 -1 8 9 2 -1 9 10 2 -1 10 11 2 -1 11 12 2 -1 12 0 2 -1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2 -1 7 8 2 -1 8 9 2 -1 9
+10 2 -1 10 11 2 -1 11 12 2 -1 12 0 2 -1 ]
+}
+}
+]
+}
+DEF top Transform {
+translation -4.172325e-007 -1 1.788140e-007
+rotation 0 0 -1 0
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 0.5 0.5 0.5
+diffuseColor 0.24706 0.24706 0
+shininess 0.7
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ .866 2 -.5 1 2 0 0 2 0 .5 2 -.866 0 2 -1 -.5 2 -.866 -.866 2 -.5 -1
+2 0 -.866 2 .5 -.5 2 .866 0 2 1 .5 2 .866 .866 2 .5 ]
+}
+texCoord
+TextureCoordinate { point [ .06699 -6.75 0 -6.5 .5 -6.5 .25 -6.93301 .5 -7
+.75 -6.93301 .933 -6.75 1 -6.5 .933 -6.25 .75 -6.067 .5 -6 .25 -6.067 .06699
+-6.25 ] } coordIndex [ 0 1 2 -1 3 0 2 -1 4 3 2 -1 5 4 2 -1 6 5 2 -1 7 6 2
+-1 8 7 2 -1 9 8 2 -1 10 9 2 -1 11 10 2 -1 12 11 2 -1 1 12 2 -1 ] texCoordIndex
+[ 0 1 2 -1 3 0 2 -1 4 3 2 -1 5 4 2 -1 6 5 2 -1 7 6 2 -1 8 7 2 -1 9 8 2 -1 10
+9 2 -1 11 10 2 -1 12 11 2 -1 1 12 2 -1 ]
+}
+}
+]
+}
+]
+}
+DEF hemisphere Transform {
+translation 1.098615e-007 6.613758e-009 2.529010e-007
+rotation 1 -7.555782e-008 7.555782e-008 3.14318
+scale 0.21053 0.06928 0.21053
+children [
+Shape {
+appearance Appearance {
+material Material {
+specularColor 0.5 0.5 0.5
+diffuseColor 0.49804 0.49804 0.49804
+shininess 0.7
+}
+}
+geometry IndexedFaceSet {
+ccw FALSE
+creaseAngle 3.14
+coord Coordinate {
+point [ 1 0 0 .866 0 -.5 0 0 0 .5 0 -.866 0 0 -1 -.5 0 -.866 -.866 0 -.5 -1
+0 0 -.866 0 .5 -.5 0 .866 0 0 1 .5 0 .866 .866 0 .5 .9709 .4333 0 .8408 .4333
+-.4854 .4854 .4333 -.8408 0 .4333 -.9709 -.4854 .4333 -.8408 -.8408 .4333
+-.4854 -.9709 .4333 0 -.8408 .4333 .4854 -.4854 .4333 .8408 0 .4333 .9709
+.4854 .4333 .8408 .8408 .4333 .4854 .8 .7667 0 .6928 .7667 -.4 .4 .7667 -.6928
+0 .7667 -.8 -.4 .7667 -.6928 -.6928 .7667 -.4 -.8 .7667 0 -.6928 .7667 .4
+-.4 .7667 .6928 0 .7667 .8 .4 .7667 .6928 .6928 .7667 .4 .3 .9658 0 .2598
+.9658 -.15 .15 .9658 -.2598 0 .9658 -.3 -.15 .9658 -.2598 -.2598 .9658 -.15
+-.3 .9658 0 -.2598 .9658 .15 -.15 .9658 .2598 0 .9658 .3 .15 .9658 .2598 .2598
+.9658 .15 0 1 0 ]
+}
+texCoord
+TextureCoordinate { point [ .75 -7 .8333 -7 .5 -7 .9167 -7 -.08333 -7 0 -7
+.08333 -7 .1667 -7 .25 -7 .3333 -7 .4167 -7 .5833 -7 .6667 -7 .75 -6.5667
+.8333 -6.5667 .9167 -6.5667 -.08333 -6.5667 0 -6.5667 .08333 -6.5667 .1667
+-6.5667 .25 -6.5667 .3333 -6.5667 .4167 -6.5667 .5 -6.5667 .5833 -6.5667 .6667
+-6.5667 .75 -6.2333 .8333 -6.2333 .9167 -6.2333 -.08333 -6.2333 0 -6.2333
+.08333 -6.2333 .1667 -6.2333 .25 -6.2333 .3333 -6.2333 .4167 -6.2333 .5 -6.2333
+.5833 -6.2333 .6667 -6.2333 .75 -6.0342 .8333 -6.0342 .9167 -6.0342 -.08333
+-6.0342 0 -6.0342 .08333 -6.0342 .1667 -6.0342 .25 -6.0342 .3333 -6.0342 .4167
+-6.0342 .5 -6.0342 .5833 -6.0342 .6667 -6.0342 .5 -6 ] } coordIndex [ 0 1 2
+-1 1 3 2 -1 3 4 2 -1 4 5 2 -1 5 6 2 -1 6 7 2 -1 7 8 2 -1 8 9 2 -1 9 10 2 -1
+10 11 2 -1 11 12 2 -1 12 0 2 -1 13 14 0 -1 14 1 0 -1 14 15 1 -1 15 3 1 -1 15
+16 3 -1 16 4 3 -1 16 17 4 -1 17 5 4 -1 17 18 5 -1 18 6 5 -1 18 19 6 -1 19 7
+6 -1 19 20 7 -1 20 8 7 -1 20 21 8 -1 21 9 8 -1 21 22 9 -1 22 10 9 -1 22 23 10
+-1 23 11 10 -1 23 24 11 -1 24 12 11 -1 24 13 12 -1 13 0 12 -1 25 26 13 -1 26
+14 13 -1 26 27 14 -1 27 15 14 -1 27 28 15 -1 28 16 15 -1 28 29 16 -1 29 17 16
+-1 29 30 17 -1 30 18 17 -1 30 31 18 -1 31 19 18 -1 31 32 19 -1 32 20 19 -1 32
+33 20 -1 33 21 20 -1 33 34 21 -1 34 22 21 -1 34 35 22 -1 35 23 22 -1 35 36 23
+-1 36 24 23 -1 36 25 24 -1 25 13 24 -1 37 38 25 -1 38 26 25 -1 38 39 26 -1 39
+27 26 -1 39 40 27 -1 40 28 27 -1 40 41 28 -1 41 29 28 -1 41 42 29 -1 42 30 29
+-1 42 43 30 -1 43 31 30 -1 43 44 31 -1 44 32 31 -1 44 45 32 -1 45 33 32 -1 45
+46 33 -1 46 34 33 -1 46 47 34 -1 47 35 34 -1 47 48 35 -1 48 36 35 -1 48 37 36
+-1 37 25 36 -1 38 37 49 -1 39 38 49 -1 40 39 49 -1 41 40 49 -1 42 41 49 -1 43
+42 49 -1 44 43 49 -1 45 44 49 -1 46 45 49 -1 47 46 49 -1 48 47 49 -1 37 48 49
+-1 ] texCoordIndex
+[ 0 1 2 -1 1 3 2 -1 4 5 2 -1 5 6 2 -1 6 7 2 -1 7 8 2 -1 8 9 2 -1 9 10 2 -1 10
+2 2 -1 2 11 2 -1 11 12 2 -1 12 0 2 -1 13 14 0 -1 14 1 0 -1 14 15 1 -1 15 3 1
+-1 16 17 4 -1 17 5 4 -1 17 18 5 -1 18 6 5 -1 18 19 6 -1 19 7 6 -1 19 20 7
+-1 20 8 7 -1 20 21 8 -1 21 9 8 -1 21 22 9 -1 22 10 9 -1 22 23 10 -1 23 2 10
+-1 23 24 2 -1 24 11 2 -1 24 25 11 -1 25 12 11 -1 25 13 12 -1 13 0 12 -1 26 27
+13 -1 27 14 13 -1 27 28 14 -1 28 15 14 -1 29 30 16 -1 30 17 16 -1 30 31 17
+-1 31 18 17 -1 31 32 18 -1 32 19 18 -1 32 33 19 -1 33 20 19 -1 33 34 20 -1 34
+21 20 -1 34 35 21 -1 35 22 21 -1 35 36 22 -1 36 23 22 -1 36 37 23 -1 37 24 23
+-1 37 38 24 -1 38 25 24 -1 38 26 25 -1 26 13 25 -1 39 40 26 -1 40 27 26 -1 40
+41 27 -1 41 28 27 -1 42 43 29 -1 43 30 29 -1 43 44 30 -1 44 31 30 -1 44 45 31
+-1 45 32 31 -1 45 46 32 -1 46 33 32 -1 46 47 33 -1 47 34 33 -1 47 48 34 -1 48
+35 34 -1 48 49 35 -1 49 36 35 -1 49 50 36 -1 50 37 36 -1 50 51 37 -1 51 38 37
+-1 51 39 38 -1 39 26 38 -1 40 39 52 -1 41 40 52 -1 43 42 52 -1 44 43 52 -1 45
+44 52 -1 46 45 52 -1 47 46 52 -1 48 47 52 -1 49 48 52 -1 50 49 52 -1 51 50 52
+-1 39 51 52 -1 ]
+}
+}
+]
+}
+]
+}
+DEF BLADES_platanim_interpgroup Transform {
+translation 6.83815 1.55965 -3.15578
+rotation 0.74043 -0.47538 0.47517 1.86647
+scale 0.80195 0.80195 0.45226
+children [
+DEF BLADES_platanim_timer TimeSensor {
+cycleInterval 8 
+loop TRUE
+stopTime 1 
+}
+DEF BLADES_platanim_oriinterp OrientationInterpolator {
+key [ 0 ,0.2522 ,0.5 ,0.7511 ,1 , ]
+keyValue [ 0 0 1 0 ,0 -1 0 1.58 ,0 1 0 3.142 ,0 1 0 1.562 ,0 -1 0 0.00799 , ]
+}
+]
+}
+DEF BLADES_platanim_trig_sensor_touch TouchSensor {
+}
+]
+}
+]
+}
+DEF __ph_00001_NewGroup_spinnable Script {
+field SFRotation newRotation 0 1 0 0 
+eventOut SFRotation spin 
+eventIn SFVec3f translationIn 
+url [ "javascript:
+function  translationIn(value)
+{
+newRotation[3]=value[0]/2;
+spin=newRotation;
+}
+", ]
+}
+]
+}
+DEF __ph_00001_NewGroupPS PlaneSensor {
+}
+]
+}
+ROUTE BLADES_platanim_oriinterp.value_changed TO BLADES_platanim_animator.set_rotation 
+ROUTE BLADES_platanim_timer.fraction_changed TO BLADES_platanim_oriinterp.set_fraction 
+ROUTE BLADES_platanim_trig_sensor_touch.touchTime TO BLADES_platanim_timer.set_startTime 
+ROUTE __ph_00001_NewGroupPS.translation_changed TO __ph_00001_NewGroup_spinnable.translationIn 
+ROUTE __ph_00001_NewGroup_spinnable.spin TO __ph_00001_NewGroup.set_rotation 

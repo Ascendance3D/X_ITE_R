@@ -1,0 +1,177 @@
+#VRML V2.0 utf8
+WorldInfo {
+ title "creepwall"
+ info [
+  "This VRML World was created with Spazz3D, a VRML 97 authoring tool"
+  "www.spazz3d.com"
+ ]
+}
+DEF dad_GROUND Transform {
+ children [
+  DEF GROUND Group {
+   children [
+    DEF dad_Group1 Transform {
+     translation 0.0 -0.75 0.0
+     children [
+      DEF Group1 Group {
+       children [
+        DEF dad_Box6 Transform {
+         children [
+          DEF Box6 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material DEF Red_mat Material {
+             ambientIntensity 0.200
+             shininess 0.100
+             diffuseColor 1.0 0.0 0.0
+             emissiveColor 0.0 0.0 0.0
+             specularColor 0.0 0.0 0.0
+            }
+           }
+           geometry Box {
+            size 6.0 2.0 0.5
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere2 Transform {
+         translation 0.0 1.5 0.0
+         rotation 0.0 0.0 1.0 1.572
+         children [
+          DEF Sphere2 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Sphere {
+            radius 0.500
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere1 Transform {
+         translation -3.0 1.5 0.0
+         rotation -1.0 -0.0 0.0 3.142
+         children [
+          DEF Sphere1 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Sphere {
+            radius 0.500
+           }
+          }
+         ]
+        }
+        DEF dad_Sphere3 Transform {
+         translation 3.0 1.5 0.0
+         rotation 0.001 -1.0 -0.0 3.142
+         children [
+          DEF Sphere3 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Sphere {
+            radius 0.500
+           }
+          }
+         ]
+        }
+        DEF dad_Box7 Transform {
+         translation 0.0 1.5 0.0
+         children [
+          DEF Box7 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 6.5 0.1 0.5
+           }
+          }
+         ]
+        }
+        DEF dad_Box8 Transform {
+         translation -2.0 1.25 0.0
+         children [
+          DEF Box8 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.1 0.45 0.5
+           }
+          }
+         ]
+        }
+        DEF dad_Box9 Transform {
+         translation -1.0 1.25 0.0
+         children [
+          DEF Box9 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.1 0.45 0.5
+           }
+          }
+         ]
+        }
+        DEF dad_Box10 Transform {
+         translation 1.0 1.25 0.0
+         children [
+          DEF Box10 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.1 0.45 0.5
+           }
+          }
+         ]
+        }
+        DEF dad_Box11 Transform {
+         translation 2.0 1.25 0.0
+         children [
+          DEF Box11 Shape {
+           appearance Appearance {
+            texture ImageTexture {
+             url "creep.jpg"
+            }
+            material USE Red_mat
+           }
+           geometry Box {
+            size 0.1 0.45 0.5
+           }
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
