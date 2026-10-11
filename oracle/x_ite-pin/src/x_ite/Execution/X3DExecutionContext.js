@@ -1,0 +1,1005 @@
+import Fields                      from "../Fields.js";
+import X3DBaseNode                 from "../Base/X3DBaseNode.js";
+import X3DBoundedObject            from "../Components/Grouping/X3DBoundedObject.js";
+import { getUniqueName }           from "./NamedNodesHandling.js";
+import NamedNodesArray             from "./NamedNodesArray.js";
+import X3DImportedNodeInstance     from "../Components/Core/X3DImportedNodeInstance.js";
+import X3DImportedNode             from "./X3DImportedNode.js";
+import ImportedNodesArray          from "./ImportedNodesArray.js";
+import ExternProtoDeclarationArray from "../Prototype/ExternProtoDeclarationArray.js";
+import ProtoDeclarationArray       from "../Prototype/ProtoDeclarationArray.js";
+import X3DProtoDeclaration         from "../Prototype/X3DProtoDeclaration.js";
+import X3DExternProtoDeclaration   from "../Prototype/X3DExternProtoDeclaration.js";
+import RouteArray                  from "../Routing/RouteArray.js";
+import X3DRoute                    from "../Routing/X3DRoute.js";
+import X3DCast                     from "../Base/X3DCast.js";
+import X3DConstants                from "../Base/X3DConstants.js";
+import SFNodeCache                 from "../Fields/SFNodeCache.js";
+import $                           from "../../lib/helper.js";
+
+const
+   _outerNode     = Symbol (),
+   _namedNodes    = Symbol (),
+   _importedNodes = Symbol (),
+   _protos        = Symbol (),
+   _externprotos  = Symbol (),
+   _routes        = Symbol ();
+
+function X3DExecutionContext (executionContext, outerNode = null, browser = executionContext .getBrowser ())
+{
+   X3DBaseNode .call (this, executionContext, browser);
+
+   this .addType (X3DConstants .X3DExecutionContext);
+
+   this .addChildObjects (X3DConstants .initializeOnly, "rootNodes",          new Fields .MFNode (),
+                          X3DConstants .inputOutput,    "countPrimitives",    new Fields .SFBool (true),
+                          X3DConstants .outputOnly,     "worldInfos",         new Fields .MFNode (),
+                          X3DConstants .outputOnly,     "sceneGraph_changed", new Fields .SFTime (),
+                          X3DConstants .outputOnly,     "bbox_changed",       new Fields .SFTime ());
+
+   this ._rootNodes .setPrivate (false);
+   this ._rootNodes .collectCloneCount = () => 1;
+
+   if (executionContext)
+   {
+      this ._countPrimitives    .addReference     (executionContext ._countPrimitives);
+      this ._sceneGraph_changed .addFieldInterest (executionContext ._sceneGraph_changed);
+      this ._bbox_changed       .addFieldInterest (executionContext ._bbox_changed);
+   }
+
+   this [_outerNode]       = outerNode;
+   this [_namedNodes]      = new NamedNodesArray ();
+   this [_importedNodes]   = new ImportedNodesArray ();
+   this [_protos]          = new ProtoDeclarationArray ();
+   this [_externprotos]    = new ExternProtoDeclarationArray ();
+   this [_routes]          = new RouteArray ();
+
+   this [_namedNodes]     .addParent (this);
+   this [_importedNodes]  .addParent (this);
+   this [_protos]         .addParent (this);
+   this [_externprotos]   .addParent (this);
+   this [_routes]         .addParent (this);
+}
+
+Object .assign (Object .setPrototypeOf (X3DExecutionContext .prototype, X3DBaseNode .prototype),
+{
+   getLocalScene ()
+   {
+      return this .getExecutionContext () .getLocalScene ();
+   },
+   setExecutionContext (executionContext)
+   {
+      if (this .getExecutionContext ())
+      {
+         this ._countPrimitives .removeReference (this .getExecutionContext () ._countPrimitives);
+         this ._sceneGraph_changed .removeFieldInterest (this .getExecutionContext () ._sceneGraph_changed);
+         this ._bbox_changed       .removeFieldInterest (this .getExecutionContext () ._bbox_changed);
+      }
+
+      X3DBaseNode .prototype .setExecutionContext .call (this, executionContext);
+
+      if (executionContext)
+      {
+         this ._countPrimitives .addReference (executionContext ._countPrimitives);
+         this ._sceneGraph_changed .addFieldInterest (executionContext ._sceneGraph_changed);
+         this ._bbox_changed       .addFieldInterest (executionContext ._bbox_changed);
+      }
+   },
+   getOuterNode ()
+   {
+      // Can be either of type X3DProtoDeclaration or X3DPrototypeInstance, or null.
+      return this [_outerNode];
+   },
+   getCountPrimitives ()
+   {
+      return this ._countPrimitives .getValue ();
+   },
+   setCountPrimitives (value)
+   {
+      this ._countPrimitives = (this .getExecutionContext () ?.getCountPrimitives () ?? true) && value;
+   },
+   getBBox (bbox, shadows)
+   {
+      const nodes = Array .from (this .getRootNodes (), node => X3DCast (X3DConstants .X3DBoundedObject, node))
+         .filter (node => node);
+
+      return X3DBoundedObject .prototype .getBBox (nodes, bbox, shadows);
+   },
+   getSpecificationVersion ()
+   {
+      return this .getExecutionContext () .getSpecificationVersion ();
+   },
+   getEncoding ()
+   {
+      return this .getExecutionContext () .getEncoding ();
+   },
+   getWorldURL ()
+   {
+      return this .getExecutionContext () .getWorldURL ();
+   },
+   getBaseURL ()
+   {
+      return this .getExecutionContext () .getBaseURL ();
+   },
+   getProfile ()
+   {
+      return this .getExecutionContext () .getProfile ();
+   },
+   hasComponent (name, level)
+   {
+      return this .getExecutionContext () .hasComponent (name, level);
+   },
+   getComponents ()
+   {
+      return this .getExecutionContext () .getComponents ();
+   },
+   fromUnit (category, value)
+   {
+      return this .getExecutionContext () .fromUnit (category, value);
+   },
+   toUnit (category, value)
+   {
+      return this .getExecutionContext () .toUnit (category, value);
+   },
+   getUnits ()
+   {
+      return this .getExecutionContext () .getUnits ();
+   },
+   createNode (typeName, setup = true /* non-public argument */)
+   {
+      typeName = String (typeName);
+
+      if (setup === false)
+      {
+         const ConcreteNode = this .getBrowser () .getConcreteNodes () .get (typeName);
+
+         if (!ConcreteNode)
+            return null;
+
+         // There must be an error if the specification range does not match,
+         // otherwise protos with the same name will be overwritten, e.g. Delay.
+
+         const { from, to } = ConcreteNode .specificationRange;
+
+         if (this .getSpecificationVersion () < from || this .getSpecificationVersion () > to)
+            return null;
+
+         if (!this .hasComponent (ConcreteNode .componentInfo .name))
+            console .warn (`Node type '${typeName}' does not match component/profile statements in '${this .getWorldURL ()}'.`);
+
+         return new ConcreteNode (this);
+      }
+      else
+      {
+         const ConcreteNode = this .getBrowser () .getConcreteNodes () .get (typeName);
+
+         if (!ConcreteNode)
+            throw new Error (`Unknown node type '${typeName}'.`);
+
+         // There must be an error if the specification range does not match,
+         // otherwise protos with the same name will be overwritten, e.g. Delay.
+
+         const { from, to } = ConcreteNode .specificationRange;
+
+         if (this .getSpecificationVersion () < from || this .getSpecificationVersion () > to)
+            throw new Error (`Node type '${typeName}' does not match specification version in '${this .getWorldURL ()}.`);
+
+         if (!this .hasComponent (ConcreteNode .componentInfo .name))
+            console .warn (`Node type '${typeName}' does not match component/profile statements in '${this .getWorldURL ()}'.`);
+
+         const baseNode = new ConcreteNode (this);
+
+         baseNode .setup ();
+
+         return SFNodeCache .get (baseNode);
+      }
+   },
+   createProto (name, setup = true /* non-public argument */)
+   {
+      name = String (name);
+
+      for (let executionContext = this;;)
+      {
+         const protoNode = executionContext .protos .get (name)
+            ?? executionContext .externprotos .get (name);
+
+         if (protoNode)
+            return protoNode .createInstance (this, setup);
+
+         if (executionContext .isScene)
+            break;
+
+         executionContext = executionContext .getExecutionContext ();
+      }
+
+      if (setup === false)
+         return null;
+
+      throw new Error (`Unknown proto or externproto type '${name}'.`);
+   },
+   addNamedNode (name, node)
+   {
+      name = String (name);
+      node = X3DCast (X3DConstants .X3DNode, node, false);
+
+      if (!node)
+         throw new Error ("Couldn't add named node: node must be of type X3DNode.");
+
+      if (node instanceof X3DImportedNodeInstance)
+         throw new Error ("Couldn't add named node: node cannot be of type X3DImportedNodeInstance.");
+
+      if (node .getExecutionContext () !== this)
+         throw new Error ("Couldn't add named node: node does not belong to this execution context.");
+
+      if (!name)
+         throw new Error ("Couldn't add named node: node name is empty.");
+
+      if (this [_namedNodes] .has (name))
+         throw new Error (`Couldn't add named node: node named '${name}' is already in use.`);
+
+      if (this [_namedNodes] .get (node .getName ()) ?.getValue () === node)
+         throw new Error (`Couldn't add named node: node named '${node .getName ()}' already has a name.`);
+
+      // Add named node.
+
+      node .setName (name);
+
+      this [_namedNodes] .add (name, SFNodeCache .get (node));
+   },
+   updateNamedNode (name, node)
+   {
+      name = String (name);
+      node = X3DCast (X3DConstants .X3DNode, node, false);
+
+      if (!node)
+         throw new Error ("Couldn't update named node: node must be of type X3DNode.");
+
+      if (node instanceof X3DImportedNodeInstance)
+         throw new Error ("Couldn't add named node: node cannot be of type X3DImportedNodeInstance.");
+
+      if (node .getExecutionContext () !== this)
+         throw new Error ("Couldn't update named node: node does not belong to this execution context.");
+
+      if (!name)
+         throw new Error ("Couldn't update named node: node name is empty.");
+
+      // Remove named node.
+
+      this .removeNamedNode (name);
+
+      // Update named node.
+
+      this [_namedNodes] .update (node .getName (), name, SFNodeCache .get (node));
+
+      node .setName (name);
+
+      this ._namedNodes_changed = Date .now () / 1000;
+   },
+   removeNamedNode (name)
+   {
+      name = String (name);
+
+      const node = this [_namedNodes] .get (name);
+
+      node ?.getValue () ?.setName ("");
+
+      this [_namedNodes] .remove (name);
+
+      this ._namedNodes_changed = Date .now () / 1000;
+   },
+   getNamedNode (name)
+   {
+      name = String (name);
+
+      const node = this [_namedNodes] .get (name);
+
+      if (node ?.getValue ())
+         return node;
+
+      throw new Error (`Named node '${name}' not found.`);
+   },
+   getNamedNodes ()
+   {
+      return this [_namedNodes];
+   },
+   getUniqueName (name)
+   {
+      return getUniqueName (this [_namedNodes], name);
+   },
+   addImportedNode (inlineNode, exportedName, importedName = exportedName, description = "")
+   {
+      exportedName = String (exportedName);
+      importedName = String (importedName);
+
+      if (this [_importedNodes] .has (importedName))
+         throw new Error (`Couldn't add imported node: imported name '${importedName}' already in use.`);
+
+      this .updateImportedNode (inlineNode, exportedName, importedName, description);
+   },
+   updateImportedNode (inlineNode, exportedName, importedName, description = "")
+   {
+      inlineNode   = X3DCast (X3DConstants .Inline, inlineNode, false);
+      exportedName = String (exportedName);
+      importedName = importedName === undefined ? exportedName : String (importedName);
+      description  = String (description);
+
+      if (!inlineNode)
+         throw new Error ("Node must be of type Inline node.");
+
+      if (inlineNode .getExecutionContext () !== this)
+         throw new Error ("Couldn't update imported node: Inline node does not belong to this execution context.");
+
+      if (!exportedName)
+         throw new Error ("Couldn't update imported node: exported name is empty.");
+
+      if (!importedName)
+         throw new Error ("Couldn't update imported node: imported name is empty.");
+
+      // Update imported node.
+
+      this .removeImportedNode (importedName);
+
+      const importedNode = new X3DImportedNode (this, inlineNode, exportedName, importedName, description);
+
+      this [_importedNodes] .add (importedName, importedNode);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   renameImportedNode (oldImportedName, newImportedName)
+   {
+      const importedNode = this [_importedNodes] .get (oldImportedName);
+
+      if (!importedNode)
+         throw new Error ("Couldn't rename imported node: imported node does not exists.");
+
+      if (this [_importedNodes] .get (newImportedName))
+         throw new Error ("Couldn't rename imported node: new imported name does already exists.");
+
+      importedNode .setImportName (newImportedName);
+
+      this [_importedNodes] .update (oldImportedName, newImportedName, importedNode);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   removeImportedNode (importedName)
+   {
+      importedName = String (importedName);
+
+      const importedNode = this [_importedNodes] .get (importedName);
+
+      if (!importedNode)
+         return;
+
+      this [_importedNodes] .remove (importedName);
+
+      importedNode .dispose ();
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   getImportedNode (importedName)
+   {
+      importedName = String (importedName);
+
+      const importedNode = this [_importedNodes] .get (importedName);
+
+      if (importedNode)
+         return importedNode .instance;
+
+      throw new Error (`Imported node '${importedName}' not found.`);
+   },
+   getImportedNodes ()
+   {
+      return this [_importedNodes];
+   },
+   getUniqueImportName (name)
+   {
+      return getUniqueName (this [_importedNodes], name);
+   },
+   getLocalNode (name)
+   {
+      name = String (name);
+
+      try
+      {
+         return this .getNamedNode (name);
+      }
+      catch
+      {
+         const importedNode = this [_importedNodes] .get (name);
+
+         if (importedNode)
+            return importedNode .instance;
+
+         throw new Error (`Unknown named or imported node '${name}'.`);
+      }
+   },
+   /**
+    *
+    * @param {SFNode|X3DNode|X3DImportedNode} node
+    * @returns either an X3DImportedNode if possible or X3DNode
+    */
+   getNodeOrImportedNode (node)
+   {
+      node = X3DCast (X3DConstants .X3DNode, node, false);
+
+      if (!node)
+         throw new Error ("Couldn't get localized node: node must be of type X3DNode.");
+
+      for (const importedNode of this [_importedNodes])
+      {
+         try
+         {
+            if (importedNode .getExportedNode () === node)
+               return importedNode .getInstance ();
+         }
+         catch
+         { }
+      }
+
+      return node;
+   },
+   setRootNodes ()
+   { },
+   getRootNodes ()
+   {
+      return this ._rootNodes;
+   },
+   getProtoDeclaration (name)
+   {
+      name = String (name);
+
+      const proto = this [_protos] .get (name);
+
+      if (proto)
+         return proto;
+
+      throw new Error (`Proto declaration '${name}' not found.`);
+   },
+   addProtoDeclaration (name, proto)
+   {
+      name = String (name);
+
+      if (!(proto instanceof X3DProtoDeclaration))
+         throw new Error ("Couldn't add proto declaration: proto must be of type X3DProtoDeclaration.");
+
+      if (proto .getExecutionContext () !== this)
+         throw new Error ("Couldn't add proto declaration: proto does not belong to this execution context.");
+
+      if (this [_protos] .has (name))
+         throw new Error (`Couldn't add proto declaration: proto '${name}' already in use.`);
+
+      if (this [_protos] .get (proto .getName ()) === proto)
+         throw new Error (`Couldn't add proto declaration: proto '${proto .getName ()}' already added.`);
+
+      if (!name)
+         throw new Error ("Couldn't add proto declaration: proto name is empty.");
+
+      if (this [_externprotos] .has (name))
+         console .warn (`Added proto '${name}' will override extern proto with same name.`);
+
+      if (this .getBrowser () .getConcreteNodes () .has (name))
+         console .warn (`Added proto '${name}', but will not override built-in node of same type if profile/components include this node.`);
+
+      this [_protos] .add (name, proto);
+      proto .setName (name);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   updateProtoDeclaration (name, proto)
+   {
+      name = String (name);
+
+      if (!(proto instanceof X3DProtoDeclaration))
+         throw new Error ("Couldn't update proto declaration: proto must be of type X3DProtoDeclaration.");
+
+      if (proto .getExecutionContext () !== this)
+         throw new Error ("Couldn't update proto declaration: proto does not belong to this execution context.");
+
+      if (!name)
+         throw new Error ("Couldn't update proto declaration: proto name is empty.");
+
+      if (this [_externprotos] .has (name))
+         console .warn (`Added proto '${name}' will override extern proto with same name.`);
+
+      if (this .getBrowser () .getConcreteNodes () .has (name))
+         console .warn (`Added proto '${name}', but will not override built-in node of same type if profile/components include this node.`);
+
+      this [_protos] .update (proto .getName (), name, proto);
+      proto .setName (name);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   removeProtoDeclaration (name)
+   {
+      name = String (name);
+
+      this [_protos] .remove (name);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   getProtoDeclarations ()
+   {
+      return this [_protos];
+   },
+   getUniqueProtoName (name)
+   {
+      return getUniqueName (this [_protos], name);
+   },
+   getExternProtoDeclaration (name)
+   {
+      name = String (name);
+
+      const externproto = this [_externprotos] .get (name);
+
+      if (externproto)
+         return externproto;
+
+      throw new Error (`Extern proto declaration '${name}' not found.`);
+   },
+   addExternProtoDeclaration (name, externproto)
+   {
+      name = String (name);
+
+      if (!(externproto instanceof X3DExternProtoDeclaration))
+         throw new Error ("Couldn't add extern proto declaration: extern proto must be of type X3DExternProtoDeclaration.");
+
+      if (externproto .getExecutionContext () !== this)
+         throw new Error ("Couldn't add extern proto declaration: extern proto does not belong to this execution context.");
+
+      if (this [_externprotos] .has (name))
+         throw new Error (`Couldn't add extern proto declaration: extern proto '${name}' already in use.`);
+
+      if (this [_externprotos] .get (externproto .getName ()) === externproto)
+         throw new Error (`Couldn't add extern proto declaration: extern proto '${externproto .getName ()}' already added.`);
+
+      if (!name)
+         throw new Error ("Couldn't add extern proto declaration: extern proto name is empty.");
+
+      if (this [_protos] .has (name))
+         console .warn (`Added extern proto '${name}' will be overridden by proto with same name.`);
+
+      if (this .getBrowser () .getConcreteNodes () .has (name))
+         console .warn (`Added extern proto '${name}', but will not override built-in node of same type if profile/components include this node.`);
+
+      this [_externprotos] .add (name, externproto);
+      externproto .setName (name);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   updateExternProtoDeclaration (name, externproto)
+   {
+      name = String (name);
+
+      if (!(externproto instanceof X3DExternProtoDeclaration))
+         throw new Error ("Couldn't update extern proto declaration: extern proto must be of type X3DExternProtoDeclaration.");
+
+      if (externproto .getExecutionContext () !== this)
+         throw new Error ("Couldn't update extern proto declaration: extern proto does not belong to this execution context.");
+
+      if (!name)
+         throw new Error ("Couldn't update extern proto declaration: extern proto name is empty.");
+
+      if (this [_protos] .has (name))
+         console .warn (`Added extern proto '${name}' will be overridden by proto with same name.`);
+
+      if (this .getBrowser () .getConcreteNodes () .has (name))
+         console .warn (`Added extern proto '${name}', but will not override built-in node of same type if profile/components include this node.`);
+
+      this [_externprotos] .update (externproto .getName (), name, externproto);
+      externproto .setName (name);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   removeExternProtoDeclaration (name)
+   {
+      name = String (name);
+
+      this [_externprotos] .remove (name);
+
+      this ._sceneGraph_changed = Date .now () / 1000;
+   },
+   getExternProtoDeclarations ()
+   {
+      return this [_externprotos];
+   },
+   getUniqueExternProtoName (name)
+   {
+      return getUniqueName (this [_externprotos], name);
+   },
+   addRoute (sourceNode, sourceField, destinationNode, destinationField)
+   {
+      // Normalize arguments.
+
+      sourceNode       = X3DCast (X3DConstants .X3DNode, sourceNode, false);
+      sourceField      = String (sourceField);
+      destinationNode  = X3DCast (X3DConstants .X3DNode, destinationNode, false);
+      destinationField = String (destinationField);
+
+      // Check nodes.
+
+      if (!sourceNode)
+         throw new Error ("Bad ROUTE specification: source node must be of type X3DNode.");
+
+      if (!destinationNode)
+         throw new Error ("Bad ROUTE specification: destination node must be of type X3DNode.");
+
+      // Resolve imported source and destination node.
+
+      sourceNode      = this .getNodeOrImportedNode (sourceNode);
+      destinationNode = this .getNodeOrImportedNode (destinationNode);
+
+      // Add route.
+      const route = this .getRoute (sourceNode, sourceField, destinationNode, destinationField);
+
+      if (route)
+      {
+         return route;
+      }
+      else
+      {
+         const route = new X3DRoute (this, sourceNode, sourceField, destinationNode, destinationField);
+
+         this [_routes] .add (route .getId (), route);
+
+         return route;
+      }
+   },
+   deleteRoute (route)
+   {
+      // Case: sourceNode, sourceField, destinationNode, destinationField.
+      if (arguments .length === 4)
+         route = this .getRoute (... arguments);
+
+      if (!(route instanceof X3DRoute))
+         return;
+
+      if (!this .routes .has (route .getId ()))
+         return;
+
+      this [_routes] .remove (route .getId ());
+
+      route .dispose ();
+   },
+   getRoute (sourceNode, sourceFieldName, destinationNode, destinationFieldName)
+   {
+      // Normalize arguments.
+
+      sourceNode           = X3DCast (X3DConstants .X3DNode, sourceNode, false);
+      sourceFieldName      = String (sourceFieldName);
+      destinationNode      = X3DCast (X3DConstants .X3DNode, destinationNode, false);
+      destinationFieldName = String (destinationFieldName);
+
+      // Check nodes.
+
+      if (!sourceNode)
+         throw new Error ("Bad ROUTE specification: sourceNode must be of type X3DNode.");
+
+      if (!destinationNode)
+         throw new Error ("Bad ROUTE specification: destinationNode must be of type X3DNode.");
+
+      // Resolve imported source and destination node.
+
+      sourceNode      = this .getNodeOrImportedNode (sourceNode);
+      destinationNode = this .getNodeOrImportedNode (destinationNode);
+
+      // Get fields if possible.
+
+      const sourceField = sourceNode instanceof X3DImportedNodeInstance
+         ? $.try (() => sourceNode .getField (sourceFieldName))
+         : sourceNode .getField (sourceFieldName);
+
+      const destinationField = destinationNode instanceof X3DImportedNodeInstance
+         ? $.try (() => destinationNode .getField (destinationFieldName))
+         : destinationNode .getField (destinationFieldName);
+
+      X3DRoute .checkFields (sourceField, destinationField);
+
+      // Return route.
+
+      return this [_routes] .find (route =>
+      {
+         if (route .getSourceNode () !== sourceNode)
+            return false;
+
+         if (route .getDestinationNode () !== destinationNode)
+            return false;
+
+         if (sourceField)
+         {
+            if ($.try (() => sourceNode .getField (route .getSourceField ())) !== sourceField)
+               return false;
+         }
+         else
+         {
+            if (sourceNode instanceof X3DImportedNodeInstance)
+            {
+               if (route .getSourceField () !== sourceFieldName)
+                  return false;
+            }
+            else
+            {
+               return false;
+            }
+         }
+
+         if (destinationField)
+         {
+            if ($.try (() => destinationNode .getField (route .getDestinationField ())) !== destinationField)
+               return false;
+         }
+         else
+         {
+            if (destinationNode instanceof X3DImportedNodeInstance)
+            {
+               if (route .getDestinationField () !== destinationFieldName)
+                  return false;
+            }
+            else
+            {
+               return false;
+            }
+         }
+
+         return true;
+      });
+   },
+   getRoutes ()
+   {
+      return this [_routes];
+   },
+   getWorldInfos ()
+   {
+      return this ._worldInfos;
+   },
+   addWorldInfo (worldInfoNode)
+   {
+      this ._worldInfos .push (worldInfoNode);
+   },
+   removeWorldInfo (worldInfoNode)
+   {
+      for (const [i, worldInfo] of this ._worldInfos .entries ())
+      {
+         if (worldInfo .getValue () !== worldInfoNode)
+            continue;
+
+         this ._worldInfos .splice (i, 1);
+         break;
+      }
+   },
+   toVRMLStream (generator)
+   {
+      generator .PushExecutionContext (this);
+      generator .NamedNodes (this .getNamedNodes ());
+      generator .ImportedNodes (this .getImportedNodes ());
+
+      // Output extern protos
+
+      this .getExternProtoDeclarations () .toVRMLStream (generator);
+
+      // Output protos
+
+      this .getProtoDeclarations () .toVRMLStream (generator);
+
+      // Output root nodes
+
+      const
+         rootNodes = this .getRootNodes (),
+         last      = rootNodes .length - 1;
+
+      for (const [i, rootNode] of rootNodes .entries ())
+      {
+         generator .Indent ();
+
+         if (rootNode)
+            rootNode .toVRMLStream (generator);
+         else
+            generator .NULL ();
+
+         generator .TidyBreak ();
+
+         if (i !== last)
+            generator .TidyBreak ();
+      }
+
+      // Output imported nodes
+
+      const importedNodes = this .getImportedNodes ();
+
+      if (importedNodes .length)
+      {
+         generator .TidyBreak ();
+
+         importedNodes .toVRMLStream (generator);
+      }
+
+      // Output routes
+
+      const routes = this .getRoutes ();
+
+      if (routes .length)
+      {
+         generator .TidyBreak ();
+
+         routes .toVRMLStream (generator);
+      }
+
+      generator .PopExecutionContext ();
+   },
+   toXMLStream (generator)
+   {
+      generator .PushExecutionContext (this);
+      generator .NamedNodes (this .getNamedNodes ());
+      generator .ImportedNodes (this .getImportedNodes ());
+
+      // Output extern protos
+
+      this .getExternProtoDeclarations () .toXMLStream (generator);
+
+      // Output protos
+
+      this .getProtoDeclarations () .toXMLStream (generator);
+
+      // Output root nodes
+
+      const rootNodes = this .getRootNodes ();
+
+      if (rootNodes .length)
+      {
+         rootNodes .toXMLStream (generator);
+
+         generator .TidyBreak ();
+      }
+
+      // Output imported nodes
+
+      this .getImportedNodes () .toXMLStream (generator);
+
+      // Output routes
+
+      this .getRoutes () .toXMLStream (generator);
+
+      generator .PopExecutionContext ();
+   },
+   toJSONStream (generator)
+   {
+      generator .PushExecutionContext (this);
+      generator .NamedNodes (this .getNamedNodes ());
+      generator .ImportedNodes (this .getImportedNodes ());
+
+      let comma = false;
+
+      comma = this .getExternProtoDeclarations () .toJSONStream (generator, comma);
+      comma = this .getProtoDeclarations ()       .toJSONStream (generator, comma);
+
+      // Root nodes
+
+      for (const rootNode of this .getRootNodes ())
+      {
+         if (comma)
+            generator .string += ',';
+
+         generator .TidyBreak ();
+         generator .Indent ();
+
+         if (rootNode)
+            rootNode .toJSONStream (generator);
+         else
+            generator .string += "null";
+
+         comma = true;
+      }
+
+      this .getImportedNodes () .toJSONStream (generator, comma);
+      this .getRoutes ()        .toJSONStream (generator, comma);
+
+      generator .PopExecutionContext ();
+
+      return comma;
+   },
+   dispose ()
+   {
+      for (const route of Array .from (this [_routes]))
+         this .deleteRoute (route);
+
+      this [_outerNode] = null;
+
+      this [_namedNodes]    .clear ();
+      this [_importedNodes] .clear ();
+      this [_protos]        .clear ();
+      this [_externprotos]  .clear ();
+      this [_routes]        .clear ();
+
+      X3DBaseNode .prototype .dispose .call (this);
+   },
+});
+
+for (const key of Object .keys (X3DExecutionContext .prototype))
+   Object .defineProperty (X3DExecutionContext .prototype, key, { enumerable: false });
+
+Object .defineProperties (X3DExecutionContext .prototype,
+{
+   isScene:
+   {
+      value: false,
+      enumerable: true,
+   },
+   specificationVersion:
+   {
+      get: X3DExecutionContext .prototype .getSpecificationVersion,
+      enumerable: true,
+   },
+   encoding:
+   {
+      get: X3DExecutionContext .prototype .getEncoding,
+      enumerable: true,
+   },
+   profile:
+   {
+      get: X3DExecutionContext .prototype .getProfile,
+      enumerable: true,
+   },
+   components:
+   {
+      get: X3DExecutionContext .prototype .getComponents,
+      enumerable: true,
+   },
+   worldURL:
+   {
+      get: X3DExecutionContext .prototype .getWorldURL,
+      enumerable: true,
+   },
+   baseURL:
+   {
+      get: X3DExecutionContext .prototype .getBaseURL,
+      enumerable: true,
+   },
+   units:
+   {
+      get: X3DExecutionContext .prototype .getUnits,
+      enumerable: true,
+   },
+   namedNodes:
+   {
+      get: X3DExecutionContext .prototype .getNamedNodes,
+      enumerable: true,
+   },
+   importedNodes:
+   {
+      get: X3DExecutionContext .prototype .getImportedNodes,
+      enumerable: true,
+   },
+   rootNodes:
+   {
+      get: X3DExecutionContext .prototype .getRootNodes,
+      set: X3DExecutionContext .prototype .setRootNodes,
+      enumerable: true,
+   },
+   protos:
+   {
+      get: X3DExecutionContext .prototype .getProtoDeclarations,
+      enumerable: true,
+   },
+   externprotos:
+   {
+      get: X3DExecutionContext .prototype .getExternProtoDeclarations,
+      enumerable: true,
+   },
+   routes:
+   {
+      get: X3DExecutionContext .prototype .getRoutes,
+      enumerable: true,
+   },
+});
+
+Object .defineProperties (X3DExecutionContext,
+{
+   typeName:
+   {
+      value: "X3DExecutionContext",
+      enumerable: true,
+   },
+});
+
+X3DConstants .addConstant (X3DExecutionContext .typeName);
+
+export default X3DExecutionContext;

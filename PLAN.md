@@ -1,0 +1,150 @@
+# Rust port plan — X_ITE and CodeMirror 5
+
+Written 2026-10-11. Plan only. No Rust code exists yet.
+
+## Hard rules for this lane
+
+- **Private until proven.** Nothing from `scratch/rust-port/` goes to GitHub or any
+  other remote until Ryan says every part works. No `git remote add`, no push, no
+  gist, no issue, no PR. `scratch/` is gitignored by the lane root (`.gitignore:14`).
+- The upstream copies under `upstream/` are read-only references. Never edit them.
+  `upstream/codemirror5` still has its `origin` remote; never push from it.
+- Do not touch `X_ITE/x_ite` (the fork). It is on `fix/firefox-vrml-xml-parser`
+  and belongs to the upstream-contribution lane. Read it only.
+- No Cybertown or blaxxun assets in Rust test fixtures that could ever ship.
+  Corpus files stay in `recon/fixtures/` and are read by path.
+
+## Inputs (pinned)
+
+| project | path | version | size | license |
+| --- | --- | --- | --- | --- |
+| X_ITE | `X_ITE/x_ite/src` | 16.5.0, branch `fix/firefox-vrml-xml-parser` @ `34cdf9f97` | 764 JS files, ~129k lines | MIT |
+| CodeMirror 5 | `scratch/rust-port/upstream/codemirror5` | 5.65.21 @ `4ca3d05` | core `src/` 10.4k lines; `mode/` 38k (123 modes); `addon/` 8.7k; `keymap/` 1.3k | MIT |
+
+Both are MIT, so a Rust port may keep MIT. Keep both copyright notices.
+
+## Layout (when work starts)
+
+```
+scratch/rust-port/
+├── PLAN.md               this file
+├── upstream/             read-only reference sources
+├── Cargo.toml            one workspace
+├── crates/
+│   ├── x3d-fields/       SF*/MF* field types, math (Vector/Matrix/Rotation)
+│   ├── x3d-parse/        VRML classic + XML + JSON parsers
+│   ├── x3d-scene/        nodes, execution context, routes, PROTO/EXTERNPROTO
+│   ├── x3d-render/       wgpu renderer + shaders
+│   ├── x3d-browser/      browser loop, navigation, loading (native + wasm)
+│   ├── cm-core/          CodeMirror document model (no UI)
+│   ├── cm-modes/         mode API + ported modes
+│   └── cm-view/          CodeMirror view + input
+└── oracle/               scripts that run the original JS and dump results
+```
+
+A local `git init` inside `scratch/rust-port` (no remote) is fine for history.
+
+## How we prove it works: the oracle
+
+Every phase compares the Rust output to the original JavaScript output.
+The JS is the "oracle" — the answer key.
+
+- X_ITE: reuse `scratch/qa/run.mjs` (headless chromium, `Cache-Control: no-store`,
+  threaded server). Add a dump mode: parse a scene, print a canonical text dump of
+  the node tree, fields, and routes. The Rust side prints the same dump. Diff them.
+  Later, compare screenshots with a pixel tolerance.
+- CodeMirror: the upstream `test/` suite (`test.js`, `doc_test.js`, `mode_test.js`,
+  …) runs in headless chromium. Port the test cases to Rust tests one by one.
+  For modes, `mode_test.js` already encodes "text in → token styles out". That is
+  a perfect diff target.
+- Corpus: the 14,607 Cybertown files indexed in `recon/index/` are the real
+  acceptance test for the VRML parser. Read via `recon/scan.py` rules (gzip in memory,
+  `rb`, never write to the archives).
+
+## What REA does here (and what it does not)
+
+REA is built for programs that ship *without* source. Here we have the source, so
+REA does not drive the port. It helps in two places:
+
+1. **Inventory.** `analyze_javascript_application` maps modules and call flow.
+   First run on CodeMirror `src/` (evidence `ev_0f874a7a…4162`): 67 files parsed,
+   0 parse failures, but coverage is **partial** — the result budget ran out before
+   `model/Doc.js`, `model/history.js`, `model/selection.js` and others got semantic
+   analysis. Use it per-folder, not whole-tree. The X_ITE whole-tree run
+   (evidence `ev_dbd2afb6…bb0f`) parsed 765 JS files with 0 parse failures, but is
+   also **partial**: 1,280 application unknowns, 15,704 semantic unknowns, 1,297
+   limitation notes. Same lesson — scan one folder per phase.
+2. **Proof ledger.** `build_reconstruction_obligation_ledger` and
+   `evaluate_reconstruction_coverage` keep a checklist: one obligation per behavior,
+   each tied to an original case, a Rust owner, and a passing verifier. A phase is
+   "done" only when its ledger closes with no open unknowns.
+
+## Decisions (made by Ryan 2026-10-11)
+
+- Render target: **wgpu**.
+- CodeMirror view: **native desktop first** (C5 targets a native window, not wasm/DOM).
+- Script engine: **rquickjs** (QuickJS).
+
+### Original options, for the record
+
+1. **Render target for X_ITE.** Recommended: `wgpu` (one renderer for native
+   Vulkan/Metal/DX12 and browser WebGPU/WebGL2 via wasm). Alternative: raw WebGL2
+   via `web-sys`, browser only.
+2. **UI target for CodeMirror view.** Recommended: wasm + DOM (`web-sys`) first, because
+   CM5's view logic is built around DOM measurement; a native view (egui or a custom
+   wgpu text view) later. Alternative: native first.
+3. **Script node engine.** X_ITE `Script` runs ECMAScript. Recommended: `rquickjs`
+   (QuickJS; small, fast, mature). Alternative: `boa` (pure Rust, slower, less complete).
+
+## X_ITE phases
+
+Ordered so each phase gives something testable on the Cybertown corpus.
+
+| # | phase | JS sources | ~lines | done when |
+| --- | --- | --- | --- | --- |
+| X0 | Oracle + dump format | `scratch/qa/` | — | JS dump is stable across 2 runs on 50 corpus files |
+| X1 | Fields + math | `x_ite/Fields`, `x_ite/Base`, `standard/Math` | 14k | field parse/print round-trip matches JS on all field types |
+| X2 | VRML classic parser | `Parser/VRMLParser.js`, `X3DParser.js`, `Expressions.js`, `GoldenGate.js` | ~4k | node-tree dump matches JS on every corpus file the JS parses; same errors on the rest |
+| X3 | Scene model | `Execution`, `Routing`, `Prototype`, `Configuration`, `Components/Core` | 10k | PROTO/EXTERNPROTO expansion and ROUTE tables match JS dumps |
+| X4 | Loading | `InputOutput/FileLoader.js`, `lib/helper.js`, `Networking` | 3k | gzip, MFString fallback, Inline resolution match JS on corpus |
+| X5 | Event engine (no pixels) | Time, Interpolation, Followers, EventUtilities, sensors | 5k | event cascade trace matches JS over N simulated frames |
+| X6 | Script node | `Components/Scripting`, SAI in `Browser/` | 2k+ | Cybertown script fixtures produce same event trace |
+| X7 | Renderer core | `Rendering`, `Shape`, `Geometry3D`, `Lighting`, `Texturing`, `Grouping`, `Navigation`, shaders in `assets/shaders/webgl2` | 25k | screenshot diff under tolerance on 20 chosen corpus worlds |
+| X8 | Remaining components | NURBS, Text, Sound, Particles, HAnim, Geospatial, Layering, Layout, Picking, Physics, Volume, … | 30k | each component: X3D example scenes match by dump + screenshot |
+| X9 | Other formats | XML, JSON, glTF/GLB, OBJ, PLY, STL, SVG parsers | 10k | parse dumps match JS |
+| X10 | Browser shell | `Browser/` UI, context menu, keyboard, native window + wasm page | 15k | a person can walk around a Cybertown world in both targets |
+
+Library swaps (no line-by-line port): `ammojs` → `rapier3d`; `libtess.js` → `lyon_tessellation`
+or port; `opentype` fonts → `ttf-parser` + `rustybuzz`; Web Audio → `kira` or `cpal`;
+GLSL shaders → keep GLSL, compile with `naga`.
+
+## CodeMirror 5 phases
+
+| # | phase | JS sources | ~lines | done when |
+| --- | --- | --- | --- | --- |
+| C0 | Oracle | `test/` in headless chromium | — | upstream suite runs green headless here |
+| C1 | Utilities | `util/StringStream.js`, `util/bidi.js`, `util/misc.js` | 0.9k | unit tests ported and green |
+| C2 | Document model | `model/` (Doc, chunk B-tree, changes, history, selection, mark_text) | 2.0k | `doc_test.js` cases green in Rust |
+| C3 | Lines + highlighting | `line/`, `modes.js`, mode API | 1.4k | state/tokenize API matches JS on sample text |
+| C4 | Modes | `mode/` — only needed ones first: javascript, xml, css, htmlmixed, clike | 38k total | `mode_test.js` token streams match for each ported mode |
+| C5 | View + input | `display/`, `input/`, `measurement/`, `edit/` | 6.2k | `test.js` view tests green in wasm build; manual edit smoke test |
+| C6 | Addons + keymaps | `addon/`, `keymap/` on demand | 10k | per addon test file green |
+
+Note: CM5 has no VRML mode. If the goal is a VRML editor, a new VRML mode is a
+C4 add-on, written fresh, not ported.
+
+## Rough effort
+
+Line counts are not effort, but for scale: CodeMirror core C0–C5 is weeks.
+X_ITE X0–X4 (parse + load, no pixels) is weeks. X5–X10 is months.
+
+## Status
+
+- 2026-10-11: **C0 done** — 1483 CodeMirror tests pass headless. **X0 done** —
+  X_ITE dump is stable on 50 corpus files (47 parse, 3 rejected). See `oracle/README.md`.
+
+## Suggested order
+
+1. X0 + C0 (both oracles) in parallel.
+2. C1–C3 and X1–X2 in parallel. These have no UI and test cleanly.
+3. Stop and review with Ryan before any renderer or view work.

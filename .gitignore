@@ -1,0 +1,5 @@
+/target/
+/target-*/
+/upstream/
+/oracle/cm5-build/node_modules/
+/oracle/x_ite-pin/node_modules
