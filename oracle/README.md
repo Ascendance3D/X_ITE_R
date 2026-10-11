@@ -42,3 +42,33 @@ The 3 failures are all X_ITE rejecting an IS mapping between fields of different
 types (`06-kue.wrl`, `31-av0.wrl`, `42-taharutben1.wrl`). The Rust port must
 reproduce that behavior first. Whether X_ITE should accept it is a question for the
 X_ITE upstream lane, not this one.
+
+## X1 — X_ITE node table, fields, number formatting, math
+
+All cases here are synthetic, and both scripts run against `x_ite-pin/src` unchanged.
+
+- `x_ite-nodes.mjs` → `x_ite-nodes.json` (2026-10-11). Headless, with the same server
+  pattern as `x_ite-dump.mjs`. It records two things:
+  - `vrml2Available`: `browser.getConcreteNodes()` after creating a `#VRML V2.0` scene
+    (146 classes).
+  - For all 263 node types, each type's field definitions, aliases, instance initial
+    values and component/profile tables. Each node is recorded as a VRML 2.0 instance and
+    as an X3D 4.0 instance.
+
+  Components are loaded one at a time. Texturing3D and VolumeRendering fail with
+  "CharLS is not defined" and are listed in `failedComponents`.
+  `tools/trim_nodes.py` turns the result into the embedded table
+  `crates/x3d-scene/data/x_ite-nodes.json`.
+- `x_ite-fields.mjs` → `x_ite-fields.json` (2026-10-11). Runs in plain node with no
+  browser. The parser's module graph needs stub `document`/`libtess` globals, and
+  X3DScene has to be imported first to avoid a module cycle. It records:
+  - FloatFormat/DoubleFormat for 3049 numbers;
+  - `fromVRMLString` → `toVRMLString` for 106 cases covering all 42 non-node field types;
+  - Vector2/3/4, Rotation4, Quaternion, Matrix3/4 and Color3/4 results;
+  - V8 `Math.*` results on 2022 inputs each.
+
+```
+node oracle/x_ite-nodes.mjs oracle/x_ite-nodes.json
+python3 oracle/tools/trim_nodes.py oracle/x_ite-nodes.json crates/x3d-scene/data/x_ite-nodes.json
+node oracle/x_ite-fields.mjs oracle/x_ite-fields.json
+```
