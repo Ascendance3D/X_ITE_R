@@ -30,6 +30,29 @@ DIGEST="$HERE/reference-digest.py"
 die_usage () { echo "verify-candidate: $*" >&2; exit 2; }
 refuse () { echo "verify-candidate: REFUSED: $*" >&2; exit 3; }
 
+# --- read the arguments ------------------------------------------------------
+# Arguments are parsed BEFORE the lock is sourced, because --lock chooses which
+# lock file to read. An earlier draft sourced first, so --lock was silently
+# ignored and every negative test appeared to pass.
+EXPECT_COMMIT=""
+ALLOW_DIRTY=0
+SKIP_REFERENCE=0
+RUN=()
+
+while [ $# -gt 0 ]; do
+   case "$1" in
+      --expect) [ $# -ge 2 ] || die_usage "--expect needs a commit"; EXPECT_COMMIT="$2"; shift 2 ;;
+      --expect=*) EXPECT_COMMIT="${1#--expect=}"; shift ;;
+      --root) [ $# -ge 2 ] || die_usage "--root needs a directory"; ROOT="$(cd -- "$2" && pwd -P)"; shift 2 ;;
+      --allow-dirty) ALLOW_DIRTY=1; shift ;;
+      --lock) [ $# -ge 2 ] || die_usage "--lock needs a file"; LOCK="$2"; shift 2 ;;
+      --no-reference-check) SKIP_REFERENCE=1; shift ;;
+      --) shift; RUN=("$@"); break ;;
+      -h|--help) sed -n '2,20p' "${BASH_SOURCE[0]}"; exit 0 ;;
+      *) die_usage "unknown argument: $1" ;;
+   esac
+done
+
 # --- read the lock -----------------------------------------------------------
 [ -f "$LOCK" ] || die_usage "missing pin file: $LOCK"
 # shellcheck disable=SC1090
@@ -48,24 +71,7 @@ refuse () { echo "verify-candidate: REFUSED: $*" >&2; exit 3; }
 CM5_SUBS="${CM5_SUBS:-}"
 ALLOWED_INFRA_FILES="${ALLOWED_INFRA_FILES:-}"
 
-EXPECT_COMMIT="$CANDIDATE_COMMIT"
-ALLOW_DIRTY=0
-SKIP_REFERENCE=0
-RUN=()
-
-while [ $# -gt 0 ]; do
-   case "$1" in
-      --expect) [ $# -ge 2 ] || die_usage "--expect needs a commit"; EXPECT_COMMIT="$2"; shift 2 ;;
-      --expect=*) EXPECT_COMMIT="${1#--expect=}"; shift ;;
-      --root) [ $# -ge 2 ] || die_usage "--root needs a directory"; ROOT="$(cd -- "$2" && pwd -P)"; shift 2 ;;
-      --allow-dirty) ALLOW_DIRTY=1; shift ;;
-      --lock) [ $# -ge 2 ] || die_usage "--lock needs a file"; LOCK="$2"; shift 2 ;;
-      --no-reference-check) SKIP_REFERENCE=1; shift ;;
-      --) shift; RUN=("$@"); break ;;
-      -h|--help) sed -n '2,20p' "${BASH_SOURCE[0]}"; exit 0 ;;
-      *) die_usage "unknown argument: $1" ;;
-   esac
-done
+[ -n "$EXPECT_COMMIT" ] || EXPECT_COMMIT="$CANDIDATE_COMMIT"
 
 # --- gather the facts --------------------------------------------------------
 command -v git >/dev/null || die_usage "git not found"
