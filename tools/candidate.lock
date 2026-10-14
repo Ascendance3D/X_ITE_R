@@ -1,0 +1,38 @@
+# Pinned baseline identity for the X_ITE -> Rust port.
+# Read by tools/verify-candidate.sh. Fail-closed: a test run must match every value here.
+#
+# The approved research candidate for R0.1. This is a worktree of the private
+# rust-port repository at /home/ryan/Projects/cybertown/X_ITE/scratch/rust-port.
+CANDIDATE_COMMIT=a553381b9f4d950d71032096fb2a27d30cd68b93
+CANDIDATE_BRANCH=research/r0-1-baseline-authority
+CANDIDATE_WORKTREE=/home/ryan/Projects/cybertown/.worktrees/r0-1-baseline-authority
+
+# --- Reference source: X_ITE ------------------------------------------------
+# The X_ITE source this port is translated from. Do not change without owner review.
+# The gate checks the commit, the version, and a digest of the vendored source.
+X_ITE_PIN=34cdf9f97145b3cd2b8e250f8c88dfdd083c0517
+X_ITE_VERSION=16.5.0
+X_ITE_REF_DIR=oracle/x_ite-pin/src
+X_ITE_PIN_FILE=oracle/x_ite-pin/PINNED_COMMIT
+X_ITE_VERSION_FILE=oracle/x_ite-pin/package.json
+X_ITE_REF_DIGEST=88c5d8da0abc1463afd38c33898836cfff978e48a1af104936dea7fb33f5df2c
+X_ITE_REF_FILES=854
+
+# --- Reference source: CodeMirror 5 ------------------------------------------
+# The CodeMirror 5 source the cm-* crates are ported from.
+CM5_PIN=4ca3d0551cf9125114e0802877480599472dc186
+CM5_VERSION=5.65.21
+CM5_REF_DIR=oracle/cm5-build
+CM5_SUBS="src mode addon keymap lib test"
+CM5_VERSION_FILE=oracle/cm5-build/package.json
+CM5_REF_DIGEST=d2daa3a3a863163603b645e453e2ffc6c1a4277d228108a4d437c7627f0f911c
+CM5_REF_FILES=440
+# The live CodeMirror checkout, when it is present. Checked for its commit.
+CM5_LIVE_DIR=/home/ryan/Projects/cybertown/X_ITE/scratch/rust-port/upstream/codemirror5
+
+# Infrastructure that R0.1 is allowed to add on top of the candidate.
+# A commit whose entire diff against CANDIDATE_COMMIT touches only these paths
+# still counts as the approved candidate. Any other difference refuses.
+# This keeps the gate fail-closed for the renderer and runtime, which is the
+# thing the gate exists to protect.
+ALLOWED_INFRA_FILES="tools/verify-candidate.sh tools/candidate.lock tools/reference-digest.py tools/selftest-identity.sh"
