@@ -343,7 +343,7 @@ impl<'a> Builder<'a> {
         let inline = sg.in_inline(n);
 
         match ty {
-            "Viewpoint" if bound.viewpoint.is_none() && !inline => bound.viewpoint = Some((n, *m)),
+            "Viewpoint" | "OrthoViewpoint" if bound.viewpoint.is_none() && !inline => bound.viewpoint = Some((n, *m)),
             "NavigationInfo" if bound.navigation_info.is_none() && !inline => bound.navigation_info = Some(n),
             "Background" | "TextureBackground" if bound.background.is_none() && !inline => bound.background = Some((n, *m)),
             "Fog" if !inline => {
@@ -408,7 +408,7 @@ impl<'a> Builder<'a> {
                 }
             }
             // Nodes with no visual output.
-            "WorldInfo" | "Viewpoint" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "TimeSensor" | "TouchSensor" | "PlaneSensor" | "SphereSensor"
+            "WorldInfo" | "Viewpoint" | "OrthoViewpoint" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "TimeSensor" | "TouchSensor" | "PlaneSensor" | "SphereSensor"
             | "CylinderSensor" | "ProximitySensor" | "VisibilitySensor" | "Script" | "PositionInterpolator" | "OrientationInterpolator"
             | "ColorInterpolator" | "ScalarInterpolator" | "CoordinateInterpolator" | "NormalInterpolator" | "Sound" | "AudioClip"
             | "BooleanFilter" | "BooleanToggle" | "BooleanTrigger" | "BooleanSequencer" | "IntegerSequencer" | "IntegerTrigger"
@@ -842,13 +842,24 @@ impl<'a> Builder<'a> {
         };
 
         // Viewpoint (default: position 0 0 10, fieldOfView π/4).
-        let (position, orientation, fov, vp_model) = match bound.viewpoint {
+        let (position, orientation, fov, vp_model, is_ortho, ortho_fov) = match bound.viewpoint {
             Some((v, m)) => {
-                let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
-                let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
-                (sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0)), sg.rotation(v, "orientation"), fov, m)
+                let ty = sg.type_name(v).unwrap_or("Viewpoint");
+                if ty == "OrthoViewpoint" {
+                    let fov = sg.f64s(v, "fieldOfView");
+                    let fov = if fov.len() == 4 {
+                        [fov[0], fov[1], fov[2], fov[3]]
+                    } else {
+                        [-1.0, -1.0, 1.0, 1.0]
+                    };
+                    (sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0)), sg.rotation(v, "orientation"), std::f64::consts::FRAC_PI_4, m, true, fov)
+                } else {
+                    let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
+                    let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
+                    (sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0)), sg.rotation(v, "orientation"), fov, m, false, [-1.0, -1.0, 1.0, 1.0])
+                }
             }
-            None => (Vector3::new(0.0, 0.0, 10.0), Rotation4::identity(), std::f64::consts::FRAC_PI_4, Matrix4::IDENTITY),
+            None => (Vector3::new(0.0, 0.0, 10.0), Rotation4::identity(), std::f64::consts::FRAC_PI_4, Matrix4::IDENTITY, false, [-1.0, -1.0, 1.0, 1.0]),
         };
 
         // ExamineViewer.set_activeViewpoint__: with StraightenHorizon (default TRUE) the EXAMINE
@@ -862,19 +873,24 @@ impl<'a> Builder<'a> {
         let mut view = camera_space;
         view.inverse();
 
-        // NavigationInfo: near = avatarSize [0] / 2 (0.125 if 0), far = visibilityLimit or 1e5.
+        // NavigationInfo: near = avatarSize [0] / 2 (0.125 if 0), far = visibilityLimit or 1e5 (1e4 for OrthoViewpoint).
+        let far_max_val = if is_ortho { 1e4 } else { far_max() };
         let (headlight, near, far) = match bound.navigation_info {
             Some(ni) => {
                 let avatar = sg.f64s(ni, "avatarSize");
                 let radius = avatar.first().copied().unwrap_or(0.25).max(0.0);
                 let near = if radius == 0.0 { 0.125 } else { radius / 2.0 };
                 let limit = sg.f64(ni, "visibilityLimit", 0.0).max(0.0);
-                (sg.bool(ni, "headlight", true), near, if limit != 0.0 { limit } else { far_max() })
+                (sg.bool(ni, "headlight", true), near, if limit != 0.0 { limit } else { far_max_val })
             }
-            None => (true, 0.125, far_max()),
+            None => (true, 0.125, far_max_val),
         };
 
-        let projection = perspective(fov, near, far, width as f64, height as f64);
+        let projection = if is_ortho {
+            ortho_projection(ortho_fov, near, far, width as f64, height as f64)
+        } else {
+            perspective(fov, near, far, width as f64, height as f64)
+        };
 
         let (view, projection, headlight, _far) = match &self.camera {
             Some(o) => {
@@ -1018,6 +1034,40 @@ pub fn perspective(fov: f64, near: f64, far: f64, width: f64, height: f64) -> Ma
     let f = n_2 / t_b;
 
     Matrix4([e, 0.0, 0.0, 0.0, 0.0, f, 0.0, 0.0, a, bb, c, -1.0, 0.0, 0.0, d, 0.0])
+}
+
+/// Camera.ortho (column-major array, X_ITE layout).
+pub fn ortho(l: f64, r: f64, b: f64, t: f64, near: f64, far: f64) -> Matrix4 {
+    let r_l = r - l;
+    let t_b = t - b;
+    let f_n = far - near;
+
+    let a = 2.0 / r_l;
+    let bb = 2.0 / t_b;
+    let c = -2.0 / f_n;
+    let d = -(r + l) / r_l;
+    let e = -(t + b) / t_b;
+    let f = -(far + near) / f_n;
+
+    Matrix4([a, 0.0, 0.0, 0.0, 0.0, bb, 0.0, 0.0, 0.0, 0.0, c, 0.0, d, e, f, 1.0])
+}
+
+/// OrthoViewpoint.getProjectionMatrixWithLimits (X_ITE layout).
+pub fn ortho_projection(fov: [f64; 4], near: f64, far: f64, width: f64, height: f64) -> Matrix4 {
+    let ratio = width / height;
+    let (min_x, min_y, max_x, max_y) = (fov[0], fov[1], fov[2], fov[3]);
+    let size_x = max_x - min_x;
+    let size_y = max_y - min_y;
+
+    if ratio > size_x / size_y {
+        let center = (min_x + max_x) / 2.0;
+        let size1_2 = (size_y * ratio) / 2.0;
+        ortho(center - size1_2, center + size1_2, min_y, max_y, near, far)
+    } else {
+        let center = (min_y + max_y) / 2.0;
+        let size1_2 = (size_x / ratio) / 2.0;
+        ortho(min_x, max_x, center - size1_2, center + size1_2, near, far)
+    }
 }
 
 /// TextureTransform.eventsProcessed.
