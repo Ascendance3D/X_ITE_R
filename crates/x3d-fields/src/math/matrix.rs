@@ -1,10 +1,122 @@
 //! Matrix3 / Matrix4 (standard/Math/Numbers/Matrix{3,4}.js), row-major element order as in
-//! X_ITE (`this [0] .. this [15]`). The eigen-decomposition based `factor`/`getTransform`
-//! is not ported yet.
+//! X_ITE (`this [0] .. this [15]`). `factor` / `get_transform` port the
+//! eigen-decomposition based decomposition from Matrix4.js with
+//! `eigen_decomposition` from standard/Math/Algorithms/eigen_decomposition.js
+//! (SGI Inventor Jacobi rotations).
 
 use super::rotation::Rotation4;
 use super::vector::{Vector2, Vector3, Vector4};
 use crate::jsmath;
+
+/// Eigenvalues and eigenvectors of a symmetric 3x3 matrix.
+///
+/// Ports `eigen_decomposition` (SGI Inventor Jacobi rotations). `matrix` is
+/// row-major; `values` receives the eigenvalues and `vectors[j][i]` the j-th
+/// component of the i-th eigenvector, as in X_ITE.
+#[allow(clippy::needless_range_loop)] // index loops mirror the JS source
+fn eigen_decomposition(matrix: &Matrix3, values: &mut [f64; 3], vectors: &mut [[f64; 3]; 3]) {
+    const ORDER: usize = 3;
+    const SIZE: usize = 9;
+
+    let mut a = [[0.0; ORDER]; ORDER];
+    let mut b = [0.0; ORDER];
+    let mut z = [0.0; ORDER];
+
+    for i in 0..ORDER {
+        b[i] = matrix.0[i * ORDER + i];
+        values[i] = b[i];
+
+        for j in 0..ORDER {
+            vectors[i][j] = if i == j { 1.0 } else { 0.0 };
+            a[i][j] = matrix.0[j * ORDER + i];
+        }
+    }
+
+    // 50 sweeps, as in the original algorithm.
+    for sweep in 0..50 {
+        let mut sm = 0.0;
+
+        for p in 0..ORDER - 1 {
+            for q in p + 1..ORDER {
+                sm += a[p][q].abs();
+            }
+        }
+
+        if sm == 0.0 {
+            break;
+        }
+
+        let thresh = if sweep < 3 { 0.2 * sm / SIZE as f64 } else { 0.0 };
+
+        for p in 0..ORDER - 1 {
+            for q in p + 1..ORDER {
+                let g = 100.0 * a[p][q].abs();
+
+                if sweep > 3
+                    && values[p].abs() + g == values[p].abs()
+                    && values[q].abs() + g == values[q].abs()
+                {
+                    a[p][q] = 0.0;
+                } else if a[p][q].abs() > thresh {
+                    let h = values[q] - values[p];
+
+                    let t = if h.abs() + g == h.abs() {
+                        a[p][q] / h
+                    } else {
+                        let theta = 0.5 * h / a[p][q];
+                        let mut t = 1.0 / (theta.abs() + (1.0 + theta * theta).sqrt());
+
+                        if theta < 0.0 {
+                            t = -t;
+                        }
+
+                        t
+                    };
+
+                    let c = 1.0 / (1.0 + t * t).sqrt();
+                    let s = t * c;
+                    let tau = s / (1.0 + c);
+                    let h = t * a[p][q];
+                    z[p] -= h;
+                    z[q] += h;
+                    values[p] -= h;
+                    values[q] += h;
+                    a[p][q] = 0.0;
+
+                    for j in 0..p {
+                        let (g, h) = (a[j][p], a[j][q]);
+                        a[j][p] = g - s * (h + g * tau);
+                        a[j][q] = h + s * (g - h * tau);
+                    }
+
+                    for j in p + 1..q {
+                        let (g, h) = (a[p][j], a[j][q]);
+                        a[p][j] = g - s * (h + g * tau);
+                        a[j][q] = h + s * (g - h * tau);
+                    }
+
+                    for j in q + 1..ORDER {
+                        let (g, h) = (a[p][j], a[q][j]);
+                        a[p][j] = g - s * (h + g * tau);
+                        a[q][j] = h + s * (g - h * tau);
+                    }
+
+                    for j in 0..ORDER {
+                        let (g, h) = (vectors[j][p], vectors[j][q]);
+                        vectors[j][p] = g - s * (h + g * tau);
+                        vectors[j][q] = h + s * (g - h * tau);
+                    }
+                }
+            }
+        }
+
+        for p in 0..ORDER {
+            values[p] = b[p] + z[p];
+            b[p] = values[p];
+            z[p] = 0.0;
+        }
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Matrix3(pub [f64; 9]);
@@ -421,5 +533,103 @@ impl Matrix4 {
         let m = &self.0;
 
         Matrix3([m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9], m[10]])
+    }
+
+    /// Matrix4.factor: decompose into translation, rotation, scale and
+    /// scaleOrientation (each optional). Ports Matrix4.js `factor`, including
+    /// the sign rule from `det A` and the `U = !R ~S R A` rotation recovery.
+    pub fn factor(
+        &self,
+        translation: Option<&mut Vector3>,
+        rotation: Option<&mut Rotation4>,
+        scale: Option<&mut Vector3>,
+        scale_orientation: Option<&mut Rotation4>,
+    ) {
+        let m = &self.0;
+
+        // (1) Get translation.
+        if let Some(t) = translation {
+            t.set(m[12], m[13], m[14]);
+        }
+
+        if rotation.is_none() && scale.is_none() && scale_orientation.is_none() {
+            return;
+        }
+
+        // (2) Create 3x3 matrix.
+        let mut a = self.submatrix();
+
+        // (3) Compute det A. If negative, sign = -1, else sign = 1.
+        let det = a.determinant();
+        let det_sign = if det < 0.0 { -1.0 } else { 1.0 };
+
+        // (4) B = A * !A (here !A means A transpose), then decompose.
+        let mut b = a;
+        b.transpose();
+        b.mult_left(&a);
+
+        let mut values = [0.0; 3];
+        let mut vectors = [[0.0; 3]; 3];
+        eigen_decomposition(&b, &mut values, &mut vectors);
+
+        let mut so = Matrix3([
+            vectors[0][0], vectors[1][0], vectors[2][0],
+            vectors[0][1], vectors[1][1], vectors[2][1],
+            vectors[0][2], vectors[1][2], vectors[2][2],
+        ]);
+
+        if let Some(sorient) = scale_orientation {
+            sorient.set_matrix(&so);
+        }
+
+        // Compute s = sqrt(eigen values), with sign.
+        let mut s = Vector3::ZERO;
+        s.set(
+            det_sign * values[0].sqrt(),
+            det_sign * values[1].sqrt(),
+            det_sign * values[2].sqrt(),
+        );
+
+        if let Some(sc) = scale {
+            sc.assign(&s);
+        }
+
+        if let Some(rot) = rotation {
+            let mut si = Matrix3::ZERO;
+            si.0[0] = 1.0 / s.x;
+            si.0[4] = 1.0 / s.y;
+            si.0[8] = 1.0 / s.z;
+
+            // (5) Compute U = !R ~S R A.
+            a.mult_left(&so);
+            a.mult_left(&si);
+            so.transpose();
+            a.mult_left(&so);
+            rot.set_matrix(&a);
+        }
+    }
+
+    /// Matrix4.getTransform: as `factor`, but first removes `center`
+    /// (P' = T * C * R * SR * S * -SR * -C * P callers pass center through).
+    pub fn get_transform(
+        &self,
+        translation: Option<&mut Vector3>,
+        rotation: Option<&mut Rotation4>,
+        scale: Option<&mut Vector3>,
+        scale_orientation: Option<&mut Rotation4>,
+        center: Option<&Vector3>,
+    ) {
+        match center {
+            Some(c) => {
+                let mut neg = *c;
+                neg.negate();
+                let mut m = Matrix4::IDENTITY;
+                m.translate(&neg);
+                m.mult_left(self);
+                m.translate(c);
+                m.factor(translation, rotation, scale, scale_orientation);
+            }
+            None => self.factor(translation, rotation, scale, scale_orientation),
+        }
     }
 }
