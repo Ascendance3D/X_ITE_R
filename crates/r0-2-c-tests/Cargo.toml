@@ -1,0 +1,35 @@
+[package]
+name = "r0-2-c-tests"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+publish = false
+description = "R0.2-C compatibility test foundation for the X_ITE -> Rust port"
+
+[features]
+# `future_gate` compiles tests/future_gate.rs and tests/future_gate_chrome.rs.
+# They carry no #[ignore]. They do not compile before R0.2-D (Option B).
+# Run them with crates/r0-2-c-tests/future-gate.sh.
+default = []
+future_gate = []
+
+[dependencies]
+vrml97 = { path = "../vrml97" }
+vrml = { path = "../vrml" }
+x3d = { path = "../x3d" }
+x3d-fields = { path = "../x3d-fields" }
+x3d-scene = { path = "../x3d-scene" }
+x3d-parse = { path = "../x3d-parse" }
+
+[dev-dependencies]
+vrml97 = { path = "../vrml97" }
+vrml = { path = "../vrml" }
+x3d = { path = "../x3d" }
+x3d-fields = { path = "../x3d-fields" }
+x3d-scene = { path = "../x3d-scene" }
+x3d-parse = { path = "../x3d-parse" }
+serde_json = "1"
+
+[[bin]]
+name = "r0-2-c-cli"
+path = "src/cli.rs"

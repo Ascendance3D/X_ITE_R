@@ -1950,6 +1950,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
 
 [[package]]
+name = "r0-2-c-tests"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+ "vrml",
+ "vrml97",
+ "x3d",
+ "x3d-fields",
+ "x3d-parse",
+ "x3d-scene",
+]
+
+[[package]]
 name = "radium"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

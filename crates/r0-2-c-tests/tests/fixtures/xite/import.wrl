@@ -1,0 +1,4 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+DEF I Inline { url "import-child.wrl" }
+IMPORT I.G AS N

@@ -1,0 +1,151 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "file": "bom.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"bom\"\n}\n",
+   "log": []
+  },
+  {
+   "file": "def-use.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF B Box { }\n\nGroup {\n  children Shape {\n    geometry USE B\n  }\n}\n",
+   "log": []
+  },
+  {
+   "file": "empty.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\n",
+   "log": []
+  },
+  {
+   "file": "export-vrml2.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF G Group { }\n\nEXPORT G\n",
+   "log": []
+  },
+  {
+   "file": "export.x3dv.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nDEF G Group { }\n\nEXPORT G\n",
+   "log": []
+  },
+  {
+   "file": "externproto-malformed.wrl",
+   "ok": false,
+   "error": "Couldn't load X3D file.",
+   "log": [
+    "error: Couldn't load URL 'http://oracle/c1-stage/externproto-malformed.wrl'. Error: ",
+    "error: Error: Expected a ']' at the end of EXTERNPROTO interface declaration."
+   ]
+  },
+  {
+   "file": "externproto-url.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO E [ ]\n\"missing-proto.wrl\"\n\nGroup {\n  children E { }\n}\n",
+   "log": [
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/c1-stage/missing-proto.wrl'. Error: Not Found"
+   ]
+  },
+  {
+   "file": "group-children.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nGroup {\n  children [\n    Shape { }\n    Transform {\n      translation 1 2 3\n    }\n  ]\n}\n",
+   "log": []
+  },
+  {
+   "file": "import-child.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nDEF G Group { }\n",
+   "log": []
+  },
+  {
+   "file": "import.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nDEF I Inline {\n  global TRUE\n  url \"import-child.wrl\"\n}\n\nIMPORT I.G AS N\n",
+   "log": []
+  },
+  {
+   "file": "invalid-utf8.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"a���b�c\"\n}\n",
+   "log": []
+  },
+  {
+   "file": "minimal-gzip.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nShape {\n  appearance Appearance {\n    material Material { }\n  }\n  geometry Box { }\n}\n",
+   "log": []
+  },
+  {
+   "file": "minimal.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nShape {\n  appearance Appearance {\n    material Material { }\n  }\n  geometry Box { }\n}\n",
+   "log": []
+  },
+  {
+   "file": "ortho-v33.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Navigation : 3\n\nOrthoViewpoint {\n  fieldOfView -2 -1 2 1\n}\n",
+   "log": []
+  },
+  {
+   "file": "ortho-v40.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Navigation : 3\n\nOrthoViewpoint {\n  fieldOfView -2 -1 2 1\n}\n",
+   "log": []
+  },
+  {
+   "file": "proto.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO MyBox [\n  initializeOnly SFVec3f size 1 1 1\n]\n{\n  Box {\n    size IS size\n  }\n}\n\nGroup {\n  children MyBox {\n    size 2 2 2\n  }\n}\n",
+   "log": []
+  },
+  {
+   "file": "root-count.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nGroup {\n  children [\n    Shape { }\n    Shape { }\n  ]\n}\n",
+   "log": []
+  },
+  {
+   "file": "route-bad-field.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF T Transform { }\n\nDEF TS TimeSensor { }\n",
+   "log": [
+    "warn: Parser error at line 4. Error: Unknown field 'set' in node class Transform."
+   ]
+  },
+  {
+   "file": "route-valid.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF TS TimeSensor { }\n\nDEF PI PositionInterpolator { }\n\nROUTE TS.fraction_changed TO PI.set_fraction\n",
+   "log": []
+  },
+  {
+   "file": "truncated-gzip.wrl",
+   "ok": false,
+   "error": "Couldn't load X3D file.",
+   "log": [
+    "error: Couldn't load URL 'http://oracle/c1-stage/truncated-gzip.wrl'. Error: Couldn't parse X3D. No suitable file handler found for 'http://oracle/c1-stage/truncated-gzip.wrl'."
+   ]
+  },
+  {
+   "file": "unknown-node.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNULL\n",
+   "log": [
+    "warn: Parser error at line 2: Unknown node type or proto 'NotANode'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+   ]
+  },
+  {
+   "file": "unterminated-bracket.wrl",
+   "ok": false,
+   "error": "Couldn't load X3D file.",
+   "log": [
+    "error: Couldn't load URL 'http://oracle/c1-stage/unterminated-bracket.wrl'. Error: ",
+    "error: Error: Expected ']'."
+   ]
+  }
+ ]
+}
