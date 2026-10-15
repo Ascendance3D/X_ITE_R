@@ -7,6 +7,10 @@
 # The script refuses to reuse an existing OUT_DIR. It never edits the archives or the
 # extracted crates: vrml and x3d reach the extracted vrml97 through an explicit
 # [patch.crates-io] entry in the consumer manifest. Exit 0 only when every step passes.
+#
+# Since R0.2-D the local vrml97 is a facade over the engine crates. This script is now the
+# one place that proves the 0.1.0 differences: main.rs prints them as checks, and the
+# compile probes below prove the items 0.1.0 lacks.
 set -u -o pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -76,6 +80,43 @@ export CARGO_TARGET_DIR="$OUT/target"
 step "cargo build" cargo build --offline --manifest-path "$OUT/consumer/Cargo.toml"
 step "cargo run" cargo run -q --offline --manifest-path "$OUT/consumer/Cargo.toml"
 step "patch used, not registry" bash -c "cargo tree --offline --manifest-path '$OUT/consumer/Cargo.toml' -i vrml97 | head -1 | grep -F '$OUT/published/vrml97-0.1.0'"
+
+# Historical absence records (moved from the local suite in R0.2-D). Each probe names an
+# item that vrml97 0.1.0 lacks and must fail `cargo check` with exactly the given rustc
+# error code. A probe that compiles, or fails another way, fails the script.
+R6='source_node: 0, source_field: String::new(), destination_node: 0, destination_field: String::new(), source_loc: vrml97::scene::FieldLoc::Pre(0), destination_loc: vrml97::scene::FieldLoc::Pre(0),'
+C7='parent: None, outer: vrml97::scene::Outer::Scene, root_nodes: Vec::new(), named_nodes: Default::default(), protos: Default::default(), externprotos: Default::default(), routes: Vec::new(),'
+PARSE='let s = vrml97::parse_bytes(b"#VRML V2.0 utf8\n", "a.wrl").unwrap();'
+PROBES=(
+  "matrix4_lacks_factor|E0599|let m = vrml97::fields::math::Matrix4::IDENTITY; m.factor(None, None, None, None);"
+  "matrix4_lacks_get_transform|E0599|let m = vrml97::fields::math::Matrix4::IDENTITY; m.get_transform(None, None, None, None, None);"
+  "node_kind_lacks_imported|E0599|let _ = vrml97::scene::scene::NodeKind::Imported(0);"
+  "route_lacks_four_engine_fields|E0560|let _ = vrml97::scene::scene::Route { $R6 id: 0, conn: None, raw_source_field: String::new(), raw_destination_field: String::new(), };"
+  "ctx_lacks_imported_exported|E0560|let _ = vrml97::scene::scene::ExecutionContext { $C7 imported: Default::default(), exported: Default::default(), };"
+  "scene_lacks_scene_infos|E0609|$PARSE let _ = &s.scene_infos;"
+  "scene_lacks_imported|E0609|$PARSE let _ = &s.imported;"
+  "scene_lacks_exported|E0609|$PARSE let _ = &s.exported;"
+  "scene_lacks_route_counter|E0609|$PARSE let _ = &s.route_counter;"
+)
+probe() { # probe <name> <code> <body>
+  local d="$OUT/probes/$1"
+  mkdir -p "$d/src"
+  printf '[package]\nname = "%s"\nversion = "0.0.0"\nedition = "2024"\npublish = false\n\n[workspace]\n\n[dependencies]\nvrml97 = { path = "%s" }\n' \
+    "$1" "$OUT/published/vrml97-0.1.0" > "$d/Cargo.toml"
+  cp "$OUT/published/vrml97-0.1.0/Cargo.lock" "$d/Cargo.lock" && chmod u+w "$d/Cargo.lock"
+  printf '#![allow(unused)]\nfn main() {\n%s\n}\n' "$3" > "$d/src/main.rs"
+  local err codes
+  if err="$(CARGO_TARGET_DIR="$OUT/probe-target" cargo check --offline --quiet --color never --manifest-path "$d/Cargo.toml" 2>&1)"; then
+    echo "$1: compiles against 0.1.0" >>"$LOG.out"; return 1
+  fi
+  codes="$(echo "$err" | grep -o 'error\[E[0-9]*\]' | sort -u | tr -d '\n')"
+  echo "$1: $codes" >>"$LOG.out"
+  [ "$codes" = "error[$2]" ]
+}
+for p in "${PROBES[@]}"; do
+  IFS='|' read -r name code body <<<"$p"
+  step "absent in 0.1.0: $name ($code)" probe "$name" "$code" "$body"
+done
 
 AFTER="$(tree_hash "$OUT/published")"
 echo "extracted-tree-sha256-after $AFTER" | tee -a "$LOG"

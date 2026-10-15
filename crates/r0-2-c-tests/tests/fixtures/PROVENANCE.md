@@ -46,5 +46,5 @@ identical except `factor` rotation `y`: node `0x3ff000000000000d`, Chromium
 
 ## Node data counts
 
-`crates/vrml97/data/x_ite-nodes.json`: 263 `nodes`, 39 `components`, 8 `profiles`
+`crates/x3d-scene/data/x_ite-nodes.json` (until R0.2-D also `crates/vrml97/data/`, byte-identical): 263 `nodes`, 39 `components`, 8 `profiles`
 (counted with Python `json`).

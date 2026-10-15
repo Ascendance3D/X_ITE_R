@@ -8,9 +8,14 @@ description = "VRML97 / X3D classic-encoding parser and writer, a faithful Rust 
 readme = "README.md"
 keywords = ["vrml", "vrml97", "x3d", "3d", "parser"]
 categories = ["parser-implementations", "graphics", "rendering::data-formats"]
-include = ["src/**/*.rs", "data/x_ite-nodes.json", "README.md", "LICENSE", "Cargo.toml"]
+include = ["src/**/*.rs", "README.md", "LICENSE", "Cargo.toml"]
 
+# Private Option B facade (R0.2-D). Path-only dependencies: this manifest cannot be
+# packaged until the engine crates are published (R0.2-B section 9.2).
 [dependencies]
-libm = "0.2"
-serde_json = { version = "1", features = ["float_roundtrip"] }
-flate2 = "1"
+x3d-fields = { path = "../x3d-fields" }
+x3d-scene = { path = "../x3d-scene" }
+x3d-parse = { path = "../x3d-parse" }
+
+[dev-dependencies]
+serde_json = "1"

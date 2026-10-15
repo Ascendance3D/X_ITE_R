@@ -60,34 +60,67 @@ const MODULE_PATHS: [&str; 24] = [
     "scene::vrml",
 ];
 
-/// Cross-check: every `pub mod` declared in the vrml97 source is in MODULE_PATHS, and no
-/// other path is. This catches a new module that the compile checks above would miss.
+/// Cross-check: every module path the facade exposes is in MODULE_PATHS, and no other
+/// path is. This catches a new public module that the compile checks above would miss.
+///
+/// Since R0.2-D `crates/vrml97/src/lib.rs` is a facade. `pub use x3d_fields as fields;`
+/// and `pub use x3d_scene as scene;` expose each engine crate's whole `pub mod` tree, so
+/// this walks the engine source. `pub mod parse` re-exports a named list from `x3d_parse`;
+/// only the `x3d_parse` modules in that list are public.
 #[test]
 fn module_path_list_is_complete() {
-    fn walk(dir: &std::path::Path, prefix: &str, out: &mut Vec<String>) {
-        let file = if prefix.is_empty() { dir.join("lib.rs") } else { dir.join("mod.rs") };
-        scan(&std::fs::read_to_string(&file).unwrap(), dir, prefix, out);
-    }
-    fn scan(src: &str, dir: &std::path::Path, prefix: &str, out: &mut Vec<String>) {
-        for line in src.lines() {
+    fn walk(file: &std::path::Path, prefix: &str, out: &mut Vec<String>) {
+        let dir = file.parent().unwrap();
+        for line in std::fs::read_to_string(file).unwrap().lines() {
             let Some(rest) = line.trim_start().strip_prefix("pub mod ") else { continue };
             let name = rest.trim_end_matches([';', '{', ' ']).trim();
-            let path = if prefix.is_empty() { name.to_string() } else { format!("{prefix}::{name}") };
+            let path = format!("{prefix}::{name}");
             out.push(path.clone());
-            let sub = dir.join(name);
-            if sub.join("mod.rs").exists() {
-                walk(&sub, &path, out);
-            } else if rest.trim_end().ends_with(';') {
-                scan(&std::fs::read_to_string(dir.join(format!("{name}.rs"))).unwrap(), dir, &path, out);
+            if rest.trim_end().ends_with(';') {
+                let sub = dir.join(name).join("mod.rs");
+                walk(&if sub.exists() { sub } else { dir.join(format!("{name}.rs")) }, &path, out);
             }
         }
     }
+    let crates = r0_2_c_tests::workspace_root().join("crates");
+    let lib = std::fs::read_to_string(crates.join("vrml97/src/lib.rs")).unwrap();
     let mut found = Vec::new();
-    walk(&r0_2_c_tests::workspace_root().join("crates/vrml97/src"), "", &mut found);
+
+    let aliases: Vec<(&str, &str)> = lib
+        .lines()
+        .filter_map(|l| l.trim().strip_prefix("pub use x3d_")?.strip_suffix(';')?.split_once(" as "))
+        .collect();
+    assert_eq!(aliases, [("fields", "fields"), ("scene", "scene")], "crate-wide module aliases");
+    for (krate, name) in aliases {
+        found.push(name.to_string());
+        walk(&crates.join(format!("x3d-{krate}/src/lib.rs")), name, &mut found);
+    }
+
+    assert!(lib.contains("\npub mod parse {\n"), "inline facade module parse");
+    found.push("parse".to_string());
+    let block = lib.split("pub mod parse {").nth(1).unwrap().split('}').next().unwrap();
+    let listed: Vec<&str> = block.split("x3d_parse::{").nth(1).unwrap().split([',', ' ', '\n']).filter(|w| !w.is_empty()).collect();
+    let engine = crates.join("x3d-parse/src/lib.rs");
+    let mut engine_mods = Vec::new();
+    walk(&engine, "parse", &mut engine_mods);
+    for m in engine_mods {
+        let top = m.split("::").nth(1).unwrap();
+        if listed.contains(&top) {
+            found.push(m);
+        }
+    }
+
     found.sort();
     let mut want: Vec<String> = MODULE_PATHS.iter().map(|s| s.to_string()).collect();
     want.sort();
     assert_eq!(found, want);
+}
+
+/// `x3d_parse::compare` is an oracle test helper that vrml97 never released. The facade
+/// keeps it out of `vrml97::parse`.
+#[test]
+fn parse_compare_is_not_public() {
+    r0_2_c_tests::assert_probe_fails(env!("CARGO_TARGET_TMPDIR"), "parse_compare_not_public", "use vrml97::parse::compare as _;", &["E0432"]);
 }
 
 // -------------------------------------------------------------------------
@@ -181,7 +214,7 @@ fn root_vrml_summarize() {
 
 // -------------------------------------------------------------------------
 // x3d crate root: 4 re-exports + Node, Field, node, nodes, components, profiles
-// Counts: crates/vrml97/data/x_ite-nodes.json has 263 nodes, 39 components, 8 profiles.
+// Counts: crates/x3d-scene/data/x_ite-nodes.json has 263 nodes, 39 components, 8 profiles.
 // -------------------------------------------------------------------------
 
 #[test]

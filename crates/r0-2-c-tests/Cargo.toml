@@ -8,7 +8,7 @@ description = "R0.2-C compatibility test foundation for the X_ITE -> Rust port"
 
 [features]
 # `future_gate` compiles tests/future_gate.rs and tests/future_gate_chrome.rs.
-# They carry no #[ignore]. They do not compile before R0.2-D (Option B).
+# They carry no #[ignore]. They compile since R0.2-D (Option B); before it they did not.
 # Run them with crates/r0-2-c-tests/future-gate.sh.
 default = []
 future_gate = []

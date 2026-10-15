@@ -2687,9 +2687,10 @@ dependencies = [
 name = "vrml97"
 version = "0.1.0"
 dependencies = [
- "flate2",
- "libm",
  "serde_json",
+ "x3d-fields",
+ "x3d-parse",
+ "x3d-scene",
 ]
 
 [[package]]

@@ -89,8 +89,149 @@ fn main() {
     let _: Option<x3d::Node> = x3d::node("Box");
     let _: Option<x3d::Field> = x3d::node("Box").and_then(|n| n.field("size"));
 
+    ok &= historical_differences();
+
     if !ok {
         std::process::exit(1);
     }
     println!("ALL PASS");
+}
+
+// -------------------------------------------------------------------------
+// Historical difference records of vrml97 0.1.0 (moved here from the local suite in R0.2-D).
+//
+// R0.2-D made the local vrml97 a facade over the engine crates, so the local suite now
+// checks parity. These records keep the proof of how the *released* 0.1.0 differs from
+// X_ITE, against the released archive only. Items that 0.1.0 lacks (Matrix4::factor,
+// NodeKind::Imported, the four Scene fields, the extra Route and ExecutionContext fields)
+// are proven by the compile probes in published-consumer.sh, because a missing item
+// cannot be named in this program.
+// -------------------------------------------------------------------------
+
+// Byte-identical to crates/r0-2-c-tests/tests/fixtures/xite/{export.x3dv,export-vrml2,import,ortho-v33}.wrl.
+const EXPORT_X3DV: &[u8] = b"#X3D V3.3 utf8\nPROFILE Interchange\nDEF G Group { }\nEXPORT G\n";
+const EXPORT_VRML2: &[u8] = b"#VRML V2.0 utf8\nDEF G Group { }\nEXPORT G\n";
+const IMPORT: &[u8] = b"#X3D V3.3 utf8\nPROFILE Interchange\nDEF I Inline { url \"import-child.wrl\" }\nIMPORT I.G AS N\n";
+const ORTHO_V33: &[u8] = b"#X3D V3.3 utf8\nPROFILE Immersive\nCOMPONENT Navigation:3\nOrthoViewpoint { fieldOfView [ -2 -1 2 1 ] }\n";
+// Pinned X_ITE 34cdf9f97 text of ortho-v33.wrl (ORACLE.json) with fieldOfView as 0.1.0 prints it.
+const ORTHO_V33_PUBLISHED: &str = "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Navigation : 3\n\nOrthoViewpoint {\n  fieldOfView [\n    -2,\n    -1,\n    2,\n    1\n  ]\n}\n";
+
+// Chrome 155 Math.sin / cos / tan vectors where glibc differs (crates/x3d-fields/tests/chrome_math.rs).
+const CHROME_SIN: &[(u64, u64)] = &[
+    (0xbfc4d644da65bda0, 0xbfc4bebd80c34c7b),
+    (0xc00b18b162781378, 0x3fcf1ad94ab666a3),
+    (0x400b03976beb5720, 0xbfcdd2edfb5f0b65),
+    (0xc00e05b6fbe3c732, 0x3fe25cf82689c635),
+    (0x400a0f052caa5114, 0xbfbd904e7e0da65f),
+    (0xc00a38529536ac0c, 0x3fc157c1859ab0c5),
+    (0xbfd5d5a5f1f14bf0, 0xbfd569d825235469),
+    (0xc004e6e382b5e6b4, 0xbfe02539fd704e81),
+];
+const CHROME_COS: &[(u64, u64)] = &[
+    (0x3feb22eaf76f67b0, 0x3fe52acdc024418d),
+    (0x3ff1ce01251878f4, 0x3fdc4c4d7e78b1e5),
+    (0x3ff32921a973f558, 0x3fd756637149ff05),
+    (0x3fefcbd013106548, 0x3fe175fafb8f0d95),
+    (0xbffeb29b61d06a98, 0xbfd5d04d3011209b),
+    (0xbfff312e5d66aa34, 0xbfd7a98a46e8f627),
+    (0x4001cc7917628b0e, 0xbfe37804ff5a92dd),
+    (0xbfe99fe047ff1b30, 0x3fe646eae0aed533),
+];
+const CHROME_TAN: &[(u64, u64)] = &[
+    (0x3fc691e7d2715320, 0x3fc6ce8a79d39c49),
+    (0x3ff505a153b86bac, 0x400e73211f7a4d3f),
+    (0xbfe016adbc016408, 0xbfe198cd3b51e153),
+    (0xc0084b532498b29c, 0x3fbaee49c2144175),
+    (0x3fbf4657f99eca80, 0x3fbf6e69f691d8dd),
+    (0x40087dbf85a5cc16, 0xbfb492c54374c738),
+    (0xbfe613ad768d9308, 0xbfea67cdf2f38a55),
+    (0xbffb19e9b3961d90, 0x40202c90eb667c05),
+];
+
+fn historical_differences() -> bool {
+    use vrml97::fields::{format, jsmath};
+    let mut ok = true;
+
+    // Known difference 1: 0.1.0 rejects EXPORT and IMPORT; X_ITE accepts both.
+    for (name, input, line) in [("export.x3dv.wrl", EXPORT_X3DV, 4), ("export-vrml2.wrl", EXPORT_VRML2, 3)] {
+        let got = parse_bytes(input, name).err().map(|e| e.to_string());
+        let want = format!("Parser error at line {line}: EXPORT is not supported by the Rust port yet (phase X4).");
+        ok &= check(&format!("0.1.0 difference 1: {name} EXPORT is a hard error"), got.as_deref() == Some(want.as_str()));
+    }
+    let got = parse_bytes(IMPORT, "import.wrl").err().map(|e| e.to_string());
+    ok &= check(
+        "0.1.0 difference 1: import.wrl IMPORT is a hard error",
+        got.as_deref() == Some("Parser error at line 4: IMPORT is not supported by the Rust port yet (phase X4)."),
+    );
+
+    // Known difference 2: number formatting. X_ITE / Chrome give "1" for 0.9999999999999994 at 15 digits.
+    ok &= check("0.1.0 difference 2: DoubleFormat(0.9999999999999994) is 0.999999999999999", format::double_format(0.9999999999999994) == "0.999999999999999");
+    let intl: &[(u64, usize, &str)] = &[
+        (0x3fefffffffffffff, 16, "0.9999999999999999"),
+        (0x3feffffffffffffe, 16, "0.9999999999999998"),
+        (0x3feffffffffffffd, 16, "0.9999999999999997"),
+        (0x3feffffffffffffc, 16, "0.9999999999999996"),
+        (0x3feffffffffffffb, 15, "0.999999999999999"),
+        (0x3feffffffffffffb, 16, "0.9999999999999994"),
+    ];
+    for (b, p, published) in intl {
+        ok &= check(
+            &format!("0.1.0 difference 2: intl_standard({:e}, {p}) is {published}", f64::from_bits(*b)),
+            format::intl_standard(f64::from_bits(*b), *p) == *published,
+        );
+    }
+
+    // Known difference 3: the 0.1.0 Chrome flavor is the platform libm, not Chrome.
+    jsmath::set_flavor(jsmath::MathFlavor::Chrome);
+    let mut misses = 0;
+    let mut platform = true;
+    for (table, f, p) in [
+        (CHROME_SIN, jsmath::sin as fn(f64) -> f64, f64::sin as fn(f64) -> f64),
+        (CHROME_COS, jsmath::cos, f64::cos),
+        (CHROME_TAN, jsmath::tan, f64::tan),
+    ] {
+        for (x, chrome) in table {
+            let got = f(f64::from_bits(*x)).to_bits();
+            misses += (got != *chrome) as usize;
+            platform &= got == p(f64::from_bits(*x)).to_bits();
+        }
+    }
+    jsmath::set_flavor(jsmath::MathFlavor::Node);
+    ok &= check("0.1.0 difference 3: Chrome-flavor sin/cos/tan equal the platform libm", platform);
+    ok &= check(&format!("0.1.0 difference 3: Chrome-flavor math misses Chrome on {misses} of 24 vectors (> 0)"), misses > 0);
+
+    // Known difference 9: OrthoViewpoint.fieldOfView prints as MFFloat; X_ITE prints `fieldOfView -2 -1 2 1`.
+    let got = parse_bytes(ORTHO_V33, "ortho-v33.wrl").ok().map(|s| s.to_vrml_string());
+    ok &= check("0.1.0 difference 9: ortho-v33.wrl fieldOfView prints as MFFloat", got.as_deref() == Some(ORTHO_V33_PUBLISHED));
+
+    // Shape records. Each literal and match below compiles only against the exact 0.1.0
+    // shape: a struct literal must name every field, a match must cover every variant.
+    use vrml97::scene::{FieldLoc, Outer, scene::{ExecutionContext, NodeKind, Route}};
+    let r = Route {
+        source_node: 0,
+        source_field: String::new(),
+        destination_node: 0,
+        destination_field: String::new(),
+        source_loc: FieldLoc::Pre(0),
+        destination_loc: FieldLoc::Pre(0),
+    };
+    ok &= check("0.1.0 shape: Route is exactly the six-field literal", r.source_field.is_empty());
+    let c = ExecutionContext {
+        parent: None,
+        outer: Outer::Scene,
+        root_nodes: Vec::new(),
+        named_nodes: Default::default(),
+        protos: Default::default(),
+        externprotos: Default::default(),
+        routes: Vec::new(),
+    };
+    ok &= check("0.1.0 shape: ExecutionContext is exactly the seven-field literal", c.root_nodes.is_empty());
+    let k = NodeKind::Placeholder;
+    let four = match k {
+        NodeKind::Builtin(_) | NodeKind::Instance(_) | NodeKind::Internal(_) => false,
+        NodeKind::Placeholder => true,
+    };
+    ok &= check("0.1.0 shape: a four-arm NodeKind match is exhaustive", four);
+
+    ok
 }
