@@ -1,0 +1,17 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# A PROTO whose body Script sets an exposed eventOut when it initializes. The main file
+# routes that eventOut to a Script whose fields show the value in the static dump.
+PROTO Logger [
+  field SFInt32 level 2
+  eventOut SFInt32 result
+]
+{
+  DEF Log Script {
+    field SFInt32 level IS level
+    eventOut SFInt32 result IS result
+    url "javascript:
+function initialize () { result = level * 10; print ('logger initialize ' + level); }
+"
+  }
+}

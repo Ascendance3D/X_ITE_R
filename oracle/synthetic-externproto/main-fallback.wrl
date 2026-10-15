@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# URL list: the first URL is missing, so the second one must be used.
+EXTERNPROTO Widget [ field SFFloat size ] [ "missing-widget.wrl#Widget", "lib-widget.wrl#Widget" ]
+DEF Found Widget {}

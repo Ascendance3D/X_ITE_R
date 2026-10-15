@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# EXTERNPROTO with a fragment: PROTO defaults, explicit values, IS-driven body.
+EXTERNPROTO Widget [
+  field SFFloat size
+  field SFColor color
+  field MFString label
+  exposedField SFVec3f offset
+] "lib-widget.wrl#Widget"
+DEF Plain Widget {}
+DEF Sized Widget { size 2 }
+DEF Moved Widget { offset 3 0 0 color 1 0 0 }

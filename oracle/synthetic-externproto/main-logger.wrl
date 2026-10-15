@@ -1,0 +1,19 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# The loaded PROTO body's Script must initialize when each instance is realized, and its
+# eventOut must reach the Mirror Script through the instance's routes.
+EXTERNPROTO Logger [ field SFInt32 level  eventOut SFInt32 result ] "lib-logger.wrl#Logger"
+DEF A Logger {}
+DEF B Logger { level 5 }
+DEF Mirror Script {
+  field SFInt32 a 0
+  field SFInt32 b 0
+  eventIn SFInt32 fromA
+  eventIn SFInt32 fromB
+  url "javascript:
+function fromA (v) { a = v; }
+function fromB (v) { b = v; }
+"
+}
+ROUTE A.result TO Mirror.fromA
+ROUTE B.result TO Mirror.fromB

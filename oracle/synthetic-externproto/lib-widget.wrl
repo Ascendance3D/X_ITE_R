@@ -1,0 +1,22 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# A PROTO with non-zero defaults, IS references to fields, and an exposedField.
+PROTO Widget [
+  field SFFloat size 5
+  field SFColor color 0 0 1
+  field MFString label [ "default" ]
+  exposedField SFVec3f offset 0 0 0
+]
+{
+  Transform {
+    translation IS offset
+    children [
+      Shape {
+        appearance Appearance {
+          material Material { diffuseColor IS color }
+        }
+        geometry Sphere { radius IS size }
+      }
+    ]
+  }
+}

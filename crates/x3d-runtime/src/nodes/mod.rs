@@ -71,9 +71,15 @@ impl Runtime {
     /// Constructor side effects: private child objects (X3DBaseNode.addChildObjects).
     pub fn construct_node(&mut self, node: NodeId) {
         // X3DPrototypeInstance constructor → construct (): an instance of an extern proto that
-        // is not loaded calls protoNode .requestImmediateLoad () (once per declaration).
+        // is not loaded calls protoNode .requestImmediateLoad () (once per declaration). A loaded
+        // one takes the PROTO's field defaults now; its body is realized at setup.
         if let NodeKind::Instance(ProtoRef::Extern(e)) = self.scene.node(node).kind {
             self.extern_request_load(e);
+
+            if let Some(proto) = self.extern_loaded.get(&e).copied().flatten() {
+                self.extern_instance_defaults(node, proto);
+            }
+
             return;
         }
 

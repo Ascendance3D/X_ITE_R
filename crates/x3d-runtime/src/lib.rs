@@ -198,6 +198,11 @@ pub struct Runtime {
     pub pending_scenes: Vec<inline::PendingScene>,
     /// `await browser .nextFrame ()` continuations, resolved after the finishEvents of a frame.
     pub frame_waiters: Vec<inline::FrameWaiter>,
+    /// EXTERNPROTO scenes that were parsed and set up, waiting like `pending_scenes` (see
+    /// `loader.rs`, `extern_scene`).
+    pub pending_externs: Vec<loader::PendingExtern>,
+    /// EXTERNPROTO scenes whose loadCount reached 0, waiting for the next frame.
+    pub extern_frame_waiters: Vec<loader::PendingExtern>,
     /// Fetches in flight in request order (macrotasks); `tasks` holds the microtasks.
     pub fetches: std::collections::VecDeque<Task>,
     /// Own live flag (X3DBaseNode [_live]) of the scenes that Inlines loaded, by root context.
@@ -263,6 +268,8 @@ impl Runtime {
             inline_scenes: HashMap::new(),
             pending_scenes: vec![],
             frame_waiters: vec![],
+            pending_externs: vec![],
+            extern_frame_waiters: vec![],
             fetches: Default::default(),
             inline_live: HashMap::new(),
             live_watchers: vec![],
@@ -667,10 +674,12 @@ impl Runtime {
         self.run_tasks();
     }
 
-    /// Is a load of an Inline still in progress (X3DBrowser loadCount > 0)?
+    /// Is a load of an Inline or EXTERNPROTO still in progress (X3DBrowser loadCount > 0)?
     pub fn has_unfinished_loads(&self) -> bool {
         !self.pending_scenes.is_empty()
             || !self.frame_waiters.is_empty()
+            || !self.pending_externs.is_empty()
+            || !self.extern_frame_waiters.is_empty()
             || (0..self.scene.nodes.len() as NodeId).any(|n| {
                 self.builtin_name(n) == Some("Inline") && self.url_load_state(n) == nodes::LoadState::InProgress
             })

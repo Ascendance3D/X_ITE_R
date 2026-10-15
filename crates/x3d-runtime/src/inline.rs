@@ -206,18 +206,34 @@ impl Runtime {
         let parent = self.scene.node(node).ctx;
         let m = self.scene.merge_inline(scene, parent, node);
 
-        // The scene object that owns `loadCount`; its interest is FileLoader.set_loadCount__.
+        let (scene_node, count) = self.new_load_count_scene();
+        self.pending_scenes.push(PendingScene { node, ctx: m.root_ctx, scene_node });
+
+        // `new X3DScene (browser)`: setLive (false).
+        self.inline_live.insert(m.root_ctx, false);
+
+        self.attach_merged_scene(m, ctx_count, setup_order);
+
+        // FileLoader.setScene: `scene ._loadCount .addEvent ()`.
+        self.add_event(count);
+        Ok(())
+    }
+
+    /// The scene object that owns `loadCount` of a loaded scene (FileLoader.setScene); its
+    /// interest is FileLoader.set_loadCount__.
+    pub(crate) fn new_load_count_scene(&mut self) -> (NodeId, FKey) {
         let scene_node = self.create_internal_node("X3DScene");
         let count = self.add_private_field(scene_node, "loadCount", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
 
         self.nrt_mut(scene_node).setup_started = true;
         self.nrt_mut(scene_node).initialized = true;
         self.add_interest(count, scene_node, Cb::SceneLoadCount);
-        self.pending_scenes.push(PendingScene { node, ctx: m.root_ctx, scene_node });
 
-        // `new X3DScene (browser)`: setLive (false).
-        self.inline_live.insert(m.root_ctx, false);
+        (scene_node, count)
+    }
 
+    /// Construct, route and set up the nodes of a merged scene (the order of X3DParser.setupNodes).
+    pub(crate) fn attach_merged_scene(&mut self, m: MergeMap, ctx_count: usize, setup_order: Vec<NodeId>) {
         for n in m.node_offset..self.scene.nodes.len() as NodeId {
             self.nrt_mut(n);
 
@@ -241,17 +257,16 @@ impl Runtime {
         for n in setup_order {
             self.setup_node(m.node(n));
         }
-
-        // FileLoader.setScene: `scene ._loadCount .addEvent ()`.
-        self.add_event(count);
-        Ok(())
     }
 
     /// FileLoader.set_loadCount__ (interest on the scene's loadCount).
     pub(crate) fn scene_load_count(&mut self, scene_node: NodeId) {
-        let Some(i) = self.pending_scenes.iter().position(|p| p.scene_node == scene_node) else {
+        let inline = self.pending_scenes.iter().position(|p| p.scene_node == scene_node);
+        let ext = self.pending_externs.iter().position(|p| p.scene_node == scene_node);
+
+        if inline.is_none() && ext.is_none() {
             return;
-        };
+        }
 
         let k = self.private_field(scene_node, "loadCount").unwrap();
 
@@ -262,14 +277,27 @@ impl Runtime {
         self.remove_interest(k, scene_node, Cb::SceneLoadCount);
 
         // await this .browser .nextFrame ()
-        let p = self.pending_scenes.remove(i);
-        self.frame_waiters.push(FrameWaiter { node: p.node, ctx: p.ctx });
+        match (inline, ext) {
+            (Some(i), _) => {
+                let p = self.pending_scenes.remove(i);
+                self.frame_waiters.push(FrameWaiter { node: p.node, ctx: p.ctx });
+            }
+            (None, Some(i)) => {
+                let p = self.pending_externs.remove(i);
+                self.extern_frame_waiters.push(p);
+            }
+            (None, None) => {}
+        }
     }
 
     /// The continuation of the `nextFrame ()` promises: after the finishEvents of a frame.
     pub(crate) fn finish_frame(&mut self) {
         for w in std::mem::take(&mut self.frame_waiters) {
             self.set_internal_scene(w.node, SceneArg::Scene(w.ctx));
+        }
+
+        for p in std::mem::take(&mut self.extern_frame_waiters) {
+            self.extern_attach(p);
         }
 
         self.run_tasks();

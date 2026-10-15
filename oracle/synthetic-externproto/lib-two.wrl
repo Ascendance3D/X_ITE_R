@@ -1,0 +1,11 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# Two PROTOs. A URL without a fragment must pick the first one (Other).
+PROTO Other [ field SFFloat size 9 ]
+{
+  Transform { children [ Shape { geometry Box { size 1 1 1 } } ] }
+}
+PROTO Thing [ field SFFloat size 7 ]
+{
+  Transform { children [ Shape { geometry Sphere { radius IS size } } ] }
+}
