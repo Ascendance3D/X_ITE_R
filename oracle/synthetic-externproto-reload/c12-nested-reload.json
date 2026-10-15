@@ -1,0 +1,3 @@
+{ "world": "main-nested.wrl", "authority": "XITE_COMPATIBILITY", "covers": [12], "dt": 0.1, "frames": 26,
+  "actions": [ { "frame": 6, "type": "url", "name": "Wrap", "url": ["lib-wrap-b.wrl#Wrap"] },
+               { "frame": 16, "type": "url", "name": "Wrap", "url": ["lib-wrap-a.wrl#Wrap"] } ] }

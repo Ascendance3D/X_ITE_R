@@ -1,0 +1,3 @@
+{ "world": "main-reload.wrl", "authority": "XITE_COMPATIBILITY", "covers": [7], "dt": 0.1, "frames": 24,
+  "actions": [ { "frame": 4, "type": "load", "name": "Gadget", "value": false },
+               { "frame": 8, "type": "load", "name": "Gadget", "value": true } ] }

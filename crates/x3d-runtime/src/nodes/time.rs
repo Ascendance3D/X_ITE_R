@@ -333,7 +333,18 @@ impl Runtime {
     /// `if (!enabled) return; advanceOnlyTime (); this [callback] ()`.
     pub fn fire_timeouts(&mut self, now: f64) {
         loop {
-            let Some(i) = self.timeouts.iter().enumerate().filter(|(_, t)| t.time <= now).min_by(|a, b| a.1.time.partial_cmp(&b.1.time).unwrap()).map(|(i, _)| i) else {
+            let node_timeout = self.timeouts.iter().enumerate().filter(|(_, t)| t.time <= now).min_by(|a, b| a.1.time.partial_cmp(&b.1.time).unwrap()).map(|(i, _)| i);
+
+            // The auto refresh timers of EXTERNPROTO declarations (setTimeout) run in due order with these.
+            if let Some((due, e)) = self.extern_next_timer(now) {
+                if node_timeout.is_none_or(|i| due < self.timeouts[i].time * 1000.0) {
+                    self.now = now;
+                    self.extern_perform_auto_refresh(e);
+                    continue;
+                }
+            }
+
+            let Some(i) = node_timeout else {
                 break;
             };
 

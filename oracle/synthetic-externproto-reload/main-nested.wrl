@@ -1,0 +1,28 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# An EXTERNPROTO whose PROTO body holds another EXTERNPROTO instance; the outer one is reloaded.
+EXTERNPROTO Wrap [ field SFInt32 level  eventOut SFInt32 result  eventIn SFInt32 poke ] "lib-wrap-a.wrl#Wrap"
+DEF W1 Wrap {}
+DEF W2 Wrap { level 4 }
+DEF Mirror Script {
+  eventIn SFInt32 from1
+  eventIn SFInt32 from2
+  url "javascript:
+function from1 (v) { print ('mirror w1 ' + v); }
+function from2 (v) { print ('mirror w2 ' + v); }
+"
+}
+DEF Clock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF Driver Script {
+  eventIn SFTime tick
+  eventOut SFInt32 poke_out
+  field SFInt32 n 0
+  url "javascript:
+function tick (t) { n = n + 1; print ('driver tick ' + n); poke_out = n; }
+"
+}
+ROUTE Clock.cycleTime TO Driver.tick
+ROUTE Driver.poke_out TO W1.poke
+ROUTE Driver.poke_out TO W2.poke
+ROUTE W1.result TO Mirror.from1
+ROUTE W2.result TO Mirror.from2

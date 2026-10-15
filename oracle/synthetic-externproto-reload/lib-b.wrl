@@ -1,0 +1,31 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# Implementation B of Gadget: level defaults to 7, offset to 0 2 0, a second field "extra", a Sphere body.
+PROTO Gadget [
+  field SFInt32 level 7
+  field SFString tag "B"
+  field SFInt32 extra 4
+  exposedField SFVec3f offset 0 2 0
+  eventOut SFInt32 result
+  eventIn SFInt32 poke
+]
+{
+  Transform {
+    translation IS offset
+    children [
+      DEF Log Script {
+        field SFInt32 level IS level
+        field SFString tag IS tag
+        field SFInt32 extra IS extra
+        eventOut SFInt32 result IS result
+        eventIn SFInt32 poke IS poke
+        url "javascript:
+function initialize () { result = level * 100; print ('B initialize level=' + level + ' tag=' + tag + ' extra=' + extra); }
+function poke (v) { print ('B poke ' + v); result = v + 2000; }
+function shutdown () { print ('B shutdown'); }
+"
+      }
+      Shape { geometry Sphere { radius 1 } }
+    ]
+  }
+}

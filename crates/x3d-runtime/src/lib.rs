@@ -20,6 +20,7 @@
 //! loading and exactly one frame (FileLoader.set_loadCount__ awaits `browser .nextFrame ()`).
 
 pub mod events;
+pub mod extern_proto;
 pub mod inline;
 pub mod loader;
 pub mod nodes;
@@ -30,11 +31,16 @@ use std::collections::HashMap;
 use x3d_fields::{FieldValue, NodeId, access};
 use x3d_scene::*;
 
+pub use extern_proto::{CacheEntry, ExternState, PendingExtern};
 pub use loader::{Fetcher, LocalFetcher};
 pub use script::{ScriptCall, ScriptError, ScriptHost};
 
 /// A field identity: node + location (X_ITE field object identity).
 pub type FKey = (NodeId, FieldLoc);
+
+/// A world that is still loading after this many frames is given up on (a load that can never
+/// finish would keep [`Runtime::load_scene`] busy forever).
+pub const MAX_LOAD_FRAMES: usize = 100_000;
 
 /// The frozen browser time of the oracle (dump.html: FROZEN_TIME).
 pub const FROZEN_TIME: f64 = 946684800.0;
@@ -162,7 +168,8 @@ pub enum Task {
     /// Inline.loadData / X3DUrlObject loadData: the fetch (a macrotask: it completes after the
     /// pending microtasks).
     UrlLoad(NodeId),
-    ExternLoad(ExternId),
+    /// X3DExternProtoDeclaration.loadData (declaration, generation): fetch the candidates.
+    ExternLoad(ExternId, u64),
     /// A Script whose source is fetched (a macrotask, requested by the Script's microtask).
     ScriptFetch(NodeId),
 }
@@ -199,10 +206,23 @@ pub struct Runtime {
     /// `await browser .nextFrame ()` continuations, resolved after the finishEvents of a frame.
     pub frame_waiters: Vec<inline::FrameWaiter>,
     /// EXTERNPROTO scenes that were parsed and set up, waiting like `pending_scenes` (see
-    /// `loader.rs`, `extern_scene`).
-    pub pending_externs: Vec<loader::PendingExtern>,
+    /// `extern_proto.rs`, `extern_scene`).
+    pub pending_externs: Vec<PendingExtern>,
     /// EXTERNPROTO scenes whose loadCount reached 0, waiting for the next frame.
-    pub extern_frame_waiters: Vec<loader::PendingExtern>,
+    pub extern_frame_waiters: Vec<PendingExtern>,
+    /// X3DUrlObject state of the EXTERNPROTO declarations (created on first use).
+    pub extern_states: HashMap<ExternId, ExternState>,
+    /// Declarations whose `loadData` event is waiting to be processed (the next frame's prepareEvents).
+    pub extern_load_events: Vec<ExternId>,
+    /// FileLoader.#sceneCache of EXTERNPROTO scenes, least recently used first.
+    pub extern_cache: Vec<(String, CacheEntry)>,
+    /// The body (execution context) each realized PROTO instance has now.
+    pub instance_bodies: HashMap<NodeId, CtxId>,
+    /// Instances of EXTERNPROTOs that went through `construct ()`: `updateInstances` calls their
+    /// `update ()` (the others get `construct ()`).
+    pub instance_update: std::collections::HashSet<NodeId>,
+    /// Bodies of instances that were replaced (X3DExecutionContext.dispose).
+    pub dead_ctxs: std::collections::HashSet<CtxId>,
     /// Fetches in flight in request order (macrotasks); `tasks` holds the microtasks.
     pub fetches: std::collections::VecDeque<Task>,
     /// Own live flag (X3DBaseNode [_live]) of the scenes that Inlines loaded, by root context.
@@ -270,6 +290,12 @@ impl Runtime {
             frame_waiters: vec![],
             pending_externs: vec![],
             extern_frame_waiters: vec![],
+            extern_states: HashMap::new(),
+            extern_load_events: vec![],
+            extern_cache: vec![],
+            instance_bodies: HashMap::new(),
+            instance_update: Default::default(),
+            dead_ctxs: Default::default(),
             fetches: Default::default(),
             inline_live: HashMap::new(),
             live_watchers: vec![],
@@ -662,7 +688,7 @@ impl Runtime {
 
             match task {
                 Task::UrlLoad(node) => self.url_load(node),
-                Task::ExternLoad(e) => self.extern_load(e),
+                Task::ExternLoad(e, request) => self.extern_run(e, request),
                 Task::ScriptFetch(node) => self.script_load(node),
                 Task::ScriptLoad(..) | Task::ScriptLoaded(..) => {}
             }
@@ -680,6 +706,7 @@ impl Runtime {
             || !self.frame_waiters.is_empty()
             || !self.pending_externs.is_empty()
             || !self.extern_frame_waiters.is_empty()
+            || self.extern_states.values().any(|s| s.load_state == nodes::LoadState::InProgress)
             || (0..self.scene.nodes.len() as NodeId).any(|n| {
                 self.builtin_name(n) == Some("Inline") && self.url_load_state(n) == nodes::LoadState::InProgress
             })
@@ -712,7 +739,7 @@ impl Runtime {
         // FileLoader.set_loadCount__ awaits `browser .nextFrame ()` once the scene's loadCount is
         // 0, and every Inline in it holds the count until its own scene is attached: one frame,
         // plus one for every level of nested Inlines.
-        loop {
+        for _ in 0..MAX_LOAD_FRAMES {
             let waiting = self.has_unfinished_loads();
 
             self.frame();

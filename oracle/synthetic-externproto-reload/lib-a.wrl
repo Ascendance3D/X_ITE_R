@@ -1,0 +1,29 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# Implementation A of Gadget: level defaults to 2, offset to 1 0 0; the body prints and answers pokes.
+PROTO Gadget [
+  field SFInt32 level 2
+  field SFString tag "A"
+  exposedField SFVec3f offset 1 0 0
+  eventOut SFInt32 result
+  eventIn SFInt32 poke
+]
+{
+  Transform {
+    translation IS offset
+    children [
+      DEF Log Script {
+        field SFInt32 level IS level
+        field SFString tag IS tag
+        eventOut SFInt32 result IS result
+        eventIn SFInt32 poke IS poke
+        url "javascript:
+function initialize () { result = level * 10; print ('A initialize level=' + level + ' tag=' + tag); }
+function poke (v) { print ('A poke ' + v); result = v + 1000; }
+function shutdown () { print ('A shutdown'); }
+"
+      }
+      Shape { geometry Box { size 1 1 1 } }
+    ]
+  }
+}

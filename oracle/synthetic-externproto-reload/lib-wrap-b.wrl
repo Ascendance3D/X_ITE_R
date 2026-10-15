@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# Wrap again, over lib-b.wrl, with another default level.
+EXTERNPROTO Gadget [ field SFInt32 level  eventOut SFInt32 result  eventIn SFInt32 poke ] "lib-b.wrl#Gadget"
+PROTO Wrap [
+  field SFInt32 level 6
+  eventOut SFInt32 result
+  eventIn SFInt32 poke
+]
+{
+  Gadget { level IS level  result IS result  poke IS poke }
+}

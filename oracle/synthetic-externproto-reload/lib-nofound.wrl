@@ -1,0 +1,9 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# A VRML file without any PROTO: not interpretable as an external prototype. Its Script shows
+# whether the nodes of a rejected candidate are set up before the candidate is rejected.
+DEF Probe Script {
+  url "javascript:
+function initialize () { print ('nofound initialize'); }
+"
+}

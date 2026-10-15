@@ -178,6 +178,9 @@ pub struct ExternProtoDecl {
     pub fields: Vec<Field>,
     pub has_metadata: bool,
     pub url: Vec<String>,
+    /// The declaration's load state is COMPLETE (X3DUrlObject): its interface is the loaded PROTO's
+    /// and instances compare their fields with its defaults (X3DPrototypeInstance.isDefaultValue).
+    pub complete: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -669,8 +672,16 @@ impl Scene {
                     None => !field.modified,
                 }
             }
-            // X3DPrototypeInstance.isDefaultValue: an extern proto that never loaded only
-            // knows whether a field was set.
+            // X3DPrototypeInstance.isDefaultValue: an extern proto that is not loaded only knows
+            // whether a field was set; a loaded one compares with the PROTO's defaults, which the
+            // declaration took over (X3DBaseNode.isDefaultValue).
+            (NodeKind::Instance(ProtoRef::Extern(e)), FieldLoc::Pre(_)) if self.externprotos[*e].complete => {
+                match self.externprotos[*e].fields.iter().find(|f| f.name == field.name) {
+                    Some(f) => f.value.equals(&field.value),
+                    None if field.name == "metadata" => field.value.equals(&FieldValue::SFNode(None)),
+                    None => !field.modified,
+                }
+            }
             (NodeKind::Instance(ProtoRef::Extern(_)), _) => !field.modified,
             // User-defined fields are their own definition.
             (_, FieldLoc::User(_)) => true,
@@ -732,7 +743,7 @@ impl Scene {
     }
 
     pub fn new_extern_proto(&mut self, ctx: CtxId, url: Vec<String>) -> ExternId {
-        self.externprotos.push(ExternProtoDecl { name: String::new(), ctx, fields: vec![], has_metadata: true, url });
+        self.externprotos.push(ExternProtoDecl { name: String::new(), ctx, fields: vec![], has_metadata: true, url, complete: false });
         self.externprotos.len() - 1
     }
 

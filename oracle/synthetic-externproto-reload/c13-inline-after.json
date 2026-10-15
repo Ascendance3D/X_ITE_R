@@ -1,0 +1,2 @@
+{ "world": "main-inline.wrl", "authority": "XITE_COMPATIBILITY", "covers": [14], "dt": 0.1, "frames": 20,
+  "actions": [ { "frame": 3, "type": "url", "name": "Gadget", "url": ["lib-b.wrl#Gadget"] } ] }

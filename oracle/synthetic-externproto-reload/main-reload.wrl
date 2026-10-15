@@ -1,0 +1,49 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# One EXTERNPROTO, two instances (one explicit value), a Mirror that prints what comes out, and a
+# Driver that pokes the instances every 0.5 s and moves Explicit at the second tick, so routes and
+# explicit values can be seen working across a reload.
+EXTERNPROTO Gadget [
+  field SFInt32 level
+  field SFString tag
+  exposedField SFVec3f offset
+  eventOut SFInt32 result
+  eventIn SFInt32 poke
+] [ "lib-a.wrl#Gadget" ]
+DEF Plain Gadget {}
+DEF Explicit Gadget { level 5 }
+DEF Mirror Script {
+  eventIn SFInt32 fromPlain
+  eventIn SFInt32 fromExplicit
+  eventIn SFVec3f offsetPlain
+  eventIn SFVec3f offsetExplicit
+  url "javascript:
+function fromPlain (v) { print ('mirror plain ' + v); }
+function fromExplicit (v) { print ('mirror explicit ' + v); }
+function offsetPlain (v) { print ('mirror plain offset ' + v); }
+function offsetExplicit (v) { print ('mirror explicit offset ' + v); }
+"
+}
+DEF Clock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF Driver Script {
+  eventIn SFTime tick
+  eventOut SFInt32 poke_out
+  eventOut SFVec3f offset_out
+  field SFInt32 n 0
+  url "javascript:
+function tick (t) {
+  n = n + 1;
+  print ('driver tick ' + n);
+  poke_out = n;
+  if (n == 2) offset_out = new SFVec3f (0, 0, 5);
+}
+"
+}
+ROUTE Clock.cycleTime TO Driver.tick
+ROUTE Driver.poke_out TO Plain.poke
+ROUTE Driver.poke_out TO Explicit.poke
+ROUTE Driver.offset_out TO Explicit.set_offset
+ROUTE Plain.result TO Mirror.fromPlain
+ROUTE Explicit.result TO Mirror.fromExplicit
+ROUTE Plain.offset_changed TO Mirror.offsetPlain
+ROUTE Explicit.offset_changed TO Mirror.offsetExplicit

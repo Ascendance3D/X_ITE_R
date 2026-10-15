@@ -187,35 +187,40 @@ impl Runtime {
                 Ok(()) => return true,
                 Err(error) => {
                     attempts += 1;
-
-                    let data_url = resolved.as_ref().is_some_and(|r| r.scheme() == "data");
-                    let resolved_text = match &resolved {
-                        Some(r) if !data_url => decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string()),
-                        _ => String::new(),
-                    };
-                    let subject = if candidate.is_empty() {
-                        "empty URL".to_string()
-                    } else if data_url {
-                        "data URL".to_string()
-                    } else if !resolved_text.is_empty() {
-                        format!("URL '{resolved_text}'")
-                    } else {
-                        format!("URL '{}'", truncate(candidate))
-                    };
-                    let prefix = if loader.type_name.is_empty() { String::new() } else { format!("{}: ", loader.type_name) };
-
-                    if remaining > 0 {
-                        self.log_warn(format!("{prefix}Couldn't load {subject}, trying URL {} of {}. {error}", attempts + 1, attempts + remaining));
-                    } else if attempts == 1 {
-                        self.log_error(format!("{prefix}Couldn't load {subject}. {error}"));
-                    } else {
-                        self.log_error(format!("{prefix}Couldn't load any of the {attempts} URLs, tried in this order:"));
-                    }
+                    self.print_load_error(loader, candidate, resolved.as_ref(), &error, attempts, remaining);
                 }
             }
         }
 
         false
+    }
+
+    /// FileLoader.printError for the candidate that just failed: `attempts` counts it, `remaining`
+    /// is the number of candidates after it.
+    pub(crate) fn print_load_error(&mut self, loader: &FileLoader, candidate: &str, resolved: Option<&url::Url>, error: &str, attempts: usize, remaining: usize) {
+        let data_url = resolved.is_some_and(|r| r.scheme() == "data");
+        let resolved_text = match resolved {
+            Some(r) if !data_url => decode_uri(r.as_str()).unwrap_or_else(|| r.as_str().to_string()),
+            _ => String::new(),
+        };
+        let subject = if candidate.is_empty() {
+            "empty URL".to_string()
+        } else if data_url {
+            "data URL".to_string()
+        } else if !resolved_text.is_empty() {
+            format!("URL '{resolved_text}'")
+        } else {
+            format!("URL '{}'", truncate(candidate))
+        };
+        let prefix = if loader.type_name.is_empty() { String::new() } else { format!("{}: ", loader.type_name) };
+
+        if remaining > 0 {
+            self.log_warn(format!("{prefix}Couldn't load {subject}, trying URL {} of {}. {error}", attempts + 1, attempts + remaining));
+        } else if attempts == 1 {
+            self.log_error(format!("{prefix}Couldn't load {subject}. {error}"));
+        } else {
+            self.log_error(format!("{prefix}Couldn't load any of the {attempts} URLs, tried in this order:"));
+        }
     }
 
     pub(crate) fn url_strings(&self, node: NodeId) -> Vec<String> {
@@ -376,129 +381,4 @@ impl Runtime {
             }
         }
     }
-}
-
-impl Runtime {
-    /// X3DExternProtoDeclaration.requestImmediateLoad (X3DUrlObject): starts a load only from
-    /// NOT_STARTED_STATE; `load` is always TRUE; an empty url does nothing.
-    pub(crate) fn extern_request_load(&mut self, e: ExternId) {
-        if self.extern_loaded.contains_key(&e) {
-            return;
-        }
-
-        self.extern_loaded.insert(e, None);
-
-        if !self.scene.externprotos[e].url.is_empty() {
-            self.tasks.push_back(Task::ExternLoad(e));
-        }
-    }
-
-    /// X3DExternProtoDeclaration.loadData: FileLoader.createX3DFromURL (url, null, setInternalScene).
-    pub(crate) fn extern_load(&mut self, e: ExternId) {
-        let loader = FileLoader { type_name: "X3DExternProtoDeclaration".into(), base: self.scene.world_url_of(self.scene.externprotos[e].ctx).to_string(), data_as_string: false };
-        let urls = self.scene.externprotos[e].url.clone();
-
-        self.load_document(&loader, &urls, |rt, loaded| match loaded {
-            Loaded::Script(_) => Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
-            Loaded::Data(data, url) => rt.extern_scene(e, &data, &url),
-        });
-    }
-
-    /// FileLoader.createX3DFromString for an EXTERNPROTO: the scene is parsed and its nodes are
-    /// set up (like `inline_scene`); it waits for its loadCount and the next frame before
-    /// `extern_attach`. The PROTO is the one named by the URL fragment, else the first one.
-    fn extern_scene(&mut self, e: ExternId, data: &[u8], url: &url::Url) -> Result<(), String> {
-        let mut scene = x3d_parse::parse_bytes(data, url.as_str()).map_err(|err| format!("Error: {err}"))?;
-
-        // `scene .protos .get (hash)` or `scene .protos [0]`; a data: URL has no fragment.
-        let fragment = if url.scheme() == "data" { "" } else { url.fragment().unwrap_or("") };
-        let root = scene.ctx(ROOT);
-        let found = if fragment.is_empty() { root.protos.values().first().copied() } else { root.protos.get(fragment) };
-        let Some(local) = found else {
-            return Err("Error: PROTO not found.".into());
-        };
-
-        for w in std::mem::take(&mut scene.warnings) {
-            self.log_warn(w);
-        }
-
-        let setup_order = std::mem::take(&mut scene.setup_order);
-        let ctx_count = scene.contexts.len();
-        let parent = self.scene.externprotos[e].ctx;
-        let m = self.scene.merge_extern(scene, parent);
-
-        let (scene_node, count) = self.new_load_count_scene();
-        self.pending_externs.push(PendingExtern { ext: e, ctx: m.root_ctx, proto: local + m.proto_offset, scene_node });
-
-        // `new X3DScene (browser)`: setLive (false) until extern_attach.
-        self.inline_live.insert(m.root_ctx, false);
-
-        self.attach_merged_scene(m, ctx_count, setup_order);
-
-        // FileLoader.setScene: `scene ._loadCount .addEvent ()`.
-        self.add_event(count);
-        Ok(())
-    }
-
-    /// X3DExternProtoDeclaration.setInternalScene, after the frame (see `finish_frame`): the scene
-    /// goes live, the declaration takes the PROTO's interface, and its instances update.
-    pub(crate) fn extern_attach(&mut self, p: PendingExtern) {
-        let PendingExtern { ext: e, ctx, proto, .. } = p;
-
-        // scene .setLive (true)
-        self.inline_live.insert(ctx, true);
-        self.refresh_live();
-
-        // this .setProtoDeclaration (proto): the declaration takes the PROTO's interface.
-        let (fields, has_metadata) = (self.scene.protos[proto].fields.clone(), self.scene.protos[proto].has_metadata);
-        self.scene.externprotos[e].fields = fields;
-        self.scene.externprotos[e].has_metadata = has_metadata;
-        self.extern_loaded.insert(e, Some(proto));
-
-        // updateInstances → X3DPrototypeInstance.construct for each instance.
-        for inst in self.extern_instances(e) {
-            self.extern_instance_defaults(inst, proto);
-
-            if self.is_initialized(inst) {
-                self.realize(inst);
-            }
-        }
-    }
-
-    /// Every instance node of an EXTERNPROTO declaration.
-    fn extern_instances(&self, e: ExternId) -> Vec<NodeId> {
-        (0..self.scene.nodes.len() as NodeId).filter(|&n| matches!(self.scene.node(n).kind, NodeKind::Instance(ProtoRef::Extern(x)) if x == e)).collect()
-    }
-
-    /// X3DPrototypeInstance.construct, the field part for a loaded EXTERNPROTO: an interface field
-    /// that the file did not set takes the PROTO's default. A field the declaration lacks is added.
-    pub(crate) fn extern_instance_defaults(&mut self, inst: NodeId, proto: ProtoId) {
-        for pf in self.scene.protos[proto].fields.clone() {
-            let Some(i) = self.scene.node(inst).fields.iter().position(|f| f.name == pf.name) else {
-                // addPredefinedField
-                self.scene.node_mut(inst).fields.push(Field::new(&pf.name, pf.access, pf.value.clone()));
-                continue;
-            };
-
-            let f = &self.scene.node(inst).fields[i];
-            let skip = f.access != pf.access || f.ty() != pf.ty() || !f.is_initializable() || f.modified || !f.references.is_empty();
-
-            if !skip {
-                self.set_raw((inst, FieldLoc::Pre(i)), pf.value.clone());
-            }
-        }
-    }
-}
-
-/// A scene an EXTERNPROTO loaded that waits for its loadCount and the next frame.
-#[derive(Clone, Debug)]
-pub struct PendingExtern {
-    /// The EXTERNPROTO declaration that loads the scene.
-    pub ext: ExternId,
-    /// Root context of the loaded scene.
-    pub ctx: CtxId,
-    /// The PROTO that the declaration takes its interface and body from (merged id).
-    pub proto: ProtoId,
-    /// The internal node that owns the scene's `loadCount` field.
-    pub scene_node: NodeId,
 }

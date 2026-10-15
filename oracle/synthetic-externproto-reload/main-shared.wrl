@@ -1,0 +1,7 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# Two EXTERNPROTO declarations, one file: the scene is fetched and set up once.
+EXTERNPROTO First [ field SFInt32 level ] "lib-multi.wrl#First"
+EXTERNPROTO Second [ field SFInt32 level ] "lib-multi.wrl#Second"
+DEF A First {}
+DEF B Second {}

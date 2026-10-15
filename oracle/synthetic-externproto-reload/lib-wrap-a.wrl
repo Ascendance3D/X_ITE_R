@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# Wrap holds a Gadget from lib-a.wrl: an EXTERNPROTO inside the body of an externally loaded PROTO.
+EXTERNPROTO Gadget [ field SFInt32 level  eventOut SFInt32 result  eventIn SFInt32 poke ] "lib-a.wrl#Gadget"
+PROTO Wrap [
+  field SFInt32 level 1
+  eventOut SFInt32 result
+  eventIn SFInt32 poke
+]
+{
+  Gadget { level IS level  result IS result  poke IS poke }
+}

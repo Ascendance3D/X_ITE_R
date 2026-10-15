@@ -13,9 +13,16 @@ impl Runtime {
         }
     }
 
-    /// Body execution context of a realized instance.
+    /// Body execution context of a realized instance (the current one: a replaced body is gone).
     pub fn instance_body(&self, inst: NodeId) -> Option<CtxId> {
-        self.scene.contexts.iter().rposition(|c| c.outer == Outer::Instance(inst))
+        self.instance_bodies.get(&inst).copied()
+    }
+
+    /// The type names of the root nodes of an instance's body (`None` without a body).
+    pub fn instance_body_roots(&self, inst: NodeId) -> Option<Vec<Option<String>>> {
+        let body = self.instance_body(inst)?;
+
+        Some(self.scene.ctx(body).root_nodes.iter().map(|n| n.map(|n| self.type_name(n))).collect())
     }
 
     /// X3DPrototypeInstance.initialize.
@@ -29,9 +36,18 @@ impl Runtime {
             return;
         };
 
+        // X3DPrototypeInstance.realize: an extern proto that is not COMPLETE has no body.
+        if let NodeKind::Instance(ProtoRef::Extern(e)) = self.scene.node(inst).kind {
+            if self.extern_load_state(e) != nodes::LoadState::Complete {
+                return;
+            }
+        }
+
         let decl_body = self.scene.protos[p].body;
         let parent = self.scene.protos[p].ctx;
         let body = self.scene.new_context(parent, Outer::Instance(inst));
+
+        self.instance_bodies.insert(inst, body);
 
         // addExternProtos / addProtos
         let externprotos: Vec<(String, ExternId)> = self.scene.ctx(decl_body).externprotos.values().iter().map(|e| (self.scene.externprotos[*e].name.clone(), *e)).collect();
