@@ -1,0 +1,83 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "file": "lib-logger.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Logger [\n  initializeOnly SFInt32 level 2\n  outputOnly     SFInt32 result\n]\n{\n  DEF Log Script {\n    initializeOnly SFInt32 level IS level\n    outputOnly     SFInt32 result IS result\n\n    url \"javascript:\nfunction initialize () { result = level * 10; print ('logger initialize ' + level); }\n\"\n  }\n}\n\n",
+   "log": []
+  },
+  {
+   "file": "lib-nested.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Widget [\n  initializeOnly SFFloat  size\n  initializeOnly SFColor  color\n  initializeOnly MFString label\n  inputOutput    SFVec3f  offset\n]\n\"lib-widget.wrl#Widget\"\n\nPROTO Wrap [\n  initializeOnly SFFloat size 1\n]\n{\n  Widget {\n    size IS size\n  }\n}\n\n",
+   "log": []
+  },
+  {
+   "file": "lib-two.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Other [\n  initializeOnly SFFloat size 9\n]\n{\n  Transform {\n    children Shape {\n      geometry Box {\n        size 1 1 1\n      }\n    }\n  }\n}\n\nPROTO Thing [\n  initializeOnly SFFloat size 7\n]\n{\n  Transform {\n    children Shape {\n      geometry Sphere {\n        radius IS size\n      }\n    }\n  }\n}\n\n",
+   "log": []
+  },
+  {
+   "file": "lib-widget.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO Widget [\n  initializeOnly SFFloat  size 5\n  initializeOnly SFColor  color 0 0 1\n  initializeOnly MFString label \"default\"\n  inputOutput    SFVec3f  offset 0 0 0\n]\n{\n  Transform {\n    translation IS offset\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor IS color\n        }\n      }\n      geometry Sphere {\n        radius IS size\n      }\n    }\n  }\n}\n\n",
+   "log": []
+  },
+  {
+   "file": "main-basic.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Widget [\n  initializeOnly SFFloat  size\n  initializeOnly SFColor  color\n  initializeOnly MFString label\n  inputOutput    SFVec3f  offset\n]\n\"lib-widget.wrl#Widget\"\n\nDEF Plain Widget { }\n\nDEF Sized Widget {\n  size 2\n}\n\nDEF Moved Widget {\n  color 1 0 0\n  offset 3 0 0\n}\n",
+   "log": []
+  },
+  {
+   "file": "main-dead.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Widget [\n  initializeOnly SFFloat size\n]\n\"missing-widget.wrl#Widget\"\n\nDEF Dead Widget {\n  size 4\n}\n",
+   "log": [
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-externproto/missing-widget.wrl#Widget'. Error: Not Found"
+   ]
+  },
+  {
+   "file": "main-fallback.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Widget [\n  initializeOnly SFFloat  size\n  initializeOnly SFColor  color\n  initializeOnly MFString label\n  inputOutput    SFVec3f  offset\n]\n[\n  \"missing-widget.wrl#Widget\",\n  \"lib-widget.wrl#Widget\"\n]\n\nDEF Found Widget { }\n",
+   "log": [
+    "warn: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-externproto/missing-widget.wrl#Widget', trying URL 2 of 2. Error: Not Found"
+   ]
+  },
+  {
+   "file": "main-fragmentless.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Thing [\n  initializeOnly SFFloat size\n]\n\"lib-two.wrl\"\n\nDEF Pick Thing { }\n",
+   "log": []
+  },
+  {
+   "file": "main-logger.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Logger [\n  initializeOnly SFInt32 level\n  outputOnly     SFInt32 result\n]\n\"lib-logger.wrl#Logger\"\n\nDEF A Logger { }\n\nDEF B Logger {\n  level 5\n}\n\nDEF Mirror Script {\n  initializeOnly SFInt32 a 20\n  initializeOnly SFInt32 b 50\n  inputOnly      SFInt32 fromA\n  inputOnly      SFInt32 fromB\n\n  url \"javascript:\nfunction fromA (v) { a = v; }\nfunction fromB (v) { b = v; }\n\"\n}\n\nROUTE A.result TO Mirror.fromA\nROUTE B.result TO Mirror.fromB\n",
+   "log": []
+  },
+  {
+   "file": "main-missing-fragment.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Widget [\n  initializeOnly SFFloat size\n]\n\"lib-widget.wrl#Nope\"\n\nDEF Lost Widget {\n  size 4\n}\n",
+   "log": [
+    "error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/synthetic-externproto/lib-widget.wrl#Nope'. Error: PROTO not found."
+   ]
+  },
+  {
+   "file": "main-nested.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Wrap [\n  initializeOnly SFFloat size\n]\n\"lib-nested.wrl#Wrap\"\n\nDEF Outer Wrap {\n  size 3\n}\n\nDEF Default Wrap { }\n",
+   "log": []
+  },
+  {
+   "file": "main-zero.wrl",
+   "ok": true,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nEXTERNPROTO Widget [\n  initializeOnly SFFloat  size\n  initializeOnly SFColor  color\n  initializeOnly MFString label\n  inputOutput    SFVec3f  offset\n]\n\"lib-widget.wrl#Widget\"\n\nDEF Zero Widget {\n  size 0\n}\n",
+   "log": []
+  }
+ ]
+}

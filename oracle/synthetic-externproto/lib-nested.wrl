@@ -1,0 +1,8 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# A PROTO whose body holds another EXTERNPROTO instance (resolved from this file's URL).
+EXTERNPROTO Widget [ field SFFloat size ] "lib-widget.wrl#Widget"
+PROTO Wrap [ field SFFloat size 1 ]
+{
+  Widget { size IS size }
+}

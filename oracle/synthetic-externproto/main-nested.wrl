@@ -1,0 +1,6 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# An EXTERNPROTO whose PROTO body holds another EXTERNPROTO instance (a second load).
+EXTERNPROTO Wrap [ field SFFloat size ] "lib-nested.wrl#Wrap"
+DEF Outer Wrap { size 3 }
+DEF Default Wrap {}

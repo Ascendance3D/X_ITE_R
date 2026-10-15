@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port (no archive content).
+# The file loads, but it has no PROTO named Nope: the declaration never gets a body.
+EXTERNPROTO Widget [ field SFFloat size ] "lib-widget.wrl#Nope"
+DEF Lost Widget { size 4 }

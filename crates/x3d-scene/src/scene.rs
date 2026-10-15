@@ -1063,6 +1063,16 @@ impl MergeMap {
 impl Scene {
     /// [`Scene::merge`] for the scene an Inline loaded: its scene data is kept per root context.
     pub fn merge_inline(&mut self, other: Scene, parent: CtxId, inline: NodeId) -> MergeMap {
+        self.merge_scene(other, parent, Some(inline))
+    }
+
+    /// [`Scene::merge`] for the scene an EXTERNPROTO loaded: a child of the declaring context
+    /// (`X3DScene.setExecutionContext`), with its scene data kept per root context.
+    pub fn merge_extern(&mut self, other: Scene, parent: CtxId) -> MergeMap {
+        self.merge_scene(other, parent, None)
+    }
+
+    fn merge_scene(&mut self, other: Scene, parent: CtxId, outer: Option<NodeId>) -> MergeMap {
         let info = SceneInfo {
             specification_version: other.specification_version.clone(),
             encoding: other.encoding.clone(),
@@ -1071,7 +1081,7 @@ impl Scene {
             components: other.components.clone(),
             meta: other.meta.clone(),
         };
-        let m = self.merge(other, parent, Some(inline));
+        let m = self.merge(other, parent, outer);
 
         self.scene_infos.insert(m.root_ctx, info);
         m
