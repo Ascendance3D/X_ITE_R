@@ -1,0 +1,15 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# A scene whose Script asks for prepareEvents and eventsProcessed: it reports every frame it gets.
+DEF PrepClock TimeSensor { cycleInterval 0.4 loop TRUE }
+DEF PrepScript Script {
+  eventIn SFTime tick
+  field SFInt32 frames 0
+  url "javascript:
+    function initialize () { print ('P initialize'); }
+    function tick (t) { print ('P tick'); }
+    function prepareEvents (t) { frames = frames + 1; print ('P prepare ' + frames); }
+    function eventsProcessed () { print ('P processed'); }
+  "
+}
+ROUTE PrepClock.cycleTime TO PrepScript.tick

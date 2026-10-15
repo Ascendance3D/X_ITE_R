@@ -1,0 +1,14 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# Classic encoding of X3D 4.0: the Inline has the X3D `load` field and starts unloaded.
+DEF Holder Group { children [ DEF Inl Inline { load FALSE url "content-x3d.wrl" } ] }
+DEF ParentClock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF ParentScript Script {
+  inputOnly SFTime tick
+  initializeOnly SFInt32 n 0
+  url "ecmascript:
+    function tick (t) { n = n + 1; Browser.println ('parent tick ' + n); }
+  "
+}
+ROUTE ParentClock.cycleTime TO ParentScript.tick

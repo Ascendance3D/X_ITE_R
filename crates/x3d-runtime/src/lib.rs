@@ -26,6 +26,7 @@ pub mod loader;
 pub mod nodes;
 pub mod protos;
 pub mod script;
+pub mod url_object;
 
 use std::collections::HashMap;
 use x3d_fields::{FieldValue, NodeId, access};
@@ -76,6 +77,10 @@ pub enum Cb {
     // X3DUrlObject
     UrlSetLoad,
     UrlSetUrl,
+    /// `_loadData` of an Inline: the buffered request (several requests before it is processed make one load).
+    UrlLoadData,
+    /// `autoRefresh` or `autoRefreshTimeLimit` changed.
+    UrlSetAutoRefresh,
     // Script (X3DScriptNode): field callback index into user-defined fields.
     ScriptField(usize),
     ScriptEventsProcessed,
@@ -166,8 +171,9 @@ pub enum Task {
     /// Script: setLoadState (COMPLETE/FAILED) after initialize__ resolved.
     ScriptLoaded(NodeId, bool),
     /// Inline.loadData / X3DUrlObject loadData: the fetch (a macrotask: it completes after the
-    /// pending microtasks).
-    UrlLoad(NodeId),
+    /// pending microtasks), for the request with this generation. A request that was replaced or
+    /// cancelled meanwhile does nothing.
+    UrlLoad(NodeId, u64),
     /// X3DExternProtoDeclaration.loadData (declaration, generation): fetch the candidates.
     ExternLoad(ExternId, u64),
     /// A Script whose source is fetched (a macrotask, requested by the Script's microtask).
@@ -223,6 +229,8 @@ pub struct Runtime {
     pub instance_update: std::collections::HashSet<NodeId>,
     /// Bodies of instances that were replaced (X3DExecutionContext.dispose).
     pub dead_ctxs: std::collections::HashSet<CtxId>,
+    /// Root contexts of Inline scenes that were disposed or discarded (see `inline.rs`).
+    pub disposed_scenes: std::collections::HashSet<CtxId>,
     /// Fetches in flight in request order (macrotasks); `tasks` holds the microtasks.
     pub fetches: std::collections::VecDeque<Task>,
     /// Own live flag (X3DBaseNode [_live]) of the scenes that Inlines loaded, by root context.
@@ -296,6 +304,7 @@ impl Runtime {
             instance_bodies: HashMap::new(),
             instance_update: Default::default(),
             dead_ctxs: Default::default(),
+            disposed_scenes: Default::default(),
             fetches: Default::default(),
             inline_live: HashMap::new(),
             live_watchers: vec![],
@@ -687,7 +696,7 @@ impl Runtime {
             };
 
             match task {
-                Task::UrlLoad(node) => self.url_load(node),
+                Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
                 Task::ScriptFetch(node) => self.script_load(node),
                 Task::ScriptLoad(..) | Task::ScriptLoaded(..) => {}

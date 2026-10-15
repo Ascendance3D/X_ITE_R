@@ -1,0 +1,2 @@
+{"world": "main-shared-nested.wrl", "authority": "X3D_REQUIRED", "covers": [8, 15], "dt": 0.1, "frames": 14,
+  "actions": [{"frame": 6, "type": "url", "name": "Inl/Right", "url": ["content-c.wrl"]}] }

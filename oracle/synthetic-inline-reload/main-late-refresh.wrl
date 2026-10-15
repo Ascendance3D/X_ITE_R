@@ -1,0 +1,5 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# The Inline asks for a file that is not there yet and refreshes itself every 0.5 s (X3D autoRefresh).
+DEF Holder Group { children [ DEF Inl Inline { url "late.wrl" autoRefresh 0.5 } ] }

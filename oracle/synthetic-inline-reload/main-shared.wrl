@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# Two Inlines of the same file in different places: shared use is not a cycle.
+DEF Holder Group { children [ DEF First Inline { url "content-a.wrl" } DEF Second Inline { url "content-a.wrl" } ] }

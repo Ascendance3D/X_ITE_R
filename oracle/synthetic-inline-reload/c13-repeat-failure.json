@@ -1,0 +1,6 @@
+{"world": "main-one.wrl", "authority": "XITE_COMPATIBILITY", "covers": [11, 16], "dt": 0.1, "frames": 20,
+  "actions": [{"frame": 3, "type": "url", "name": "Inl", "url": ["gone1.wrl"]},
+               {"frame": 6, "type": "url", "name": "Inl", "url": ["gone2.wrl"]},
+               {"frame": 9, "type": "url", "name": "Inl", "url": ["gone1.wrl"]},
+               {"frame": 12, "type": "url", "name": "Inl", "url": ["gone2.wrl"]},
+               {"frame": 15, "type": "url", "name": "Inl", "url": ["content-b.wrl"]}] }

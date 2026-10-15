@@ -231,7 +231,7 @@ impl Runtime {
     }
 
     /// Inline.loadData / ImageTexture.loadData … : run the FileLoader for the node.
-    pub(crate) fn url_load(&mut self, node: NodeId) {
+    pub(crate) fn url_load(&mut self, node: NodeId, generation: u64) {
         let type_name = self.type_name(node);
 
         if type_name == "MovieTexture" {
@@ -239,7 +239,12 @@ impl Runtime {
         }
 
         if type_name == "Inline" {
-            return self.inline_load(node);
+            // The request may have been replaced, cancelled or disposed since it was queued.
+            if self.inline_request_is_current(node, generation) {
+                self.inline_load(node, generation);
+            }
+
+            return;
         }
 
         let loader = FileLoader { type_name: type_name.clone(), base: self.base_url(node), data_as_string: false };

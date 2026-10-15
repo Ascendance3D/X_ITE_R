@@ -1,0 +1,3 @@
+{"world": "main-one.wrl", "authority": "XITE_COMPATIBILITY", "covers": [12], "dt": 0.1, "frames": 16,
+  "actions": [{"frame": 4, "type": "url", "name": "Inl", "url": ["content-b.wrl"]},
+               {"frame": 5, "type": "remove", "name": "Inl", "group": "Holder"}] }

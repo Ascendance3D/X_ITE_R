@@ -1,0 +1,2 @@
+{"world": "main-one.wrl", "authority": "XITE_COMPATIBILITY", "covers": [2], "dt": 0.1, "frames": 12,
+  "actions": [{"frame": 5, "type": "url", "name": "Inl", "url": ["content-a.wrl"]}] }

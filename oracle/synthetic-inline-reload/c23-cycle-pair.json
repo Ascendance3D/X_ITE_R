@@ -1,0 +1,2 @@
+{"world": "main-cycle-pair.wrl", "authority": "IMPLEMENTATION_SAFETY", "covers": [15], "dt": 0.1, "frames": 12, "oracle": "skip", "skipReason": "X_ITE loads a pair of scenes that load each other without end",
+  "actions": [] }

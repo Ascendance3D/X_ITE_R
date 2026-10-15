@@ -1,0 +1,14 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+PROTO Gizmo [ field SFInt32 level 7 eventIn SFInt32 poke ]
+{
+  DEF GizmoScript Script {
+    eventIn SFInt32 poke
+    field SFInt32 level IS level
+    url "javascript:
+      function initialize () { print ('Gizmo two initialize level=' + level); }
+      function poke (v) { print ('Gizmo two poke ' + v); }
+    "
+  }
+  Transform { children Shape { geometry Sphere { radius 1 } } }
+}

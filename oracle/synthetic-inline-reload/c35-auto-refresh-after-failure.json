@@ -1,0 +1,2 @@
+{"world": "main-late-refresh.wrl", "authority": "X3D_REQUIRED", "covers": [4, 8, 16], "dt": 0.1, "frames": 16,
+  "actions": [{"frame": 4, "type": "publish", "path": "late.wrl", "from": "content-b.wrl"}] }

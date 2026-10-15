@@ -1,0 +1,15 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+DEF ClockX TimeSensor { cycleInterval 0.6 loop TRUE }
+DEF ReportX Script {
+  inputOnly SFTime tick
+  initializeOnly SFInt32 n 0
+  url "ecmascript:
+    function initialize () { Browser.println ('X initialize'); }
+    function tick (t) { n = n + 1; Browser.println ('X tick ' + n); }
+    function shutdown () { Browser.println ('X shutdown'); }
+  "
+}
+DEF MoverX Transform { children Shape { geometry Box { } } }
+ROUTE ClockX.cycleTime TO ReportX.tick

@@ -34,6 +34,17 @@ pub enum LoadState {
 #[derive(Debug, Default)]
 pub struct UrlState {
     pub load_state: LoadState,
+    /// Identity of the current load request (an Inline's FileLoader). It grows whenever a request
+    /// is replaced or cancelled (FileLoader.abort), so a result of an older request is recognized.
+    pub generation: u64,
+    /// `Date .now ()` (ms) at construction and when the load state last became COMPLETE / FAILED
+    /// (X3DUrlObject [_autoRefreshStartTime] / [_autoRefreshCompleteTime]).
+    pub start_ms: f64,
+    pub complete_ms: f64,
+    /// Due time (ms) of the auto refresh timer, if one is set.
+    pub timer: Option<f64>,
+    /// The scene of this node was shut down (Scripts called `shutdown ()`, interests removed).
+    pub scene_closed: bool,
 }
 
 /// X3DCast-like test against the X3D abstract type hierarchy for the types the runtime handles.
@@ -95,7 +106,9 @@ impl Runtime {
             n if followers::make(n).is_some() => self.nrt_mut(node).state = State::Follower(followers::make(n).unwrap()),
             "Inline" => {
                 self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
-                self.nrt_mut(node).state = State::UrlObject(Default::default());
+                self.add_private_field(node, "loadData", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
+                let now_ms = self.now * 1000.0;
+                self.nrt_mut(node).state = State::UrlObject(UrlState { start_ms: now_ms, complete_ms: now_ms, ..Default::default() });
             }
             "ImageTexture" | "MovieTexture" | "AudioClip" => self.nrt_mut(node).state = State::UrlObject(Default::default()),
             _ => {}
@@ -316,7 +329,7 @@ impl Runtime {
             | Cb::SequencerSetNext
             | Cb::SequencerSetKey
             | Cb::SequencerSetKeyValue => self.event_utils_call(node, i.cb),
-            Cb::UrlSetLoad | Cb::UrlSetUrl => self.url_object_changed(node, i.cb),
+            Cb::UrlSetLoad | Cb::UrlSetUrl | Cb::UrlLoadData | Cb::UrlSetAutoRefresh => self.url_object_changed(node, i.cb),
             Cb::SceneLoadCount => self.scene_load_count(node),
             Cb::RouteReconnect(id) => self.reconnect_route(id),
             Cb::ScriptField(_) | Cb::ScriptEventsProcessed | Cb::ScriptPrepareEvents => self.script_interest(node, i.cb, k),

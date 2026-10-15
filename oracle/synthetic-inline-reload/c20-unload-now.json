@@ -1,0 +1,3 @@
+{"world": "main-one.wrl", "authority": "XITE_COMPATIBILITY", "covers": [5], "dt": 0.1, "frames": 16,
+  "actions": [{"frame": 5, "type": "unloadNow", "name": "Inl"},
+               {"frame": 8, "type": "loadNow", "name": "Inl"}] }

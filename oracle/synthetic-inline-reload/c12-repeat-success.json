@@ -1,0 +1,7 @@
+{"world": "main-one.wrl", "authority": "X3D_REQUIRED", "covers": [10], "dt": 0.1, "frames": 22,
+  "actions": [{"frame": 3, "type": "url", "name": "Inl", "url": ["content-b.wrl"]},
+               {"frame": 6, "type": "url", "name": "Inl", "url": ["content-a.wrl"]},
+               {"frame": 9, "type": "url", "name": "Inl", "url": ["content-b.wrl"]},
+               {"frame": 12, "type": "url", "name": "Inl", "url": ["content-a.wrl"]},
+               {"frame": 15, "type": "url", "name": "Inl", "url": ["content-b.wrl"]},
+               {"frame": 18, "type": "url", "name": "Inl", "url": ["content-a.wrl"]}] }
