@@ -1,0 +1,5 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# VRML97 header, but the Inline uses the X3D `load` field: VRML97 6.25 has only url, bboxCenter and
+# bboxSize. The parser takes what the pinned X_ITE takes; this port adds nothing to VRML97 syntax.
+DEF Holder Group { children [ DEF Inl Inline { load FALSE url "content-a.wrl" } ] }

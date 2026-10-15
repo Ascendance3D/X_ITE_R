@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>R0.3-C oracle: Inline reload, load state and refresh, frame by frame</title>
+<!-- Lives inside the pinned src/ so X_ITE resolves its assets/ the same way it does upstream.
+     dump.html and anim.html stay untouched. Like anim.html this page drives the browser's frame loop
+     by hand (browser .advanceTime returns false, the harness calls [_traverse]) and runs a virtual clock:
+
+       * browser .getCurrentTime () returns T;
+       * Date .now () returns DATE (ms) from the first line on, so the autoRefresh bookkeeping of
+         X3DUrlObject (Date .now () at construction and at load completion) is deterministic;
+       * window .setTimeout / clearTimeout are a virtual queue that fires in due order.
+
+     Every console message is recorded in order with the harness step it was logged in
+     (window .__step), which is the frame-order evidence of the lane. -->
+<script>
+window.__step = 0;
+window.__console = [ ];
+
+for (const m of [ "log", "warn", "error" ])
+{
+   console [m] = (... a) =>
+   {
+      window .__console .push ({ step: window .__step, level: m, text: a .map (String) .join (" ") .split ("\n") [0] });
+   };
+}
+</script>
+<script src="../node_modules/libtess/libtess.cat.js"></script>
+<script src="../node_modules/@create3000/libgif/libgif.js"></script>
+<script src="../node_modules/apng-js/lib/index.js"></script>
+<x3d-canvas id="c" antialiased="false" splashScreen="false" contextMenu="false" notifications="false"
+   timings="false" contentScale="1" style="display:block;width:64px;height:64px"></x3d-canvas>
+<script type="module">
+// Virtual clock first, before X_ITE reads Date .now ().
+let T = 946684800, DATE = T * 1000, allow = true, timers = [ ], timerId = 0;
+
+Date .now = () => DATE;
+
+// Count the fetches by the page itself, from the call to the response: the harness waits for them too,
+// because the browser's request events reach it later than the page makes the call.
+let pendingFetch = 0;
+const realFetch  = window .fetch .bind (window);
+
+window .fetch        = (... args) => { ++ pendingFetch; return realFetch (... args) .finally (() => -- pendingFetch); };
+window .pendingFetch = () => pendingFetch;
+
+window .setTimeout = (fn, ms = 0, ... args) =>
+{
+   const id = ++ timerId;
+   timers .push ({ id, due: DATE + Math .max (+ms || 0, 0), seq: id, fn: () => fn (... args) });
+   return id;
+};
+
+window .clearTimeout = id => { timers = timers .filter (t => t .id !== id); };
+
+await import ("./x_ite.js");
+
+const browser  = document .getElementById ("c") .browser;
+const X3D      = window [Symbol .for ("X_ITE.X3D")];
+const traverse = browser [Symbol .for ("X_ITE.X3DBrowserContext.traverse")];
+
+browser .getCurrentTime      = () => T;
+browser .getCurrentFrameRate = () => 60;
+browser .advanceTime         = () => allow;
+
+function runTimers (untilMs)
+{
+   for (;;)
+   {
+      timers .sort ((a, b) => a .due - b .due || a .seq - b .seq);
+
+      const t = timers [0];
+
+      if (!t || t .due > untilMs)
+         break;
+
+      timers .shift ();
+
+      const saveT = T, saveDATE = DATE;
+
+      DATE = Math .max (DATE, t .due);
+      T    = Math .max (T, t .due / 1000);
+
+      try { t .fn (); } catch (e) { console .error (e); }
+
+      T    = saveT;
+      DATE = Math .max (saveDATE, DATE);
+   }
+}
+
+// The world is loaded without the browser's own frame loop: the harness drives every frame (the
+// pages load, the fetches settle, one frame at the same time T, until loadURL has finished), so the
+// order of the first messages does not depend on how fast the network answers.
+window .loaded = null;
+
+window .beginLoad = function (url, t0)
+{
+   T = t0;
+   DATE = t0 * 1000;
+   window .__step = 0;
+   window .loaded = null;
+   allow = false;
+
+   browser .loadURL (new X3D .MFString (url)) .then (
+      () => { window .loaded = { ok: true }; },
+      e  => { window .loaded = { ok: false, error: String (e ?.message ?? e) .split ("\n") [0] }; });
+};
+
+window .setDate = ms => { DATE = ms; };
+window .setStep = k => { window .__step = k; };
+
+// One browser frame at browser time `t` (seconds).
+window .step = function (t)
+{
+   runTimers (t * 1000);
+
+   T    = t;
+   DATE = Math .max (DATE, t * 1000);
+
+   allow = true;
+   traverse .call (browser, 0, undefined);
+   allow = false;
+};
+
+// Inline nodes are found by DEF path: "Mid/Leaf" is the node Leaf in the scene that Mid loaded.
+function nodeAt (path)
+{
+   let scene = browser .currentScene, node = null;
+
+   for (const part of path .split ("/"))
+   {
+      node  = scene .getNamedNode (part) .getValue ();
+      scene = node .getInternalScene ?.();
+   }
+
+   return node;
+}
+
+// What the harness does to an Inline, the way an embedding application would (SAI: field writes,
+// loadNow, unloadNow; `load`, `autoRefresh` and `autoRefreshTimeLimit` are X3DUrlObject fields).
+window .act = function (a)
+{
+   const n = nodeAt (a .name);
+
+   switch (a .type)
+   {
+      case "url":                  n ._url = new X3D .MFString (... a .url); break;
+      case "load":                 n ._load = a .value; break;
+      case "autoRefresh":          n ._autoRefresh = a .value; break;
+      case "autoRefreshTimeLimit": n ._autoRefreshTimeLimit = a .value; break;
+      case "loadNow":              n .loadNow () .catch (() => { }); break;
+      case "unloadNow":            n .unloadNow (); break;
+      case "remove":
+      {
+         // Take the Inline out of the scene graph: the Group `group` loses it from `children`.
+         const group = nodeAt (a .group);
+         group ._children = Array .from (group ._children) .filter (c => c .getValue () !== n);
+         break;
+      }
+      default: throw new Error (`unknown action ${a .type}`);
+   }
+};
+
+const C = X3D .X3DConstants;
+
+const stateName = value => ({
+   [C .NOT_STARTED_STATE]: "NOT_STARTED",
+   [C .IN_PROGRESS_STATE]: "IN_PROGRESS",
+   [C .COMPLETE_STATE]:    "COMPLETE",
+   [C .FAILED_STATE]:      "FAILED",
+}) [value];
+
+function inlines (scene, prefix, out)
+{
+   for (const field of scene .namedNodes)
+   {
+      const n = field .getValue ();
+
+      if (n ?.getTypeName () !== "Inline")
+         continue;
+
+      const internal = n .getInternalScene (), loaded = internal !== browser .getDefaultScene ();
+
+      out .push ({
+         path: prefix + n .getName (),
+         loadState: stateName (n .checkLoadState ()),
+         load: n ._load .getValue (),
+         url: Array .from (n ._url),
+         loaded,
+         roots: loaded ? Array .from (internal .rootNodes, r => r ?.getValue () ?.getTypeName () ?? null) : [ ],
+         children: n .groupNode ._children .length,
+         live: loaded ? internal .isLive () : null,
+      });
+
+      if (loaded)
+         inlines (internal, `${prefix}${n .getName ()}/`, out);
+   }
+}
+
+window .snapshot = function ()
+{
+   const scene = browser .currentScene, list = [ ];
+
+   inlines (scene, "", list);
+
+   return { loadCount: scene ._loadCount .getValue (), inlines: list, vrml: scene .toVRMLString () };
+};
+
+window .drainConsole = function ()
+{
+   const out = window .__console;
+   window .__console = [ ];
+   return out;
+};
+
+window .ready = true;
+</script>

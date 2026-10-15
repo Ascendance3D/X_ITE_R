@@ -335,11 +335,20 @@ impl Runtime {
         loop {
             let node_timeout = self.timeouts.iter().enumerate().filter(|(_, t)| t.time <= now).min_by(|a, b| a.1.time.partial_cmp(&b.1.time).unwrap()).map(|(i, _)| i);
 
-            // The auto refresh timers of EXTERNPROTO declarations (setTimeout) run in due order with these.
-            if let Some((due, e)) = self.extern_next_timer(now) {
+            // The auto refresh timers of EXTERNPROTO declarations and Inlines (setTimeout) run in due order with these.
+            let extern_timer = self.extern_next_timer(now).map(|(due, e)| (due, Some(e), 0));
+            let inline_timer = self.inline_next_timer(now).map(|(due, n)| (due, None, n));
+            let url_timer = [extern_timer, inline_timer].into_iter().flatten().min_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+
+            if let Some((due, extern_id, inline_node)) = url_timer {
                 if node_timeout.is_none_or(|i| due < self.timeouts[i].time * 1000.0) {
                     self.now = now;
-                    self.extern_perform_auto_refresh(e);
+
+                    match extern_id {
+                        Some(e) => self.extern_perform_auto_refresh(e),
+                        None => self.inline_perform_auto_refresh(inline_node),
+                    }
+
                     continue;
                 }
             }

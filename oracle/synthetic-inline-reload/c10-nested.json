@@ -1,0 +1,3 @@
+{"world": "main-nested.wrl", "authority": "X3D_REQUIRED", "covers": [8, 14], "dt": 0.1, "frames": 16,
+  "actions": [{"frame": 6, "type": "url", "name": "Mid/Leaf", "url": ["content-b.wrl"]},
+               {"frame": 10, "type": "url", "name": "Mid", "url": ["content-c.wrl"]}] }

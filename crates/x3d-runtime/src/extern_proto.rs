@@ -279,13 +279,7 @@ impl Runtime {
 
         let now = self.now_ms();
         let st = self.xs(e);
-        let elapsed = (now - st.complete_ms) / 1000.0;
-        let auto_refresh = st.auto_refresh.max(0.0);
-        let mut interval = auto_refresh - elapsed;
-
-        if interval < 0.0 {
-            interval = (elapsed / auto_refresh).ceil() * auto_refresh - elapsed;
-        }
+        let interval = url_object::refresh_interval(st.auto_refresh, (now - st.complete_ms) / 1000.0);
 
         self.extern_set_auto_refresh_timer(e, interval);
     }
@@ -295,19 +289,7 @@ impl Runtime {
         let now = self.now_ms();
         let st = self.xs(e);
 
-        st.timer = None;
-
-        if st.auto_refresh <= 0.0 {
-            return;
-        }
-
-        let limit = st.auto_refresh_time_limit;
-
-        if limit > 0.0 && (now - st.start_ms) / 1000.0 > limit - interval {
-            return;
-        }
-
-        st.timer = Some(now + interval * 1000.0);
+        st.timer = url_object::refresh_timer_due(now, st.start_ms, st.auto_refresh, st.auto_refresh_time_limit, interval);
     }
 
     /// The due time (ms) and declaration of the earliest auto refresh timer due by `now` (seconds).
@@ -788,18 +770,21 @@ impl Runtime {
         self.refresh_live();
     }
 
-    /// Is `ctx` a disposed instance body, or inside one?
+    /// Is `ctx` a disposed instance body or a disposed Inline scene, or inside one?
     pub fn ctx_dead(&self, ctx: CtxId) -> bool {
         let mut c = ctx;
 
-        for _ in 0..64 {
-            if self.dead_ctxs.contains(&c) {
+        for _ in 0..256 {
+            if self.dead_ctxs.contains(&c) || self.disposed_scenes.contains(&c) {
                 return true;
             }
 
             match self.scene.ctx(c).outer {
                 Outer::Instance(n) => c = self.scene.node(n).ctx,
-                _ => return false,
+                _ => match self.scene.ctx(c).parent {
+                    Some(p) => c = p,
+                    None => return false,
+                },
             }
         }
 

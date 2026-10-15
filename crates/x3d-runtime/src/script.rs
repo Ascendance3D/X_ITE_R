@@ -32,6 +32,8 @@ pub struct ScriptState {
     pub load_state: nodes::LoadState,
     /// Callback names connected for this script (name, is function).
     pub functions: Vec<String>,
+    /// The Script belongs to a scene that was disposed: it takes no more events.
+    pub closed: bool,
 }
 
 impl Runtime {
@@ -131,6 +133,26 @@ impl Runtime {
         }
 
         Ok(())
+    }
+
+    /// The Script of a scene that was disposed (an Inline whose scene was replaced): it stops
+    /// getting `prepareEvents`, `eventsProcessed` and field events. X_ITE keeps them all.
+    pub(crate) fn script_close(&mut self, node: NodeId) {
+        if self.script_state(node).closed {
+            return;
+        }
+
+        self.script_state(node).closed = true;
+
+        if let Some(k) = self.private_field(self.browser_node, "prepareEvents") {
+            self.remove_interest(k, node, Cb::ScriptPrepareEvents);
+        }
+
+        self.nrt_mut(node).interests.retain(|i| !(i.node == node && i.cb == Cb::ScriptEventsProcessed));
+
+        for i in 0..self.scene.node(node).user_fields.len() {
+            self.remove_interest((node, FieldLoc::User(i)), node, Cb::ScriptField(i));
+        }
     }
 
     /// call__ / set_field__ with setError on a thrown value.

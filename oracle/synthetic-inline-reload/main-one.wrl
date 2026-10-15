@@ -1,0 +1,13 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# One Inline inside a Group, and a parent clock whose routes must survive every reload of the Inline.
+DEF Holder Group { children [ DEF Inl Inline { url "content-a.wrl" } ] }
+DEF ParentClock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF ParentScript Script {
+  eventIn SFTime tick
+  field SFInt32 n 0
+  url "javascript:
+    function tick (t) { n = n + 1; print ('parent tick ' + n); }
+  "
+}
+ROUTE ParentClock.cycleTime TO ParentScript.tick

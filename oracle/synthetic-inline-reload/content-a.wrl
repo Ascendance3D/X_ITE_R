@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# Scene A: a looping clock, a script that reports every tenth of the cycle and a mover.
+DEF ClockA TimeSensor { cycleInterval 1 loop TRUE }
+DEF ReportA Script {
+  eventIn SFFloat set_fraction
+  eventOut SFVec3f pos
+  field SFInt32 last -1
+  url "javascript:
+    function initialize () { print ('A initialize'); }
+    function set_fraction (f) {
+      pos = new SFVec3f (f * 2, 0, 0);
+      var q = Math.floor (f * 10);
+      if (q != last) { last = q; print ('A fraction ' + q); }
+    }
+    function shutdown () { print ('A shutdown'); }
+  "
+}
+DEF MoverA Transform { children Shape { geometry Box { size 1 1 1 } } }
+ROUTE ClockA.fraction_changed TO ReportA.set_fraction
+ROUTE ReportA.pos TO MoverA.set_translation

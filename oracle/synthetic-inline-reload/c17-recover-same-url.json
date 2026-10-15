@@ -1,0 +1,3 @@
+{"world": "main-late.wrl", "authority": "IMPLEMENTATION_SAFETY", "covers": [16], "dt": 0.1, "frames": 16,
+  "actions": [{"frame": 6, "type": "publish", "path": "late.wrl", "from": "content-b.wrl"},
+               {"frame": 6, "type": "url", "name": "Inl", "url": ["late.wrl"]}] }

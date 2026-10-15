@@ -1,0 +1,20 @@
+# Known differences against the X_ITE oracle for synthetic-inline-reload.
+# case<TAB>first step<TAB>last step<TAB>fields<TAB>reason
+# Every line is a deliberate difference (IMPLEMENTATION_SAFETY). The Rust behavior in these steps is
+# asserted directly by the tests of crates/x3d-script/tests/inline_reload_safety.rs.
+#
+# An older request that finishes after a newer one was made replaces the result for a frame in X_ITE
+# (B is shown, then C). Rust drops the older result: B is never shown, A stays until C completes.
+c07-overlap-frames	5	6	console,inlines,loadCount	older request must not replace the newer one
+# `load` set to FALSE while a request is in flight: X_ITE still shows the scene when the request
+# completes (B, live, with load FALSE). Rust keeps the Inline NOT_STARTED and empty.
+c09-disable-while-loading	5	16	console,inlines	a disabled Inline must not accept a late result
+# A Script of a scene that was replaced keeps getting prepareEvents in X_ITE, for ever (the scene is
+# disposed, the Script is not). Rust removes the Script's prepareEvents and eventsProcessed interests.
+c29-script-interests	7	12	console	a disposed scene must not keep Script event interests
+# X3D 4.0 (9.3.2 X3DUrlObject): "If the preceding file loading fails ... no automatic refresh is performed." X_ITE keeps
+# refreshing after a failure and loads the file once it exists. Rust stays FAILED (X3D_REQUIRED).
+c35-auto-refresh-after-failure	5	16	console,inlines,loadCount	no automatic refresh after a failed load (X3D 4.0, 9.3.2)
+# An Inline in a scene that is disposed while its request is queued: X_ITE still fetches and runs the scene
+# ("B initialize", then one "B fraction" in a scene nobody shows). Rust cancels the request with the scene.
+c36-dispose-nested-queued	6	7	console	a nested Inline of a disposed scene must not load

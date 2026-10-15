@@ -1,0 +1,4 @@
+{"world": "main-x3d.wrl", "authority": "X3D_REQUIRED", "covers": [1, 2, 5, 7], "dt": 0.1, "frames": 18,
+  "actions": [{"frame": 4, "type": "load", "name": "Inl", "value": true},
+               {"frame": 8, "type": "url", "name": "Inl", "url": ["content-b.wrl"]},
+               {"frame": 11, "type": "load", "name": "Inl", "value": false}] }

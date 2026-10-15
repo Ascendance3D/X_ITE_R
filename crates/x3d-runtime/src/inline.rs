@@ -16,6 +16,31 @@
 //!    Inlines hold it) and then for `browser .nextFrame ()`: the finishEvents of the next frame.
 //! 4. `setInternalScene`: the old scene is disposed, the new one is attached and made live
 //!    (TimeSensors resume), the load state becomes COMPLETE.
+//!
+//! What belongs to which authority (R0.3-C):
+//!
+//! * VRML97 6.25 / X3D 4.0 Inline: the `url` list is tried in order of preference; an empty list
+//!   does nothing; the results are undefined if a file changes after it was loaded. X3D adds `load`
+//!   (FALSE: nothing is loaded), `autoRefresh` and `autoRefreshTimeLimit` (X3DUrlObject). VRML97 has
+//!   none of these three fields; this port does not add them to VRML97 syntax, it takes whatever the
+//!   parser accepts, as X_ITE does.
+//! * X_ITE (not in either standard): `loadNow`, `unloadNow`, the `loadData` buffer (several requests
+//!   before the next frame make one load), the frame on which each step happens.
+//!
+//! Where the pinned X_ITE (34cdf9f97) is unsafe, this port differs on purpose (tests in
+//! `crates/x3d-script/tests/inline_reload*.rs` name each one):
+//!
+//! * Load identity. Every request has a generation (`UrlState::generation`), as the EXTERNPROTO
+//!   declarations of R0.3-B. A scene that finishes for an older generation (a slower earlier request,
+//!   or a request cancelled by `load` FALSE) is discarded; X_ITE lets it replace the current result
+//!   or show a disabled Inline.
+//! * A scene that is disposed takes its nested Inlines with it: their loads are cancelled, their
+//!   scenes are not live, the Scripts in them stop receiving `prepareEvents` and `eventsProcessed`.
+//!   X_ITE leaves all of that running.
+//! * A scene that contains itself (directly, or through other scenes) is not loaded again: the
+//!   candidate fails with an error. X_ITE loads it without end.
+//! * A parse error prints the parser's message first, as VRMLParser does.
+//! * No automatic refresh after a failed load (X3D 4.0, 9.3.2 X3DUrlObject); X_ITE keeps refreshing.
 
 use crate::loader::{FileLoader, Loaded};
 use crate::nodes::LoadState;
@@ -26,6 +51,8 @@ use crate::*;
 pub struct PendingScene {
     /// The Inline node.
     pub node: NodeId,
+    /// The request that fetched the scene.
+    pub generation: u64,
     /// Root context of the scene.
     pub ctx: CtxId,
     /// The internal node that owns the scene's `loadCount` field.
@@ -37,6 +64,7 @@ pub struct PendingScene {
 #[derive(Clone, Debug)]
 pub struct FrameWaiter {
     pub node: NodeId,
+    pub generation: u64,
     pub ctx: CtxId,
 }
 
@@ -79,6 +107,19 @@ impl Runtime {
             self.set_value(k, FieldValue::SFInt32(value));
         }
 
+        // X3DUrlObject.setLoadState: COMPLETE restarts the auto refresh timer. X_ITE does so after
+        // FAILED too; X3D 4.0 (9.3.2 X3DUrlObject) says "if the preceding file loading fails ... no
+        // automatic refresh is performed", and this port follows the standard.
+        match state {
+            LoadState::Complete => self.inline_auto_refresh_complete(node),
+            LoadState::Failed => {
+                if let Some(s) = self.url_state_mut(node) {
+                    s.timer = None;
+                }
+            }
+            _ => {}
+        }
+
         // X3DScene.addLoadingObject / removeLoadingObject: `_loadCount = size`.
         self.update_load_count(self.scene.scene_root(self.scene.node(node).ctx));
     }
@@ -114,6 +155,16 @@ impl Runtime {
     pub(crate) fn inline_initialize(&mut self, node: NodeId) {
         self.interest(node, "load", Cb::UrlSetLoad);
         self.interest(node, "url", Cb::UrlSetUrl);
+
+        if self.builtin_name(node) == Some("Inline") {
+            if let Some(k) = self.private_field(node, "loadData") {
+                self.add_interest(k, node, Cb::UrlLoadData);
+            }
+
+            self.interest(node, "autoRefresh", Cb::UrlSetAutoRefresh);
+            self.interest(node, "autoRefreshTimeLimit", Cb::UrlSetAutoRefresh);
+        }
+
         self.request_immediate_load(node);
     }
 
@@ -137,11 +188,67 @@ impl Runtime {
         }
 
         self.set_load_state(node, LoadState::InProgress);
-        self.tasks.push_back(Task::UrlLoad(node));
+
+        // `if (this .isInitialized ()) this ._loadData = time; else this .loadData ()`: the field
+        // event is the buffer that makes several requests before it is processed one load.
+        if self.builtin_name(node) == Some("Inline") && self.nrt(node).is_some_and(|n| n.initialized) {
+            if let Some(k) = self.private_field(node, "loadData") {
+                let t = self.now;
+                self.set_value(k, FieldValue::SFTime(t));
+                return;
+            }
+        }
+
+        self.url_start_load(node);
     }
 
     fn url_state_missing(&self, node: NodeId) -> bool {
         !matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::UrlObject(_)))
+    }
+
+    fn url_state_mut(&mut self, node: NodeId) -> Option<&mut nodes::UrlState> {
+        match &mut self.nrt_mut(node).state {
+            nodes::State::UrlObject(s) => Some(s),
+            _ => None,
+        }
+    }
+
+    /// Inline.loadData: `this .fileLoader ?.abort ()`, then a new FileLoader whose fetch is a macrotask.
+    /// Only an Inline has a request identity; the other nodes that fetch keep generation 0.
+    fn url_start_load(&mut self, node: NodeId) {
+        let generation = if self.builtin_name(node) == Some("Inline") { self.inline_abort(node) } else { 0 };
+
+        self.tasks.push_back(Task::UrlLoad(node, generation));
+    }
+
+    /// FileLoader.abort () of the node's current request: whatever that request still delivers is
+    /// recognized as old and dropped. A scene it already fetched and parsed is discarded now.
+    /// Returns the identity of the request that follows.
+    fn inline_abort(&mut self, node: NodeId) -> u64 {
+        let generation = self.url_state_mut(node).map_or(0, |s| {
+            s.generation += 1;
+            s.generation
+        });
+
+        for p in self.pending_scenes.iter().filter(|p| p.node == node).cloned().collect::<Vec<_>>() {
+            self.pending_scenes.retain(|q| q.ctx != p.ctx);
+            self.dispose_scene(p.ctx);
+        }
+
+        for w in self.frame_waiters.iter().filter(|w| w.node == node).cloned().collect::<Vec<_>>() {
+            self.frame_waiters.retain(|q| q.ctx != w.ctx);
+            self.dispose_scene(w.ctx);
+        }
+
+        generation
+    }
+
+    /// Is `generation` the request the node is waiting for? A disabled, replaced, cancelled or
+    /// disposed Inline is not waiting for anything.
+    pub(crate) fn inline_request_is_current(&self, node: NodeId, generation: u64) -> bool {
+        let current = matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::UrlObject(s)) if s.generation == generation && s.load_state == LoadState::InProgress);
+
+        current && !self.ctx_dead(self.scene.node(node).ctx)
     }
 
     /// X3DUrlObject.requestUnload.
@@ -156,14 +263,27 @@ impl Runtime {
         self.set_load_state(node, LoadState::NotStarted);
     }
 
-    /// `unloadData ()`: an Inline replaces its scene by the browser's empty default scene.
+    /// `unloadData ()`: an Inline aborts its request and replaces its scene by the browser's empty
+    /// default scene.
     fn unload_data(&mut self, node: NodeId) {
         if self.builtin_name(node) == Some("Inline") {
+            self.inline_abort(node);
             self.set_internal_scene(node, SceneArg::Default);
         }
     }
 
-    /// X3DUrlObject.set_load__ / set_url__ (the interests on `load` and `url`).
+    /// X3DUrlObject.loadNow: start over from NOT_STARTED.
+    pub fn inline_load_now(&mut self, node: NodeId) {
+        self.set_load_state(node, LoadState::NotStarted);
+        self.request_immediate_load(node);
+    }
+
+    /// X3DUrlObject.unloadNow.
+    pub fn inline_unload_now(&mut self, node: NodeId) {
+        self.request_unload(node);
+    }
+
+    /// X3DUrlObject.set_load__ / set_url__ / loadData / set_autoRefresh__ (the interests).
     pub(crate) fn url_object_changed(&mut self, node: NodeId, cb: Cb) {
         match cb {
             Cb::UrlSetLoad => {
@@ -181,30 +301,49 @@ impl Runtime {
                 self.set_load_state(node, LoadState::NotStarted);
                 self.request_immediate_load(node);
             }
+            Cb::UrlLoadData => {
+                // A request that was cancelled before its event was processed (`load` FALSE) loads nothing.
+                if self.url_load_state(node) == LoadState::InProgress {
+                    self.url_start_load(node);
+                }
+            }
+            Cb::UrlSetAutoRefresh => self.inline_auto_refresh_changed(node),
             _ => {}
         }
     }
 
     /// Inline.loadData → FileLoader.createX3DFromURL (url, null, setInternalScene).
-    pub(crate) fn inline_load(&mut self, node: NodeId) {
+    pub(crate) fn inline_load(&mut self, node: NodeId, generation: u64) {
         let loader = FileLoader { type_name: "Inline".into(), base: self.base_url(node), data_as_string: true };
         let urls = self.url_strings(node);
 
         let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
             Loaded::Script(_) => Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
-            Loaded::Data(data, url) => rt.inline_scene(node, &data, url.as_str()),
+            Loaded::Data(data, url) => rt.inline_scene(node, generation, &data, &url),
         });
 
-        if !ok {
-            // loadDocumentError: `callback (null)`.
+        // loadDocumentError: `callback (null)`. A request that was replaced meanwhile has nothing to say.
+        if !ok && self.inline_request_is_current(node, generation) {
             self.set_internal_scene(node, SceneArg::None);
         }
     }
 
     /// FileLoader.createX3DFromString for an Inline: parse the scene into a new X3DScene, set up
     /// its nodes (Scripts initialize in the microtasks that follow) and wait for its loadCount.
-    fn inline_scene(&mut self, node: NodeId, data: &[u8], url: &str) -> Result<(), String> {
-        let mut scene = x3d_parse::parse_bytes(data, url).map_err(|e| format!("Error: {e}"))?;
+    fn inline_scene(&mut self, node: NodeId, generation: u64, data: &[u8], url: &url::Url) -> Result<(), String> {
+        if self.inline_is_cyclic(node, url) {
+            return Err("Error: Cyclic Inline: the scene is already being loaded by a scene that contains this Inline.".into());
+        }
+
+        let mut scene = match x3d_parse::parse_bytes(data, url.as_str()) {
+            Ok(scene) => scene,
+            Err(x3d_parse::LoadError::Parse(e)) => {
+                // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
+                self.log_error(format!("Error: {}", e.message));
+                return Err(format!("Error: \n{e}"));
+            }
+            Err(e) => return Err(format!("Error: {e}")),
+        };
 
         for w in std::mem::take(&mut scene.warnings) {
             self.log_warn(w);
@@ -216,16 +355,62 @@ impl Runtime {
         let m = self.scene.merge_inline(scene, parent, node);
 
         let (scene_node, count) = self.new_load_count_scene();
-        self.pending_scenes.push(PendingScene { node, ctx: m.root_ctx, scene_node });
+        self.pending_scenes.push(PendingScene { node, generation, ctx: m.root_ctx, scene_node });
 
         // `new X3DScene (browser)`: setLive (false).
         self.inline_live.insert(m.root_ctx, false);
 
+        let root = m.root_ctx;
+
         self.attach_merged_scene(m, ctx_count, setup_order);
+
+        // A Script that initialized just now may have replaced or disabled this very Inline.
+        if !self.inline_request_is_current(node, generation) {
+            self.pending_scenes.retain(|p| p.ctx != root);
+            self.dispose_scene(root);
+            return Ok(());
+        }
 
         // FileLoader.setScene: `scene ._loadCount .addEvent ()`.
         self.add_event(count);
         Ok(())
+    }
+
+    /// Does the scene at `url` already contain this Inline, directly or through the scenes that loaded
+    /// it? Such a load would never end. A file that is used in two places is not a cycle: only the
+    /// scenes that contain the Inline count (no fragment).
+    fn inline_is_cyclic(&self, node: NodeId, url: &url::Url) -> bool {
+        let strip = |s: &str| s.split('#').next().unwrap_or("").to_string();
+        let target = strip(url.as_str());
+        let mut c = self.scene.node(node).ctx;
+
+        for _ in 0..512 {
+            // The body of a PROTO instance belongs to the scene of the instance.
+            if let Outer::Instance(n) = self.scene.ctx(c).outer {
+                c = self.scene.node(n).ctx;
+                continue;
+            }
+
+            let root = self.scene.scene_root(c);
+
+            if strip(self.scene.world_url_of(root)) == target {
+                return true;
+            }
+
+            if root == ROOT {
+                return false;
+            }
+
+            c = match self.scene.ctx(root).outer {
+                Outer::Inline(Some(n)) => self.scene.node(n).ctx,
+                _ => match self.scene.ctx(root).parent {
+                    Some(p) => p,
+                    None => return false,
+                },
+            };
+        }
+
+        true
     }
 
     /// The scene object that owns `loadCount` of a loaded scene (FileLoader.setScene); its
@@ -289,7 +474,12 @@ impl Runtime {
         match (inline, ext) {
             (Some(i), _) => {
                 let p = self.pending_scenes.remove(i);
-                self.frame_waiters.push(FrameWaiter { node: p.node, ctx: p.ctx });
+
+                if self.inline_request_is_current(p.node, p.generation) {
+                    self.frame_waiters.push(FrameWaiter { node: p.node, generation: p.generation, ctx: p.ctx });
+                } else {
+                    self.dispose_scene(p.ctx);
+                }
             }
             (None, Some(i)) => {
                 let p = self.pending_externs.remove(i);
@@ -302,7 +492,12 @@ impl Runtime {
     /// The continuation of the `nextFrame ()` promises: after the finishEvents of a frame.
     pub(crate) fn finish_frame(&mut self) {
         for w in std::mem::take(&mut self.frame_waiters) {
-            self.set_internal_scene(w.node, SceneArg::Scene(w.ctx));
+            if self.inline_request_is_current(w.node, w.generation) {
+                self.set_internal_scene(w.node, SceneArg::Scene(w.ctx));
+            } else {
+                // The request was replaced, disabled or its Inline disposed while the scene waited.
+                self.dispose_scene(w.ctx);
+            }
         }
 
         for p in std::mem::take(&mut self.extern_frame_waiters) {
@@ -392,17 +587,197 @@ impl Runtime {
     /// (X3DExecutionContext.dispose → deleteRoute → X3DRoute.dispose) and the scene goes not live
     /// (X3DBaseNode.dispose → setLive (false)), which pauses its TimeSensors and followers.
     ///
-    /// The nodes are not disposed: the root nodes' SFNode elements are not the cached wrappers
-    /// (`SFNodeCache .get (node) === this` in SFNode.dispose is false), so `node .dispose ()` is
-    /// never called. A Script of the scene keeps its callbacks and gets no `shutdown ()`; its
-    /// prepareEvents interest on the browser even keeps firing.
+    /// The nodes are not disposed, as in X_ITE: the root nodes' SFNode elements are not the cached
+    /// wrappers (`SFNodeCache .get (node) === this` in SFNode.dispose is false), so `node .dispose ()`
+    /// is never called. This port goes further than X_ITE in what it stops in the scene and in
+    /// every scene inside it (a nested Inline's scene, the body of a PROTO instance):
+    ///
+    /// * routes are deleted, scenes go not live;
+    /// * a nested Inline cancels its request and drops the scene it has parsed (X_ITE lets it finish);
+    /// * a Script stops getting `prepareEvents` and `eventsProcessed` (X_ITE keeps calling them for
+    ///   ever). It still gets no `shutdown ()`: VRML97 4.12.3 asks for one, X_ITE has none, and the
+    ///   accepted corpus baselines do not expect it (see the report).
     pub(crate) fn dispose_scene(&mut self, root: CtxId) {
-        for r in std::mem::take(&mut self.scene.contexts[root].routes) {
-            self.dispose_route(r);
+        if !self.disposed_scenes.insert(root) {
+            return;
         }
 
-        self.inline_live.insert(root, false);
+        let inside: Vec<CtxId> = (0..self.scene.contexts.len()).filter(|&c| self.ctx_within(c, root)).collect();
+
+        for &c in &inside {
+            for r in std::mem::take(&mut self.scene.contexts[c].routes) {
+                self.dispose_route(r);
+            }
+
+            if let Some(live) = self.inline_live.get_mut(&c) {
+                *live = false;
+            }
+        }
+
+        let inside: std::collections::HashSet<CtxId> = inside.into_iter().collect();
+        let nodes: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| inside.contains(&self.scene.node(n).ctx)).collect();
+
+        for &n in &nodes {
+            match self.builtin_name(n) {
+                Some("Inline") => self.inline_close(n),
+                Some("Script") => self.script_close(n),
+                _ => {}
+            }
+        }
+
+        // The nodes get their last live change (a TimeSensor stops, a follower pauses) and are
+        // forgotten: a disposed scene never goes live again, and the lists must not grow with every reload.
         self.refresh_live();
+
+        let dead: std::collections::HashSet<NodeId> = nodes.into_iter().collect();
+
+        self.live_watchers.retain(|(n, _)| !dead.contains(n));
+        self.followers.retain(|n| !dead.contains(n));
+    }
+
+    /// Is `ctx` the context `root`, or inside it (through scenes and PROTO instance bodies)?
+    fn ctx_within(&self, ctx: CtxId, root: CtxId) -> bool {
+        let mut c = ctx;
+
+        for _ in 0..256 {
+            if c == root {
+                return true;
+            }
+
+            match self.scene.ctx(c).outer {
+                Outer::Instance(n) => c = self.scene.node(n).ctx,
+                _ => match self.scene.ctx(c).parent {
+                    Some(p) => c = p,
+                    None => return false,
+                },
+            }
+        }
+
+        false
+    }
+
+    /// An Inline in a scene that was disposed: no request, no timer, no scene, nothing in progress.
+    fn inline_close(&mut self, node: NodeId) {
+        let Some(s) = self.url_state_mut(node) else {
+            return;
+        };
+
+        if s.scene_closed {
+            return;
+        }
+
+        s.scene_closed = true;
+        s.timer = None;
+
+        self.inline_abort(node);
+
+        if let Some(c) = self.inline_scenes.remove(&node) {
+            self.dispose_scene(c);
+        }
+
+        if self.url_load_state(node) == LoadState::InProgress {
+            self.set_load_state(node, LoadState::NotStarted);
+        }
+    }
+
+    // --- X3DUrlObject auto refresh ----------------------------------------------------------
+
+    /// `Date .now ()` in ms.
+    fn url_now_ms(&self) -> f64 {
+        self.now * 1000.0
+    }
+
+    /// X3DUrlObject.setLoadState (COMPLETE, FAILED): remember when, set the timer for `autoRefresh`.
+    fn inline_auto_refresh_complete(&mut self, node: NodeId) {
+        let now = self.url_now_ms();
+        let interval = self.get_f64(node, "autoRefresh").max(0.0);
+
+        if let Some(s) = self.url_state_mut(node) {
+            s.complete_ms = now;
+        }
+
+        self.inline_set_auto_refresh_timer(node, interval);
+    }
+
+    /// X3DUrlObject.setAutoRefreshTimer.
+    fn inline_set_auto_refresh_timer(&mut self, node: NodeId, interval: f64) {
+        let now = self.url_now_ms();
+        let (auto_refresh, limit) = (self.get_f64(node, "autoRefresh"), self.get_f64(node, "autoRefreshTimeLimit"));
+
+        if let Some(s) = self.url_state_mut(node) {
+            s.timer = url_object::refresh_timer_due(now, s.start_ms, auto_refresh, limit, interval);
+        }
+    }
+
+    /// X3DUrlObject.set_autoRefresh__ (`autoRefresh` or `autoRefreshTimeLimit` was set).
+    fn inline_auto_refresh_changed(&mut self, node: NodeId) {
+        if self.url_load_state(node) != LoadState::Complete {
+            return;
+        }
+
+        let now = self.url_now_ms();
+        let auto_refresh = self.get_f64(node, "autoRefresh");
+        let complete = match self.nrt(node).map(|n| &n.state) {
+            Some(nodes::State::UrlObject(s)) => s.complete_ms,
+            _ => now,
+        };
+
+        self.inline_set_auto_refresh_timer(node, url_object::refresh_interval(auto_refresh, (now - complete) / 1000.0));
+    }
+
+    /// The due time (ms) and Inline of the earliest auto refresh timer due by `now` (seconds).
+    pub(crate) fn inline_next_timer(&self, now: f64) -> Option<(f64, NodeId)> {
+        (0..self.scene.nodes.len() as NodeId)
+            .filter_map(|n| match self.nrt(n).map(|r| &r.state) {
+                Some(nodes::State::UrlObject(s)) if self.builtin_name(n) == Some("Inline") => s.timer.map(|due| (due, n)),
+                _ => None,
+            })
+            .filter(|(due, _)| *due <= now * 1000.0)
+            .min_by(|a, b| a.0.partial_cmp(&b.0).unwrap().then(a.1.cmp(&b.1)))
+    }
+
+    /// X3DUrlObject.performAutoRefresh: start over from NOT_STARTED (without the cache).
+    pub(crate) fn inline_perform_auto_refresh(&mut self, node: NodeId) {
+        if let Some(s) = self.url_state_mut(node) {
+            s.timer = None;
+        }
+
+        self.set_load_state(node, LoadState::NotStarted);
+        self.request_immediate_load(node);
+    }
+}
+
+/// What is left of Inline loads and scenes (for tests: nothing may stay behind).
+#[derive(Clone, Debug, Default)]
+pub struct InlineDiagnostics {
+    /// Scenes parsed and set up that wait for their loadCount.
+    pub pending_scenes: usize,
+    /// Scenes whose loadCount reached 0 and that wait for the next frame.
+    pub frame_waiters: usize,
+    /// Inline nodes whose load state is IN_PROGRESS.
+    pub in_progress: usize,
+    /// Scenes of Inlines that are live (their TimeSensors run).
+    pub live_scenes: usize,
+    /// Live scenes that no Inline shows any more.
+    pub orphan_live_scenes: usize,
+    /// Armed auto refresh timers.
+    pub timers: usize,
+}
+
+impl Runtime {
+    pub fn inline_diagnostics(&self) -> InlineDiagnostics {
+        let shown: std::collections::HashSet<CtxId> = self.inline_scenes.values().copied().collect();
+        // Only the scenes that an Inline loaded (an EXTERNPROTO's scene is live too, but no Inline shows it).
+        let live: Vec<CtxId> = self.inline_live.iter().filter(|(c, l)| **l && matches!(self.scene.ctx(**c).outer, Outer::Inline(Some(_)))).map(|(c, _)| *c).collect();
+
+        InlineDiagnostics {
+            pending_scenes: self.pending_scenes.len(),
+            frame_waiters: self.frame_waiters.len(),
+            in_progress: (0..self.scene.nodes.len() as NodeId).filter(|&n| self.builtin_name(n) == Some("Inline") && self.url_load_state(n) == LoadState::InProgress).count(),
+            live_scenes: live.len(),
+            orphan_live_scenes: live.iter().filter(|c| !shown.contains(c)).count(),
+            timers: (0..self.scene.nodes.len() as NodeId).filter(|&n| matches!(self.nrt(n).map(|r| &r.state), Some(nodes::State::UrlObject(s)) if s.timer.is_some())).count(),
+        }
     }
 }
 

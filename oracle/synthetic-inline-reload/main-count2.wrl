@@ -1,0 +1,10 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# A Script in the world counts the frames it is asked to prepare; 2 Inline level(s) are loading.
+DEF Counter Script {
+  field SFInt32 frames 0
+  url "javascript:
+    function prepareEvents (t) { frames = frames + 1; print ('world prepare ' + frames); }
+  "
+}
+DEF Mid Inline { url "nest-mid.wrl" }

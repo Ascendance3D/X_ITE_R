@@ -1,0 +1,14 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+DEF MidClock TimeSensor { cycleInterval 0.3 loop TRUE }
+DEF MidScript Script {
+  eventIn SFTime tick
+  field SFInt32 n 0
+  url "javascript:
+    function initialize () { print ('Mid initialize'); }
+    function tick (t) { n = n + 1; print ('Mid tick ' + n); }
+    function shutdown () { print ('Mid shutdown'); }
+  "
+}
+ROUTE MidClock.cycleTime TO MidScript.tick
+DEF MidGroup Group { children [ DEF Leaf Inline { url "content-a.wrl" } ] }

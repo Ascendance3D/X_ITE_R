@@ -1,0 +1,3 @@
+{"world": "main-nested.wrl", "authority": "IMPLEMENTATION_SAFETY", "covers": [9, 12], "dt": 0.1, "frames": 14,
+  "actions": [{"frame": 5, "type": "url", "name": "Mid", "url": ["content-c.wrl"]},
+               {"frame": 6, "type": "url", "name": "Mid/Leaf", "url": ["content-b.wrl"]}] }

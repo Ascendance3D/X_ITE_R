@@ -1,0 +1,16 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-C (no archive content).
+# A scene that declares an EXTERNPROTO and uses it.
+EXTERNPROTO Gizmo [ field SFInt32 level eventIn SFInt32 poke ] [ "lib-gizmo-two.wrl#Gizmo" ]
+DEF GizmoOne Gizmo { level 3 }
+DEF GizmoClock TimeSensor { cycleInterval 0.4 loop TRUE }
+DEF GizmoDriver Script {
+  eventIn SFTime tick
+  eventOut SFInt32 poke_out
+  field SFInt32 n 0
+  url "javascript:
+    function tick (t) { n = n + 1; poke_out = n; }
+  "
+}
+ROUTE GizmoClock.cycleTime TO GizmoDriver.tick
+ROUTE GizmoDriver.poke_out TO GizmoOne.poke
