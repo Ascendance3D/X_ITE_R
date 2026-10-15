@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# R0.2-C1 reproducible consumer of the published crates.io 0.1.0 archives.
+#
+#   bash crates/r0-2-c-tests/published-consumer/published-consumer.sh [OUT_DIR]
+#
+# OUT_DIR must be outside any source tree. Default: /tmp/r02c1-published-consumer.
+# The script refuses to reuse an existing OUT_DIR. It never edits the archives or the
+# extracted crates: vrml and x3d reach the extracted vrml97 through an explicit
+# [patch.crates-io] entry in the consumer manifest. Exit 0 only when every step passes.
+set -u -o pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ARCHIVES="${R02C1_ARCHIVES:-/home/ryan/Projects/cybertown/X_ITE/scratch/rust-r01a-evidence/published-crates}"
+OUT="${1:-/tmp/r02c1-published-consumer}"
+LOG="$OUT/commands.log"
+
+# SHA-256 values recorded by R0.1A (R0.1A-BASELINE-REPORT.md, "Published crate tarballs").
+declare -A PIN=(
+  [vrml97]=80072178321e7b6ecf1281ca42e0dce9d71b07c6541dbabba3cd1d69c00efd5f
+  [vrml]=93b9e21dfd89a1a8ef2d02e1e5305b8f7de65eff543855435c9d51584519c197
+  [x3d]=f6a4e16b19888af702f395e589aefb58533e683cc30bd97d15332d9c50341a98
+)
+
+if [ -e "$OUT" ]; then echo "published-consumer: REFUSED: $OUT exists" >&2; exit 2; fi
+case "$OUT" in /home/ryan/Projects/*) echo "published-consumer: REFUSED: $OUT is inside a source tree" >&2; exit 2;; esac
+mkdir -p "$OUT/published" "$OUT/consumer/src" || exit 2
+
+FAIL=0
+step() { # step <name> <command...>
+  local name="$1"; shift
+  "$@" >>"$LOG.out" 2>&1
+  local rc=$?
+  printf '%s\texit=%s\t%s\n' "$name" "$rc" "$*" | tee -a "$LOG"
+  [ $rc -eq 0 ] || FAIL=1
+  return $rc
+}
+
+tree_hash() { (cd "$1" && find . -type f | LC_ALL=C sort | xargs -d '\n' sha256sum | sha256sum | cut -c1-64); }
+
+for c in vrml97 vrml x3d; do
+  a="$ARCHIVES/$c-0.1.0.crate"
+  got="$(sha256sum "$a" | cut -c1-64)"
+  if [ "$got" = "${PIN[$c]}" ]; then rc=0; else rc=1; FAIL=1; fi
+  printf 'sha256 %s\texit=%s\t%s\n' "$c" "$rc" "$got" | tee -a "$LOG"
+  [ $rc -eq 0 ] || { echo "published-consumer: archive hash mismatch for $c" >&2; exit 1; }
+  step "extract $c" tar -xzf "$a" -C "$OUT/published"
+done
+chmod -R a-w "$OUT/published"
+BEFORE="$(tree_hash "$OUT/published")"
+echo "extracted-tree-sha256-before $BEFORE" | tee -a "$LOG"
+
+cat >"$OUT/consumer/Cargo.toml" <<TOML
+[package]
+name = "r02c1-published-consumer"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+vrml97 = { path = "$OUT/published/vrml97-0.1.0" }
+vrml = { path = "$OUT/published/vrml-0.1.0" }
+x3d = { path = "$OUT/published/x3d-0.1.0" }
+
+# vrml and x3d declare vrml97 = "0.1" from crates.io. Point that at the extracted archive.
+[patch.crates-io]
+vrml97 = { path = "$OUT/published/vrml97-0.1.0" }
+TOML
+cp "$HERE/main.rs" "$OUT/consumer/src/main.rs"
+# The published vrml97 archive ships its own Cargo.lock; use it so dependency versions are the released ones.
+cp "$OUT/published/vrml97-0.1.0/Cargo.lock" "$OUT/consumer/Cargo.lock"
+chmod u+w "$OUT/consumer/Cargo.lock"
+
+export CARGO_TARGET_DIR="$OUT/target"
+step "cargo build" cargo build --offline --manifest-path "$OUT/consumer/Cargo.toml"
+step "cargo run" cargo run -q --offline --manifest-path "$OUT/consumer/Cargo.toml"
+step "patch used, not registry" bash -c "cargo tree --offline --manifest-path '$OUT/consumer/Cargo.toml' -i vrml97 | head -1 | grep -F '$OUT/published/vrml97-0.1.0'"
+
+AFTER="$(tree_hash "$OUT/published")"
+echo "extracted-tree-sha256-after $AFTER" | tee -a "$LOG"
+if [ "$BEFORE" != "$AFTER" ]; then echo "published-consumer: extracted tree changed" | tee -a "$LOG"; FAIL=1; fi
+
+if [ $FAIL -eq 0 ]; then echo "published-consumer: PASS" | tee -a "$LOG"; else echo "published-consumer: FAIL" | tee -a "$LOG"; fi
+exit $FAIL

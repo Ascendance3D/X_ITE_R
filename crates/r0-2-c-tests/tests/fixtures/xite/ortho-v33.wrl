@@ -1,0 +1,4 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Navigation:3
+OrthoViewpoint { fieldOfView [ -2 -1 2 1 ] }
