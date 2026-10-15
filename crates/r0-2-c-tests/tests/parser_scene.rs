@@ -146,23 +146,32 @@ fn parse_externproto_with_url_in_interface_fails() {
 }
 
 // -------------------------------------------------------------------------
-// Known difference 1: EXPORT and IMPORT
+// Known difference 1: EXPORT and IMPORT. Closed through the facade; the 0.1.0 hard
+// errors are recorded by published-consumer/main.rs.
 // -------------------------------------------------------------------------
 
 #[test]
-fn parse_export_is_hard_error_published() {
-    for (file, line) in [("export.x3dv.wrl", 4), ("export-vrml2.wrl", 3)] {
-        assert!(oracle()[file].ok, "X_ITE accepts EXPORT in {file}");
-        let e = vrml97::parse_bytes(&input(file), file).err().expect("published accepts EXPORT: known difference 1 closed; retire this record");
-        assert_eq!(e.to_string(), format!("Parser error at line {line}: EXPORT is not supported by the Rust port yet (phase X4)."));
+fn parse_export_facade_matches_xite() {
+    for file in ["export.x3dv.wrl", "export-vrml2.wrl"] {
+        let o = &oracle()[file];
+        assert!(o.ok, "X_ITE accepts EXPORT in {file}");
+        let p = vrml97::parse_bytes(&input(file), file).unwrap_or_else(|e| panic!("{file}: facade: {e}"));
+        assert_eq!(p.to_vrml_string(), o.vrml.as_deref().unwrap(), "{file}: facade text");
+        assert_eq!(p.warnings, o.warns, "{file}: facade warnings");
+        assert_eq!(p.exported.len(), 1, "{file}: one EXPORT");
     }
 }
 
 #[test]
-fn parse_import_is_hard_error_published() {
-    assert!(oracle()["import.wrl"].ok, "X_ITE accepts IMPORT");
-    let e = vrml97::parse_bytes(&input("import.wrl"), "import.wrl").err().expect("published accepts IMPORT: known difference 1 closed; retire this record");
-    assert_eq!(e.to_string(), "Parser error at line 4: IMPORT is not supported by the Rust port yet (phase X4).");
+fn parse_import_facade_matches_xite_without_inline_load() {
+    let o = &oracle()["import.wrl"];
+    assert!(o.ok, "X_ITE accepts IMPORT");
+    let want = o.vrml.clone().unwrap();
+    assert!(want.contains("  global TRUE\n"));
+    let p = vrml97::parse_bytes(&input("import.wrl"), "import.wrl").unwrap_or_else(|e| panic!("import.wrl: facade: {e}"));
+    assert_eq!(p.to_vrml_string(), want.replace("  global TRUE\n", ""));
+    assert_eq!(p.warnings, o.warns, "import.wrl: facade warnings");
+    assert_eq!(p.imported.len(), 1, "import.wrl: one IMPORT");
 }
 
 #[test]
@@ -184,23 +193,18 @@ fn engine_parse_import_matches_xite_without_inline_load() {
 }
 
 // -------------------------------------------------------------------------
-// Known difference 9: OrthoViewpoint.fieldOfView
+// Known difference 9: OrthoViewpoint.fieldOfView. Closed through the facade; the
+// 0.1.0 MFFloat text is recorded by published-consumer/main.rs.
 // -------------------------------------------------------------------------
 
 #[test]
-fn orthoviewpoint_fieldofview_published_prints_mffloat() {
-    // R0.2-C asserted only that a plain Viewpoint printed "Viewpoint". This checks the
-    // node the difference is about, in X3D 3.3 and 4.0 headers.
+fn orthoviewpoint_fieldofview_facade_prints_sfvec4f() {
+    // The node the difference is about, in X3D 3.3 and 4.0 headers.
     for file in ["ortho-v33.wrl", "ortho-v40.wrl"] {
         let want = oracle()[file].vrml.clone().unwrap();
         assert!(want.ends_with("OrthoViewpoint {\n  fieldOfView -2 -1 2 1\n}\n"), "{file}: oracle");
         let p = vrml97::parse_bytes(&input(file), file).unwrap().to_vrml_string();
-        assert_eq!(
-            p,
-            want.replace("fieldOfView -2 -1 2 1", "fieldOfView [\n    -2,\n    -1,\n    2,\n    1\n  ]"),
-            "{file}: published"
-        );
-        assert_ne!(p, want, "known difference 9 closed for {file}; retire this record");
+        assert_eq!(p, want, "{file}: facade");
         let e = x3d_parse::parse_bytes(&input(file), file).unwrap().to_vrml_string();
         assert_eq!(e, want, "{file}: engine");
     }

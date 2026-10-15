@@ -81,27 +81,18 @@ fn chrome_math_engine_matches_chrome() {
     assert_eq!(ej::atan2(1.0, 1.0).to_bits(), 0x3fe921fb54442d18);
 }
 
-/// Known difference 3 (R0.2-A section 7.4): the published Chrome flavor calls the
-/// platform libm (`f64::sin` and friends), the engine calls CORE-MATH. The vectors above
-/// were chosen where glibc differs from Chrome, so the published flavor must miss some.
-/// The exact miss set depends on the platform libm; this records that it is not empty and
-/// that each published result is the platform result.
+/// Known difference 3 (R0.2-A section 7.4) is closed through the facade: the Chrome
+/// flavor reached through `vrml97` is the engine's CORE-MATH, exact on every vector.
+/// 0.1.0 used the platform libm; published-consumer/main.rs records that.
 #[test]
-fn chrome_math_published_differs_from_chrome_known_difference_3() {
+fn chrome_math_facade_matches_chrome() {
     chrome();
-    let misses = unary(SIN, pj::sin).len() + unary(COS, pj::cos).len() + unary(TAN, pj::tan).len();
-    assert!(misses > 0, "known difference 3 closed: published Chrome-flavor math matches Chrome on every recorded vector; retire this record");
-    for (x, _) in SIN {
-        let x = f64::from_bits(*x);
-        assert_eq!(pj::sin(x).to_bits(), x.sin().to_bits());
-    }
-    for (x, _) in COS {
-        let x = f64::from_bits(*x);
-        assert_eq!(pj::cos(x).to_bits(), x.cos().to_bits());
-    }
-    for (x, _) in TAN {
-        let x = f64::from_bits(*x);
-        assert_eq!(pj::tan(x).to_bits(), x.tan().to_bits());
+    assert_eq!(pj::flavor(), pj::MathFlavor::Chrome);
+    assert_eq!(unary(SIN, pj::sin), vec![]);
+    assert_eq!(unary(COS, pj::cos), vec![]);
+    assert_eq!(unary(TAN, pj::tan), vec![]);
+    for (y, x, want) in ATAN2 {
+        assert_eq!(pj::atan2(f64::from_bits(*y), f64::from_bits(*x)).to_bits(), *want);
     }
 }
 

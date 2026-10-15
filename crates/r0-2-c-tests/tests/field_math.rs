@@ -220,23 +220,14 @@ fn generator_format_engine_matches_xite() {
     }
 }
 
-/// Known difference 2 (R0.2-A section 7.4): the published formatter rounds the shortest
-/// digits half away from zero; ICU first builds an approximate decimal. The only input in
-/// GENERATOR_FORMAT where that matters is 0.9999999999999994 at 15 digits.
-const PUBLISHED_GENERATOR_DIFFERENCES: &[(u64, &str)] = &[(0x3feffffffffffffb, "0.999999999999999")];
-
+/// Known difference 2 (R0.2-A section 7.4) is closed through the facade: every value,
+/// including 0.9999999999999994 at 15 digits, is exact. The 0.1.0 value is recorded by
+/// published-consumer/main.rs.
 #[test]
-fn generator_format_published_matches_xite_except_known_difference_2() {
+fn generator_format_facade_matches_xite() {
     for (b, double, float) in GENERATOR_FORMAT {
         let v = f64::from_bits(*b);
-        let got = vrml97::fields::format::double_format(v);
-        match PUBLISHED_GENERATOR_DIFFERENCES.iter().find(|(k, _)| k == b) {
-            Some((_, published)) => {
-                assert_eq!(got, *published, "DoubleFormat({v:e}) published value");
-                assert_ne!(got, *double, "known difference 2 closed for {v:e}; retire this record");
-            }
-            None => assert_eq!(got, *double, "DoubleFormat({v:e})"),
-        }
+        assert_eq!(vrml97::fields::format::double_format(v), *double, "DoubleFormat({v:e})");
         assert_eq!(vrml97::fields::format::float_format(v), *float, "FloatFormat({v:e})");
     }
 }
@@ -276,28 +267,13 @@ fn intl_standard_engine_matches_chrome() {
     }
 }
 
-/// Known difference 2, exact published values where they differ from Chrome.
-const PUBLISHED_INTL_DIFFERENCES: &[(u64, usize, &str)] = &[
-    (0x3fefffffffffffff, 16, "0.9999999999999999"),
-    (0x3feffffffffffffe, 16, "0.9999999999999998"),
-    (0x3feffffffffffffd, 16, "0.9999999999999997"),
-    (0x3feffffffffffffc, 16, "0.9999999999999996"),
-    (0x3feffffffffffffb, 15, "0.999999999999999"),
-    (0x3feffffffffffffb, 16, "0.9999999999999994"),
-];
-
+/// Known difference 2 is closed through the facade on all 22 vectors. The six 0.1.0
+/// values that differed are recorded by published-consumer/main.rs.
 #[test]
-fn intl_standard_published_matches_chrome_except_known_difference_2() {
+fn intl_standard_facade_matches_chrome() {
     for (b, p, want) in CHROME_INTL {
         let v = f64::from_bits(*b);
-        let got = vrml97::fields::format::intl_standard(v, *p);
-        match PUBLISHED_INTL_DIFFERENCES.iter().find(|(k, q, _)| k == b && q == p) {
-            Some((_, _, published)) => {
-                assert_eq!(got, *published, "{v:e} at {p}: published value");
-                assert_ne!(got, *want, "known difference 2 closed for {v:e} at {p}; retire this record");
-            }
-            None => assert_eq!(got, *want, "{v:e} at {p}"),
-        }
+        assert_eq!(vrml97::fields::format::intl_standard(v, *p), *want, "{v:e} at {p}");
     }
 }
 

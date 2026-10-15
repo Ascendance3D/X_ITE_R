@@ -2,9 +2,10 @@
 //!
 //! * The gate sources contain no `#[ignore]` and define exactly the tests that
 //!   `future-gate.sh` requires.
-//! * Before R0.2-D the gate must not compile against the duplicate implementation, and it
-//!   must fail for the recorded reasons. When Option B lands, the gate compiles, this
-//!   record fails, and R0.2-D runs `future-gate.sh` and retires this record.
+//! * Since R0.2-D (Option B) the gate compiles against the facade. Before R0.2-D it failed
+//!   with 19 rustc errors (E0308, E0425, E0531, E0560, E0599, E0609); R0.2-C1 evidence
+//!   `future-gate-compile-errors-before.txt` keeps that record. `future-gate.sh` runs the
+//!   12 gate tests; this guard proves only that they build.
 
 use std::process::Command;
 
@@ -60,14 +61,8 @@ fn gate_sources_are_feature_gated() {
     }
 }
 
-/// The rustc error codes the gate produces today, against R0.2-C `35ce9ec` sources:
-/// E0599 (no method `factor` / `get_transform`), E0425 and E0531 (no variant `Imported`),
-/// E0560 (struct has no such field), E0609 (no field on type),
-/// E0308 (mismatched types: two Scene types).
-const BEFORE_OPTION_B: &[&str] = &["E0308", "E0425", "E0531", "E0560", "E0599", "E0609"];
-
 #[test]
-fn gate_does_not_compile_against_the_duplicate_implementation() {
+fn gate_compiles_against_the_shared_implementation() {
     let tmp = env!("CARGO_TARGET_TMPDIR");
     let out = Command::new(env!("CARGO"))
         .args(["test", "--offline", "--no-run", "--color", "never", "--features", "future_gate", "--test", "future_gate", "--test", "future_gate_chrome", "--manifest-path"])
@@ -75,14 +70,5 @@ fn gate_does_not_compile_against_the_duplicate_implementation() {
         .env("CARGO_TARGET_DIR", r0_2_c_tests::scratch_dir(tmp).join("gate-target"))
         .output()
         .unwrap();
-    let stderr = String::from_utf8_lossy(&out.stderr);
-    assert!(
-        !out.status.success(),
-        "the future gate now compiles: Option B has landed. Run crates/r0-2-c-tests/future-gate.sh \
-         and retire this record in the same change."
-    );
-    let mut codes: Vec<&str> = stderr.split("error[").skip(1).filter_map(|p| p.split(']').next()).collect();
-    codes.sort();
-    codes.dedup();
-    assert_eq!(codes, BEFORE_OPTION_B, "{stderr}");
+    assert!(out.status.success(), "the future gate does not compile:\n{}", String::from_utf8_lossy(&out.stderr));
 }

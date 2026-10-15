@@ -4,8 +4,9 @@
 //!
 //! - `tests/api_surface.rs` — Suite 1. Compiler checks of every public module path and
 //!   the crate-root set of `vrml97`, `vrml` and `x3d` 0.1.0.
-//! - `tests/type_identity.rs` — Suite 2. Current-difference records between the
-//!   published and the engine types. Absent items are proven with compile probes.
+//! - `tests/type_identity.rs` — Suite 2. One type authority: since R0.2-D the local
+//!   `vrml97` re-exports the engine types. Shapes are proven with compile probes. The
+//!   0.1.0 difference records run against the released archive in `published-consumer/`.
 //! - `tests/field_math.rs` — Suite 3. Field, matrix and float-format results compared
 //!   with recorded X_ITE / Chrome / Node outputs (Node math flavor, the default).
 //! - `tests/js_math_chrome.rs` — Suite 3b. The Chrome math flavor. A separate test binary,
@@ -14,8 +15,8 @@
 //!   pinned X_ITE oracle in `tests/fixtures/xite/ORACLE.json`.
 //! - `tests/error_compat.rs` — Suite 6. Public `ParseError` and `LoadError`.
 //! - `tests/future_gate.rs`, `tests/future_gate_chrome.rs` — Suite 7. Real future
-//!   requirements behind the `future_gate` feature. They do not compile today.
-//!   `future-gate.sh` is the one command that runs them after R0.2-D.
+//!   requirements behind the `future_gate` feature. They compile since R0.2-D.
+//!   `future-gate.sh` is the one command that runs them.
 //! - `tests/future_gate_contract.rs` — guards the gate itself (no `#[ignore]`, exact
 //!   names, recorded compile failure).
 //!
