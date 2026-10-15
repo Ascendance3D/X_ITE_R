@@ -1,0 +1,24 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# Implementation C of Gadget: the interface drops "result" and "poke" (routes to them cannot survive)
+# and changes the type of "tag" (SFInt32 instead of SFString).
+PROTO Gadget [
+  field SFInt32 level 3
+  field SFInt32 tag 99
+  exposedField SFVec3f offset 0 0 3
+]
+{
+  Transform {
+    translation IS offset
+    children [
+      DEF Log Script {
+        field SFInt32 level IS level
+        field SFInt32 tag IS tag
+        url "javascript:
+function initialize () { print ('C initialize level=' + level + ' tag=' + tag); }
+"
+      }
+      Shape { geometry Cone { } }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# URL list: the first file has no PROTO (but a Script), the second does not exist, the third works.
+EXTERNPROTO Gadget [ field SFInt32 level  eventOut SFInt32 result ] [ "lib-nofound.wrl", "missing-gadget.wrl#Gadget", "lib-a.wrl#Gadget" ]
+DEF Found Gadget {}
+DEF Mirror Script {
+  eventIn SFInt32 fromFound
+  url "javascript:
+function fromFound (v) { print ('mirror found ' + v); }
+"
+}
+ROUTE Found.result TO Mirror.fromFound

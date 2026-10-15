@@ -16,17 +16,8 @@ pub struct Sg<'a> {
 
 impl<'a> Sg<'a> {
     pub fn new(rt: &'a Runtime) -> Self {
-        let mut bodies = HashMap::new();
-
-        // Later contexts win, like Runtime::instance_body (rposition).
-        for (i, c) in rt.scene.contexts.iter().enumerate() {
-            match c.outer {
-                Outer::Instance(n) => {
-                    bodies.insert(n, i);
-                }
-                _ => {}
-            }
-        }
+        // The current body of each instance; a replaced body is not drawn.
+        let bodies: HashMap<NodeId, CtxId> = rt.instance_bodies.clone();
 
         Sg { rt, bodies }
     }

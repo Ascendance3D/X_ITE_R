@@ -184,6 +184,14 @@ impl Runtime {
     /// field and process events. Phases: prepareEvents, timePrepareEvents, timeEvents,
     /// cameraEvents, sensorEvents, displayEvents, finishEvents.
     pub fn process_phase(&mut self, name: &str) {
+        // The `loadData` events of EXTERNPROTO declarations (X3DUrlObject: `_loadData = time`) are
+        // processed with the first events of the frame.
+        if name == "prepareEvents" {
+            for e in std::mem::take(&mut self.extern_load_events) {
+                self.extern_load_data(e);
+            }
+        }
+
         let k = self.private_field(self.browser_node, name).expect("browser event field");
         self.add_tainted_field(k);
         self.process_events();

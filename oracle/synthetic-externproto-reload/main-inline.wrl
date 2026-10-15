@@ -1,0 +1,22 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# A Gadget EXTERNPROTO and an Inline side by side: ordinary Inline loading must keep working before,
+# during and after EXTERNPROTO reloads.
+EXTERNPROTO Gadget [ field SFInt32 level  eventOut SFInt32 result ] "lib-a.wrl#Gadget"
+DEF G Gadget {}
+DEF Inl Inline { url "inl-a.wrl" }
+DEF Clock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF Driver Script {
+  eventIn SFTime tick
+  eventOut MFString url_out
+  field SFInt32 n 0
+  url "javascript:
+function tick (t) {
+  n = n + 1;
+  print ('driver tick ' + n);
+  if (n == 3) url_out = new MFString ('inl-b.wrl');
+}
+"
+}
+ROUTE Clock.cycleTime TO Driver.tick
+ROUTE Driver.url_out TO Inl.set_url

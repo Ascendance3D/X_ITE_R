@@ -1,0 +1,20 @@
+# Known differences against the X_ITE oracle for synthetic-externproto-reload.
+# case<TAB>first step<TAB>last step<TAB>fields<TAB>reason
+# Every line is a deliberate difference (IMPLEMENTATION_SAFETY). The Rust behavior in these steps is
+# asserted directly by the tests of crates/x3d-script/tests/extern_reload.rs.
+#
+# X_ITE keeps both its `construct` and `update` interests on an instance after a failed load, so the next
+# successful load realizes the body of an instance twice (here: Explicit; "B initialize level=5" twice).
+c05-missing	11	20	console	X_ITE builds one instance's body twice after a failed load; Rust builds one body per instance
+c16-recover-new-url	10	20	console	same duplicate body after a failed load
+# An older request that finishes after a newer one was made replaces the result for a frame in X_ITE
+# (B is realized, then C). Rust drops the older result: B is never realized, C completes one frame later.
+c08-overlap-frames	5	6	console,externs,loadCount,vrml	older request must not replace the newer one
+# `load` set to FALSE while a request is in flight: X_ITE still activates the declaration when the
+# request completes. Rust keeps it NOT_STARTED with its old PROTO and bodies.
+c10-disable-while-loading	5	16	console,externs,vrml	disabled declaration must not become active from an old request
+# X_ITE caches a failed fetch for good: the same URL asked for again dies with a TypeError ("Cannot read
+# properties of null (reading 'setWorldURL')") although the file exists by then. Rust fetches again.
+c17-recover-same-url	9	24	console,externs,instances,loadCount,vrml	a resource that becomes available must be loadable again
+# X_ITE lets a load of a removed declaration finish and replace the bodies; Rust cancels the load.
+c20-remove-while-loading	5	16	console,externs,vrml	a removed declaration keeps no active load

@@ -83,22 +83,31 @@ impl Runtime {
         self.update_load_count(self.scene.scene_root(self.scene.node(node).ctx));
     }
 
-    /// `scene ._loadCount = loadingObjects .size` for a scene that has not been attached yet.
-    fn update_load_count(&mut self, root: CtxId) {
-        let Some(scene_node) = self.pending_scenes.iter().find(|p| p.ctx == root).map(|p| p.scene_node) else {
+    /// `scene ._loadCount = loadingObjects .size` for a scene that has not been attached yet: the
+    /// Inlines and EXTERNPROTO declarations of the scene that are loading.
+    pub(crate) fn update_load_count(&mut self, root: CtxId) {
+        let scene_node = self
+            .pending_scenes
+            .iter()
+            .find(|p| p.ctx == root)
+            .map(|p| p.scene_node)
+            .or_else(|| self.pending_externs.iter().find(|p| p.ctx == root).map(|p| p.scene_node));
+
+        let Some(scene_node) = scene_node else {
             return;
         };
 
-        let count = (0..self.scene.nodes.len() as NodeId)
+        let inlines = (0..self.scene.nodes.len() as NodeId)
             .filter(|&n| {
                 self.builtin_name(n) == Some("Inline")
                     && self.url_load_state(n) == LoadState::InProgress
                     && self.scene.scene_root(self.scene.node(n).ctx) == root
             })
-            .count() as i32;
+            .count();
+        let externs = self.extern_states.iter().filter(|(e, s)| s.load_state == LoadState::InProgress && self.scene.scene_root(self.scene.externprotos[**e].ctx) == root).count();
 
         let k = self.private_field(scene_node, "loadCount").unwrap();
-        self.set_value(k, FieldValue::SFInt32(count));
+        self.set_value(k, FieldValue::SFInt32((inlines + externs) as i32));
     }
 
     /// Inline.initialize: X3DUrlObject.initialize, then `requestImmediateLoad ()`.
@@ -330,6 +339,11 @@ impl Runtime {
     /// browser updates and `scene .setLive (true)` ran (X3DBrowser.replaceWorld, [`Runtime::go_live`]);
     /// an Inline's scene is live when it was attached and its parent context is live.
     pub fn ctx_live(&self, ctx: CtxId) -> bool {
+        // A replaced instance body is disposed: not live.
+        if self.ctx_dead(ctx) {
+            return false;
+        }
+
         let root = self.scene.scene_root(ctx);
 
         if root == ROOT {

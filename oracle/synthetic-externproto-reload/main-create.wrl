@@ -1,0 +1,21 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# A Script creates a fresh Gadget at the fourth tick: its field defaults show which PROTO the
+# declaration holds at that moment (the declaration is reloaded in between).
+EXTERNPROTO Gadget [ field SFInt32 level  field SFString tag ] "lib-a.wrl#Gadget"
+DEF Clock TimeSensor { cycleInterval 0.5 loop TRUE }
+DEF Driver Script {
+  eventIn SFTime tick
+  field SFInt32 n 0
+  url "javascript:
+function tick (t) {
+  n = n + 1;
+  print ('driver tick ' + n);
+  if (n == 4) {
+    var g = Browser.currentScene.createProto ('Gadget');
+    print ('created level=' + g.level + ' tag=' + g.tag);
+  }
+}
+"
+}
+ROUTE Clock.cycleTime TO Driver.tick

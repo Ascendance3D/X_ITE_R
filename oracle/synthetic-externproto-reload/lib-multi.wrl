@@ -1,0 +1,8 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-B (no archive content).
+# One file, two PROTOs and a root Script: two EXTERNPROTOs naming this file share one parsed scene.
+DEF Probe Script { url "javascript:
+function initialize () { print ('multi root initialize'); }
+" }
+PROTO First [ field SFInt32 level 11 ] { Shape { geometry Box { } } }
+PROTO Second [ field SFInt32 level 22 ] { Shape { geometry Sphere { } } }
