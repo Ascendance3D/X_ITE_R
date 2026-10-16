@@ -18,3 +18,23 @@ c10-disable-while-loading	5	16	console,externs,vrml	disabled declaration must no
 c17-recover-same-url	9	24	console,externs,instances,loadCount,vrml	a resource that becomes available must be loadable again
 # X_ITE lets a load of a removed declaration finish and replace the bodies; Rust cancels the load.
 c20-remove-while-loading	5	16	console,externs,vrml	a removed declaration keeps no active load
+# A Script in an instance body that is replaced or removed gets `shutdown ()` (ISO/IEC 14772-1 4.12.3,
+# "invoked when the corresponding Script node is deleted"). X_ITE has no shutdown call, so its console lacks
+# the "A shutdown" / "B shutdown" lines. Rust follows the standard; R0.3-D asserts it in extern_reload.rs.
+c02-url-change	5	5	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c03-explicit-values	13	13	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c04b-fallback-runtime	5	5	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c05-missing	4	4	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c06-load-toggle	8	8	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c07-refresh	10	10	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c07-refresh	20	20	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c07b-refresh-interval-change	30	30	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c09-overlap-same-frame	5	5	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c11-route-interface-change	5	5	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c12-nested-reload	9	9	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c12-nested-reload	16	16	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c13-inline-after	4	4	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c16-recover-new-url	4	4	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c17-recover-same-url	4	4	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c18-all-without-proto	5	5	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it
+c19-load-now	4	4	console	Script.shutdown () runs when its instance body is disposed (4.12.3); X_ITE never calls it

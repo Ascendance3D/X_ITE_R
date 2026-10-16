@@ -495,6 +495,13 @@ impl Runtime {
                 return Step::Failed { error: "Error: EXTERNPROTO URL refers to the scene that is loading it.".into(), resolved: Some(resolved) };
             }
 
+            // A cached scene that went with the world is no scene: it is fetched again.
+            let stale = |c: CtxId| self.ctx_dead(c) || self.emptied_ctxs.contains(&c);
+
+            if self.extern_cache.iter().any(|(k, entry)| k == key && matches!(entry, CacheEntry::Ready(c) if stale(*c))) {
+                self.extern_cache.retain(|(k, _)| k != key);
+            }
+
             match self.extern_cache_get(key) {
                 Some(CacheEntry::Ready(ctx)) => {
                     let ctx = *ctx;
@@ -538,7 +545,13 @@ impl Runtime {
 
         let setup_order = std::mem::take(&mut scene.setup_order);
         let ctx_count = scene.contexts.len();
-        let parent = self.scene.externprotos[e].ctx;
+
+        // A scene that goes into the cache belongs to the browser, not to the declaration that
+        // fetched it: X_ITE gives it `browser .getDefaultScene ()` as its execution context
+        // (X3DExternProtoDeclaration.setInternalScene) and never disposes it with a user's scene.
+        // Here that is the world: an Inline that declared it first may go, the next one finds it.
+        // An uncached scene (a URL with a query) is the declaration's own and goes with it.
+        let parent = if key.is_some() { ROOT } else { self.scene.externprotos[e].ctx };
         let m = self.scene.merge_extern(scene, parent);
 
         let (scene_node, count) = self.new_load_count_scene();
@@ -755,16 +768,16 @@ impl Runtime {
 // --- X3DPrototypeInstance.construct / update ----------------------------------------------------
 
 impl Runtime {
-    /// `this [_body] ?.dispose ()`: the body's routes are deleted and the body goes dead (its
-    /// TimeSensors and followers stop). Its nodes are not disposed, like X_ITE's.
+    /// `this [_body] ?.dispose ()`: the body is disposed like a scene (see [`Runtime::dispose_scene`]) and
+    /// goes dead. X_ITE leaves its nodes to the garbage collector; here the sweep releases them.
     pub(crate) fn instance_dispose_body(&mut self, inst: NodeId) {
         let Some(body) = self.instance_bodies.remove(&inst) else {
             return;
         };
 
-        for r in std::mem::take(&mut self.scene.contexts[body].routes) {
-            self.dispose_route(r);
-        }
+        // The body is disposed like a scene: its Scripts get `shutdown ()` (4.12.3), its routes go,
+        // its nodes are released at the next sweep.
+        self.dispose_scene(body);
 
         self.dead_ctxs.insert(body);
         self.refresh_live();

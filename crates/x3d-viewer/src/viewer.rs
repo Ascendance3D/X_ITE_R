@@ -346,6 +346,25 @@ impl Viewer3d {
         });
     }
 
+    /// Nodes the runtime released since the last call: nothing the viewer remembers of them may
+    /// meet a node that takes their id (saved viewpoints, sensor state, the pointer's drags,
+    /// hovers and Anchor presses).
+    fn forget_released(&mut self) {
+        let released = self.rt.take_released();
+
+        if released.is_empty() {
+            return;
+        }
+
+        let dead = |key: &(Vec<NodeId>, NodeId)| released.contains(&key.1) || key.0.iter().any(|n| released.contains(n));
+
+        self.layer.forget(&released);
+        self.prox.retain(|k, _| !dead(k));
+        self.vis.retain(|k, _| !dead(k));
+        self.geom_cache.retain(|k, _| !dead(k));
+        self.pointer.forget(&released);
+    }
+
     /// One iteration of X3DBrowserContext [_traverse] at browser time `now`
     /// (advanceTime has set getCurrentTime to `now`).
     pub fn step(&mut self, now: f64) {
@@ -356,6 +375,8 @@ impl Viewer3d {
                 self.frame_rate = 1.0 / dt;
             }
         }
+
+        self.forget_released();
 
         self.last_time = Some(now);
         self.time = now;
@@ -818,6 +839,9 @@ impl Viewer3d {
     // --- input -------------------------------------------------------------------------------
 
     pub fn input(&mut self, ev: UiEvent) {
+        // A slot released since the last frame may have been handed out again (a load that
+        // completed, a Script that created nodes): the pointer must not reach the new node.
+        self.forget_released();
         self.input_event(ev);
 
         // The event handler returned: pending microtasks run and the loads they wait for complete.

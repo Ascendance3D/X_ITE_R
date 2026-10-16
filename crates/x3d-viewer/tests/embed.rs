@@ -128,3 +128,140 @@ fn renders_into_a_host_texture_and_reloads() {
         v.frame(T0 + 7.0, &big, wgpu::TextureFormat::Rgba8Unorm, 320, 240).unwrap();
     });
 }
+
+// --- R0.3-D-FIX-1 EMBEDDED_VIEWER_UNLOAD_OMISSION ---------------------------------------------------
+// The host unloads, reloads or replaces the world: the old world is unloaded first (ISO/IEC 14772-1
+// 4.12.3, its Scripts get `shutdown ()` once), while its script engine still holds its state, and only
+// then is the next world created. (`take_prints` returns what was printed since the last frame: a
+// frame moves the prints to the status line.)
+
+/// A world whose Script prints `init <tag>` and `shutdown <tag>`, and `tick <tag>` on every frame.
+fn scripted(tag: &str) -> String {
+    format!(
+        "#VRML V2.0 utf8\nDEF Clock TimeSensor {{ loop TRUE }}\nDEF S Script {{\n  eventIn SFTime tick\n  url \"javascript:\n    function initialize () {{ print ('init {tag}'); }}\n    function tick (t) {{ print ('tick {tag}'); }}\n    function shutdown () {{ print ('shutdown {tag}'); }}\n  \"\n}}\nROUTE Clock.time TO S.tick\n"
+    )
+}
+
+fn count(prints: &[String], line: &str) -> usize {
+    prints.iter().filter(|p| p.as_str() == line).count()
+}
+
+fn opts() -> LoadOptions {
+    LoadOptions { root: None, start_time: Some(T0) }
+}
+
+/// What the old world printed up to its end: its last line is its `shutdown`, once.
+fn assert_shut_down_once(prints: &[String], tag: &str) {
+    let line = format!("shutdown {tag}");
+
+    assert_eq!(count(prints, &line), 1, "{prints:?}");
+    assert!(!prints.iter().skip_while(|l| **l != line).skip(1).any(|l| l.ends_with(&format!(" {tag}"))), "{tag} ran after its shutdown: {prints:?}");
+}
+
+#[test]
+fn unload_shuts_the_world_down_once() {
+    let Some((device, queue)) = device() else { return eprintln!("no adapter, skipped") };
+    spawn_big_stack(move || {
+        let mut v = EmbeddedViewer::new(device, queue, (64, 64));
+        let p = world("fix1-unload.wrl", &scripted("A"));
+
+        v.load(&p, opts()).unwrap();
+        assert_eq!(count(&v.take_prints(), "init A"), 1);
+        v.step(T0 + 0.1);
+        v.step(T0 + 0.2);
+        assert_eq!(v.status(), "tick A");
+
+        v.unload();
+        assert!(!v.is_loaded());
+        assert_shut_down_once(&v.take_prints(), "A");
+
+        v.unload();
+        v.step(T0 + 0.3);
+        assert!(v.take_prints().is_empty(), "a second unload shuts nothing down again");
+    });
+}
+
+#[test]
+fn reload_and_replacement_shut_the_old_world_down_first() {
+    let Some((device, queue)) = device() else { return eprintln!("no adapter, skipped") };
+    spawn_big_stack(move || {
+        let mut v = EmbeddedViewer::new(device, queue, (64, 64));
+        let a = world("fix1-a.wrl", &scripted("A"));
+        let b = world("fix1-b.wrl", &scripted("B"));
+
+        v.load(&a, opts()).unwrap();
+        v.step(T0 + 0.1);
+
+        // Reload: the old A shuts down once, then the new A starts.
+        v.reload().unwrap();
+
+        let prints = v.take_prints();
+        let down = prints.iter().position(|l| l == "shutdown A").unwrap_or_else(|| panic!("no shutdown: {prints:?}"));
+        let up = prints.iter().position(|l| l == "init A").unwrap_or_else(|| panic!("no init: {prints:?}"));
+
+        assert_eq!(count(&prints, "shutdown A"), 1, "{prints:?}");
+        assert_eq!(count(&prints, "init A"), 1, "{prints:?}");
+        assert!(down < up, "the old world shuts down before the new one starts: {prints:?}");
+
+        // Replacement by another world.
+        v.step(T0 + 0.2);
+        v.load(&b, opts()).unwrap();
+
+        let prints = v.take_prints();
+
+        assert_shut_down_once(&prints[..prints.iter().position(|l| l == "init B").unwrap_or_else(|| panic!("no init B: {prints:?}"))], "A");
+        assert_eq!(count(&prints, "init B"), 1, "{prints:?}");
+
+        v.step(T0 + 0.3);
+        assert_eq!(v.status(), "tick B", "the new world runs");
+        assert!(v.take_prints().iter().all(|l| !l.ends_with(" A")));
+    });
+}
+
+#[test]
+fn a_failed_replacement_leaves_no_world_and_does_not_revive_the_old_one() {
+    let Some((device, queue)) = device() else { return eprintln!("no adapter, skipped") };
+    spawn_big_stack(move || {
+        let mut v = EmbeddedViewer::new(device, queue, (64, 64));
+        let a = world("fix1-fail.wrl", &scripted("A"));
+
+        v.load(&a, opts()).unwrap();
+        v.step(T0 + 0.1);
+
+        assert!(v.load(&a.with_file_name("fix1-missing.wrl"), opts()).is_err());
+        assert!(!v.is_loaded());
+        assert_shut_down_once(&v.take_prints(), "A");
+
+        v.step(T0 + 0.2);
+        v.unload();
+        assert!(v.take_prints().is_empty(), "the old world is gone: no tick, no second shutdown");
+        assert_eq!(v.status(), "");
+
+        // The viewer still loads the next world.
+        v.load(&a, opts()).unwrap();
+        assert_eq!(count(&v.take_prints(), "init A"), 1);
+    });
+}
+
+#[test]
+fn dropping_the_viewer_unloads_its_world() {
+    let Some((device, queue)) = device() else { return eprintln!("no adapter, skipped") };
+    spawn_big_stack(move || {
+        let a = world("fix1-drop.wrl", &scripted("A"));
+        let b = world("fix1-drop-b.wrl", &scripted("B"));
+
+        // The host replaces its viewer: the first one's world goes with it, and the second one's
+        // Scripts run normally after it.
+        let mut first = EmbeddedViewer::new(device.clone(), queue.clone(), (64, 64));
+        first.load(&a, opts()).unwrap();
+        first.step(T0 + 0.1);
+        drop(first);
+
+        let mut second = EmbeddedViewer::new(device, queue, (64, 64));
+        second.load(&b, opts()).unwrap();
+        assert_eq!(count(&second.take_prints(), "init B"), 1);
+        second.step(T0 + 0.1);
+        second.step(T0 + 0.2);
+        assert_eq!(second.status(), "tick B");
+    });
+}

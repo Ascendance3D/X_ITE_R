@@ -25,6 +25,13 @@ pub trait ScriptHost {
 
     /// Script.call__ / set_field__.
     fn call(&mut self, rt: &mut Runtime, node: NodeId, call: ScriptCall) -> Result<(), ScriptError>;
+
+    /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
+    fn destroy_context(&mut self, _node: NodeId) {}
+
+    /// The nodes were released and their ids may be handed out again: a wrapper of one of them
+    /// that a Script still holds points to `tombstone` from now on.
+    fn release_nodes(&mut self, _rt: &mut Runtime, _nodes: &[NodeId], _tombstone: NodeId) {}
 }
 
 #[derive(Debug, Default, Clone)]
@@ -135,14 +142,29 @@ impl Runtime {
         Ok(())
     }
 
-    /// The Script of a scene that was disposed (an Inline whose scene was replaced): it stops
-    /// getting `prepareEvents`, `eventsProcessed` and field events. X_ITE keeps them all.
+    /// The Script of a scene that was disposed (an Inline whose scene was replaced, a world that was
+    /// unloaded): ISO/IEC 14772-1 4.12.3 asks for `shutdown ()` when the Script node is deleted or
+    /// the world containing it is unloaded or replaced, and for no other method after it.
+    ///
+    /// X_ITE never calls `shutdown`; this port does. The call comes first, while the Script is still
+    /// connected, so what it sends is queued. The routes of the disposed scene are deleted right after
+    /// (see [`Runtime::dispose_scene`]), so events for nodes that the same action deletes are not
+    /// delivered, and the Script takes no event once the call has returned.
     pub(crate) fn script_close(&mut self, node: NodeId) {
         if self.script_state(node).closed {
             return;
         }
 
+        // Only a Script that was initialized has anything to shut down.
+        let initialized = self.scripts.contains(&node);
+        let has_shutdown = self.script_state(node).functions.iter().any(|f| f == "shutdown");
+
+        // Set first: a `shutdown ()` that reaches its own Script, or disposes its scene again, finds it closed.
         self.script_state(node).closed = true;
+
+        if initialized && has_shutdown {
+            self.script_call(node, ScriptCall::Plain("shutdown".into()), "shutdown");
+        }
 
         if let Some(k) = self.private_field(self.browser_node, "prepareEvents") {
             self.remove_interest(k, node, Cb::ScriptPrepareEvents);
@@ -153,10 +175,24 @@ impl Runtime {
         for i in 0..self.scene.node(node).user_fields.len() {
             self.remove_interest((node, FieldLoc::User(i)), node, Cb::ScriptField(i));
         }
+
+        self.scripts.retain(|&s| s != node);
+
+        if initialized {
+            if let Some(mut host) = self.script_host.take() {
+                host.destroy_context(node);
+                self.script_host = Some(host);
+            }
+        }
     }
 
     /// call__ / set_field__ with setError on a thrown value.
     fn script_call(&mut self, node: NodeId, call: ScriptCall, reason_name: &str) {
+        // After `shutdown ()` no other method of the Script may run (4.12.3).
+        if self.script_state(node).closed && !matches!(&call, ScriptCall::Plain(n) if n == "shutdown") {
+            return;
+        }
+
         let Some(mut host) = self.script_host.take() else {
             return;
         };

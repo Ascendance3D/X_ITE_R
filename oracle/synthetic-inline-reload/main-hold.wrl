@@ -1,0 +1,14 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-D (no archive content).
+# Keeper holds a node of the Inline's scene in an SFNode field and in a JavaScript variable.
+DEF Holder Group { children [ DEF Inl Inline { url "content-a.wrl" } ] }
+DEF Keeper Script {
+  field SFNode held NULL
+  eventIn SFTime save
+  eventIn SFTime report
+  url "javascript:
+    var saved = null;
+    function save (t) { saved = held; print ('saved ' + saved.getNodeTypeName ()); }
+    function report (t) { print ('saved is ' + saved.getNodeTypeName () + ' / ' + saved.getNodeName ()); }
+  "
+}
