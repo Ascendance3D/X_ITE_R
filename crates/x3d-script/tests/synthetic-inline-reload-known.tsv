@@ -18,3 +18,37 @@ c35-auto-refresh-after-failure	5	16	console,inlines,loadCount	no automatic refre
 # An Inline in a scene that is disposed while its request is queued: X_ITE still fetches and runs the scene
 # ("B initialize", then one "B fraction" in a scene nobody shows). Rust cancels the request with the scene.
 c36-dispose-nested-queued	6	7	console	a nested Inline of a disposed scene must not load
+# A Script of a scene that is replaced, switched off or unloaded gets `shutdown ()` (ISO/IEC 14772-1 4.12.3,
+# "invoked when the Script node is deleted or the world containing it is unloaded or replaced"). X_ITE has no
+# shutdown call, so its console lacks the "<name> shutdown" lines. Rust follows the standard (R0.3-D); the
+# calls are asserted by crates/x3d-script/tests/world_disposal.rs.
+c02-url-replace	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c03b-fallback-runtime	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c05-load-toggle	4	4	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c06-url-while-load-off	3	3	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c08-overlap-same-frame	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c10-nested	7	7	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c10-nested	11	11	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c12-repeat-success	4	4	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c12-repeat-success	7	7	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c12-repeat-success	10	10	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c12-repeat-success	13	13	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c12-repeat-success	16	16	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c12-repeat-success	19	19	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c13-repeat-failure	3	3	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c14-remove-while-loading	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c18-load-now	6	6	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c19-auto-refresh	6	6	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c19-auto-refresh	12	12	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c19-auto-refresh	18	18	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c20-unload-now	5	5	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c21-empty-url	4	4	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c24-shared	6	6	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c25-shared-nested	7	7	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c26-same-url-again	6	6	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c27-x3d	9	9	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c27-x3d	11	11	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c28-dispose-nested-while-loading	6	6	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c28-dispose-nested-while-loading	7	7	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c30-dispose-nested-loaded	7	7	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it
+c37-url-and-load-false-same-frame	4	4	console	Script.shutdown () runs when its scene is disposed (4.12.3); X_ITE never calls it

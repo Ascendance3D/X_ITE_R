@@ -425,6 +425,34 @@ impl Pointer {
         !self.active.is_empty()
     }
 
+    /// The runtime released `released` ([`Runtime::take_released`]): their ids may name nodes of
+    /// another scene from now on. Every sensor, Anchor and hit this pointer remembers of them is
+    /// dropped, without events: a drag or a press on a node that is gone ends with it, and the
+    /// node that takes the slot starts inactive and not under the pointer. The other sensors keep
+    /// their state.
+    pub fn forget(&mut self, released: &[NodeId]) {
+        if released.is_empty() {
+            return;
+        }
+
+        let gone = |path: &[NodeId], n: NodeId| released.contains(&n) || path.iter().any(|p| released.contains(p));
+        let dead = |r: &NodeRef| gone(&r.path, r.node);
+
+        self.over.retain(|(n, _)| !dead(n));
+        self.active.retain(|(n, _)| !dead(n));
+        self.states.retain(|(n, _)| !dead(n));
+        self.anchor_over.retain(|(path, n), _| !gone(path, *n));
+        self.anchor_active.retain(|(path, n), _| !gone(path, *n));
+
+        // The last pick is reused while navigating: it must not name a released node either.
+        if self.hit.shape.as_ref().is_some_and(dead) {
+            self.hit = Hit::default();
+        } else {
+            self.hit.sensors.retain(|s| !dead(&s.node));
+            self.hit.anchors.retain(|a| !dead(a));
+        }
+    }
+
     /// X3DPointingDeviceSensorContext.buttonPressEvent. `hit` is the fresh pick.
     pub fn button_press(&mut self, root: &mut Runtime, hit: Hit, cam: &PickCamera, now: f64) -> bool {
         self.hit = hit;

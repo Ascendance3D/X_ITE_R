@@ -16,6 +16,7 @@ delete global .__x;
 
 const wrappers = new Map (); // attached handle → wrapper (field object identity)
 const nodes    = new Map (); // node id → SFNode proxy (SFNodeCache)
+const targets  = new Map (); // node id → the target of that proxy, to repoint it when the node is released
 
 // Rust → JS value
 function R (r)
@@ -410,6 +411,7 @@ function nodeWrapper (id)
       const target = new SFNodeBase ();
 
       target [N] = id;
+      targets .set (id, target);
       nodes .set (id, w = new Proxy (target, nodeHandler));
    }
 
@@ -712,5 +714,30 @@ global .__call = function (script, name, value, time, hasValue)
    {
       currentScript = previous;
    }
+};
+
+// Nodes were released and their ids may belong to other nodes soon: the wrappers that scripts still hold
+// point to the empty tombstone node from now on.
+global .__release = function (ids, tombstone)
+{
+   for (const id of ids)
+   {
+      const target = targets .get (id);
+
+      if (target)
+         target [N] = tombstone;
+
+      targets .delete (id);
+      nodes .delete (id);
+      contexts .delete (id);
+      sources .delete (id);
+   }
+};
+
+// The Script was shut down: its global object and callbacks are not needed any more.
+global .__destroy = function (script)
+{
+   contexts .delete (script);
+   sources .delete (script);
 };
 })(globalThis);

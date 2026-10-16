@@ -692,6 +692,13 @@ impl Layer {
         *self.fog_stack.last().unwrap()
     }
 
+    /// Nodes the runtime released (their ids may belong to other nodes soon): their saved state goes.
+    /// The stacks and lists drop them in the next scan, which no longer finds them.
+    pub fn forget(&mut self, released: &[NodeId]) {
+        self.vps.retain(|n, _| *n == DEFAULT || !released.contains(n));
+        self.transition_active.retain(|n, _| !released.contains(n));
+    }
+
     pub fn vp(&mut self, n: NodeId) -> &mut Vp {
         self.vps.entry(n).or_default()
     }

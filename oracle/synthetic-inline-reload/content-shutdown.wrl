@@ -1,0 +1,25 @@
+#VRML V2.0 utf8
+# Synthetic, newly authored for the Rust port R0.3-D (no archive content).
+# S sends an event from shutdown () to T, which is deleted by the same action: T gets no event after
+# its own shutdown (ISO/IEC 14772-1 4.12.3). Plain has no shutdown. Leaf nests another Inline.
+DEF S Script {
+  eventOut SFInt32 out
+  eventIn SFInt32 ping
+  url "javascript:
+    function initialize () { print ('S initialize'); }
+    function ping (v) { print ('S ping ' + v); }
+    function eventsProcessed () { print ('S processed'); }
+    function shutdown () { print ('S shutdown'); out = 7; ping (8); }
+  "
+}
+DEF T Script {
+  eventIn SFInt32 got
+  url "javascript:
+    function got (v) { print ('T got ' + v); }
+    function shutdown () { print ('T shutdown'); }
+  "
+}
+DEF Plain Script { url "javascript: function initialize () { print ('Plain initialize'); }" }
+DEF Bad Script { url "javascript: function shutdown () { print ('Bad shutdown'); throw new Error ('boom'); }" }
+DEF Leaf Inline { url "content-shutdown-leaf.wrl" }
+ROUTE S.out TO T.got

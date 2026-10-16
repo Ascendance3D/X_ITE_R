@@ -291,8 +291,8 @@ fn parent_routes_survive_every_reload() {
 }
 
 /// Repeated reloads, successful and failed, add no live state: after the first cycles the number
-/// of watchers, followers, interests, timers and tasks stays the same. (The node arena is append-only
-/// and grows with every scene; the report names it as a limit.)
+/// of watchers, followers, interests, timers and tasks stays the same. (The node arena is bounded too:
+/// R0.3-D releases the nodes of disposed scenes; `world_disposal.rs` asserts it directly.)
 #[test]
 fn repeated_reloads_do_not_accumulate_live_state() {
     on_big_stack(|| {
@@ -330,12 +330,10 @@ fn repeated_reloads_do_not_accumulate_live_state() {
 
         // The four requests repeat (a scene, another scene, a missing file, a third scene): the
         // counts at the same point of the cycle must not grow from one round to the next.
-        // The node arena is append-only: every loaded scene stays in it. The growth is linear, the same
-        // for every round of four reloads (the report names it as a limit).
-        let growth: Vec<usize> = arena.windows(2).map(|w| w[1] - w[0]).collect();
-
-        println!("node arena growth per 4 reloads: {growth:?} (total {})", arena.last().unwrap());
-        assert!(growth.windows(2).all(|g| g[0] == g[1]), "arena growth is not linear: {growth:?}");
+        // The node arena no longer grows with every reload (R0.3-D): after the first rounds the
+        // sizes at the same point of the cycle are equal.
+        println!("node arena sizes every 16 reloads: {arena:?}");
+        assert!(arena[2..].windows(2).all(|w| w[0] == w[1]), "the node arena keeps growing: {arena:?}");
         assert!(samples.len() > 8);
         assert!(samples.iter().zip(&samples[4..]).all(|(a, b)| a == b), "live state grows with reloads: {samples:?}");
     });

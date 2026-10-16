@@ -428,7 +428,7 @@ impl Runtime {
 
     /// Construct, route and set up the nodes of a merged scene (the order of X3DParser.setupNodes).
     pub(crate) fn attach_merged_scene(&mut self, m: MergeMap, ctx_count: usize, setup_order: Vec<NodeId>) {
-        for n in m.node_offset..self.scene.nodes.len() as NodeId {
+        for n in m.node_offset..m.node_end {
             self.nrt_mut(n);
 
             if !matches!(self.scene.node(n).kind, NodeKind::Internal(_)) {
@@ -505,6 +505,9 @@ impl Runtime {
         }
 
         self.run_tasks();
+
+        // The end of a frame: nothing is being processed, and the scenes disposed during it are over.
+        self.release_disposed();
     }
 
     /// Inline.setInternalScene.
@@ -587,22 +590,33 @@ impl Runtime {
     /// (X3DExecutionContext.dispose → deleteRoute → X3DRoute.dispose) and the scene goes not live
     /// (X3DBaseNode.dispose → setLive (false)), which pauses its TimeSensors and followers.
     ///
-    /// The nodes are not disposed, as in X_ITE: the root nodes' SFNode elements are not the cached
-    /// wrappers (`SFNodeCache .get (node) === this` in SFNode.dispose is false), so `node .dispose ()`
-    /// is never called. This port goes further than X_ITE in what it stops in the scene and in
+    /// The nodes are not disposed one by one, as in X_ITE: the root nodes' SFNode elements are not the
+    /// cached wrappers (`SFNodeCache .get (node) === this` in SFNode.dispose is false), so
+    /// `node .dispose ()` is never called. X_ITE leaves them to the garbage collector; here they are
+    /// queued for the sweep of [`Runtime::release_disposed`] (R0.3-D), which frees the ones that nothing
+    /// outside the scene refers to. This port goes further than X_ITE in what it stops in the scene and in
     /// every scene inside it (a nested Inline's scene, the body of a PROTO instance):
     ///
     /// * routes are deleted, scenes go not live;
     /// * a nested Inline cancels its request and drops the scene it has parsed (X_ITE lets it finish);
-    /// * a Script stops getting `prepareEvents` and `eventsProcessed` (X_ITE keeps calling them for
-    ///   ever). It still gets no `shutdown ()`: VRML97 4.12.3 asks for one, X_ITE has none, and the
-    ///   accepted corpus baselines do not expect it (see the report).
+    /// * a Script gets `shutdown ()` (VRML97 4.12.3; X_ITE has none), then stops getting
+    ///   `prepareEvents`, `eventsProcessed` and field events (X_ITE keeps calling them for ever).
     pub(crate) fn dispose_scene(&mut self, root: CtxId) {
         if !self.disposed_scenes.insert(root) {
             return;
         }
 
         let inside: Vec<CtxId> = (0..self.scene.contexts.len()).filter(|&c| self.ctx_within(c, root)).collect();
+        let inside_set: std::collections::HashSet<CtxId> = inside.iter().copied().collect();
+        let nodes: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| inside_set.contains(&self.scene.node(n).ctx)).collect();
+
+        // ISO/IEC 14772-1 4.12.3: `shutdown ()` runs while the scene is still connected. What it
+        // sends is queued; the routes below are deleted before the queue is processed.
+        for &n in &nodes {
+            if self.builtin_name(n) == Some("Script") {
+                self.script_close(n);
+            }
+        }
 
         for &c in &inside {
             for r in std::mem::take(&mut self.scene.contexts[c].routes) {
@@ -614,15 +628,16 @@ impl Runtime {
             }
         }
 
-        let inside: std::collections::HashSet<CtxId> = inside.into_iter().collect();
-        let nodes: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| inside.contains(&self.scene.node(n).ctx)).collect();
-
         for &n in &nodes {
-            match self.builtin_name(n) {
-                Some("Inline") => self.inline_close(n),
-                Some("Script") => self.script_close(n),
-                _ => {}
+            if self.builtin_name(n) == Some("Inline") {
+                self.inline_close(n);
             }
+        }
+
+        // Nothing refers to the scene any more, unless a live field, route or context does: the nodes
+        // go at the next sweep (see `release.rs`). The whole world is never released.
+        if root != ROOT {
+            self.queue_release(&inside, &nodes);
         }
 
         // The nodes get their last live change (a TimeSensor stops, a follower pauses) and are
@@ -635,8 +650,18 @@ impl Runtime {
         self.followers.retain(|n| !dead.contains(n));
     }
 
+    /// The world is unloaded (or replaced by another one): every Script in it gets `shutdown ()`
+    /// (ISO/IEC 14772-1 4.12.3) and the world stops. Events the Scripts queued are left for the
+    /// caller's next event processing.
+    pub fn unload_world(&mut self) {
+        self.dispose_scene(ROOT);
+
+        // The cached EXTERNPROTO scenes belong to the world (see `extern_scene`) and went with it.
+        self.extern_cache.clear();
+    }
+
     /// Is `ctx` the context `root`, or inside it (through scenes and PROTO instance bodies)?
-    fn ctx_within(&self, ctx: CtxId, root: CtxId) -> bool {
+    pub(crate) fn ctx_within(&self, ctx: CtxId, root: CtxId) -> bool {
         let mut c = ctx;
 
         for _ in 0..256 {

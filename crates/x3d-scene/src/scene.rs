@@ -102,6 +102,11 @@ pub enum NodeKind {
     Imported(ImportedId),
 }
 
+/// The `Internal` name of a released arena slot (see [`Scene::release_node`]): no fields, not a node
+/// of any scene until [`Scene::merge`] or [`Scene::alloc_node`] hands the slot out again. (It is not a
+/// variant of its own: `NodeKind` is part of the published API.)
+pub const FREE_SLOT: &str = "X3DReleasedSlot";
+
 #[derive(Clone, Debug)]
 pub struct Node {
     pub kind: NodeKind,
@@ -229,6 +234,12 @@ pub struct Scene {
     pub imported: Vec<ImportedNode>,
     pub exported: Vec<ExportedNode>,
     pub route_counter: usize,
+    /// Released arena slots, reused by [`Scene::merge`] (a free run of the scene's size) and
+    /// [`Scene::alloc_node`] (any slot). Ordered, so runs are found from the lowest id.
+    pub free_nodes: std::collections::BTreeSet<NodeId>,
+    /// New nodes go to the end of the arena, never into a released slot: whoever sets this
+    /// finds the nodes it creates as the range `len..` (SFNode.fromString).
+    pub append_only: bool,
 }
 
 pub const ROOT: CtxId = 0;
@@ -267,6 +278,8 @@ impl Scene {
             imported: vec![],
             exported: vec![],
             route_counter: 0,
+            free_nodes: Default::default(),
+            append_only: false,
         }
     }
 
@@ -444,9 +457,80 @@ impl Scene {
         &mut self.nodes[id as usize]
     }
 
+    /// Put `node` into a released slot if there is one, else at the end of the arena.
     fn push_node(&mut self, node: Node) -> NodeId {
+        if !self.append_only {
+            if let Some(id) = self.free_nodes.pop_first() {
+                self.nodes[id as usize] = node;
+                return id;
+            }
+        }
+
         self.nodes.push(node);
         (self.nodes.len() - 1) as NodeId
+    }
+
+    /// [`Scene::push_node`] for the runtime's own nodes.
+    pub fn alloc_node(&mut self, node: Node) -> NodeId {
+        self.push_node(node)
+    }
+
+    /// Release a slot: the node and everything it owns is dropped, the id may be handed out again.
+    /// The caller has made sure that nothing refers to the node any more.
+    pub fn release_node(&mut self, id: NodeId) {
+        let slot = &mut self.nodes[id as usize];
+
+        if self.free_nodes.contains(&id) {
+            return;
+        }
+
+        *slot = Node {
+            kind: NodeKind::Internal(FREE_SLOT),
+            ctx: ROOT,
+            name: String::new(),
+            fields: vec![],
+            user_fields: vec![],
+            private_fields: vec![],
+            can_user_defined_fields: false,
+        };
+
+        self.free_nodes.insert(id);
+    }
+
+    /// The lowest released run of `len` consecutive slots, taken out of the free set.
+    fn alloc_run(&mut self, len: usize) -> Option<NodeId> {
+        if len == 0 || self.free_nodes.len() < len {
+            return None;
+        }
+
+        let (mut start, mut run) = (0, 0);
+        let mut prev: Option<NodeId> = None;
+
+        for &id in &self.free_nodes {
+            if prev.is_some_and(|p| p + 1 == id) {
+                run += 1;
+            } else {
+                start = id;
+                run = 1;
+            }
+
+            prev = Some(id);
+
+            if run == len {
+                for k in start..start + len as NodeId {
+                    self.free_nodes.remove(&k);
+                }
+
+                return Some(start);
+            }
+        }
+
+        None
+    }
+
+    /// Is the slot a live node (not released)?
+    pub fn is_live(&self, id: NodeId) -> bool {
+        (id as usize) < self.nodes.len() && !self.free_nodes.contains(&id)
     }
 
     /// X3DExecutionContext.createNode (typeName, false): `None` if the type is not available.
@@ -1058,6 +1142,9 @@ impl Scene {
 #[derive(Clone, Copy, Debug)]
 pub struct MergeMap {
     pub node_offset: NodeId,
+    /// One past the merged scene's last node: its nodes are `node_offset..node_end`, in released
+    /// slots or at the end of the arena.
+    pub node_end: NodeId,
     pub ctx_offset: CtxId,
     pub proto_offset: ProtoId,
     pub extern_offset: ExternId,
@@ -1077,8 +1164,9 @@ impl Scene {
         self.merge_scene(other, parent, Some(inline))
     }
 
-    /// [`Scene::merge`] for the scene an EXTERNPROTO loaded: a child of the declaring context
-    /// (`X3DScene.setExecutionContext`), with its scene data kept per root context.
+    /// [`Scene::merge`] for the scene an EXTERNPROTO loaded: a child of `parent`
+    /// (`X3DScene.setExecutionContext`: the declaring context, or the world for a cached scene),
+    /// with its scene data kept per root context.
     pub fn merge_extern(&mut self, other: Scene, parent: CtxId) -> MergeMap {
         self.merge_scene(other, parent, None)
     }
@@ -1102,8 +1190,11 @@ impl Scene {
     /// Inline) to this one so both share one node arena. Its root context becomes a child of
     /// `parent` with `Outer::Inline (outer)`.
     pub fn merge(&mut self, mut other: Scene, parent: CtxId, outer: Option<NodeId>) -> MergeMap {
+        let count = other.nodes.len();
+        let node_offset = self.alloc_run(count).unwrap_or(self.nodes.len() as NodeId);
         let m = MergeMap {
-            node_offset: self.nodes.len() as NodeId,
+            node_offset,
+            node_end: node_offset + count as NodeId,
             ctx_offset: self.contexts.len(),
             proto_offset: self.protos.len(),
             extern_offset: self.externprotos.len(),
@@ -1211,7 +1302,15 @@ impl Scene {
             }
         }
 
-        self.nodes.append(&mut other.nodes);
+        // A released run takes the scene's nodes in place; otherwise they go to the end of the arena.
+        if (m.node_offset as usize) < self.nodes.len() {
+            for (i, node) in other.nodes.drain(..).enumerate() {
+                self.nodes[m.node_offset as usize + i] = node;
+            }
+        } else {
+            self.nodes.append(&mut other.nodes);
+        }
+
         self.contexts.append(&mut other.contexts);
         self.protos.append(&mut other.protos);
         self.externprotos.append(&mut other.externprotos);

@@ -82,6 +82,15 @@ pub struct EmbeddedViewer {
     renderer: Renderer,
     source: Option<(PathBuf, LoadOptions)>,
     size: (u32, u32),
+    /// Browser.print output of unloaded worlds that the host has not taken yet.
+    closed_prints: Vec<String>,
+}
+
+/// The host drops the viewer: its world is unloaded like by [`EmbeddedViewer::unload`].
+impl Drop for EmbeddedViewer {
+    fn drop(&mut self) {
+        self.close_world();
+    }
 }
 
 impl EmbeddedViewer {
@@ -91,7 +100,7 @@ impl EmbeddedViewer {
         // BrowserOptions / RenderingProperties: Multisampling defaults to 4 (clamped to the
         // device maximum, which is 4 here until `configure_samples` has seen the adapter).
         renderer.set_sample_count(DEFAULT_MULTISAMPLING);
-        EmbeddedViewer { core: None, renderer, source: None, size: (size.0.max(1), size.1.max(1)) }
+        EmbeddedViewer { core: None, renderer, source: None, size: (size.0.max(1), size.1.max(1)), closed_prints: vec![] }
     }
 
     /// Tell the viewer which multisample counts the adapter supports for the host's target
@@ -154,12 +163,26 @@ impl EmbeddedViewer {
 
     // --- world ---------------------------------------------------------------------------
 
-    /// Load a world (replacing the current one).
+    /// Load a world (replacing the current one). The current world is unloaded first, also when
+    /// the new one fails to load: then no world is loaded.
     pub fn load(&mut self, path: &Path, options: LoadOptions) -> Result<(), String> {
+        self.close_world();
+        self.source = Some((path.to_path_buf(), options.clone()));
+
         let v = Viewer3d::load(path, options.root.as_deref(), options.start_time.unwrap_or_else(realtime_now), self.size.0, self.size.1)?;
         self.core = Some(v);
-        self.source = Some((path.to_path_buf(), options));
         Ok(())
+    }
+
+    /// Unload the current world, if any (ISO/IEC 14772-1 4.12.3: its Scripts get `shutdown ()`,
+    /// [`x3d_runtime::Runtime::unload_world`]), then drop it. This comes before anything creates
+    /// the next world's script engine, which takes over the thread's script state. What the
+    /// Scripts print in `shutdown ()` is kept for [`EmbeddedViewer::take_prints`].
+    fn close_world(&mut self) {
+        if let Some(mut c) = self.core.take() {
+            c.rt.unload_world();
+            self.closed_prints.append(&mut c.rt.prints);
+        }
     }
 
     /// Load the same file again (the file changed on disk), keeping the navigation type.
@@ -178,7 +201,7 @@ impl EmbeddedViewer {
     }
 
     pub fn unload(&mut self) {
-        self.core = None;
+        self.close_world();
         self.source = None;
     }
 
@@ -280,9 +303,15 @@ impl EmbeddedViewer {
         self.core.as_ref().map(|c| c.log()).unwrap_or(&[])
     }
 
-    /// Browser.print output since the last call.
+    /// Browser.print output since the last call (a world that was unloaded since comes first).
     pub fn take_prints(&mut self) -> Vec<String> {
-        self.core.as_mut().map(|c| std::mem::take(&mut c.rt.prints)).unwrap_or_default()
+        let mut out = std::mem::take(&mut self.closed_prints);
+
+        if let Some(c) = self.core.as_mut() {
+            out.append(&mut c.rt.prints);
+        }
+
+        out
     }
 
     /// Anchor activations since the last call (urls and parameters; the viewer never opens them).

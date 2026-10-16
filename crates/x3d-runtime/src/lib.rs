@@ -25,6 +25,7 @@ pub mod inline;
 pub mod loader;
 pub mod nodes;
 pub mod protos;
+pub mod release;
 pub mod script;
 pub mod url_object;
 
@@ -270,6 +271,21 @@ pub struct Runtime {
     /// Follower nodes in the order they were initialized (the order of their `set_live__`
     /// interests on the scene's live field).
     pub followers: Vec<NodeId>,
+    /// Candidates for the next sweep of [`release`]: nodes of disposed scenes, nothing else refers to them yet.
+    pub release_queue: Vec<NodeId>,
+    /// Disposed contexts whose tables are emptied once their nodes are released.
+    pub release_ctxs: Vec<CtxId>,
+    /// Contexts that the sweep emptied. Their entries in the scene's PROTO, EXTERNPROTO, IMPORT and
+    /// EXPORT tables stay (the ids are positions) but count for nothing: a slot they name may hold a
+    /// node of another scene now.
+    pub(crate) emptied_ctxs: std::collections::HashSet<CtxId>,
+    /// Nodes released since the host last asked ([`Runtime::take_released`]).
+    pub released_log: Vec<NodeId>,
+    /// Nodes released so far, and sweeps that released any.
+    pub released_total: u64,
+    pub release_epoch: u64,
+    /// The empty node that the JavaScript wrappers of released nodes point to.
+    pub tombstone: Option<NodeId>,
     /// Process-unique id of this runtime (stable when an Inline's runtime moves in its map).
     pub uid: u64,
 }
@@ -322,6 +338,13 @@ impl Runtime {
             frame_rate: 60.0,
             scene_live: false,
             followers: vec![],
+            release_queue: vec![],
+            release_ctxs: vec![],
+            emptied_ctxs: Default::default(),
+            released_log: vec![],
+            released_total: 0,
+            release_epoch: 0,
+            tombstone: None,
             uid: {
                 static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
                 NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
@@ -369,8 +392,8 @@ impl Runtime {
         self.prints.push(text);
     }
 
-    fn create_internal_node(&mut self, name: &'static str) -> NodeId {
-        self.scene.nodes.push(Node {
+    pub(crate) fn create_internal_node(&mut self, name: &'static str) -> NodeId {
+        self.scene.alloc_node(Node {
             kind: NodeKind::Internal(name),
             ctx: ROOT,
             name: String::new(),
@@ -378,9 +401,7 @@ impl Runtime {
             user_fields: vec![],
             private_fields: vec![],
             can_user_defined_fields: false,
-        });
-
-        (self.scene.nodes.len() - 1) as NodeId
+        })
     }
 
     // --- node and field state ------------------------------------------------------------
@@ -792,7 +813,7 @@ impl Runtime {
         let ctx_count = scene.contexts.len();
         let m = self.scene.merge(scene, parent, outer);
 
-        for n in m.node_offset..self.scene.nodes.len() as NodeId {
+        for n in m.node_offset..m.node_end {
             self.nrt_mut(n);
             self.construct_node(n);
         }
@@ -841,9 +862,14 @@ impl Runtime {
     pub fn sfnode_from_string(&mut self, text: &str, ctx: CtxId) -> Result<Option<NodeId>, String> {
         let first_new = self.scene.nodes.len() as NodeId;
         let first_setup = self.scene.setup_order.len();
-        let scene = std::mem::replace(&mut self.scene, Scene::new(""));
-        let (scene, result) = x3d_parse::Parser::parse_sfnode_into(scene, ctx, text);
+        let mut scene = std::mem::replace(&mut self.scene, Scene::new(""));
 
+        // The nodes it creates are found as the range `first_new..`: none goes into a released slot.
+        scene.append_only = true;
+
+        let (mut scene, result) = x3d_parse::Parser::parse_sfnode_into(scene, ctx, text);
+
+        scene.append_only = false;
         self.scene = scene;
 
         for w in std::mem::take(&mut self.scene.warnings) {

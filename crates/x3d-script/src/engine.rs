@@ -168,6 +168,46 @@ impl ScriptHost for QuickJsHost {
             }
         })
     }
+
+    fn destroy_context(&mut self, node: NodeId) {
+        self.destroy(node);
+    }
+
+    fn release_nodes(&mut self, rt: &mut Runtime, nodes: &[NodeId], tombstone: NodeId) {
+        self.enter(rt);
+
+        // A field handle of a released node keeps the value it had; it no longer reaches the field.
+        let dead: std::collections::HashSet<NodeId> = nodes.iter().copied().collect();
+
+        with_state(|s| {
+            let stale: Vec<(FKey, u32)> = s.attached.iter().filter(|(k, _)| dead.contains(&k.0)).map(|(k, h)| (*k, *h)).collect();
+
+            for (k, h) in stale {
+                s.attached.remove(&k);
+
+                // SAFETY: `enter` made `rt` the runtime of this host for the duration of the call.
+                let value = unsafe { (*s.rt).value(k).clone() };
+
+                s.slots[h as usize] = Slot::Value(value);
+            }
+        });
+
+        self.context.with(|ctx| {
+            if let Ok(f) = ctx.globals().get::<_, Function>("__release") {
+                let _ = f.call::<_, ()>((nodes.to_vec(), tombstone));
+            }
+        });
+    }
+}
+
+impl QuickJsHost {
+    fn destroy(&mut self, node: NodeId) {
+        self.context.with(|ctx| {
+            if let Ok(f) = ctx.globals().get::<_, Function>("__destroy") {
+                let _ = f.call::<_, ()>((node,));
+            }
+        });
+    }
 }
 
 // --- slots ---------------------------------------------------------------------------------
