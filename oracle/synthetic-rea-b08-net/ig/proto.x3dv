@@ -1,0 +1,7 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+PROTO PB [ field SFVec3f size 1 1 1 ] { Shape { geometry Box { size IS size } } }
+PB { size 0.6 1.4 0.6 }

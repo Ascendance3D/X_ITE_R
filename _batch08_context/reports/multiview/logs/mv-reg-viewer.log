@@ -1,0 +1,305 @@
+   Compiling x3d-parse v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-parse)
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+   Compiling x3d-runtime v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-runtime)
+warning: `x3d-parse` (lib) generated 3 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+   Compiling x3d-script v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-script)
+   Compiling x3d-render v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-render)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1080:4
+     |
+1080 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:582:19
+    |
+582 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+582 -     Custom(usize, bool),
+582 +     Custom(usize, ()),
+    |
+
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-viewer)
+warning: `x3d-render` (lib) generated 4 warnings
+    Finished `release` profile [optimized] target(s) in 36.76s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/depth_modes.rs (/tmp/b08/multiview/build/release/deps/depth_modes-1d2fcb35249673c2)
+
+running 1 test
+test depth_modes_cycle_and_agree_on_plain_scenes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.99s
+
+     Running tests/embed.rs (/tmp/b08/multiview/build/release/deps/embed-dc0b8f88924a7f82)
+
+running 5 tests
+test a_failed_replacement_leaves_no_world_and_does_not_revive_the_old_one ... ok
+test reload_and_replacement_shut_the_old_world_down_first ... ok
+test unload_shuts_the_world_down_once ... ok
+test dropping_the_viewer_unloads_its_world ... ok
+test renders_into_a_host_texture_and_reloads ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.96s
+
+     Running tests/geometry_provider_viewer.rs (/tmp/b08/multiview/build/release/deps/geometry_provider_viewer-b3078869ae4d1c24)
+
+running 1 test
+test a_viewer_installs_the_provider_for_every_runtime_of_the_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/particles_b06_events.rs (/tmp/b08/multiview/build/release/deps/particles_b06_events-4089b613baf9f978)
+
+running 4 tests
+test emitter_and_system_fields_change_while_particles_fly ... ok
+test max_particles_scenario_numbers ... ok
+test max_particles_and_enabled_change ... ok
+test explosion_fields_change_between_bursts ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/particles_b06_exact.rs (/tmp/b08/multiview/build/release/deps/particles_b06_exact-fc2fdb99ce33d996)
+
+running 30 tests
+test bounded_disabled ... ok
+test cone_spherical ... ok
+test cone_basic ... ok
+test point_fixed ... ok
+test cone_zeroangle ... ok
+test bounded_floor_damp1 ... ok
+test bounded_floor_gravity ... ok
+test surface_ifs_twosided ... ok
+test surface_ifs_solid ... ok
+test point_dir ... ok
+test bounded_two ... ok
+test cone_wide ... ok
+test point_nospeed ... ok
+test bounded_floor ... ok
+test point_spherical ... ok
+test bounded_box ... ok
+test point_create_off ... ok
+test point_off ... ok
+test surface_box ... ok
+test point_dirraw ... ok
+test cone_down ... ok
+test volume_cube_spherical ... ok
+test volume_empty ... ok
+test explosion_basic ... ok
+test explosion_fixed ... ok
+test cone_tilt ... ok
+test surface_nosurface ... ok
+test volume_cube ... ok
+test volume_twocubes ... ok
+test spot_values_from_the_gpu ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/particles_b06_retention.rs (/tmp/b08/multiview/build/release/deps/particles_b06_retention-9dce34330157bbee)
+
+running 2 tests
+test a_released_system_has_no_state_and_no_interest ... ok
+test particle_systems_come_and_go_with_their_inline_100_cycles ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/particles_b06_stat.rs (/tmp/b08/multiview/build/release/deps/particles_b06_stat-a6014821d1f7fe8e)
+
+running 8 tests
+test explosion_stat ... ok
+test point_spherical_stat ... ok
+test cone_wide_stat ... ok
+test cone_basic_stat ... ok
+test surface_ifs_twosided_stat ... ok
+test surface_box_stat ... ok
+test volume_cube_stat ... ok
+test volume_twocubes_stat ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/particles_b06_unreachable.rs (/tmp/b08/multiview/build/release/deps/particles_b06_unreachable-043bd05d5f0097df)
+
+running 11 tests
+test a_created_scene_goes_as_a_whole ... ok
+test a_node_held_by_a_script_variable_survives_until_the_script_drops_it ... ok
+test a_node_in_a_script_mfnode_survives_until_the_script_drops_it ... ok
+test a_node_reachable_only_through_a_route_survives_until_the_route_is_deleted ... ok
+test a_node_used_elsewhere_survives_removal_from_one_parent ... ok
+test a_released_system_leaves_no_interest_no_watcher_and_no_buffer ... ok
+test a_script_host_that_cannot_report_keeps_every_created_node ... ok
+test a_system_held_by_a_group_stays_and_goes_with_the_children ... ok
+test released_ids_are_reused_safely ... ok
+test unloading_an_inline_releases_what_its_script_created ... ok
+test unreferenced_runtime_created_systems_are_released_100_cycles ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running tests/particles_b07.rs (/tmp/b08/multiview/build/release/deps/particles_b07-2eae475aaddd7d06)
+
+running 5 tests
+test a_world_system_removed_from_its_group_runs_on_without_growing ... ok
+test oracle_cases_match_x_ite ... ok
+test polyline_cache_follows_the_scene_over_100_inline_reloads ... ok
+test polyline_cache_tracks_coord_changes_without_growing ... ok
+test script_created_polyline_systems_are_released_100_cycles ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+
+     Running tests/physics_b06_baseline.rs (/tmp/b08/multiview/build/release/deps/physics_b06_baseline-7a9f03c9877170eb)
+
+running 48 tests
+test fields_roundtrip ... ok
+test fall_sphere ... ok
+test finite_rotation ... ok
+test joint_motor ... ok
+test forces_torques ... ok
+test damping ... ok
+test fall_masses ... ok
+test center_of_mass ... ok
+test reload_inline ... ok
+test joint_universal ... ok
+test inertia_ignored ... ok
+test gravity_flags ... ok
+test joint_ball_offaxis ... ok
+test prefer_accuracy ... ok
+test joint_slider ... ok
+test rt_collection ... ok
+test joint_slider_gravity ... ok
+test joint_hinge_single ... ok
+test joint_ball ... ok
+test joint_hinge_double ... ok
+test rt_joint ... ok
+test joint_hinge_single_all ... ok
+test quirks_of_x_ite_are_in_the_baselines_and_in_ours ... ok
+test joint_hinge_double_rate ... ok
+test shape_box_box ... ok
+test shape_cylinder ... ok
+test shape_elevation ... ok
+test shape_ifs_floor ... ok
+test shape_elevation_origin ... ok
+test joint_chain ... ok
+test shape_sphere ... ok
+test shape_cone ... ok
+test sensor_partial ... ok
+test shape_box ... ok
+test shape_ifs_dynamic ... ok
+test shape_cone_open ... ok
+test shape_thickness ... ok
+test rt_sensor ... ok
+test rt_collider ... ok
+test velocities ... ok
+test collision_space ... ok
+test rt_body ... ok
+test sleep_rest ... ok
+test collider_friction ... ok
+test collider_bounce ... ok
+test collidable_offset ... ok
+test shape_cylinder_open ... ok
+test sleep_wake ... ok
+
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+
+     Running tests/physics_b06_lifecycle.rs (/tmp/b08/multiview/build/release/deps/physics_b06_lifecycle-d7c36a9b5d03c4f0)
+
+running 6 tests
+test reused_node_ids_inherit_nothing ... ok
+test a_joint_removed_from_joints_leaves_the_bullet_world ... ok
+test a_body_removed_from_bodies_leaves_the_bullet_world ... ok
+test a_removed_body_no_longer_affects_the_world ... ok
+test repeated_body_and_joint_create_remove_stay_flat ... ok
+test physics_worlds_come_and_go_with_their_inline_100_cycles ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/pointer_slot_reuse.rs (/tmp/b08/multiview/build/release/deps/pointer_slot_reuse-912263d05063d563)
+
+running 6 tests
+test a_held_cylinder_sensor_does_not_drive_the_node_that_takes_its_slot ... ok
+test a_held_world_sensor_survives_an_inline_swap ... ok
+test a_held_sphere_sensor_does_not_drive_the_node_that_takes_its_slot ... ok
+test a_hover_does_not_carry_over_to_the_node_that_takes_its_slot ... ok
+test a_pressed_anchor_does_not_fire_the_anchor_that_takes_its_slot ... ok
+test a_held_plane_sensor_does_not_drive_the_node_that_takes_its_slot ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/retention_viewer.rs (/tmp/b08/multiview/build/release/deps/retention_viewer-43f8cb92eb030dd0)
+
+running 2 tests
+test w6_viewer_pointer_slot_reuse ... ok
+test embedded::w7_embedded_viewer_load_and_unload ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.89s
+
+     Running tests/viewer.rs (/tmp/b08/multiview/build/release/deps/viewer-4da1b52910a14a33)
+
+running 11 tests
+test chaser_converges_with_cosine_step_response ... ok
+test anchor_activation_is_reported_not_opened ... ok
+test live_time_sensor_drives_interpolator ... ok
+test render_cache_rebuilds_only_changed_geometry ... ok
+test touch_and_plane_sensors_fire ... ok
+test examine_drag_rotates_and_wheel_zooms ... ok
+test viewpoint_stack_next_previous_first_last ... ok
+test script_events_processed_each_frame ... ok
+test walk_forward_moves_and_gravity_holds_on_ground ... ok
+test examine_pan_accumulates_moves_within_a_frame ... ok
+test render_cache_keeps_background_textures ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+exit 0

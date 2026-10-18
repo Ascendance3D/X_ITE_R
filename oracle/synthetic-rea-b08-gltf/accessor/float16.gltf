@@ -1,0 +1,62 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 24
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 24,
+   "byteLength": 12
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5131,
+   "count": 4,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 36,
+   "uri": "data:application/octet-stream;base64,ALwAvAAAADwAvAAAADwAPAAAALwAPAAAAAABAAIAAAACAAMA"
+  }
+ ]
+}

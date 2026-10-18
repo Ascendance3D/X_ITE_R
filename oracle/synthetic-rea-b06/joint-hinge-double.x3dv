@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection {  bodies [ DEF A RigidBody { fixed TRUE position 0 5 0 geometry DEF A_C CollidableShape { shape Shape { geometry Box { size 0.5 0.5 0.5 } } } }
+  DEF B RigidBody { mass 1 position 1.5 5 0 geometry DEF B_C CollidableShape { shape Shape { geometry Box { size 3 0.4 0.4 } } } } ]
+  joints [ DEF J DoubleAxisHingeJoint { body1 USE A body2 USE B anchorPoint 0 5 0 axis1 0 0 1 axis2 0 1 0 desiredAngularVelocity1 2 maxTorque1 50 suspensionForce 1 forceOutput [ "ALL" ] } ] }

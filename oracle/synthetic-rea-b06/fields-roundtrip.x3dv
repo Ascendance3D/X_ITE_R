@@ -1,0 +1,16 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { enabled FALSE preferAccuracy TRUE errorCorrection 0.5 iterations 7 gravity 1 -2 3 constantForceMix 0.01 maxCorrectionSpeed 2 contactSurfaceThickness 0.05 autoDisable TRUE disableTime 3 disableLinearSpeed 0.1 disableAngularSpeed 0.2 visible FALSE bboxDisplay TRUE bboxSize 1 2 3 bboxCenter 4 5 6
+  collider DEF CC CollisionCollection { enabled FALSE appliedParameters [ "BOUNCE" "FRICTION_COEFFICIENT_2" "SLIP_COEFFICIENT_2" "BOGUS" ] bounce 0.7 minBounceSpeed 0.2 frictionCoefficients 0.3 0.4 surfaceSpeed 0.5 0.6 slipFactors 0.7 0.8 softnessConstantForceMix 0.02 softnessErrorCorrection 0.3 visible FALSE bboxDisplay TRUE bboxSize 1 1 1 bboxCenter 1 1 1 collidables [ USE A_O USE SP ] }
+  bodies [ DEF A RigidBody { fixed TRUE position 1 2 3 orientation 0 1 0 1 linearVelocity 1 2 3 angularVelocity 4 5 6 useFiniteRotation TRUE finiteRotationAxis 1 0 0 autoDamp TRUE linearDampingFactor 0.1 angularDampingFactor 0.2 mass 3 inertia 1 2 3 4 5 6 7 8 9 centerOfMass 1 1 1 forces [ 1 1 1 ] torques [ 2 2 2 ] useGlobalGravity FALSE autoDisable TRUE disableTime 4 disableLinearSpeed 0.3 disableAngularSpeed 0.4 enabled FALSE bboxDisplay TRUE bboxSize 2 2 2 bboxCenter 3 3 3
+    geometry DEF A_O CollidableOffset { enabled FALSE translation 1 2 3 rotation 0 0 1 2 visible FALSE bboxDisplay TRUE bboxSize 1 1 1 bboxCenter 2 2 2 collidable DEF A_C CollidableShape { enabled FALSE translation 3 2 1 rotation 1 0 0 1 visible FALSE bboxDisplay TRUE bboxSize 1 1 1 bboxCenter 1 2 3 shape Shape { geometry Box { } } } } } ]
+  joints [ DEF J1 BallJoint { forceOutput [ "body1AnchorPoint" ] anchorPoint 1 2 3 body1 USE A }
+           DEF J2 SingleAxisHingeJoint { forceOutput [ "ALL" ] anchorPoint 1 2 3 axis 1 1 0 minAngle -1 maxAngle 2 stopBounce 0.1 stopErrorCorrection 0.2 body2 USE A }
+           DEF J3 DoubleAxisHingeJoint { forceOutput [ "ALL" ] anchorPoint 1 2 3 axis1 0 0 1 axis2 1 0 0 minAngle1 -1 maxAngle1 1 desiredAngularVelocity1 1 desiredAngularVelocity2 2 maxTorque1 3 maxTorque2 4 stop1Bounce 0.1 stop1ConstantForceMix 0.2 stop1ErrorCorrection 0.3 suspensionForce 0.4 suspensionErrorCorrection 0.5 }
+           DEF J4 SliderJoint { forceOutput [ "separation" ] axis 1 0 0 minSeparation -1 maxSeparation 2 sliderForce 3 stopBounce 0.1 stopErrorCorrection 0.2 }
+           DEF J5 UniversalJoint { forceOutput [ "ALL" ] anchorPoint 1 2 3 axis1 0 1 0 axis2 0 0 1 stop1Bounce 0.1 stop2Bounce 0.2 stop1ErrorCorrection 0.3 stop2ErrorCorrection 0.4 }
+           DEF J6 MotorJoint { autoCalc TRUE forceOutput [ "ALL" ] axis1Angle 1 axis2Angle 2 axis3Angle 3 axis1Torque 4 axis2Torque 5 axis3Torque 6 enabledAxes 3 motor1Axis 0 1 0 motor2Axis 0 0 1 motor3Axis 1 0 0 stop1Bounce 0.1 stop2Bounce 0.2 stop3Bounce 0.3 stop1ErrorCorrection 0.4 stop2ErrorCorrection 0.5 stop3ErrorCorrection 0.6 } ] }
+DEF SP CollisionSpace { enabled FALSE useGeometry TRUE visible FALSE bboxDisplay TRUE bboxSize 1 2 3 bboxCenter 4 5 6 collidables [ USE A_C ] }
+DEF S CollisionSensor { enabled FALSE description "d" collider USE CC }

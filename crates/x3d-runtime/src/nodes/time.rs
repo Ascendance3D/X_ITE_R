@@ -44,10 +44,87 @@ pub fn clamp(value: f64, min: f64, max: f64) -> f64 {
 
 impl Runtime {
     fn ts(&mut self, node: NodeId) -> &mut TimeState {
+        // BufferAudioSource keeps its X3DUrlObject state in State; its time state is here.
+        if !matches!(self.nrt_mut(node).state, State::Time(_)) {
+            return self.time_states.entry(node).or_default();
+        }
+
         match &mut self.nrt_mut(node).state {
             State::Time(t) => t,
-            _ => panic!("not a time dependent node"),
+            _ => unreachable!(),
         }
+    }
+
+    /// TimeSensor, or a Sound node (X3DSoundSourceNode, X3DSoundProcessingNode).
+    fn is_time_sensor(&self, node: NodeId) -> bool {
+        self.builtin_name(node) == Some("TimeSensor")
+    }
+
+    /// The set_time interest on timeEvents.
+    fn time_events_cb(&self, node: NodeId) -> Cb {
+        if self.is_time_sensor(node) { Cb::TimeSensorSetTime } else { Cb::Sound(super::sound::SoundCb::Time) }
+    }
+
+    /// `this ._loop`: the loop field, or the private `loop` child object of the Sound nodes
+    /// without one.
+    pub(crate) fn time_loop(&self, node: NodeId) -> bool {
+        match self.pre(node, "loop").or_else(|| self.private_field(node, "loop")) {
+            Some(k) => matches!(self.value(k), FieldValue::SFBool(true)),
+            None => false,
+        }
+    }
+
+    /// X3DTimeDependentNode.initialize. `enabled_cb`: the set_enabled__ the class has
+    /// (X3DSoundProcessingNode overrides it).
+    pub(crate) fn time_dependent_initialize(&mut self, node: NodeId, enabled_cb: Cb) {
+        self.watch_live(node);
+
+        let initialized = self.private_field(node, "initialized").unwrap();
+
+        self.add_interest(initialized, node, Cb::TimeSetLoop);
+        self.interest(node, "enabled", enabled_cb);
+        if let Some(k) = self.pre(node, "loop").or_else(|| self.private_field(node, "loop")) {
+            self.add_interest(k, node, Cb::TimeSetLoop);
+        }
+        self.interest(node, "startTime", Cb::TimeSetStartTime);
+        self.interest(node, "pauseTime", Cb::TimeSetPauseTime);
+        self.interest(node, "resumeTime", Cb::TimeSetResumeTime);
+        self.interest(node, "stopTime", Cb::TimeSetStopTime);
+
+        let (start, pause, resume, stop) = (
+            self.get_f64(node, "startTime"),
+            self.get_f64(node, "pauseTime"),
+            self.get_f64(node, "resumeTime"),
+            self.get_f64(node, "stopTime"),
+        );
+
+        let s = self.ts(node);
+        s.start_time_value = start;
+        s.pause_time_value = pause;
+        s.resume_time_value = resume;
+        s.stop_time_value = stop;
+
+        let now = self.now;
+        self.set_value(initialized, FieldValue::SFTime(now));
+    }
+
+    /// X3DTimeDependentNode.resetElapsedTime.
+    pub(crate) fn time_reset_elapsed(&mut self, node: NodeId) {
+        let now = self.now;
+        let s = self.ts(node);
+        s.start = now;
+        s.pause = now;
+        s.pause_interval = 0.0;
+    }
+
+    /// X3DTimeDependentNode.getElapsedTime.
+    pub(crate) fn time_elapsed_time(&mut self, node: NodeId) -> f64 {
+        self.time_elapsed(node)
+    }
+
+    /// X3DTimeDependentNode.stop.
+    pub(crate) fn time_stop_node(&mut self, node: NodeId) {
+        self.time_stop(node);
     }
 
     fn range(&self, node: NodeId) -> [f64; 3] {
@@ -119,7 +196,7 @@ impl Runtime {
     }
 
     pub(crate) fn time_set_loop(&mut self, node: NodeId) {
-        if self.get_bool(node, "enabled") && self.get_bool(node, "loop") {
+        if self.get_bool(node, "enabled") && self.time_loop(node) {
             let s = self.ts(node).clone();
 
             if s.stop_time_value <= s.start_time_value && s.start_time_value <= self.now {
@@ -128,6 +205,9 @@ impl Runtime {
         }
 
         // set_loop (): empty for TimeSensor.
+        if !self.is_time_sensor(node) {
+            self.sound_set_loop(node);
+        }
     }
 
     pub(crate) fn time_set_start_time(&mut self, node: NodeId) {
@@ -216,6 +296,25 @@ impl Runtime {
             return;
         }
 
+        if !self.is_time_sensor(node) {
+            self.time_reset_elapsed(node);
+
+            // The event order below is very important.
+            self.set_pre(node, "isActive", FieldValue::SFBool(true));
+            self.sound_set_start(node);
+
+            if self.time_node_live(node) {
+                let k = self.private_field(self.browser_node, "timeEvents").unwrap();
+                let cb = self.time_events_cb(node);
+                self.add_interest(k, node, cb);
+            } else {
+                self.ts(node).disabled = true;
+                self.time_real_pause(node);
+            }
+
+            return;
+        }
+
         // resetElapsedTime
         let now = self.now;
         let s = self.ts(node);
@@ -283,16 +382,29 @@ impl Runtime {
         self.ts(node).pause = now;
 
         // set_pause (): timePrepareEvents .removeInterest ("set_prepare", this).
-        self.time_sensor_remove_prepare(node);
+        if self.is_time_sensor(node) {
+            self.time_sensor_remove_prepare(node);
+        } else {
+            self.sound_set_pause(node);
+        }
 
         let k = self.private_field(self.browser_node, "timeEvents").unwrap();
-        self.remove_interest(k, node, Cb::TimeSensorSetTime);
+        let cb = self.time_events_cb(node);
+        self.remove_interest(k, node, cb);
     }
 
     /// X3DTimeDependentNode.real_resume.
     fn time_real_resume(&mut self, node: NodeId) {
         let interval = self.now - self.ts(node).pause;
         self.ts(node).pause_interval += interval;
+
+        if !self.is_time_sensor(node) {
+            self.sound_set_resume(node);
+            let k = self.private_field(self.browser_node, "timeEvents").unwrap();
+            let cb = self.time_events_cb(node);
+            self.add_interest(k, node, cb);
+            return;
+        }
 
         // TimeSensor.set_resume
         self.time_sensor_add_prepare(node);
@@ -316,8 +428,12 @@ impl Runtime {
 
     // --- timeouts (X3DTimeDependentNode.addTimeout / removeTimeout / processTimeout) ----------
 
-    fn add_timeout(&mut self, node: NodeId, name: &'static str, time: f64) {
+    pub(crate) fn add_timeout(&mut self, node: NodeId, name: &'static str, time: f64) {
         self.remove_timeout(node, name);
+
+        // `setTimeout (fn, (time - currentTime) * 1000)`: a NaN delay is 0, the timer fires at
+        // the next timer run (a NaN time is never <= now).
+        let time = if time.is_nan() { self.now } else { time };
 
         // Only a live scene has a frame clock; the oracle's frozen scene never fires them.
         if self.live {
@@ -325,7 +441,7 @@ impl Runtime {
         }
     }
 
-    fn remove_timeout(&mut self, node: NodeId, name: &str) {
+    pub(crate) fn remove_timeout(&mut self, node: NodeId, name: &str) {
         self.timeouts.retain(|t| !(t.node == node && t.name == name));
     }
 
@@ -369,6 +485,7 @@ impl Runtime {
                 "start" => self.time_do_start(t.node),
                 "pause" => self.time_do_pause(t.node),
                 "resume" => self.time_do_resume(t.node),
+                "abort" => self.load_sensor_abort(t.node),
                 _ => self.time_stop(t.node),
             }
 
@@ -383,7 +500,11 @@ impl Runtime {
         }
 
         // set_stop (): removes the prepare interest only.
-        self.time_sensor_remove_prepare(node);
+        if self.is_time_sensor(node) {
+            self.time_sensor_remove_prepare(node);
+        } else {
+            self.sound_set_stop(node);
+        }
 
         if self.is_paused(node) {
             self.set_pre(node, "isPaused", FieldValue::SFBool(false));
@@ -392,7 +513,8 @@ impl Runtime {
         self.set_pre(node, "isActive", FieldValue::SFBool(false));
 
         let k = self.private_field(self.browser_node, "timeEvents").unwrap();
-        self.remove_interest(k, node, Cb::TimeSensorSetTime);
+        let cb = self.time_events_cb(node);
+        self.remove_interest(k, node, cb);
     }
 
     /// TimeSensor.setRange.

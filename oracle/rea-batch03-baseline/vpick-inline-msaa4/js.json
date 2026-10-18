@@ -1,0 +1,1521 @@
+{
+  "ok": true,
+  "poses": {
+    "8": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "68": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "72": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "76": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "84": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "88": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "92": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "96": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "104": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "108": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "112": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "116": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "124": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "128": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "132": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "136": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "140": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "144": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "148": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "152": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "156": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "160": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "164": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "168": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "172": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "176": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "180": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "184": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "188": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "192": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "196": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "200": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "204": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "208": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "212": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "216": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "220": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "224": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "228": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "232": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "236": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "240": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "244": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "248": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "252": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "256": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "260": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 0\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 0\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 0\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 0\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 0\n  inputOutput    SFString log \"\"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 1\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 1\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p 0.6 0.4 0\n  inputOutput    SFInt32  IP_p_count 1\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 1\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 1\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 1\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 1\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [\n    0 0 0,\n    0.6 0.4 0\n  ]\n  inputOutput    SFInt32  IP_p_count 2\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 1\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 1\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 1\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 1\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [\n    0 0 0,\n    0.6 0.4 0\n  ]\n  inputOutput    SFInt32  IP_p_count 2\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 1\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 1\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 1\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 1\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [\n    0 0 0,\n    0.6 0.4 0\n  ]\n  inputOutput    SFInt32  IP_p_count 2\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 1\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 1\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 1\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 1\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p 0 0 0\n  inputOutput    SFInt32  IP_p_count 3\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 1\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 1\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "68": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 1\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 1\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p 0 0 0\n  inputOutput    SFInt32  IP_p_count 3\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 1\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 1\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "72": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 1\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IV_g_count 1\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "76": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "84": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "88": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "92": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "96": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "104": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "108": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "112": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "116": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  load FALSE\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "124": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "128": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "132": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "136": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "140": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "144": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "148": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "152": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "156": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "160": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "164": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 2\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 2\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 4\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 2\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 2\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "168": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 3\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 3\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p 0.6 0.4 0\n  inputOutput    SFInt32  IP_p_count 5\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 3\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 3\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "172": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 3\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 3\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [\n    0 0 0,\n    0.6 0.4 0\n  ]\n  inputOutput    SFInt32  IP_p_count 6\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 3\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 3\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "176": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 3\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 3\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [\n    0 0 0,\n    0.6 0.4 0\n  ]\n  inputOutput    SFInt32  IP_p_count 6\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 3\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 3\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "180": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 3\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 3\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [\n    0 0 0,\n    0.6 0.4 0\n  ]\n  inputOutput    SFInt32  IP_p_count 6\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 3\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 3\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "184": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 3\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 3\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p 0 0 0\n  inputOutput    SFInt32  IP_p_count 7\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 3\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 3\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "188": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a TRUE\n  inputOutput    SFInt32  IP_a_count 3\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IP_g_count 3\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p 0 0 0\n  inputOutput    SFInt32  IP_p_count 7\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 3\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g USE _1\n  inputOutput    SFInt32  IV_g_count 3\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "192": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a TRUE\n  inputOutput    SFInt32  IV_a_count 3\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g DEF _1 Sphere { }\n  inputOutput    SFInt32  IV_g_count 3\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "196": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "200": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "204": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "208": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "212": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "216": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "220": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "224": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "228": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "232": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "236": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "240": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "244": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "248": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "252": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "256": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n",
+    "260": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Picking : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Geometry2D : 1\n\nViewpoint {\n  position 0 0 14\n}\n\nDEF ISENS Inline {\n  url \"vpick-inline-sensor.wrl\"\n}\n\nDEF C TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF PI PositionInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    -6 0 0,\n    6 0 0\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFBool   on_IP_a\n  inputOutput    SFBool   IP_a FALSE\n  inputOutput    SFInt32  IP_a_count 4\n  inputOnly      MFNode   on_IP_g\n  inputOutput    MFNode   IP_g [ ]\n  inputOutput    SFInt32  IP_g_count 4\n  inputOnly      MFVec3f  on_IP_p\n  inputOutput    MFVec3f  IP_p [ ]\n  inputOutput    SFInt32  IP_p_count 8\n  inputOnly      SFBool   on_IV_a\n  inputOutput    SFBool   IV_a FALSE\n  inputOutput    SFInt32  IV_a_count 4\n  inputOnly      MFNode   on_IV_g\n  inputOutput    MFNode   IV_g [ ]\n  inputOutput    SFInt32  IV_g_count 4\n  inputOutput    SFString log \"IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 Ks Kr IP_a1 IP_g1 IP_p1 IV_a1 IV_g1 IP_p2 IP_p1 IP_a0 IP_g0 IP_p0 IV_a0 IV_g0 \"\n  inputOnly      SFString on_key\n  initializeOnly SFNode   isens USE ISENS\n\n  url \"javascript:\nfunction on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 's') isens .load = false;\n   if (k == 'r') isens .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nIMPORT ISENS.IP\nIMPORT ISENS.IV\nIMPORT ISENS.M AS IM\n\nROUTE C.fraction_changed TO PI.set_fraction\nROUTE PI.value_changed TO IM.set_translation\nROUTE IP.isActive TO R.on_IP_a\nROUTE IP.pickedGeometry TO R.on_IP_g\nROUTE IP.pickedPoint TO R.on_IP_p\nROUTE IV.isActive TO R.on_IV_a\nROUTE IV.pickedGeometry TO R.on_IV_g\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

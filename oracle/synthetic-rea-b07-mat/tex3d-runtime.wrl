@@ -1,0 +1,76 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Geometry2D:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+COMPONENT Lighting:3
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+Transform { translation -3 2 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF A ImageTexture3D { url "vol/u8-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 0 2 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF B ImageTexture3D { url [ "vol/not-a-volume.nrrd" "vol/rgb-raw.nrrd" ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 3 2 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF C ImageTexture3D { url "vol/u8-gzip.nrrd" load FALSE } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -3 -1.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF D ImageTexture3D { url "vol/mono2-explicit.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 0 -1.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF E ImageTexture3D { } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+DEF LS LoadSensor { timeOut 0 children [ USE A USE B USE C USE D USE E ] }
+DEF G Group { children [ DEF GS Transform { translation 3 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF F ImageTexture3D { url "vol/rgba-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } } ] }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFInt32 on_wa
+  inputOnly SFInt32 on_ha
+  inputOnly SFInt32 on_da
+  inputOnly SFInt32 on_ca
+  inputOnly SFInt32 on_cb
+  inputOnly SFInt32 on_ce
+  inputOnly SFBool on_loaded
+  inputOnly SFTime on_progress
+  inputOutput SFString log ""
+  initializeOnly SFNode a USE A
+  initializeOnly SFNode b USE B
+  initializeOnly SFNode c USE C
+  initializeOnly SFNode d USE D
+  initializeOnly SFNode e USE E
+  initializeOnly SFNode f USE F
+  initializeOnly SFNode g USE G
+  initializeOnly SFNode gs USE GS
+  url "javascript:
+var made = null;
+function on_wa (v) { log = log + 'Wa' + v + ' '; }
+function on_ha (v) { log = log + 'Ha' + v + ' '; }
+function on_da (v) { log = log + 'Da' + v + ' '; }
+function on_ca (v) { log = log + 'Ca' + v + ' '; }
+function on_cb (v) { log = log + 'Cb' + v + ' '; }
+function on_ce (v) { log = log + 'Ce' + v + ' '; }
+function on_loaded (v) { log = log + 'L' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') a .url = new MFString ('vol/rgb-raw.nrrd');
+   if (k == 'b') a .url = new MFString ('vol/missing.nrrd');
+   if (k == 'c') a .url = new MFString ('vol/missing.nrrd', 'vol/tiny-u8.nrrd');
+   if (k == 'd') c .load = true;
+   if (k == 'e') c .load = false;
+   if (k == 'f') e .url = new MFString ('vol/rle-8bit.dcm');
+   if (k == 'g') d .url = new MFString ('vol/bad-type.nrrd');
+   if (k == 'h') b .url = new MFString ();
+   if (k == 'i') b .url = new MFString ('vol/u8-ascii.nrrd');
+   if (k == 'j') { made = Browser .currentScene .createNode ('ImageTexture3D'); made .url = new MFString ('vol/la-raw.nrrd'); gs .children[0] .appearance .texture = made; }
+   if (k == 'k') g .removeChildren = new MFNode (gs);
+   if (k == 'l') g .addChildren = new MFNode (gs);
+   if (k == 'm') f .url = new MFString ('vol/wide-u8.nrrd');
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE A.width TO R.on_wa
+ROUTE A.height TO R.on_ha
+ROUTE A.depth TO R.on_da
+ROUTE A.colorDepth TO R.on_ca
+ROUTE B.colorDepth TO R.on_cb
+ROUTE E.colorDepth TO R.on_ce
+ROUTE LS.isLoaded TO R.on_loaded

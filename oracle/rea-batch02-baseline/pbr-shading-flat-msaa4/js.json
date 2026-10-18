@@ -1,0 +1,94 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Scripting : 1\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nSpotLight {\n  color 1 0.7 0.5\n  intensity 3\n  location -2.5 2 3\n  direction 0.6 -0.5 -0.6\n  radius 15\n  beamWidth 0.3\n  cutOffAngle 0.6\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"pbr/env.png\"\n  }\n}\n\nDEF OPTIONS Script {\n  url \"javascript:\nfunction initialize ()\n{\n   Browser .setBrowserOption ('Shading', 'FLAT');\n}\n\"\n}\n\nTransform {\n  translation -1.8 0.9 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseTexture ImageTexture {\n          url \"pbr/base.png\"\n        }\n        metallic 0\n        roughness 0.5\n      }\n    }\n    geometry Sphere {\n      radius 0.7\n    }\n  }\n}\n\nTransform {\n  translation 0 0.9 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        metallicRoughnessTexture ImageTexture {\n          url \"pbr/mr.png\"\n        }\n        occlusionStrength 0.8\n        occlusionTexture ImageTexture {\n          url \"pbr/occlusion.png\"\n        }\n      }\n    }\n    geometry Sphere {\n      radius 0.7\n    }\n  }\n}\n\nTransform {\n  translation 1.8 0.9 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.3 0.3 0.35\n        emissiveColor 1 1 1\n        emissiveTexture ImageTexture {\n          url \"pbr/emissive.png\"\n        }\n        metallic 0\n        roughness 0.6\n      }\n    }\n    geometry Sphere {\n      radius 0.7\n    }\n  }\n}\n\nTransform {\n  translation -1.8 -0.9 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.8 0.8 0.8\n        metallic 0\n        roughness 0.35\n        normalScale 1.5\n        normalTexture ImageTexture {\n          url \"pbr/normal.png\"\n        }\n      }\n    }\n    geometry Box {\n      size 1.2 1.2 1.2\n    }\n  }\n}\n\nTransform {\n  translation 0 -0.9 0\n  rotation 0 1 0 0.5\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        metallic 0.2\n        roughness 0.4\n      }\n      texture ImageTexture {\n        url \"pbr/base.png\"\n      }\n      textureTransform TextureTransform {\n        rotation 0.3\n        scale 2 2\n      }\n    }\n    geometry Box {\n      size 1.2 1.2 1.2\n    }\n  }\n}\n\nTransform {\n  translation 1.8 -0.9 0.5\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseTexture ImageTexture {\n          url \"pbr/base-alpha.png\"\n        }\n        metallic 0\n        roughness 0.3\n        transparency 0.2\n      }\n    }\n    geometry Sphere {\n      radius 0.7\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT HAnim:1
+Viewpoint { position 0 1 6 description "front" }
+DEF H HAnimHumanoid {
+  skeleton DEF J HAnimJoint {
+    name "humanoid_root"
+    children [
+      DEF S HAnimSite { name "x_pt" translation 1 0 0 children Shape { geometry Box { size 0.4 0.4 0.4 } } }
+      DEF SEG HAnimSegment { name "seg" children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Sphere { radius 0.3 } } }
+      Shape { geometry Cone { } }
+    ]
+  }
+  viewpoints DEF HS HAnimSite { name "cam_pt" translation 0 1 4 children Viewpoint { description "site view" } }
+  joints USE J
+  segments USE SEG
+  sites USE S
+}

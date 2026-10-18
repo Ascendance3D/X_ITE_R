@@ -1,0 +1,64 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA-verify oracle world: Switch (whichChoice driven by a Script), LOD (level_changed), Billboard. Authored; no archive content.
+Viewpoint { position 0 0 10 }
+DEF T TimeSensor { cycleInterval 3 loop TRUE startTime 946684800 }
+DEF DRV Script {
+  inputOnly SFFloat set_f
+  outputOnly SFInt32 choice
+  inputOutput SFInt32 step -1
+  url "ecmascript:
+function set_f (f, ts) {
+  var s = Math.floor (f * 6);
+  if (s == step) return;
+  step = s;
+  choice = s % 3;
+}
+"
+}
+Transform {
+  translation -3 0 0
+  children [
+    DEF SW Switch {
+      whichChoice 0
+      children [
+        Shape { geometry Box { } }
+        Shape { geometry Sphere { } }
+        Shape { geometry Cone { } }
+      ]
+    }
+  ]
+}
+Transform {
+  translation 3 0 0
+  children [
+    DEF LOD1 LOD {
+      range [ 5 15 ]
+      children [
+        Shape { geometry Box { } }
+        Shape { geometry Sphere { } }
+        Shape { geometry Cone { } }
+      ]
+    }
+  ]
+}
+Transform {
+  translation 0 3 0
+  children [
+    DEF BB Billboard {
+      axisOfRotation 0 1 0
+      children [ Shape { geometry Box { size 0.5 0.5 0.5 } } ]
+    }
+  ]
+}
+DEF OBS Script {
+  inputOutput SFInt32 sw -1
+  inputOutput SFInt32 lodLevel -1
+  url "ecmascript:
+function noop () { }
+"
+}
+ROUTE T.fraction_changed TO DRV.set_f
+ROUTE DRV.choice TO SW.set_whichChoice
+ROUTE SW.whichChoice_changed TO OBS.sw
+ROUTE LOD1.level_changed TO OBS.lodLevel

@@ -332,3 +332,92 @@ pub fn parse_int(text: &str) -> f64 {
 pub fn parse_float(text: &str) -> f64 {
     text.parse::<f64>().unwrap_or(f64::NAN)
 }
+
+/// JS StrWhiteSpaceChar (WhiteSpace and LineTerminator), as `parseFloat` / `parseInt` skip it.
+fn is_js_space(c: char) -> bool {
+    matches!(c, '\t' | '\n' | '\u{b}' | '\u{c}' | '\r' | ' ' | '\u{a0}' | '\u{feff}' | '\u{1680}' | '\u{2000}'..='\u{200a}' | '\u{2028}' | '\u{2029}' | '\u{202f}' | '\u{205f}' | '\u{3000}')
+}
+
+/// JS global `parseFloat (string)` on any string: the longest decimal (or `Infinity`) prefix
+/// after leading white space, else NaN.
+pub fn js_parse_float(text: &str) -> f64 {
+    let s = text.trim_start_matches(is_js_space);
+    let b = s.as_bytes();
+    let mut i = 0;
+
+    if i < b.len() && (b[i] == b'+' || b[i] == b'-') {
+        i += 1;
+    }
+
+    if s[i..].starts_with("Infinity") {
+        return if b.first() == Some(&b'-') { f64::NEG_INFINITY } else { f64::INFINITY };
+    }
+
+    let digits = |i: &mut usize| {
+        let start = *i;
+        while *i < b.len() && b[*i].is_ascii_digit() {
+            *i += 1;
+        }
+        *i - start
+    };
+
+    let mut n = digits(&mut i);
+
+    if i < b.len() && b[i] == b'.' {
+        let mut k = i + 1;
+        let m = digits(&mut k);
+
+        if n + m > 0 {
+            i = k;
+            n += m;
+        }
+    }
+
+    if n == 0 {
+        return f64::NAN;
+    }
+
+    if i < b.len() && (b[i] == b'e' || b[i] == b'E') {
+        let mut k = i + 1;
+
+        if k < b.len() && (b[k] == b'+' || b[k] == b'-') {
+            k += 1;
+        }
+
+        if digits(&mut k) > 0 {
+            i = k;
+        }
+    }
+
+    let t = &s[..i];
+    let t = t.strip_suffix('.').unwrap_or(t);
+
+    t.parse::<f64>().unwrap_or(f64::NAN)
+}
+
+/// JS global `parseInt (string)` without a radix: leading white space, a sign, `0x` for hex,
+/// then the longest digit prefix, else NaN.
+pub fn js_parse_int(text: &str) -> f64 {
+    let s = text.trim_start_matches(is_js_space);
+    let (negative, s) = match s.as_bytes().first() {
+        Some(b'-') => (true, &s[1..]),
+        Some(b'+') => (false, &s[1..]),
+        _ => (false, s),
+    };
+
+    let (radix, s) = match s.strip_prefix("0x").or_else(|| s.strip_prefix("0X")) {
+        Some(rest) => (16, rest),
+        None => (10, s),
+    };
+
+    let n = s.chars().take_while(|c| c.is_digit(radix)).count();
+
+    if n == 0 {
+        return f64::NAN;
+    }
+
+    let digits = &s[..n];
+    let v = if radix == 10 { digits.parse::<f64>().unwrap_or(f64::NAN) } else { parse_int(&format!("0x{digits}")) };
+
+    if negative { -v } else { v }
+}

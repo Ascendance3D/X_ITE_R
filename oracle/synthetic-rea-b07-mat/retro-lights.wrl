@@ -1,0 +1,34 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+Transform { translation -1.470 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 0 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 0.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.5 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.470 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0 roughness 0.5 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.3 extensions [ RetroreflectionMaterialExtension { retroreflection 2 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.3 extensions [ RetroreflectionMaterialExtension { retroreflection -1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.470 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.25 extensions [ RetroreflectionMaterialExtension { retroreflection 1 retroreflectionTexture ImageTexture { url "../synthetic-rea-b02/pbr/occlusion.png" } } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0.5 roughness 0.25 extensions [ RetroreflectionMaterialExtension { retroreflection 0.8 retroreflectionTexture ImageTexture { url "../synthetic-rea-b02/pbr/mr.png" } } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.6 0.9 metallic 1 roughness 0.15 extensions [ RetroreflectionMaterialExtension { retroreflection 1 retroreflectionTexture ImageTexture { url "../synthetic-rea-b02/pbr/base-alpha.png" } } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.9 0.9 metallic 1 roughness 0.1 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } RetroreflectionMaterialExtension { retroreflection 0.25 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.470 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.5 0.5 0.5 metallic 0 roughness 0.1 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } IORMaterialExtension { indexOfRefraction 2.2 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.5 0.5 0.5 metallic 0 roughness 0.1 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } SpecularMaterialExtension { specular 0.5 specularColor 1 0.4 0.4 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.9 0.9 metallic 1 roughness 0.3 normalTexture ImageTexture { url "../synthetic-rea-b02/pbr/normal.png" } extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.9 0.9 emissiveColor 0.1 0.05 0 metallic 1 roughness 0.3 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } EmissiveStrengthMaterialExtension { emissiveStrength 2 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.470 -1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 0 } ] } } geometry Box { size 0.7 0.7 0.7 } } }
+Transform { translation -0.490 -1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 0.5 } ] } } geometry Box { size 0.7 0.7 0.7 } } }
+Transform { translation 0.490 -1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ] } } geometry Box { size 0.7 0.7 0.7 } } }
+Transform { translation 1.470 -1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.5 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ] } } geometry Box { size 0.7 0.7 0.7 } } }

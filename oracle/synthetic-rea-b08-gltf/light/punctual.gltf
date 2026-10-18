@@ -1,0 +1,214 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 0
+    }
+   },
+   "translation": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 1
+    }
+   },
+   "translation": [
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 2
+    }
+   },
+   "translation": [
+    2,
+    0,
+    0
+   ]
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 3
+    }
+   },
+   "translation": [
+    3,
+    0,
+    0
+   ]
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 4
+    }
+   },
+   "translation": [
+    4,
+    0,
+    0
+   ]
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 5
+    }
+   },
+   "translation": [
+    5,
+    0,
+    0
+   ]
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 6
+    }
+   },
+   "translation": [
+    6,
+    0,
+    0
+   ]
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ]
+  }
+ ],
+ "scene": 0,
+ "extensionsUsed": [
+  "KHR_lights_punctual"
+ ],
+ "extensions": {
+  "KHR_lights_punctual": {
+   "lights": [
+    {
+     "type": "directional",
+     "name": "Sun",
+     "color": [
+      1,
+      0.9,
+      0.8
+     ],
+     "intensity": 3
+    },
+    {
+     "type": "spot",
+     "color": [
+      0.5,
+      0.5,
+      1
+     ],
+     "intensity": 50,
+     "range": 12,
+     "spot": {
+      "innerConeAngle": 0.2,
+      "outerConeAngle": 0.9
+     },
+     "innerConeAngle": 0.2,
+     "outerConeAngle": 0.9
+    },
+    {
+     "type": "point",
+     "intensity": 10,
+     "range": 0
+    },
+    {
+     "type": "point",
+     "name": "Lamp"
+    },
+    {
+     "type": "bogus"
+    },
+    {
+     "type": "spot"
+    }
+   ]
+  }
+ },
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 12
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -1,
+    -1,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 60,
+   "uri": "data:application/octet-stream;base64,AACAvwAAgL8AAAAAAACAPwAAgL8AAAAAAACAPwAAgD8AAAAAAACAvwAAgD8AAAAAAAABAAIAAAACAAMA"
+  }
+ ]
+}

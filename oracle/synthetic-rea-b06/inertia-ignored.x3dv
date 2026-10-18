@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { gravity 0 0 0  bodies [ DEF A RigidBody { position -3 0 0 mass 2 inertia 1 0 0 0 1 0 0 0 1 torques [ 0 0 4, 1 0 0 ] geometry DEF A_C CollidableShape {  shape Shape { geometry Box { size 1 2 3 } } } }
+DEF B RigidBody { position 3 0 0 mass 2 inertia 50 0 0 0 7 0 0 0 0.5 torques [ 0 0 4, 1 0 0 ] geometry DEF B_C CollidableShape {  shape Shape { geometry Box { size 1 2 3 } } } }
+DEF C RigidBody { position 0 5 0 mass 2 inertia 9 1 2 3 4 5 6 7 8 torques [ 0 0 4, 1 0 0 ] geometry DEF C_C CollidableShape {  shape Shape { geometry Box { size 1 2 3 } } } } ]  }

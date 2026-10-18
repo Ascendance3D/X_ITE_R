@@ -1,0 +1,147 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nViewpoint {\n  position 0 0 8\n}\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.2 0.5 0.7\n    }\n  }\n  geometry Sphere {\n    radius 0.6\n  }\n}\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nViewpoint {\n  position 0 0 8\n}\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.2 0.5 0.7\n    }\n  }\n  geometry Sphere {\n    radius 0.6\n  }\n}\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nViewpoint {\n  position 0 0 8\n}\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nNULL\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.2 0.5 0.7\n    }\n  }\n  geometry Sphere {\n    radius 0.6\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Parser error at line 4: Unknown node type or proto 'ReceiverPdu'. You probably have insufficient component/profile statements, and/or an inappropriate specification version.",
+    "warn: Parser error at line 5: Unknown node type or proto 'SignalPdu'. You probably have insufficient component/profile statements, and/or an inappropriate specification version.",
+    "warn: Parser error at line 6: Unknown node type or proto 'TransmitterPdu'. You probably have insufficient component/profile statements, and/or an inappropriate specification version.",
+    "warn: Parser error at line 7: Unknown node type or proto 'DISEntityManager'. You probably have insufficient component/profile statements, and/or an inappropriate specification version.",
+    "warn: Parser error at line 8: Unknown node type or proto 'DISEntityManager'. You probably have insufficient component/profile statements, and/or an inappropriate specification version.",
+    "warn: Parser error at line 9: Unknown node type or proto 'ReceiverPdu'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+  ],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

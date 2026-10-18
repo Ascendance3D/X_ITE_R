@@ -1,0 +1,60 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Geospatial:1
+COMPONENT Networking:3
+COMPONENT KeyDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 6 }
+DEF GM GeoMetadata { url "checker.png" summary [ "title" "a test" ] data [ DEF D WorldInfo { title "data" } DEF B Transform { children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Box { } } } ] }
+Transform { translation 2 0 0 children DEF GM2 GeoMetadata { description "inside a Transform" load FALSE } }
+Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.9 } } geometry Sphere { radius 0.5 } }
+DEF LS LoadSensor { children [ USE GM ] }
+DEF LS2 LoadSensor { children [ USE GM2 ] }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly MFString on_url
+  inputOnly MFString on_summary
+  inputOnly MFNode on_data
+  inputOnly SFBool on_load
+  inputOnly SFBool on_loaded
+  inputOnly SFBool on_active
+  inputOnly SFFloat on_progress
+  inputOnly SFTime on_time
+  inputOutput SFString log ""
+  initializeOnly SFNode gm USE GM
+  initializeOnly SFNode gm2 USE GM2
+  url "javascript:
+function initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }
+function on_url (v) { log = log + 'U' + v + ' '; }
+function on_summary (v) { log = log + 'S' + v + ' '; }
+function on_data (v) { log = log + 'D' + v .length + ' '; }
+function on_load (v) { log = log + 'O' + v + ' '; }
+function on_loaded (v) { log = log + 'L' + v + ' '; }
+function on_active (v) { log = log + 'A' + v + ' '; }
+function on_progress (v) { log = log + 'P' + v + ' '; }
+function on_time (v) { log = log + 'T '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') gm .summary = new MFString ('changed');
+   if (k == 'b') gm .url = new MFString ('other.txt');
+   if (k == 'c') gm .load = false;
+   if (k == 'd') { gm .load = true; gm2 .load = true; }
+   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }
+   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE GM.url_changed TO R.on_url
+ROUTE GM.summary_changed TO R.on_summary
+ROUTE GM.data_changed TO R.on_data
+ROUTE GM.load_changed TO R.on_load
+ROUTE LS.isLoaded TO R.on_loaded
+ROUTE LS.isActive TO R.on_active
+ROUTE LS.progress TO R.on_progress
+ROUTE LS.loadTime TO R.on_time
+ROUTE LS2.isLoaded TO R.on_loaded
+ROUTE LS2.isActive TO R.on_active

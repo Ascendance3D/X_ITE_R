@@ -1,0 +1,274 @@
+{
+  "ok": true,
+  "poses": {
+    "18": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "74": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "88": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "102": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "116": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "130": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "144": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "160": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.8 0.3 0.2\n    }\n  }\n  geometry Box {\n    size 12 12 0.2\n  }\n}\n\nDEF LS LayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      viewport DEF V1 Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0.5,\n          1\n        ]\n      }\n      children [\n        Viewpoint {\n          position 0 0 6\n        }\n        Background {\n          skyColor 0.3 0.1 0.4\n        }\n        DEF TS1 TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material DEF M1 Material {\n              diffuseColor 0.2 0.4 0.9\n            }\n          }\n          geometry Box {\n            size 3 3 0.5\n          }\n        }\n      ]\n    }\n    DEF L2 LayoutLayer {\n      layout DEF LAY Layout {\n        align [\n          \"LEFT\",\n          \"BOTTOM\"\n        ]\n        offsetUnits [\n          \"PIXEL\",\n          \"PIXEL\"\n        ]\n        offset [\n          20,\n          20\n        ]\n        sizeUnits [\n          \"PIXEL\",\n          \"PIXEL\"\n        ]\n        size [\n          100,\n          100\n        ]\n        scaleMode [\n          \"PIXEL\",\n          \"PIXEL\"\n        ]\n      }\n      children [\n        DEF TS2 TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material DEF M2 Material {\n              diffuseColor 0 0 0\n              emissiveColor 0.9 0.9 0.2\n            }\n          }\n          geometry IndexedFaceSet {\n            coordIndex [\n              0,\n              1,\n              2,\n              3,\n              -1\n            ]\n            coord Coordinate {\n              point [\n                -50 -50 0,\n                50 -50 0,\n                50 50 0,\n                -50 50 0\n              ]\n            }\n          }\n        }\n      ]\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  t1\n  inputOnly      SFTime  t2\n  inputOutput    SFInt32 c0 0\n  inputOutput    SFInt32 c1 0\n  inputOutput    SFInt32 c2 0\n  inputOutput    SFInt32 step 0\n  initializeOnly SFNode  ls USE LS\n  initializeOnly SFNode  l1 USE L1\n  initializeOnly SFNode  l2 USE L2\n  initializeOnly SFNode  v1 USE V1\n  initializeOnly SFNode  lay USE LAY\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  m1 USE M1\n  initializeOnly SFNode  m2 USE M2\n\n  url \"javascript:\nfunction t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.8, 0.3 + 0.15 * c0, 0.2); next (); }\nfunction t1 (value) { c1 = c1 + 1; m1 .diffuseColor = new SFColor (0.2 + 0.3 * c1, 0.4, 0.9); next (); }\nfunction t2 (value) { c2 = c2 + 1; m2 .emissiveColor = new SFColor (0.9, 0.9 - 0.3 * c2, 0.2); next (); }\nfunction next ()\n{\n   step = step + 1;\n\n   if (step == 1) { l1 .pointerEvents = false; }\n   if (step == 2) { l1 .pointerEvents = true; ls .order = new MFInt32 (1, 0, 2); }\n   if (step == 3) { ls .order = new MFInt32 (0, 1, 2); v1 .clipBoundary = new MFFloat (0, 0.5, 0.5, 1); }\n   if (step == 4) { lay .size = new MFFloat (150, 60); lay .offset = new MFFloat (0, 0); lay .align = new MFString ('CENTER', 'BOTTOM'); }\n   if (step == 5) { l1 .visible = false; }\n   if (step == 6) { ls .order = new MFInt32 (2, 1); l1 .visible = true; }\n   if (step == 7) { l1 .removeChildren = new MFNode (l1 .children [3]); }\n   if (step == 8) { l1 .addChildren = new MFNode (l2 .children [1]); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS0.touchTime TO S.t0\nROUTE TS1.touchTime TO S.t1\nROUTE TS2.touchTime TO S.t2\n",
+    "160": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.8 0.75 0.2\n    }\n  }\n  geometry Box {\n    size 12 12 0.2\n  }\n}\n\nDEF LS LayerSet {\n  order [\n    2,\n    1\n  ]\n  layers [\n    DEF L1 Layer {\n      viewport DEF V1 Viewport {\n        clipBoundary [\n          0,\n          0.5,\n          0.5,\n          1\n        ]\n      }\n      children [\n        Viewpoint {\n          position 0 0 6\n        }\n        Background {\n          skyColor 0.3 0.1 0.4\n        }\n        DEF TS1 TouchSensor { }\n        DEF _1 Shape {\n          appearance Appearance {\n            material DEF M2 Material {\n              diffuseColor 0 0 0\n              emissiveColor 0.9 0.3 0.2\n            }\n          }\n          geometry IndexedFaceSet {\n            coordIndex [\n              0,\n              1,\n              2,\n              3,\n              -1\n            ]\n            coord Coordinate {\n              point [\n                -50 -50 0,\n                50 -50 0,\n                50 50 0,\n                -50 50 0\n              ]\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 LayoutLayer {\n      layout DEF LAY Layout {\n        align [\n          \"CENTER\",\n          \"BOTTOM\"\n        ]\n        offsetUnits [\n          \"PIXEL\",\n          \"PIXEL\"\n        ]\n        sizeUnits [\n          \"PIXEL\",\n          \"PIXEL\"\n        ]\n        size [\n          150,\n          60\n        ]\n        scaleMode [\n          \"PIXEL\",\n          \"PIXEL\"\n        ]\n      }\n      children [\n        DEF TS2 TouchSensor { }\n        USE _1\n      ]\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  t1\n  inputOnly      SFTime  t2\n  inputOutput    SFInt32 c0 3\n  inputOutput    SFInt32 c1 4\n  inputOutput    SFInt32 c2 2\n  inputOutput    SFInt32 step 9\n  initializeOnly SFNode  ls USE LS\n  initializeOnly SFNode  l1 USE L1\n  initializeOnly SFNode  l2 USE L2\n  initializeOnly SFNode  v1 USE V1\n  initializeOnly SFNode  lay USE LAY\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  m1 DEF M1 Material {\n    diffuseColor 1 0.4 0.9\n  }\n  initializeOnly SFNode  m2 USE M2\n\n  url \"javascript:\nfunction t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.8, 0.3 + 0.15 * c0, 0.2); next (); }\nfunction t1 (value) { c1 = c1 + 1; m1 .diffuseColor = new SFColor (0.2 + 0.3 * c1, 0.4, 0.9); next (); }\nfunction t2 (value) { c2 = c2 + 1; m2 .emissiveColor = new SFColor (0.9, 0.9 - 0.3 * c2, 0.2); next (); }\nfunction next ()\n{\n   step = step + 1;\n\n   if (step == 1) { l1 .pointerEvents = false; }\n   if (step == 2) { l1 .pointerEvents = true; ls .order = new MFInt32 (1, 0, 2); }\n   if (step == 3) { ls .order = new MFInt32 (0, 1, 2); v1 .clipBoundary = new MFFloat (0, 0.5, 0.5, 1); }\n   if (step == 4) { lay .size = new MFFloat (150, 60); lay .offset = new MFFloat (0, 0); lay .align = new MFString ('CENTER', 'BOTTOM'); }\n   if (step == 5) { l1 .visible = false; }\n   if (step == 6) { ls .order = new MFInt32 (2, 1); l1 .visible = true; }\n   if (step == 7) { l1 .removeChildren = new MFNode (l1 .children [3]); }\n   if (step == 8) { l1 .addChildren = new MFNode (l2 .children [1]); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS0.touchTime TO S.t0\nROUTE TS1.touchTime TO S.t1\nROUTE TS2.touchTime TO S.t2\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

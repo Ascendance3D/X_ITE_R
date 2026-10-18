@@ -1,0 +1,13 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 12
+  particleLifetime 1
+  lifetimeVariation 0.25
+  emitter DEF EM PolylineEmitter { direction 0 1 0 speed 1 }
+}
+
+Shape { geometry IndexedLineSet { coordIndex [ 0 1 2 -1 ] coord DEF C2 Coordinate { point [ 10 0 0, 10 5 0, 12 5 0 ] } } }

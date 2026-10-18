@@ -1,0 +1,29 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT TextureProjection:2
+COMPONENT Layering:1
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "../synthetic-rea-b02/pbr/env.png" } }
+DirectionalLight { direction -0.3 -1 -0.4 intensity 1 shadows TRUE }
+TextureProjector { location 0 0 4 direction 0 0 -1 fieldOfView 0.4 texture ImageTexture { url "proj-checker.png" } }
+Transform { translation 0 -1.8 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 0 roughness 0.8 } } geometry Box { size 6 0.1 4 } } }
+DEF RT RenderedTexture { width 64 height 64 children [ Viewpoint { position 0 0 4 } Background { skyColor 0.9 0.2 0.2 } Shape { appearance Appearance { material Material { diffuseColor 0.2 0.2 1 } } geometry Box { } } ] }
+DEF PG PickableGroup { children [
+Transform { translation -1.575 0.300 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.6 0.3 0.1 metallic 0 roughness 0.8 extensions [ ClearcoatMaterialExtension { clearcoat 1 clearcoatTexture USE RT } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 0.300 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.2 0.2 metallic 0 roughness 0.7 extensions [ SheenMaterialExtension { sheenColor 1 1 1 sheenRoughness 0.5 sheenColorTexture USE RT } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 0.300 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0.1 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 1 attenuationColor 0.6 0.9 0.6 attenuationDistance 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 0.300 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.3 0.3 emissiveColor 0.05 0.02 0 metallic 0.5 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 } EmissiveStrengthMaterialExtension { emissiveStrength 3 } ] } } geometry Sphere { radius 0.45 } } }
+] }
+LayerSet { order [ 0 1 2 ] layers [
+  Layer { children [ Viewpoint { position 0 0 6 } DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 } PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 } Transform { translation -0.525 -1.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 1 roughness 0.3 extensions [ AnisotropyMaterialExtension { anisotropyStrength 1 } ] } } geometry Sphere { radius 0.45 } } } Transform { translation 0.525 -1.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 0.8 0.8 metallic 0 roughness 0.2 extensions [ TransmissionMaterialExtension { transmission 1 } ] } } geometry Sphere { radius 0.45 } } } ] }
+  LayoutLayer { layout Layout { size [ 0.3 0.3 ] sizeUnits [ "FRACTION" "FRACTION" ] align [ "RIGHT" "TOP" ] } children [ Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.5 0.2 emissiveColor 0.2 0.2 0.4  extensions [ EmissiveStrengthMaterialExtension { emissiveStrength 2 } ClearcoatMaterialExtension { clearcoat 1 } ] } } geometry Rectangle2D { size 0.3 0.3 } } ] }
+] }

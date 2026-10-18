@@ -1,0 +1,9 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { bodies [ DEF A RigidBody { fixed TRUE position 0 8 0 geometry DEF A_C CollidableShape { shape Shape { geometry Box { size 0.5 0.5 0.5 } } } }
+  DEF B RigidBody { mass 1 position 1 8 0 geometry DEF B_C CollidableShape { shape Shape { geometry Sphere { radius 0.2 } } } }
+  DEF C RigidBody { mass 1 position 2 8 0 geometry DEF C_C CollidableShape { shape Shape { geometry Sphere { radius 0.2 } } } }
+  DEF D RigidBody { mass 1 position 3 8 0 geometry DEF D_C CollidableShape { shape Shape { geometry Sphere { radius 0.2 } } } } ]
+  joints [ DEF J1 BallJoint { body1 USE A body2 USE B anchorPoint 0 8 0 } DEF J2 BallJoint { body1 USE B body2 USE C anchorPoint 1 8 0 forceOutput [ "ALL" ] } DEF J3 BallJoint { body1 USE C body2 USE D anchorPoint 2 8 0 } ] }

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>REA batch 08 multiview oracle: N x3d-canvas on one page, each with its own browser, one virtual clock</title>
+<!-- Not part of the pinned X_ITE. x_ite-multi-b08.mjs serves this file at /x_ite-pin/src/multi-b08.html so that
+     X_ITE resolves its assets/ the way it does upstream (relative to the page URL); the pin is not written.
+     Same clock model as x_ite-pin/src/anim-msaa.html, for several browsers:
+       * every browser's getCurrentTime () returns T, set per step;
+       * Date.now () returns DATE, window.setTimeout is a virtual queue;
+       * the browsers' own frame loops never traverse (advanceTime () is false); the harness calls each
+         browser's [_traverse] itself, canvas 0 first, then canvas 1.
+     ?n=<canvases>&w=&h=&ms=<Multisampling, 0 = off>&rand=<constant Math.random value> -->
+<style>html, body { margin: 0; padding: 0; background: #000; } x3d-canvas { display: inline-block; vertical-align: top; }</style>
+<script src="../node_modules/libtess/libtess.cat.js"></script>
+<script src="../node_modules/@create3000/libgif/libgif.js"></script>
+<script src="../node_modules/apng-js/lib/index.js"></script>
+<script src="../node_modules/CharLS.js/dist/charLS-DynamicMemory-browser.js"></script>
+<script src="../node_modules/dicom-parser/dist/dicomParser.js"></script>
+<script src="../node_modules/jpeg-js/lib/decoder.js"></script>
+<script src="../node_modules/OpenJPEG.js/dist/openJPEG-DynamicMemory-browser.js"></script>
+<script>
+{ const q = new URLSearchParams (location .search), n = +q .get ("n") || 1, w = +q .get ("w") || 96, h = +q .get ("h") || 72, ms = +q .get ("ms") || 0;
+  const rand = q .get ("rand");
+  if (rand !== null) Math .random = () => +rand;
+  for (let i = 0; i < n; ++ i)
+     document .write (`<x3d-canvas id="c${i}" antialiased="${ms > 0}" ${ms > 0 ? `multisampling="${ms}"` : ""} preserveDrawingBuffer="true" splashScreen="false"
+        contextMenu="false" notifications="false" timings="false" contentScale="1" tabindex="0"
+        style="width:${w}px;height:${h}px"></x3d-canvas>`); }
+</script>
+<script type="module">
+await import ("./x_ite.js");
+
+const X3D     = window [Symbol .for ("X_ITE.X3D")];
+const _trav   = Symbol .for ("X_ITE.X3DBrowserContext.traverse");
+const els     = [ ... document .querySelectorAll ("x3d-canvas") ];
+const brs     = els .map (e => e .browser);
+const realSetTimeout = window .setTimeout .bind (window);
+
+let T = 946684800, RATE = 60, DATE = T * 1000;
+const allow = brs .map (() => true), counted = brs .map (() => 0), target = brs .map (() => "");
+
+brs .forEach ((b, i) =>
+{
+   b .getCurrentTime      = () => T;
+   b .getCurrentFrameRate = () => RATE;
+   b .advanceTime         = () => { if (!allow [i]) return false; if (target [i] && b .currentScene ?.worldURL === target [i]) ++ counted [i]; return true; };
+});
+
+let timers = [ ], timerId = 0;
+
+function installVirtualClock ()
+{
+   Date .now = () => DATE;
+   window .setTimeout = (fn, ms = 0, ... args) => { const id = ++ timerId; timers .push ({ id, due: DATE + Math .max (+ms || 0, 0), seq: id, fn: () => fn (... args) }); return id; };
+   window .clearTimeout = id => { timers = timers .filter (t => t .id !== id); };
+}
+
+function runTimers (untilMs)
+{
+   for (;;)
+   {
+      timers .sort ((a, b) => a .due - b .due || a .seq - b .seq);
+      const t = timers [0];
+      if (!t || t .due > untilMs) break;
+      timers .shift ();
+      const saveT = T, saveDATE = DATE;
+      DATE = Math .max (DATE, t .due);
+      T    = Math .max (T, t .due / 1000);
+      try { t .fn (); } catch (e) { console .error (e); }
+      T = saveT;
+      DATE = Math .max (saveDATE, DATE);
+   }
+}
+
+function doTraverse (i)
+{
+   allow [i] = true;
+   brs [i] [_trav] (0, undefined);
+   allow [i] = false;
+}
+
+const log = [ ];
+
+for (const m of [ "error", "warn" ])
+   console [m] = (... a) => { log .push (`${m}: ${a .map (String) .join (" ") .split ("\n") [0]}`); };
+
+window .info = () => brs .map (b => ({ x_ite: b .version, multisampling: b .getRenderingProperty ("Multisampling"), antialiased: b .getRenderingProperty ("Antialiased") }));
+
+// Load `url` into canvas i with real frames at the frozen time t0, then top up to `warmup` frames at t0.
+window .load = async function (i, url, t0, dt, warmup)
+{
+   T = t0; DATE = t0 * 1000; RATE = 1 / dt; target [i] = url;
+
+   try
+   {
+      await brs [i] .loadURL (new X3D .MFString (url));
+      await brs [i] .nextFrame ();
+      await brs [i] .nextFrame ();
+   }
+   catch (e)
+   {
+      return { ok: false, error: String (e ?.message ?? e) .split ("\n") [0], log };
+   }
+
+   allow [i] = false;
+   return { ok: true, log };
+};
+
+window .start = function (warmup)
+{
+   installVirtualClock ();
+
+   for (let i = 0; i < brs .length; ++ i)
+   {
+      allow [i] = false;
+      // Real frames drew while the other canvases loaded; top every canvas up to the same count.
+      while (counted [i] < warmup) doTraverse (i);
+   }
+
+   return counted .slice ();
+};
+
+window .step = function (t, dt)
+{
+   runTimers (t * 1000);
+   T = t; DATE = Math .max (DATE, t * 1000); RATE = 1 / dt;
+
+   for (let i = 0; i < brs .length; ++ i)
+      doTraverse (i);
+};
+
+window .setDate = ms => { DATE = ms; };
+window .getLog = () => log .slice () .sort ();
+
+window .pixels = function (i)
+{
+   const gl = brs [i] .getContext ();
+   const w  = gl .drawingBufferWidth, h = gl .drawingBufferHeight;
+   const px = new Uint8Array (w * h * 4);
+   const fb = gl .getParameter (gl .FRAMEBUFFER_BINDING);
+
+   gl .bindFramebuffer (gl .FRAMEBUFFER, null);
+   gl .readPixels (0, 0, w, h, gl .RGBA, gl .UNSIGNED_BYTE, px);
+   gl .bindFramebuffer (gl .FRAMEBUFFER, fb);
+
+   let bin = "";
+   for (let k = 0; k < px .length; k += 0x8000) bin += String .fromCharCode .apply (null, px .subarray (k, k + 0x8000));
+
+   return { width: w, height: h, rgba: btoa (bin) };
+};
+
+window .ready = true;
+</script>

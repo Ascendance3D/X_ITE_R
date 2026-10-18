@@ -1,0 +1,154 @@
+   Compiling x3d-parse v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-parse)
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+   Compiling x3d-runtime v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-runtime)
+warning: `x3d-parse` (lib) generated 3 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+   Compiling x3d-script v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-script)
+   Compiling x3d-render v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-render)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1080:4
+     |
+1080 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:582:19
+    |
+582 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+582 -     Custom(usize, bool),
+582 +     Custom(usize, ()),
+    |
+
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-viewer)
+warning: `x3d-render` (lib) generated 4 warnings
+warning: function `setup` is never used
+   --> crates/x3d-viewer/tests/multi_viewer_b08.rs:294:4
+    |
+294 | fn setup() -> Option<Rig> {
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: direct cast of function item into an integer
+   --> crates/x3d-viewer/tests/multi_viewer_b08.rs:904:76
+    |
+904 |         assert_eq!(first as usize, x3d_render::traverse::particle_geometry as usize);
+    |                                                                            ^^^^^^^^
+    |
+    = note: `#[warn(function_casts_as_integer)]` on by default
+help: first cast to a pointer `as *const ()`
+    |
+904 |         assert_eq!(first as usize, x3d_render::traverse::particle_geometry as *const () as usize);
+    |                                                                            ++++++++++++
+
+warning: `x3d-viewer` (test "multi_viewer_b08") generated 2 warnings (run `cargo fix --test "multi_viewer_b08" -p x3d-viewer` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 33.91s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/multi_viewer_b08.rs (/tmp/b08/multiview/build/release/deps/multi_viewer_b08-302956cd6d42bd38)
+
+running 18 tests
+test gen_oracle_worlds ... ignored
+test unload_prints_stay_per_viewer ... ok
+test geometry_provider_is_one_stateless_function ... ok
+next seed after 6 frames: B alone 16049371, A and B 30864175
+test random_stream_is_shared_on_the_thread ... ok
+MULTIVIEW msaa=4 world=rb-a frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-a frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00145; Rust alone vs X_ITE alone 0.00145; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-a frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00579; Rust alone vs X_ITE alone 0.00579; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=rb-a frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=rb-a frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=rb-a frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00434; Rust alone vs X_ITE alone 0.00434; Rust pair vs Rust alone 0.00000
+test particle_state_two_viewers_equal_alone ... ok
+test script_hosts_released_per_viewer ... ok
+MULTIVIEW msaa=4 world=s-a frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00347; Rust alone vs X_ITE alone 0.00347; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=s-a frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00391; Rust alone vs X_ITE alone 0.00391; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=s-a frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00304; Rust alone vs X_ITE alone 0.00304; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=s-a frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=s-a frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=s-a frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-b frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-b frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00289; Rust alone vs X_ITE alone 0.00289; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-b frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00289; Rust alone vs X_ITE alone 0.00289; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 pair=["rb-a", "rb-b"] worst 0.00579
+MULTIVIEW msaa=0 world=rb-b frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=rb-b frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00145; Rust alone vs X_ITE alone 0.00145; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=rb-b frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 pair=["rb-a", "rb-b"] worst 0.00434
+test x_ite_two_canvases_rigid_bodies_msaa4 ... ok
+test x_ite_two_canvases_rigid_bodies_msaa0 ... ok
+test rendering_options_stay_per_viewer ... ok
+test scripts_two_viewers_interleaved_msaa4 ... ok
+MULTIVIEW msaa=4 world=s-b frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00260; Rust alone vs X_ITE alone 0.00260; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=s-b frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00289; Rust alone vs X_ITE alone 0.00289; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=s-b frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00217; Rust alone vs X_ITE alone 0.00217; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 pair=["s-a", "s-b"] worst 0.00391
+test scripts_two_viewers_interleaved_msaa0 ... ok
+MULTIVIEW msaa=0 world=s-b frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=s-b frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 world=s-b frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=0 pair=["s-a", "s-b"] worst 0.00000
+test x_ite_two_canvases_scripts_msaa4 ... ok
+test x_ite_two_canvases_scripts_msaa0 ... ok
+test independent_reload ... ok
+test independent_drop ... ok
+test resources_released_per_viewer ... ok
+test particles_and_physics_three_viewers_msaa0 ... ok
+test particles_and_physics_three_viewers_msaa4 ... ok
+
+test result: ok. 17 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.07s
+

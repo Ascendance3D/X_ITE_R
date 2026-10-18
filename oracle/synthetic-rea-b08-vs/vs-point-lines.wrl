@@ -1,0 +1,19 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EnvironmentalEffects:3
+COMPONENT Grouping:3
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "../synthetic-rea-b02/pbr/env.png" } }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+
+Transform { translation -1 0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.8 0.7 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 1 0.7 0.5 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.6 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.9 0.5 0.3  } ] } } geometry PointSet { coord Coordinate { point [ 0 0 0, 0.5 0.5 0, -0.5 0.4 0 ] } } } }
+Transform { translation 1 0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.8 0.7 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 1 0.7 0.5 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.6 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.9 0.5 0.3  } ] } } geometry IndexedLineSet { coord Coordinate { point [ 0 0 0, 0.5 0.5 0, -0.5 0.4 0 ] } coordIndex [ 0 1 2 -1 ] } } }

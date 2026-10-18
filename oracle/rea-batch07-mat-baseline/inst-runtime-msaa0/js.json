@@ -1,0 +1,558 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "110": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "130": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "140": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "150": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "160": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "170": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "180": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "190": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "200": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "229": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "230": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0\n    ]\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n}\n\nDEF I3 InstancedShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"\"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0,\n      0 2 0\n    ]\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n}\n\nDEF I3 InstancedShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0,\n      0 2 0\n    ]\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n}\n\nDEF I3 InstancedShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0,\n      0 2 0\n    ]\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n}\n\nDEF I3 InstancedShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0,\n      0 2 0\n    ]\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n}\n\nDEF I3 InstancedShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0,\n      0 2 0\n    ]\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n}\n\nDEF I3 InstancedShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "70": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0,\n      0 2 0\n    ]\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations [\n      -2 1 0,\n      0 1 0,\n      2 1 0,\n      0 2 0\n    ]\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.9 0.5 0.2\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "110": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry DEF BX Box {\n      size 0.6 0.6 0.6\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    appearance DEF AP Appearance {\n      material DEF MA Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma USE MA\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "130": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "140": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group { }\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km \"\n  initializeOnly SFNode   i1 DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "160": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children [\n    DEF I1 InstancedShape {\n      translations -1 0 0\n      rotations [\n        0 0 1 0.5,\n        0 0 1 1\n      ]\n      scales [\n        1 1 1,\n        1.5 0.5 1\n      ]\n      scaleOrientations 0 0 1 0.8\n      centers 0.4 0 0\n      geometry DEF BX Box {\n        size 1 0.3 0.3\n      }\n    }\n    InstancedShape {\n      translations [\n        1 0 0,\n        -1 0 0\n      ]\n      geometry Sphere { }\n    }\n  ]\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "170": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children [\n    DEF I1 InstancedShape {\n      translations -1 0 0\n      rotations [\n        0 0 1 0.5,\n        0 0 1 1\n      ]\n      scales [\n        1 1 1,\n        1.5 0.5 1\n      ]\n      scaleOrientations 0 0 1 0.8\n      centers 0.4 0 0\n      geometry DEF BX Box {\n        size 1 0.3 0.3\n      }\n    }\n    InstancedShape {\n      translations [\n        1 0 0,\n        -1 0 0\n      ]\n      scales [\n        0.5 0.5 0.5,\n        1.5 1.5 1.5\n      ]\n      geometry Sphere { }\n    }\n  ]\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "180": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "190": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    visible FALSE\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "200": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "229": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "230": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 7\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 1.5\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF G1 Group {\n  children DEF I1 InstancedShape {\n    translations -1 0 0\n    rotations [\n      0 0 1 0.5,\n      0 0 1 1\n    ]\n    scales [\n      1 1 1,\n      1.5 0.5 1\n    ]\n    scaleOrientations 0 0 1 0.8\n    centers 0.4 0 0\n    geometry DEF BX Box {\n      size 1 0.3 0.3\n    }\n  }\n}\n\nDEF I2 InstancedShape {\n  translations -2 -1 0\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.8 0.4\n    }\n  }\n  geometry Cone { }\n}\n\nDEF I3 InstancedShape {\n  translations [\n    0 -1 0,\n    2 -1 0\n  ]\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 1\n    }\n  }\n  geometry Sphere {\n    radius 0.4\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks \"\n  initializeOnly SFNode   i1 USE I1\n  initializeOnly SFNode   i2 USE I2\n  initializeOnly SFNode   i3 USE I3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   bx USE BX\n  initializeOnly SFNode   ma DEF MA Material {\n    diffuseColor 0.2 0.9 0.9\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));\n   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));\n   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));\n   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));\n   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));\n   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');\n   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));\n   if (k == 'h') i1 .translations = new MFVec3f ();\n   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));\n   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);\n   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);\n   if (k == 'l') i1 .appearance = null;\n   if (k == 'm') g1 .removeChildren = new MFNode (i1);\n   if (k == 'n') g1 .addChildren = new MFNode (i1);\n   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }\n   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));\n   if (k == 'q') g1 .removeChildren = new MFNode (made);\n   if (k == 'r') i1 .visible = false;\n   if (k == 's') i1 .visible = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

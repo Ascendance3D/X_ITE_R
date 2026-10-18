@@ -1,0 +1,480 @@
+{
+ "ok": true,
+ "dt": 0.03333333333333333,
+ "t0": 946684800,
+ "frames": 45,
+ "warmup": 8,
+ "seed": 377303218,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0333333,
+   "randomSeed": 85226380.98015669,
+   "numParticles": 20000,
+   "deltaTime": 0.0022222222222222222,
+   "creationTime": 946684800.0333333,
+   "createParticles": true
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0666667,
+   "randomSeed": 1516924924.6468134,
+   "numParticles": 20000,
+   "deltaTime": 0.004296296296296296,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 3,
+   "time": 946684800.1,
+   "randomSeed": 2776132938.353631,
+   "numParticles": 20000,
+   "deltaTime": 0.006232098765432098,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 4,
+   "time": 946684800.1333333,
+   "randomSeed": 4186998941.0251384,
+   "numParticles": 20000,
+   "deltaTime": 0.008038847736625514,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 5,
+   "time": 946684800.1666666,
+   "randomSeed": 282890925.9341343,
+   "numParticles": 20000,
+   "deltaTime": 0.009725146776406035,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 6,
+   "time": 946684800.2,
+   "randomSeed": 771448110.8203832,
+   "numParticles": 20000,
+   "deltaTime": 0.011299025880201187,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 7,
+   "time": 946684800.2333333,
+   "randomSeed": 2092841790.5127223,
+   "numParticles": 20000,
+   "deltaTime": 0.012767979710409997,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 8,
+   "time": 946684800.2666667,
+   "randomSeed": 4151307389.033448,
+   "numParticles": 20000,
+   "deltaTime": 0.014139003285271552,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 9,
+   "time": 946684800.3,
+   "randomSeed": 1711875747.6014228,
+   "numParticles": 20000,
+   "deltaTime": 0.01541862528847567,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 10,
+   "time": 946684800.3333334,
+   "randomSeed": 4104716393.0442963,
+   "numParticles": 20000,
+   "deltaTime": 0.016612939158132847,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 11,
+   "time": 946684800.3666667,
+   "randomSeed": 1243706868.710427,
+   "numParticles": 20000,
+   "deltaTime": 0.017727632103146214,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 12,
+   "time": 946684800.4,
+   "randomSeed": 2129024570.5042977,
+   "numParticles": 20000,
+   "deltaTime": 0.018768012185158688,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 13,
+   "time": 946684800.4333333,
+   "randomSeed": 1888952218.560194,
+   "numParticles": 20000,
+   "deltaTime": 0.019739033595036995,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 14,
+   "time": 946684800.4666667,
+   "randomSeed": 3753498583.1260705,
+   "numParticles": 20000,
+   "deltaTime": 0.020645320244256752,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 15,
+   "time": 946684800.5,
+   "randomSeed": 3097073020.2789063,
+   "numParticles": 20000,
+   "deltaTime": 0.021491187783528525,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 16,
+   "time": 946684800.5333333,
+   "randomSeed": 1874354193.563593,
+   "numParticles": 20000,
+   "deltaTime": 0.022280664153515515,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 17,
+   "time": 946684800.5666667,
+   "randomSeed": 1111088741.7413044,
+   "numParticles": 20000,
+   "deltaTime": 0.023017508765503368,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 18,
+   "time": 946684800.6,
+   "randomSeed": 3968610554.075986,
+   "numParticles": 20000,
+   "deltaTime": 0.023705230403358698,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 19,
+   "time": 946684800.6333333,
+   "randomSeed": 2256285677.4746675,
+   "numParticles": 20000,
+   "deltaTime": 0.024347103932023672,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 20,
+   "time": 946684800.6666666,
+   "randomSeed": 2685820878.3746586,
+   "numParticles": 20000,
+   "deltaTime": 0.024946185892110985,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 21,
+   "time": 946684800.7,
+   "randomSeed": 329879839.9231939,
+   "numParticles": 20000,
+   "deltaTime": 0.02550532905485914,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 22,
+   "time": 946684800.7333333,
+   "randomSeed": 3332127697.224179,
+   "numParticles": 20000,
+   "deltaTime": 0.02602719600675742,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 23,
+   "time": 946684800.7666667,
+   "randomSeed": 1755833956.591188,
+   "numParticles": 20000,
+   "deltaTime": 0.026514271828529147,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 24,
+   "time": 946684800.8,
+   "randomSeed": 772784930.8200719,
+   "numParticles": 20000,
+   "deltaTime": 0.026968875928849428,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 25,
+   "time": 946684800.8333334,
+   "randomSeed": 491869282.8854778,
+   "numParticles": 20000,
+   "deltaTime": 0.027393173089148355,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 26,
+   "time": 946684800.8666667,
+   "randomSeed": 3109399892.2760363,
+   "numParticles": 20000,
+   "deltaTime": 0.02778918377209402,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 27,
+   "time": 946684800.9,
+   "randomSeed": 801739775.8133304,
+   "numParticles": 20000,
+   "deltaTime": 0.028158793742843306,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 28,
+   "time": 946684800.9333333,
+   "randomSeed": 2660704735.3805065,
+   "numParticles": 20000,
+   "deltaTime": 0.028503763048875974,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 29,
+   "time": 946684800.9666667,
+   "randomSeed": 2875133818.3305807,
+   "numParticles": 20000,
+   "deltaTime": 0.02882573440117313,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 30,
+   "time": 946684801,
+   "randomSeed": 3540842685.1755834,
+   "numParticles": 20000,
+   "deltaTime": 0.029126240996650475,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 31,
+   "time": 946684801.0333333,
+   "randomSeed": 824680601.8079891,
+   "numParticles": 20000,
+   "deltaTime": 0.029406713819095997,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 32,
+   "time": 946684801.0666667,
+   "randomSeed": 2047834966.5232012,
+   "numParticles": 20000,
+   "deltaTime": 0.029668488453378487,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 33,
+   "time": 946684801.1,
+   "randomSeed": 2007686514.5325491,
+   "numParticles": 20000,
+   "deltaTime": 0.029912811445375477,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 34,
+   "time": 946684801.1333333,
+   "randomSeed": 3564968544.169966,
+   "numParticles": 20000,
+   "deltaTime": 0.030140846237906003,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 35,
+   "time": 946684801.1666666,
+   "randomSeed": 689590502.8394423,
+   "numParticles": 20000,
+   "deltaTime": 0.03035367871093449,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 36,
+   "time": 946684801.2,
+   "randomSeed": 3430761651.2012134,
+   "numParticles": 20000,
+   "deltaTime": 0.030552322352427743,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 37,
+   "time": 946684801.2333333,
+   "randomSeed": 3135893805.269868,
+   "numParticles": 20000,
+   "deltaTime": 0.030737723084488116,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 38,
+   "time": 946684801.2666667,
+   "randomSeed": 4205533095.020823,
+   "numParticles": 20000,
+   "deltaTime": 0.030910763767744466,
+   "creationTime": 946684800.0333333,
+   "createParticles": false
+  },
+  {
+   "frame": 39,
+   "time": 946684801.3,
+   "randomSeed": 2079873957.5157416,
+   "numParticles": 20000,
+   "deltaTime": 0.031072268405450392,
+   "creationTime": 946684801.3,
+   "createParticles": true
+  },
+  {
+   "frame": 40,
+   "time": 946684801.3333334,
+   "randomSeed": 2624289078.388985,
+   "numParticles": 20000,
+   "deltaTime": 0.031223006067309256,
+   "creationTime": 946684801.3,
+   "createParticles": false
+  },
+  {
+   "frame": 41,
+   "time": 946684801.3666667,
+   "randomSeed": 56009035.98695938,
+   "numParticles": 20000,
+   "deltaTime": 0.03136369455171086,
+   "creationTime": 946684801.3,
+   "createParticles": false
+  },
+  {
+   "frame": 42,
+   "time": 946684801.4,
+   "randomSeed": 1742748819.5942347,
+   "numParticles": 20000,
+   "deltaTime": 0.031495003803819026,
+   "creationTime": 946684801.3,
+   "createParticles": false
+  },
+  {
+   "frame": 43,
+   "time": 946684801.4333333,
+   "randomSeed": 269441273.9372658,
+   "numParticles": 20000,
+   "deltaTime": 0.03161755910578665,
+   "creationTime": 946684801.3,
+   "createParticles": false
+  },
+  {
+   "frame": 44,
+   "time": 946684801.4666667,
+   "randomSeed": 1734176584.5962305,
+   "numParticles": 20000,
+   "deltaTime": 0.03173194405428976,
+   "creationTime": 946684801.3,
+   "createParticles": false
+  },
+  {
+   "frame": 45,
+   "time": 946684801.5,
+   "randomSeed": 3337651188.2228928,
+   "numParticles": 20000,
+   "deltaTime": 0.03183870333955933,
+   "creationTime": 946684801.3,
+   "createParticles": false
+  }
+ ],
+ "dumps": {
+  "38": {
+   "numParticles": 1238,
+   "total": 20000
+  },
+  "39": {
+   "numParticles": 20000,
+   "total": 20000
+  },
+  "45": {
+   "numParticles": 0,
+   "total": 20000
+  }
+ },
+ "log": [],
+ "init": {
+  "deltaTimeBeforeReset": 0.014139003285271552,
+  "numParticlesAfterLoad": 20000,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": true
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 20000,
+  "particleLifetime": 1,
+  "lifetimeVariation": 0.25,
+  "emitter": "ExplosionEmitter",
+  "numForces": 0,
+  "boundedHierarchyRoot": -1,
+  "stride": 28
+ },
+ "geometry": {
+  "numForces": 0
+ },
+ "animateCalls": 45,
+ "determinism": {
+  "runs": 2,
+  "same_Math_random_seed": 377303218,
+  "bit_identical_f32": true,
+  "identical_steps_and_dump_index": true,
+  "f32_bytes": 2378656
+ },
+ "world": "oracle/synthetic-rea-b06/particles-explosion-stat.x3dv",
+ "samples": {
+  "file": "samples.f32",
+  "columns": [
+   "frame",
+   "lifetime",
+   "r",
+   "g",
+   "b",
+   "a",
+   "vx",
+   "vy",
+   "vz",
+   "px",
+   "py",
+   "pz",
+   "pw"
+  ],
+  "rows": 20000,
+  "cap": 20000
+ }
+}

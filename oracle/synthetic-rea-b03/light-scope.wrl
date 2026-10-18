@@ -1,0 +1,23 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Lighting:3
+COMPONENT Layering:1
+NavigationInfo { headlight FALSE }
+Viewpoint { position 0 0 16 }
+DirectionalLight { direction 0 0 -1 color 0.15 0.15 0.15 }
+Transform { translation -6 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }
+Group { children [ DirectionalLight { direction 1 0 0 color 1 0 0 } Transform { translation -3 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } Group { children [ DirectionalLight { direction -1 0 0 color 0 0 1 } Transform { translation 0 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] } Transform { translation 3 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+Transform { translation 6 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 0 0 0 children [ Transform { translation -6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } PointLight { global FALSE location -3 0 3 color 0 1 0 radius 20 } Transform { translation -3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }
+Transform { children [ SpotLight { global FALSE location 3 0 4 direction 0 0 -1 cutOffAngle 0.6 beamWidth 0.3 color 1 1 0 } Transform { translation 3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+Transform { children [ Transform { children [ DirectionalLight { global TRUE direction 0 -1 -1 color 0.2 0.1 0.3 intensity 0.8 } ] } ] }
+Transform { translation 6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }
+Inline { url "light-scope-inline.wrl" }
+Transform { translation -3 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }
+Switch { whichChoice 0 children [ Group { children [ DirectionalLight { direction 0 1 -1 color 0 1 1 } Transform { translation 0 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] } ] }
+Collision { children [ DirectionalLight { direction 0 1 0 color 1 0 1 } Transform { translation 3 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+Billboard { children [ DirectionalLight { direction 1 1 -1 color 1 0.5 0 } Transform { translation 6 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+Anchor { children [ PointLight { global FALSE location 0 -7 3 color 0.5 0.5 1 } Transform { translation -3 -7 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+LOD { range [ 1000 ] level [ Group { children [ DirectionalLight { direction -1 1 -1 color 0.6 1 0.2 } Transform { translation 0 -7 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] } Group { } ] }
+Transform { translation 3 -7 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }

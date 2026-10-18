@@ -1,0 +1,90 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight TRUE }
+Transform { children Shape { appearance DEF AP Appearance { material Material { diffuseColor 0.4 0.4 0.4 } shaders [ DEF BADC ComposedShader { language "GLSL" parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } DEF BADF ShaderPart { type "FRAGMENT" url "data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.5) oops; }" } ] } DEF GOODC ComposedShader { language "GLSL" parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } DEF GOODF ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main() { gl_FragColor = vec4 (0.2, 0.9, 0.5, 1.0); }
+" } ] } ] } geometry Sphere { radius 1 } } }
+DEF K KeySensor { }
+
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFBool valid1
+  inputOnly SFBool selected1
+  inputOnly SFBool valid2
+  inputOnly SFBool selected2
+  initializeOnly SFNode ap USE AP
+  initializeOnly SFNode badc USE BADC
+  initializeOnly SFNode goodc USE GOODC
+  initializeOnly SFNode badf USE BADF
+  initializeOnly SFNode goodf USE GOODF
+  url "javascript:
+function valid1 (v, t) { Browser .println ('badc.isValid ' + v); }
+function selected1 (v, t) { Browser .println ('badc.isSelected ' + v); }
+function valid2 (v, t) { Browser .println ('goodc.isValid ' + v); }
+function selected2 (v, t) { Browser .println ('goodc.isSelected ' + v); }
+function on_key (k)
+{
+   Browser .println ('key ' + k + ' ' + badc .isValid + ' ' + badc .isSelected + ' ' + goodc .isValid + ' ' + goodc .isSelected);
+   if (k == 'a') badf .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.2, 0.2, 1.0); }');
+   if (k == 'b') ap .shaders = new MFNode (goodc, badc);
+   if (k == 'c') ap .shaders = new MFNode ();
+   if (k == 'd') ap .shaders = new MFNode (badc, goodc);
+   if (k == 'e') goodf .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');
+   if (k == 'f') goodc .activate = true;
+}
+"
+}
+ROUTE BADC.isValid TO R.valid1
+ROUTE BADC.isSelected TO R.selected1
+ROUTE GOODC.isValid TO R.valid2
+ROUTE GOODC.isSelected TO R.selected2
+ROUTE K.keyPress TO R.on_key

@@ -1,0 +1,25 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Scripting:1
+COMPONENT PointingDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+SpotLight { location -2.5 2 3 direction 0.6 -0.5 -0.6 intensity 3 cutOffAngle 0.6 beamWidth 0.3 radius 15 color 1 0.7 0.5 }
+Transform { translation -1.650 1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.04 0.04 0.04 glossiness 1 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.550 1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.04 0.04 0.04 glossiness 0.7 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.550 1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.04 0.04 0.04 glossiness 0.4 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.650 1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.04 0.04 0.04 glossiness 0 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.650 0.000 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.5 0.5 0.5 glossiness 1 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.550 0.000 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.5 0.5 0.5 glossiness 0.7 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.550 0.000 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.5 0.5 0.5 glossiness 0.4 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.650 0.000 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 0.5 0.5 0.5 glossiness 0 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.650 -1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 1 0.8 0.4 glossiness 1 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.550 -1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 1 0.8 0.4 glossiness 0.7 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.550 -1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 1 0.8 0.4 glossiness 0.4 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.650 -1.100 0 children Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.5 0.6 0.8 specularColor 1 0.8 0.4 glossiness 0 } } geometry Sphere { radius 0.45 } } }

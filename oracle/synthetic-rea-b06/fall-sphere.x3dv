@@ -1,0 +1,5 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection {   bodies [ DEF B RigidBody { position 0 10 0 mass 1 geometry DEF B_C CollidableShape {  shape Shape { geometry Sphere { radius 1 } } } } ]  }

@@ -1,0 +1,17 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+# Synthetic REA oracle world: Shading POINT in WALK. The polygon mode (or point drawing) is global GL
+# state, so X_ITE's gravity and collision depth renders see only what POINT draws: the avatar falls
+# through the floor slab, and while the slab's top face is in the collision volume the face's
+# near-plane clip edge (WIREFRAME) blocks the walk. Authored.
+NavigationInfo { type "WALK" }
+Viewpoint { position 0 1.6 8 }
+Transform { translation 0 -0.5 0 children Shape { appearance Appearance { material Material { } } geometry Box { size 40 1 40 } } }
+Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.9 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -20 -3 20, 20 -3 20, 20 -3 -20, -20 -3 -20 ] } coordIndex [ 0 1 2 3 -1 ] } }
+Transform { translation 0 2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Box { size 30 4 0.5 } } }
+DEF S Script {
+  url "ecmascript:
+    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }
+  "
+}

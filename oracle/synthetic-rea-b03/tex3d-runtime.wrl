@@ -1,0 +1,56 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT CubeMapTexturing:3
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Lighting:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+DEF S1 Transform { translation -3 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF P PixelTexture3D { image [ 3 4 4 4 0 5242880 10485760 15728640 20480 5263360 10506240 15749120 40960 5283840 10526720 15769600 61440 5304320 10547200 15790080 80 5242960 10485840 15728720 20560 5263440 10506320 15749200 41040 5283920 10526800 15769680 61520 5304400 10547280 15790160 160 5243040 10485920 15728800 20640 5263520 10506400 15749280 41120 5284000 10526880 15769760 61600 5304480 10547360 15790240 240 5243120 10486000 15728880 20720 5263600 10506480 15749360 41200 5284080 10526960 15769840 61680 5304560 10547440 15790320 ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 1.2 } } }
+DEF S2 Transform { translation 0 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF C ComposedTexture3D { texture [ PixelTexture { image 2 2 4 -433575681 686172415 673769215 -1 } PixelTexture { image 2 2 4 684211455 1009305855 -935581441 -1 } PixelTexture { image 2 2 4 844162815 -432910081 1357263615 -1 } PixelTexture { image 2 2 4 -590206721 685560575 -769073921 -1 } ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 1.2 } } }
+DEF S3 Transform { translation 3 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture DEF A ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 4 slicesOverY 4 numberOfSlices 16 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 1.2 } } }
+DEF LS LoadSensor { children USE A }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFInt32 on_width
+  inputOnly SFInt32 on_height
+  inputOnly SFInt32 on_depth
+  inputOnly SFInt32 on_color
+  inputOnly SFBool on_loaded
+  inputOutput SFString log ""
+  initializeOnly SFNode p USE P
+  initializeOnly SFNode c USE C
+  initializeOnly SFNode a USE A
+  url "javascript:
+function on_width (v) { log = log + 'W' + v + ' '; }
+function on_height (v) { log = log + 'H' + v + ' '; }
+function on_depth (v) { log = log + 'D' + v + ' '; }
+function on_color (v) { log = log + 'C' + v + ' '; }
+function on_loaded (v) { log = log + 'L' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);
+   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);
+   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);
+   if (k == 'd') c .texture = new MFNode ();
+   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }
+   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');
+   if (k == 'g') a .url = new MFString ('missing-atlas.png');
+   if (k == 'h') a .load = false;
+   if (k == 'i') a .load = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE A.width TO R.on_width
+ROUTE A.height TO R.on_height
+ROUTE A.depth TO R.on_depth
+ROUTE A.colorDepth TO R.on_color
+ROUTE LS.isLoaded TO R.on_loaded

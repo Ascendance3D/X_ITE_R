@@ -1,0 +1,41 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+# Synthetic REA oracle world: the PrimitiveQuality, TextureQuality and TextCompression options,
+# set LOW / LOW / SCALING by a Script in initialize and HIGH / HIGH / CHAR_SPACING at the
+# second cycle (the primitives, the default TextureProperties and the Text are rebuilt).
+# Authored; checker64.png is self-made.
+Viewpoint { position 0 0 10 }
+NavigationInfo { type "NONE" }
+DirectionalLight { direction -0.4 -0.6 -1 }
+Transform { translation -3 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.6 0.3 } } geometry Sphere { radius 1 } } }
+Transform { translation 0 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.8 } } geometry Cone { bottomRadius 1 height 2 } } }
+Transform { translation 3 2 0 rotation 1 0 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.8 0.3 } } geometry Cylinder { radius 1 height 1.5 } } }
+Transform { translation -3 -0.7 0 children Shape { appearance Appearance { material Material { emissiveColor 1 1 0.4 } } geometry Circle2D { radius 1 } } }
+Transform { translation 0 -0.7 0 children Shape { appearance Appearance { material Material { emissiveColor 0.4 1 1 } } geometry Disk2D { innerRadius 0.4 outerRadius 1 } } }
+Transform { translation 3 -0.7 0 children Shape { appearance Appearance { material Material { emissiveColor 1 0.5 1 } } geometry ArcClose2D { radius 1 startAngle 0.3 endAngle 4 } } }
+Transform { translation -4.5 -3.2 0 children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry Text { string [ "Quality g" "WWW" ] length [ 6 0 ] fontStyle FontStyle { size 0.9 family "SERIF" } } } }
+Transform { translation 3.3 -3 0 rotation 1 0 0 -1.2 children Shape { appearance Appearance { texture ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry Rectangle2D { size 2.5 6 } } }
+DEF S Script {
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    function initialize () {
+      Browser .setBrowserOption ('PrimitiveQuality', 'LOW');
+      Browser .setBrowserOption ('TextureQuality', 'LOW');
+      Browser .setBrowserOption ('TextCompression', 'SCALING');
+    }
+    function cycle (v) {
+      step = step + 1;
+      if (step == 2) {
+        Browser .setBrowserOption ('PrimitiveQuality', 'HIGH');
+        Browser .setBrowserOption ('TextureQuality', 'HIGH');
+        Browser .setBrowserOption ('TextCompression', 'CHAR_SPACING');
+      }
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.5 loop TRUE }
+ROUTE STEP.cycleTime TO S.cycle

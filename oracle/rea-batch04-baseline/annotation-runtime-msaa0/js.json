@@ -1,0 +1,329 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "65": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "75": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "85": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "95": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "105": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "109": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "110": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children Transform {\n    translation -2.5 0 0\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.4 0.3\n        }\n      }\n      geometry Box { }\n    }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 1 2 3\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      text \"hello\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/a.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF NEW Shape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.4 0.9\n    }\n  }\n  geometry Cone { }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children Transform {\n    translation -2.5 0 0\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.4 0.3\n        }\n      }\n      geometry Box { }\n    }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 1 2 3\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      text \"hello\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/a.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF NEW Shape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.4 0.9\n    }\n  }\n  geometry Cone { }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  visible FALSE\n  children Transform {\n    translation -2.5 0 0\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.4 0.3\n        }\n      }\n      geometry Box { }\n    }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 1 2 3\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      text \"hello\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/a.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF NEW Shape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.4 0.9\n    }\n  }\n  geometry Cone { }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children Transform {\n    translation -2.5 0 0\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.4 0.3\n        }\n      }\n      geometry Box { }\n    }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 1 2 3\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      text \"hello\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/a.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF NEW Shape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.4 0.9\n    }\n  }\n  geometry Cone { }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children [\n    DEF _1 Transform {\n      translation -2.5 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.4 0.3\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF NEW Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.4 0.9\n        }\n      }\n      geometry Cone { }\n    }\n  ]\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 1 2 3\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      text \"hello\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/a.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 1 2 3\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      text \"hello\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/a.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "65": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 4 5 6\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      contentType \"text/html\"\n      text \"world\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/a.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 Ke Tworld R4 5 6 \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "75": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 4 5 6\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      contentType \"text/html\"\n      text \"world\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/b.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 Ke Tworld R4 5 6 Kf U\\\"http://annotation.invalid/b.html\\\" \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "85": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  annotationGroupID \"group-1\"\n  displayPolicy \"ALWAYS\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 4 5 6\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  marker Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.2\n      }\n    }\n    geometry Sphere {\n      radius 3\n    }\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      contentType \"text/html\"\n      text \"world\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/b.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  load FALSE\n  url \"other.txt\"\n  summary \"changed\"\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 Ke Tworld R4 5 6 Kf U\\\"http://annotation.invalid/b.html\\\" Kg S\\\"changed\\\" U\\\"other.txt\\\" \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "95": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  enabled FALSE\n  annotationGroupID \"group-1\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 4 5 6\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      contentType \"text/html\"\n      text \"world\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/b.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"other.txt\"\n  summary \"changed\"\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 Ke Tworld R4 5 6 Kf U\\\"http://annotation.invalid/b.html\\\" Kg S\\\"changed\\\" U\\\"other.txt\\\" Kh DNEVER \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "105": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  enabled FALSE\n  annotationGroupID \"group-1\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 4 5 6\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      contentType \"text/html\"\n      text \"world\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/b.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"other.txt\"\n  summary \"changed\"\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 Ke Tworld R4 5 6 Kf U\\\"http://annotation.invalid/b.html\\\" Kg S\\\"changed\\\" U\\\"other.txt\\\" Kh DNEVER \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "109": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  enabled FALSE\n  annotationGroupID \"group-1\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 4 5 6\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      contentType \"text/html\"\n      text \"world\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/b.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"other.txt\"\n  summary \"changed\"\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 Ke Tworld R4 5 6 Kf U\\\"http://annotation.invalid/b.html\\\" Kg S\\\"changed\\\" U\\\"other.txt\\\" Kh DNEVER \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "110": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Annotation : 1\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF GA GroupAnnotation {\n  enabled FALSE\n  annotationGroupID \"group-1\"\n  children DEF NEW Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.4 0.9\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF AT AnnotationTarget {\n  referencePoint 4 5 6\n  leadLineStyle LineProperties {\n    linewidthScaleFactor 2\n  }\n  annotations [\n    DEF TA TextAnnotation {\n      annotationGroupID \"group-1\"\n      contentType \"text/html\"\n      text \"world\"\n    }\n    DEF UA URLAnnotation {\n      url \"http://annotation.invalid/b.html\"\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children DEF TB TextAnnotation {\n    text \"child of a Transform\"\n  }\n}\n\nDEF GM GeoMetadata {\n  url \"other.txt\"\n  summary \"changed\"\n  data DEF D WorldInfo {\n    title \"data\"\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nUSE NEW\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFString on_text\n  inputOnly      SFVec3f  on_reference\n  inputOnly      MFNode   on_children\n  inputOnly      SFBool   on_visible\n  inputOnly      MFString on_url\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      MFString on_summary\n  inputOnly      SFString on_policy\n  inputOutput    SFString log \"I 1 2 Atrue P0 Ka Vfalse Kb Vtrue Kc C2 Kd C1 Ke Tworld R4 5 6 Kf U\\\"http://annotation.invalid/b.html\\\" Kg S\\\"changed\\\" U\\\"other.txt\\\" Kh DNEVER \"\n  initializeOnly SFNode   ga USE GA\n  initializeOnly SFNode   at USE AT\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   ua USE UA\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   extra USE NEW\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }\nfunction on_text (v) { log = log + 'T' + v + ' '; }\nfunction on_reference (v) { log = log + 'R' + v + ' '; }\nfunction on_children (v) { log = log + 'C' + v .length + ' '; }\nfunction on_visible (v) { log = log + 'V' + v + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_policy (v) { log = log + 'D' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ga .visible = false;\n   if (k == 'b') ga .visible = true;\n   if (k == 'c') ga .addChildren = new MFNode (extra);\n   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);\n   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }\n   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }\n   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }\n   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE TA.text_changed TO R.on_text\nROUTE AT.referencePoint_changed TO R.on_reference\nROUTE GA.children_changed TO R.on_children\nROUTE GA.visible_changed TO R.on_visible\nROUTE UA.url_changed TO R.on_url\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GA.displayPolicy_changed TO R.on_policy\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 7,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

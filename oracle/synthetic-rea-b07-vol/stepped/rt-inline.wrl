@@ -1,0 +1,30 @@
+#X3D V4.1 utf8
+PROFILE Full
+COMPONENT Texturing3D:2
+COMPONENT VolumeRendering:4
+META "generator" "oracle/tools/gen_rea_b07_vol.py"
+NavigationInfo { type [ "NONE" ] headlight FALSE }
+Background { skyColor [ 0.12 0.16 0.3 ] groundColor [ 0.12 0.16 0.3 ] }
+Viewpoint { position 3.1 2.2 3.4 orientation -0.495741 0.846964 0.192074 0.858071 }
+DEF IN Inline { url "inline-a.x3dv" }
+DEF K KeySensor { }
+DEF R Script {
+ directOutput TRUE
+ inputOnly SFString on_key
+ initializeOnly SFNode in_ USE IN
+ url "javascript:
+function on_key (k)
+{
+
+   if (k == 'a') in_ .load = false;
+   if (k == 'b') in_ .load = true;
+   if (k == 'c') in_ .url = new MFString ('inline-b.x3dv');
+   if (k == 'd') in_ .url = new MFString ('inline-a.x3dv');
+   if (k == 'e') in_ .load = false;
+   if (k == 'f') in_ .url = new MFString ('inline-b.x3dv');
+   if (k == 'g') in_ .load = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+

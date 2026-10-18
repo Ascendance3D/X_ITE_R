@@ -1,0 +1,36 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 8 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+
+Group { children [
+  DEF EM DISEntityManager { address "127.0.0.1" applicationID 3 port 41234 siteID 4
+    children [ DEF TM DISEntityTypeMapping { url "mapping.xml" category 1 country 225 domain 2 extra 3 kind 4 specific 5 subcategory 6 description "types" } ] }
+  DEF RX ReceiverPdu { address "127.0.0.1" port 41234 networkMode "networkReader" applicationID 5 entityID 6 radioID 7 siteID 8
+    transmitterApplicationID 9 transmitterEntityID 10 transmitterRadioID 11 transmitterSiteID 12
+    receivedPower 1.5 receiverState 2 rtpHeaderExpected TRUE readInterval 0.25 writeInterval 2 whichGeometry 0
+    multicastRelayHost "relay.invalid" multicastRelayPort 99 geoCoords 1 2 3 geoSystem [ "UTM" "Z10" "N" ] description "rx" }
+  DEF SG SignalPdu { address "127.0.0.1" port 41236 networkMode "networkWriter" applicationID 5 data [ 1 2 3 4 ] dataLength 4
+    encodingScheme 6 entityID 7 radioID 8 sampleRate 8000 samples 4 siteID 9 tdlType 10 whichGeometry -1 description "sig" }
+  DEF TX TransmitterPdu { address "127.0.0.1" port 41236 networkMode "networkWriter" antennaLocation 1 2 3 antennaPatternLength 4 antennaPatternType 5
+    applicationID 6 cryptoKeyID 7 cryptoSystem 8 entityID 9 frequency 10 inputSource 11 lengthOfModulationParameters 12 modulationTypeDetail 13
+    modulationTypeMajor 14 modulationTypeSpreadSpectrum 15 modulationTypeSystem 16 power 17.5 radioEntityTypeCategory 18 radioEntityTypeCountry 19
+    radioEntityTypeDomain 20 radioEntityTypeKind 21 radioEntityTypeNomenclature 22 radioEntityTypeNomenclatureVersion 23 radioID 24
+    relativeAntennaLocation 4 5 6 siteID 25 transmitFrequencyBandwidth 26.5 transmitState 27 description "tx" }
+] }
+DEF DRX ReceiverPdu { }
+DEF DSG SignalPdu { }
+DEF DTX TransmitterPdu { }
+DEF DEM DISEntityManager { }
+DEF DTM DISEntityTypeMapping { }
+Shape { appearance Appearance { material Material { diffuseColor 0.7 0.3 0.2 } } geometry Box { size 1 1 1 } }
+

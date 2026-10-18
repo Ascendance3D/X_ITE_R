@@ -1,0 +1,327 @@
+{
+  "ok": true,
+  "poses": {
+    "2": {
+      "position": [
+        0,
+        900,
+        1500
+      ],
+      "orientation": [
+        0.9999999999999992,
+        0,
+        0,
+        5.7331853071795855
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "FAR",
+      "description": "far",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        150,
+        250
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        5.783185307179586
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "NEAR",
+      "description": "near",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        150,
+        250
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        5.783185307179586
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "NEAR",
+      "description": "near",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        150,
+        250
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        5.783185307179586
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "NEAR",
+      "description": "near",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        150,
+        250
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        5.783185307179586
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "NEAR",
+      "description": "near",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        150,
+        250
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        5.783185307179586
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "NEAR",
+      "description": "near",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        150,
+        250
+      ],
+      "orientation": [
+        1,
+        0,
+        0,
+        5.783185307179586
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "NEAR",
+      "description": "near",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        900,
+        1500
+      ],
+      "orientation": [
+        0.9999999999999968,
+        0,
+        0,
+        5.733185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "FAR",
+      "description": "far",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        900,
+        1500
+      ],
+      "orientation": [
+        0.9999999999999968,
+        0,
+        0,
+        5.733185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "FAR",
+      "description": "far",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        900,
+        1500
+      ],
+      "orientation": [
+        0.9999999999999968,
+        0,
+        0,
+        5.733185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "FAR",
+      "description": "far",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        900,
+        1500
+      ],
+      "orientation": [
+        0.9999999999999968,
+        0,
+        0,
+        5.733185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "FAR",
+      "description": "far",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        900,
+        1500
+      ],
+      "orientation": [
+        0.9999999999999968,
+        0,
+        0,
+        5.733185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "FAR",
+      "description": "far",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode DEF _1 Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\"\n  ]\n  inputOutput SFInt32  n 1\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\"\n  ]\n  inputOutput SFInt32  n 4\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\"\n  ]\n  inputOutput SFInt32  n 5\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\"\n  ]\n  inputOutput SFInt32  n 5\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\"\n  ]\n  inputOutput SFInt32  n 6\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\"\n  ]\n  inputOutput SFInt32  n 7\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\"\n  ]\n  inputOutput SFInt32  n 10\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode DEF _1 Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\",\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\"\n  ]\n  inputOutput SFInt32  n 13\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode DEF _1 Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\",\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\"\n  ]\n  inputOutput SFInt32  n 13\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode DEF _1 Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\",\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\"\n  ]\n  inputOutput SFInt32  n 14\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode DEF _1 Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\",\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\"\n  ]\n  inputOutput SFInt32  n 17\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  transitionType \"TELEPORT\"\n}\n\nDEF FAR Viewpoint {\n  description \"far\"\n  position 0 900 1500\n  orientation 1 0 0 -0.55\n}\n\nDEF NEAR Viewpoint {\n  description \"near\"\n  position 0 150 250\n  orientation 1 0 0 -0.5\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.4\n}\n\nDEF TILE GeoLOD {\n  geoOrigin USE ORIGIN\n  rootUrl \"geolod-assets/root.wrl\"\n  child1Url \"geolod-assets/c1.wrl\"\n  child2Url \"geolod-assets/c2.wrl\"\n  child3Url \"geolod-assets/c3.wrl\"\n  child4Url \"geolod-assets/missing-c4.wrl\"\n  center 30 10 0\n  range 600\n}\n\nDEF NODE GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30.004 10 0\n  range 900\n  rootNode DEF _1 Transform {\n    translation 0 0 -450\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.7 0.1\n        }\n      }\n      geometry Sphere {\n        radius 40\n      }\n    }\n  }\n}\n\nDEF S Script {\n  inputOnly   SFInt32  tileLevel\n  inputOnly   MFNode   tileChildren\n  inputOnly   SFInt32  nodeLevel\n  inputOnly   MFNode   nodeChildren\n  inputOnly   SFTime   tick\n  inputOutput MFString events [\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\",\n    \"tile level 1\",\n    \"node level 1\",\n    \"node children 0\",\n    \"tile children 3\",\n    \"tile level 0\",\n    \"tile children 1\",\n    \"node level 0\",\n    \"node children 1\"\n  ]\n  inputOutput SFInt32  n 20\n  outputOnly  SFBool   near\n  outputOnly  SFBool   far\n\n  url \"ecmascript:\n    function tileLevel (v) { events [events .length] = 'tile level ' + v; }\n    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }\n    function nodeLevel (v) { events [events .length] = 'node level ' + v; }\n    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }\n    function tick (v) {\n      n = n + 1;\n      if (n == 4) near = true;\n      if (n == 12) far = true;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE TILE.level_changed TO S.tileLevel\nROUTE TILE.children TO S.tileChildren\nROUTE NODE.level_changed TO S.nodeLevel\nROUTE NODE.children TO S.nodeChildren\nROUTE S.near TO NEAR.set_bind\nROUTE S.far TO FAR.set_bind\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea/geolod-assets/missing-c4.wrl'. Error: Not Found"
+  ],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "viewport": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

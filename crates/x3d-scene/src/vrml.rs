@@ -7,26 +7,28 @@ use std::collections::{HashMap, HashSet};
 use x3d_fields::{FieldValue, Generator, NodeId, access};
 
 #[derive(Default)]
-struct CtxIndex {
-    names: HashSet<String>,
-    names_by_node: HashMap<NodeId, String>,
-    nodes: HashSet<NodeId>,
-    route_nodes: HashSet<NodeId>,
+pub(crate) struct CtxIndex {
+    pub(crate) names: HashSet<String>,
+    pub(crate) names_by_node: HashMap<NodeId, String>,
+    pub(crate) nodes: HashSet<NodeId>,
+    pub(crate) route_nodes: HashSet<NodeId>,
     /// X3DGenerator [importedNames]: the printed name of an imported node instance.
-    imported_names: HashMap<NodeId, String>,
+    pub(crate) imported_names: HashMap<NodeId, String>,
 }
 
 pub struct VrmlGenerator<'a> {
     pub g: Generator,
-    scene: &'a Scene,
+    pub(crate) scene: &'a Scene,
     /// `None` is the `null` execution context pushed by X3DObject.toVRMLString.
     stack: Vec<Option<CtxId>>,
     index: HashMap<CtxId, CtxIndex>,
+    /// The predefined field whose value prints next (for its unit category).
+    pub(crate) unit_field: Option<(NodeId, String)>,
 }
 
 impl<'a> VrmlGenerator<'a> {
     pub fn new(scene: &'a Scene) -> Self {
-        VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new() }
+        VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new(), unit_field: None }
     }
 
     pub fn push_ctx(&mut self, ctx: Option<CtxId>) {
@@ -54,17 +56,17 @@ impl<'a> VrmlGenerator<'a> {
         }
     }
 
-    fn current(&self) -> Option<CtxId> {
+    pub(crate) fn current(&self) -> Option<CtxId> {
         self.stack.last().copied().flatten()
     }
 
-    fn cur_index(&mut self) -> &mut CtxIndex {
+    pub(crate) fn cur_index(&mut self) -> &mut CtxIndex {
         let c = self.current().expect("execution context");
         self.index.get_mut(&c).unwrap()
     }
 
     /// X3DGenerator.NamedNodes.
-    fn named_nodes(&mut self, ctx: CtxId) {
+    pub(crate) fn named_nodes(&mut self, ctx: CtxId) {
         let scene = self.scene;
         let index = self.cur_index();
 
@@ -81,7 +83,7 @@ impl<'a> VrmlGenerator<'a> {
     }
 
     /// X3DGenerator.Name.
-    fn name(&mut self, node: NodeId) -> String {
+    pub(crate) fn name(&mut self, node: NodeId) -> String {
         if let Some(n) = self.cur_index().names_by_node.get(&node) {
             return n.clone();
         }
@@ -101,7 +103,7 @@ impl<'a> VrmlGenerator<'a> {
     }
 
     /// X3DGenerator.NeedsName: clone count > 1 (known once the runtime ran), or routes.
-    fn needs_name(&self, node: NodeId) -> bool {
+    pub(crate) fn needs_name(&self, node: NodeId) -> bool {
         if self.scene.clone_counts.as_ref().is_some_and(|c| c.get(&node).is_some_and(|n| *n > 1)) {
             return true;
         }
@@ -120,7 +122,7 @@ impl<'a> VrmlGenerator<'a> {
     }
 
     /// X3DGenerator.ImportedName.
-    fn imported_name(&mut self, instance: NodeId) -> String {
+    pub(crate) fn imported_name(&mut self, instance: NodeId) -> String {
         if let Some(n) = self.cur_index().imported_names.get(&instance) {
             return n.clone();
         }
@@ -204,7 +206,7 @@ impl<'a> VrmlGenerator<'a> {
         }
     }
 
-    fn is_shared_node(&self, node: NodeId) -> bool {
+    pub(crate) fn is_shared_node(&self, node: NodeId) -> bool {
         self.current() != Some(self.scene.node(node).ctx)
     }
 
@@ -255,6 +257,25 @@ impl<'a> VrmlGenerator<'a> {
                 g.push(":");
                 g.tidy_space();
                 g.push(&level.to_string());
+                g.brk();
+            }
+
+            g.tidy_break();
+        }
+
+        // UnitInfo.toVRMLStream for the units whose conversion factor is not 1.
+        let units: Vec<_> = scene.units_of(root).iter().filter(|u| u.conversion_factor != 1.0).collect();
+
+        if !units.is_empty() {
+            for u in units {
+                g.indent();
+                g.push("UNIT");
+                g.space();
+                g.push(&u.category);
+                g.space();
+                g.push(&u.name);
+                g.space();
+                g.push(&x3d_fields::jsmath::number_to_string(u.conversion_factor));
                 g.brk();
             }
 
@@ -497,8 +518,27 @@ impl<'a> VrmlGenerator<'a> {
                     self.g.push("]");
                 }
             },
-            _ => value.to_vrml_stream(&mut self.g),
+            _ => {
+                self.apply_units();
+                value.to_vrml_stream(&mut self.g);
+                self.g.set_unit_factors(1.0, 1.0);
+            }
         }
+    }
+
+    /// Generator.ToUnit for the next value: `this .ExecutionContext () ?.toUnit (category, value) ?? value`,
+    /// with the category of `unit_field` (taken) and the angle unit.
+    pub(crate) fn apply_units(&mut self) {
+        let unit_field = self.unit_field.take();
+        let (unit, angle) = match self.current() {
+            Some(ctx) => match &unit_field {
+                Some((n, name)) => self.scene.unit_factors(ctx, Some(*n), name),
+                None => self.scene.unit_factors(ctx, None, ""),
+            },
+            None => (1.0, 1.0),
+        };
+
+        self.g.set_unit_factors(unit, angle);
     }
 
     fn sfnode_to_vrml(&mut self, node: Option<NodeId>) {
@@ -509,7 +549,7 @@ impl<'a> VrmlGenerator<'a> {
     }
 
     /// X3DBaseNode.getChangedFields (extended = false).
-    fn changed_fields(&self, id: NodeId) -> Vec<usize> {
+    pub(crate) fn changed_fields(&self, id: NodeId) -> Vec<usize> {
         let node = self.scene.node(id);
         let mut out = vec![];
 
@@ -634,11 +674,11 @@ impl<'a> VrmlGenerator<'a> {
         self.g.push("}");
     }
 
-    fn reference_name(&self, r: &FieldRef) -> &'a str {
+    pub(crate) fn reference_name(&self, r: &FieldRef) -> &'a str {
         &self.scene.protos[r.proto].fields[r.index].name
     }
 
-    fn reference_initializable(&self, r: &FieldRef) -> bool {
+    pub(crate) fn reference_initializable(&self, r: &FieldRef) -> bool {
         self.scene.protos[r.proto].fields[r.index].is_initializable()
     }
 
@@ -751,6 +791,10 @@ impl<'a> VrmlGenerator<'a> {
                 FieldValue::SFVec4f(v4).to_vrml_stream(&mut self.g);
                 return;
             }
+        }
+
+        if !matches!(value, FieldValue::SFNode(_) | FieldValue::MFNode(_)) {
+            self.unit_field = Some((id, name.to_string()));
         }
 
         self.value_to_vrml(value);

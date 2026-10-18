@@ -1,0 +1,195 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  },
+  {
+   "camera": 0
+  },
+  {
+   "camera": 1
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 0
+    }
+   }
+  },
+  {
+   "extensions": {
+    "KHR_lights_punctual": {
+     "light": 1
+    }
+   }
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ]
+  }
+ ],
+ "scene": 0,
+ "cameras": [
+  {
+   "type": "perspective",
+   "perspective": {
+    "yfov": 0.7,
+    "znear": 0.1,
+    "zfar": 10
+   }
+  },
+  {
+   "type": "orthographic",
+   "orthographic": {
+    "xmag": 2,
+    "ymag": 1,
+    "znear": 0.1,
+    "zfar": 10
+   }
+  }
+ ],
+ "extensions": {
+  "KHR_lights_punctual": {
+   "lights": [
+    {
+     "type": "spot",
+     "intensity": 5,
+     "range": 10,
+     "color": [
+      1,
+      1,
+      1
+     ]
+    },
+    {
+     "type": "point",
+     "intensity": 2
+    }
+   ]
+  }
+ },
+ "extensionsUsed": [
+  "KHR_animation_pointer"
+ ],
+ "animations": [
+  {
+   "name": "camera-ortho-zfar",
+   "samplers": [
+    {
+     "input": 2,
+     "output": 3,
+     "interpolation": "LINEAR"
+    }
+   ],
+   "channels": [
+    {
+     "sampler": 0,
+     "target": {
+      "path": "pointer",
+      "extensions": {
+       "KHR_animation_pointer": {
+        "pointer": "/cameras/1/orthographic/zfar"
+       }
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "extensionsRequired": [
+  "KHR_animation_pointer"
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 12
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 60,
+   "byteLength": 8
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 68,
+   "byteLength": 8
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -1,
+    -1,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 2,
+   "type": "SCALAR",
+   "min": [
+    0
+   ],
+   "max": [
+    1
+   ]
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 2,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 76,
+   "uri": "data:application/octet-stream;base64,AACAvwAAgL8AAAAAAACAPwAAgL8AAAAAAACAPwAAgD8AAAAAAACAvwAAgD8AAAAAAAABAAIAAAACAAMAAAAAAAAAgD8AACBBAACgQQ=="
+  }
+ ]
+}

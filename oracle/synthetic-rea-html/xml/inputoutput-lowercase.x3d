@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Full" version="4.0">
+<Scene>
+<Material diffusecolor='1 0 0' shininess='0.2'/><DirectionalLight intensity='0.5' on='false'/>
+</Scene>
+</X3D>

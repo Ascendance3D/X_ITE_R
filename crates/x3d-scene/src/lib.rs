@@ -3,10 +3,12 @@
 //! contributors). Pinned reference: oracle/x_ite-pin (fork commit 34cdf9f97).
 
 pub mod info_array;
+mod json;
 pub mod nodes;
 pub mod scene;
 pub mod setup;
 pub mod vrml;
+mod xml;
 
 pub use nodes::{NodeTable, NodeType, table};
 pub use scene::*;

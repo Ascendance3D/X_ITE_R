@@ -1,0 +1,28 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF R0 RigidBodyCollection { collider DEF CC0 CollisionCollection { bounce 0.8 minBounceSpeed 0 appliedParameters [ "BOUNCE" ]  collidables [ USE F0_C USE B0_C ] }
+  bodies [ DEF F0 RigidBody { fixed TRUE position 0 0 0 geometry DEF F0_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B0 RigidBody { mass 1 position 0 4 0 geometry DEF B0_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R1 RigidBodyCollection { collider DEF CC1 CollisionCollection { bounce 0.8 minBounceSpeed 0 appliedParameters [  ]  collidables [ USE F1_C USE B1_C ] }
+  bodies [ DEF F1 RigidBody { fixed TRUE position 30 0 0 geometry DEF F1_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B1 RigidBody { mass 1 position 30 4 0 geometry DEF B1_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R2 RigidBodyCollection { collider DEF CC2 CollisionCollection { bounce 0.8 minBounceSpeed 100 appliedParameters [ "BOUNCE" ]  collidables [ USE F2_C USE B2_C ] }
+  bodies [ DEF F2 RigidBody { fixed TRUE position 60 0 0 geometry DEF F2_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B2 RigidBody { mass 1 position 60 4 0 geometry DEF B2_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R3 RigidBodyCollection { collider DEF CC3 CollisionCollection { bounce 0.0 minBounceSpeed 0 appliedParameters [ "BOUNCE" ]  collidables [ USE F3_C USE B3_C ] }
+  bodies [ DEF F3 RigidBody { fixed TRUE position 90 0 0 geometry DEF F3_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B3 RigidBody { mass 1 position 90 4 0 geometry DEF B3_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R4 RigidBodyCollection { collider DEF CC4 CollisionCollection { bounce 1.0 minBounceSpeed 0 appliedParameters [ "BOUNCE" ]  collidables [ USE F4_C USE B4_C ] }
+  bodies [ DEF F4 RigidBody { fixed TRUE position 120 0 0 geometry DEF F4_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B4 RigidBody { mass 1 position 120 4 0 geometry DEF B4_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R5 RigidBodyCollection { collider DEF CC5 CollisionCollection { bounce 0.5 minBounceSpeed 0 appliedParameters [ "BOUNCE" ] enabled FALSE collidables [ USE F5_C USE B5_C ] }
+  bodies [ DEF F5 RigidBody { fixed TRUE position 150 0 0 geometry DEF F5_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B5 RigidBody { mass 1 position 150 4 0 geometry DEF B5_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R6 RigidBodyCollection { collider DEF CC6 CollisionCollection { bounce 0.8 minBounceSpeed 0.1 appliedParameters [ "BOUNCE" ]  collidables [ USE F6_C USE B6_C ] }
+  bodies [ DEF F6 RigidBody { fixed TRUE position 180 0 0 geometry DEF F6_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B6 RigidBody { mass 1 position 180 4 0 geometry DEF B6_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R7 RigidBodyCollection { collider DEF CC7 CollisionCollection { bounce 0.8 minBounceSpeed 3 appliedParameters [ "BOUNCE" ]  collidables [ USE F7_C USE B7_C ] }
+  bodies [ DEF F7 RigidBody { fixed TRUE position 210 0 0 geometry DEF F7_C CollidableShape { shape Shape { geometry Box { size 10 1 10 } } } }
+           DEF B7 RigidBody { mass 1 position 210 4 0 geometry DEF B7_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }

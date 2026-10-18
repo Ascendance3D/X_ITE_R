@@ -166,10 +166,11 @@ fn parse_export_facade_matches_xite() {
 fn parse_import_facade_matches_xite_without_inline_load() {
     let o = &oracle()["import.wrl"];
     assert!(o.ok, "X_ITE accepts IMPORT");
+    // `global TRUE`: the Inline constructor's legacy default for X3D <= 3.3 (node table "legacy").
     let want = o.vrml.clone().unwrap();
     assert!(want.contains("  global TRUE\n"));
     let p = vrml97::parse_bytes(&input("import.wrl"), "import.wrl").unwrap_or_else(|e| panic!("import.wrl: facade: {e}"));
-    assert_eq!(p.to_vrml_string(), want.replace("  global TRUE\n", ""));
+    assert_eq!(p.to_vrml_string(), want);
     assert_eq!(p.warnings, o.warns, "import.wrl: facade warnings");
     assert_eq!(p.imported.len(), 1, "import.wrl: one IMPORT");
 }
@@ -184,12 +185,12 @@ fn engine_parse_export_matches_xite() {
 
 #[test]
 fn engine_parse_import_matches_xite_without_inline_load() {
-    // X_ITE loads the Inline and then prints `global TRUE` on it. The parser alone does
-    // not load the Inline, so that one line is the only difference.
+    // X_ITE prints `global TRUE` on the Inline: Inline's constructor sets it for X3D <= 3.3
+    // (not the Inline load, as an earlier note here said). The parser now matches exactly.
     let want = oracle()["import.wrl"].vrml.clone().unwrap();
     assert!(want.contains("  global TRUE\n"));
     let e = x3d_parse::parse_bytes(&input("import.wrl"), "import.wrl").unwrap();
-    assert_eq!(e.to_vrml_string(), want.replace("  global TRUE\n", ""));
+    assert_eq!(e.to_vrml_string(), want);
 }
 
 // -------------------------------------------------------------------------

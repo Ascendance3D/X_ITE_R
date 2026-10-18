@@ -1,0 +1,1 @@
+{"world": "main.wrl", "authority": "XITE_COMPATIBILITY", "covers": ["glTF/GLB through Inline"], "dt": 0.1, "frames": 14, "actions": [{"frame": 4, "type": "url", "name": "Inl", "url": ["missing/gone.gltf", "../synthetic-rea-b08-gltf/invalid/version-1.gltf", "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"]}]}

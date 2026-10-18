@@ -14,19 +14,38 @@
 //!   external scripts against a local, read-only file root ([`loader`]);
 //! * the Script node, with the JavaScript engine behind the [`ScriptHost`] trait ([`script`]).
 //!
+//! # Embedding requirement: the geometry provider
+//!
+//! SurfaceEmitter, VolumeEmitter, BoundedPhysicsModel and the concave CollidableShape need the triangulated
+//! geometry of other nodes. This crate cannot build it (the tessellation is in `x3d-render`); the embedder
+//! installs a process-global builder once, with `x3d_render::traverse::install_particle_geometry ()`
+//! ([`nodes::particle_systems::set_geometry_provider`]). `Viewer3d` does it for you. A bare [`Runtime`] in a
+//! process without a Viewer or an install sees empty geometry and logs one `warn:` per affected node. First
+//! install wins, process wide, so a Viewer anywhere in the process also serves every bare Runtime. Details:
+//! [`nodes::particle_systems`].
+//!
 //! The oracle (oracle/x_ite-pin/src/dump.html) runs with `update="false"` and a frozen
 //! `getCurrentTime` (946684800). [`Runtime::load_world`] reproduces what happens between
 //! `createX3DFromURL` and its promise resolving: parse, setup, script loading, url object
 //! loading and exactly one frame (FileLoader.set_loadCount__ awaits `browser .nextFrame ()`).
 
+pub mod browser_options;
+pub mod bullet;
+pub mod geo;
 pub mod events;
 pub mod extern_proto;
 pub mod inline;
+pub mod inline_geometry;
+pub mod font_library;
 pub mod loader;
 pub mod nodes;
+pub mod nurbs;
+pub mod particles;
+pub mod physics;
 pub mod protos;
 pub mod release;
 pub mod script;
+pub mod sound;
 pub mod url_object;
 
 use std::collections::HashMap;
@@ -34,7 +53,7 @@ use x3d_fields::{FieldValue, NodeId, access};
 use x3d_scene::*;
 
 pub use extern_proto::{CacheEntry, ExternState, PendingExtern};
-pub use loader::{Fetcher, LocalFetcher};
+pub use loader::{Fetcher, LocalFetcher, parse_bytes_with_fetcher};
 pub use script::{ScriptCall, ScriptError, ScriptHost};
 
 /// A field identity: node + location (X_ITE field object identity).
@@ -50,6 +69,40 @@ pub const FROZEN_TIME: f64 = 946684800.0;
 /// Interest callbacks (X3DObject.addInterest (callbackName, object)). The node is the object.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Cb {
+    // NURBS (nodes/nurbs.rs): index into nurbs::FILTER_FIELDS.
+    NurbsFilterAdd(u8),
+    NurbsFilterRemove(u8),
+    NurbsSetScale,
+    NurbsSetGeometry,
+    NurbsInterpSetFraction,
+    // ViewpointGroup (nodes/viewpoint_group.rs)
+    ViewpointGroupSetSize,
+    ViewpointGroupSetActive,
+    // HAnim (nodes/hanim.rs). A payload names the pose or motion the event came from.
+    HAnimHumanoidSetChildren,
+    HAnimHumanoidSetMotions,
+    HAnimHumanoidSetJoints,
+    HAnimHumanoidSetSkinCoord,
+    HAnimHumanoidPoseFraction(NodeId),
+    HAnimHumanoidPoseActive,
+    HAnimHumanoidConnectJoints(NodeId),
+    HAnimHumanoidConnectAllJoints,
+    HAnimHumanoidJointName,
+    HAnimHumanoidUnlock,
+    HAnimHumanoidDeprecated,
+    HAnimPoseResetAllJoints,
+    HAnimPoseCommence,
+    HAnimPoseStartTime,
+    HAnimPoseFraction,
+    HAnimPoseChildren,
+    HAnimMotionEnabled,
+    HAnimMotionJoints,
+    HAnimMotionInterpolators,
+    HAnimMotionNextOrPrevious(i8),
+    HAnimMotionFrameIndex,
+    HAnimMotionFrameDuration,
+    HAnimMotionFrameIncrement,
+    HAnimMotionStartOrEndFrame,
     // X3DTimeDependentNode
     TimeSetLoop,
     TimeSetEnabled,
@@ -64,6 +117,9 @@ pub enum Cb {
     InterpSetFraction,
     InterpSetKey,
     InterpSetKeyValue,
+    // SplinePositionInterpolator(2D) / SplineScalarInterpolator
+    SplineSetKeyVelocity,
+    SplineSetNormalizeVelocity,
     // EventUtilities
     BooleanFilterSetBoolean,
     BooleanToggleSetBoolean,
@@ -82,10 +138,31 @@ pub enum Cb {
     UrlLoadData,
     /// `autoRefresh` or `autoRefreshTimeLimit` changed.
     UrlSetAutoRefresh,
+    /// InlineGeometry.set_solid__ / set_smooth__.
+    InlineGeometrySolid,
+    InlineGeometrySmooth,
+    /// FontLibrary.set_family__.
+    FontLibrarySetFamily,
+    /// X3DFontStyleNode: `family` or `style` changed (`set_url__`).
+    FontStyleReload,
     // Script (X3DScriptNode): field callback index into user-defined fields.
     ScriptField(usize),
     ScriptEventsProcessed,
     ScriptPrepareEvents,
+    // LoadSensor
+    LoadSensorSetEnabled,
+    LoadSensorSetTimeOut,
+    LoadSensorSetChildren,
+    /// set_loadState__ (urlObject): interest on the `loadState` of a watched url object.
+    LoadSensorLoadState,
+    // X3DKeyDeviceSensorNode.set_enabled__
+    KeySensorSetEnabled,
+    // TransformSensor.set_enabled__ / set_targetObject__ (enabled, size, targetObject)
+    TransformSensorSetEnabled,
+    PickSensorSetLive,
+    LayerSetObjectType,
+    // GeoProximitySensor geoCenter → center field interest
+    GeoCenterToCenter,
     // X3DGroupingNode
     GroupAddChildren,
     GroupRemoveChildren,
@@ -100,10 +177,37 @@ pub enum Cb {
     TimeSensorSetTime,
     // X3DBindableNode.set_bind__
     BindableSetBind,
+    // X3DViewpointNode.set_navigationInfo__: `_isBound .addFieldInterest (navigationInfoNode ._set_bind)`.
+    ViewpointIsBound,
+    // GeoLOD.set_rootLoadState__ / set_childLoadState__ (interests on its private Inlines' loadState).
+    GeoLodRootLoadState,
+    GeoLodChildLoadState,
     // FileLoader.set_loadCount__ of a scene that an Inline loaded (interest on the scene's loadCount).
     SceneLoadCount,
     // X3DRoute.reconnect: interest on the loadState of an Inline that an imported node of the route belongs to.
     RouteReconnect(usize),
+    // ComposedCubeMapTexture.set_texture__ (index): the face slot a texture field change fills.
+    ComposedCubeSetTexture(u8),
+    // X3DTextureProjectorNode.set_texture__ / set_textureNode__ (a node interest on the texture).
+    ProjectorSetTexture,
+    ProjectorSetTextureNode,
+    // PixelTexture.set_image__.
+    PixelTextureSetImage,
+    // ComposedTexture3D.set_texture__, `_update .addEvent` (node interest on a slice), update.
+    Composed3DSetTexture,
+    Composed3DSliceEvent,
+    Composed3DUpdate,
+    // RenderedTexture.set_singleFrame__ / set_children__ (checkUpdate = false), set_dimensions__.
+    RenderedResetUpdate,
+    RenderedSetDimensions,
+    // The Sound component (nodes/sound.rs).
+    Sound(nodes::sound::SoundCb),
+    // ParticleSystem (nodes/particle_systems.rs).
+    Particle(nodes::particle_systems::ParticleCb),
+    // RigidBodyPhysics (nodes/rigid_body_physics.rs).
+    Physics(nodes::rigid_body_physics::PhysicsCb),
+    // Shaders: ShaderPart, ComposedShader and the Appearance's shader selection (nodes/shaders.rs).
+    Shader(nodes::shaders::ShaderCb),
 }
 
 /// A pending `setTimeout` of X3DTimeDependentNode.addTimeout (virtual time).
@@ -144,6 +248,13 @@ pub struct NodeRt {
     pub tainted: bool,
     pub interests: Vec<Interest>,
     pub state: nodes::State,
+    /// X3DTexture2DNode width and height once texture data was set (`None`: clearTexture's 1 × 1).
+    pub texture_size: Option<(u32, u32)>,
+    /// ImageTextureAtlas: slicesOverX, slicesOverY, numberOfSlices of the image shown (setImage
+    /// reads them once); `None` while cleared.
+    pub atlas: Option<[i32; 3]>,
+    /// ImageTexture3D: the volume the NRRD / DICOM parser produced (`None`: the cleared texture).
+    pub volume: Option<std::rc::Rc<nodes::image_texture_3d::Volume>>,
 }
 
 /// An event (Events.js): the field whose value is delivered, and the fields already visited.
@@ -196,20 +307,39 @@ pub struct Runtime {
     /// The browser's private event fields (prepareEvents, timeEvents, …) live on this node.
     pub browser_node: NodeId,
     pub script_host: Option<Box<dyn ScriptHost>>,
+    /// The Shaders component: the compiler the renderer installs, parts, links and the Appearance selection.
+    pub shaders: nodes::shaders::ShaderHost,
     pub fetcher: Box<dyn Fetcher>,
     /// Extern protos that finished loading: extern → (proto in loaded context).
     pub extern_loaded: HashMap<ExternId, Option<ProtoId>>,
     /// browser.loadFont cache: font URL → loaded.
     pub font_cache: HashMap<String, bool>,
+    /// X3DTextContext [_library]: execution context → upper-cased family → font (`font_library.rs`); it is never pruned by a node.
+    pub font_libraries: HashMap<CtxId, HashMap<String, std::rc::Rc<x3d_text::Font>>>,
+    /// FontLibrary.font of each FontLibrary node.
+    pub font_library_fonts: HashMap<NodeId, Option<std::rc::Rc<x3d_text::Font>>>,
+    /// Grows whenever a FontLibrary registers a font: the renderer rebuilds Text geometry with it.
+    pub font_epoch: u64,
+    /// X3DFontStyleNode.font when the last loadData took it from a FontLibrary.
+    pub font_style_fonts: HashMap<NodeId, std::rc::Rc<x3d_text::Font>>,
+    /// FontStyle load loops that wait for a FontLibrary that is still loading.
+    pub pending_font_styles: Vec<font_library::PendingFontStyle>,
     /// Script nodes in the order their contexts became active, for diagnostics.
     pub scripts: Vec<NodeId>,
     /// Inline.getInternalScene: Inline node → root context of the scene it loaded and attached.
     /// The scenes live in this runtime's node arena (`scene.merge_inline`), like X_ITE's one
     /// browser: one event queue, one set of browser events, one script realm.
     pub inline_scenes: HashMap<NodeId, CtxId>,
+    /// InlineGeometry.getInnerNode: InlineGeometry node → the geometry node of the scene it loaded (`inline_geometry.rs`).
+    pub inline_geometries: HashMap<NodeId, NodeId>,
     /// Scenes that were parsed and set up but are not attached yet (FileLoader.setScene waits for
     /// their loadCount to reach 0 and then for the next frame).
     pub pending_scenes: Vec<inline::PendingScene>,
+    /// When set (x3d-drive's offline audio frames), a BufferAudioSource's decodeAudioData result
+    /// waits in `pending_audio_decodes` until [`Runtime::flush_audio_decodes`] at the start of
+    /// the next frame, like oracle/x_ite-anim.mjs gates the browser's decoder thread.
+    pub defer_audio_decodes: bool,
+    pub pending_audio_decodes: Vec<(NodeId, Vec<u8>)>,
     /// `await browser .nextFrame ()` continuations, resolved after the finishEvents of a frame.
     pub frame_waiters: Vec<inline::FrameWaiter>,
     /// EXTERNPROTO scenes that were parsed and set up, waiting like `pending_scenes` (see
@@ -221,6 +351,12 @@ pub struct Runtime {
     pub extern_states: HashMap<ExternId, ExternState>,
     /// Declarations whose `loadData` event is waiting to be processed (the next frame's prepareEvents).
     pub extern_load_events: Vec<ExternId>,
+    /// RenderedTexture.traverse of this frame's DISPLAY pass: the textures whose renderTexture runs
+    /// (set by the host after its display walk, read by the renderer).
+    pub rendered_now: Vec<NodeId>,
+    /// Images fetched but not yet decoded (`await this .loadImage ()`): ImageTexture sizes and
+    /// ImageTextureAtlas outputs. Applied after the next frame's prepareEvents.
+    pub decoded_images: Vec<(NodeId, nodes::texture_projector::Decoded)>,
     /// FileLoader.#sceneCache of EXTERNPROTO scenes, least recently used first.
     pub extern_cache: Vec<(String, CacheEntry)>,
     /// The body (execution context) each realized PROTO instance has now.
@@ -255,6 +391,10 @@ pub struct Runtime {
     pub description: String,
     /// Requests scripts made of the browser (Browser.nextViewpoint …), drained by the viewer.
     pub browser_requests: Vec<String>,
+    /// BrowserOptions, BrowserProperties and RenderingProperties (`getBrowserOption` …).
+    pub browser_options: browser_options::BrowserOptions,
+    /// Background.initialize: the private ImageTexture of each `xxxUrl` field, per Background.
+    pub background_textures: HashMap<NodeId, Vec<(&'static str, NodeId)>>,
     /// Bump counter for X3DBindableNode.modificationCount.
     pub bind_modifications: HashMap<NodeId, u64>,
     pub bind_counter: u64,
@@ -271,16 +411,67 @@ pub struct Runtime {
     /// Follower nodes in the order they were initialized (the order of their `set_live__`
     /// interests on the scene's live field).
     pub followers: Vec<NodeId>,
+    /// X3DKeyDeviceSensorContext [_keyDeviceSensorNodes]: enabled, live key device sensors (insertion order).
+    pub key_sensors: Vec<NodeId>,
+    /// X3DPickingContext [_transformSensorNodes] (insertion order).
+    pub transform_sensors: Vec<NodeId>,
+    /// X3DPickingContext [_pickSensorNodes] [0]: the live, enabled pick sensors (insertion order).
+    pub pick_sensors: Vec<NodeId>,
+    /// X3DLayerNode: `this ._objectType .addFieldInterest (groupNodes ._objectType)`: the objectType
+    /// of a layer's PickableGroup once the layer's objectType changed (it starts "ALL").
+    pub layer_object_types: HashMap<NodeId, Vec<String>>,
+    /// X3DExecutionContext [_worldInfos]: the live WorldInfo nodes of each context, in add order.
+    pub world_infos: HashMap<CtxId, Vec<NodeId>>,
+    /// X3DNurbsSurfaceGeometryNode.tessellationScale set by a NurbsSet (absent: 1).
+    pub nurbs_scales: HashMap<NodeId, f64>,
+    /// NurbsSet.geometryNodes: the member surfaces of each NurbsSet.
+    pub nurbs_set_members: HashMap<NodeId, Vec<NodeId>>,
+    /// ViewpointGroup (`active`, `displayed`), set by set_active__.
+    pub viewpoint_groups: HashMap<NodeId, (bool, bool)>,
+    /// HAnimHumanoid, HAnimPose and HAnimMotion state (nodes/hanim.rs).
+    pub hanim_humanoids: HashMap<NodeId, nodes::hanim::HumanoidState>,
+    pub hanim_poses: HashMap<NodeId, nodes::hanim::PoseState>,
+    pub hanim_motions: HashMap<NodeId, nodes::hanim::MotionState>,
+    /// RigidBodyPhysics: the nursery of the Ammo objects and the time step log (nodes/rigid_body_physics.rs).
+    pub physics: nodes::rigid_body_physics::PhysicsRt,
+    /// The browser's audio context (X3DSoundContext.getAudioContext), made by the first Sound
+    /// node, in the mode `audio_mode` names.
+    pub audio: Option<sound::AudioEngine>,
+    pub audio_mode: sound::AudioMode,
+    /// The Web Audio state of the Sound nodes.
+    pub sound: HashMap<NodeId, nodes::sound::SoundState>,
+    /// X3DSoundContext [_soundDestinationNodes] (insertion ordered set).
+    pub sound_destinations: Vec<NodeId>,
+    /// X3DTimeDependentNode state of nodes whose State holds something else.
+    pub time_states: HashMap<NodeId, nodes::time::TimeState>,
     /// Candidates for the next sweep of [`release`]: nodes of disposed scenes, nothing else refers to them yet.
     pub release_queue: Vec<NodeId>,
     /// Disposed contexts whose tables are emptied once their nodes are released.
     pub release_ctxs: Vec<CtxId>,
-    /// Contexts that the sweep emptied. Their entries in the scene's PROTO, EXTERNPROTO, IMPORT and
-    /// EXPORT tables stay (the ids are positions) but count for nothing: a slot they name may hold a
-    /// node of another scene now.
+    /// Contexts that the sweep emptied and whose slots are not released yet: something still names
+    /// them or a record they own (see `release.rs`). Their entries in the scene's PROTO, EXTERNPROTO,
+    /// IMPORT and EXPORT tables count for nothing: a node slot they name may hold a node of another
+    /// scene now. A context leaves this set when its slot is released.
     pub(crate) emptied_ctxs: std::collections::HashSet<CtxId>,
+    /// Last request identity handed out (EXTERNPROTO loads), runtime-wide.
+    pub request_counter: u64,
+    /// Instance bodies that were built and then replaced or dropped, counted (their slots are reused).
+    pub bodies_disposed: usize,
+    /// Table slots released so far (contexts, PROTO, EXTERNPROTO, IMPORT, EXPORT), for diagnostics.
+    pub table_slots_released: u64,
     /// Nodes released since the host last asked ([`Runtime::take_released`]).
     pub released_log: Vec<NodeId>,
+    /// Nodes created at runtime (Script `createNode`, `createVrmlFromString`, `new SFNode (…)`): the
+    /// candidates of the reachability sweep (see `release.rs`, "Runtime-created nodes").
+    pub dynamic_nodes: std::collections::HashSet<NodeId>,
+    /// Nodes for which the missing geometry provider was already logged (`warn_no_geometry_provider`).
+    pub(crate) provider_warned: std::collections::HashSet<NodeId>,
+    /// Execution contexts made by `createVrmlFromString` whose nodes are all runtime-created.
+    pub dynamic_ctxs: std::collections::HashSet<CtxId>,
+    /// Something that can change reachability happened since the last dynamic sweep.
+    pub dynamic_dirty: bool,
+    /// Frames since the last dynamic sweep (a Script dropping a reference raises no event).
+    pub dynamic_idle: u32,
     /// Nodes released so far, and sweeps that released any.
     pub released_total: u64,
     pub release_epoch: u64,
@@ -291,7 +482,11 @@ pub struct Runtime {
 }
 
 impl Runtime {
-    pub fn new(scene: Scene, fetcher: Box<dyn Fetcher>) -> Runtime {
+    pub fn new(mut scene: Scene, fetcher: Box<dyn Fetcher>) -> Runtime {
+        // The parser's static clone counts describe the scene before it runs; the runtime
+        // publishes its own (publish_clone_counts).
+        scene.clone_counts = None;
+
         let mut rt = Runtime {
             scene,
             frt: HashMap::new(),
@@ -305,17 +500,28 @@ impl Runtime {
             tasks: Default::default(),
             browser_node: 0,
             script_host: None,
+            shaders: Default::default(),
             fetcher,
             extern_loaded: HashMap::new(),
             font_cache: HashMap::new(),
+            font_libraries: HashMap::new(),
+            font_library_fonts: HashMap::new(),
+            font_epoch: 0,
+            pending_font_styles: vec![],
+            font_style_fonts: HashMap::new(),
             scripts: vec![],
             inline_scenes: HashMap::new(),
+            inline_geometries: HashMap::new(),
             pending_scenes: vec![],
+            defer_audio_decodes: false,
+            pending_audio_decodes: vec![],
             frame_waiters: vec![],
             pending_externs: vec![],
             extern_frame_waiters: vec![],
             extern_states: HashMap::new(),
             extern_load_events: vec![],
+            decoded_images: vec![],
+            rendered_now: vec![],
             extern_cache: vec![],
             instance_bodies: HashMap::new(),
             instance_update: Default::default(),
@@ -331,6 +537,8 @@ impl Runtime {
             prints: vec![],
             description: String::new(),
             browser_requests: vec![],
+            browser_options: browser_options::BrowserOptions::new(512, 512),
+            background_textures: HashMap::new(),
             bind_modifications: HashMap::new(),
             bind_counter: 0,
             stamps: vec![],
@@ -338,10 +546,35 @@ impl Runtime {
             frame_rate: 60.0,
             scene_live: false,
             followers: vec![],
+            key_sensors: vec![],
+            transform_sensors: vec![],
+            pick_sensors: vec![],
+            layer_object_types: HashMap::new(),
+            world_infos: HashMap::new(),
+            nurbs_scales: HashMap::new(),
+            nurbs_set_members: HashMap::new(),
+            viewpoint_groups: HashMap::new(),
+            hanim_humanoids: HashMap::new(),
+            hanim_poses: HashMap::new(),
+            hanim_motions: HashMap::new(),
+            physics: Default::default(),
+            audio: None,
+            audio_mode: sound::default_mode(),
+            sound: HashMap::new(),
+            sound_destinations: vec![],
+            time_states: HashMap::new(),
             release_queue: vec![],
             release_ctxs: vec![],
             emptied_ctxs: Default::default(),
+            request_counter: 0,
+            bodies_disposed: 0,
+            table_slots_released: 0,
             released_log: vec![],
+            dynamic_nodes: Default::default(),
+            dynamic_ctxs: Default::default(),
+            dynamic_dirty: false,
+            provider_warned: Default::default(),
+            dynamic_idle: 0,
             released_total: 0,
             release_epoch: 0,
             tombstone: None,
@@ -353,7 +586,7 @@ impl Runtime {
 
         rt.browser_node = rt.create_internal_node("X3DBrowser");
 
-        for name in ["prepareEvents", "timePrepareEvents", "timeEvents", "cameraEvents", "sensorEvents", "displayEvents", "finishEvents"] {
+        for name in ["prepareEvents", "timePrepareEvents", "timeEvents", "cameraEvents", "sensorEvents", "displayEvents", "displayFinishEvents", "finishEvents"] {
             rt.add_private_field(rt.browser_node, name, access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
         }
 
@@ -528,6 +761,12 @@ impl Runtime {
         }
     }
 
+    pub fn remove_node_interest(&mut self, target: NodeId, node: NodeId, cb: Cb) {
+        if let Some(n) = self.nrt.get_mut(target as usize) {
+            n.interests.retain(|i| !(i.node == node && i.cb == cb));
+        }
+    }
+
     pub fn add_field_interest(&mut self, from: FKey, to: FKey) {
         let fi = &mut self.frt_mut(from).field_interests;
 
@@ -641,6 +880,9 @@ impl Runtime {
             return;
         }
 
+        // A node reference came or went: a runtime-created node may have become unreachable.
+        self.dynamic_dirty = true;
+
         for n in old {
             if !new.contains(&n) {
                 if let Some(l) = self.parents.get_mut(&n) {
@@ -738,7 +980,7 @@ impl Runtime {
             || !self.extern_frame_waiters.is_empty()
             || self.extern_states.values().any(|s| s.load_state == nodes::LoadState::InProgress)
             || (0..self.scene.nodes.len() as NodeId).any(|n| {
-                self.builtin_name(n) == Some("Inline") && self.url_load_state(n) == nodes::LoadState::InProgress
+                matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry")) && self.url_load_state(n) == nodes::LoadState::InProgress
             })
     }
 
@@ -850,13 +1092,40 @@ impl Runtime {
                 return Err(format!("Error: \n{e}"));
             }
         };
+        let simple = scene.contexts.len() == 1
+            && scene.protos.is_empty()
+            && scene.externprotos.is_empty()
+            && scene.imported.is_empty()
+            && scene.exported.is_empty();
         let m = self.import_scene(scene, parent, None);
+
+        // The new scene is a candidate of the reachability sweep as a whole (a node keeps its scene).
+        if simple && (m.node_offset..m.node_end).all(|n| self.dynamic_eligible(n)) {
+            self.dynamic_nodes.extend(m.node_offset..m.node_end);
+            self.dynamic_ctxs.insert(m.root_ctx);
+            self.dynamic_dirty = true;
+        }
 
         Ok(self.scene.ctx(m.root_ctx).root_nodes.clone())
     }
 }
 
 impl Runtime {
+    /// Nodes a Script created: candidates of the reachability sweep (`release.rs`).
+    pub(crate) fn register_dynamic(&mut self, nodes: impl IntoIterator<Item = NodeId>) {
+        let before = self.dynamic_nodes.len();
+
+        for n in nodes {
+            if self.dynamic_eligible(n) {
+                self.dynamic_nodes.insert(n);
+            }
+        }
+
+        if self.dynamic_nodes.len() != before {
+            self.dynamic_dirty = true;
+        }
+    }
+
     /// Script.js `new SFNode (vrmlSyntax)`: SFNode.fromString in the script's context, then set
     /// up the new nodes. `Err` is the message of the thrown Error.
     pub fn sfnode_from_string(&mut self, text: &str, ctx: CtxId) -> Result<Option<NodeId>, String> {
@@ -889,6 +1158,8 @@ impl Runtime {
             self.setup_node(n);
         }
 
+        self.register_dynamic(first_new..self.scene.nodes.len() as NodeId);
+
         match result {
             Ok(Some(FieldValue::SFNode(Some(n)))) => Ok(Some(n)),
             Ok(Some(_)) => Ok(None),
@@ -899,6 +1170,8 @@ impl Runtime {
 
     /// X3DExecutionContext.deleteRoute: also removes the field interest.
     pub fn delete_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) {
+        self.dynamic_dirty = true;
+
         if let Some(r) = self.scene.delete_route(ctx, source, source_field, destination, destination_field) {
             self.remove_field_interest((r.source_node, r.source_loc), (r.destination_node, r.destination_loc));
         }
@@ -906,7 +1179,20 @@ impl Runtime {
 
     /// X3DExecutionContext.createNode (typeName): created and set up.
     pub fn create_node_setup(&mut self, ctx: CtxId, type_name: &str) -> Option<NodeId> {
-        let n = self.scene.create_node(ctx, type_name)?;
+        self.create_node_tracked(ctx, type_name, false)
+    }
+
+    /// `createNode` called by a Script: the node is a candidate of the reachability sweep (`release.rs`).
+    pub fn create_node_script(&mut self, ctx: CtxId, type_name: &str) -> Option<NodeId> {
+        self.create_node_tracked(ctx, type_name, true)
+    }
+
+    fn create_node_tracked(&mut self, ctx: CtxId, type_name: &str, script_created: bool) -> Option<NodeId> {
+        self.scene.alloc_log = Some(vec![]);
+
+        let created = self.scene.create_node(ctx, type_name);
+        let log = self.scene.alloc_log.take().unwrap_or_default();
+        let n = created?;
 
         for w in std::mem::take(&mut self.scene.warnings) {
             self.log_warn(w);
@@ -915,6 +1201,13 @@ impl Runtime {
         self.nrt_mut(n);
         self.construct_node(n);
         self.setup_node(n);
+
+        // Only a Script's nodes are candidates of the reachability sweep; the runtime's own (the Contacts of
+        // a CollisionSensor) are held by tables the sweep does not read.
+        if script_created {
+            self.register_dynamic(log);
+        }
+
         Some(n)
     }
 

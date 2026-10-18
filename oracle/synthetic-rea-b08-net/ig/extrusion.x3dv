@@ -1,0 +1,6 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+Shape { geometry Extrusion { crossSection [ 1 1, 1 -1, -1 -1, -1 1, 1 1 ] spine [ 0 -0.8 0, 0 0 0, 0 0.8 0 ] scale [ 0.6 0.6, 0.3 0.3, 0.6 0.6 ] creaseAngle 0.3 solid TRUE } }

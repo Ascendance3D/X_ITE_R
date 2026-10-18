@@ -1,0 +1,20 @@
+ply
+format ascii 1.0
+comment synthetic point cloud with float colors and an unknown edge element
+element vertex 3
+property float x
+property float y
+property float z
+property float r
+property float g
+property float b
+element edge 2
+property int vertex1
+property int vertex2
+property float weight
+end_header
+0 0 0 1.0 0.0 0.0
+1 0 0 0.0 1.0 0.0
+0 1 0 0.0 0.0 1.0
+0 1 0.5
+1 2 0.25

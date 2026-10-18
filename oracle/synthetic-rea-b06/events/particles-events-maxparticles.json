@@ -1,0 +1,9 @@
+{"dt": 0.03333333333333333, "t0": 946684800, "frames": 100, "warmup": 8, "seed": 8802, "node": "PS", "dumpAll": true,
+ "events": [
+  {"frame": 25, "node": "PS", "field": "maxParticles", "value": 20},
+  {"frame": 50, "node": "PS", "field": "maxParticles", "value": 6},
+  {"frame": 60, "node": "PS", "field": "enabled", "value": false},
+  {"frame": 70, "node": "PS", "field": "enabled", "value": true},
+  {"frame": 85, "node": "PS", "field": "maxParticles", "value": 0},
+  {"frame": 90, "node": "PS", "field": "maxParticles", "value": 10}
+ ]}

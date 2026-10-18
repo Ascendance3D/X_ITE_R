@@ -1,0 +1,9 @@
+#VRML V2.0 utf8
+DEF Clock TimeSensor { cycleInterval 2 loop TRUE }
+DEF Pos PositionInterpolator { key [0 0.5 1] keyValue [0 0 0, 1 2 3, 0 0 0] }
+DEF Rot OrientationInterpolator { key [0 1] keyValue [0 1 0 0, 0 1 0 3.14159] }
+DEF Xf Transform { children [ Shape { geometry Box { } } ] }
+ROUTE Clock.fraction_changed TO Pos.set_fraction
+ROUTE Pos.value_changed TO Xf.set_translation
+ROUTE Clock.fraction_changed TO Rot.set_fraction
+ROUTE Rot.value_changed TO Xf.set_rotation

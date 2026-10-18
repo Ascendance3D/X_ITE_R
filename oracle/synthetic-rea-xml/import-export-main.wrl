@@ -1,0 +1,10 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT Networking:3
+# IMPORT of exported nodes from an Inline, one renamed with AS, and an EXPORT of a local node.
+DEF Lib Inline { url "import-export-lib.wrl" }
+IMPORT Lib.LibBox AS Box
+IMPORT Lib.PublicScript
+DEF Holder Group { children [ USE Box ] }
+EXPORT Holder

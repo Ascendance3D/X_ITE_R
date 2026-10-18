@@ -1,0 +1,115 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+PROTO Holder [ inputOutput SFVec3f at 0 0 0 inputOutput MFNode kids [ ] ] { Transform { translation IS at children IS kids } }
+Viewpoint { position 0 0 18 }
+DEF GA PickableGroup { objectType [ "A" ] children DEF TA Transform { translation -4 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 transparency 0.3 } } geometry Box { size 2 2 2 } } } }
+DEF GB PickableGroup { objectType [ "B" ] children DEF TB Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 transparency 0.3 } } geometry Box { size 2 2 2 } } } }
+DEF GAB PickableGroup { objectType [ "A" "B" ] children DEF TAB Transform { translation 1 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 transparency 0.3 } } geometry Sphere { radius 1 } } } }
+DEF GN PickableGroup { objectType [ "NONE" ] children DEF TN Transform { translation 3.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 transparency 0.3 } } geometry Box { size 2 2 2 } } } }
+DEF GOFF PickableGroup { pickable FALSE children DEF TOFF Transform { translation 6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 transparency 0.3 } } geometry Box { size 2 2 2 } } } }
+DEF GOUT PickableGroup { objectType [ "A" ] children DEF GIN PickableGroup { objectType [ "B" ] children DEF TIN Transform { translation -1.5 -3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.8 transparency 0.3 } } geometry Box { size 1.5 1.5 1.5 } } } } }
+DEF HP Holder { at 1 -3 0 kids [ Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.8 transparency 0.3 } } geometry Cylinder { radius 0.8 height 1.5 } } ] }
+DEF MOVER Transform { translation -7 0 0 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF LINE IndexedLineSet { coord Coordinate { point [ -1 0 0, 1 0 0, 0 -1 0.2, 0 1 0.2 ] } coordIndex [ 0 1 -1 2 3 -1 ] } }
+  DEF SALL LinePickSensor { objectType [ "ALL" ] matchCriterion "MATCH_ANY" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE TA USE TB USE TAB USE TN USE TOFF USE GIN USE HP ] }
+  DEF SA LinePickSensor { objectType [ "A" ] matchCriterion "MATCH_ANY" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE TA USE TB USE TAB USE TN USE TOFF USE GIN USE HP ] }
+  DEF SAB LinePickSensor { objectType [ "A" "B" ] matchCriterion "MATCH_EVERY" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE TA USE TB USE TAB USE TN USE TOFF USE GIN USE HP ] }
+  DEF SB1 LinePickSensor { objectType [ "B" ] matchCriterion "MATCH_ONLY_ONE" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE TA USE TB USE TAB USE TN USE TOFF USE GIN USE HP ] }
+  DEF SB2 LinePickSensor { objectType [ "B" ] matchCriterion "MATCH_EVERY" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE TA USE TB USE TAB USE TN USE TOFF USE GIN USE HP ] }
+  DEF SC LinePickSensor { objectType [ "C" "A" ] matchCriterion "MATCH_ANY" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE TA USE TB USE TAB USE TN USE TOFF USE GIN USE HP ] }
+] }
+DEF CLOCK TimeSensor { cycleInterval 4 loop TRUE }
+DEF PATH PositionInterpolator { key [ 0 0.5 0.5001 1 ] keyValue [ -7 0 0, 8 0 0, -4 -3 0, 4 -3 0 ] }
+ROUTE CLOCK.fraction_changed TO PATH.set_fraction
+ROUTE PATH.value_changed TO MOVER.set_translation
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool on_SALL_a
+  inputOutput SFBool SALL_a FALSE
+  inputOutput SFInt32 SALL_a_count 0
+  inputOnly MFNode on_SALL_g
+  inputOutput MFNode SALL_g [ ]
+  inputOutput SFInt32 SALL_g_count 0
+  inputOnly SFBool on_SA_a
+  inputOutput SFBool SA_a FALSE
+  inputOutput SFInt32 SA_a_count 0
+  inputOnly MFNode on_SA_g
+  inputOutput MFNode SA_g [ ]
+  inputOutput SFInt32 SA_g_count 0
+  inputOnly SFBool on_SAB_a
+  inputOutput SFBool SAB_a FALSE
+  inputOutput SFInt32 SAB_a_count 0
+  inputOnly MFNode on_SAB_g
+  inputOutput MFNode SAB_g [ ]
+  inputOutput SFInt32 SAB_g_count 0
+  inputOnly SFBool on_SB1_a
+  inputOutput SFBool SB1_a FALSE
+  inputOutput SFInt32 SB1_a_count 0
+  inputOnly MFNode on_SB1_g
+  inputOutput MFNode SB1_g [ ]
+  inputOutput SFInt32 SB1_g_count 0
+  inputOnly SFBool on_SB2_a
+  inputOutput SFBool SB2_a FALSE
+  inputOutput SFInt32 SB2_a_count 0
+  inputOnly MFNode on_SB2_g
+  inputOutput MFNode SB2_g [ ]
+  inputOutput SFInt32 SB2_g_count 0
+  inputOnly SFBool on_SC_a
+  inputOutput SFBool SC_a FALSE
+  inputOutput SFInt32 SC_a_count 0
+  inputOnly MFNode on_SC_g
+  inputOutput MFNode SC_g [ ]
+  inputOutput SFInt32 SC_g_count 0
+  inputOutput SFString log ""
+  inputOnly SFString on_key
+  initializeOnly SFNode sa USE SA
+  initializeOnly SFNode sall USE SALL
+  initializeOnly SFNode ga USE GA
+  initializeOnly SFNode goff USE GOFF
+  initializeOnly SFNode tb USE TB
+  initializeOnly SFNode tab USE TAB
+  url "javascript:
+function on_SALL_a (value) { SALL_a = value; SALL_a_count = SALL_a_count + 1; log = log + 'SALL_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SALL_g (value) { SALL_g = value; SALL_g_count = SALL_g_count + 1; log = log + 'SALL_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SA_a (value) { SA_a = value; SA_a_count = SA_a_count + 1; log = log + 'SA_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SA_g (value) { SA_g = value; SA_g_count = SA_g_count + 1; log = log + 'SA_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SAB_a (value) { SAB_a = value; SAB_a_count = SAB_a_count + 1; log = log + 'SAB_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SAB_g (value) { SAB_g = value; SAB_g_count = SAB_g_count + 1; log = log + 'SAB_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SB1_a (value) { SB1_a = value; SB1_a_count = SB1_a_count + 1; log = log + 'SB1_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SB1_g (value) { SB1_g = value; SB1_g_count = SB1_g_count + 1; log = log + 'SB1_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SB2_a (value) { SB2_a = value; SB2_a_count = SB2_a_count + 1; log = log + 'SB2_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SB2_g (value) { SB2_g = value; SB2_g_count = SB2_g_count + 1; log = log + 'SB2_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SC_a (value) { SC_a = value; SC_a_count = SC_a_count + 1; log = log + 'SC_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_SC_g (value) { SC_g = value; SC_g_count = SC_g_count + 1; log = log + 'SC_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'e') sa .enabled = false;
+   if (k == 'f') sa .enabled = true;
+   if (k == 'o') sall .objectType = new MFString ('NONE');
+   if (k == 'p') sall .objectType = new MFString ('ALL');
+   if (k == 't') sall .pickTarget = new MFNode (tab);
+   if (k == 'g') ga .objectType = new MFString ('B');
+   if (k == 'q') goff .pickable = true;
+   if (k == 'm') tb .translation = new SFVec3f (-1.5, 5, 0);
+}
+"
+}
+ROUTE SALL.isActive TO R.on_SALL_a
+ROUTE SALL.pickedGeometry TO R.on_SALL_g
+ROUTE SA.isActive TO R.on_SA_a
+ROUTE SA.pickedGeometry TO R.on_SA_g
+ROUTE SAB.isActive TO R.on_SAB_a
+ROUTE SAB.pickedGeometry TO R.on_SAB_g
+ROUTE SB1.isActive TO R.on_SB1_a
+ROUTE SB1.pickedGeometry TO R.on_SB1_g
+ROUTE SB2.isActive TO R.on_SB2_a
+ROUTE SB2.pickedGeometry TO R.on_SB2_g
+ROUTE SC.isActive TO R.on_SC_a
+ROUTE SC.pickedGeometry TO R.on_SC_g
+ROUTE K.keyPress TO R.on_key

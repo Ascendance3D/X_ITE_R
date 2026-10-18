@@ -1,0 +1,15 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 7 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+PointLight { location 2.5 2 3 intensity 1.5 radius 20 attenuation 0 0 1 }
+InstancedShape { translations [ -2 1.5 0, 0 1.5 0, 2 1.5 0, -2 0 0, 0 0 0, 2 0 0, -2 -1.5 0, 0 -1.5 0, 2 -1.5 0 ] rotations [ 0 0 1 0.3, 0 1 0 0.8, 1 0 0 1.2 ] scales [ 1 1 1, 1.4 0.6 1, 0.5 1.5 0.7 ]  appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2 }  } geometry Box { size 0.5 0.5 0.5 } }

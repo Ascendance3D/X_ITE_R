@@ -1,0 +1,24 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+Transform { translation -1.575 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.85 metallic 1 roughness 0.35 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } AnisotropyMaterialExtension { anisotropyStrength 0.8 anisotropyRotation 0.4 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.5 roughness 0.2 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } IridescenceMaterialExtension { iridescence 1 iridescenceThicknessMaximum 500 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.7 0.1 0.1 metallic 0 roughness 0.6 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } ClearcoatMaterialExtension { clearcoat 1 clearcoatRoughness 0.1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.2 0.3 metallic 0.3 roughness 0.6 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } SheenMaterialExtension { sheenColor 1 0.5 0.5 sheenRoughness 0.4 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.575 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0.1 extensions [ RetroreflectionMaterialExtension { retroreflection 0.7 } TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 0 roughness 0.3 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } DiffuseTransmissionMaterialExtension { diffuseTransmission 0.6 diffuseTransmissionColor 1 0.6 0.3 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.9 0.9 metallic 1 roughness 0.3 extensions [ RetroreflectionMaterialExtension { retroreflection 1 } AnisotropyMaterialExtension { anisotropyStrength 1 } IridescenceMaterialExtension { iridescence 1 } ClearcoatMaterialExtension { clearcoat 0.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ DispersionMaterialExtension { dispersion 5 } RetroreflectionMaterialExtension { retroreflection 1 } TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.075 -1.6 0 rotation 0 1 0 0.5 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.25 extensions [ RetroreflectionMaterialExtension { retroreflection 1 retroreflectionTexture ImageTexture { url "../synthetic-rea-b02/pbr/occlusion.png" } retroreflectionTextureMapping "second" } ] } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord MultiTextureCoordinate { texCoord [ TextureCoordinate { mapping "first" point [ 0 0, 1 0, 1 1, 0 1 ] } TextureCoordinate { mapping "second" point [ 0 0, 3 0, 3 3, 0 3 ] } ] } } } }
+Transform { translation 2.125 -1.6 0 rotation 0 1 0 0.5 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.25 extensions [ RetroreflectionMaterialExtension { retroreflection 1 retroreflectionTexture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } retroreflectionTextureMapping "first" } ] } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord MultiTextureCoordinate { texCoord [ TextureCoordinate { mapping "first" point [ 0 0, 1 0, 1 1, 0 1 ] } TextureCoordinate { mapping "second" point [ 0 0, 3 0, 3 3, 0 3 ] } ] } } } }

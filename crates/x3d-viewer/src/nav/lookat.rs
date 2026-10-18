@@ -250,12 +250,10 @@ impl LookAt {
     }
 
     fn add_rotation(&mut self, from_vector: &Vector3, to_vector: &Vector3, cx: &mut Cx) {
-        let up = Vector3::Y_AXIS;
-
         if self.orientation_chaser.is_active && self.orientation_chaser.connected {
             let mut user_orientation = set_vectors(to_vector, from_vector);
             user_orientation.mult_right(&cx.base.orientation).mult_right(&self.orientation_chaser.set_destination_value);
-            let user_orientation = straighten(&user_orientation, &up);
+            let user_orientation = cx.base.straighten_horizon(cx.vp, &user_orientation);
 
             let mut offset = inv(&cx.base.orientation);
             offset.mult_right(&user_orientation);
@@ -265,7 +263,7 @@ impl LookAt {
         } else {
             let mut user_orientation = set_vectors(to_vector, from_vector);
             user_orientation.mult_right(&cx.vp.user_orientation(cx.base));
-            let user_orientation = straighten(&user_orientation, &up);
+            let user_orientation = cx.base.straighten_horizon(cx.vp, &user_orientation);
 
             let mut offset = inv(&cx.base.orientation);
             offset.mult_right(&user_orientation);

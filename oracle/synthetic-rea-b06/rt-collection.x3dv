@@ -1,0 +1,37 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { contactSurfaceThickness 0.0  bodies [ DEF F RigidBody { position 0 0 0 fixed TRUE geometry DEF F_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } }
+DEF A RigidBody { position -3 5 0 mass 1 geometry DEF A_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF B RigidBody { position 3 5 0 mass 1 geometry DEF B_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } } ]  }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF SC Script {
+  inputOnly SFTime tick
+  outputOnly SFVec3f g
+  outputOnly SFBool en
+  outputOnly SFFloat ec
+  outputOnly SFBool ad
+  outputOnly SFFloat cs
+  initializeOnly SFFloat s0 -1
+  url "ecmascript:
+var done = [ ];
+function tick (v)
+{
+  if (s0 < 0) s0 = v;
+  var f = Math .round ((v - s0) * 60);
+  if (f >= 20 && !done[0]) { done[0] = true; g = new SFVec3f (0, 5, 0); }
+  if (f >= 40 && !done[1]) { done[1] = true; en = false; }
+  if (f >= 60 && !done[2]) { done[2] = true; en = true; }
+  if (f >= 80 && !done[3]) { done[3] = true; ec = 0.1; }
+  if (f >= 100 && !done[4]) { done[4] = true; ad = true; }
+  if (f >= 120 && !done[5]) { done[5] = true; cs = 0.5; }
+}
+"
+}
+ROUTE TS.time TO SC.tick
+ROUTE SC.g TO RBC.set_gravity
+ROUTE SC.en TO RBC.set_enabled
+ROUTE SC.ec TO RBC.set_errorCorrection
+ROUTE SC.ad TO RBC.set_autoDisable
+ROUTE SC.cs TO RBC.set_contactSurfaceThickness

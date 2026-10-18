@@ -1,0 +1,31 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 12
+  particleLifetime 1
+  lifetimeVariation 0.25
+  emitter DEF EM PolylineEmitter { direction 0 1 0 speed 1 variation 0.25 mass 1 surfaceArea 3 coordIndex [ 0 1 2 3 -1 ] coord DEF C Coordinate { point [ 0 0 0, 1 0 0, 1 2 0, 3 2 1 ] } }
+  physics [ DEF W1 WindPhysicsModel { direction 1 0 0 speed 1.2 gustiness 0.2 turbulence 0.2 } DEF F1 ForcePhysicsModel { force 0 -1 0 } ]
+}
+
+Shape { geometry IndexedLineSet { coordIndex [ 0 1 2 3 -1 ] coord DEF C2 Coordinate { point [ 10 0 0, 10 5 0, 12 5 0, 12 5 5 ] } } }
+DEF TS TimeSensor { cycleInterval 1 loop TRUE }
+DEF SC Script { directOutput TRUE inputOnly SFTime set_time initializeOnly SFNode w USE W1 initializeOnly SFNode em USE EM initializeOnly SFNode co USE C initializeOnly SFNode co2 USE C2
+  initializeOnly SFFloat t0 -1 initializeOnly SFInt32 stage 0
+  url "ecmascript:
+    function set_time (v) { if (t0 < 0) t0 = v; var d = v - t0;
+      if (stage == 0 && d > 0.3) { stage = 1; w .direction = new SFVec3f (0, 0, 0); }
+      else if (stage == 1 && d > 0.6) { stage = 2; em .set_coordIndex = new MFInt32 (0, 1, -1, 2, 3, -1); }
+      else if (stage == 2 && d > 0.9) { stage = 3; co .point = new MFVec3f (new SFVec3f (0, 0, 0), new SFVec3f (2, 0, 0), new SFVec3f (2, 3, 0), new SFVec3f (0, 3, 3)); }
+      else if (stage == 3 && d > 1.2) { stage = 4; em .coord = co2; em .set_coordIndex = new MFInt32 (0, 1, 2, -1); }
+      else if (stage == 4 && d > 1.5) { stage = 5; em .speed = 3; em .variation = 0.5; w .enabled = false; }
+      else if (stage == 5 && d > 1.8) { stage = 6; em .direction = new SFVec3f (0, 0, 0); w .enabled = true; w .direction = new SFVec3f (1, 0, 0); }
+      else if (stage == 6 && d > 2.1) { stage = 7; em .coord = null; }
+      else if (stage == 7 && d > 2.4) { stage = 8; em .coord = co; em .set_coordIndex = new MFInt32 (3, 2, 1, 0, -1); }
+    }"
+}
+ROUTE TS.time TO SC.set_time
+

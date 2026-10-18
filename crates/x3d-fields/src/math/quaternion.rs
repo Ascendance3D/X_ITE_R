@@ -255,10 +255,64 @@ impl Quaternion {
         self
     }
 
+    /// Quaternion.setEuler (x, y, z, order): the six orders; any other order leaves the
+    /// quaternion as it is (returns false).
+    pub fn set_euler_order(&mut self, x: f64, y: f64, z: f64, order: &str) -> bool {
+        let (x, y, z) = (x / 2.0, y / 2.0, z / 2.0);
+        let (sx, sy, sz) = (jsmath::sin(x), jsmath::sin(y), jsmath::sin(z));
+        let (cx, cy, cz) = (jsmath::cos(x), jsmath::cos(y), jsmath::cos(z));
+
+        let (qx, qy, qz, qw) = match order {
+            "XYZ" => (sx * cy * cz + cx * sy * sz, cx * sy * cz - sx * cy * sz, cx * cy * sz + sx * sy * cz, cx * cy * cz - sx * sy * sz),
+            "ZYX" => (sx * cy * cz - cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz + sx * sy * sz),
+            "YXZ" => (sx * cy * cz + cx * sy * sz, cx * sy * cz - sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz + sx * sy * sz),
+            "ZXY" => (sx * cy * cz - cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz + sx * sy * cz, cx * cy * cz - sx * sy * sz),
+            "YZX" => (sx * cy * cz + cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz - sx * sy * sz),
+            "XZY" => (sx * cy * cz - cx * sy * sz, cx * sy * cz - sx * cy * sz, cx * cy * sz + sx * sy * cz, cx * cy * cz + sx * sy * sz),
+            _ => return false,
+        };
+
+        (self.x, self.y, self.z, self.w) = (qx, qy, qz, qw);
+        true
+    }
+
     /// Algorithm.js: slerp (short = true).
     pub fn slerp(&mut self, destination: &Self, t: f64) -> &mut Self {
         slerp(self, *destination, t, true);
         self
+    }
+
+    /// Quaternion.squad (a, b, destination, t): Shoemake's squad with shortest-path slerps.
+    pub fn squad(&mut self, a: &Self, b: &Self, destination: &Self, t: f64) -> &mut Self {
+        slerp(self, *destination, t, true);
+        let mut t2 = *a;
+        slerp(&mut t2, *b, t, true);
+        slerp(self, t2, 2.0 * t * (1.0 - t), true);
+        self
+    }
+
+    /// Quaternion.spline (Q0, Q1, Q2): the inner control point of squad, normalized.
+    pub fn spline(q0: &Self, q1: &Self, q2: &Self) -> Self {
+        let (mut q0, mut q1, mut q2) = (*q0, *q1, *q2);
+
+        if q0.dot(&q1) < 0.0 {
+            q0.negate();
+        }
+
+        if q2.dot(&q1) < 0.0 {
+            q2.negate();
+        }
+
+        let mut q1_i = q1;
+        q1_i.inverse();
+
+        let mut t1 = q1_i;
+        t1.mult_right(&q0).log();
+        let mut t2 = q1_i;
+        t2.mult_right(&q2).log();
+        t1.add(&t2).divide(-4.0).exp();
+
+        *q1.mult_right(&t1).normalize()
     }
 
     pub fn log(&mut self) -> &mut Self {

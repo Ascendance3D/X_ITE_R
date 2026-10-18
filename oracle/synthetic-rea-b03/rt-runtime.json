@@ -1,0 +1,121 @@
+{
+ "settle": true,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 145,
+ "capture": [
+  12,
+  16,
+  27,
+  30,
+  39,
+  42,
+  51,
+  54,
+  63,
+  66,
+  75,
+  78,
+  87,
+  90,
+  99,
+  102,
+  111,
+  114,
+  123,
+  126,
+  135,
+  138
+ ],
+ "dump": [
+  10,
+  16,
+  30,
+  42,
+  54,
+  66,
+  78,
+  90,
+  102,
+  114,
+  126,
+  138,
+  144
+ ],
+ "events": [
+  {
+   "frame": 4,
+   "type": "mousemove",
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 4,
+   "type": "mousedown",
+   "button": 0,
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 5,
+   "type": "mouseup",
+   "button": 0,
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 20,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 32,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 44,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 56,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 68,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 80,
+   "type": "key",
+   "key": "f"
+  },
+  {
+   "frame": 92,
+   "type": "key",
+   "key": "g"
+  },
+  {
+   "frame": 104,
+   "type": "key",
+   "key": "h"
+  },
+  {
+   "frame": 116,
+   "type": "key",
+   "key": "i"
+  },
+  {
+   "frame": 128,
+   "type": "key",
+   "key": "j"
+  }
+ ]
+}

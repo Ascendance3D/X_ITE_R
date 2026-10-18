@@ -1,0 +1,46 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:5
+COMPONENT KeyDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 6 }
+DEF S Shape {
+  appearance DEF A Appearance {
+    material Material { diffuseColor 0.3 0.6 0.9 }
+    acousticProperties DEF AP AcousticProperties { description "wall" diffuse 0.25 specular 0.5 refraction 0.125 absorption 0.75 }
+  }
+  geometry Box { }
+}
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFFloat on_diffuse
+  inputOnly SFFloat on_absorption
+  inputOnly SFBool on_enabled
+  inputOnly SFNode on_ap
+  inputOutput SFString log ""
+  initializeOnly SFNode ap USE AP
+  initializeOnly SFNode a USE A
+  url "javascript:
+function initialize () { log = 'I ' + ap .getNodeTypeName () + ' ' + ap .description + ' ' + ap .diffuse + ' ' + ap .specular + ' ' + ap .refraction + ' ' + ap .absorption + ' ' + ap .enabled + ' '; }
+function on_diffuse (v) { log = log + 'D' + v + ' '; }
+function on_absorption (v) { log = log + 'B' + v + ' '; }
+function on_enabled (v) { log = log + 'E' + v + ' '; }
+function on_ap (v) { log = log + 'N' + (v ? v .getNodeTypeName () : 'null') + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') { ap .diffuse = 0.5; ap .absorption = 1.5; }
+   if (k == 'b') ap .enabled = false;
+   if (k == 'c') a .acousticProperties = null;
+   if (k == 'd') { var n = Browser .currentScene .createNode ('AcousticProperties'); n .specular = 0.9; a .acousticProperties = n; log = log + n .specular + ' ' + n .diffuse + ' '; }
+   if (k == 'e') a .acousticProperties = ap;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE AP.diffuse_changed TO R.on_diffuse
+ROUTE AP.absorption_changed TO R.on_absorption
+ROUTE AP.enabled_changed TO R.on_enabled
+ROUTE A.acousticProperties_changed TO R.on_ap

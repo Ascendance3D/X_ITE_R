@@ -1,0 +1,9 @@
+NRRD0004
+# Complete NRRD file format specification at:
+# synthetic volume of oracle/synthetic-rea-b07-mat (generated)
+type: uchar
+dimension: 3
+sizes: 8 8 8
+encoding: gzip
+
+not gzip data at all

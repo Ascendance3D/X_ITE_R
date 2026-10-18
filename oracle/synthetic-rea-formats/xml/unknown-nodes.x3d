@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='3.3'>
+  <Scene>
+    <!-- unknown element name, with children -->
+    <FancyWidget label='x' size='3'>
+      <Shape>
+        <Box/>
+      </Shape>
+      <Nested>
+        <Deeper flag='yes'/>
+      </Nested>
+    </FancyWidget>
+    <!-- known node with an unknown attribute -->
+    <Transform translation='0 0 0' bogusAttribute='42'>
+      <Shape>
+        <Box/>
+      </Shape>
+    </Transform>
+    <!-- NULL element in an MFNode field position -->
+    <Switch whichChoice='1'>
+      <NULL/>
+      <Shape>
+        <Sphere/>
+      </Shape>
+    </Switch>
+    <Group>
+      <!-- comment inside a group -->
+      <NULL/>
+      <Shape>
+        <Cone/>
+      </Shape>
+    </Group>
+  </Scene>
+</X3D>

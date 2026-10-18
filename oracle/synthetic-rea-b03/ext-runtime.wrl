@@ -1,0 +1,60 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT TextureProjection:2
+COMPONENT Layering:1
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "../synthetic-rea-b02/pbr/env.png" } }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+Transform { translation 0 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture { url "proj-checker.png" } } geometry Box { size 8 6 0.1 } } }
+Transform { translation -1.5 0.8 -1.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0.2 0.2 } } geometry Box { size 0.6 2.5 0.3 } } }
+Transform { translation 1.5 -0.8 -1.5 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.4 1 transparency 0.5 } } geometry Cone { bottomRadius 0.5 height 1.5 } } }
+DEF CC ClearcoatMaterialExtension { clearcoat 0 }
+DEF SH SheenMaterialExtension { sheenColor 0 0 0 }
+DEF TR TransmissionMaterialExtension { transmission 0 }
+DEF EM EmissiveStrengthMaterialExtension { emissiveStrength 1 }
+DEF M1 PhysicalMaterial { baseColor 0.7 0.2 0.2 emissiveColor 0.1 0.05 0 metallic 0 roughness 0.6 extensions [ USE CC USE EM ] }
+DEF M2 PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0.1 extensions [ USE TR ] }
+DEF M3 PhysicalMaterial { baseColor 0.2 0.3 0.6 metallic 0 roughness 0.7 extensions [ USE SH ] }
+Transform { translation -1.4 0.6 0 children Shape { appearance Appearance { material USE M1 } geometry Sphere { radius 0.6 } } }
+Transform { translation 0 0.6 0 children Shape { appearance Appearance { material USE M2 } geometry Sphere { radius 0.6 } } }
+Transform { translation 1.4 0.6 0 children Shape { appearance Appearance { material USE M3 } geometry Sphere { radius 0.6 } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode cc USE CC
+  initializeOnly SFNode sh USE SH
+  initializeOnly SFNode tr USE TR
+  initializeOnly SFNode em USE EM
+  initializeOnly SFNode m1 USE M1
+  initializeOnly SFNode m2 USE M2
+  initializeOnly SFNode m3 USE M3
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') { cc .clearcoat = 1; cc .clearcoatRoughness = 0.2; }
+   if (k == 'b') { sh .sheenColor = new SFColor (1, 0.8, 0.6); sh .sheenRoughness = 0.4; }
+   if (k == 'c') tr .transmission = 1;
+   if (k == 'd') em .emissiveStrength = 6;
+   if (k == 'e') cc .clearcoatTexture = Browser .currentScene .createNode ('PixelTexture');
+   if (k == 'f') { var p = cc .clearcoatTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }
+   if (k == 'g') m1 .extensions = new MFNode (em);
+   if (k == 'h') m3 .extensions = new MFNode (sh, tr);
+   if (k == 'i') m2 .extensions = new MFNode ();
+   if (k == 'j') { var v = Browser .currentScene .createNode ('VolumeMaterialExtension'); v .thickness = 1; v .attenuationDistance = 0.5; v .attenuationColor = new SFColor (1, 0.3, 0.1); m3 .extensions = new MFNode (sh, tr, v); }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

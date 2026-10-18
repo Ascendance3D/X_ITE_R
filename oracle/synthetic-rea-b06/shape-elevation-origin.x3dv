@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { collider DEF CC CollisionCollection { bounce 0.3 minBounceSpeed 0 appliedParameters [ "BOUNCE" ]  collidables [ DEF F_C CollidableShape { shape Shape { geometry ElevationGrid { xDimension 5 zDimension 5 xSpacing 2 zSpacing 2 height [ 0 0 0 0 0, 0 1 1 1 0, 0 1 2 1 0, 0 1 1 1 0, 0 0 0 0 0 ] solid FALSE } } } DEF B_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } ] }
+  bodies [ DEF F RigidBody { fixed TRUE position 0 0 0 geometry USE F_C } DEF B RigidBody { position 3 4 5 mass 1 geometry USE B_C } ] }
+DEF S CollisionSensor { collider USE CC }

@@ -1,0 +1,24 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+COMPONENT KeyDeviceSensor:1
+DEF I Inline { url "reload-inline-content.wrl" }
+IMPORT I.O AS O
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFBool on_active
+  inputOutput SFInt32 starts 0
+  initializeOnly SFNode inline USE I
+  url "javascript:
+function on_active (v) { if (v) starts = starts + 1; }
+function on_key (k)
+{
+   if (k == 's') inline .load = false;
+   if (k == 'r') inline .load = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE O.isActive TO R.on_active

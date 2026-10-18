@@ -1,0 +1,2 @@
+# case	class	note (Ammo contactTest result differs from the Rust port of Bullet 2.82; see the batch 03 REPORT)
+# none: all 4000 cases match since the port follows ammo.js Bullet 2.82 and the picker history

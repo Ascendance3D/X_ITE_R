@@ -1,0 +1,142 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nTransform {\n  translation -1.6 1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family \"LATER\"\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.6 1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family \"LATER\"\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.6 -1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family [\n          \"NONE\",\n          \"LATER\"\n        ]\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.6 -1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nFontLibrary {\n  family \"LATER\"\n  url \"fonts/PTSans-Bold.ttf\"\n}\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nTransform {\n  translation -1.6 1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family \"LATER\"\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.6 1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family \"LATER\"\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.6 -1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family [\n          \"NONE\",\n          \"LATER\"\n        ]\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.6 -1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nFontLibrary {\n  family \"LATER\"\n  url \"fonts/PTSans-Bold.ttf\"\n}\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nTransform {\n  translation -1.6 1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family \"LATER\"\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.6 1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family \"LATER\"\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1.6 -1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        family [\n          \"NONE\",\n          \"LATER\"\n        ]\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.6 -1.3 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.4\n      }\n    }\n    geometry Text {\n      string \"Ag\"\n      fontStyle FontStyle {\n        size 1.3\n        justify \"MIDDLE\"\n      }\n    }\n  }\n}\n\nFontLibrary {\n  family \"LATER\"\n  url \"fonts/PTSans-Bold.ttf\"\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Couldn't find font family 'NONE' with style 'PLAIN'."
+  ],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { autoDisable TRUE disableTime 0.5 disableLinearSpeed 0.5 disableAngularSpeed 0.5 bodies [ DEF F RigidBody { position 0 0 0 fixed TRUE geometry DEF F_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } }
+  DEF B RigidBody { mass 1 position 0 1.2 0 autoDisable TRUE disableTime 0.5 disableLinearSpeed 0.5 disableAngularSpeed 0.5 geometry DEF B_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } }
+  DEF B2 RigidBody { mass 1 position 3 1.2 0 autoDisable FALSE disableTime 0.5 disableLinearSpeed 0.5 disableAngularSpeed 0.5 geometry DEF B2_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ] }

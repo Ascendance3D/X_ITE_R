@@ -1,0 +1,59 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Geospatial:1
+COMPONENT Scripting:1
+# Synthetic REA oracle world: GeoLOD. TILE loads rootUrl and shows it while the viewer is far;
+# near (closer than range to center) it loads the four child urls (child4Url is missing, so FAILED
+# also counts as loaded) and shows them; far again shows the root scene. NODE has a rootNode
+# instead of a rootUrl. A Script logs level_changed and the number of children. Authored.
+DEF ORIGIN GeoOrigin { geoCoords 30 10 0 rotateYUp TRUE }
+NavigationInfo { type [ "EXAMINE" "ANY" ] transitionType "TELEPORT" }
+DEF FAR Viewpoint { description "far" position 0 900 1500 orientation 1 0 0 -0.55 }
+DEF NEAR Viewpoint { description "near" position 0 150 250 orientation 1 0 0 -0.5 }
+DirectionalLight { direction -0.3 -1 -0.4 }
+DEF TILE GeoLOD {
+  geoOrigin USE ORIGIN
+  center 30 10 0
+  range 600
+  rootUrl "geolod-assets/root.wrl"
+  child1Url "geolod-assets/c1.wrl"
+  child2Url "geolod-assets/c2.wrl"
+  child3Url "geolod-assets/c3.wrl"
+  child4Url "geolod-assets/missing-c4.wrl"
+}
+DEF NODE GeoLOD {
+  geoOrigin USE ORIGIN
+  center 30.004 10 0
+  range 900
+  rootNode Transform { translation 0 0 -450 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.7 0.1 } } geometry Sphere { radius 40 } } }
+}
+DEF S Script {
+  inputOnly SFInt32 tileLevel
+  inputOnly MFNode tileChildren
+  inputOnly SFInt32 nodeLevel
+  inputOnly MFNode nodeChildren
+  inputOnly SFTime tick
+  inputOutput MFString events [ ]
+  inputOutput SFInt32 n 0
+  outputOnly SFBool near
+  outputOnly SFBool far
+  url "ecmascript:
+    function tileLevel (v) { events [events .length] = 'tile level ' + v; }
+    function tileChildren (v) { events [events .length] = 'tile children ' + v .length; }
+    function nodeLevel (v) { events [events .length] = 'node level ' + v; }
+    function nodeChildren (v) { events [events .length] = 'node children ' + v .length; }
+    function tick (v) {
+      n = n + 1;
+      if (n == 4) near = true;
+      if (n == 12) far = true;
+    }
+  "
+}
+DEF T TimeSensor { cycleInterval 0.1 loop TRUE }
+ROUTE T.cycleTime TO S.tick
+ROUTE TILE.level_changed TO S.tileLevel
+ROUTE TILE.children TO S.tileChildren
+ROUTE NODE.level_changed TO S.nodeLevel
+ROUTE NODE.children TO S.nodeChildren
+ROUTE S.near TO NEAR.set_bind
+ROUTE S.far TO FAR.set_bind

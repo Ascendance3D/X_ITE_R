@@ -1,0 +1,9 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Lighting:2
+UNIT length centimetre 0.01
+UNIT angle degree 0.017453292519943295
+# Synthetic REA render world: UNIT length and angle scale what is drawn. Authored.
+Viewpoint { position 0 0 1000 fieldOfView 45 }
+Transform { translation -150 0 0 rotation 0 1 0 30 children Shape { appearance Appearance { material Material { diffuseColor 1 0.5 0 } } geometry Box { size 120 120 120 } } }
+Transform { translation 150 50 0 rotation 1 0 0 45 children Shape { appearance Appearance { material Material { diffuseColor 0 0.6 1 } } geometry Cone { bottomRadius 60 height 150 } } }

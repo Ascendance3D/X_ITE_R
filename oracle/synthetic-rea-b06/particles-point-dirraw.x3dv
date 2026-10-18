@@ -1,0 +1,11 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 12
+  particleLifetime 1
+  lifetimeVariation 0.25
+  emitter PointEmitter { position 0 0 0 direction 0 3 4 speed 5 variation 0.5 }
+}

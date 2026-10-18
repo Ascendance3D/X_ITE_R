@@ -163,9 +163,10 @@ fn gate_export_import_parses() {
         let s = vrml97::parse_bytes(&input(file), file).unwrap();
         assert_eq!(s.to_vrml_string(), oracle_vrml(file), "{file}");
     }
-    // X_ITE prints `global TRUE` after it loads the Inline; parse-only output lacks it.
+    // `global TRUE`: Inline's constructor sets it for X3D <= 3.3 (node table "legacy"); the
+    // parse-only output now equals X_ITE's exactly (an earlier note blamed the Inline load).
     let s = vrml97::parse_bytes(&input("import.wrl"), "import.wrl").unwrap();
-    assert_eq!(s.to_vrml_string(), oracle_vrml("import.wrl").replace("  global TRUE\n", ""));
+    assert_eq!(s.to_vrml_string(), oracle_vrml("import.wrl"));
 }
 
 /// 10. OrthoViewpoint.fieldOfView prints as X_ITE prints it (SFVec4f form).

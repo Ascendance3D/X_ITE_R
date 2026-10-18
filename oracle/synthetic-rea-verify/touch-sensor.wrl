@@ -1,0 +1,25 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA-verify oracle world: TouchSensor over a Box, driven by pointer events. Authored; no archive content.
+Viewpoint { position 0 0 10 }
+DEF G Group {
+  children [
+    DEF TS TouchSensor { }
+    Shape { geometry Box { size 2 2 2 } }
+  ]
+}
+DEF OBS Script {
+  inputOutput SFBool over FALSE
+  inputOutput SFBool active FALSE
+  inputOutput SFVec3f hit 0 0 0
+  inputOutput SFVec3f normal 0 0 0
+  inputOutput SFTime touch 0
+  url "ecmascript:
+function noop () { }
+"
+}
+ROUTE TS.isOver TO OBS.over
+ROUTE TS.isActive TO OBS.active
+ROUTE TS.hitPoint_changed TO OBS.hit
+ROUTE TS.hitNormal_changed TO OBS.normal
+ROUTE TS.touchTime TO OBS.touch

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>X1 oracle: node tables (dump.html + external component globals)</title>
+<!-- Lives inside the pinned src/ so X_ITE resolves its assets/ the same way it does upstream. -->
+<script src="../node_modules/libtess/libtess.cat.js"></script>
+<script src="../node_modules/@create3000/libgif/libgif.js"></script>
+<script src="../node_modules/apng-js/lib/index.js"></script>
+<!-- nodes.html only: the external components' globals (as upstream src/x_ite.html loads them), so Texturing3D and VolumeRendering load. -->
+<script src="../node_modules/CharLS.js/dist/charLS-DynamicMemory-browser.js"></script>
+<script src="../node_modules/dicom-parser/dist/dicomParser.js"></script>
+<script src="../node_modules/jpeg-js/lib/decoder.js"></script>
+<script src="../node_modules/OpenJPEG.js/dist/openJPEG-DynamicMemory-browser.js"></script>
+<!-- update="false" stops the frame loop, so TimeSensors and routes never run before the dump. -->
+<x3d-canvas id="c" update="false" style="width:64px;height:64px"></x3d-canvas>
+<script type="module">
+await import ("./x_ite.js");
+
+// Freeze *event* time only. A looping TimeSensor evaluates its fraction from the browser's
+// current time when the scene initializes, so a live clock makes the dump differ run to run.
+// Date.now itself must keep moving: the loader stalls if wall-clock time stands still.
+// X_ITE copies context methods onto the browser when it is built, so patch the instance.
+const FROZEN_TIME = 946684800; // 2000-01-01T00:00:00Z
+const canvasBrowser = document .getElementById ("c") .browser;
+
+canvasBrowser .getCurrentTime = () => FROZEN_TIME;
+
+const X3D = window [Symbol .for ("X_ITE.X3D")];
+
+window .dump = async function (url)
+{
+   const log = [ ];
+   const orig = { };
+
+   for (const m of [ "error", "warn" ])
+   {
+      orig [m] = console [m];
+      console [m] = (... a) => log .push (`${m}: ${a .map (String) .join (" ") .split ("\n") [0]}`);
+   }
+
+   try
+   {
+      const browser = canvasBrowser;
+      const scene   = await browser .createX3DFromURL (new X3D .MFString (url));
+
+      // Load failures finish in network order, which is not stable. Sort them.
+      return { ok: true, vrml: scene .toVRMLString (), log: log .sort () };
+   }
+   catch (e)
+   {
+      return { ok: false, error: String (e ?.message ?? e) .split ("\n") [0], log: log .sort () };
+   }
+   finally
+   {
+      Object .assign (console, orig);
+   }
+};
+
+window .ready = true;
+</script>

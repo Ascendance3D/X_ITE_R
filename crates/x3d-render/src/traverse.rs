@@ -5,6 +5,7 @@
 
 use crate::fog::{self, FogParams};
 use crate::geometry::{self, Colors, ElevationInput, ExtrusionInput, Geometry, IfsInput};
+use crate::layer::{self, LayerKey, LayoutCamera, LayoutNode, LayoutStack};
 use crate::sg::Sg;
 use crate::text;
 use crate::texture::{self, TextureImage};
@@ -15,8 +16,11 @@ use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Shading {
-    /// Material with normals: Material2.glsl X3D_GOURAUD_MATERIAL (Shading GOURAUD default).
+    /// A legacy Material (specification version <= 3.3) with normals: getMaterialKey follows the
+    /// Shading option, X3D_GOURAUD_MATERIAL by default, X3D_PHONG_MATERIAL with PHONG.
     Gouraud,
+    /// Material (X3D 4) and TwoSidedMaterial with normals: X3D_PHONG_MATERIAL (getMaterialKey 2).
+    Phong,
     /// UnlitMaterial / no material, or a Material on points and lines (X3D_UNLIT_MATERIAL).
     Unlit,
 }
@@ -24,13 +28,409 @@ pub enum Shading {
 #[derive(Clone, Debug)]
 pub struct MaterialParams {
     pub shading: Shading,
+    /// diffuseColor; PhysicalMaterial baseColor.
     pub diffuse: [f64; 3],
     pub ambient_intensity: f64,
     pub specular: [f64; 3],
     pub shininess: f64,
     pub emissive: [f64; 3],
     pub transparency: f64,
+    /// The physical shaders: 0 none, 1 PhysicalMaterial (Physical2.fs, X3D_MATERIAL_METALLIC_ROUGHNESS),
+    /// 2 SpecularGlossinessMaterial (SpecularGlossiness2.fs).
+    pub pbr: u32,
+    /// metallic (PhysicalMaterial) or glossiness (SpecularGlossinessMaterial).
+    pub metallic: f64,
+    pub roughness: f64,
+    pub normal_scale: f64,
+    pub occlusion_strength: f64,
+    /// X3D_MATERIAL_TEXTURES of the material (see [`MaterialTexture`]).
+    pub textures: Vec<MaterialTexture>,
+    /// PhysicalMaterial.extensions (X_ITE, experimental), `None` without one.
+    pub extensions: Option<Rc<MaterialExtensions>>,
 }
+
+/// The shader options of the X3DMaterialExtensionNodes (X3D_<NAME>_MATERIAL_EXT).
+pub const EXT_EMISSIVE_STRENGTH: u32 = 1;
+pub const EXT_IOR: u32 = 2;
+pub const EXT_SPECULAR: u32 = 4;
+pub const EXT_CLEARCOAT: u32 = 8;
+pub const EXT_SHEEN: u32 = 16;
+pub const EXT_IRIDESCENCE: u32 = 32;
+pub const EXT_ANISOTROPY: u32 = 64;
+pub const EXT_TRANSMISSION: u32 = 128;
+pub const EXT_VOLUME: u32 = 256;
+pub const EXT_DIFFUSE_TRANSMISSION: u32 = 512;
+pub const EXT_DISPERSION: u32 = 1024;
+pub const EXT_RETROREFLECTION: u32 = 2048;
+pub const EXT_VOLUME_SCATTER: u32 = 4096;
+
+/// The uniforms the X3DMaterialExtensionNodes of a PhysicalMaterial set (their set_*__ clamps).
+/// A later node of the same type sets its uniforms after an earlier one (extensionNodes sorted by
+/// extension key, stable), so it wins.
+#[derive(Clone, Debug)]
+pub struct MaterialExtensions {
+    pub flags: u32,
+    pub emissive_strength: f64,
+    pub ior: f64,
+    pub specular: f64,
+    pub specular_color: [f64; 3],
+    pub specular_strength: f64,
+    pub clearcoat: f64,
+    pub clearcoat_roughness: f64,
+    pub sheen_color: [f64; 3],
+    pub sheen_roughness: f64,
+    pub iridescence: f64,
+    pub iridescence_ior: f64,
+    pub iridescence_thickness: [f64; 2],
+    /// cos (anisotropyRotation), sin (anisotropyRotation), anisotropyStrength.
+    pub anisotropy: [f64; 3],
+    pub transmission: f64,
+    pub thickness: f64,
+    pub attenuation_distance: f64,
+    pub attenuation_color: [f64; 3],
+    pub diffuse_transmission: f64,
+    pub diffuse_transmission_color: [f64; 3],
+    /// DispersionMaterialExtension.set_dispersion__: max (dispersion, 0).
+    pub dispersion: f64,
+    /// RetroreflectionMaterialExtension.set_retroreflection__: clamp (retroreflection, 0, 1).
+    pub retroreflection: f64,
+    /// VolumeScatterMaterialExtension.set_multiscatterColor__ (scatterStrength and scatterAnisotropy
+    /// are clamped by X_ITE but no shader reads them).
+    pub multiscatter_color: [f64; 3],
+}
+
+impl Default for MaterialExtensions {
+    fn default() -> Self {
+        MaterialExtensions {
+            flags: 0,
+            emissive_strength: 1.0,
+            ior: 1.5,
+            specular: 1.0,
+            specular_color: [1.0; 3],
+            specular_strength: 1.0,
+            clearcoat: 0.0,
+            clearcoat_roughness: 0.0,
+            sheen_color: [0.0; 3],
+            sheen_roughness: 0.0,
+            iridescence: 0.0,
+            iridescence_ior: 1.3,
+            iridescence_thickness: [100.0, 400.0],
+            anisotropy: [1.0, 0.0, 0.0],
+            transmission: 0.0,
+            thickness: 0.0,
+            attenuation_distance: 1_000_000.0,
+            attenuation_color: [1.0; 3],
+            diffuse_transmission: 0.0,
+            diffuse_transmission_color: [1.0; 3],
+            dispersion: 0.0,
+            retroreflection: 0.0,
+            multiscatter_color: [0.0; 3],
+        }
+    }
+}
+
+/// The material texture kinds of the extensions (after the five of MaterialTexture), with the
+/// extension type and the texture field: specular (a), specularColor (rgb), clearcoat (r),
+/// clearcoatRoughness (g), clearcoatNormal (rgb), sheenColor (rgb), sheenRoughness (a),
+/// iridescence (r), iridescenceThickness (g), anisotropy (rgb), transmission (r), thickness (g),
+/// diffuseTransmission (a), diffuseTransmissionColor (rgb), retroreflection (r),
+/// multiscatterColor (rgb; scatterStrengthTexture is read by no shader).
+pub const EXTENSION_TEXTURES: [(&str, &str); 16] = [
+    ("SpecularMaterialExtension", "specularTexture"),
+    ("SpecularMaterialExtension", "specularColorTexture"),
+    ("ClearcoatMaterialExtension", "clearcoatTexture"),
+    ("ClearcoatMaterialExtension", "clearcoatRoughnessTexture"),
+    ("ClearcoatMaterialExtension", "clearcoatNormalTexture"),
+    ("SheenMaterialExtension", "sheenColorTexture"),
+    ("SheenMaterialExtension", "sheenRoughnessTexture"),
+    ("IridescenceMaterialExtension", "iridescenceTexture"),
+    ("IridescenceMaterialExtension", "iridescenceThicknessTexture"),
+    ("AnisotropyMaterialExtension", "anisotropyTexture"),
+    ("TransmissionMaterialExtension", "transmissionTexture"),
+    ("VolumeMaterialExtension", "thicknessTexture"),
+    ("DiffuseTransmissionMaterialExtension", "diffuseTransmissionTexture"),
+    ("DiffuseTransmissionMaterialExtension", "diffuseTransmissionColorTexture"),
+    ("RetroreflectionMaterialExtension", "retroreflectionTexture"),
+    ("VolumeScatterMaterialExtension", "multiscatterColorTexture"),
+];
+
+/// The X3DMaterialExtensionNodes this renderer draws.
+const MATERIAL_EXTENSIONS: [&str; 13] = [
+    "EmissiveStrengthMaterialExtension",
+    "IORMaterialExtension",
+    "SpecularMaterialExtension",
+    "ClearcoatMaterialExtension",
+    "SheenMaterialExtension",
+    "IridescenceMaterialExtension",
+    "AnisotropyMaterialExtension",
+    "TransmissionMaterialExtension",
+    "VolumeMaterialExtension",
+    "DiffuseTransmissionMaterialExtension",
+    "DispersionMaterialExtension",
+    "RetroreflectionMaterialExtension",
+    "VolumeScatterMaterialExtension",
+];
+
+/// PhysicalMaterial.set_extensions__: X3DCast (X3DMaterialExtensionNode) of each node.
+fn extension_nodes(sg: &Sg, m: NodeId) -> Vec<NodeId> {
+    if sg.type_name(m) != Some("PhysicalMaterial") {
+        return vec![];
+    }
+
+    sg.nodes(m, "extensions").into_iter().filter(|e| sg.type_name(*e).is_some_and(|t| t.ends_with("MaterialExtension"))).collect()
+}
+
+/// The setShaderUniforms values of the extensions of `m`.
+fn material_extensions(sg: &Sg, m: NodeId) -> Option<Rc<MaterialExtensions>> {
+    let nodes = extension_nodes(sg, m);
+
+    if nodes.is_empty() {
+        return None;
+    }
+
+    let mut x = MaterialExtensions::default();
+
+    for e in nodes {
+        match sg.type_name(e).unwrap_or("") {
+            "EmissiveStrengthMaterialExtension" => {
+                x.flags |= EXT_EMISSIVE_STRENGTH;
+                x.emissive_strength = sg.f64(e, "emissiveStrength", 1.0).max(0.0);
+            }
+            "IORMaterialExtension" => {
+                x.flags |= EXT_IOR;
+                x.ior = sg.f64(e, "indexOfRefraction", 1.5).max(1.0);
+            }
+            "SpecularMaterialExtension" => {
+                x.flags |= EXT_SPECULAR;
+                x.specular = sg.f64(e, "specular", 1.0).clamp(0.0, 1.0);
+                x.specular_color = sg.color(e, "specularColor", [1.0; 3]);
+                x.specular_strength = sg.f64(e, "specularStrength", 1.0).max(0.0);
+            }
+            "ClearcoatMaterialExtension" => {
+                x.flags |= EXT_CLEARCOAT;
+                x.clearcoat = sg.f64(e, "clearcoat", 0.0).clamp(0.0, 1.0);
+                x.clearcoat_roughness = sg.f64(e, "clearcoatRoughness", 0.0).clamp(0.0, 1.0);
+            }
+            "SheenMaterialExtension" => {
+                x.flags |= EXT_SHEEN;
+                x.sheen_color = sg.color(e, "sheenColor", [0.0; 3]);
+                x.sheen_roughness = sg.f64(e, "sheenRoughness", 0.0).clamp(0.0, 1.0);
+            }
+            "IridescenceMaterialExtension" => {
+                x.flags |= EXT_IRIDESCENCE;
+                x.iridescence = sg.f64(e, "iridescence", 0.0).clamp(0.0, 1.0);
+                x.iridescence_ior = sg.f64(e, "iridescenceIndexOfRefraction", 1.3).max(1.0);
+                x.iridescence_thickness = [sg.f64(e, "iridescenceThicknessMinimum", 100.0).max(0.0), sg.f64(e, "iridescenceThicknessMaximum", 400.0).max(0.0)];
+            }
+            "AnisotropyMaterialExtension" => {
+                x.flags |= EXT_ANISOTROPY;
+                let rotation = sg.f64(e, "anisotropyRotation", 0.0);
+                x.anisotropy = [rotation.cos(), rotation.sin(), sg.f64(e, "anisotropyStrength", 0.0).clamp(0.0, 1.0)];
+            }
+            "TransmissionMaterialExtension" => {
+                x.flags |= EXT_TRANSMISSION;
+                x.transmission = sg.f64(e, "transmission", 0.0).clamp(0.0, 1.0);
+            }
+            "VolumeMaterialExtension" => {
+                x.flags |= EXT_VOLUME;
+                x.thickness = sg.f64(e, "thickness", 0.0).max(0.0);
+                // set_attenuationDistance__: 0 means 1e6 (infinite), negative values 0.
+                let d = sg.f64(e, "attenuationDistance", 1_000_000.0);
+                x.attenuation_distance = if d != 0.0 { d.max(0.0) } else { 1_000_000.0 };
+                x.attenuation_color = sg.color(e, "attenuationColor", [1.0; 3]);
+            }
+            "DiffuseTransmissionMaterialExtension" => {
+                x.flags |= EXT_DIFFUSE_TRANSMISSION;
+                x.diffuse_transmission = sg.f64(e, "diffuseTransmission", 0.0).clamp(0.0, 1.0);
+                x.diffuse_transmission_color = sg.color(e, "diffuseTransmissionColor", [1.0; 3]);
+            }
+            "DispersionMaterialExtension" => {
+                x.flags |= EXT_DISPERSION;
+                x.dispersion = sg.f64(e, "dispersion", 0.0).max(0.0);
+            }
+            "RetroreflectionMaterialExtension" => {
+                x.flags |= EXT_RETROREFLECTION;
+                x.retroreflection = sg.f64(e, "retroreflection", 0.0).clamp(0.0, 1.0);
+            }
+            "VolumeScatterMaterialExtension" => {
+                x.flags |= EXT_VOLUME_SCATTER;
+                x.multiscatter_color = sg.color(e, "multiscatterColor", [0.0; 3]);
+            }
+            _ => {}
+        }
+    }
+
+    Some(Rc::new(x))
+}
+
+/// One named material texture (MaterialTextures.js): `kind` 0 base (diffuse), 1 emissive,
+/// 2 metallic-roughness (specular-glossiness), 3 occlusion, 4 normal; the texture transform and
+/// coordinate channel its mapping names (setNamedShaderUniforms, 0 when the mapping is unknown).
+#[derive(Clone, Debug)]
+pub struct MaterialTexture {
+    pub kind: u32,
+    pub texture: Rc<TextureImage>,
+    pub transform: u32,
+    pub coord: u32,
+}
+
+/// The first EnvironmentLight (getMaxEnvironmentLights 1): X3D_USE_IBL.
+#[derive(Clone, Debug)]
+pub struct EnvironmentParams {
+    pub color: [f64; 3],
+    pub intensity: f64,
+    /// EnvironmentLightContainer.setGlobalVariables rotationMatrix (mat3, GLSL column order).
+    pub rotation: [f32; 9],
+    /// The specularTexture the diffuse and specular maps are filtered from.
+    pub specular: Rc<TextureImage>,
+}
+
+/// BlendMode factor names (BlendMode.initialize factorTypes).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum BlendFactor {
+    Zero,
+    One,
+    SrcColor,
+    OneMinusSrcColor,
+    DstColor,
+    OneMinusDstColor,
+    SrcAlpha,
+    OneMinusSrcAlpha,
+    DstAlpha,
+    OneMinusDstAlpha,
+    SrcAlphaSaturate,
+    ConstantColor,
+    OneMinusConstantColor,
+    ConstantAlpha,
+    OneMinusConstantAlpha,
+}
+
+impl BlendFactor {
+    fn from_name(name: &str) -> Option<BlendFactor> {
+        use BlendFactor::*;
+
+        Some(match name {
+            "ZERO" => Zero,
+            "ONE" => One,
+            "SRC_COLOR" => SrcColor,
+            "ONE_MINUS_SRC_COLOR" => OneMinusSrcColor,
+            "DST_COLOR" => DstColor,
+            "ONE_MINUS_DST_COLOR" => OneMinusDstColor,
+            "SRC_ALPHA" => SrcAlpha,
+            "ONE_MINUS_SRC_ALPHA" => OneMinusSrcAlpha,
+            "DST_ALPHA" => DstAlpha,
+            "ONE_MINUS_DST_ALPHA" => OneMinusDstAlpha,
+            "SRC_ALPHA_SATURATE" => SrcAlphaSaturate,
+            "CONSTANT_COLOR" => ConstantColor,
+            "ONE_MINUS_CONSTANT_COLOR" => OneMinusConstantColor,
+            "CONSTANT_ALPHA" => ConstantAlpha,
+            "ONE_MINUS_CONSTANT_ALPHA" => OneMinusConstantAlpha,
+            _ => return None,
+        })
+    }
+}
+
+/// BlendMode equation names (BlendMode.initialize equationTypes).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum BlendEquation {
+    Add,
+    Subtract,
+    ReverseSubtract,
+    Min,
+    Max,
+}
+
+impl BlendEquation {
+    fn from_name(name: &str) -> Option<BlendEquation> {
+        use BlendEquation::*;
+
+        Some(match name {
+            "FUNC_ADD" => Add,
+            "FUNC_SUBTRACT" => Subtract,
+            "FUNC_REVERSE_SUBTRACT" => ReverseSubtract,
+            "MIN" => Min,
+            "MAX" => Max,
+            _ => return None,
+        })
+    }
+}
+
+/// BlendMode.enable: gl.blendColor, gl.blendFuncSeparate (srcRGB, dstRGB, srcAlpha, dstAlpha),
+/// gl.blendEquationSeparate (rgb, alpha).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct BlendParams {
+    pub color: [f64; 4],
+    pub source_color: BlendFactor,
+    pub source_alpha: BlendFactor,
+    pub destination_color: BlendFactor,
+    pub destination_alpha: BlendFactor,
+    pub color_equation: BlendEquation,
+    pub alpha_equation: BlendEquation,
+}
+
+/// DepthMode depthFunction names (set_depthFunction__, default LEQUAL).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum DepthFunc {
+    Never,
+    Less,
+    Equal,
+    LessEqual,
+    Greater,
+    NotEqual,
+    GreaterEqual,
+    Always,
+}
+
+/// DepthMode.enable: polygon offset fill, depth test and function, depth range, depth mask.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct DepthParams {
+    pub test: bool,
+    pub func: DepthFunc,
+    pub mask: bool,
+    /// gl.polygonOffset (factor, units).
+    pub polygon_offset: [f64; 2],
+    /// gl.depthRange (near, far), clamped to [0, 1] like GL.
+    pub range: [f64; 2],
+}
+
+/// PointProperties uniforms (set_pointSizeScaleFactor__ … set_attenuation__, ContentScale 1).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct PointParams {
+    pub scale_factor: f64,
+    pub min_value: f64,
+    pub max_value: f64,
+    pub attenuation: [f64; 3],
+}
+
+/// LineProperties with `applied` TRUE (Appearance.set_applied__).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct LineParams {
+    /// 1 … 16 (set_linetype__).
+    pub linetype: i32,
+    /// max (1, linewidthScaleFactor) × ContentScale.
+    pub width: f64,
+}
+
+/// FillProperties uniforms.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct FillParams {
+    pub filled: bool,
+    pub hatched: bool,
+    /// 1 … 19 (set_hatchStyle__).
+    pub hatch_style: i32,
+    pub hatch_color: [f64; 3],
+}
+
+/// Appearance.getStyleProperties (geometryType): X3D_STYLE_PROPERTIES of the shader.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum StyleParams {
+    Point(PointParams),
+    Line(LineParams),
+    Fill(FillParams),
+}
+
+/// ALIASED_POINT_SIZE_RANGE [1] of the oracle GPU (ANGLE on OpenGL, NVIDIA).
+pub const MAX_POINT_SIZE: f64 = 2047.0;
 
 #[derive(Clone, Debug)]
 pub struct DrawItem {
@@ -38,12 +438,112 @@ pub struct DrawItem {
     pub geometry: Rc<Geometry>,
     pub model_view: Matrix4,
     pub material: MaterialParams,
-    pub texture: Option<Rc<TextureImage>>,
-    /// x3d_TextureMatrix [0] (TextureTransform, column-major for GLSL).
-    pub texture_matrix: [f32; 16],
+    /// The X3D_TEXTURE units: the appearance's X3DSingleTextureNode, or a MultiTexture's textures
+    /// (at most maxTextures).
+    pub textures: Vec<Rc<TextureImage>>,
+    /// The MultiTexture parameters (X3D_MULTI_TEXTURING), `None` for a single texture.
+    pub multi_texture: Option<MultiTextureParams>,
+    /// x3d_TextureMatrix [X3D_NUM_TEXTURE_TRANSFORMS] (column-major for GLSL); at least one.
+    pub texture_matrices: Vec<[f32; 16]>,
+    /// The shape's texture projectors, indices into [`Frame::projectors`]: global, then the
+    /// local ones of the enclosing grouping nodes, at most [`MAX_TEXTURES`].
+    pub projectors: Vec<u32>,
+    /// The shape's lights, indices into [`Frame::lights`]: the layer's global lights, then the
+    /// local lights (`global FALSE`) of the enclosing grouping nodes, at most [`MAX_LIGHTS`]
+    /// (X3DMaterialNode objectsKeys: getGlobalLightsKeys () .concat (localObjectsKeys)).
+    pub lights: Vec<u32>,
     pub transparent: bool,
+    /// The back face material (Appearance.backMaterial, or a TwoSidedMaterial's back side):
+    /// X3DGeometryNode.display draws a non-solid geometry twice, back faces with this material
+    /// first, then front faces with `material`.
+    pub back_material: Option<MaterialParams>,
+    pub blend: Option<BlendParams>,
+    pub depth: Option<DepthParams>,
+    /// The enabled ClipPlanes in scope (view-space normal and distance, X3D_NUM_CLIP_PLANES at
+    /// most maxClipPlanes), outermost first.
+    pub clip_planes: Vec<[f64; 4]>,
+    pub style: Option<StyleParams>,
+    /// The hatch style or linetype texture the style uses.
+    pub style_texture: Option<Rc<TextureImage>>,
     /// Sort key for transparent shapes: bbox center z in view space.
     pub distance: f64,
+    /// The rectangle of the Viewport nodes around the shape (X3DViewportNode.push: the shape's
+    /// gl.viewport and scissor); `None` for the layer's.
+    pub viewport: Option<[f64; 4]>,
+    /// A VolumeData node (VolumeRendering): the renderer draws its planes instead of `geometry`.
+    pub volume: Option<Rc<crate::volume::VolumeDraw>>,
+    /// An InstancedShape: the instances drawn with the shape's model-view matrix (`None`: one draw).
+    pub instances: Option<Rc<InstanceData>>,
+    /// A GaussianSplats node (component GaussianSplats): the renderer draws its splats instead of `geometry`.
+    pub splats: Option<Rc<crate::splats::SplatDraw>>,
+    /// The Appearance selected a valid ComposedShader (Batch 08): the renderer draws with its program.
+    pub custom: Option<Rc<crate::shader_gpu::CustomDraw>>,
+}
+
+/// InstancedShape.set_matrices__: the matrix and the normal matrix (`submatrix .transpose () .inverse ()`,
+/// column-major for GLSL) of every instance; `numInstances` is the longest of the five fields.
+#[derive(Debug)]
+pub struct InstanceData {
+    pub matrices: Vec<Matrix4>,
+    pub normals: Vec<[f32; 9]>,
+}
+
+/// InstancedShape.set_matrices__ of `n`: the last value of a shorter field repeats, an empty field
+/// leaves its part of `Matrix4 .setTransform` out.
+pub fn instance_data(sg: &Sg, n: NodeId) -> InstanceData {
+    let t = sg.f64s(n, "translations");
+    let r = sg.f64s(n, "rotations");
+    let s = sg.f64s(n, "scales");
+    let so = sg.f64s(n, "scaleOrientations");
+    let c = sg.f64s(n, "centers");
+    let (nt, nr, ns, nso, nc) = (t.len() / 3, r.len() / 4, s.len() / 3, so.len() / 4, c.len() / 3);
+    let count = nt.max(nr).max(ns).max(nso).max(nc);
+    let vec3 = |v: &[f64], len: usize, i: usize| (len > 0).then(|| {
+        let k = i.min(len - 1) * 3;
+        Vector3::new(v[k], v[k + 1], v[k + 2])
+    });
+    let rot = |v: &[f64], len: usize, i: usize| (len > 0).then(|| {
+        let k = i.min(len - 1) * 4;
+        Rotation4::new(v[k], v[k + 1], v[k + 2], v[k + 3])
+    });
+    let mut matrices = Vec::with_capacity(count);
+    let mut normals = Vec::with_capacity(count);
+
+    for i in 0..count {
+        let mut m = Matrix4::IDENTITY;
+        m.set_transform(vec3(&t, nt, i).as_ref(), rot(&r, nr, i).as_ref(), vec3(&s, ns, i).as_ref(), rot(&so, nso, i).as_ref(), vec3(&c, nc, i).as_ref());
+        let mut normal = m.submatrix();
+        normal.transpose();
+        normal.inverse();
+        normals.push(normal.0.map(|v| v as f32));
+        matrices.push(m);
+    }
+
+    InstanceData { matrices, normals }
+}
+
+impl DrawItem {
+    /// Appearance.isVolumeScatter: the front or back material has a VolumeScatterMaterialExtension
+    /// (X3DShapeNode.set_volumeScatter__: the only shapes of the volume scatter pass).
+    pub fn volume_scatter(&self) -> bool {
+        let t = |m: &MaterialParams| m.extensions.as_ref().is_some_and(|x| x.flags & EXT_VOLUME_SCATTER != 0);
+        t(&self.material) || self.back_material.as_ref().is_some_and(t)
+    }
+
+    /// Appearance.isTransmission: the front or back material has a TransmissionMaterialExtension
+    /// (X3DShapeNode.set_transmission__: not drawn in the transmission pass).
+    pub fn transmission(&self) -> bool {
+        let t = |m: &MaterialParams| m.extensions.as_ref().is_some_and(|x| x.flags & EXT_TRANSMISSION != 0);
+        t(&self.material) || self.back_material.as_ref().is_some_and(t)
+    }
+}
+
+/// MultiTexture.setShaderUniforms: x3d_MultiTextureColor and per unit mode, alphaMode, source and
+/// function (ModeType, SourceType, FunctionType numbers).
+#[derive(Clone, Debug)]
+pub struct MultiTextureParams {
+    pub color: [f64; 4],
+    pub units: Vec<[u32; 4]>,
 }
 
 #[derive(Clone, Debug)]
@@ -61,7 +561,189 @@ pub struct LightParams {
     pub beam_width: f64,
     /// Inverse of the light's model-view 3×3 (point and spot lights).
     pub matrix: [f32; 9],
+    /// The light's shadow (X3DLightNode shadows with shadowIntensity > 0 and shadowMapSize > 0).
+    pub shadow: Option<ShadowParams>,
 }
+
+/// A TextureProjector or TextureProjectorParallel container (X3DTextureProjectorNode, light key
+/// 3): Texture2.glsl x3d_TextureProjector [i] and its texture.
+#[derive(Clone, Debug)]
+pub struct ProjectorParams {
+    pub texture: Rc<TextureImage>,
+    pub color: [f64; 3],
+    pub intensity: f64,
+    /// The location in view space (computed in the pass that rendered the container first).
+    pub location: Vector3,
+    /// nearParameter, farParameter: the clamp range of the texture coordinate p.
+    pub params: [f64; 2],
+    /// setGlobalVariables matrix: view space to texture coordinates (stpq).
+    pub matrix: Matrix4,
+    /// X3DSingleTextureNode.isLinear (X3D_TEXTURE_PROJECTOR_i_LINEAR).
+    pub linear: bool,
+}
+
+/// The shadow uniforms of a light container (setShaderUniforms with a shadowBuffer).
+#[derive(Clone, Debug)]
+pub struct ShadowParams {
+    pub color: [f64; 3],
+    pub intensity: f64,
+    pub bias: f64,
+    pub map_size: u32,
+    /// setGlobalVariables shadowMatrix: view space to the shadow map (directional and spot lights:
+    /// texture coordinates and depth; point lights: the light's space).
+    pub matrix: Matrix4,
+    /// The light's map in [`Frame::shadow_maps`].
+    pub map: usize,
+}
+
+/// A light container's shadowBuffer (TextureBuffer of shadowMapSize², DEPTH_COMPONENT24, NEAREST)
+/// and the views renderShadowMap draws into it.
+#[derive(Clone, Debug)]
+pub struct ShadowMap {
+    pub size: u32,
+    pub views: Vec<ShadowView>,
+}
+
+/// InstancedShape.set_bbox__: bboxSize and bboxCenter, or the union of the geometry's box under every
+/// instance matrix.
+fn instanced_bbox(sg: &Sg, n: NodeId, geometry: &Geometry, instances: &InstanceData) -> Box3 {
+    if !sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0)).equals(&Vector3::new(-1.0, -1.0, -1.0)) {
+        return Box3::new(&sg.vec3(n, "bboxSize", Vector3::ZERO), &sg.vec3(n, "bboxCenter", Vector3::ZERO));
+    }
+
+    let mut bbox = Box3::EMPTY;
+
+    if geometry.vertex_count() > 0 {
+        for m in &instances.matrices {
+            let mut sub = Box3::new(&geometry.bbox_size(), &geometry.bbox_center());
+            sub.mult_right(m);
+            bbox.add(&sub);
+        }
+    }
+
+    bbox
+}
+
+/// One renderObject.render (TraverseType.SHADOW) of the light's group.
+#[derive(Clone, Debug)]
+pub struct ShadowView {
+    /// GL projection (clip z in -w..w).
+    pub projection: Matrix4,
+    /// gl.viewport in the shadow map: x, y (from the bottom), width, height.
+    pub viewport: [u32; 4],
+    pub items: Vec<DepthItem>,
+}
+
+/// X3DRenderObject.addDepthShape: a shadow-casting shape of the pass.
+#[derive(Clone, Debug)]
+pub struct DepthItem {
+    pub geometry: Rc<Geometry>,
+    pub model_view: Matrix4,
+    pub clip_planes: Vec<[f64; 4]>,
+    /// An InstancedShape's instances.
+    pub instances: Option<Rc<InstanceData>>,
+}
+
+/// The groupNode of a light container: a grouping node (its own traverse, so a Transform applies
+/// its matrix again in the shadow pass) or the root nodes of a layer or Inline (their Group).
+#[derive(Clone, Debug)]
+enum ShadowGroup {
+    Node(NodeId),
+    Roots(Vec<NodeId>),
+}
+
+/// Box3: a matrix whose axes are the half sizes and whose origin is the center; all zero when
+/// empty (Box3.set ()).
+#[derive(Clone, Copy, Debug)]
+struct Box3(Matrix4);
+
+impl Box3 {
+    const EMPTY: Box3 = Box3(Matrix4([0.0; 16]));
+
+    fn new(size: &Vector3, center: &Vector3) -> Box3 {
+        Box3(Matrix4([size.x / 2.0, 0.0, 0.0, 0.0, 0.0, size.y / 2.0, 0.0, 0.0, 0.0, 0.0, size.z / 2.0, 0.0, center.x, center.y, center.z, 1.0]))
+    }
+
+    fn from_extents(min: &Vector3, max: &Vector3) -> Box3 {
+        let mut size = *max;
+        size.subtract(min);
+        let mut center = *max;
+        center.add(min).divide(2.0);
+        Box3::new(&size, &center)
+    }
+
+    fn is_empty(&self) -> bool {
+        self.0 .0[15] == 0.0
+    }
+
+    /// Box3.getExtents.
+    fn extents(&self) -> (Vector3, Vector3) {
+        let m = &self.0 .0;
+        let x = Vector3::new(m[0], m[1], m[2]);
+        let y = Vector3::new(m[4], m[5], m[6]);
+        let z = Vector3::new(m[8], m[9], m[10]);
+        let mut r1 = y;
+        r1.add(&z);
+        let mut r2 = z;
+        r2.subtract(&y);
+        let mut p1 = x;
+        p1.add(&r1);
+        let mut p4 = x;
+        p4.add(&r2);
+        let mut p2 = r1;
+        p2.subtract(&x);
+        let mut p3 = r2;
+        p3.subtract(&x);
+        let mut min = p1;
+        min.min(&p2).min(&p3).min(&p4);
+        let mut max = p1;
+        max.max(&p2).max(&p3).max(&p4);
+        for p in [&mut p1, &mut p2, &mut p3, &mut p4] {
+            p.negate();
+        }
+        min.min(&p1).min(&p2).min(&p3).min(&p4);
+        max.max(&p1).max(&p2).max(&p3).max(&p4);
+        let center = Vector3::new(m[12], m[13], m[14]);
+        min.add(&center);
+        max.add(&center);
+        (min, max)
+    }
+
+    /// Box3.center.
+    fn center(&self) -> Vector3 {
+        Vector3::new(self.0 .0[12], self.0 .0[13], self.0 .0[14])
+    }
+
+    /// Box3.add.
+    fn add(&mut self, other: &Box3) {
+        if self.is_empty() {
+            *self = *other;
+        } else if !other.is_empty() {
+            let (mut min, mut max) = self.extents();
+            let (b_min, b_max) = other.extents();
+            min.min(&b_min);
+            max.max(&b_max);
+            *self = Box3::from_extents(&min, &max);
+        }
+    }
+
+    fn mult_right(&mut self, m: &Matrix4) -> &mut Self {
+        self.0.mult_right(m);
+        self
+    }
+}
+
+/// Camera.frustum.
+fn frustum(l: f64, r: f64, b: f64, t: f64, n: f64, f: f64) -> Matrix4 {
+    let (r_l, t_b, f_n, n_2) = (r - l, t - b, f - n, 2.0 * n);
+    Matrix4([n_2 / r_l, 0.0, 0.0, 0.0, 0.0, n_2 / t_b, 0.0, 0.0, (r + l) / r_l, (t + b) / t_b, -(f + n) / f_n, -1.0, 0.0, 0.0, -(n_2 * f) / f_n, 0.0])
+}
+
+/// X3DLightNode.getBiasMatrix.
+const SHADOW_BIAS_MATRIX: Matrix4 = Matrix4([0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, 0.5, 1.0]);
+
+/// The largest shadowMapSize (getMaxTextureSize clamps it; wgpu's default texture limit).
+const MAX_SHADOW_MAP_SIZE: u32 = 8192;
 
 #[derive(Clone, Debug)]
 pub struct BackgroundParams {
@@ -82,6 +764,7 @@ pub struct BackgroundFace {
     pub texture: Rc<TextureImage>,
 }
 
+#[derive(Clone)]
 pub struct Frame {
     pub projection: Matrix4,
     pub view: Matrix4,
@@ -93,9 +776,51 @@ pub struct Frame {
     /// Node types encountered that the renderer does not draw.
     pub unsupported: BTreeSet<String>,
     pub viewpoint: Option<NodeId>,
+    /// GeneratedCubeMapTexture passes to draw before this frame.
+    pub cube_passes: Vec<CubePass>,
+    /// RenderedTexture passes to draw before this frame (after the cube passes).
+    pub rendered_passes: Vec<RenderedPass>,
+    /// The first EnvironmentLight (image based lighting of the physical materials).
+    pub environment: Option<EnvironmentParams>,
+    /// Browser options ToneMapping (0 NONE, 1 ACES_NARKOWICZ, 2 ACES_HILL, 3
+    /// ACES_HILL_EXPOSURE_BOOST, 4 KHR_PBR_NEUTRAL; NONE for a texture pass, which is not
+    /// independent), ColorSpace (0 SRGB, 1 LINEAR, 2 LINEAR_WHEN_PHYSICAL_MATERIAL) and Exposure
+    /// (Math .max (value, 0)).
+    pub tone_mapping: u32,
+    pub color_space: u32,
+    pub exposure: f64,
+    /// The layer's viewport rectangle (x, y, width, height in pixels, y up: X3DLayerNode
+    /// viewportNode .getRectangle ()); `None` for the whole target.
+    pub viewport: Option<[f64; 4]>,
+    /// LayerSet: the layers drawn, in order, each a frame of its own; this frame then carries
+    /// only the texture passes and the browser-wide values. Empty without a LayerSet.
+    pub layers: Vec<Frame>,
+    /// The shadow maps of the frame's lights (X3DRenderObject.draw renderShadowMap), drawn before
+    /// the frame.
+    pub shadow_maps: Vec<ShadowMap>,
+    /// The texture projectors of the frame (DrawItem.projectors).
+    pub projectors: Vec<ProjectorParams>,
 }
 
 pub const MAX_LIGHTS: usize = 8;
+
+/// The texture projectors of each shape: the global ones, then the shape's local ones, at most
+/// MAX_TEXTURES (X3D_NUM_TEXTURE_PROJECTORS min (numTextureProjectors, browser .getMaxTextures ())).
+fn shape_projectors(items: &mut [DrawItem], globals: &[u32]) {
+    for item in items {
+        let local = std::mem::take(&mut item.projectors);
+        item.projectors = globals.iter().chain(&local).copied().take(MAX_TEXTURES).collect();
+    }
+}
+
+/// The lights of each shape: the global lights, then the shape's local lights, at most
+/// MAX_LIGHTS (X3D_NUM_LIGHTS min (numLights, browser .getMaxLights ())).
+fn shape_lights(items: &mut [DrawItem], globals: &[u32]) {
+    for item in items {
+        let local = std::mem::take(&mut item.lights);
+        item.lights = globals.iter().chain(&local).copied().take(MAX_LIGHTS).collect();
+    }
+}
 
 /// Camera and bindable state supplied by an interactive viewer (x3d-viewer) instead of the
 /// "first node found" choice of the static render: the bound viewpoint's cameraSpaceMatrix
@@ -115,6 +840,10 @@ pub struct CameraOverride {
     pub navigation_info: Option<NodeId>,
     pub background: Option<(NodeId, Matrix4)>,
     pub fog: Option<NodeId>,
+    /// The viewpoint's getMaxFarValue, the radius of the background (X3DBackgroundNode).
+    pub max_far: f64,
+    /// OrthoViewpoint getUserSizeX and getUserSizeY (Layout: getViewportSize).
+    pub ortho_size: Option<(f64, f64)>,
 }
 
 struct Bound {
@@ -145,10 +874,35 @@ pub struct RenderCache {
     faces: HashMap<(u64, NodeId, usize), CacheEntry<TextureImage>>,
     /// X_ITE's 1x1 white default texture, shared so the GPU keeps one bind group for it.
     white: Option<Rc<TextureImage>>,
+    /// getBBoxShape (): the unit cube of every bboxDisplay (one buffer on the GPU).
+    bbox_box: Option<Rc<Geometry>>,
+    /// HAnimJoint.modelViewMatrix: the model-view of each joint's last DISPLAY traversal.
+    joint_model_views: HashMap<(u64, NodeId), Matrix4>,
+    /// HAnimHumanoid.jointMatricesArray and the unlock count it was made at (the update Lock).
+    joint_matrices: HashMap<(u64, NodeId), (u64, Rc<Vec<f32>>)>,
+    /// Skinned copies of geometries, reused while their source, tables and matrices are the same.
+    skinned: HashMap<(u64, NodeId, usize), SkinnedEntry>,
+    /// GaussianSplats data (see [`crate::splats`]), by node; `used` is the frame it was last drawn.
+    splats: HashMap<(u64, NodeId), (u64, Rc<crate::splats::SplatData>, u64)>,
     frame: u64,
     /// Counters for tests and tools: geometries (re)built / reused in the last frame.
     pub built: usize,
     pub reused: usize,
+}
+
+struct SkinnedEntry {
+    source: Rc<Geometry>,
+    tables: Rc<crate::hanim::SkinTables>,
+    matrices: Rc<Vec<f32>>,
+    value: Rc<Geometry>,
+    used: u64,
+}
+
+/// One HAnimHumanoid or HAnimSegment traversal of the DISPLAY pass (renderObject.getHAnimNode ()).
+struct SkinSource {
+    node: NodeId,
+    tables: Rc<crate::hanim::SkinTables>,
+    matrices: Rc<Vec<f32>>,
 }
 
 struct CacheEntry<T> {
@@ -171,6 +925,8 @@ impl RenderCache {
         self.geometries.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
         self.textures.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
         self.faces.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.skinned.retain(|_, e| e.used + CACHE_KEEP_FRAMES >= frame);
+        self.splats.retain(|_, e| e.2 + crate::splats_gpu::KEEP_FRAMES >= frame);
     }
 }
 
@@ -208,8 +964,27 @@ fn fingerprint(sg: &Sg, n: NodeId) -> u64 {
     }
 
     let mut h = 0xcbf29ce484222325u64;
+    mix(&mut h, quality_epoch());
+    // A Text finds its font in the FontLibrary table, which a FontLibrary load changes.
+    if sg.type_name(n) == Some("Text") {
+        mix(&mut h, sg.rt.font_epoch);
+    }
     walk(sg, n, 0, &mut h);
     h
+}
+
+/// Owned storage behind an [`crate::extras::Extras`] view.
+pub struct ExtrasOwned<'s> {
+    tex: Option<Vec<crate::extras::TexChannel<'s>>>,
+    tangent: Option<&'s [f32]>,
+    fog: Option<&'s [f32]>,
+    attribs: Vec<crate::extras::Attrib<'s>>,
+}
+
+impl ExtrasOwned<'_> {
+    pub fn view(&self) -> crate::extras::Extras<'_> {
+        crate::extras::Extras { tex: self.tex.as_deref(), tangent: self.tangent, fog: self.fog, attribs: &self.attribs }
+    }
 }
 
 pub struct Builder<'a> {
@@ -220,10 +995,136 @@ pub struct Builder<'a> {
     pub unsupported: BTreeSet<String>,
     items: Vec<DrawItem>,
     lights: Vec<LightParams>,
+    /// renderObject.getGlobalLights (): indices into `lights`.
+    global_lights: Vec<u32>,
+    projectors: Vec<ProjectorParams>,
+    global_projectors: Vec<u32>,
+    local_projectors: Vec<u32>,
+    /// The projector containers of the main pass: node, model matrix, location in view space
+    /// (a texture pass uses the main pass's location, see `projector`).
+    projector_sources: Vec<(NodeId, Matrix4, Vector3)>,
+    /// The grouping nodes around the current node (the groupNode of a local light).
+    groups: Vec<ShadowGroup>,
+    /// The root nodes of the layer being built (renderObject.getLayer () .getGroups ()).
+    layer_roots: Vec<NodeId>,
+    /// The shadow maps of the frame being built.
+    shadow_maps: Vec<ShadowMap>,
+    /// The light containers with a shadow map of the frame being built: the light node, its
+    /// model matrix, its invLightSpaceProjectionMatrix and its uniforms. A texture pass (a
+    /// DependentRenderer) finds the container of the same light and uses its map.
+    shadow_sources: Vec<(NodeId, Matrix4, Matrix4, ShadowParams)>,
+    /// The X3DLightNode part of renderObject.getLocalObjects (): the `global FALSE` lights of the
+    /// enclosing grouping nodes (indices into `lights`).
+    local_lights: Vec<u32>,
     /// Interactive camera (see [`CameraOverride`]); `None` for the oracle renders.
     pub camera: Option<CameraOverride>,
     /// Results kept between frames (interactive viewer); `None` rebuilds everything per frame.
     cache: Option<&'a mut RenderCache>,
+    /// renderObject.getLocalObjects (): the clip planes pushed by the enclosing grouping nodes.
+    clip_planes: Vec<[f64; 4]>,
+    /// GeneratedCubeMapTexture.traverse: the textures to render this frame (update not NONE, a
+    /// framebuffer) with the model matrix of the last shape that used them, in first-use order.
+    generated: Vec<(NodeId, Matrix4)>,
+    /// RenderedTextures this frame draws (Runtime::rendered_now) reached by the current layer, and
+    /// those an earlier layer drew (RenderedTexture.traverse: checkUpdate after the first).
+    rendered: Vec<NodeId>,
+    rendered_done: Vec<NodeId>,
+    /// The camera space matrix of the pass being built (modelMatrix = modelView × cameraSpace).
+    camera_space: Matrix4,
+    /// A texture pass (DependentRenderer): not independent, so no texture is collected, and the
+    /// shapes that use `hidden_texture` are not drawn (setShaderUniforms: scissor 0 0 0 0).
+    dependent: bool,
+    hidden_texture: Option<NodeId>,
+    /// setTransparent (background .isTransparent ()) of the layer's bound background.
+    background_transparent: bool,
+    /// The first EnvironmentLight that is on (X3D_USE_IBL).
+    environment: Option<EnvironmentParams>,
+    /// Interactive cameras of the other layers of a LayerSet (`camera` is layer 0's).
+    pub layer_cameras: Vec<(LayerKey, CameraOverride)>,
+    /// renderObject.getViewVolumes (): the viewport rectangles, the layer's first.
+    viewports: Vec<[f64; 4]>,
+    /// renderObject.getLayouts () and getLayoutRectangles ().
+    layouts: LayoutStack,
+    /// The layer's viewpoint and navigation info as Layout.push reads them.
+    layout_camera: LayoutCamera,
+    /// renderObject.getInvHumanoidMatrix (): starts with the identity.
+    inv_humanoid: Vec<Matrix4>,
+    /// renderObject.getHAnimNode (): the skin source around the current shape, indices into `skins`.
+    hanim: Vec<Option<usize>>,
+    skins: Vec<SkinSource>,
+    /// The draw items to skin once their source is complete: item index, geometry node, source.
+    skin_items: Vec<(usize, NodeId, usize)>,
+    /// HAnimJoint.modelViewMatrix of this frame (and, with a cache, of earlier frames).
+    joint_model_views: HashMap<NodeId, Matrix4>,
+}
+
+#[path = "traverse_splats.rs"]
+mod traverse_splats;
+#[path = "traverse_shaders.rs"]
+mod traverse_shaders;
+
+/// One GeneratedCubeMapTexture.renderTexture: six frames drawn into the texture's faces before
+/// the frame that samples it (X3DRenderObject.draw: rendered textures first).
+#[derive(Clone)]
+pub struct CubePass {
+    /// The texture (runtime uid, node), as in [`TextureImage::generated`].
+    pub key: (u64, NodeId),
+    pub size: u32,
+    /// Front, back, left, right, top, bottom (X3DEnvironmentTextureNode.targets order).
+    pub faces: Vec<Frame>,
+    /// update NEXT_FRAME_ONLY: the host sets update to NONE after the pass.
+    pub next_frame_only: bool,
+}
+
+/// A RenderedTexture pass (RenderedTexture.renderTexture): `frame` drawn into the texture's
+/// width × height target, then copied into the texture.
+#[derive(Clone)]
+pub struct RenderedPass {
+    /// The texture (runtime uid, node), as in [`TextureImage::generated`].
+    pub key: (u64, NodeId),
+    pub width: u32,
+    pub height: u32,
+    /// depthMap: TraverseType DEPTH (the shapes' window depth as color, cleared to 1 1 1 1, no
+    /// background) into a float texture.
+    pub depth_map: bool,
+    pub frame: Frame,
+}
+
+/// RenderedTexture.setChild: the children by kind (the last of each special kind wins).
+struct RenderedChildren {
+    fog: Option<NodeId>,
+    navigation_info: Option<NodeId>,
+    background: Option<NodeId>,
+    viewpoint: Option<NodeId>,
+    group: Vec<NodeId>,
+}
+
+fn rendered_children(sg: &Sg, n: NodeId) -> RenderedChildren {
+    let mut c = RenderedChildren { fog: None, navigation_info: None, background: None, viewpoint: None, group: vec![] };
+
+    for child in sg.nodes(n, "children") {
+        match sg.type_name(child) {
+            Some("Fog") => c.fog = Some(child),
+            Some("NavigationInfo") => c.navigation_info = Some(child),
+            Some("Background" | "TextureBackground") => c.background = Some(child),
+            Some("Viewpoint" | "OrthoViewpoint" | "GeoViewpoint") => c.viewpoint = Some(child),
+            _ => c.group.push(child),
+        }
+    }
+
+    c
+}
+
+/// The layer's camera for the RenderedTexture passes (built in `build_layer`).
+#[derive(Clone)]
+struct PassCamera {
+    camera_space: Matrix4,
+    view: Matrix4,
+    fov: f64,
+    near: f64,
+    far: f64,
+    ortho: Option<[f64; 4]>,
+    headlight: bool,
 }
 
 /// Children-like fields of the grouping nodes.
@@ -246,6 +1147,9 @@ fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
             let _ = kids;
             if choice >= 0 && (choice as usize) < raw.len() { raw[choice as usize].and_then(|c| sg.inner(c)).into_iter().collect() } else { vec![] }
         }
+        "CADFace" => sg.cad_face_child(n).into_iter().collect(),
+        "HAnimHumanoid" | "HAnimJoint" | "HAnimSegment" | "HAnimSite" => sg.hanim_children(n, ty).map(|g| g.concat()).unwrap_or_default(),
+        "GeoLOD" => sg.geo_lod_kids(n, true),
         _ => {
             let mut kids = sg.nodes(n, "children");
             if kids.is_empty() && ty == "LOD" {
@@ -256,11 +1160,51 @@ fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
     }
 }
 
-const GROUPS: &[&str] = &["Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "StaticGroup"];
+const GROUPS: &[&str] = &[
+    "Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "GeoLocation", "GeoTransform", "GeoLOD", "CADAssembly", "CADLayer", "CADPart", "CADFace", "PickableGroup", "GroupAnnotation", "HAnimHumanoid",
+    "HAnimJoint", "HAnimSegment", "HAnimSite",
+];
 
 impl<'a> Builder<'a> {
     pub fn new(root: &'a x3d_runtime::Runtime) -> Self {
-        Builder { root, geometries: HashMap::new(), textures: HashMap::new(), unsupported: BTreeSet::new(), items: vec![], lights: vec![], camera: None, cache: None }
+        Builder {
+            root,
+            geometries: HashMap::new(),
+            textures: HashMap::new(),
+            unsupported: BTreeSet::new(),
+            items: vec![],
+            lights: vec![],
+            global_lights: vec![],
+            projectors: vec![],
+            global_projectors: vec![],
+            local_projectors: vec![],
+            projector_sources: vec![],
+            groups: vec![],
+            layer_roots: vec![],
+            shadow_maps: vec![],
+            shadow_sources: vec![],
+            local_lights: vec![],
+            camera: None,
+            cache: None,
+            clip_planes: vec![],
+            generated: vec![],
+            rendered: vec![],
+            rendered_done: vec![],
+            camera_space: Matrix4::IDENTITY,
+            dependent: false,
+            hidden_texture: None,
+            background_transparent: false,
+            environment: None,
+            layer_cameras: vec![],
+            viewports: vec![],
+            layouts: LayoutStack::default(),
+            layout_camera: LayoutCamera { ortho: None, fov: std::f64::consts::FRAC_PI_4, near: 0.125, content_scale: 1.0 },
+            inv_humanoid: vec![Matrix4::IDENTITY],
+            hanim: vec![None],
+            skins: vec![],
+            skin_items: vec![],
+            joint_model_views: HashMap::new(),
+        }
     }
 
     /// Keep geometry and texture results in `cache` between frames.
@@ -272,16 +1216,19 @@ impl<'a> Builder<'a> {
         self
     }
 
-    /// Transform: Matrix4.setTransform (translation, rotation, scale, scaleOrientation, center).
-    fn transform_matrix(&self, sg: &Sg, n: NodeId) -> Matrix4 {
-        let t = sg.vec3(n, "translation", Vector3::ZERO);
-        let r = sg.rotation(n, "rotation");
-        let s = sg.vec3(n, "scale", Vector3::ONE);
-        let so = sg.rotation(n, "scaleOrientation");
-        let c = sg.vec3(n, "center", Vector3::ZERO);
-        let mut m = Matrix4::IDENTITY;
-        m.set_transform(Some(&t), Some(&r), Some(&s), Some(&so), Some(&c));
-        m
+    /// ClipPlane.push for the ClipPlane children of a grouping node; returns how many were pushed.
+    fn push_clip_planes(&mut self, sg: &Sg, kids: &[NodeId], model_view: &Matrix4) -> usize {
+        let before = self.clip_planes.len();
+
+        for &c in kids {
+            if sg.type_name(c) == Some("ClipPlane") {
+                if let Some(p) = clip_plane(sg, c, model_view) {
+                    self.clip_planes.push(p);
+                }
+            }
+        }
+
+        self.clip_planes.len() - before
     }
 
     /// Billboard.rotate.
@@ -318,6 +1265,22 @@ impl<'a> Builder<'a> {
     }
 
     /// LOD.getLevel with a range.
+    /// The LOD child to draw: `children [min (level_changed, length - 1)]` once a DISPLAY traversal
+    /// (the viewer's LOD.changeLevel) has set level_changed; before that (a still image of a scene
+    /// that never ran a frame) the level the distance gives.
+    fn lod_kids(&self, sg: &Sg, n: NodeId, model_view: &Matrix4, kids: Vec<NodeId>) -> Vec<NodeId> {
+        let stored = sg.i32(n, "level_changed", -1);
+
+        if stored >= 0 {
+            let raw = sg.raw_nodes(n, "children");
+            let level = stored.min(raw.len() as i32 - 1);
+
+            return if level >= 0 { raw[level as usize].and_then(|c| sg.inner(c)).into_iter().collect() } else { vec![] };
+        }
+
+        self.lod_level(sg, n, model_view, kids.len()).map(|l| vec![kids[l]]).unwrap_or_default()
+    }
+
     fn lod_level(&self, sg: &Sg, n: NodeId, model_view: &Matrix4, count: usize) -> Option<usize> {
         if count == 0 {
             return None;
@@ -342,8 +1305,14 @@ impl<'a> Builder<'a> {
         let Some(ty) = sg.type_name(n) else { return };
         let inline = sg.in_inline(n);
 
+        // X3DGroupingNode: a child whose `visible` is FALSE (X3DBoundedObject._display) is in none
+        // of the group's object sets, not even cameraObjects.
+        if !sg.bool(n, "visible", true) {
+            return;
+        }
+
         match ty {
-            "Viewpoint" | "OrthoViewpoint" if bound.viewpoint.is_none() && !inline => bound.viewpoint = Some((n, *m)),
+            "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint" if bound.viewpoint.is_none() && !inline => bound.viewpoint = Some((n, *m)),
             "NavigationInfo" if bound.navigation_info.is_none() && !inline => bound.navigation_info = Some(n),
             "Background" | "TextureBackground" if bound.background.is_none() && !inline => bound.background = Some((n, *m)),
             "Fog" if !inline => {
@@ -353,13 +1322,13 @@ impl<'a> Builder<'a> {
                     bound.fog = Some(n);
                 }
             }
-            _ if GROUPS.contains(&ty) => {
+            _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => {
                 let mut mm = *m;
-                if ty == "Transform" {
-                    mm.mult_left(&self.transform_matrix(sg, n));
+                if let Some(t) = sg.group_matrix(n, ty) {
+                    mm.mult_left(&t);
                 }
                 let kids = children_of(sg, n, ty);
-                let kids = if ty == "LOD" { self.lod_level(sg, n, &mm, kids.len()).map(|l| vec![kids[l]]).unwrap_or_default() } else { kids };
+                let kids = if ty == "LOD" { self.lod_kids(sg, n, &mm, kids) } else { kids };
                 for c in kids {
                     self.camera(sg, c, &mm, bound, depth + 1);
                 }
@@ -376,51 +1345,246 @@ impl<'a> Builder<'a> {
         }
         let Some(ty) = sg.type_name(n) else { return };
 
+        // X3DGroupingNode.set_objects__: the bbox node of a bounded object with bboxDisplay is a visible
+        // object whatever its `visible` is.
+        if crate::bbox_display::DISPLAYED_TYPES.contains(&ty) {
+            return self.bbox_display(sg, n, mv);
+        }
+
+        // X3DGroupingNode: a child whose `visible` is FALSE is not a visible object.
+        if !sg.bool(n, "visible", true) {
+            return;
+        }
+
         match ty {
-            "Shape" => self.shape(sg, n, mv),
+            "Shape" | "InstancedShape" => self.shape(sg, n, mv),
+            "VolumeData" | "IsoSurfaceVolumeData" | "SegmentedVolumeData" => self.volume(sg, n, ty, mv),
+            "GaussianSplats" => self.splats(sg, n, mv),
             "DirectionalLight" | "PointLight" | "SpotLight" => self.light(sg, n, ty, mv),
+            "TextureProjector" | "TextureProjectorParallel" => self.projector(sg, n, ty, mv),
+            "EnvironmentLight" => self.environment_light(sg, n, mv),
+            // StaticGroup: the optimized group holds only the shapes (StaticGroup.createGroups).
+            "StaticGroup" => {
+                let mut shapes = vec![];
+                sg.static_shapes(n, &Matrix4::IDENTITY, &mut shapes, depth);
+                for (s, mut m) in shapes {
+                    m.mult_right(mv);
+                    self.shape(sg, s, &m);
+                }
+            }
             "Inline" => {
                 // Inline.getInternalScene: the loaded scene's root nodes.
+                // Inline.traverse: its private Group holds the root nodes.
                 if let Some(ctx) = sg.inline_scene(n) {
                     if sg.bool(n, "load", true) {
-                        for c in sg.roots_of(ctx) {
-                            self.display(sg, c, mv, depth + 1);
-                        }
+                        // A grouping node: lights first, local lights end with the Inline.
+                        let roots = sg.roots_of(ctx);
+                        self.groups.push(ShadowGroup::Roots(roots.clone()));
+                        self.group_children(sg, roots, mv, depth);
+                        self.groups.pop();
                     }
                 }
             }
+            "HAnimHumanoid" => self.hanim_humanoid(sg, n, mv, depth),
+            "HAnimSegment" if crate::hanim::segment_tables(sg, n).is_some() => self.hanim_segment(sg, n, mv, depth),
             _ if GROUPS.contains(&ty) => {
                 let mut m = *mv;
-                if ty == "Transform" {
-                    m.mult_left(&self.transform_matrix(sg, n));
+                if let Some(t) = sg.group_matrix(n, ty) {
+                    m.mult_left(&t);
+
+                    // HAnimJoint.traverse: DISPLAY keeps the joint's model-view matrix.
+                    if ty == "HAnimJoint" {
+                        self.joint_model_views.insert(n, m);
+
+                        if let Some(c) = self.cache.as_deref_mut() {
+                            c.joint_model_views.insert((sg.rt.uid, n), m);
+                        }
+                    }
                 } else if ty == "Billboard" {
                     let b = self.billboard_matrix(sg, n, &m);
                     m.mult_left(&b);
                 }
                 let kids = children_of(sg, n, ty);
-                let kids = if ty == "LOD" { self.lod_level(sg, n, &m, kids.len()).map(|l| vec![kids[l]]).unwrap_or_default() } else { kids };
-
-                // Lights first (X3DGroupingNode: displayNodes push, then visibleObjects).
-                let (lights, rest): (Vec<NodeId>, Vec<NodeId>) =
-                    kids.into_iter().partition(|c| matches!(sg.type_name(*c), Some("DirectionalLight" | "PointLight" | "SpotLight")));
-                for c in lights.into_iter().chain(rest) {
-                    self.display(sg, c, &m, depth + 1);
-                }
+                let kids = if ty == "LOD" { self.lod_kids(sg, n, &m, kids) } else { kids };
+                self.groups.push(ShadowGroup::Node(n));
+                self.group_children(sg, kids, &m, depth);
+                self.groups.pop();
             }
+            // Viewport.traverse: its rectangle in the enclosing one around the children.
+            "Viewport" => {
+                let rectangle = layer::viewport_rectangle(sg, n, self.viewport());
+                self.viewports.push(rectangle);
+                self.groups.push(ShadowGroup::Node(n));
+                self.group_children(sg, children_of(sg, n, ty), mv, depth);
+                self.groups.pop();
+                self.viewports.pop();
+            }
+            "LayoutGroup" => self.layout_group(sg, n, sg.node(n, "layout"), sg.node(n, "viewport"), children_of(sg, n, ty), mv, depth),
             // Nodes with no visual output.
-            "WorldInfo" | "Viewpoint" | "OrthoViewpoint" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "TimeSensor" | "TouchSensor" | "PlaneSensor" | "SphereSensor"
+            "WorldInfo" | "ClipPlane" | "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "TimeSensor" | "TouchSensor" | "GeoTouchSensor" | "PlaneSensor" | "SphereSensor"
             | "CylinderSensor" | "ProximitySensor" | "VisibilitySensor" | "Script" | "PositionInterpolator" | "OrientationInterpolator"
             | "ColorInterpolator" | "ScalarInterpolator" | "CoordinateInterpolator" | "NormalInterpolator" | "Sound" | "AudioClip"
             | "BooleanFilter" | "BooleanToggle" | "BooleanTrigger" | "BooleanSequencer" | "IntegerSequencer" | "IntegerTrigger"
-            | "TimeTrigger" | "MetadataString" | "MetadataFloat" | "MetadataInteger" | "MetadataSet" | "MetadataDouble" | "MetadataBoolean" => {}
+            | "TimeTrigger" | "AnnotationTarget" | "TextAnnotation" | "URLAnnotation" | "IconAnnotation" | "GeoMetadata" | "FontLibrary" | "DISEntityManager" | "DISEntityTypeMapping" | "NurbsSet" | "NurbsPositionInterpolator" | "NurbsOrientationInterpolator" | "NurbsSurfaceInterpolator" | "MetadataString" | "MetadataFloat" | "MetadataInteger" | "MetadataSet" | "MetadataDouble" | "MetadataBoolean" => {}
+            // LayerSet is drawn by the world (X3DWorld), not as a child of layer 0; Layer and
+            // LayoutLayer are not X3DChildNodes.
+            "LayerSet" | "Layer" | "LayoutLayer" | "AnnotationLayer" | "Layout" => {}
             // Not X3DChildNode: X3DGroupingNode.add ignores these in children.
-            "Appearance" | "Material" | "ImageTexture" | "PixelTexture" | "MovieTexture" | "TextureTransform" | "Coordinate" | "Color"
+            "Appearance" | "Material" | "UnlitMaterial" | "TwoSidedMaterial" | "PointProperties" | "LineProperties" | "FillProperties" | "TextureProperties" | "BlendMode" | "DepthMode" | "ImageTexture" | "PixelTexture" | "MovieTexture" | "TextureTransform" | "Coordinate" | "Color"
             | "Normal" | "TextureCoordinate" | "FontStyle" | "Box" | "Sphere" | "Cone" | "Cylinder" | "IndexedFaceSet" | "IndexedLineSet"
-            | "PointSet" | "ElevationGrid" | "Extrusion" | "Text" => {}
+            | "PointSet" | "ElevationGrid" | "GeoElevationGrid" | "Extrusion" | "Text" => {}
             other => {
                 self.unsupported.insert(other.to_string());
             }
         }
+    }
+
+    /// X3DBBoxNode.traverse for a ReceiverPdu, SignalPdu or TransmitterPdu with bboxDisplay: the bbox shape
+    /// (a Shape without Appearance: unlit white lines) in `setTransform (bbox .center, null, bbox .size)`.
+    /// The bounding box is bboxSize / bboxCenter, or empty (size and center 0) at the default -1 -1 -1.
+    fn bbox_display(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) {
+        if !sg.bool(n, "bboxDisplay", false) {
+            return;
+        }
+
+        let size = sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0));
+        let bbox = if size.equals(&Vector3::new(-1.0, -1.0, -1.0)) { Box3::EMPTY } else { Box3::new(&size, &sg.vec3(n, "bboxCenter", Vector3::ZERO)) };
+        let (min, max) = bbox.extents();
+        let mut extent = max;
+        extent.subtract(&min);
+        let center = bbox.center();
+        let mut local = Matrix4::IDENTITY;
+        local.set_transform(Some(&center), None, Some(&extent), None, None);
+        let mut m = *mv;
+        m.mult_left(&local);
+
+        let geometry = match self.cache.as_deref_mut() {
+            Some(c) => c.bbox_box.get_or_insert_with(|| Rc::new(crate::bbox_display::unit_box_lines())).clone(),
+            None => Rc::new(crate::bbox_display::unit_box_lines()),
+        };
+        let mut distance = Vector3::ZERO;
+        m.mult_vec_matrix3(&mut distance);
+
+        self.items.push(DrawItem {
+            geometry_node: n,
+            geometry,
+            model_view: m,
+            material: default_material(),
+            textures: vec![],
+            multi_texture: None,
+            texture_matrices: vec![IDENTITY_F32],
+            projectors: self.local_projectors.clone(),
+            lights: self.local_lights.clone(),
+            transparent: false,
+            back_material: None,
+            blend: None,
+            depth: None,
+            clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
+            style: None,
+            style_texture: None,
+            distance: distance.z,
+            viewport: (self.viewports.len() > 1).then(|| self.viewport()),
+            volume: None,
+            instances: None,
+            splats: None,
+            custom: None,
+        });
+    }
+
+    /// X3DGroupingNode.traverse: lights first (displayNodes push, then visibleObjects), the
+    /// ClipPlane children pushed before the children and popped after.
+    fn group_children(&mut self, sg: &Sg, kids: Vec<NodeId>, m: &Matrix4, depth: usize) {
+        let pushed = self.push_clip_planes(sg, &kids, m);
+        let local = self.local_lights.len();
+        let local_projectors = self.local_projectors.len();
+        let (lights, rest): (Vec<NodeId>, Vec<NodeId>) = kids
+            .into_iter()
+            .partition(|c| matches!(sg.type_name(*c), Some("DirectionalLight" | "PointLight" | "SpotLight" | "EnvironmentLight" | "TextureProjector" | "TextureProjectorParallel")));
+        for c in lights.into_iter().chain(rest) {
+            self.display(sg, c, m, depth + 1);
+        }
+        // X3DLightNode.pop: the group's local lights end with the group.
+        self.local_lights.truncate(local);
+        self.local_projectors.truncate(local_projectors);
+        self.clip_planes.truncate(self.clip_planes.len() - pushed);
+    }
+
+    /// The current viewport rectangle (renderObject .getViewVolumes () .at (-1) .getViewport ()).
+    fn viewport(&self) -> [f64; 4] {
+        self.viewports.last().copied().unwrap_or([0.0, 0.0, 1.0, 1.0])
+    }
+
+    /// LayoutGroup.traverse (also the group of a LayoutLayer): the Viewport pushed, then the
+    /// Layout's matrix around the children.
+    #[allow(clippy::too_many_arguments)]
+    fn layout_group(&mut self, sg: &Sg, n: NodeId, layout: Option<NodeId>, viewport: Option<NodeId>, kids: Vec<NodeId>, mv: &Matrix4, depth: usize) {
+        let viewport = viewport.filter(|v| sg.type_name(*v) == Some("Viewport"));
+        self.groups.push(ShadowGroup::Node(n));
+
+        if let Some(v) = viewport {
+            let rectangle = layer::viewport_rectangle(sg, v, self.viewport());
+            self.viewports.push(rectangle);
+        }
+
+        match layout.filter(|l| sg.type_name(*l) == Some("Layout")) {
+            Some(l) => {
+                let node = LayoutNode::read(sg, l);
+                let current = self.viewport();
+                let m = self.layouts.push(&node, &self.layout_camera, &current, mv);
+                self.group_children(sg, kids, &m, depth);
+                self.layouts.pop();
+            }
+            None => self.group_children(sg, kids, mv, depth),
+        }
+
+        if viewport.is_some() {
+            self.viewports.pop();
+        }
+
+        self.groups.pop();
+    }
+
+    /// EnvironmentLight: X3DLightNode.set_on__ (on and intensity > 0); only the first one counts
+    /// (getMaxEnvironmentLights 1). EnvironmentLightContainer.setGlobalVariables: the rotation part
+    /// of the model-view matrix, multLeft (rotation), inverted. Without a specularTexture X_ITE
+    /// binds its default white cube maps. A GeneratedCubeMapTexture specularTexture is rendered
+    /// at the light's origin (EnvironmentLight.traverse).
+    fn environment_light(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) {
+        let specular = sg.node(n, "specularTexture").filter(|t| matches!(sg.type_name(*t), Some("ComposedCubeMapTexture" | "ImageCubeMapTexture" | "GeneratedCubeMapTexture")));
+
+        // EnvironmentLight.traverse (a visible object while its specularTexture is a rendered
+        // texture, whether the light is on or not).
+        if let Some(t) = specular.filter(|t| sg.type_name(*t) == Some("GeneratedCubeMapTexture")) {
+            if !self.dependent && sg.string(t, "update", "NONE") != "NONE" && sg.i32(t, "size", 128) > 0 {
+                let mut model = *mv;
+                model.translate(&sg.vec3(n, "origin", Vector3::ZERO));
+                model.mult_right(&self.camera_space);
+
+                match self.generated.iter_mut().find(|(g, _)| *g == t) {
+                    Some(e) => e.1 = model,
+                    None => self.generated.push((t, model)),
+                }
+            }
+        }
+
+        let intensity = sg.f64(n, "intensity", 1.0).max(0.0);
+
+        if !sg.bool(n, "on", true) || intensity <= 0.0 || self.environment.is_some() {
+            return;
+        }
+
+        let texture = specular.and_then(|t| self.texture(sg, t)).unwrap_or_else(|| Rc::new(texture::white_cube()));
+        let mut rotation = Rotation4::identity();
+        mv.get_transform(None, Some(&mut rotation), None, None, None);
+        rotation.mult_left(&sg.rotation(n, "rotation"));
+        rotation.inverse();
+
+        self.environment = Some(EnvironmentParams {
+            color: sg.color(n, "color", [1.0, 1.0, 1.0]),
+            intensity,
+            rotation: rotation.get_matrix().0.map(|v| v as f32),
+            specular: texture,
+        });
     }
 
     fn light(&mut self, sg: &Sg, n: NodeId, ty: &str, mv: &Matrix4) {
@@ -432,6 +1596,18 @@ impl<'a> Builder<'a> {
 
         let color = sg.color(n, "color", [1.0, 1.0, 1.0]);
         let ambient_intensity = sg.f64(n, "ambientIntensity", 0.0).clamp(0.0, 1.0);
+
+        // X3DLightNode.push: a global light joins renderObject.getGlobalLights (every shape of the
+        // layer), a local one the local objects of the group (its shapes until the group's pop).
+        let index = self.lights.len() as u32;
+        if sg.bool(n, "global", ty != "DirectionalLight") {
+            self.global_lights.push(index);
+        } else {
+            self.local_lights.push(index);
+        }
+
+        let global = sg.bool(n, "global", ty != "DirectionalLight");
+        let shadow = self.light_shadow(sg, n, ty, mv, global);
 
         match ty {
             "DirectionalLight" => {
@@ -451,6 +1627,7 @@ impl<'a> Builder<'a> {
                     cut_off_angle: 0.0,
                     beam_width: 0.0,
                     matrix: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+                    shadow: None,
                 });
             }
             _ => {
@@ -477,8 +1654,412 @@ impl<'a> Builder<'a> {
                     cut_off_angle: if spot { sg.f64(n, "cutOffAngle", 0.785398).clamp(0.0, std::f64::consts::FRAC_PI_2) } else { 0.0 },
                     beam_width: if spot { sg.f64(n, "beamWidth", 1.5708).clamp(0.0, std::f64::consts::FRAC_PI_2) } else { 0.0 },
                     matrix,
+                    shadow: None,
                 });
             }
+        }
+
+        if let Some(l) = self.lights.last_mut() {
+            l.shadow = shadow;
+        }
+    }
+
+    /// X3DTextureProjectorNode.push and its container's renderShadowMap / setGlobalVariables: the
+    /// projector's texture space (location, direction straightened to upVector, perspective of
+    /// fieldOfView or the TextureProjectorParallel's rectangle, biased, the texture's flipY
+    /// matrix) as seen from the view.
+    fn projector(&mut self, sg: &Sg, n: NodeId, ty: &str, mv: &Matrix4) {
+        // set_on__: on, intensity > 0 and an X3DTexture2DNode texture (setEnabled).
+        let intensity = sg.f64(n, "intensity", 1.0).max(0.0);
+        let texture_node = sg.node(n, "texture").filter(|t| matches!(sg.type_name(*t), Some("ImageTexture" | "PixelTexture" | "MovieTexture" | "RenderedTexture")));
+
+        if !sg.bool(n, "on", true) || intensity <= 0.0 {
+            return;
+        }
+
+        let Some(texture_node) = texture_node else { return };
+        let Some(texture) = self.texture(sg, texture_node) else { return };
+        let global = sg.bool(n, "global", true);
+        let mut model = *mv;
+        model.mult_right(&self.camera_space);
+
+        let mut inv = if global { model } else { Matrix4::IDENTITY };
+        let mut direction = sg.vec3(n, "direction", Vector3::new(0.0, 0.0, 1.0));
+        direction.negate();
+        let mut rotation = Rotation4::identity();
+        rotation.set_vectors(&Vector3::Z_AXIS, &direction);
+        let rotation = straighten(&rotation, &sg.vec3(n, "upVector", Vector3::new(0.0, 1.0, 0.0)));
+        let location = sg.vec3(n, "location", Vector3::ZERO);
+        inv.translate(&location);
+        inv.rotate(&rotation);
+        inv.inverse();
+
+        // set_nearDistance__ / set_farDistance__.
+        let near_field = sg.f64(n, "nearDistance", -1.0);
+        let far_field = sg.f64(n, "farDistance", -1.0);
+        let (near, near_parameter) = if near_field < 0.0 { (0.125, 0.0) } else { (near_field, -1.0) };
+        let (far, far_parameter) = if far_field < 0.0 { (100_000.0, 1.0) } else { (far_field, 2.0) };
+        let (width, height) = (texture.width.max(1) as f64, texture.height.max(1) as f64);
+
+        let projection = if ty == "TextureProjector" {
+            // getFieldOfView: in (0, π), else π/4; Camera.perspective with the texture's size.
+            let fov = sg.f64(n, "fieldOfView", std::f64::consts::FRAC_PI_4);
+            let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
+            let ratio = (fov / 2.0).tan() * near;
+            if width > height {
+                let aspect = width * ratio / height;
+                frustum(-aspect, aspect, -ratio, ratio, near, far)
+            } else {
+                let aspect = height * ratio / width;
+                frustum(-ratio, ratio, -aspect, aspect, near, far)
+            }
+        } else {
+            let f = sg.vec4(n, "fieldOfView", x3d_fields::math::Vector4::new(-1.0, -1.0, 1.0, 1.0));
+            let (min_x, min_y, max_x, max_y) = (f.x, f.y, f.z, f.w);
+            let (size_x, size_y) = (max_x - min_x, max_y - min_y);
+            let ratio = width / height;
+            if ratio > size_x / size_y {
+                let center = (min_x + max_x) / 2.0;
+                let size1_2 = (size_y * ratio) / 2.0;
+                ortho(center - size1_2, center + size1_2, min_y, max_y, near, far)
+            } else {
+                let center = (min_y + max_y) / 2.0;
+                let size1_2 = (size_x / ratio) / 2.0;
+                ortho(min_x, max_x, center - size1_2, center + size1_2, near, far)
+            }
+        };
+
+        if !global {
+            let mut inverse_model = model;
+            inverse_model.inverse();
+            inv.mult_left(&inverse_model);
+        }
+
+        // X3DSingleTextureNode.getMatrix: identity or the flipY matrix (ImageTexture, MovieTexture).
+        let texture_matrix = if texture.flip_y { Matrix4([1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0]) } else { Matrix4::IDENTITY };
+        inv.mult_right(&projection).mult_right(&SHADOW_BIAS_MATRIX).mult_right(&texture_matrix);
+
+        // The location: computed once, in the pass that renders the container first (a texture
+        // pass keeps the main pass's value).
+        let mut view_location = location;
+        mv.mult_vec_matrix3(&mut view_location);
+        let close = |a: &Matrix4, b: &Matrix4| a.0.iter().zip(b.0.iter()).all(|(x, y)| (x - y).abs() <= 1e-9 * (1.0 + x.abs()));
+        if self.dependent {
+            if let Some((_, _, l)) = self.projector_sources.iter().find(|(node, m, _)| *node == n && close(m, &model)) {
+                view_location = *l;
+            }
+        } else {
+            self.projector_sources.push((n, model, view_location));
+        }
+
+        let mut matrix = self.camera_space;
+        matrix.mult_right(&inv);
+        let index = self.projectors.len() as u32;
+        if global {
+            self.global_projectors.push(index);
+        } else {
+            self.local_projectors.push(index);
+        }
+
+        self.projectors.push(ProjectorParams { texture, color: sg.color(n, "color", [1.0, 1.0, 1.0]), intensity, location: view_location, params: [near_parameter, far_parameter], matrix, linear: false });
+    }
+
+    /// X3DLightNode.getShadowIntensity / getShadowMapSize and the container's renderShadowMap:
+    /// the light's shadow map (the shadow-casting shapes of its group seen from the light) and
+    /// the shadow uniforms. Not in a texture pass (a dependent renderer).
+    fn light_shadow(&mut self, sg: &Sg, n: NodeId, ty: &str, mv: &Matrix4, global: bool) -> Option<ShadowParams> {
+        let intensity = if sg.bool(n, "shadows", false) { sg.f64(n, "shadowIntensity", 1.0).clamp(0.0, 1.0) } else { 0.0 };
+        let size = sg.i32(n, "shadowMapSize", 1024).clamp(0, MAX_SHADOW_MAP_SIZE as i32) as u32;
+
+        if intensity <= 0.0 || size == 0 {
+            return None;
+        }
+
+        let mut model = *mv;
+        model.mult_right(&self.camera_space);
+
+        // DependentRenderer.getLightContainer: the main pass's container, its map rendered once
+        // (shadowMapRendered); setGlobalVariables with the texture pass's cameraSpaceMatrix.
+        if self.dependent {
+            let close = |a: &Matrix4, b: &Matrix4| a.0.iter().zip(b.0.iter()).all(|(x, y)| (x - y).abs() <= 1e-9 * (1.0 + x.abs()));
+            let (_, _, map_matrix, params) = self.shadow_sources.iter().find(|(node, m, _, _)| *node == n && close(m, &model))?;
+            let mut matrix = self.camera_space;
+            matrix.mult_right(map_matrix);
+            return Some(ShadowParams { matrix, ..params.clone() });
+        }
+
+        let group = if global { ShadowGroup::Roots(self.layer_roots.clone()) } else { self.groups.last().cloned().unwrap_or_else(|| ShadowGroup::Roots(self.layer_roots.clone())) };
+        let mut inv_light_space = if global { model } else { Matrix4::IDENTITY };
+        let direction = sg.vec3(n, "direction", Vector3::new(0.0, 0.0, -1.0));
+        let mut negated = direction;
+        negated.negate();
+        let mut rotation = Rotation4::identity();
+        rotation.set_vectors(&Vector3::Z_AXIS, &negated);
+
+        let mut views = vec![];
+        let mut map_matrix;
+
+        match ty {
+            "DirectionalLight" => {
+                inv_light_space.rotate(&rotation);
+                inv_light_space.inverse();
+                let mut light_bbox = self.shadow_bbox(sg, &group);
+                light_bbox.mult_right(&inv_light_space);
+                let (min, max) = light_bbox.extents();
+                let projection = ortho(min.x, max.x, min.y, max.y, -max.z, -min.z);
+                views.push(ShadowView { projection, viewport: [0, 0, size, size], items: self.shadow_items(sg, &group, &inv_light_space) });
+                map_matrix = inv_light_space;
+                if !global {
+                    let mut inv = model;
+                    inv.inverse();
+                    map_matrix.mult_left(&inv);
+                }
+                map_matrix.mult_right(&projection).mult_right(&SHADOW_BIAS_MATRIX);
+            }
+            "SpotLight" => {
+                inv_light_space.translate(&sg.vec3(n, "location", Vector3::ZERO));
+                inv_light_space.rotate(&rotation);
+                inv_light_space.inverse();
+                let mut light_bbox = self.shadow_bbox(sg, &group);
+                light_bbox.mult_right(&inv_light_space);
+                let (min, _) = light_bbox.extents();
+                let far = sg.f64(n, "radius", 100.0).min(-min.z);
+                // SpotLightContainer.renderShadow: no shadow without anything in front of the light.
+                if !(far > 0.0) {
+                    return None;
+                }
+                let cut_off_angle = sg.f64(n, "cutOffAngle", 0.785398).clamp(0.0, std::f64::consts::FRAC_PI_2);
+                // Camera.perspective (fieldOfView, 0.125, max (10000, far), size, size).
+                let ratio = (cut_off_angle).tan() * 0.125;
+                let projection = frustum(-ratio, ratio, -ratio, ratio, 0.125, far.max(10000.0));
+                views.push(ShadowView { projection, viewport: [0, 0, size, size], items: self.shadow_items(sg, &group, &inv_light_space) });
+                map_matrix = inv_light_space;
+                if !global {
+                    let mut inv = model;
+                    inv.inverse();
+                    map_matrix.mult_left(&inv);
+                }
+                map_matrix.mult_right(&projection).mult_right(&SHADOW_BIAS_MATRIX);
+            }
+            _ => {
+                // PointLightContainer: six 90° views (perspective2) into the compact layout.
+                inv_light_space.translate(&sg.vec3(n, "location", Vector3::ZERO));
+                inv_light_space.inverse();
+                const AXES: [(f64, f64, f64); 6] = [(1.0, 0.0, 0.0), (-1.0, 0.0, 0.0), (0.0, 0.0, -1.0), (0.0, 0.0, 1.0), (0.0, 1.0, 0.0), (0.0, -1.0, 0.0)];
+                const VIEWPORTS: [[f64; 4]; 6] = [[0.0, 0.5, 0.25, 0.5], [0.5, 0.5, 0.25, 0.5], [0.75, 0.5, 0.25, 0.5], [0.25, 0.5, 0.25, 0.5], [0.0, 0.0, 0.5, 0.5], [0.5, 0.0, 0.5, 0.5]];
+                let ratio = std::f64::consts::FRAC_PI_4.tan() * 0.125;
+                let projection = frustum(-ratio, ratio, -ratio, ratio, 0.125, 10_000.0);
+
+                for (axis, v) in AXES.iter().zip(VIEWPORTS) {
+                    let mut r = Rotation4::identity();
+                    r.set_vectors(&Vector3::new(axis.0, axis.1, axis.2), &Vector3::Z_AXIS);
+                    let mut orientation = Matrix4::IDENTITY;
+                    orientation.rotate(&r);
+                    // push (orientationMatrices [i]), multLeft (invLightSpaceMatrix).
+                    let mut m = orientation;
+                    m.mult_left(&inv_light_space);
+                    let s = size as f64;
+                    let viewport = [(v[0] * s) as u32, (v[1] * s) as u32, (v[2] * s) as u32, (v[3] * s) as u32];
+                    views.push(ShadowView { projection, viewport, items: self.shadow_items(sg, &group, &m) });
+                }
+
+                map_matrix = inv_light_space;
+                if !global {
+                    let mut inv = model;
+                    inv.inverse();
+                    map_matrix.mult_left(&inv);
+                }
+            }
+        }
+
+        // setGlobalVariables: shadowMatrix = cameraSpaceMatrix · invLightSpaceProjectionMatrix.
+        let mut matrix = self.camera_space;
+        matrix.mult_right(&map_matrix);
+        self.shadow_maps.push(ShadowMap { size, views });
+
+        let params = ShadowParams {
+            color: sg.color(n, "shadowColor", [0.0, 0.0, 0.0]),
+            intensity,
+            bias: sg.f64(n, "shadowBias", 0.005).clamp(0.0, 1.0),
+            map_size: size,
+            matrix,
+            map: self.shadow_maps.len() - 1,
+        };
+        self.shadow_sources.push((n, model, map_matrix, params.clone()));
+        Some(params)
+    }
+
+    /// groupNode .getSubBBox (bbox, true): the shadow-casting shapes of the group in its own space.
+    fn shadow_bbox(&mut self, sg: &Sg, group: &ShadowGroup) -> Box3 {
+        let kids = match group {
+            ShadowGroup::Node(n) => {
+                let ty = sg.type_name(*n).unwrap_or("");
+                let kids = children_of(sg, *n, ty);
+                if ty == "LOD" { self.lod_kids(sg, *n, &Matrix4::IDENTITY, kids) } else { kids }
+            }
+            ShadowGroup::Roots(r) => r.clone(),
+        };
+        self.bbox_of(sg, &kids, 0)
+    }
+
+    /// X3DBoundedObject.getBBox (nodes, bbox, shadows TRUE).
+    fn bbox_of(&mut self, sg: &Sg, nodes: &[NodeId], depth: usize) -> Box3 {
+        let mut bbox = Box3::EMPTY;
+
+        for &c in nodes {
+            bbox.add(&self.node_bbox(sg, c, depth + 1));
+        }
+
+        bbox
+    }
+
+    /// getBBox (bbox, true) of one child: a Shape only when it casts shadows; a grouping node its
+    /// children (in its own matrix) or its bboxSize.
+    fn node_bbox(&mut self, sg: &Sg, n: NodeId, depth: usize) -> Box3 {
+        if depth > 256 || !sg.bool(n, "visible", true) {
+            return Box3::EMPTY;
+        }
+
+        let Some(ty) = sg.type_name(n) else { return Box3::EMPTY };
+        let default_size = |sg: &Sg| sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0)).equals(&Vector3::new(-1.0, -1.0, -1.0));
+        let own = |sg: &Sg| Box3::new(&sg.vec3(n, "bboxSize", Vector3::ZERO), &sg.vec3(n, "bboxCenter", Vector3::ZERO));
+
+        match ty {
+            "Shape" => {
+                if !sg.bool(n, "castShadow", true) {
+                    return Box3::EMPTY;
+                }
+                if !default_size(sg) {
+                    return own(sg);
+                }
+                match sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)) {
+                    Some(g) if g.vertex_count() > 0 => Box3::new(&g.bbox_size(), &g.bbox_center()),
+                    _ => Box3::EMPTY,
+                }
+            }
+            // InstancedShape.set_bbox__ (an empty instance list is not enabled: no bounded object).
+            "InstancedShape" => {
+                if !sg.bool(n, "castShadow", true) {
+                    return Box3::EMPTY;
+                }
+                let instances = instance_data(sg, n);
+                if instances.matrices.is_empty() {
+                    return if default_size(sg) { Box3::EMPTY } else { own(sg) };
+                }
+                match sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)) {
+                    Some(g) => instanced_bbox(sg, n, &g, &instances),
+                    None => Box3::EMPTY,
+                }
+            }
+            "Inline" => {
+                if !default_size(sg) {
+                    return own(sg);
+                }
+                match sg.inline_scene(n).filter(|_| sg.bool(n, "load", true)) {
+                    Some(ctx) => self.bbox_of(sg, &sg.roots_of(ctx), depth),
+                    None => Box3::EMPTY,
+                }
+            }
+            "StaticGroup" => self.bbox_of(sg, &sg.nodes(n, "children"), depth),
+            _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => {
+                if !default_size(sg) {
+                    return own(sg);
+                }
+                let kids = children_of(sg, n, ty);
+                let kids = if ty == "LOD" { self.lod_kids(sg, n, &Matrix4::IDENTITY, kids) } else { kids };
+                let mut bbox = self.bbox_of(sg, &kids, depth);
+                if let Some(m) = sg.group_matrix(n, ty) {
+                    bbox.mult_right(&m);
+                }
+                bbox
+            }
+            _ => Box3::EMPTY,
+        }
+    }
+
+    /// renderObject.render (TraverseType.SHADOW, groupNode.traverse): the shadow objects of the
+    /// group with `model_view` (the light space); its clip planes, not the ones around it.
+    fn shadow_items(&mut self, sg: &Sg, group: &ShadowGroup, model_view: &Matrix4) -> Vec<DepthItem> {
+        let saved = std::mem::take(&mut self.clip_planes);
+        let mut items = vec![];
+
+        match group {
+            ShadowGroup::Node(n) => self.shadow_display(sg, *n, model_view, 0, &mut items),
+            ShadowGroup::Roots(roots) => {
+                let pushed = self.push_clip_planes(sg, roots, model_view);
+                for r in roots {
+                    self.shadow_display(sg, *r, model_view, 1, &mut items);
+                }
+                self.clip_planes.truncate(self.clip_planes.len() - pushed);
+            }
+        }
+
+        self.clip_planes = saved;
+        items
+    }
+
+    /// X3DGroupingNode.traverse SHADOW: the visible shadow objects (a Shape with castShadow).
+    fn shadow_display(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4, depth: usize, out: &mut Vec<DepthItem>) {
+        if depth > 256 || !sg.bool(n, "visible", true) {
+            return;
+        }
+
+        let Some(ty) = sg.type_name(n) else { return };
+
+        match ty {
+            "Shape" => {
+                if !sg.bool(n, "castShadow", true) {
+                    return;
+                }
+                if let Some(geometry) = sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)) {
+                    out.push(DepthItem { geometry, model_view: *mv, clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), instances: None });
+                }
+            }
+            // InstancedShape.displaySimple: the depth shader with X3D_INSTANCING.
+            "InstancedShape" => {
+                if !sg.bool(n, "castShadow", true) {
+                    return;
+                }
+                let instances = instance_data(sg, n);
+                if let (Some(geometry), false) = (sg.node(n, "geometry").and_then(|g| self.geometry(sg, g)), instances.matrices.is_empty()) {
+                    out.push(DepthItem { geometry, model_view: *mv, clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), instances: Some(Rc::new(instances)) });
+                }
+            }
+            "StaticGroup" => {
+                let mut shapes = vec![];
+                sg.static_shapes(n, &Matrix4::IDENTITY, &mut shapes, depth);
+                for (s, mut m) in shapes {
+                    m.mult_right(mv);
+                    self.shadow_display(sg, s, &m, depth + 1, out);
+                }
+            }
+            "Inline" => {
+                if let Some(ctx) = sg.inline_scene(n).filter(|_| sg.bool(n, "load", true)) {
+                    let roots = sg.roots_of(ctx);
+                    let pushed = self.push_clip_planes(sg, &roots, mv);
+                    for r in roots {
+                        self.shadow_display(sg, r, mv, depth + 1, out);
+                    }
+                    self.clip_planes.truncate(self.clip_planes.len() - pushed);
+                }
+            }
+            _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => {
+                let mut m = *mv;
+                if let Some(t) = sg.group_matrix(n, ty) {
+                    m.mult_left(&t);
+                } else if ty == "Billboard" {
+                    let b = self.billboard_matrix(sg, n, &m);
+                    m.mult_left(&b);
+                }
+                let kids = children_of(sg, n, ty);
+                let kids = if ty == "LOD" { self.lod_kids(sg, n, &m, kids) } else { kids };
+                let pushed = self.push_clip_planes(sg, &kids, &m);
+                for c in kids {
+                    self.shadow_display(sg, c, &m, depth + 1, out);
+                }
+                self.clip_planes.truncate(self.clip_planes.len() - pushed);
+            }
+            _ => {}
         }
     }
 
@@ -494,8 +2075,16 @@ impl<'a> Builder<'a> {
             return t.clone();
         }
 
+        // RenderedTexture isTransparent: setTransparent (background .isTransparent ()) of a
+        // renderTexture of an earlier frame (the one of this frame comes after the shapes are
+        // sorted); part of the cache fingerprint.
+        let rendered_transparent = sg.type_name(n) == Some("RenderedTexture") && {
+            let before = sg.rt.rendered_texture_first(n).is_some_and(|f| f < sg.rt.now * 1000.0);
+            before && rendered_children(sg, n).background.map_or(self.background_transparent, |b| background_transparent(sg, b))
+        };
+
         let persistent = self.cache.is_some();
-        let (ckey, fp) = if persistent { ((sg.rt.uid, n), fingerprint(sg, n)) } else { ((0, 0), 0) };
+        let (ckey, fp) = if persistent { ((sg.rt.uid, n), fingerprint(sg, n) ^ rendered_transparent as u64) } else { ((0, 0), 0) };
 
         if let Some(c) = self.cache.as_deref_mut() {
             let frame = c.frame;
@@ -518,6 +2107,59 @@ impl<'a> Builder<'a> {
                 texture::load_image_texture(sg, n, &base, self.root.fetcher.as_ref()).map(Rc::new)
             }
             "PixelTexture" => texture::pixel_texture(sg, n).map(Rc::new),
+            "ComposedCubeMapTexture" => {
+                // Slot textures that are COMPLETE: an ImageTexture by its load state, a PixelTexture
+                // with a valid image.
+                let slots = sg.rt.composed_cube_faces(n).unwrap_or([None; 6]);
+                let mut faces: HashMap<NodeId, Option<Rc<TextureImage>>> = HashMap::new();
+                for f in slots.into_iter().flatten() {
+                    let complete = match sg.type_name(f) {
+                        Some("ImageTexture") => sg.rt.url_load_state(f) == x3d_runtime::nodes::LoadState::Complete,
+                        Some("PixelTexture") => true,
+                        _ => false,
+                    };
+                    let image = if complete { self.texture(sg, f) } else { None };
+                    faces.insert(f, image);
+                }
+                Some(Rc::new(texture::composed_cube(sg, n, slots, |f| faces.get(&f).cloned().flatten())))
+            }
+            "GeneratedCubeMapTexture" => {
+                // set_size__: no framebuffer for size <= 0 (the cleared texture).
+                let size = sg.i32(n, "size", 128);
+                Some(Rc::new(if size > 0 { texture::generated_cube(sg, n, size as u32, self.background_transparent) } else { texture::white_cube() }))
+            }
+            "ImageCubeMapTexture" => {
+                let base = sg.rt.scene.world_url_of(sg.rt.scene.node(n).ctx).to_string();
+                // Until a url loads, the cleared texture (X3DEnvironmentTextureNode.initialize).
+                Some(Rc::new(texture::load_image_cube(sg, n, &base, self.root.fetcher.as_ref()).unwrap_or_else(texture::white_cube)))
+            }
+            "RenderedTexture" => Some(Rc::new(texture::rendered_texture(sg, n, rendered_transparent))),
+            "PixelTexture3D" => Some(Rc::new(texture::pixel_texture_3d(sg, n))),
+            // ImageTexture3D: the volume the runtime's NRRD / DICOM parser produced; until one loads, the cleared texture.
+            "ImageTexture3D" => Some(Rc::new(match sg.rt.image_texture_3d_volume(n) {
+                Some(v) => texture::image_texture_3d(sg, n, &v),
+                None => texture::white_3d(),
+            })),
+            "ComposedTexture3D" => {
+                // The X3DTexture2DNodes of `texture` with their images once COMPLETE
+                // (checkLoadState, see Runtime::texture_2d_complete).
+                let mut slices = vec![];
+                for c in sg.nodes(n, "texture") {
+                    let Some(c) = sg.inner(c).filter(|c| matches!(sg.type_name(*c), Some("ImageTexture" | "PixelTexture" | "MovieTexture" | "RenderedTexture"))) else {
+                        continue;
+                    };
+                    let complete = sg.rt.texture_2d_complete(c);
+                    // An empty PixelTexture is complete with the cleared 1 × 1 texture.
+                    let image = if complete { self.texture(sg, c).or_else(|| Some(Rc::new(TextureImage::white()))) } else { None };
+                    slices.push((c, image));
+                }
+                // The size warning is console output of the event pass, not drawn.
+                Some(Rc::new(texture::composed_texture_3d(sg, n, &slices, &mut |_| {})))
+            }
+            "ImageTextureAtlas" => {
+                let base = sg.rt.scene.world_url_of(sg.rt.scene.node(n).ctx).to_string();
+                Some(Rc::new(texture::load_image_texture_atlas(sg, n, &base, self.root.fetcher.as_ref()).unwrap_or_else(texture::white_3d)))
+            }
             other => {
                 self.unsupported.insert(other.to_string());
                 None
@@ -575,12 +2217,51 @@ impl<'a> Builder<'a> {
         }
     }
 
+    /// The texCoord, tangent, fogCoord and attrib children of a geometry node.
+    fn extras<'s>(&self, sg: &'s Sg, n: NodeId) -> ExtrasOwned<'s> {
+        use crate::extras::{generator_mode, Attrib, TexChannel};
+        let string = |c: NodeId, f: &str| -> &'s str {
+            match sg.value(c, f) {
+                Some(FieldValue::SFString(s)) => s.as_str(),
+                _ => "",
+            }
+        };
+        let single = |c: NodeId| -> Option<TexChannel<'s>> {
+            match sg.type_name(c)? {
+                "TextureCoordinate" => Some(TexChannel::Point { values: sg.f32s(c, "point"), components: 2, mapping: string(c, "mapping") }),
+                "TextureCoordinate3D" => Some(TexChannel::Point { values: sg.f32s(c, "point"), components: 3, mapping: string(c, "mapping") }),
+                "TextureCoordinate4D" => Some(TexChannel::Point { values: sg.f32s(c, "point"), components: 4, mapping: string(c, "mapping") }),
+                "TextureCoordinateGenerator" => {
+                    let mut parameter = [0.0f32; 6];
+                    for (p, v) in parameter.iter_mut().zip(sg.f32s(c, "parameter")) {
+                        *p = *v;
+                    }
+                    Some(TexChannel::Generator { mode: generator_mode(string(c, "mode")), parameter, mapping: string(c, "mapping") })
+                }
+                _ => None,
+            }
+        };
+        let tex = sg.node(n, "texCoord").and_then(|t| match sg.type_name(t)? {
+            "MultiTextureCoordinate" => Some(sg.nodes(t, "texCoord").into_iter().filter_map(single).collect()),
+            _ => single(t).map(|c| vec![c]),
+        });
+        let tangent = sg.node(n, "tangent").filter(|t| sg.type_name(*t) == Some("Tangent")).map(|t| sg.f32s(t, "vector"));
+        let fog = sg.node(n, "fogCoord").filter(|t| sg.type_name(*t) == Some("FogCoordinate")).map(|t| sg.f32s(t, "depth"));
+        let attribs = sg
+            .nodes(n, "attrib")
+            .into_iter()
+            .filter_map(|a| match sg.type_name(a)? {
+                "FloatVertexAttribute" => Some(Attrib::Float { name: string(a, "name"), components: sg.i32(a, "numComponents", 4).clamp(1, 4) as usize, values: sg.f32s(a, "value") }),
+                "Matrix3VertexAttribute" => Some(Attrib::Matrix3 { name: string(a, "name"), values: sg.f32s(a, "value") }),
+                "Matrix4VertexAttribute" => Some(Attrib::Matrix4 { name: string(a, "name"), values: sg.f32s(a, "value") }),
+                _ => None,
+            })
+            .collect();
+        ExtrasOwned { tex, tangent, fog, attribs }
+    }
+
     fn coord(&self, sg: &Sg, n: NodeId) -> Option<Vec<f32>> {
-        let c = sg.node(n, "coord")?;
-        match sg.type_name(c)? {
-            "Coordinate" | "CoordinateDouble" => Some(sg.f32s(c, "point").to_vec()),
-            _ => None,
-        }
+        sg.coord_points(sg.node(n, "coord")?)
     }
 
     fn build_geometry(&mut self, sg: &Sg, n: NodeId) -> Option<Geometry> {
@@ -588,6 +2269,7 @@ impl<'a> Builder<'a> {
 
         let g = match ty {
             "IndexedFaceSet" => {
+                let ex = self.extras(sg, n);
                 let coord = self.coord(sg, n);
                 let colors = self.colors(sg, n);
                 let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
@@ -607,6 +2289,7 @@ impl<'a> Builder<'a> {
                     crease_angle: sg.f64(n, "creaseAngle", 0.0),
                     color_per_vertex: sg.bool(n, "colorPerVertex", true),
                     normal_per_vertex: sg.bool(n, "normalPerVertex", true),
+                    extras: ex.view(),
                 };
                 geometry::indexed_face_set(&input)
             }
@@ -626,6 +2309,102 @@ impl<'a> Builder<'a> {
                 let colors = self.colors(sg, n);
                 geometry::point_set(coord.as_deref(), colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }))
             }
+            "TriangleSet" | "TriangleFanSet" | "TriangleStripSet" | "QuadSet" | "IndexedTriangleSet" | "IndexedTriangleFanSet" | "IndexedTriangleStripSet" | "IndexedQuadSet" => {
+                use crate::composed::{composed_geometry, ComposedInput, Kind};
+                let ex = self.extras(sg, n);
+                let coord = self.coord(sg, n);
+                let colors = self.colors(sg, n);
+                let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
+                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let kind = match ty {
+                    "TriangleSet" => Kind::TriangleSet,
+                    "QuadSet" => Kind::QuadSet,
+                    "TriangleFanSet" => Kind::TriangleFanSet { fan_count: sg.i32s(n, "fanCount") },
+                    "TriangleStripSet" => Kind::TriangleStripSet { strip_count: sg.i32s(n, "stripCount") },
+                    "IndexedTriangleSet" => Kind::IndexedTriangleSet { index: sg.i32s(n, "index") },
+                    "IndexedTriangleFanSet" => Kind::IndexedTriangleFanSet { index: sg.i32s(n, "index") },
+                    "IndexedTriangleStripSet" => Kind::IndexedTriangleStripSet { index: sg.i32s(n, "index") },
+                    _ => Kind::IndexedQuadSet { index: sg.i32s(n, "index") },
+                };
+                composed_geometry(&ComposedInput {
+                    kind,
+                    coord: coord.as_deref(),
+                    color: colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
+                    tex_coord: tex.as_deref(),
+                    normal: normal.as_deref(),
+                    solid: sg.bool(n, "solid", true),
+                    ccw: sg.bool(n, "ccw", true),
+                    color_per_vertex: sg.bool(n, "colorPerVertex", true),
+                    normal_per_vertex: sg.bool(n, "normalPerVertex", true),
+                    extras: ex.view(),
+                })
+            }
+            "GeoElevationGrid" => {
+                let ex = self.extras(sg, n);
+                let colors = self.colors(sg, n);
+                let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
+                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let (xd, zd) = (sg.i32(n, "xDimension", 0), sg.i32(n, "zDimension", 0));
+                let geo_points = (xd >= 2 && zd >= 2).then(|| {
+                    // GeoElevationGrid.createPoints.
+                    let geo = sg.geo_object(n);
+                    let height = sg.f64s(n, "height");
+                    let y_scale = sg.f64(n, "yScale", 1.0);
+                    let (xs, zs) = (sg.f64(n, "xSpacing", 1.0), sg.f64(n, "zSpacing", 1.0));
+                    let origin = sg.vec3(n, "geoGridOrigin", Vector3::ZERO);
+                    let mut points = vec![];
+                    for z in 0..zd as usize {
+                        for x in 0..xd as usize {
+                            let h = height.get(x + z * xd as usize).copied().unwrap_or(0.0) * y_scale;
+                            let mut p = if geo.standard_order { Vector3::new(zs * z as f64, xs * x as f64, h) } else { Vector3::new(xs * x as f64, zs * z as f64, h) };
+                            p.add(&origin);
+                            points.push(geo.get_coord(&p));
+                        }
+                    }
+                    points
+                });
+                geometry::elevation_grid(&ElevationInput {
+                    x_dimension: xd,
+                    z_dimension: zd,
+                    x_spacing: 1.0,
+                    z_spacing: 1.0,
+                    height: &[],
+                    color: colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
+                    tex_coord: tex.as_deref(),
+                    normal: normal.as_deref(),
+                    ccw: sg.bool(n, "ccw", true),
+                    solid: sg.bool(n, "solid", true),
+                    crease_angle: sg.f64(n, "creaseAngle", 0.0),
+                    color_per_vertex: sg.bool(n, "colorPerVertex", true),
+                    normal_per_vertex: sg.bool(n, "normalPerVertex", true),
+                    extras: ex.view(),
+                    geo_points,
+                })
+            }
+            "Arc2D" => crate::geometry2d::arc2d(sg.f64(n, "radius", 1.0), sg.f64(n, "startAngle", 0.0), sg.f64(n, "endAngle", std::f64::consts::FRAC_PI_2)),
+            "ArcClose2D" => crate::geometry2d::arc_close2d(
+                sg.f64(n, "radius", 1.0),
+                sg.f64(n, "startAngle", 0.0),
+                sg.f64(n, "endAngle", std::f64::consts::FRAC_PI_2),
+                matches!(sg.value(n, "closureType"), Some(x3d_fields::FieldValue::SFString(c)) if c == "CHORD"),
+                sg.bool(n, "solid", false),
+            ),
+            "Circle2D" => crate::geometry2d::circle2d(sg.f64(n, "radius", 1.0)),
+            "Disk2D" => crate::geometry2d::disk2d(sg.f64(n, "innerRadius", 0.0), sg.f64(n, "outerRadius", 1.0), sg.bool(n, "solid", false)),
+            "Polyline2D" => crate::geometry2d::polyline2d(sg.f32s(n, "lineSegments")),
+            "Polypoint2D" => crate::geometry2d::polypoint2d(sg.f32s(n, "point")),
+            "Rectangle2D" => {
+                let size = sg.vec2(n, "size", Vector2::new(2.0, 2.0));
+                crate::geometry2d::rectangle2d((size.x, size.y), sg.bool(n, "solid", false))
+            }
+            "TriangleSet2D" => crate::geometry2d::triangle_set2d(sg.f32s(n, "vertices"), sg.bool(n, "solid", false)),
+            "LineSet" => {
+                let coord = self.coord(sg, n);
+                let colors = self.colors(sg, n);
+                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
+                let ex = self.extras(sg, n);
+                crate::geometry2d::line_set(sg.i32s(n, "vertexCount"), coord.as_deref(), colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }), normal.as_deref(), &ex.view())
+            }
             "Box" => geometry::make_box(sg.vec3(n, "size", Vector3::new(2.0, 2.0, 2.0)), sg.bool(n, "solid", true)),
             "Sphere" => geometry::make_sphere(sg.f64(n, "radius", 1.0), sg.bool(n, "solid", true)),
             "Cone" => geometry::make_cone(
@@ -644,6 +2423,7 @@ impl<'a> Builder<'a> {
                 sg.bool(n, "solid", true),
             ),
             "ElevationGrid" => {
+                let ex = self.extras(sg, n);
                 let colors = self.colors(sg, n);
                 let tex = sg.node(n, "texCoord").filter(|t| sg.type_name(*t) == Some("TextureCoordinate")).map(|t| sg.f32s(t, "point").to_vec());
                 let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector").to_vec());
@@ -661,9 +2441,16 @@ impl<'a> Builder<'a> {
                     crease_angle: sg.f64(n, "creaseAngle", 0.0),
                     color_per_vertex: sg.bool(n, "colorPerVertex", true),
                     normal_per_vertex: sg.bool(n, "normalPerVertex", true),
+                    extras: ex.view(),
+                    geo_points: None,
                 })
             }
             "Text" => return text::text_geometry(sg, n, &mut self.unsupported),
+            "NurbsPatchSurface" => crate::nurbs::surface(sg, n, sg.rt.nurbs_tessellation_scale(n), false),
+            "NurbsTrimmedSurface" => crate::nurbs::surface(sg, n, sg.rt.nurbs_tessellation_scale(n), true),
+            "NurbsCurve" => crate::nurbs::curve(sg, n),
+            "NurbsSweptSurface" => crate::nurbs::swept(sg, n, false),
+            "NurbsSwungSurface" => crate::nurbs::swept(sg, n, true),
             "Extrusion" => {
                 let orientation = sg.f64s(n, "orientation");
                 geometry::extrusion(&ExtrusionInput {
@@ -688,77 +2475,426 @@ impl<'a> Builder<'a> {
         Some(g)
     }
 
+    /// HAnimHumanoid.traverse (DISPLAY): its private Transform's groups (skeleton, viewpoints, the
+    /// Skin group that pushes the humanoid as hAnimNode) with the inverse humanoid model-view on
+    /// renderObject.getInvHumanoidMatrix (), then skinning: the joint matrices when the update
+    /// Lock is open (the runtime's unlock count changed) and the humanoid has a skinCoord.
+    fn hanim_humanoid(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4, depth: usize) {
+        let mut m = *mv;
+        m.mult_left(&sg.group_matrix(n, "HAnimHumanoid").unwrap());
+        let mut inv = m;
+        inv.inverse();
+
+        let Some([skeleton, viewpoints, skin]) = sg.hanim_children(n, "HAnimHumanoid") else { return };
+        let (joints, bindings) = crate::hanim::humanoid_joints(sg, n);
+        let tables = Rc::new(crate::hanim::humanoid_tables(sg, n, &joints));
+        let source = self.skins.len();
+
+        self.skins.push(SkinSource { node: n, tables, matrices: Rc::new(vec![]) });
+        self.inv_humanoid.push(inv);
+        self.groups.push(ShadowGroup::Node(n));
+        self.group_children(sg, skeleton, &m, depth);
+        self.group_children(sg, viewpoints, &m, depth);
+        self.hanim.push(Some(source));
+        self.group_children(sg, skin, &m, depth);
+        self.hanim.pop();
+        self.groups.pop();
+        self.inv_humanoid.pop();
+
+        // skinning: Function.prototype without a Coordinate skinCoord; the matrices stay zero.
+        let skin_coord = sg.node(n, "skinCoord").filter(|c| matches!(sg.type_name(*c), Some("Coordinate" | "CoordinateDouble")));
+        let unlocks = sg.rt.hanim_unlocks(n);
+        let key = (sg.rt.uid, n);
+        let cached = self.cache.as_deref().and_then(|c| c.joint_matrices.get(&key).cloned());
+
+        let matrices = match (skin_coord, cached) {
+            (None, _) => Rc::new(vec![0.0; joints.len() * 32]),
+            (Some(_), Some((count, m))) if count == unlocks && m.len() == joints.len() * 32 => m,
+            (Some(_), _) => {
+                let model_views: Vec<Matrix4> = joints
+                    .iter()
+                    .map(|j| self.joint_model_views.get(j).copied().or_else(|| self.cache.as_deref().and_then(|c| c.joint_model_views.get(&(sg.rt.uid, *j)).copied())).unwrap_or(Matrix4::IDENTITY))
+                    .collect();
+                let m = Rc::new(crate::hanim::joint_matrices(&bindings, &model_views, &inv));
+
+                if let Some(c) = self.cache.as_deref_mut() {
+                    c.joint_matrices.insert(key, (unlocks, m.clone()));
+                }
+
+                m
+            }
+        };
+
+        self.skins[source].matrices = matrices;
+        self.apply_skins(source);
+    }
+
+    /// HAnimSegment.traverse with a coord and displacements: the segment is the hAnimNode of its
+    /// children; skinning sets joint 0 to its model-view × the inverse humanoid model-view.
+    fn hanim_segment(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4, depth: usize) {
+        let Some(tables) = crate::hanim::segment_tables(sg, n) else { return };
+        let matrices = Rc::new(crate::hanim::segment_matrices(mv, self.inv_humanoid.last().unwrap()));
+        let source = self.skins.len();
+
+        self.skins.push(SkinSource { node: n, tables: Rc::new(tables), matrices });
+        self.hanim.push(Some(source));
+        self.groups.push(ShadowGroup::Node(n));
+        self.group_children(sg, children_of(sg, n, "HAnimSegment"), mv, depth);
+        self.groups.pop();
+        self.hanim.pop();
+        self.apply_skins(source);
+    }
+
+    /// Skin2.glsl for the draw items of `source`.
+    fn apply_skins(&mut self, source: usize) {
+        let pending: Vec<(usize, NodeId)> = self.skin_items.iter().filter(|(_, _, s)| *s == source).map(|(i, g, _)| (*i, *g)).collect();
+        self.skin_items.retain(|(_, _, s)| *s != source);
+
+        let s = &self.skins[source];
+        let (node, tables, matrices) = (s.node, s.tables.clone(), s.matrices.clone());
+
+        for (i, gnode) in pending {
+            let Some(item) = self.items.get(i).filter(|item| item.geometry_node == gnode) else { continue };
+            let src = item.geometry.clone();
+            let key = (self.root.uid, node, Rc::as_ptr(&src) as usize);
+
+            let value = match self.cache.as_deref_mut() {
+                Some(c) => {
+                    let frame = c.frame;
+
+                    match c.skinned.get_mut(&key) {
+                        Some(e) if Rc::ptr_eq(&e.source, &src) && e.tables == tables && e.matrices == matrices => {
+                            e.used = frame;
+                            e.value.clone()
+                        }
+                        _ => {
+                            let value = Rc::new(crate::hanim::skin(&src, &tables, &matrices));
+                            c.skinned.insert(key, SkinnedEntry { source: src, tables: tables.clone(), matrices: matrices.clone(), value: value.clone(), used: frame });
+                            value
+                        }
+                    }
+                }
+                None => Rc::new(crate::hanim::skin(&src, &tables, &matrices)),
+            };
+
+            self.items[i].geometry = value;
+        }
+    }
+
     fn shape(&mut self, sg: &Sg, n: NodeId, mv: &Matrix4) {
         let Some(gnode) = sg.node(n, "geometry") else { return };
         let Some(geometry) = self.geometry(sg, gnode) else { return };
 
-        let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
-        let material_node = appearance.and_then(|a| sg.node(a, "material")).filter(|m| sg.type_name(*m) == Some("Material"));
-        let texture_node = appearance.and_then(|a| sg.node(a, "texture"));
-        let transform_node = appearance.and_then(|a| sg.node(a, "textureTransform")).filter(|t| sg.type_name(*t) == Some("TextureTransform"));
+        // InstancedShape: isEnabled () needs instances (numInstances) and a geometry.
+        let instances = (sg.type_name(n) == Some("InstancedShape")).then(|| Rc::new(instance_data(sg, n)));
 
-        if let Some(a) = appearance {
-            if let Some(m) = sg.node(a, "material") {
-                if sg.type_name(m) != Some("Material") {
-                    self.unsupported.insert(sg.type_name(m).unwrap_or("?").to_string());
+        if instances.as_ref().is_some_and(|i| i.matrices.is_empty()) {
+            return;
+        }
+
+        let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
+        let material_node = appearance.and_then(|a| sg.node(a, "material"));
+        let texture_node = appearance.and_then(|a| sg.node(a, "texture"));
+        let transform_node = appearance.and_then(|a| sg.node(a, "textureTransform"));
+
+        let has_normals = !geometry.normals.is_empty();
+
+        // GeneratedCubeMapTexture: hidden in its own texture pass; collected by an independent pass.
+        let generated = generated_textures(sg, texture_node);
+
+        if self.hidden_texture.is_some_and(|h| generated.contains(&h)) {
+            return;
+        }
+
+        if !self.dependent {
+            let mut model = *mv;
+            model.mult_right(&self.camera_space);
+
+            for g in generated {
+                if sg.string(g, "update", "NONE") == "NONE" || sg.i32(g, "size", 128) <= 0 {
+                    continue;
+                }
+
+                match self.generated.iter_mut().find(|(n, _)| *n == g) {
+                    Some(e) => e.1 = model,
+                    None => self.generated.push((g, model)),
+                }
+            }
+
+            // Appearance.traverse → RenderedTexture.traverse: the first independent pass to
+            // reach a texture that renders this frame draws it.
+            for r in rendered_textures(sg, appearance) {
+                if sg.rt.rendered_now.contains(&r) && !self.rendered.contains(&r) && !self.rendered_done.contains(&r) {
+                    self.rendered.push(r);
                 }
             }
         }
 
-        let has_normals = !geometry.normals.is_empty();
+        // Appearance.set_material__: X3DCast (X3DMaterialNode, material) ?? the browser default
+        // material (UnlitMaterial, emissiveColor 1 1 1).
+        let front = material_node.and_then(|m| {
+            let params = material_params(sg, m, has_normals, true);
+            if params.is_none() {
+                self.unsupported.insert(sg.type_name(m).unwrap_or("?").to_string());
+            }
+            params.map(|p| (m, p))
+        });
 
-        let material = match material_node {
-            Some(m) => {
-                        MaterialParams {
-                    shading: if has_normals { Shading::Gouraud } else { Shading::Unlit },
-                    diffuse: sg.color(m, "diffuseColor", [0.8, 0.8, 0.8]),
-                    ambient_intensity: sg.f64(m, "ambientIntensity", 0.2).clamp(0.0, 1.0),
-                    specular: sg.color(m, "specularColor", [0.0, 0.0, 0.0]),
-                    shininess: sg.f64(m, "shininess", 0.2).clamp(0.0, 1.0),
-                    emissive: sg.color(m, "emissiveColor", [0.0, 0.0, 0.0]),
-                    transparency: sg.f64(m, "transparency", 0.0).clamp(0.0, 1.0),
+        // Appearance.set_backMaterial__: X3DCast (X3DOneSidedMaterialNode, backMaterial), then the
+        // deprecated TwoSidedMaterial handling `??= X3DCast (TwoSidedMaterial, materialNode)`.
+        let back = appearance
+            .and_then(|a| sg.node(a, "backMaterial"))
+            .filter(|m| matches!(sg.type_name(*m), Some("Material" | "UnlitMaterial" | "PhysicalMaterial" | "SpecularGlossinessMaterial")))
+            .and_then(|m| material_params(sg, m, has_normals, true).map(|p| (m, p)))
+            .or_else(|| front.as_ref().filter(|(m, _)| sg.type_name(*m) == Some("TwoSidedMaterial")).and_then(|(m, _)| material_params(sg, *m, has_normals, false).map(|p| (*m, p))));
+
+        // X3DMaterialExtensionNodes this renderer does not draw (VolumeScatter).
+        for m in front.iter().map(|f| f.0).chain(back.iter().map(|b| b.0)) {
+            for e in extension_nodes(sg, m) {
+                let name = sg.type_name(e).unwrap_or("?");
+                if !MATERIAL_EXTENSIONS.contains(&name) {
+                    self.unsupported.insert(name.to_string());
                 }
             }
-            // Browser default material: UnlitMaterial, emissiveColor 1 1 1.
-            None => MaterialParams {
-                shading: Shading::Unlit,
-                diffuse: [0.8; 3],
-                ambient_intensity: 0.2,
-                specular: [0.0; 3],
-                shininess: 0.2,
-                emissive: [1.0, 1.0, 1.0],
-                transparency: 0.0,
-            },
+        }
+
+        let (material, front_transparent, emissive_texture) = match &front {
+            Some((m, p)) => (p.clone(), material_transparent(sg, *m, p), sg.node(*m, "emissiveTexture").filter(|_| sg.type_name(*m) == Some("UnlitMaterial"))),
+            None => (default_material(), false, None),
         };
 
-        let texture = texture_node.and_then(|t| self.texture(sg, t));
-        // An X3DTextureNode that failed to load still binds X_ITE's 1×1 white default texture.
-        let texture = match (texture_node, texture) {
-            (Some(t), None) if matches!(sg.type_name(t), Some("ImageTexture" | "PixelTexture")) => Some(self.white_texture()),
-            (_, t) => t,
+        if let Some(b) = appearance.and_then(|a| sg.node(a, "backMaterial")) {
+            if !matches!(sg.type_name(b), Some("Material" | "UnlitMaterial" | "PhysicalMaterial" | "SpecularGlossinessMaterial")) {
+                self.unsupported.insert(sg.type_name(b).unwrap_or("?").to_string());
+            }
+        }
+
+        // X3D_MATERIAL_TEXTURES of the physical materials, with the texture transform and
+        // coordinate channels their mappings name.
+        let transforms = transform_mappings(sg, transform_node);
+        let coords = coordinate_mappings(sg, gnode);
+        let mut material = material;
+        let mut front_transparent = front_transparent;
+
+        if let Some((m, _)) = &front {
+            material.textures = self.material_textures(sg, *m, &transforms, &coords);
+            // X3DOneSidedMaterialNode.set_transparent__: transparency || baseTexture .isTransparent ().
+            front_transparent |= material.textures.iter().any(|t| t.kind == 0 && t.texture.transparent);
+        }
+
+        let back = back.map(|(m, mut p)| {
+            p.textures = self.material_textures(sg, m, &transforms, &coords);
+            (m, p)
+        });
+        let back_transparent = back.as_ref().is_some_and(|(m, p)| material_transparent(sg, *m, p) || p.textures.iter().any(|t| t.kind == 0 && t.texture.transparent));
+        let back_material = back.map(|(_, p)| p);
+
+        // BlendMode, DepthMode: Appearance.set_renderModes__.
+        let blend = appearance.and_then(|a| sg.node(a, "blendMode")).filter(|b| sg.type_name(*b) == Some("BlendMode")).map(|b| blend_params(sg, b));
+        let depth = appearance.and_then(|a| sg.node(a, "depthMode")).filter(|d| sg.type_name(*d) == Some("DepthMode")).map(|d| depth_params(sg, d));
+
+        // Appearance.set_texture__: X3DCast (X3DTextureNode, texture). A MultiTexture's units are its
+        // X3DSingleTextureNode textures (at most maxTextures); MultiTexture is never transparent.
+        let (textures, multi_texture, texture_transparent) = match texture_node {
+            Some(t) if sg.type_name(t) == Some("MultiTexture") => {
+                let units: Vec<Rc<TextureImage>> = sg
+                    .nodes(t, "texture")
+                    .into_iter()
+                    .filter(|u| is_single_texture(sg, *u))
+                    .take(MAX_TEXTURES)
+                    .map(|u| self.texture(sg, u).unwrap_or_else(|| self.white_texture()))
+                    .collect();
+                let params = multi_texture_params(sg, t, units.len());
+                (units, Some(params), false)
+            }
+            Some(t) => {
+                let texture = self.texture(sg, t);
+                // An X3DTextureNode that failed to load still binds X_ITE's 1×1 white default texture.
+                let texture = match texture {
+                    None if is_single_texture(sg, t) && can_load(sg, t) => Some(self.white_texture()),
+                    t => t,
+                };
+                // Appearance.set_transparent__: the appearance texture counts even when an
+                // emissive texture replaces it in the shader.
+                let transparent = texture.as_ref().is_some_and(|t| t.transparent);
+                (texture.into_iter().collect(), None, transparent)
+            }
+            None => (vec![], None, false),
         };
 
-        let texture_matrix = match transform_node {
-            Some(t) => texture_transform_matrix(sg, t),
-            None => Matrix4::IDENTITY.0.map(|v| v as f32),
+        // Unlit2.glsl getEmissiveColor: X3D_EMISSIVE_TEXTURE wins over X3D_TEXTURE.
+        let (textures, multi_texture) = match emissive_texture {
+            Some(t) if can_load(sg, t) => (vec![self.texture(sg, t).unwrap_or_else(|| self.white_texture())], None),
+            Some(t) => {
+                self.unsupported.insert(sg.type_name(t).unwrap_or("?").to_string());
+                (textures, multi_texture)
+            }
+            None => (textures, multi_texture),
         };
 
-        let transparent = material.transparency > 0.0 || texture.as_ref().is_some_and(|t| t.transparent);
+        // Appearance.set_textureTransform__: X3DCast (X3DTextureTransformNode) ?? the default
+        // TextureTransform; MultiTextureTransform: its X3DSingleTextureTransformNodes (at most
+        // maxTextureTransforms), the default one if there is none.
+        let texture_matrices: Vec<[f32; 16]> = match transform_node {
+            Some(t) if sg.type_name(t) == Some("MultiTextureTransform") => {
+                let matrices: Vec<[f32; 16]> = sg.nodes(t, "textureTransform").into_iter().filter_map(|u| single_texture_transform_matrix(sg, u)).take(MAX_TEXTURES).collect();
+                if matrices.is_empty() { vec![IDENTITY_F32] } else { matrices }
+            }
+            Some(t) => vec![single_texture_transform_matrix(sg, t).unwrap_or(IDENTITY_F32)],
+            None => vec![IDENTITY_F32],
+        };
 
-        // addDisplayShape: distance = bbox center z in view space.
+        // Appearance.set_pointProperties__ / set_lineProperties__ / set_fillProperties__.
+        let style = appearance.and_then(|a| style_params(sg, a, geometry.geometry_type));
+        let style_texture = match style {
+            Some(StyleParams::Fill(f)) if f.hatched => Some(crate::style::hatch_texture(f.hatch_style)),
+            Some(StyleParams::Line(_)) => Some(crate::style::linetype_texture()),
+            _ => None,
+        };
+        // FillProperties.set_filled__: transparent when not filled.
+        let fill_transparent = matches!(style, Some(StyleParams::Fill(f)) if !f.filled);
+
+        // X3DGeometryNode.set_color__: setTransparent (colorNode .isTransparent ()), and ColorRGBA
+        // is always transparent.
+        let color_transparent = sg.node(gnode, "color").is_some_and(|c| sg.type_name(c) == Some("ColorRGBA"));
+
+        let transparent = color_transparent || fill_transparent || front_transparent || back_transparent || texture_transparent || (multi_texture.is_none() && textures.first().is_some_and(|t| t.transparent)) || blend.is_some();
+
+        // addDisplayShape: distance = bbox center z in view space (an InstancedShape's bbox is the
+        // union of the instances' boxes, or its bboxSize / bboxCenter).
         let mut center = geometry.bbox_center();
+
+        if let Some(i) = &instances {
+            center = instanced_bbox(sg, n, &geometry, i).center();
+        }
+
         mv.mult_vec_matrix3(&mut center);
+
+        if let Some(Some(s)) = self.hanim.last() {
+            self.skin_items.push((self.items.len(), gnode, *s));
+        }
+
+        let custom = self.custom_draw(sg, appearance);
 
         self.items.push(DrawItem {
             geometry_node: gnode,
             geometry,
             model_view: *mv,
             material,
-            texture,
-            texture_matrix,
+            textures,
+            multi_texture,
+            texture_matrices,
+            projectors: self.local_projectors.clone(),
+            lights: self.local_lights.clone(),
             transparent,
+            back_material,
+            blend,
+            depth,
+            clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
+            style,
+            style_texture,
             distance: center.z,
+            viewport: (self.viewports.len() > 1).then(|| self.viewport()),
+            volume: None,
+            instances,
+            splats: None,
+            custom,
         });
+    }
+
+    /// X3DVolumeDataNode.traverse: the private Group's Shape (a BLEND alphaMode, so a transparent
+    /// item sorted by the center of its planes). See [`crate::volume`].
+    fn volume(&mut self, sg: &Sg, n: NodeId, ty: &str, mv: &Matrix4) {
+        let d = sg.vec3(n, "dimensions", Vector3::ONE);
+        let orientation = crate::volume::sensor_orientation(mv, [d.x, d.y, d.z]).unwrap_or_else(Rotation4::identity);
+        let mut unsupported = vec![];
+        let draw = {
+            let mut tex = |t: NodeId| self.texture(sg, t);
+            crate::volume::build(sg, n, ty, mv, texture_quality(), orientation, &mut tex, &mut unsupported)
+        };
+        self.unsupported.extend(unsupported);
+        // addDisplayShape: distance = the planes' bbox center (the origin) in view space.
+        let mut center = Vector3::ZERO;
+        mv.mult_vec_matrix3(&mut center);
+        self.items.push(DrawItem {
+            geometry_node: n,
+            geometry: crate::volume::empty_geometry(),
+            model_view: *mv,
+            material: default_material(),
+            textures: vec![],
+            multi_texture: None,
+            texture_matrices: vec![IDENTITY_F32],
+            projectors: vec![],
+            lights: self.local_lights.clone(),
+            transparent: true,
+            back_material: None,
+            blend: None,
+            depth: None,
+            clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
+            style: None,
+            style_texture: None,
+            distance: center.z,
+            viewport: (self.viewports.len() > 1).then(|| self.viewport()),
+            volume: Some(Rc::new(draw)),
+            instances: None,
+            splats: None,
+            custom: None,
+        });
+    }
+
+    /// The named textures of a PhysicalMaterial or SpecularGlossinessMaterial (X3DCast
+    /// (X3DSingleTextureNode, field)); one that has not loaded binds the default white texture.
+    fn material_textures(&mut self, sg: &Sg, m: NodeId, transforms: &[String], coords: &[String]) -> Vec<MaterialTexture> {
+        let names: [&str; 5] = match sg.type_name(m) {
+            Some("PhysicalMaterial") => ["baseTexture", "emissiveTexture", "metallicRoughnessTexture", "occlusionTexture", "normalTexture"],
+            Some("SpecularGlossinessMaterial") => ["diffuseTexture", "emissiveTexture", "specularGlossinessTexture", "occlusionTexture", "normalTexture"],
+            _ => return vec![],
+        };
+        let mut out = vec![];
+
+        for (kind, name) in names.iter().enumerate() {
+            let Some(t) = sg.node(m, name).filter(|t| is_single_texture(sg, *t)) else { continue };
+            let texture = match self.texture(sg, t) {
+                Some(t) => t,
+                None => {
+                    if !can_load(sg, t) {
+                        self.unsupported.insert(sg.type_name(t).unwrap_or("?").to_string());
+                    }
+                    self.white_texture()
+                }
+            };
+            let mapping = sg.string(m, &format!("{name}Mapping"), "");
+            out.push(MaterialTexture { kind: kind as u32, texture, transform: mapping_channel(transforms, &mapping).min(3), coord: mapping_channel(coords, &mapping).min(3) });
+        }
+
+        // X3DMaterialExtensionNode.addTexture: the extension textures, kinds 5.. (a later node of
+        // the same type with the texture sets its uniform last).
+        for e in extension_nodes(sg, m) {
+            let ty = sg.type_name(e).unwrap_or("");
+
+            for (i, (ext, name)) in EXTENSION_TEXTURES.iter().enumerate() {
+                if *ext != ty {
+                    continue;
+                }
+
+                let Some(t) = sg.node(e, name).filter(|t| is_single_texture(sg, *t)) else { continue };
+                let texture = match self.texture(sg, t) {
+                    Some(t) => t,
+                    None => {
+                        if !can_load(sg, t) {
+                            self.unsupported.insert(sg.type_name(t).unwrap_or("?").to_string());
+                        }
+                        self.white_texture()
+                    }
+                };
+                let mapping = sg.string(e, &format!("{name}Mapping"), "");
+                let kind = 5 + i as u32;
+                out.retain(|o| o.kind != kind);
+                out.push(MaterialTexture { kind, texture, transform: mapping_channel(transforms, &mapping).min(3), coord: mapping_channel(coords, &mapping).min(3) });
+            }
+        }
+
+        out
     }
 
     /// X3DBackgroundNode.textureBits: the faces whose texture loaded. Background loads its six
@@ -796,7 +2932,11 @@ impl<'a> Builder<'a> {
                 match hit {
                     Some(t) => t,
                     None => {
-                        let urls = sg.strings(b, &format!("{name}Url"));
+                        // The url the face's private ImageTexture last requested (a change while
+                        // LoadUrlObjects is FALSE does not load).
+                        let field = format!("{name}Url");
+                        let private = sg.rt.background_textures.get(&b).and_then(|v| v.iter().find(|(f, _)| *f == field).map(|(_, t)| *t));
+                        let urls = private.and_then(|t| sg.rt.texture_url(t)).unwrap_or_else(|| sg.strings(b, &field));
                         let t = texture::load_background_texture(&urls, sg.rt.scene.world_url_of(sg.rt.scene.node(b).ctx), self.root.fetcher.as_ref()).map(Rc::new);
 
                         if let Some(c) = self.cache.as_deref_mut() {
@@ -817,10 +2957,299 @@ impl<'a> Builder<'a> {
         faces
     }
 
+    /// GeneratedCubeMapTexture.renderTexture, face `i`: the layer drawn by a DependentRenderer from
+    /// the texture's model matrix (rotations to the negated face normals, scales), 90° square
+    /// perspective with the viewpoint's near and far distance, the headlight placed by the main
+    /// camera, the shapes that use the texture hidden.
+    #[allow(clippy::too_many_arguments)]
+    fn cube_face(&mut self, sg: &Sg, roots: &[NodeId], node: NodeId, model: &Matrix4, i: usize, near: f64, far: f64, headlight: Option<&Matrix4>, bound: &Bound, background_far: f64, background_faces: &[BackgroundFace]) -> Frame {
+        let z = Vector3::Z_AXIS;
+        let to = [Vector3::new(0.0, 0.0, -1.0), z, Vector3::X_AXIS, Vector3::new(-1.0, 0.0, 0.0), Vector3::new(0.0, -1.0, 0.0), Vector3::Y_AXIS];
+        let scales = [Vector3::new(-1.0, -1.0, 1.0), Vector3::new(-1.0, -1.0, 1.0), Vector3::new(-1.0, -1.0, 1.0), Vector3::new(-1.0, -1.0, 1.0), Vector3::ONE, Vector3::ONE];
+
+        let mut rotation = Rotation4::identity();
+        rotation.set_vectors(&z, &to[i]);
+        let mut camera_space = *model;
+        camera_space.rotate(&rotation);
+        camera_space.scale(&scales[i]);
+        let mut view = camera_space;
+        view.inverse();
+
+        // A DependentRenderer pass of its own.
+        let saved = (std::mem::take(&mut self.items), std::mem::take(&mut self.lights), std::mem::take(&mut self.clip_planes), self.camera_space, self.dependent, self.hidden_texture, self.environment.take());
+        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights));
+        let saved_projectors = (std::mem::take(&mut self.projectors), std::mem::take(&mut self.global_projectors), std::mem::take(&mut self.local_projectors));
+        let size = sg.i32(node, "size", 128).max(1) as f64;
+        let saved_viewports = std::mem::replace(&mut self.viewports, vec![[0.0, 0.0, size, size]]);
+        self.camera_space = camera_space;
+        self.dependent = true;
+        self.hidden_texture = Some(node);
+
+        // headlightContainer .modelViewMatrix = invCameraSpace, multLeft (viewpoint cameraSpace).
+        if let Some(vp_camera_space) = headlight {
+            self.global_lights.push(self.lights.len() as u32);
+            let mut m = view;
+            m.mult_left(vp_camera_space);
+            let mut d = Vector3::new(0.0, 0.0, -1.0);
+            m.mult_dir_matrix(&mut d);
+            d.normalize();
+            self.lights.push(LightParams {
+                kind: 1,
+                color: [1.0, 1.0, 1.0],
+                intensity: 1.0,
+                ambient_intensity: 0.0,
+                direction: d,
+                location: Vector3::ZERO,
+                attenuation: [0.0; 3],
+                radius: -1.0,
+                cut_off_angle: 0.0,
+                beam_width: 0.0,
+                matrix: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+                shadow: None,
+            });
+        }
+
+        // The layer's Group: lights first, its clip planes around the roots.
+        self.group_children(sg, roots.to_vec(), &view, 0);
+
+        let mut items = std::mem::take(&mut self.items);
+        let lights = std::mem::take(&mut self.lights);
+        shape_lights(&mut items, &std::mem::take(&mut self.global_lights));
+        shape_projectors(&mut items, &std::mem::take(&mut self.global_projectors));
+        let projectors = std::mem::take(&mut self.projectors);
+        let environment = self.environment.take();
+        (self.items, self.lights, self.clip_planes, self.camera_space, self.dependent, self.hidden_texture, self.environment) = saved;
+        (self.global_lights, self.local_lights) = saved_lights;
+        (self.projectors, self.global_projectors, self.local_projectors) = saved_projectors;
+        self.viewports = saved_viewports;
+
+        Frame {
+            projection: perspective(std::f64::consts::FRAC_PI_2, near, far, 1.0, 1.0),
+            view,
+            items,
+            lights,
+            background: bound.background.and_then(|(b, m)| background_params(sg, b, &m, &view, background_far, background_faces.to_vec())),
+            fog: bound.fog.and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view)),
+            unsupported: BTreeSet::new(),
+            viewpoint: None,
+            cube_passes: vec![],
+            rendered_passes: vec![],
+            environment,
+            tone_mapping: 0,
+            color_space: color_space(&self.root.browser_options),
+            exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+            viewport: None,
+            layers: vec![],
+            // The main pass's maps (the texture pass draws none of its own).
+            shadow_maps: self.shadow_maps.clone(),
+            projectors,
+        }
+    }
+
+    /// RenderedTexture.renderTexture: a DependentRenderer pass of width × height from the
+    /// texture's Viewpoint child (identity model matrix) or the layer's viewpoint, with the layer's
+    /// NavigationInfo near and far; the Group of its other children, or the whole layer when
+    /// there are none; its Background and Fog children, or the layer's. The headlight
+    /// (NavigationInfo child or the layer's, not for a depth map) uses the container matrix
+    /// `view (layer) × cameraSpace (texture viewpoint)`: pushed as a light of its own for the
+    /// children, the layer's NavigationInfo pushes it (if on) for the layer.
+    fn rendered_pass(&mut self, sg: &Sg, node: NodeId, roots: &[NodeId], bound: &Bound, layer: &PassCamera, background_far: f64) -> RenderedPass {
+        let (width, height) = (sg.i32(node, "width", 128).max(1) as u32, sg.i32(node, "height", 128).max(1) as u32);
+        let depth_map = sg.bool(node, "depthMap", false);
+        let children = rendered_children(sg, node);
+
+        // viewpointNode .getProjectionMatrix (dependentRenderer, viewport).
+        let (camera_space, fov, near, far, ortho) = match children.viewpoint {
+            Some(v) => {
+                let ty = sg.type_name(v).unwrap_or("Viewpoint");
+                let is_ortho = ty == "OrthoViewpoint";
+                let mut camera_space = Matrix4::IDENTITY;
+                camera_space.set_transform(Some(&sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0))), Some(&sg.rotation(v, "orientation")), Some(&Vector3::ONE), Some(&Rotation4::identity()), None);
+                let far_max_val = if is_ortho { 1e4 } else { far_max() };
+                let (near, far) = match bound.navigation_info {
+                    Some(ni) => {
+                        let radius = sg.f64s(ni, "avatarSize").first().copied().unwrap_or(0.25).max(0.0);
+                        let limit = sg.f64(ni, "visibilityLimit", 0.0).max(0.0);
+                        (if radius == 0.0 { 0.125 } else { radius / 2.0 }, if limit != 0.0 { limit } else { far_max_val })
+                    }
+                    None => (0.125, far_max_val),
+                };
+                let ortho = is_ortho.then(|| {
+                    let f = sg.f64s(v, "fieldOfView");
+                    if f.len() == 4 { [f[0], f[1], f[2], f[3]] } else { [-1.0, -1.0, 1.0, 1.0] }
+                });
+                let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
+                let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
+                (camera_space, fov, near, far, ortho)
+            }
+            None => (layer.camera_space, layer.fov, layer.near, layer.far, layer.ortho),
+        };
+        let projection = match ortho {
+            Some(f) => ortho_projection(f, near, far, width as f64, height as f64),
+            None => perspective(fov, near, far, width as f64, height as f64),
+        };
+        let mut view = camera_space;
+        view.inverse();
+
+        // A DependentRenderer pass of its own.
+        let saved = (std::mem::take(&mut self.items), std::mem::take(&mut self.lights), std::mem::take(&mut self.clip_planes), self.camera_space, self.dependent, self.hidden_texture, self.environment.take());
+        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights));
+        let saved_projectors = (std::mem::take(&mut self.projectors), std::mem::take(&mut self.global_projectors), std::mem::take(&mut self.local_projectors));
+        let saved_viewports = std::mem::replace(&mut self.viewports, vec![[0.0, 0.0, width as f64, height as f64]]);
+        self.camera_space = camera_space;
+        self.dependent = true;
+        self.hidden_texture = None;
+
+        let navigation_info = children.navigation_info.or(bound.navigation_info);
+        let headlight = !depth_map && navigation_info.is_none_or(|ni| sg.bool(ni, "headlight", true));
+        let mut container = layer.view;
+        container.mult_left(&camera_space);
+        let headlight_matrix = if children.group.is_empty() {
+            (layer.headlight && !depth_map).then(|| if headlight { container } else { Matrix4::IDENTITY })
+        } else {
+            headlight.then_some(container)
+        };
+
+        // Headlights left by earlier depth map passes of the layer (the same container, drawn with
+        // the matrix it has now).
+        let leaked = if depth_map || !layer.headlight { 0 } else { sg.rt.rendered_texture_leaked_headlights(node) };
+        let headlights = headlight_matrix.map_or(0, |_| 1) + leaked;
+        let headlight_matrix = headlight_matrix.or_else(|| (leaked > 0).then(|| if headlight { container } else { Matrix4::IDENTITY }));
+
+        for m in headlight_matrix.iter().cycle().take(headlights as usize) {
+            self.global_lights.push(self.lights.len() as u32);
+            let mut d = Vector3::new(0.0, 0.0, -1.0);
+            m.mult_dir_matrix(&mut d);
+            d.normalize();
+            self.lights.push(LightParams {
+                kind: 1,
+                color: [1.0, 1.0, 1.0],
+                intensity: 1.0,
+                ambient_intensity: 0.0,
+                direction: d,
+                location: Vector3::ZERO,
+                attenuation: [0.0; 3],
+                radius: -1.0,
+                cut_off_angle: 0.0,
+                beam_width: 0.0,
+                matrix: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+                shadow: None,
+            });
+        }
+
+        let pass_roots = if children.group.is_empty() { roots.to_vec() } else { children.group.clone() };
+        self.group_children(sg, pass_roots, &view, 0);
+
+        let mut items = std::mem::take(&mut self.items);
+        let lights = std::mem::take(&mut self.lights);
+        shape_lights(&mut items, &std::mem::take(&mut self.global_lights));
+        shape_projectors(&mut items, &std::mem::take(&mut self.global_projectors));
+        let projectors = std::mem::take(&mut self.projectors);
+        let environment = self.environment.take();
+        (self.items, self.lights, self.clip_planes, self.camera_space, self.dependent, self.hidden_texture, self.environment) = saved;
+        (self.global_lights, self.local_lights) = saved_lights;
+        (self.projectors, self.global_projectors, self.local_projectors) = saved_projectors;
+        self.viewports = saved_viewports;
+
+        // The texture's Background child (not bound: identity model matrix) or the layer's; a
+        // depth map draws none.
+        let background = if depth_map {
+            None
+        } else {
+            match children.background {
+                Some(b) => {
+                    let faces = self.background_faces(sg, b);
+                    background_params(sg, b, &Matrix4::IDENTITY, &view, background_far, faces)
+                }
+                None => bound.background.and_then(|(b, m)| {
+                    let faces = self.background_faces(sg, b);
+                    background_params(sg, b, &m, &view, background_far, faces)
+                }),
+            }
+        };
+        let fog = match children.fog {
+            Some(f) => fog_params(sg, f, None, &view),
+            None => bound.fog.and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view)),
+        };
+
+        let frame = Frame {
+            projection,
+            view,
+            items,
+            lights,
+            background,
+            fog,
+            unsupported: BTreeSet::new(),
+            viewpoint: None,
+            cube_passes: vec![],
+            rendered_passes: vec![],
+            environment,
+            tone_mapping: 0,
+            color_space: color_space(&self.root.browser_options),
+            exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+            viewport: None,
+            layers: vec![],
+            shadow_maps: self.shadow_maps.clone(),
+            projectors,
+        };
+
+        RenderedPass { key: (sg.rt.uid, node), width, height, depth_map, frame }
+    }
+
     pub fn build(mut self, width: u32, height: u32) -> Frame {
         let root_sg = Sg::new(self.root);
         let sg = &root_sg;
-        let roots = sg.roots();
+        let browser = [0.0, 0.0, width as f64, height as f64];
+        self.layout_camera.content_scale = self.root.browser_options.rendering.get("ContentScale").map_or(1.0, |v| v.as_f64());
+
+        // X3DWorld.traverse: the LayerSet's layers in order, or layer 0 alone.
+        let mut frame = if layer::layer_set(sg).is_none() {
+            self.build_layer(sg, None, browser, false)
+        } else {
+            let mut layers: Vec<Frame> = layer::drawn_layers(sg).into_iter().map(|key| self.build_layer(sg, key, browser, true)).collect();
+            let cube_passes = layers.iter_mut().flat_map(|l| std::mem::take(&mut l.cube_passes)).collect();
+            let rendered_passes = layers.iter_mut().flat_map(|l| std::mem::take(&mut l.rendered_passes)).collect();
+
+            Frame {
+                projection: Matrix4::IDENTITY,
+                view: Matrix4::IDENTITY,
+                items: vec![],
+                lights: vec![],
+                background: None,
+                fog: None,
+                unsupported: BTreeSet::new(),
+                viewpoint: None,
+                cube_passes,
+                rendered_passes,
+                environment: None,
+                tone_mapping: tone_mapping(&self.root.browser_options),
+                color_space: color_space(&self.root.browser_options),
+                exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+                viewport: None,
+                layers,
+                shadow_maps: vec![],
+                projectors: vec![],
+            }
+        };
+
+        frame.unsupported = std::mem::take(&mut self.unsupported);
+
+        if let Some(c) = self.cache.as_deref_mut() {
+            c.end_frame();
+        }
+
+        frame
+    }
+
+    /// X3DLayerNode.traverse of one layer: its CAMERA pass (bindables), its viewport, then its
+    /// DISPLAY pass into a frame. `layered`: the world has a LayerSet (the frame gets its
+    /// viewport, and layer 0 its default Background).
+    fn build_layer(&mut self, sg: &Sg, key: LayerKey, browser: [f64; 4], layered: bool) -> Frame {
+        let roots = layer::layer_children(sg, key);
+        let layout_layer = layer::is_layout_layer(sg, key);
+        let viewport = layer::layer_viewport(sg, key, browser);
+        let (width, height) = (viewport[2], viewport[3]);
+        let camera = if key.is_none() { self.camera.clone() } else { self.layer_cameras.iter().find(|(k, _)| *k == key).map(|(_, c)| c.clone()) };
 
         // CAMERA pass.
         let mut bound = Bound { viewpoint: None, navigation_info: None, background: None, fog: None, fog_matrices: HashMap::new() };
@@ -828,7 +3257,7 @@ impl<'a> Builder<'a> {
             self.camera(sg, *r, &Matrix4::IDENTITY, &mut bound, 0);
         }
 
-        if let Some(o) = &self.camera {
+        if let Some(o) = &camera {
             bound.viewpoint = o.viewpoint.map(|v| (v, Matrix4::IDENTITY));
             bound.navigation_info = o.navigation_info;
             bound.background = o.background;
@@ -841,7 +3270,9 @@ impl<'a> Builder<'a> {
             None => "EXAMINE".to_string(),
         };
 
-        // Viewpoint (default: position 0 0 10, fieldOfView π/4).
+        // Viewpoint (default: position 0 0 10, fieldOfView π/4; a LayoutLayer's default viewpoint
+        // is an OrthoViewpoint).
+        let mut up_vector = Vector3::Y_AXIS;
         let (position, orientation, fov, vp_model, is_ortho, ortho_fov) = match bound.viewpoint {
             Some((v, m)) => {
                 let ty = sg.type_name(v).unwrap_or("Viewpoint");
@@ -856,15 +3287,31 @@ impl<'a> Builder<'a> {
                 } else {
                     let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
                     let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
-                    (sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0)), sg.rotation(v, "orientation"), fov, m, false, [-1.0, -1.0, 1.0, 1.0])
+                    let mut position = sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0));
+                    let mut orientation = sg.rotation(v, "orientation");
+
+                    if ty == "GeoViewpoint" {
+                        // GeoViewpoint.getPosition / getOrientation.
+                        let geo = sg.geo_object(v);
+                        let mut r = Rotation4::identity();
+                        r.set_matrix(&geo.get_location_matrix(&position).submatrix());
+                        r.mult_left(&orientation);
+                        orientation = r;
+                        position = geo.get_coord(&position);
+
+                        // GeoViewpoint.getUpVector (true), no position offset yet.
+                        up_vector = if position.norm() < 6.5e6 { geo.get_geo_up_vector(&position) } else { Vector3::Z_AXIS };
+                    }
+
+                    (position, orientation, fov, m, false, [-1.0, -1.0, 1.0, 1.0])
                 }
             }
-            None => (Vector3::new(0.0, 0.0, 10.0), Rotation4::identity(), std::f64::consts::FRAC_PI_4, Matrix4::IDENTITY, false, [-1.0, -1.0, 1.0, 1.0]),
+            None => (Vector3::new(0.0, 0.0, 10.0), Rotation4::identity(), std::f64::consts::FRAC_PI_4, Matrix4::IDENTITY, layout_layer, [-1.0, -1.0, 1.0, 1.0]),
         };
 
         // ExamineViewer.set_activeViewpoint__: with StraightenHorizon (default TRUE) the EXAMINE
         // viewer sets an orientation offset that straightens the bound viewpoint's horizon.
-        let orientation = if viewer == "EXAMINE" { straighten(&orientation, &Vector3::Y_AXIS) } else { orientation };
+        let orientation = if viewer == "EXAMINE" { straighten(&orientation, &up_vector) } else { orientation };
 
         // X3DViewpointNode.update: cameraSpaceMatrix = T(position) R(orientation) × modelMatrix.
         let mut camera_space = Matrix4::IDENTITY;
@@ -874,7 +3321,9 @@ impl<'a> Builder<'a> {
         view.inverse();
 
         // NavigationInfo: near = avatarSize [0] / 2 (0.125 if 0), far = visibilityLimit or 1e5 (1e4 for OrthoViewpoint).
-        let far_max_val = if is_ortho { 1e4 } else { far_max() };
+        // GeoViewpoint.getMaxFarValue: 1e9.
+        let is_geo = bound.viewpoint.is_some_and(|(v, _)| sg.type_name(v) == Some("GeoViewpoint"));
+        let far_max_val = if is_ortho { 1e4 } else if is_geo { 1e9 } else { far_max() };
         let (headlight, near, far) = match bound.navigation_info {
             Some(ni) => {
                 let avatar = sg.f64s(ni, "avatarSize");
@@ -887,22 +3336,37 @@ impl<'a> Builder<'a> {
         };
 
         let projection = if is_ortho {
-            ortho_projection(ortho_fov, near, far, width as f64, height as f64)
+            ortho_projection(ortho_fov, near, far, width, height)
         } else {
-            perspective(fov, near, far, width as f64, height as f64)
+            perspective(fov, near, far, width, height)
         };
 
-        let (view, projection, headlight, _far) = match &self.camera {
+        self.layout_camera.ortho = is_ortho.then(|| (ortho_fov[2] - ortho_fov[0], ortho_fov[3] - ortho_fov[1]));
+        self.layout_camera.fov = fov;
+        self.layout_camera.near = near;
+
+        let (view, projection, headlight, near, far) = match &camera {
             Some(o) => {
                 let mut view = o.camera_space;
                 view.inverse();
-                (view, o.projection.unwrap_or_else(|| perspective(o.fov, o.near, o.far, width as f64, height as f64)), o.headlight, o.far)
+                self.layout_camera.ortho = o.ortho_size;
+                self.layout_camera.fov = o.fov;
+                self.layout_camera.near = o.near;
+                (view, o.projection.unwrap_or_else(|| perspective(o.fov, o.near, o.far, width, height)), o.headlight, o.near, o.far)
             }
-            None => (view, projection, headlight, far),
+            None => (view, projection, headlight, near, far),
         };
+
+        let mut camera_space = view;
+        camera_space.inverse();
+        self.camera_space = camera_space;
+        self.background_transparent = bound.background.is_some_and(|(b, _)| background_transparent(sg, b));
+        self.viewports = vec![viewport];
+        self.layouts = LayoutStack::default();
 
         // DISPLAY pass. NavigationInfo.enable pushes the headlight first.
         if headlight {
+            self.global_lights.push(self.lights.len() as u32);
             self.lights.push(LightParams {
                 kind: 1,
                 color: [1.0, 1.0, 1.0],
@@ -915,32 +3379,87 @@ impl<'a> Builder<'a> {
                 cut_off_angle: 0.0,
                 beam_width: 0.0,
                 matrix: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0],
+                shadow: None,
             });
         }
 
-        for r in &roots {
-            self.display(sg, *r, &view, 0);
+        // X3DLayerNode: the root nodes are the children of the layer's Group (a LayoutLayer's
+        // is a LayoutGroup with the layer's layout).
+        self.layer_roots = roots.clone();
+        self.shadow_maps.clear();
+        self.shadow_sources.clear();
+        self.projector_sources.clear();
+        self.groups = vec![ShadowGroup::Roots(roots.clone())];
+
+        if layout_layer {
+            self.layout_group(sg, key.unwrap(), sg.node(key.unwrap(), "layout"), None, roots.clone(), &view, 0);
+        } else {
+            self.group_children(sg, roots.clone(), &view, 0);
         }
+
+        self.clip_planes.clear();
 
         // X3DRenderObject.setGlobalFog: modelViewMatrix = fog modelMatrix × viewMatrix, inverted 3×3.
         let fog = bound.fog.and_then(|f| fog_params(sg, f, bound.fog_matrices.get(&f), &view));
 
         let faces = bound.background.map(|(b, _)| self.background_faces(sg, b)).unwrap_or_default();
-        let background = bound.background.and_then(|(b, m)| background_params(sg, b, &m, &view, far_max(), faces));
+        let background_far = camera.as_ref().map_or(if is_geo { 1e9 } else { far_max() }, |c| c.max_far);
+        let background = match bound.background {
+            Some((b, m)) => background_params(sg, b, &m, &view, background_far, faces.clone()),
+            // X3DLayerNode.setLayer0: only layer 0 shows its default Background (black; with a
+            // single layer the cleared target already is).
+            None if layered && key.is_none() => background_build(&[[0.0, 0.0, 0.0]], &[], &[], &[], 0.0, vec![], &Matrix4::IDENTITY, &view, background_far),
+            None => None,
+        };
 
-        if let Some(c) = self.cache.as_deref_mut() {
-            c.end_frame();
+        // X3DRenderObject.draw: GeneratedCubeMapTexture.renderTexture for each texture collected.
+        let mut cube_passes = vec![];
+
+        for (node, model) in std::mem::take(&mut self.generated) {
+            let size = sg.i32(node, "size", 128).max(1) as u32;
+            let mut frames = vec![];
+
+            for i in 0..6 {
+                frames.push(self.cube_face(sg, &roots, node, &model, i, near, far, headlight.then_some(&camera_space), &bound, background_far, &faces));
+            }
+
+            cube_passes.push(CubePass { key: (sg.rt.uid, node), size, faces: frames, next_frame_only: sg.string(node, "update", "NONE") == "NEXT_FRAME_ONLY" });
         }
+
+        // RenderedTexture.renderTexture for each texture collected.
+        let pass_camera = PassCamera { camera_space, view, fov: self.layout_camera.fov, near, far, ortho: is_ortho.then_some(ortho_fov), headlight };
+        let mut rendered_passes = vec![];
+
+        for node in std::mem::take(&mut self.rendered) {
+            self.rendered_done.push(node);
+            rendered_passes.push(self.rendered_pass(sg, node, &roots, &bound, &pass_camera, background_far));
+        }
+
+        let mut items = std::mem::take(&mut self.items);
+        shape_lights(&mut items, &std::mem::take(&mut self.global_lights));
+        self.local_lights.clear();
+        shape_projectors(&mut items, &std::mem::take(&mut self.global_projectors));
+        self.local_projectors.clear();
 
         Frame {
             projection,
             view,
-            items: self.items,
-            lights: self.lights,
+            items,
+            lights: std::mem::take(&mut self.lights),
             background,
             fog,
-            unsupported: self.unsupported,
+            unsupported: BTreeSet::new(),
             viewpoint: bound.viewpoint.map(|v| v.0),
+            cube_passes,
+            rendered_passes,
+            environment: self.environment.take(),
+            tone_mapping: tone_mapping(&self.root.browser_options),
+            color_space: color_space(&self.root.browser_options),
+            exposure: self.root.browser_options.get_option("Exposure").map_or(1.0, |v| v.as_f64()).max(0.0),
+            viewport: layered.then_some(viewport),
+            layers: vec![],
+            shadow_maps: std::mem::take(&mut self.shadow_maps),
+            projectors: std::mem::take(&mut self.projectors),
         }
     }
 }
@@ -951,6 +3470,40 @@ pub fn geometry_of(rt: &x3d_runtime::Runtime, n: NodeId) -> Option<Geometry> {
     let sg = Sg::new(rt);
     let n = sg.inner(n)?;
     Builder::new(rt).build_geometry(&sg, n)
+}
+
+/// The geometry arrays the ParticleSystems emitters and bounded physics models sample
+/// (`getVertices ()` and `getNormals ()`): a geometry node as X_ITE builds it, or the private
+/// IndexedFaceSet of a VolumeEmitter (`creaseAngle` PI, `convex` FALSE).
+pub fn particle_geometry(rt: &x3d_runtime::Runtime, request: &x3d_runtime::nodes::particle_systems::GeometryRequest) -> Option<x3d_runtime::nodes::particle_systems::GeometrySoup> {
+    use x3d_runtime::nodes::particle_systems::{GeometryRequest, GeometrySoup};
+
+    match request {
+        GeometryRequest::Node(n) => {
+            let g = geometry_of(rt, *n)?;
+
+            Some(GeometrySoup { vertices: g.vertices, normals: g.normals, solid: g.solid })
+        }
+        GeometryRequest::Volume { coord, coord_index } => {
+            let sg = Sg::new(rt);
+            let points = coord.and_then(|c| sg.coord_points(c));
+            let mut input = IfsInput::new(&[], coord_index);
+
+            input.coord = points.as_deref();
+            input.crease_angle = std::f64::consts::PI;
+            input.convex = false;
+
+            let g = geometry::indexed_face_set(&input);
+
+            Some(GeometrySoup { vertices: g.vertices, normals: g.normals, solid: g.solid })
+        }
+    }
+}
+
+/// Hand the runtime the geometry builder of [`particle_geometry`]. Call once before a world with
+/// SurfaceEmitters, VolumeEmitters or BoundedPhysicsModels loads; calling again is harmless.
+pub fn install_particle_geometry() {
+    x3d_runtime::nodes::particle_systems::set_geometry_provider(particle_geometry);
 }
 
 /// NavigationInfo.set_type__: first recognized type, EXAMINE by default.
@@ -998,6 +3551,62 @@ pub fn straighten(r: &Rotation4, up: &Vector3) -> Rotation4 {
 
 static LOGARITHMIC_DEPTH_BUFFER: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
+thread_local! {
+    /// BrowserOptions PrimitiveQuality, TextureQuality and TextCompression (browser-wide in
+    /// X_ITE): the values of the browser running on this thread (a viewer builds its frames on
+    /// its own thread). The epoch counts changes so cached geometries and textures are rebuilt
+    /// (X_ITE: the option interests rebuild the primitives, Text.requestRebuild).
+    static BROWSER_QUALITIES: std::cell::Cell<(Quality, Quality, bool, u64)> = const { std::cell::Cell::new((Quality::Medium, Quality::Medium, false, 0)) };
+}
+
+/// Quality levels (Browser/Core/PrimitiveQuality.js, TextureQuality.js).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Quality {
+    Low,
+    Medium,
+    High,
+}
+
+impl Quality {
+    /// `PrimitiveQuality .get (value) ?? MEDIUM` (the option string, case sensitive).
+    pub fn from_option(value: &str) -> Quality {
+        match value {
+            "LOW" => Quality::Low,
+            "HIGH" => Quality::High,
+            _ => Quality::Medium,
+        }
+    }
+
+}
+
+/// set_PrimitiveQuality__, set_TextureQuality__ and the TextCompression option
+/// (getTextCompression: SCALING, else CHAR_SPACING). Returns true when something changed.
+pub fn set_browser_qualities(primitive: Quality, texture: Quality, text_scaling: bool) -> bool {
+    BROWSER_QUALITIES.with(|q| {
+        let (p, t, c, epoch) = q.get();
+        let changed = (p, t, c) != (primitive, texture, text_scaling);
+
+        q.set((primitive, texture, text_scaling, epoch + changed as u64));
+        changed
+    })
+}
+
+pub fn primitive_quality() -> Quality {
+    BROWSER_QUALITIES.with(|q| q.get().0)
+}
+
+pub fn texture_quality() -> Quality {
+    BROWSER_QUALITIES.with(|q| q.get().1)
+}
+
+pub fn text_compression_scaling() -> bool {
+    BROWSER_QUALITIES.with(|q| q.get().2)
+}
+
+fn quality_epoch() -> u64 {
+    BROWSER_QUALITIES.with(|q| q.get().3)
+}
+
 /// X3D `LogarithmicDepthBuffer` rendering property (a browser-wide property in X_ITE, so a
 /// process-wide switch here). Set through `gpu::Renderer::set_depth_mode`.
 pub fn set_logarithmic_depth_buffer(on: bool) {
@@ -1006,6 +3615,33 @@ pub fn set_logarithmic_depth_buffer(on: bool) {
 
 pub fn logarithmic_depth_buffer() -> bool {
     LOGARITHMIC_DEPTH_BUFFER.load(std::sync::atomic::Ordering::Relaxed)
+}
+
+/// The browser-wide options above as one value: X_ITE keeps them per browser, this port keeps them per
+/// thread (qualities) and per process (logarithmic depth), so a host with several viewers on a thread saves
+/// them after it ran one viewer and restores them before it runs the next (`x3d_viewer::embed`).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct BrowserGlobals {
+    qualities: (Quality, Quality, bool, u64),
+    log_depth: bool,
+}
+
+impl Default for BrowserGlobals {
+    /// A browser that has not seen any option: Medium qualities, no logarithmic depth buffer.
+    fn default() -> Self {
+        BrowserGlobals { qualities: (Quality::Medium, Quality::Medium, false, 0), log_depth: false }
+    }
+}
+
+/// The current values of this thread.
+pub fn browser_globals() -> BrowserGlobals {
+    BrowserGlobals { qualities: BROWSER_QUALITIES.with(|q| q.get()), log_depth: logarithmic_depth_buffer() }
+}
+
+/// Make `g` the values of this thread.
+pub fn set_browser_globals(g: BrowserGlobals) {
+    BROWSER_QUALITIES.with(|q| q.set(g.qualities));
+    set_logarithmic_depth_buffer(g.log_depth);
 }
 
 /// X3DViewpointNode.getMaxFarValue: 1e10 with the LogarithmicDepthBuffer rendering property, else 1e5.
@@ -1107,6 +3743,250 @@ pub fn texture_transform_matrix(sg: &Sg, n: NodeId) -> [f32; 16] {
     m4.map(|v| v as f32)
 }
 
+const IDENTITY_F32: [f32; 16] = [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0];
+
+/// X3DTexturingContext maxTextures (and maxTextureTransforms, maxTexCoords).
+pub const MAX_TEXTURES: usize = 4;
+
+/// The texture node types this renderer loads (`Builder::texture`).
+fn can_load(sg: &Sg, n: NodeId) -> bool {
+    matches!(sg.type_name(n), Some("ImageTexture" | "PixelTexture" | "ComposedCubeMapTexture" | "ImageCubeMapTexture" | "GeneratedCubeMapTexture"))
+}
+
+/// The GeneratedCubeMapTexture nodes an appearance texture uses (Appearance.set_renderedTextures__:
+/// the texture node's getRenderedTextures, a MultiTexture's of its textures).
+/// Appearance.renderedTextures restricted to RenderedTexture nodes (getRenderedTextures of the
+/// texture: itself, a MultiTexture's units, a ComposedTexture3D's slices; of the material and
+/// back material: their texture fields), in that order.
+pub fn rendered_textures(sg: &Sg, appearance: Option<NodeId>) -> Vec<NodeId> {
+    let Some(a) = appearance else { return vec![] };
+    let mut out: Vec<NodeId> = vec![];
+    let mut add = |t: NodeId| {
+        if sg.type_name(t) == Some("RenderedTexture") && !out.contains(&t) {
+            out.push(t);
+        }
+    };
+
+    if let Some(t) = sg.node(a, "texture") {
+        match sg.type_name(t) {
+            Some("MultiTexture") => sg.nodes(t, "texture").into_iter().for_each(&mut add),
+            Some("ComposedTexture3D") => sg.nodes(t, "texture").into_iter().filter_map(|c| sg.inner(c)).for_each(&mut add),
+            _ => add(t),
+        }
+    }
+
+    for field in ["material", "backMaterial"] {
+        let Some(m) = sg.node(a, field) else { continue };
+        for f in &sg.rt.scene.node(m).fields {
+            if let FieldValue::SFNode(Some(t)) = &f.value {
+                if let Some(t) = sg.inner(*t) {
+                    add(t);
+                }
+            }
+        }
+    }
+
+    out
+}
+
+fn generated_textures(sg: &Sg, texture: Option<NodeId>) -> Vec<NodeId> {
+    let Some(t) = texture else { return vec![] };
+
+    match sg.type_name(t) {
+        Some("GeneratedCubeMapTexture") => vec![t],
+        Some("MultiTexture") => sg.nodes(t, "texture").into_iter().filter(|u| sg.type_name(*u) == Some("GeneratedCubeMapTexture")).collect(),
+        _ => vec![],
+    }
+}
+
+/// BrowserOptions ToneMapping as the shader number (X3DMaterialNode.addRenderOptions).
+fn tone_mapping(o: &x3d_runtime::browser_options::BrowserOptions) -> u32 {
+    match o.get_option("ToneMapping").map(|v| v.as_str().to_string()).as_deref() {
+        Some("ACES_NARKOWICZ") => 1,
+        Some("ACES_HILL") => 2,
+        Some("ACES_HILL_EXPOSURE_BOOST") => 3,
+        Some("KHR_PBR_NEUTRAL") => 4,
+        _ => 0,
+    }
+}
+
+/// BrowserOptions ColorSpace (X3DMaterialNode.getShaderOptions; anything else is
+/// LINEAR_WHEN_PHYSICAL_MATERIAL).
+fn color_space(o: &x3d_runtime::browser_options::BrowserOptions) -> u32 {
+    match o.get_option("ColorSpace").map(|v| v.as_str().to_string()).as_deref() {
+        Some("SRGB") => 0,
+        Some("LINEAR") => 1,
+        _ => 2,
+    }
+}
+
+/// Appearance.textureTransformMapping / X3DGeometryNode.textureCoordinateMapping lookup
+/// (`.get (mapping) ?? 0`): a node with an empty mapping is keyed by its channel number, which no
+/// mapping string matches; a later node with the same mapping wins.
+fn mapping_channel(names: &[String], mapping: &str) -> u32 {
+    if mapping.is_empty() {
+        return 0;
+    }
+
+    names.iter().rposition(|n| n == mapping).unwrap_or(0) as u32
+}
+
+/// The mapping names of the appearance's texture transforms, by channel.
+fn transform_mappings(sg: &Sg, t: Option<NodeId>) -> Vec<String> {
+    match t {
+        Some(t) if sg.type_name(t) == Some("MultiTextureTransform") => sg.nodes(t, "textureTransform").into_iter().map(|u| sg.string(u, "mapping", "")).collect(),
+        Some(t) => vec![sg.string(t, "mapping", "")],
+        None => vec![],
+    }
+}
+
+/// The mapping names of the geometry's texture coordinates, by channel.
+fn coordinate_mappings(sg: &Sg, geometry: NodeId) -> Vec<String> {
+    match sg.node(geometry, "texCoord") {
+        Some(t) if sg.type_name(t) == Some("MultiTextureCoordinate") => sg.nodes(t, "texCoord").into_iter().map(|u| sg.string(u, "mapping", "")).collect(),
+        Some(t) => vec![sg.string(t, "mapping", "")],
+        None => vec![],
+    }
+}
+
+/// X3DBackgroundNode.isTransparent: transparency > 0, unless all six faces are loaded and opaque.
+fn background_transparent(sg: &Sg, b: NodeId) -> bool {
+    sg.f64(b, "transparency", 0.0) > 0.0
+}
+
+/// X3DCast (X3DSingleTextureNode, node).
+fn is_single_texture(sg: &Sg, n: NodeId) -> bool {
+    matches!(
+        sg.type_name(n),
+        Some(
+            "ImageTexture"
+                | "PixelTexture"
+                | "MovieTexture"
+                | "ComposedCubeMapTexture"
+                | "ImageCubeMapTexture"
+                | "GeneratedCubeMapTexture"
+                | "ComposedTexture3D"
+                | "ImageTexture3D"
+                | "PixelTexture3D"
+                | "ImageTextureAtlas"
+                | "RenderedTexture"
+        )
+    )
+}
+
+/// The matrix of an X3DSingleTextureTransformNode (TextureTransform, TextureTransform3D,
+/// TextureTransformMatrix3D); `None` for other nodes.
+fn single_texture_transform_matrix(sg: &Sg, n: NodeId) -> Option<[f32; 16]> {
+    match sg.type_name(n)? {
+        "TextureTransform" => Some(texture_transform_matrix(sg, n)),
+        "TextureTransform3D" => Some(texture_transform_3d_matrix(sg, n)),
+        // TextureTransformMatrix3D.eventsProcessed: setMatrix (matrix).
+        "TextureTransformMatrix3D" => Some(match sg.value(n, "matrix") {
+            Some(FieldValue::SFMatrix4f(m)) => m.0.map(|v| v as f32),
+            _ => IDENTITY_F32,
+        }),
+        _ => None,
+    }
+}
+
+/// TextureTransform3D.eventsProcessed.
+pub fn texture_transform_3d_matrix(sg: &Sg, n: NodeId) -> [f32; 16] {
+    let translation = sg.vec3(n, "translation", Vector3::ZERO);
+    let rotation = sg.rotation(n, "rotation");
+    let scale = sg.vec3(n, "scale", Vector3::ONE);
+    let center = sg.vec3(n, "center", Vector3::ZERO);
+    let mut m = Matrix4::IDENTITY;
+
+    if !center.equals(&Vector3::ZERO) {
+        let mut c = center;
+        c.negate();
+        m.translate(&c);
+    }
+    if !scale.equals(&Vector3::ONE) {
+        m.scale(&scale);
+    }
+    if !rotation.equals(&Rotation4::identity()) {
+        m.rotate(&rotation);
+    }
+    if !center.equals(&Vector3::ZERO) {
+        m.translate(&center);
+    }
+    if !translation.equals(&Vector3::ZERO) {
+        m.translate(&translation);
+    }
+
+    m.0.map(|v| v as f32)
+}
+
+/// MultiTexture.set_color__, set_alpha__, set_mode__, set_source__, set_function__ for `count`
+/// units (ModeType, SourceType and FunctionType numbers; missing entries are MODULATE / DEFAULT).
+fn multi_texture_params(sg: &Sg, n: NodeId, count: usize) -> MultiTextureParams {
+    let mode_type = |name: &str| -> u32 {
+        match name {
+            "REPLACE" => 0,
+            "MODULATE" => 1,
+            "MODULATE_2X" | "MODULATE2X" => 2,
+            "MODULATE_4X" | "MODULATE4X" => 3,
+            "ADD" => 4,
+            "ADD_SIGNED" | "ADDSIGNED" => 5,
+            "ADD_SIGNED_2X" | "ADDSIGNED2X" => 6,
+            "ADD_SMOOTH" | "ADDSMOOTH" => 7,
+            "SUBTRACT" => 8,
+            "BLEND_DIFFUSE_ALPHA" | "BLENDDIFFUSEALPHA" => 9,
+            "BLEND_TEXTURE_ALPHA" | "BLENDTEXTUREALPHA" => 10,
+            "BLEND_FACTOR_ALPHA" | "BLENDFACTORALPHA" => 11,
+            "BLEND_CURRENT_ALPHA" | "BLENDCURRENTALPHA" => 12,
+            "MODULATE_ALPHA_ADD_COLOR" | "MODULATEALPHA_ADDCOLOR" => 13,
+            "MODULATE_INV_ALPHA_ADD_COLOR" | "MODULATEINVALPHA_ADDCOLOR" => 14,
+            "MODULATE_INV_COLOR_ADD_ALPHA" | "MODULATEINVCOLOR_ADDALPHA" => 15,
+            "DOT_PRODUCT_3" | "DOTPRODUCT3" => 16,
+            "SELECT_ARG1" | "SELECTARG1" => 17,
+            "SELECT_ARG2" | "SELECTARG2" => 18,
+            "OFF" => 19,
+            _ => 1,
+        }
+    };
+    // `mode` entries are "rgb" or "rgb,alpha".
+    let modes: Vec<(u32, u32)> = sg
+        .strings(n, "mode")
+        .iter()
+        .map(|m| {
+            let parts: Vec<&str> = m.split(',').collect();
+            let rgb = parts[0];
+            let alpha = parts.get(1).copied().unwrap_or(rgb);
+            (mode_type(rgb.trim()), mode_type(alpha.trim()))
+        })
+        .collect();
+    let sources: Vec<u32> = sg
+        .strings(n, "source")
+        .iter()
+        .map(|s| match s.as_str() {
+            "DIFFUSE" => 1,
+            "SPECULAR" => 2,
+            "FACTOR" => 3,
+            _ => 0,
+        })
+        .collect();
+    let functions: Vec<u32> = sg
+        .strings(n, "function")
+        .iter()
+        .map(|s| match s.as_str() {
+            "COMPLEMENT" => 1,
+            "ALPHA_REPLICATE" | "ALPHAREPLICATE" => 2,
+            _ => 0,
+        })
+        .collect();
+    let color = sg.color(n, "color", [1.0, 1.0, 1.0]);
+
+    MultiTextureParams {
+        color: [color[0], color[1], color[2], sg.f64(n, "alpha", 1.0)],
+        units: (0..count).map(|i| {
+            let (mode, alpha_mode) = modes.get(i).copied().unwrap_or((1, 1));
+            [mode, alpha_mode, sources.get(i).copied().unwrap_or(0), functions.get(i).copied().unwrap_or(0)]
+        }).collect(),
+    }
+}
+
 /// Algorithm.upperBound (array, first, last, value): first index with array [i] > value.
 fn upper_bound(array: &[f64], value: f64) -> usize {
     array.iter().position(|a| *a > value).unwrap_or(array.len())
@@ -1114,16 +3994,22 @@ fn upper_bound(array: &[f64], value: f64) -> usize {
 
 /// X3DBackgroundNode.build + display matrices.
 fn background_params(sg: &Sg, n: NodeId, model: &Matrix4, view: &Matrix4, far: f64, faces: Vec<BackgroundFace>) -> Option<BackgroundParams> {
-    // drawSphere returns early for transparency 1; drawCube still draws the loaded textures.
     let transparency = sg.f64(n, "transparency", 0.0).clamp(0.0, 1.0);
+    let sky_color = sg.f32s(n, "skyColor").chunks_exact(3).map(|c| [c[0], c[1], c[2]]).collect::<Vec<_>>();
+    let ground_color = sg.f32s(n, "groundColor").chunks_exact(3).map(|c| [c[0], c[1], c[2]]).collect::<Vec<_>>();
+
+    background_build(&sky_color, &ground_color, &sg.f64s(n, "skyAngle"), &sg.f64s(n, "groundAngle"), transparency, faces, model, view, far)
+}
+
+/// X3DBackgroundNode.build and display from the field values.
+#[allow(clippy::too_many_arguments)]
+fn background_build(sky_color: &[[f32; 3]], ground_color: &[[f32; 3]], sky_angle: &[f64], ground_angle: &[f64], transparency: f64, faces: Vec<BackgroundFace>, model: &Matrix4, view: &Matrix4, far: f64) -> Option<BackgroundParams> {
+    // drawSphere returns early for transparency 1; drawCube still draws the loaded textures.
     if transparency >= 1.0 && faces.is_empty() {
         return None;
     }
 
-    let sky_color = sg.f32s(n, "skyColor").chunks_exact(3).map(|c| [c[0], c[1], c[2]]).collect::<Vec<_>>();
-    let ground_color = sg.f32s(n, "groundColor").chunks_exact(3).map(|c| [c[0], c[1], c[2]]).collect::<Vec<_>>();
-    let sky_angle = sg.f64s(n, "skyAngle");
-    let ground_angle = sg.f64s(n, "groundAngle");
+    let (sky_angle, ground_angle) = (sky_angle.to_vec(), ground_angle.to_vec());
 
     let mut colors: Vec<f32> = vec![];
     let mut sphere: Vec<f32> = vec![];
@@ -1285,4 +4171,232 @@ fn rotation_of(m: &Matrix4) -> Rotation4 {
     }
     r.set_matrix(&m3);
     r
+}
+
+/// RenderingConfiguration.maxClipPlanes.
+pub const MAX_CLIP_PLANES: usize = 6;
+
+/// Plane3.multRight (matrix) of a plane given as (normal, distanceFromOrigin).
+pub fn plane_mult_right(plane: [f64; 4], matrix: &Matrix4) -> [f64; 4] {
+    // The point on the plane along the normal from the origin.
+    let mut point = Vector3::new(plane[0] * plane[3], plane[1] * plane[3], plane[2] * plane[3]);
+    // n' = ~m * n with the inverse of the upper 3x3.
+    let mut normal = Vector3::new(plane[0], plane[1], plane[2]);
+    let mut inv = matrix.submatrix();
+
+    inv.inverse();
+    inv.mult_matrix_vec3(&mut normal);
+    normal.normalize();
+    matrix.mult_vec_matrix3(&mut point);
+
+    [normal.x, normal.y, normal.z, normal.dot(&point)]
+}
+
+/// ClipPlane.push: the plane of an enabled ClipPlane in the space of `model_view`
+/// (ClipPlaneContainer.set): normal = plane.xyz, distanceFromOrigin = -plane.w, multRight.
+pub fn clip_plane(sg: &Sg, n: NodeId, model_view: &Matrix4) -> Option<[f64; 4]> {
+    let plane = sg.vec4(n, "plane", x3d_fields::math::Vector4::new(0.0, 1.0, 0.0, 0.0));
+
+    // set_enabled__: enabled && plane != 0 0 0 0.
+    if !sg.bool(n, "enabled", true) || (plane.x == 0.0 && plane.y == 0.0 && plane.z == 0.0 && plane.w == 0.0) {
+        return None;
+    }
+
+    Some(plane_mult_right([plane.x, plane.y, plane.z, -plane.w], model_view))
+}
+
+/// ClipPlanes2.glsl clip (): a point (in the planes' space) is discarded when
+/// `dot (vertex, normal) < distance` for any plane.
+pub fn is_clipped(planes: &[[f64; 4]], point: &Vector3) -> bool {
+    planes.iter().take(MAX_CLIP_PLANES).any(|p| point.x * p[0] + point.y * p[1] + point.z * p[2] < p[3])
+}
+
+/// The browser default material: UnlitMaterial, emissiveColor 1 1 1.
+fn default_material() -> MaterialParams {
+    MaterialParams {
+        shading: Shading::Unlit,
+        diffuse: [0.8; 3],
+        ambient_intensity: 0.2,
+        specular: [0.0; 3],
+        shininess: 0.2,
+        emissive: [1.0, 1.0, 1.0],
+        transparency: 0.0,
+        pbr: 0,
+        metallic: 1.0,
+        roughness: 1.0,
+        normal_scale: 1.0,
+        occlusion_strength: 1.0,
+        textures: vec![],
+        extensions: None,
+    }
+}
+
+/// The uniforms an X3DMaterialNode sets (setShaderUniforms), `front` selecting a
+/// TwoSidedMaterial's side. `None` for material types that are not drawn here.
+fn material_params(sg: &Sg, m: NodeId, has_normals: bool, front: bool) -> Option<MaterialParams> {
+    // Material.createShader / TwoSidedMaterial (Material's shader) with normals. Material's
+    // constructor replaces getMaterialKey (2, Phong) with the Shading dependent one for a
+    // specification version <= 3.3; TwoSidedMaterial uses Material .prototype .getMaterialKey.
+    let lit = |s: Shading| if has_normals { s } else { Shading::Unlit };
+    let legacy = sg.rt.scene.spec_version_of(sg.rt.scene.node(m).ctx).trim().parse::<f64>().is_ok_and(|v| v <= 3.3);
+
+    match sg.type_name(m)? {
+        "Material" => Some(MaterialParams {
+            shading: lit(if legacy { Shading::Gouraud } else { Shading::Phong }),
+            diffuse: sg.color(m, "diffuseColor", [0.8, 0.8, 0.8]),
+            ambient_intensity: sg.f64(m, "ambientIntensity", 0.2).clamp(0.0, 1.0),
+            specular: sg.color(m, "specularColor", [0.0, 0.0, 0.0]),
+            shininess: sg.f64(m, "shininess", 0.2).clamp(0.0, 1.0),
+            emissive: sg.color(m, "emissiveColor", [0.0, 0.0, 0.0]),
+            transparency: sg.f64(m, "transparency", 0.0).clamp(0.0, 1.0),
+            ..default_material()
+        }),
+        // PhysicalMaterial: set_metallic__ / set_roughness__ / set_occlusionStrength__ clamp to
+        // [0, 1], X3DOneSidedMaterialNode.set_normalScale__ Math .max (value, 0). The physical
+        // shader is used with or without normals (no X3D_LIGHTING, no IBL without them).
+        "PhysicalMaterial" => Some(MaterialParams {
+            shading: Shading::Phong,
+            diffuse: sg.color(m, "baseColor", [1.0, 1.0, 1.0]),
+            emissive: sg.color(m, "emissiveColor", [0.0, 0.0, 0.0]),
+            transparency: sg.f64(m, "transparency", 0.0).clamp(0.0, 1.0),
+            pbr: 1,
+            metallic: sg.f64(m, "metallic", 1.0).clamp(0.0, 1.0),
+            roughness: sg.f64(m, "roughness", 1.0).clamp(0.0, 1.0),
+            normal_scale: sg.f64(m, "normalScale", 1.0).max(0.0),
+            occlusion_strength: sg.f64(m, "occlusionStrength", 1.0).clamp(0.0, 1.0),
+            extensions: material_extensions(sg, m),
+            ..default_material()
+        }),
+        // SpecularGlossinessMaterial: set_glossiness__ clamps to [0, 1].
+        "SpecularGlossinessMaterial" => Some(MaterialParams {
+            shading: Shading::Phong,
+            diffuse: sg.color(m, "diffuseColor", [1.0, 1.0, 1.0]),
+            specular: sg.color(m, "specularColor", [1.0, 1.0, 1.0]),
+            emissive: sg.color(m, "emissiveColor", [0.0, 0.0, 0.0]),
+            transparency: sg.f64(m, "transparency", 0.0).clamp(0.0, 1.0),
+            pbr: 2,
+            metallic: sg.f64(m, "glossiness", 1.0).clamp(0.0, 1.0),
+            normal_scale: sg.f64(m, "normalScale", 1.0).max(0.0),
+            occlusion_strength: sg.f64(m, "occlusionStrength", 1.0).clamp(0.0, 1.0),
+            ..default_material()
+        }),
+        // UnlitMaterial (X3DOneSidedMaterialNode): emissiveColor and transparency.
+        "UnlitMaterial" => Some(MaterialParams {
+            shading: Shading::Unlit,
+            emissive: sg.color(m, "emissiveColor", [1.0, 1.0, 1.0]),
+            transparency: sg.f64(m, "transparency", 0.0).clamp(0.0, 1.0),
+            ..default_material()
+        }),
+        "TwoSidedMaterial" => {
+            let back = !front && sg.bool(m, "separateBackColor", false);
+            let f = |name: &str| if back { format!("back{}{}", name[..1].to_uppercase(), &name[1..]) } else { name.to_string() };
+
+            // set_ambientIntensity__: Math .max (value, 0), no upper clamp.
+            Some(MaterialParams {
+                shading: lit(Shading::Phong),
+                diffuse: sg.color(m, &f("diffuseColor"), [0.8, 0.8, 0.8]),
+                ambient_intensity: sg.f64(m, &f("ambientIntensity"), 0.2).max(0.0),
+                specular: sg.color(m, &f("specularColor"), [0.0, 0.0, 0.0]),
+                shininess: sg.f64(m, &f("shininess"), 0.2).clamp(0.0, 1.0),
+                emissive: sg.color(m, &f("emissiveColor"), [0.0, 0.0, 0.0]),
+                transparency: sg.f64(m, &f("transparency"), 0.0).clamp(0.0, 1.0),
+                ..default_material()
+            })
+        }
+        _ => None,
+    }
+}
+
+/// X3DMaterialNode.isTransparent.
+fn material_transparent(sg: &Sg, m: NodeId, params: &MaterialParams) -> bool {
+    match sg.type_name(m) {
+        // TwoSidedMaterial.set_transparent__: the field values, not the clamped ones.
+        Some("TwoSidedMaterial") => sg.f64(m, "transparency", 0.0) != 0.0 || (sg.bool(m, "separateBackColor", false) && sg.f64(m, "backTransparency", 0.0) != 0.0),
+        // UnlitMaterial.set_transparent__: transparency || emissiveTexture .isTransparent (); the
+        // texture's part is decided where the texture is loaded (`shape`).
+        _ => params.transparency > 0.0,
+    }
+}
+
+/// BlendMode.set_*__: unknown names fall back to the field defaults.
+fn blend_params(sg: &Sg, b: NodeId) -> BlendParams {
+    let factor = |name: &str, default: BlendFactor| BlendFactor::from_name(&sg.string(b, name, "")).unwrap_or(default);
+    let equation = |name: &str| BlendEquation::from_name(&sg.string(b, name, "")).unwrap_or(BlendEquation::Add);
+
+    BlendParams {
+        color: sg.color4(b, "blendColor", [0.0; 4]),
+        source_color: factor("sourceColorFactor", BlendFactor::SrcAlpha),
+        source_alpha: factor("sourceAlphaFactor", BlendFactor::One),
+        destination_color: factor("destinationColorFactor", BlendFactor::OneMinusSrcAlpha),
+        destination_alpha: factor("destinationAlphaFactor", BlendFactor::OneMinusSrcAlpha),
+        color_equation: equation("colorEquation"),
+        alpha_equation: equation("alphaEquation"),
+    }
+}
+
+/// DepthMode.enable state.
+fn depth_params(sg: &Sg, d: NodeId) -> DepthParams {
+    let func = match sg.string(d, "depthFunction", "LESS_EQUAL").as_str() {
+        "NEVER" => DepthFunc::Never,
+        "LESS" => DepthFunc::Less,
+        "EQUAL" => DepthFunc::Equal,
+        "GREATER" => DepthFunc::Greater,
+        "NOT_EQUAL" => DepthFunc::NotEqual,
+        "GREATER_EQUAL" => DepthFunc::GreaterEqual,
+        "ALWAYS" => DepthFunc::Always,
+        _ => DepthFunc::LessEqual,
+    };
+    let offset = sg.vec2(d, "polygonOffset", Vector2::ZERO);
+    let range = sg.vec2(d, "depthRange", Vector2::new(0.0, 1.0));
+
+    DepthParams {
+        test: sg.bool(d, "depthTest", true),
+        func,
+        mask: sg.bool(d, "depthMask", true),
+        polygon_offset: [offset.x, offset.y],
+        range: [range.x.clamp(0.0, 1.0), range.y.clamp(0.0, 1.0)],
+    }
+}
+
+/// Appearance.getStyleProperties (geometryType) with ContentScale 1: the PointProperties for
+/// points, an applied LineProperties for lines, the FillProperties for 2D and 3D geometry.
+fn style_params(sg: &Sg, appearance: NodeId, geometry_type: u8) -> Option<StyleParams> {
+    match geometry_type {
+        0 => {
+            let p = sg.node(appearance, "pointProperties").filter(|p| sg.type_name(*p) == Some("PointProperties"))?;
+            let a = sg.vec3(p, "attenuation", Vector3::new(1.0, 0.0, 0.0));
+
+            Some(StyleParams::Point(PointParams {
+                scale_factor: sg.f64(p, "pointSizeScaleFactor", 1.0).max(0.0),
+                min_value: sg.f64(p, "pointSizeMinValue", 1.0).clamp(0.0, MAX_POINT_SIZE),
+                max_value: sg.f64(p, "pointSizeMaxValue", 1.0).clamp(0.0, MAX_POINT_SIZE),
+                attenuation: [a.x.max(0.0), a.y.max(0.0), a.z.max(0.0)],
+            }))
+        }
+        1 => {
+            let l = sg.node(appearance, "lineProperties").filter(|l| sg.type_name(*l) == Some("LineProperties"))?;
+
+            if !sg.bool(l, "applied", true) {
+                return None;
+            }
+
+            let linetype = sg.i32(l, "linetype", 1);
+
+            Some(StyleParams::Line(LineParams {
+                linetype: if (1..=16).contains(&linetype) { linetype } else { 1 },
+                width: sg.f64(l, "linewidthScaleFactor", 0.0).max(1.0),
+            }))
+        }
+        _ => {
+            let f = sg.node(appearance, "fillProperties").filter(|f| sg.type_name(*f) == Some("FillProperties"))?;
+            let style = sg.i32(f, "hatchStyle", 1);
+
+            Some(StyleParams::Fill(FillParams {
+                filled: sg.bool(f, "filled", true),
+                hatched: sg.bool(f, "hatched", true),
+                hatch_style: if (1..=19).contains(&style) { style } else { 1 },
+                hatch_color: sg.color(f, "hatchColor", [1.0, 1.0, 1.0]),
+            }))
+        }
+    }
 }

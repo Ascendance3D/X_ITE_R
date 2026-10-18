@@ -1,0 +1,1 @@
+{"size": [256, 256], "t0": 946684800, "dt": 0.03333333333333333, "frames": 150, "dump": [5, 9, 13, 17, 25, 40, 80, 150], "capture": [40, 150], "events": [{"frame": 5, "type": "mousedown", "button": 0, "x": 128, "y": 128}, {"frame": 6, "type": "mousemove", "x": 128, "y": 200}, {"frame": 140, "type": "mouseup", "button": 0, "x": 128, "y": 200}]}

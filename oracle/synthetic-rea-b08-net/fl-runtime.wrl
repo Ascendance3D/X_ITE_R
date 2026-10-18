@@ -1,0 +1,63 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+
+DEF G Group { children [
+  DEF LA FontLibrary { family "RTA" url "fonts/PTSans-Regular.ttf" }
+  DEF LB FontLibrary { family "RTB" url "fonts/PTSans-Bold.ttf" }
+] }
+DEF G2 Group { }
+Transform { translation -1.6 1.3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.4 } } geometry Text { string "Ag" fontStyle DEF FS1 FontStyle { family "RTA" style "PLAIN" size 1.3 justify "MIDDLE"  } } } }
+Transform { translation 1.6 1.3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.4 } } geometry Text { string "Ag" fontStyle DEF FS2 FontStyle { family "RTB" style "PLAIN" size 1.3 justify "MIDDLE"  } } } }
+Transform { translation -1.6 -1.3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.4 } } geometry Text { string "Ag" fontStyle DEF FS3 FontStyle { family "LATE" style "PLAIN" size 1.3 justify "MIDDLE"  } } } }
+Transform { translation 1.6 -1.3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.4 } } geometry Text { string "Ag" fontStyle DEF FS4 FontStyle { family "RTNEW" style "PLAIN" size 1.3 justify "MIDDLE"  } } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode la USE LA
+  initializeOnly SFNode lb USE LB
+  initializeOnly SFNode g USE G
+  initializeOnly SFNode g2 USE G2
+  initializeOnly SFNode fs1 USE FS1
+  initializeOnly SFNode fs2 USE FS2
+  initializeOnly SFNode fs3 USE FS3
+  initializeOnly SFNode fs4 USE FS4
+  url "javascript:
+var made = null, mt = null;
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') la .url = new MFString ('fonts/PTSans-Bold.ttf');
+   if (k == 'b') fs1 .family = new MFString ('RTA');
+   if (k == 'c') la .family = 'RTNEW';
+   if (k == 'd') fs4 .family = new MFString ('RTNEW');
+   if (k == 'e') la .url = new MFString ('fonts/missing.ttf');
+   if (k == 'f') fs1 .family = new MFString ('RTA', 'x');
+   if (k == 'g') la .load = false;
+   if (k == 'h') { made = Browser .currentScene .createNode ('FontLibrary'); made .family = 'LATE'; made .url = new MFString ('fonts/DroidSerif-Italic.ttf'); g2 .addChildren = new MFNode (made); }
+   if (k == 'i') fs3 .family = new MFString ('LATE');
+   if (k == 'j') g .removeChildren = new MFNode (la, lb);
+   if (k == 'k') fs2 .style = 'BOLD';
+   if (k == 'l') lb .url = new MFString ('fonts/PTSans-Regular.ttf');
+   if (k == 'm') fs2 .style = 'PLAIN';
+   if (k == 'n') g2 .removeChildren = new MFNode (made);
+   if (k == 'o') { lb .family = ''; lb .url = new MFString ('fonts/PTSans-Bold.ttf'); }
+   if (k == 'p') fs2 .family = new MFString ('rtb');
+   if (k == 'q') fs3 .family = new MFString ('SANS');
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+

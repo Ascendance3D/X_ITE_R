@@ -90,8 +90,9 @@ pub struct PendingExtern {
 pub enum CacheEntry {
     /// Being fetched; declarations that asked for the same URL wait here.
     Pending(Vec<(ExternId, u64, url::Url)>),
-    /// Fully loaded: root context of the merged scene.
-    Ready(CtxId),
+    /// Fully loaded: root context of the merged scene, and the generation of its slot when it was
+    /// cached. An entry whose context slot was released since names nothing (R0.3-E).
+    Ready(CtxId, u32),
 }
 
 /// What became of one candidate URL.
@@ -173,10 +174,18 @@ impl Runtime {
     /// Replace the current request by nothing: late results of older generations are ignored and
     /// the loader of the old generation is dropped (FileLoader.abort).
     fn extern_cancel(&mut self, e: ExternId) {
+        let request = self.next_request();
         let st = self.xs(e);
 
-        st.generation += 1;
+        st.generation = request;
         st.fetch = None;
+    }
+
+    /// A new request identity. Runtime-wide, not per declaration: a declaration slot that is released
+    /// and handed out again (R0.3-E) never sees the number of a request made for the one before.
+    fn next_request(&mut self) -> u64 {
+        self.request_counter += 1;
+        self.request_counter
     }
 
     /// X3DUrlObject.requestImmediateLoad for a declaration. The load itself starts when the
@@ -186,6 +195,11 @@ impl Runtime {
         let st = self.xs(e);
 
         if st.load_state != LoadState::NotStarted || !st.load {
+            return;
+        }
+
+        // The LoadUrlObjects option, checked before `load`.
+        if !self.browser_options.load_url_objects() {
             return;
         }
 
@@ -252,6 +266,23 @@ impl Runtime {
         }
 
         Some(e)
+    }
+
+    /// A declaration whose context was disposed: no request, no timer, nothing in progress. A fetch
+    /// that is in flight, or a scene that waits for its loadCount, is dropped when it comes back (its
+    /// request is not current). X_ITE lets the load finish into the disposed scene.
+    pub(crate) fn extern_close(&mut self, e: ExternId) {
+        if !self.extern_states.contains_key(&e) {
+            return;
+        }
+
+        self.extern_cancel(e);
+        self.extern_load_events.retain(|x| *x != e);
+        self.xs(e).timer = None;
+
+        if self.extern_load_state(e) == LoadState::InProgress {
+            self.extern_set_load_state(e, LoadState::NotStarted);
+        }
     }
 
     /// `loadNow ()` of the SAI object: start over from NOT_STARTED.
@@ -363,7 +394,7 @@ impl Runtime {
             in_progress: self.extern_states.values().filter(|s| s.load_state == LoadState::InProgress).count(),
             pending_cache: self.extern_cache.iter().filter(|(_, e)| matches!(e, CacheEntry::Pending(_))).count(),
             timers: self.extern_states.values().filter(|s| s.timer.is_some()).count(),
-            disposed_bodies: self.dead_ctxs.len(),
+            disposed_bodies: self.bodies_disposed,
         }
     }
 }
@@ -379,11 +410,10 @@ impl Runtime {
         }
 
         let urls = self.scene.externprotos[e].url.clone();
+        let request = self.next_request();
         let st = self.xs(e);
 
-        st.generation += 1;
-
-        let request = st.generation;
+        st.generation = request;
         let empty = urls.is_empty();
 
         st.fetch = Some(ExternFetch { request, urls, next: 0, attempts: 0 });
@@ -495,15 +525,14 @@ impl Runtime {
                 return Step::Failed { error: "Error: EXTERNPROTO URL refers to the scene that is loading it.".into(), resolved: Some(resolved) };
             }
 
-            // A cached scene that went with the world is no scene: it is fetched again.
-            let stale = |c: CtxId| self.ctx_dead(c) || self.emptied_ctxs.contains(&c);
-
-            if self.extern_cache.iter().any(|(k, entry)| k == key && matches!(entry, CacheEntry::Ready(c) if stale(*c))) {
+            // A cached scene that went with the world is no scene: it is fetched again. So is one whose
+            // context slot was released and perhaps taken by another scene (generation).
+            if self.extern_cache.iter().any(|(k, entry)| k == key && matches!(entry, CacheEntry::Ready(c, g) if self.extern_cache_stale(*c, *g))) {
                 self.extern_cache.retain(|(k, _)| k != key);
             }
 
             match self.extern_cache_get(key) {
-                Some(CacheEntry::Ready(ctx)) => {
+                Some(CacheEntry::Ready(ctx, _)) => {
                     let ctx = *ctx;
 
                     return self.extern_deliver(e, request, ctx, &resolved, true);
@@ -537,6 +566,8 @@ impl Runtime {
     /// set up (like `inline_scene`); it waits for its loadCount and the next frame before
     /// `extern_attach`. Whether the file has the PROTO is decided then (setInternalScene).
     fn extern_scene(&mut self, e: ExternId, request: u64, data: &[u8], url: &url::Url, key: Option<String>) -> Result<(), String> {
+        self.sync_svg_quality();
+
         let mut scene = x3d_parse::parse_bytes(data, url.as_str()).map_err(|err| format!("Error: {err}"))?;
 
         for w in std::mem::take(&mut scene.warnings) {
@@ -707,6 +738,12 @@ impl Runtime {
         false
     }
 
+    /// A `Ready` entry that names no cached scene: the scene was disposed or emptied, or its context
+    /// slot was released since (its generation moved on).
+    pub fn extern_cache_stale(&self, ctx: CtxId, generation: u32) -> bool {
+        self.scene.resolve_ctx(CtxHandle { id: ctx, generation }).is_none() || self.ctx_dead(ctx) || self.emptied_ctxs.contains(&ctx)
+    }
+
     /// FileLoader.getScene: the entry moves to the end of the list.
     fn extern_cache_get(&mut self, key: &str) -> Option<&mut CacheEntry> {
         let i = self.extern_cache.iter().position(|(k, _)| k == key)?;
@@ -727,17 +764,19 @@ impl Runtime {
 
     /// `cacheResolve (scene)`: the entry is ready; the waiting declarations are returned.
     fn extern_cache_ready(&mut self, key: &str, ctx: CtxId) -> Vec<(ExternId, u64, url::Url)> {
+        let generation = self.scene.ctx_slots.generation(ctx);
+
         match self.extern_cache.iter_mut().find(|(k, _)| k == key) {
-            Some((_, entry)) => match std::mem::replace(entry, CacheEntry::Ready(ctx)) {
+            Some((_, entry)) => match std::mem::replace(entry, CacheEntry::Ready(ctx, generation)) {
                 CacheEntry::Pending(waiters) => waiters,
-                CacheEntry::Ready(_) => vec![],
+                CacheEntry::Ready(..) => vec![],
             },
             None => {
                 if self.extern_cache.len() >= MAX_CACHED_SCENES {
                     self.extern_cache.remove(0);
                 }
 
-                self.extern_cache.push((key.to_string(), CacheEntry::Ready(ctx)));
+                self.extern_cache.push((key.to_string(), CacheEntry::Ready(ctx, generation)));
                 vec![]
             }
         }
@@ -779,7 +818,9 @@ impl Runtime {
         // its nodes are released at the next sweep.
         self.dispose_scene(body);
 
-        self.dead_ctxs.insert(body);
+        if self.dead_ctxs.insert(body) {
+            self.bodies_disposed += 1;
+        }
         self.refresh_live();
     }
 

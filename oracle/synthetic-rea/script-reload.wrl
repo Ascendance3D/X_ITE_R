@@ -1,0 +1,54 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA oracle world: a Script whose url and load change at run time. Script.loadData
+# calls shutdown () of the old source, disconnects it and initializes the new one; load FALSE
+# unloads (shutdown, no more callbacks); an empty url unloads. Authored; no archive content.
+DEF S Script {
+  inputOutput SFInt32 gen 0
+  outputOnly SFString msg
+  url "ecmascript:
+    function initialize () { msg = 'init A'; }
+    function shutdown () { msg = 'shutdown A'; }
+    function set_gen (value) { msg = 'gen A ' + value; }
+  "
+}
+DEF LOG Script {
+  inputOnly SFString add
+  inputOutput SFString hist ""
+  url "ecmascript:
+    function add (value) { hist = hist + ' [' + value + ']'; }
+  "
+}
+DEF STATE Script {
+  inputOnly SFInt32 loadState
+  inputOutput SFString states ""
+  url "ecmascript:
+    function loadState (value) { states = states + ' ' + value; }
+  "
+}
+DEF TS TimeSensor { cycleInterval 0.25 loop TRUE }
+DEF DRIVER Script {
+  inputOnly SFTime cycle
+  inputOutput SFInt32 step 0
+  inputOutput SFNode s USE S
+  url "ecmascript:
+    function cycle (value)
+    {
+      step = step + 1;
+      if (step == 2) s .gen = 1;
+      if (step == 3) s .url = new MFString ('ecmascript: function initialize () { msg = \"init B\"; } function shutdown () { msg = \"shutdown B\"; } function set_gen (value) { msg = \"gen B \" + value; }');
+      if (step == 4) s .gen = 2;
+      if (step == 5) s .load = false;
+      if (step == 6) s .gen = 3;
+      if (step == 7) s .load = true;
+      if (step == 8) s .gen = 4;
+      if (step == 9) s .url = new MFString ();
+      if (step == 10) s .gen = 5;
+      if (step == 11) s .url = new MFString ('ecmascript: function initialize () { msg = \"init C\"; } function set_gen (value) { msg = \"gen C \" + value; }');
+      if (step == 12) s .gen = 6;
+      if (step == 13) s .url = new MFString ('ecmascript: function initialize () { msg = \"init D\"; }');
+    }
+  "
+}
+ROUTE TS.cycleTime TO DRIVER.cycle
+ROUTE S.msg TO LOG.add

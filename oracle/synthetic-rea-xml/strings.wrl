@@ -1,0 +1,18 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT Networking:3
+# Strings that need escaping in XML output, and VRML backslash escapes.
+DEF Str Script {
+  field SFString quoted "say \"hi\""
+  field SFString amp "a & b"
+  field SFString lessGreater "1 < 2 > 0"
+  field SFString apos "it's"
+  field SFString backslash "C:\\dir\\file"
+  field SFString tab "a	b"
+  field SFString multiline "line one
+line two"
+  field SFString all "<&'\"\\>"
+  field SFString empty ""
+  field MFString mfString ["one" "two & three" "<four>" "five's"]
+}

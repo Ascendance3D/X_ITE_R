@@ -1,0 +1,96 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "materials": [
+  {
+   "name": "Same",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     1,
+     0,
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "name": "Same",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0,
+     1,
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "name": "Unused"
+  }
+ ],
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "material": 1
+    },
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "material": 7
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 48,
+   "uri": "data:application/octet-stream;base64,AACAvwAAgL8AAAAAAACAPwAAgL8AAAAAAACAPwAAgD8AAAAAAACAvwAAgD8AAAAA"
+  }
+ ]
+}

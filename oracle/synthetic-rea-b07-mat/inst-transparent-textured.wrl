@@ -1,0 +1,19 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 7 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+PointLight { location 2.5 2 3 intensity 1.5 radius 20 attenuation 0 0 1 }
+Transform { translation 0 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } } geometry Box { size 8 6 0.1 } } }
+Transform { translation -1.5 0.8 -1.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0.2 0.2 } } geometry Box { size 0.6 2.5 0.3 } } }
+Transform { translation 1.5 -0.8 -1.5 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.4 1 transparency 0.5 } } geometry Cone { bottomRadius 0.5 height 1.5 } } }
+InstancedShape { translations [ -1.6 0.8 0, 0 0.8 0, 1.6 0.8 0 ] rotations [ 0 1 0 0.4, 0 1 0 0.9, 0 1 0 1.4 ]  appearance Appearance { material Material { diffuseColor 1 0.4 0.4 transparency 0.5 }  } geometry Box { size 0.9 0.9 0.9 } }
+InstancedShape { translations [ -1.6 -1.0 0, 0 -1.0 0, 1.6 -1.0 0 ] rotations [ 0 0 1 0.3, 0 0 1 0.6, 0 0 1 0.9 ] scales [ 1 1 1, 1.2 1.2 1.2 ]  appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } textureTransform TextureTransform { scale 2 2 } } geometry Box { size 0.9 0.9 0.9 } }

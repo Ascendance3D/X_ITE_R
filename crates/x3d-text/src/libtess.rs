@@ -31,6 +31,8 @@ struct Vertex {
     an_edge: usize,
     /// The vertex callback data: the (x, y) position libtess hands back for this vertex.
     data: [f64; 2],
+    /// The vertex callback data of the indexed mode (Triangle3.triangulatePolygon: point.index).
+    index: usize,
     coords: [f64; 3],
     s: f64,
     t: f64,
@@ -92,6 +94,19 @@ pub struct Tess {
     pq: Pq,
     event: usize,
     last_edge: usize,
+    /// GLU_TESS_WINDING_ODD (Triangle3.triangulatePolygon) instead of NONZERO (PolygonText).
+    winding_odd: bool,
+    /// Indexed mode: vertex data are indices, the combine callback returns data [0].
+    indexed: bool,
+    /// NurbsTrimmedSurface mode: vertex data are points with an optional index; a merge of two
+    /// coincident vertices keeps the first point (combineCallbackIndex `return a`), an
+    /// intersection makes a new point without index (`new Vector3 (... coords)`).
+    nurbs: bool,
+    /// SVGParser mode: vertex data are indices into the parser's coordinate list; every combine
+    /// callback appends a vertex (`svg_new`) and returns its index, counted from `svg_next`.
+    svg: bool,
+    svg_next: usize,
+    svg_new: Vec<[f64; 3]>,
 }
 
 const E_HEAD: usize = 0;
@@ -300,6 +315,12 @@ impl Tess {
             pq: Pq::new(),
             event: NIL,
             last_edge: NIL,
+            winding_odd: false,
+            nurbs: false,
+            indexed: false,
+            svg: false,
+            svg_next: 0,
+            svg_new: vec![],
         };
 
         for (i, e) in t.edges.iter_mut().enumerate() {
@@ -311,7 +332,7 @@ impl Tess {
             e.active_region = NIL;
         }
 
-        t.verts.push(Vertex { next: 0, prev: 0, an_edge: NIL, data: [0.0; 2], coords: [0.0; 3], s: 0.0, t: 0.0, pq_handle: 0 });
+        t.verts.push(Vertex { next: 0, prev: 0, an_edge: NIL, data: [0.0; 2], index: NIL, coords: [0.0; 3], s: 0.0, t: 0.0, pq_handle: 0 });
         t.faces.push(Face { next: 0, prev: 0, an_edge: NIL, inside: false });
         t
     }
@@ -386,7 +407,7 @@ impl Tess {
         let v_prev = self.verts[v_next].prev;
         let v_new = self.verts.len();
 
-        self.verts.push(Vertex { next: v_next, prev: v_prev, an_edge: e_orig, data: [0.0; 2], coords: [0.0; 3], s: 0.0, t: 0.0, pq_handle: 0 });
+        self.verts.push(Vertex { next: v_next, prev: v_prev, an_edge: e_orig, data: [0.0; 2], index: NIL, coords: [0.0; 3], s: 0.0, t: 0.0, pq_handle: 0 });
         self.verts[v_prev].next = v_new;
         self.verts[v_next].prev = v_new;
 
@@ -1071,15 +1092,19 @@ impl Tess {
         reg_new
     }
 
-    fn is_winding_inside(n: i32) -> bool {
-        n != 0 // GLU_TESS_WINDING_NONZERO
+    fn is_winding_inside(&self, n: i32) -> bool {
+        if self.winding_odd {
+            n & 1 != 0 // GLU_TESS_WINDING_ODD
+        } else {
+            n != 0 // GLU_TESS_WINDING_NONZERO
+        }
     }
 
     fn compute_winding(&mut self, reg: usize) {
         let above = self.region_above(reg);
 
         self.regions[reg].winding_number = self.regions[above].winding_number + self.edges[self.regions[reg].e_up].winding;
-        self.regions[reg].inside = Self::is_winding_inside(self.regions[reg].winding_number);
+        self.regions[reg].inside = self.is_winding_inside(self.regions[reg].winding_number);
     }
 
     fn finish_region(&mut self, reg: usize) {
@@ -1162,7 +1187,7 @@ impl Tess {
             }
 
             self.regions[reg].winding_number = self.regions[reg_prev].winding_number - self.edges[e].winding;
-            self.regions[reg].inside = Self::is_winding_inside(self.regions[reg].winding_number);
+            self.regions[reg].inside = self.is_winding_inside(self.regions[reg].winding_number);
             self.regions[reg_prev].dirty = true;
 
             if !first_time && self.check_for_right_splice(reg_prev) {
@@ -1183,16 +1208,33 @@ impl Tess {
         }
     }
 
-    /// libtess.sweep.callCombine_ with X_ITE's combine callback (`new Vector3 (... coords)`).
-    fn call_combine(&mut self, isect: usize, coords: [f64; 3]) {
-        self.verts[isect].data = [coords[0], coords[1]];
+    /// libtess.sweep.callCombine_ with X_ITE's combine callbacks: PolygonText returns
+    /// `new Vector3 (... coords)`, Triangle3.triangulatePolygon returns `data [0]` (`first`).
+    fn call_combine(&mut self, isect: usize, coords: [f64; 3], first: usize) {
+        if self.svg {
+            // SVGParser combineCallback: `vertices .push (new Vector3 (... coords))`, return its index.
+            self.verts[isect].index = self.svg_next + self.svg_new.len();
+            self.svg_new.push(coords);
+        } else if self.nurbs {
+            self.verts[isect].data = [coords[0], coords[1]];
+            self.verts[isect].index = NIL;
+        } else if self.indexed {
+            self.verts[isect].index = self.verts[first].index;
+        } else {
+            self.verts[isect].data = [coords[0], coords[1]];
+        }
     }
 
     fn splice_merge_vertices(&mut self, e1: usize, e2: usize) {
         let org = self.org(e1);
         let coords = self.verts[org].coords;
 
-        self.call_combine(org, coords);
+        // NurbsTrimmedSurface: combineCallbackIndex returns `a` (c is null and a, b coincide), the
+        // plain combineCallback a new point with the same coordinates: either way the data stay.
+        if !self.nurbs {
+            self.call_combine(org, coords, org);
+        }
+
         self.mesh_splice(e1, e2);
     }
 
@@ -1220,7 +1262,7 @@ impl Tess {
         self.vertex_weights(isect, org_lo, dst_lo, &mut weights, 2);
 
         let coords = self.verts[isect].coords;
-        self.call_combine(isect, coords);
+        self.call_combine(isect, coords, org_up);
     }
 
     fn check_for_right_splice(&mut self, reg_up: usize) -> bool {
@@ -1855,6 +1897,114 @@ impl Tess {
         self.last_edge = e;
     }
 
+    /// libtess.normal.projectPolygon with normal (0, 0, 0): computeNormal_, the long-axis
+    /// projection (TRUE_PROJECT is false) and checkOrientation_.
+    fn project_polygon_computed(&mut self) {
+        let norm = self.compute_normal();
+        let i = long_axis(&norm);
+        let (s_axis, t_axis) = ((i + 1) % 3, (i + 2) % 3);
+        let t_negate = if norm[i] > 0.0 { 1.0 } else { -1.0 };
+        let mut v = self.verts[V_HEAD].next;
+
+        while v != V_HEAD {
+            self.verts[v].s = self.verts[v].coords[s_axis];
+            self.verts[v].t = t_negate * self.verts[v].coords[t_axis];
+            v = self.verts[v].next;
+        }
+
+        self.check_orientation();
+    }
+
+    fn compute_normal(&self) -> [f64; 3] {
+        let mut max_val = [-2.0 * GLU_TESS_MAX_COORD; 3];
+        let mut min_val = [2.0 * GLU_TESS_MAX_COORD; 3];
+        let mut max_vert = [NIL; 3];
+        let mut min_vert = [NIL; 3];
+        let mut v = self.verts[V_HEAD].next;
+
+        while v != V_HEAD {
+            for i in 0..3 {
+                let c = self.verts[v].coords[i];
+                if c < min_val[i] {
+                    min_val[i] = c;
+                    min_vert[i] = v;
+                }
+                if c > max_val[i] {
+                    max_val[i] = c;
+                    max_vert[i] = v;
+                }
+            }
+            v = self.verts[v].next;
+        }
+
+        let mut index = 0;
+        if max_val[1] - min_val[1] > max_val[0] - min_val[0] {
+            index = 1;
+        }
+        if max_val[2] - min_val[2] > max_val[index] - min_val[index] {
+            index = 2;
+        }
+        if min_val[index] >= max_val[index] {
+            return [0.0, 0.0, 1.0];
+        }
+
+        let mut norm = [0.0; 3];
+        let mut max_len2 = 0.0;
+        let (c1, c2) = (self.verts[min_vert[index]].coords, self.verts[max_vert[index]].coords);
+        let d1 = [c1[0] - c2[0], c1[1] - c2[1], c1[2] - c2[2]];
+        let mut v = self.verts[V_HEAD].next;
+
+        while v != V_HEAD {
+            let c = self.verts[v].coords;
+            let d2 = [c[0] - c2[0], c[1] - c2[1], c[2] - c2[2]];
+            let t = [d1[1] * d2[2] - d1[2] * d2[1], d1[2] * d2[0] - d1[0] * d2[2], d1[0] * d2[1] - d1[1] * d2[0]];
+            let t_len2 = t[0] * t[0] + t[1] * t[1] + t[2] * t[2];
+            if t_len2 > max_len2 {
+                max_len2 = t_len2;
+                norm = t;
+            }
+            v = self.verts[v].next;
+        }
+
+        if max_len2 <= 0.0 {
+            norm = [0.0; 3];
+            norm[long_axis(&d1)] = 1.0;
+        }
+
+        norm
+    }
+
+    fn check_orientation(&mut self) {
+        let mut area = 0.0;
+        let mut f = self.faces[F_HEAD].next;
+
+        while f != F_HEAD {
+            let start = self.faces[f].an_edge;
+            let mut e = start;
+
+            if self.edges[e].winding > 0 {
+                loop {
+                    let (o, d) = (self.org(e), self.dst(e));
+                    area += (self.verts[o].s - self.verts[d].s) * (self.verts[o].t + self.verts[d].t);
+                    e = self.edges[e].l_next;
+                    if e == start {
+                        break;
+                    }
+                }
+            }
+
+            f = self.faces[f].next;
+        }
+
+        if area < 0.0 {
+            let mut v = self.verts[V_HEAD].next;
+            while v != V_HEAD {
+                self.verts[v].t = -self.verts[v].t;
+                v = self.verts[v].next;
+            }
+        }
+    }
+
     /// projectPolygon with normal (0, 0, 1): s = x, t = y.
     fn project_polygon(&mut self) {
         let mut v = self.verts[V_HEAD].next;
@@ -1864,6 +2014,57 @@ impl Tess {
             self.verts[v].t = self.verts[v].coords[1];
             v = self.verts[v].next;
         }
+    }
+
+    fn render_mesh_indices(&self) -> Vec<usize> {
+        let mut out = vec![];
+        let mut f = self.faces[F_HEAD].prev;
+
+        while f != F_HEAD {
+            if self.faces[f].inside {
+                let start = self.faces[f].an_edge;
+                let mut e = start;
+
+                loop {
+                    out.push(self.verts[self.org(e)].index);
+                    e = self.edges[e].l_next;
+
+                    if e == start {
+                        break;
+                    }
+                }
+            }
+
+            f = self.faces[f].prev;
+        }
+
+        out
+    }
+
+    fn render_mesh_points(&self) -> Vec<([f64; 2], Option<usize>)> {
+        let mut out = vec![];
+        let mut f = self.faces[F_HEAD].prev;
+
+        while f != F_HEAD {
+            if self.faces[f].inside {
+                let start = self.faces[f].an_edge;
+                let mut e = start;
+
+                loop {
+                    let v = &self.verts[self.org(e)];
+                    out.push((v.data, (v.index != NIL).then_some(v.index)));
+                    e = self.edges[e].l_next;
+
+                    if e == start {
+                        break;
+                    }
+                }
+            }
+
+            f = self.faces[f].prev;
+        }
+
+        out
     }
 
     fn render_mesh(&self) -> Vec<[f64; 2]> {
@@ -1892,6 +2093,40 @@ impl Tess {
     }
 }
 
+fn long_axis(v: &[f64; 3]) -> usize {
+    let mut i = 0;
+    if v[1].abs() > v[0].abs() {
+        i = 1;
+    }
+    if v[2].abs() > v[i].abs() {
+        i = 2;
+    }
+    i
+}
+
+/// X_ITE `Triangle3.triangulatePolygon`: one contour of 3D points with their indices, winding
+/// rule ODD, no normal (libtess computes one), combine callback `data [0]`. Returns the indices
+/// of the output triangles in the order libtess reports them (three per triangle).
+pub fn triangulate_indexed(points: &[([f64; 3], usize)]) -> Vec<usize> {
+    let mut tess = Tess::new();
+    tess.winding_odd = true;
+    tess.indexed = true;
+    tess.last_edge = NIL;
+
+    for (p, index) in points {
+        let c = p.map(|x| x.clamp(-GLU_TESS_MAX_COORD, GLU_TESS_MAX_COORD));
+        tess.add_vertex(c[0], c[1]);
+        let o = tess.org(tess.last_edge);
+        tess.verts[o].coords = c;
+        tess.verts[o].index = *index;
+    }
+
+    tess.project_polygon_computed();
+    tess.compute_interior();
+    tess.tessellate_interior();
+    tess.render_mesh_indices()
+}
+
 /// X_ITE `PolygonText.triangulatePolygon`: gluTessBeginPolygon, one contour per entry of
 /// `contours`, gluTessEndPolygon; returns the vertices of the output triangles in the order libtess
 /// reports them (three per triangle).
@@ -1914,6 +2149,68 @@ pub fn triangulate(contours: &[Vec<[f64; 2]>]) -> Vec<[f64; 2]> {
     tess.compute_interior();
     tess.tessellate_interior();
     tess.render_mesh()
+}
+
+/// X_ITE `NurbsTrimmedSurface.triangulatePolygon`: winding rule ODD, normal (0, 0, 1), one
+/// contour per entry. The vertex data are the points themselves (`gluTessVertex (point, point)`)
+/// with an optional `index` property; see [`Tess::nurbs`] for the combine callbacks. Returns the
+/// output triangle vertices in libtess order.
+pub fn triangulate_points(contours: &[Vec<([f64; 2], Option<usize>)>]) -> Vec<([f64; 2], Option<usize>)> {
+    let mut tess = Tess::new();
+    tess.winding_odd = true;
+    tess.nurbs = true;
+
+    for contour in contours {
+        tess.last_edge = NIL;
+
+        for (p, index) in contour {
+            let x = p[0].clamp(-GLU_TESS_MAX_COORD, GLU_TESS_MAX_COORD);
+            let y = p[1].clamp(-GLU_TESS_MAX_COORD, GLU_TESS_MAX_COORD);
+
+            tess.add_vertex(x, y);
+            let o = tess.org(tess.last_edge);
+            tess.verts[o].data = [p[0], p[1]];
+            tess.verts[o].index = index.unwrap_or(NIL);
+        }
+    }
+
+    tess.project_polygon();
+    tess.compute_interior();
+    tess.tessellate_interior();
+    tess.render_mesh_points()
+}
+
+/// X_ITE `SVGParser.triangulatePolygon`: winding rule NONZERO or ODD, normal (0, 0, 1), one contour
+/// per entry with the vertex data being the point's index; the combine callback appends a vertex
+/// (returned in the second list) and hands out the next index, starting at `next_index`. Returns
+/// the indices of the output triangles in libtess order.
+pub fn triangulate_svg(contours: &[Vec<([f64; 2], usize)>], winding_odd: bool, next_index: usize) -> (Vec<usize>, Vec<[f64; 3]>) {
+    let mut tess = Tess::new();
+
+    tess.winding_odd = winding_odd;
+    tess.svg = true;
+    tess.svg_next = next_index;
+
+    for contour in contours {
+        tess.last_edge = NIL;
+
+        for (p, index) in contour {
+            let x = p[0].clamp(-GLU_TESS_MAX_COORD, GLU_TESS_MAX_COORD);
+            let y = p[1].clamp(-GLU_TESS_MAX_COORD, GLU_TESS_MAX_COORD);
+
+            tess.add_vertex(x, y);
+            let o = tess.org(tess.last_edge);
+            tess.verts[o].index = *index;
+        }
+    }
+
+    tess.project_polygon();
+    tess.compute_interior();
+    tess.tessellate_interior();
+
+    let indices = tess.render_mesh_indices();
+
+    (indices, std::mem::take(&mut tess.svg_new))
 }
 
 #[cfg(test)]

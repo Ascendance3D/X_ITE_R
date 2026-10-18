@@ -1,0 +1,20 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Core:2
+UNIT length centimetre 0.01
+UNIT angle degree 0.017453292519943295
+UNIT mass gram 0.001
+# Synthetic REA XML world: UNIT conversions of length and angle fields on read and write. Authored.
+DEF T Transform {
+  translation 10 20 30
+  rotation 0 1 0 90
+  scale 2 2 2
+  center 1 1 1
+  children [
+    Shape { geometry Box { size 100 50 25 } }
+    Shape { geometry Sphere { radius 33.3 } }
+    Shape { geometry Cone { bottomRadius 7 height 12.5 } }
+  ]
+}
+DEF V Viewpoint { position 0 160 1000 orientation 1 0 0 -10 fieldOfView 45 }
+DEF NI NavigationInfo { avatarSize [ 25 160 75 ] speed 150 visibilityLimit 10000 }

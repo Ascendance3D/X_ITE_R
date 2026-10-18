@@ -1,0 +1,23 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT CubeMapTexturing:3
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Lighting:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+Transform { translation -4.5 2.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 4 slicesOverY 4 numberOfSlices 16 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 2.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 4 slicesOverY 4 numberOfSlices 6 repeatS TRUE repeatT TRUE } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 2.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 4 slicesOverY 4 numberOfSlices 40 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 4.5 2.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 3 slicesOverY 2 numberOfSlices 5 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -4.5 -0.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 4 slicesOverY 4 numberOfSlices 16 }  } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -1.5 -0.2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 4 slicesOverY 4 numberOfSlices 16 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate3D { point [ 0 0 0.1, 1 0 0.4, 1 1 0.9, 0 1 0.6 ] } } } }
+Transform { translation 1.5 -0.2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverX 4 slicesOverY 4 numberOfSlices 16 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate4D { point [ 0 0 0.2 1, 2 0 0.4 2, 2 2 1.8 2, 0 1 0.6 1 ] } } } }
+Transform { translation 4.5 -0.2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" slicesOverY 4 numberOfSlices 4 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -3 -3 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url [ "missing-atlas.png" "atlas-4x4.png" ] slicesOverX 2 slicesOverY 2 numberOfSlices 4 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 0 -3 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "missing-atlas.png" slicesOverX 4 slicesOverY 4 numberOfSlices 16 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 3 -3 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTextureAtlas { url "atlas-4x4.png" load FALSE slicesOverX 4 slicesOverY 4 numberOfSlices 16 } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }

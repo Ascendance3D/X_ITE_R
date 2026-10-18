@@ -28,6 +28,10 @@ pub struct Generator {
     list_break: &'static str,
     list_indent_char: &'static str,
     attrib_break: &'static str,
+    /// Generator.ToUnit for the field being printed: its unit category's factor, and the angle
+    /// factor every SFRotation angle uses (1 when the scene has no UNIT statements).
+    unit_factor: f64,
+    angle_factor: f64,
 }
 
 impl Default for Generator {
@@ -37,6 +41,22 @@ impl Default for Generator {
 }
 
 impl Generator {
+    /// Set the ToUnit factors for the next values (field unit category, angle).
+    pub fn set_unit_factors(&mut self, unit: f64, angle: f64) {
+        self.unit_factor = unit;
+        self.angle_factor = angle;
+    }
+
+    /// ToUnit (field .getUnit (), value).
+    pub fn to_unit(&self, value: f64) -> f64 {
+        if self.unit_factor == 1.0 { value } else { value / self.unit_factor }
+    }
+
+    /// ToUnit ("angle", value).
+    pub fn to_unit_angle(&self, value: f64) -> f64 {
+        if self.angle_factor == 1.0 { value } else { value / self.angle_factor }
+    }
+
     pub fn new(style: Style) -> Self {
         let mut g = Generator {
             string: String::new(),
@@ -54,6 +74,8 @@ impl Generator {
             list_break: "\n",
             list_indent_char: "  ",
             attrib_break: "\n",
+            unit_factor: 1.0,
+            angle_factor: 1.0,
         };
 
         match style {

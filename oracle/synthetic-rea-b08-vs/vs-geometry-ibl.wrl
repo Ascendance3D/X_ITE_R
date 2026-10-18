@@ -1,0 +1,27 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EnvironmentalEffects:3
+COMPONENT Grouping:3
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "../synthetic-rea-b02/pbr/env.png" } }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+Transform { translation 0 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } } geometry Box { size 8 6 0.1 } } }
+Transform { translation -1.5 0.8 -1.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0.2 0.2 } } geometry Box { size 0.6 2.5 0.3 } } }
+
+Transform { translation -1.6 0.9 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.8 0.7 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 1 0.7 0.5 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.6 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.9 0.5 0.3  } ] } } geometry Sphere { radius 0.8 } } }
+Transform { translation -0.9 0.5 0.6 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.9 0.7 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 1 0.7 0.5 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.6 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.2 0.9 0.4  } ] } } geometry Sphere { radius 0.5 } } }
+Transform { translation 0.4 1.0 0 scale 2 0.7 1 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.7 0.8 0.9 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 0.4 0.6 1 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.3 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.1 0.4 0.9  } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.7 0.8 -0.5 rotation 1 1 0 0.7 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.8 0.7 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 1 0.7 0.5 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.6 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.9 0.5 0.3  } ] } } geometry Box { size 0.9 0.9 0.9 } } }
+Transform { translation -1.4 -1.0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.7 0.8 0.9 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 0.4 0.6 1 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.3 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.1 0.4 0.9  } ] } } geometry Cylinder { radius 0.5 height 1.1 } } }
+Transform { translation 0 -1.0 0 rotation 0 1 0 0.6 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.9 0.7 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 1 0.7 0.5 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.6 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.2 0.9 0.4  } ] } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.7 -0.6 0, 0.7 -0.6 0, 0.7 0.6 0, -0.7 0.6 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+Transform { translation 1.5 -1.0 0 scale 1.5 1.5 1.5 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.8 0.7 metallic 0 roughness 0.6 extensions [ DiffuseTransmissionMaterialExtension { diffuseTransmission 1 diffuseTransmissionColor 1 0.7 0.5 } VolumeMaterialExtension { thickness 0.4 attenuationDistance 0.6 attenuationColor 1 0.8 0.6 } VolumeScatterMaterialExtension { multiscatterColor 0.9 0.5 0.3  } ] } } geometry Cone { bottomRadius 0.4 height 0.8 } } }
+

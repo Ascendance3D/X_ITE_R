@@ -14,9 +14,40 @@ const N = Symbol ("node");
 
 delete global .__x;
 
-const wrappers = new Map (); // attached handle → wrapper (field object identity)
-const nodes    = new Map (); // node id → SFNode proxy (SFNodeCache)
-const targets  = new Map (); // node id → the target of that proxy, to repoint it when the node is released
+// R0.3-F: the caches hold WeakRefs, like X_ITE's SFNodeCache and field objects: a wrapper that no script
+// variable reaches is garbage, and `__heldNodes ()` reports the ones that are alive (release.rs).
+const wrappers = new Map (); // attached handle → WeakRef of the wrapper (field object identity)
+
+// R0.3-E: every object that holds a field handle is counted as its owner; when QuickJS frees the
+// object the slot loses that owner, and a slot with no owner is released (engine.rs, `State`).
+const owners = new FinalizationRegistry (h =>
+{
+   X ("disown", h);
+
+   const ref = wrappers .get (h);
+
+   if (ref && ref .deref () === undefined)
+      wrappers .delete (h);
+});
+
+function own (object, h)
+{
+   X ("own", h);
+   owners .register (object, h);
+}
+const nodes    = new Map (); // node id → WeakRef of the SFNode proxy (SFNodeCache)
+const targets  = new Map (); // node id → WeakRef of the target of that proxy, to repoint it when the node is released
+
+const nodeOwners = new FinalizationRegistry (id =>
+{
+   const ref = nodes .get (id);
+
+   if (ref && ref .deref () === undefined)
+   {
+      nodes .delete (id);
+      targets .delete (id);
+   }
+});
 
 // Rust → JS value
 function R (r)
@@ -31,10 +62,10 @@ function R (r)
    {
       if (r .__a)
       {
-         let w = wrappers .get (r .__h);
+         let w = wrappers .get (r .__h) ?.deref ();
 
          if (!w)
-            wrappers .set (r .__h, w = wrap (r .__t, r .__h));
+            wrappers .set (r .__h, new WeakRef (w = wrap (r .__t, r .__h)));
 
          return w;
       }
@@ -84,6 +115,8 @@ class X3DField
          this [H] = args [1];
       else
          this [H] = X ("new", this .constructor .typeName, ... args .map (A));
+
+      own (this, this [H]);
    }
    getTypeName ()       { return this .constructor .typeName; }
    getType ()           { return X3DConstants [this .constructor .typeName]; }
@@ -383,7 +416,7 @@ const SFNodeProto =
    getNodeDisplayName () { return X ("nname", this [N]) .replace (/_\d+$/, ""); },
    getNodeType ()       { return [ ]; },
    getField (name)      { const r = X ("nfield", this [N], String (name)); if (r === NOFIELD) throw new Error (`Unknown field '${name}' in node class ${this .getNodeTypeName ()}.`); return R (r); },
-   getFieldDefinitions () { return X ("nfields", this [N]); },
+   getFieldDefinitions () { return X ("nfields", this [N]) .map (f => ({ ... f, dataType: X3DConstants [f .dataType] })); },
    addFieldCallback ()  { },
    removeFieldCallback () { },
    getNodeUserData ()   { },
@@ -404,15 +437,17 @@ Object .assign (SFNodeBase .prototype, SFNodeProto);
 
 function nodeWrapper (id)
 {
-   let w = nodes .get (id);
+   let w = nodes .get (id) ?.deref ();
 
    if (!w)
    {
       const target = new SFNodeBase ();
 
       target [N] = id;
-      targets .set (id, target);
-      nodes .set (id, w = new Proxy (target, nodeHandler));
+      w = new Proxy (target, nodeHandler);
+      targets .set (id, new WeakRef (target));
+      nodes .set (id, new WeakRef (w));
+      nodeOwners .register (w, id);
    }
 
    return w;
@@ -429,13 +464,16 @@ Object .defineProperty (SFNode, "typeName", { value: "SFNode" });
 classes .SFNode = SFNode;
 
 // X3DConstants (field types and access types used by scripts).
+// Base/X3DConstants.js: access types, then one value counting up from 1001 per name.
 const X3DConstants = { initializeOnly: 1, inputOnly: 2, outputOnly: 4, inputOutput: 7 };
 
-["SFBool", "SFColor", "SFColorRGBA", "SFDouble", "SFFloat", "SFImage", "SFInt32", "SFMatrix3d", "SFMatrix3f", "SFMatrix4d", "SFMatrix4f",
- "SFNode", "SFQuaternion", "SFRotation", "SFString", "SFTime", "SFVec2d", "SFVec2f", "SFVec3d", "SFVec3f", "SFVec4d", "SFVec4f",
+["CONNECTION_ERROR", "BROWSER_EVENT", "INITIALIZED_EVENT", "SHUTDOWN_EVENT", "INITIALIZED_ERROR",
+ "NOT_STARTED_STATE", "IN_PROGRESS_STATE", "COMPLETE_STATE", "FAILED_STATE",
+ "SFBool", "SFColor", "SFColorRGBA", "SFDouble", "SFFloat", "SFImage", "SFInt32", "SFMatrix3d", "SFMatrix3f", "SFMatrix4d", "SFMatrix4f",
+ "SFNode", "SFQuaternion", "SFRotation", "SFString", "SFTime", "SFVec2d", "SFVec2f", "SFVec3d", "SFVec3f", "SFVec4d", "SFVec4f", "VrmlMatrix",
  "MFBool", "MFColor", "MFColorRGBA", "MFDouble", "MFFloat", "MFImage", "MFInt32", "MFMatrix3d", "MFMatrix3f", "MFMatrix4d",
  "MFMatrix4f", "MFNode", "MFQuaternion", "MFRotation", "MFString", "MFTime", "MFVec2d", "MFVec2f", "MFVec3d", "MFVec3f",
- "MFVec4d", "MFVec4f"] .forEach ((name, i) => X3DConstants [name] = i);
+ "MFVec4d", "MFVec4f"] .forEach ((name, i) => X3DConstants [name] = 1001 + i);
 
 // The script node whose code is running (for Browser.currentScene and SFNode ()).
 let currentScript = -1;
@@ -473,10 +511,10 @@ const Browser =
    deleteRoute (a, b, c, d)    { X ("deleteRoute", currentScript, A (a), String (b), A (c), String (d)); },
    beginUpdate ()              { },
    endUpdate ()                { },
-   getBrowserOption ()         { },
-   setBrowserOption ()         { },
-   getBrowserProperty ()       { return false; },
-   getRenderingProperty ()     { },
+   getBrowserOption (name)     { return browserField ("options", "BrowserOptions", name); },
+   setBrowserOption (name, value) { const type = X ("optionType", String (name)); if (type === null) throw unknownField ("BrowserOptions", name); X ("setOption", String (name), convertOption (type, value)); },
+   getBrowserProperty (name)   { return browserField ("properties", "BrowserProperties", name); },
+   getRenderingProperty (name) { return browserField ("rendering", "RenderingProperties", name); },
    firstViewpoint ()           { X ("brequest", "firstViewpoint"); },
    lastViewpoint ()            { X ("brequest", "lastViewpoint"); },
    nextViewpoint ()            { X ("brequest", "nextViewpoint"); },
@@ -484,12 +522,88 @@ const Browser =
    changeViewpoint ()          { },
    viewAll ()                  { },
    getScriptNode ()            { return nodeWrapper (currentScript); },
+   getComponent (name, level)  { return componentInfo (X ("browserComponent", String (name), level | 0)); },
+   getProfile (name)           { const p = profileInfo (String (name)); if (!p .components .length && X ("profileComponents", String (name)) === null) throw new Error (`Profile '${name}' is not supported.`); return p; },
 };
+
+// X3DBrowser.getBrowserOption …: `getField (name) .getValue ()`; X3DBaseNode.getField throws for
+// an unknown name. setValue converts like the field's set (): SFBool !!, SFInt32 |0, numbers +,
+// SFString String ().
+function unknownField (typeName, name) { return new Error (`Unknown field '${name}' in node class ${typeName}.`); }
+function browserField (set, typeName, name) { const v = X ("browserField", set, String (name)); if (v === null) throw unknownField (typeName, name); return v; }
+function convertOption (type, value)
+{
+   switch (type)
+   {
+      case "SFBool":   return !! value;
+      case "SFInt32":  return value | 0;
+      case "SFString": return String (value);
+      default:         return + value;
+   }
+}
+
+// Configuration/{ComponentInfo,ProfileInfo,UnitInfo}.js (title and providerURL not kept).
+function componentInfo ([name, level]) { return Object .freeze ({ name, level, title: undefined, providerURL: undefined }); }
+function componentArray (list)         { return Object .freeze (list .map (componentInfo)); }
+function profileInfo (name)
+{
+   if (name === null)
+      return null;
+
+   const components = X ("profileComponents", name);
+
+   return Object .freeze ({ name, title: undefined, providerURL: undefined, components: componentArray (components || [ ]) });
+}
 
 function executionContext (script)
 {
+   const info = () => X ("sceneInfo", script);
+   const node = n => R (n);
+   const metaValues = v => Array .isArray (v) ? v .map (String) : [String (v)];
+
    return {
+      get isScene ()          { return info () .isScene; },
+      get encoding ()         { return info () .encoding; },
+      get profile ()          { return profileInfo (info () .profile); },
+      get components ()       { return componentArray (info () .components); },
+      get units ()            { return Object .freeze (info () .units .map (([category, name, conversionFactor]) => Object .freeze ({ category, name, conversionFactor }))); },
+      get protos ()           { return protoArray (X ("protoDecls", script, false)); },
+      get externprotos ()     { return protoArray (X ("protoDecls", script, true)); },
+      get routes ()           { return Object .freeze (X ("routeList", script) .map (r => Object .freeze ({ sourceNode: node (r .sourceNode), sourceField: r .sourceField, destinationNode: node (r .destinationNode), destinationField: r .destinationField }))); },
+      get namedNodes ()       { return Object .freeze (X ("nodeArrays", script, "named") .map (R)); },
+      get importedNodes ()    { return Object .freeze (X ("nodeArrays", script, "imported") .map (m => Object .freeze ({ inlineNode: R (m .inlineNode), exportedName: m .exportedName, importedName: m .importedName }))); },
+      get exportedNodes ()    { return Object .freeze (X ("nodeArrays", script, "exported") .map (m => Object .freeze ({ exportedName: m .exportedName, localNode: R (m .localNode) }))); },
+      getNamedNodes ()        { return this .namedNodes; },
+      getImportedNodes ()     { return this .importedNodes; },
+      getExportedNodes ()     { return this .exportedNodes; },
+      getTypeName ()          { return info () .isScene ? "X3DScene" : "X3DExecutionContext"; },
+      getEncoding ()          { return this .encoding; },
+      getProfile ()           { return this .profile; },
+      getComponents ()        { return this .components; },
+      hasComponent (name, level = 0) { if (name && typeof name === "object") ({ name, level } = name); return X ("hasComponent", script, String (name), level | 0); },
+      addComponent (c)        { X ("addComponent", script, String (c .name), c .level | 0); },
+      getUnits ()             { return this .units; },
+      getUnit (category)      { return this .units .find (u => u .category === String (category)); },
+      getMetaData (name)      { const v = info () .meta .filter (e => e [0] === String (name)) .map (e => e [1]); return v .length ? v : undefined; },
+      getMetaDatas ()         { return info () .meta; },
+      setMetaData (name, v)   { X ("metaData", script, "set", String (name), metaValues (v)); },
+      addMetaData (name, v)   { X ("metaData", script, "add", String (name), metaValues (v)); },
+      removeMetaData (name)   { X ("metaData", script, "remove", String (name)); },
+      addRootNode (n)         { X ("rootNode", script, "add", A (n)); },
+      removeRootNode (n)      { X ("rootNode", script, "remove", A (n)); },
+      addNamedNode (name, n)  { X ("namedNodeOp", script, "add", String (name), A (n)); },
+      updateNamedNode (name, n) { X ("namedNodeOp", script, "remove", String (name)); X ("namedNodeOp", script, "add", String (name), A (n)); },
+      removeNamedNode (name)  { X ("namedNodeOp", script, "remove", String (name)); },
+      addExportedNode (name, n) { X ("exportedNode", script, "add", String (name), A (n)); },
+      getExportedNode (name)  { return R (X ("exportedNode", script, "get", String (name))); },
+      getRoutes ()            { return this .routes; },
+      getProtoDeclarations () { return this .protos; },
+      getExternProtoDeclarations () { return this .externprotos; },
+      toVRMLString ()         { return X ("sceneString", script, "vrml"); },
+      toXMLString ()          { return X ("sceneString", script, "xml"); },
+      toJSONString ()         { return X ("sceneString", script, "json"); },
       get rootNodes ()        { return R (X ("rootNodes", script)); },
+      getWorldInfos ()        { return R (X ("worldInfos", script)); },
       get worldURL ()         { return X ("worldURL", script); },
       get specificationVersion () { return X ("specVersion", script); },
       getWorldURL ()          { return X ("worldURL", script); },
@@ -500,6 +614,17 @@ function executionContext (script)
       addRoute (a, b, c, d)   { X ("addRoute", script, A (a), String (b), A (c), String (d)); },
       deleteRoute (a, b, c, d) { X ("deleteRoute", script, A (a), String (b), A (c), String (d)); },
    };
+}
+
+// X3DProtoDeclaration / X3DExternProtoDeclaration as the SAI sees them.
+function protoArray (list)
+{
+   return Object .freeze (list .map (p => Object .freeze ({
+      name: p .name,
+      isExternProto: p .isExternProto,
+      fields: Object .freeze (p .fields .map (f => Object .freeze ({ name: f .name, accessType: f .accessType, dataType: X3DConstants [f .dataType], value: R (f .value) }))),
+      ... (p .isExternProto ? { urls: R (p .urls) } : { }),
+   })));
 }
 
 // Math functions: V8's (fdlibm) results, not the C library's.
@@ -640,6 +765,11 @@ global .__create = function (script, sourceText, callbacks, fields)
       if (accessType === 2)
          continue;
 
+      // The accessors hold the field's handle through this object, so that the slot goes when they do.
+      const ref = { h };
+
+      own (ref, h);
+
       const names = [name];
 
       if (accessType === 7)
@@ -651,8 +781,8 @@ global .__create = function (script, sourceText, callbacks, fields)
             continue;
 
          descriptors [n] = {
-            get () { return R (X ("fv", h)); },
-            set (v) { X ("set", h, A (v)); },
+            get () { return R (X ("fv", ref .h)); },
+            set (v) { X ("set", ref .h, A (v)); },
          };
       }
    }
@@ -718,11 +848,16 @@ global .__call = function (script, name, value, time, hasValue)
 
 // Nodes were released and their ids may belong to other nodes soon: the wrappers that scripts still hold
 // point to the empty tombstone node from now on.
-global .__release = function (ids, tombstone)
+global .__release = function (ids, tombstone, detached)
 {
+   // Their field handles keep the value they had and are not the field's any more (engine.rs): no
+   // later `getField` returns these wrappers.
+   for (const h of detached)
+      wrappers .delete (h);
+
    for (const id of ids)
    {
-      const target = targets .get (id);
+      const target = targets .get (id) ?.deref ();
 
       if (target)
          target [N] = tombstone;
@@ -732,6 +867,20 @@ global .__release = function (ids, tombstone)
       contexts .delete (id);
       sources .delete (id);
    }
+};
+
+// The nodes that JavaScript reaches (wrappers that are alive); the host collects garbage first.
+global .__heldNodes = function ()
+{
+   const held = [ ];
+
+   for (const [id, ref] of nodes)
+   {
+      if (ref .deref () !== undefined)
+         held .push (id);
+   }
+
+   return held;
 };
 
 // The Script was shut down: its global object and callbacks are not needed any more.

@@ -32,6 +32,16 @@ pub trait ScriptHost {
     /// The nodes were released and their ids may be handed out again: a wrapper of one of them
     /// that a Script still holds points to `tombstone` from now on.
     fn release_nodes(&mut self, _rt: &mut Runtime, _nodes: &[NodeId], _tombstone: NodeId) {}
+
+    /// The nodes that JavaScript can still reach: live wrappers (`SFNode`), field objects of node
+    /// fields, and values (`MFNode`, `SFNode`) that live JavaScript objects hold. The host collects
+    /// garbage first, so an object nothing refers to is not counted (X_ITE: WeakRef, `SFNodeCache`).
+    ///
+    /// `None` means the host cannot say. The runtime then treats every runtime-created node as held
+    /// as long as a Script exists (conservative: nothing is released that a Script might use).
+    fn held_nodes(&mut self, _rt: &mut Runtime) -> Option<Vec<NodeId>> {
+        None
+    }
 }
 
 #[derive(Debug, Default, Clone)]
@@ -56,17 +66,28 @@ impl Runtime {
         self.interest(node, "load", Cb::UrlSetLoad);
         self.interest(node, "url", Cb::UrlSetUrl);
 
+        if let Some(k) = self.private_field(node, "loadData") {
+            self.add_interest(k, node, Cb::UrlLoadData);
+        }
+
         if self.script_state(node).load_state != nodes::LoadState::NotStarted {
             return;
         }
 
-        if !self.get_bool(node, "load") || self.url_strings(node).is_empty() {
+        // requestImmediateLoad: no load without the LoadUrlObjects option.
+        if !self.browser_options.load_url_objects() || !self.get_bool(node, "load") || self.url_strings(node).is_empty() {
             return;
         }
 
-        self.script_state(node).load_state = nodes::LoadState::InProgress;
+        self.set_load_state(node, nodes::LoadState::InProgress);
 
         // loadData: `await this .unloadData ()` — continues as a microtask.
+        self.tasks.push_back(Task::ScriptLoad(node));
+    }
+
+    /// Script.loadData (the `_loadData` event of a reload): `await this .unloadData ()`, then the fetch.
+    pub(crate) fn script_load_data(&mut self, node: NodeId) {
+        self.script_unload_data(node);
         self.tasks.push_back(Task::ScriptLoad(node));
     }
 
@@ -84,7 +105,7 @@ impl Runtime {
             rt.script_initialize_source(node, &source)
         });
 
-        self.script_state(node).load_state = if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed };
+        self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
     }
 
     /// Script.initialize__ (sourceText).
@@ -146,7 +167,8 @@ impl Runtime {
     /// unloaded): ISO/IEC 14772-1 4.12.3 asks for `shutdown ()` when the Script node is deleted or
     /// the world containing it is unloaded or replaced, and for no other method after it.
     ///
-    /// X_ITE never calls `shutdown`; this port does. The call comes first, while the Script is still
+    /// X_ITE calls `shutdown` from Script.unloadData (reload, `load` FALSE, dispose) but not when an
+    /// Inline's scene is replaced; this port also does then. The call comes first, while the Script is still
     /// connected, so what it sends is queued. The routes of the disposed scene are deleted right after
     /// (see [`Runtime::dispose_scene`]), so events for nodes that the same action deletes are not
     /// delivered, and the Script takes no event once the call has returned.
@@ -155,12 +177,22 @@ impl Runtime {
             return;
         }
 
+        // Set first: a `shutdown ()` that reaches its own Script, or disposes its scene again, finds it closed.
+        self.script_state(node).closed = true;
+
+        self.script_unload_data(node);
+    }
+
+    /// Script.unloadData: `shutdown ()` of the loaded source, then prepareEvents, eventsProcessed and
+    /// the field callbacks are disconnected. Also runs before every reload (Script.loadData) and when
+    /// `load` becomes FALSE (requestUnload).
+    pub(crate) fn script_unload_data(&mut self, node: NodeId) {
         // Only a Script that was initialized has anything to shut down.
         let initialized = self.scripts.contains(&node);
         let has_shutdown = self.script_state(node).functions.iter().any(|f| f == "shutdown");
 
-        // Set first: a `shutdown ()` that reaches its own Script, or disposes its scene again, finds it closed.
-        self.script_state(node).closed = true;
+        // `this .shutdown = null`: a reentrant unload does not call it twice.
+        self.script_state(node).functions.clear();
 
         if initialized && has_shutdown {
             self.script_call(node, ScriptCall::Plain("shutdown".into()), "shutdown");
@@ -199,6 +231,9 @@ impl Runtime {
 
         let result = host.call(self, node, call);
         self.script_host = Some(host);
+
+        // A callback may have dropped its last reference to a runtime-created node.
+        self.dynamic_dirty = true;
 
         if let Err(e) = result {
             let name = self.scene.node(node).name.clone();

@@ -1,0 +1,59 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT HAnim:1
+# Synthetic X3DOptimizer case: single-child merging and identity-group flattening.
+DEF A Transform {
+  translation 1 2 3
+  rotation 0 1 0 0.5
+  scale 2 2 2
+  children DEF B Transform {
+    translation -1 0 0.5
+    rotation 1 0 0 0.25
+    scale 1 3 1
+    scaleOrientation 0 0 1 0.3
+    center 0.5 0 0
+    children Shape { geometry Box { } }
+  }
+}
+Transform {
+  translation 0 5 0
+  rotation 0 0 1 1.5707963267948966
+  children DirectionalLight { direction 1 0 0 }
+}
+Transform {
+  translation 3 0 0
+  scale 2 1 1
+  children PointLight { location 1 1 1 }
+}
+Transform {
+  rotation 0 1 0 1
+  children SpotLight { location 0 1 0 direction 0 0 -1 }
+}
+Transform {
+  translation 0 0 10
+  rotation 0 1 0 0.75
+  children Viewpoint { position 1 2 3 orientation 1 0 0 0.2 centerOfRotation 1 1 1 }
+}
+Transform {
+  children [
+    Shape { geometry Sphere { } }
+    Shape { geometry Cone { } }
+  ]
+}
+Group {
+  children Transform { children Shape { geometry Cylinder { } } }
+}
+Transform { visible FALSE children Shape { geometry Box { size 1 1 1 } } }
+Transform {
+  translation 1 0 0
+  children Transform { visible FALSE children Shape { geometry Box { size 3 3 3 } } }
+}
+DEF Shared Transform { translation 0 1 0 children Shape { geometry Box { size 2 2 2 } } }
+Transform { translation 5 5 5 children USE Shared }
+DEF Routed Transform { children Shape { geometry Sphere { radius 3 } } }
+DEF Clock TimeSensor { }
+ROUTE Clock.isActive TO Routed.set_visible
+Transform {
+  scale 1 2 1
+  children HAnimHumanoid { translation 1 0 0 skeleton HAnimJoint { name "root" } }
+}

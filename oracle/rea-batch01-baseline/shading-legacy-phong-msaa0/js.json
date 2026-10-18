@@ -1,0 +1,77 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nTransform {\n  translation -2.2 1.2 0\n  rotation 1 1 0 0.6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.6\n        specularColor 0.8 0.8 0.8\n        emissiveColor 0.05 0 0.1\n        shininess 0.4\n      }\n      texture ImageTexture {\n        url \"../synthetic-rea-render2/checker64.png\"\n      }\n    }\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 1 1.2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.5 0.9\n        specularColor 1 1 1\n        emissiveColor 0.1 0 0\n        shininess 0.6\n      }\n      texture ImageTexture {\n        url \"../synthetic-rea-render2/checker64.png\"\n      }\n    }\n    geometry Sphere {\n      radius 1.1\n    }\n  }\n}\n\nTransform {\n  translation 3.2 1.2 0\n  children Shape {\n    appearance Appearance {\n      material TwoSidedMaterial {\n        diffuseColor 0.8 0.3 0.3\n        emissiveColor 0 0.1 0\n      }\n      texture ImageTexture {\n        url \"../synthetic-rea-render2/checker64.png\"\n      }\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -0.8 -0.8 0,\n          0.8 -0.8 0.6,\n          0.8 0.8 0,\n          -0.8 0.8 -0.6\n        ]\n      }\n    }\n  }\n}\n\nTransform {\n  translation -1 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.6 0.6 0.6\n        emissiveColor 0.2 0.1 0\n        transparency 0.3\n      }\n      texture ImageTexture {\n        url \"../synthetic-rea-render2/checker64.png\"\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('Shading', 'PHONG');\n    }\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: TwoSidedMaterial is deprecated, please use Appearance backMaterial field instead."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+DEF V1 Viewpoint { position 0 0 10 description "start" }
+DEF V2 Viewpoint { position 0 1 12 description "anchored" }
+Group { children [
+  DEF OUTER PlaneSensor { }
+  DEF A1 Anchor { description "drag anchor" url "#V2" children [
+    DEF PS PlaneSensor { }
+    Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 } } geometry Box { size 2 2 2 } } }
+  ] }
+  DEF A2 Anchor { description "plain anchor" url "#V2" children [
+    Transform { translation 2.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 } } geometry Box { size 2 2 2 } } }
+  ] }
+  Transform { translation 0 -3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.3 } } geometry Box { size 3 1 1 } } }
+] }
+DEF S Script {
+  inputOnly SFBool outer
+  inputOnly SFBool inner
+  inputOutput SFInt32 o 0
+  inputOutput SFInt32 i 0
+  url "javascript:
+function outer (v) { if (v) o = o + 1; }
+function inner (v) { if (v) i = i + 1; }
+"
+}
+ROUTE OUTER.isActive TO S.outer
+ROUTE PS.isActive TO S.inner
+

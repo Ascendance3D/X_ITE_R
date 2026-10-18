@@ -1,0 +1,214 @@
+{
+  "ok": true,
+  "poses": {
+    "5": {
+      "position": [
+        0,
+        1.6,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        1.6,
+        7.932799979492187
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        1.6,
+        7.865600020507813
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        1.6,
+        7.798399938476562
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        1.6,
+        7.663999958984375
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        1.6,
+        7.411999958984375
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        1.6,
+        6.74
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "150": {
+      "position": [
+        0,
+        1.6,
+        5.748799958984375
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nViewpoint {\n  position 0 1.6 8\n}\n\nTransform {\n  translation 0 -0.5 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Box {\n      size 40 1 40\n    }\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.4 0.4 0.9\n    }\n  }\n  geometry IndexedFaceSet {\n    solid FALSE\n    coordIndex [\n      0,\n      1,\n      2,\n      3,\n      -1\n    ]\n    coord Coordinate {\n      point [\n        -20 -3 20,\n        20 -3 20,\n        20 -3 -20,\n        -20 -3 -20\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0 0\n      }\n    }\n    geometry Box {\n      size 30 4 0.5\n    }\n  }\n}\n\nDEF S Script {\n  url \"ecmascript:\n    function initialize () { Browser .setBrowserOption ('Shading', 'POINT'); }\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      256,
+      256
+    ],
+    "viewport": [
+      0,
+      0,
+      256,
+      256
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

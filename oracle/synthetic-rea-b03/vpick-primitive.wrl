@@ -1,0 +1,152 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+Viewpoint { position 1 0 30 }
+NavigationInfo { headlight TRUE }
+DEF TBOX Transform { translation -9 0 0 rotation 0 0 1 0.3 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 transparency 0.3 } } geometry Box { size 2 2 2 } } }
+DEF TSPH Transform { translation -6 0 0 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 transparency 0.3 } } geometry Sphere { radius 1 } } }
+DEF TCON Transform { translation -3 0 0 rotation 1 0 0 0.4 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 transparency 0.3 } } geometry Cone { bottomRadius 1 height 2 } } }
+DEF TCYL Transform { translation 0 0 0 rotation 0 0 1 0.6 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 transparency 0.3 } } geometry Cylinder { radius 1 height 2 } } }
+DEF THUL Transform { translation 3 0 0 rotation 0 1 0 0.5 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.8 transparency 0.3 } } geometry IndexedFaceSet { coord Coordinate { point [ 1.2 0 0, -1.2 0 0, 0 1.2 0, 0 -1.2 0, 0 0 1.2, 0 0 -1.2 ] }
+  coordIndex [ 0 2 4 -1 2 1 4 -1 1 3 4 -1 3 0 4 -1 2 0 5 -1 1 2 5 -1 3 1 5 -1 0 3 5 -1 ] } } }
+DEF TPCY Transform { translation 6 0 0 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.8 transparency 0.3 } } geometry Cylinder { radius 1 height 2 top FALSE solid FALSE } } }
+DEF TELE Transform { translation 8 -0.6 -1 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 transparency 0.3 } } geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.7 zSpacing 0.7 height [ 0 0.4 0.1 0, 0.3 1.2 0.8 0.2, 0 0.9 0.6 0.1, 0 0.2 0 0 ] solid FALSE } } }
+DEF TREC Transform { translation 11.5 0 0 rotation 0 1 0 0.3 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 transparency 0.3 } } geometry Rectangle2D { size 2 2 } } }
+DEF TLIN Transform { translation 14 0 0 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 transparency 0.3 } } geometry LineSet { vertexCount 2 coord Coordinate { point [ -1 0 0, 1 0 0 ] } } } }
+DEF CLOCK TimeSensor { cycleInterval 7 loop TRUE }
+DEF MQBOX Transform { translation -12 3.2 0 children [
+  DEF RQBOX Transform { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF GQBOX Box { size 1.6 1 1.2 } }
+    DEF QBOX PrimitivePickSensor { intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE GQBOX pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+    DEF BQBOX PrimitivePickSensor { sortOrder "ALL_SORTED" pickingGeometry USE GQBOX pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] } ] }
+] }
+DEF PQBOX PositionInterpolator { key [ 0 1 ] keyValue [ -12 6.2 0, 16 -0.2 0 ] }
+DEF OQBOX OrientationInterpolator { key [ 0 0.5 1 ] keyValue [ 1 1 0 0, 1 1 0 3.1, 0 1 1 6 ] }
+ROUTE CLOCK.fraction_changed TO PQBOX.set_fraction
+ROUTE PQBOX.value_changed TO MQBOX.set_translation
+ROUTE CLOCK.fraction_changed TO OQBOX.set_fraction
+ROUTE OQBOX.value_changed TO RQBOX.set_rotation
+DEF MQSPH Transform { translation -12 1.1 0 children [
+  DEF RQSPH Transform { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF GQSPH Sphere { radius 0.7 } }
+    DEF QSPH PrimitivePickSensor { intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE GQSPH pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+    DEF BQSPH PrimitivePickSensor { sortOrder "ALL_SORTED" pickingGeometry USE GQSPH pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] } ] }
+] }
+DEF PQSPH PositionInterpolator { key [ 0 1 ] keyValue [ -12 4.1000000000000005 0, 16 0.010000000000000009 0 ] }
+DEF OQSPH OrientationInterpolator { key [ 0 0.5 1 ] keyValue [ 1 1 0 0, 1 1 0 3.1, 0 1 1 6 ] }
+ROUTE CLOCK.fraction_changed TO PQSPH.set_fraction
+ROUTE PQSPH.value_changed TO MQSPH.set_translation
+ROUTE CLOCK.fraction_changed TO OQSPH.set_fraction
+ROUTE OQSPH.value_changed TO RQSPH.set_rotation
+DEF MQCON Transform { translation -12 -1.0 0 children [
+  DEF RQCON Transform { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF GQCON Cone { bottomRadius 0.8 height 1.4 } }
+    DEF QCON PrimitivePickSensor { intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE GQCON pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+    DEF BQCON PrimitivePickSensor { sortOrder "ALL_SORTED" pickingGeometry USE GQCON pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] } ] }
+] }
+DEF PQCON PositionInterpolator { key [ 0 1 ] keyValue [ -12 2.0 0, 16 0.22000000000000003 0 ] }
+DEF OQCON OrientationInterpolator { key [ 0 0.5 1 ] keyValue [ 1 1 0 0, 1 1 0 3.1, 0 1 1 6 ] }
+ROUTE CLOCK.fraction_changed TO PQCON.set_fraction
+ROUTE PQCON.value_changed TO MQCON.set_translation
+ROUTE CLOCK.fraction_changed TO OQCON.set_fraction
+ROUTE OQCON.value_changed TO RQCON.set_rotation
+DEF MQCYL Transform { translation -12 -3.1000000000000005 0 children [
+  DEF RQCYL Transform { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF GQCYL Cylinder { radius 0.6 height 1.6 } }
+    DEF QCYL PrimitivePickSensor { intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE GQCYL pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+    DEF BQCYL PrimitivePickSensor { sortOrder "ALL_SORTED" pickingGeometry USE GQCYL pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] } ] }
+] }
+DEF PQCYL PositionInterpolator { key [ 0 1 ] keyValue [ -12 -0.10000000000000037 0, 16 0.4300000000000001 0 ] }
+DEF OQCYL OrientationInterpolator { key [ 0 0.5 1 ] keyValue [ 1 1 0 0, 1 1 0 3.1, 0 1 1 6 ] }
+ROUTE CLOCK.fraction_changed TO PQCYL.set_fraction
+ROUTE PQCYL.value_changed TO MQCYL.set_translation
+ROUTE CLOCK.fraction_changed TO OQCYL.set_fraction
+ROUTE OQCYL.value_changed TO RQCYL.set_rotation
+DEF CSCALE PositionInterpolator { key [ 0 0.3 0.6 1 ] keyValue [ 1 1 1, 1.6 1 0.7, 0.8 1.2 1.4, 1 1 1 ] }
+ROUTE CLOCK.fraction_changed TO CSCALE.set_fraction
+ROUTE CSCALE.value_changed TO TCON.set_scale
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool on_QBOX_a
+  inputOutput SFBool QBOX_a FALSE
+  inputOutput SFInt32 QBOX_a_count 0
+  inputOnly MFNode on_QBOX_g
+  inputOutput MFNode QBOX_g [ ]
+  inputOutput SFInt32 QBOX_g_count 0
+  inputOnly SFBool on_QSPH_a
+  inputOutput SFBool QSPH_a FALSE
+  inputOutput SFInt32 QSPH_a_count 0
+  inputOnly MFNode on_QSPH_g
+  inputOutput MFNode QSPH_g [ ]
+  inputOutput SFInt32 QSPH_g_count 0
+  inputOnly SFBool on_QCON_a
+  inputOutput SFBool QCON_a FALSE
+  inputOutput SFInt32 QCON_a_count 0
+  inputOnly MFNode on_QCON_g
+  inputOutput MFNode QCON_g [ ]
+  inputOutput SFInt32 QCON_g_count 0
+  inputOnly SFBool on_QCYL_a
+  inputOutput SFBool QCYL_a FALSE
+  inputOutput SFInt32 QCYL_a_count 0
+  inputOnly MFNode on_QCYL_g
+  inputOutput MFNode QCYL_g [ ]
+  inputOutput SFInt32 QCYL_g_count 0
+  inputOnly SFBool on_BQBOX_a
+  inputOutput SFBool BQBOX_a FALSE
+  inputOutput SFInt32 BQBOX_a_count 0
+  inputOnly MFNode on_BQBOX_g
+  inputOutput MFNode BQBOX_g [ ]
+  inputOutput SFInt32 BQBOX_g_count 0
+  inputOnly SFBool on_BQSPH_a
+  inputOutput SFBool BQSPH_a FALSE
+  inputOutput SFInt32 BQSPH_a_count 0
+  inputOnly MFNode on_BQSPH_g
+  inputOutput MFNode BQSPH_g [ ]
+  inputOutput SFInt32 BQSPH_g_count 0
+  inputOnly SFBool on_BQCON_a
+  inputOutput SFBool BQCON_a FALSE
+  inputOutput SFInt32 BQCON_a_count 0
+  inputOnly MFNode on_BQCON_g
+  inputOutput MFNode BQCON_g [ ]
+  inputOutput SFInt32 BQCON_g_count 0
+  inputOnly SFBool on_BQCYL_a
+  inputOutput SFBool BQCYL_a FALSE
+  inputOutput SFInt32 BQCYL_a_count 0
+  inputOnly MFNode on_BQCYL_g
+  inputOutput MFNode BQCYL_g [ ]
+  inputOutput SFInt32 BQCYL_g_count 0
+  inputOutput SFString log ""
+  url "javascript:
+function on_QBOX_a (value) { QBOX_a = value; QBOX_a_count = QBOX_a_count + 1; log = log + 'QBOX_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_QBOX_g (value) { QBOX_g = value; QBOX_g_count = QBOX_g_count + 1; log = log + 'QBOX_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_QSPH_a (value) { QSPH_a = value; QSPH_a_count = QSPH_a_count + 1; log = log + 'QSPH_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_QSPH_g (value) { QSPH_g = value; QSPH_g_count = QSPH_g_count + 1; log = log + 'QSPH_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_QCON_a (value) { QCON_a = value; QCON_a_count = QCON_a_count + 1; log = log + 'QCON_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_QCON_g (value) { QCON_g = value; QCON_g_count = QCON_g_count + 1; log = log + 'QCON_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_QCYL_a (value) { QCYL_a = value; QCYL_a_count = QCYL_a_count + 1; log = log + 'QCYL_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_QCYL_g (value) { QCYL_g = value; QCYL_g_count = QCYL_g_count + 1; log = log + 'QCYL_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQBOX_a (value) { BQBOX_a = value; BQBOX_a_count = BQBOX_a_count + 1; log = log + 'BQBOX_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQBOX_g (value) { BQBOX_g = value; BQBOX_g_count = BQBOX_g_count + 1; log = log + 'BQBOX_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQSPH_a (value) { BQSPH_a = value; BQSPH_a_count = BQSPH_a_count + 1; log = log + 'BQSPH_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQSPH_g (value) { BQSPH_g = value; BQSPH_g_count = BQSPH_g_count + 1; log = log + 'BQSPH_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQCON_a (value) { BQCON_a = value; BQCON_a_count = BQCON_a_count + 1; log = log + 'BQCON_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQCON_g (value) { BQCON_g = value; BQCON_g_count = BQCON_g_count + 1; log = log + 'BQCON_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQCYL_a (value) { BQCYL_a = value; BQCYL_a_count = BQCYL_a_count + 1; log = log + 'BQCYL_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BQCYL_g (value) { BQCYL_g = value; BQCYL_g_count = BQCYL_g_count + 1; log = log + 'BQCYL_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+"
+}
+ROUTE QBOX.isActive TO R.on_QBOX_a
+ROUTE QBOX.pickedGeometry TO R.on_QBOX_g
+ROUTE QSPH.isActive TO R.on_QSPH_a
+ROUTE QSPH.pickedGeometry TO R.on_QSPH_g
+ROUTE QCON.isActive TO R.on_QCON_a
+ROUTE QCON.pickedGeometry TO R.on_QCON_g
+ROUTE QCYL.isActive TO R.on_QCYL_a
+ROUTE QCYL.pickedGeometry TO R.on_QCYL_g
+ROUTE BQBOX.isActive TO R.on_BQBOX_a
+ROUTE BQBOX.pickedGeometry TO R.on_BQBOX_g
+ROUTE BQSPH.isActive TO R.on_BQSPH_a
+ROUTE BQSPH.pickedGeometry TO R.on_BQSPH_g
+ROUTE BQCON.isActive TO R.on_BQCON_a
+ROUTE BQCON.pickedGeometry TO R.on_BQCON_g
+ROUTE BQCYL.isActive TO R.on_BQCYL_a
+ROUTE BQCYL.pickedGeometry TO R.on_BQCYL_g

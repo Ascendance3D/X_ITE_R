@@ -26,6 +26,11 @@ impl Fetcher for LocalFetcher {
     fn fetch(&self, url: &url::Url) -> Result<Vec<u8>, String> {
         let href = url.as_str();
 
+        // `fetch (dataURL)` needs no server: the browser decodes the URL itself.
+        if url.scheme() == "data" {
+            return x3d_parse::gltf_default_fetch(href, "");
+        }
+
         if !href.starts_with(&self.prefix) {
             return Err("TypeError: Failed to fetch".into());
         }
@@ -121,6 +126,22 @@ fn truncate(s: &str) -> String {
     if units.len() > 120 { format!("{}…", String::from_utf16_lossy(&units[..120])) } else { s.to_string() }
 }
 
+/// FileLoader.loadDocumentAsync, the `dataAsString` branch: `url .match (/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/s)`;
+/// unless the header ends with `;base64`, the text after the first comma is `decodeURIComponent`ed (kept as it is when
+/// that fails) and a leading `ï»¿` (a UTF-8 BOM read as Latin-1) is removed.
+fn data_url_text(candidate: &str) -> Option<String> {
+    let rest = candidate.trim_start().strip_prefix("data:")?;
+    let (header, data) = rest.split_once(',')?;
+
+    if header.ends_with(";base64") {
+        return None;
+    }
+
+    let decoded = percent_encoding::percent_decode_str(data).decode_utf8().map(|d| d.into_owned()).unwrap_or_else(|_| data.to_string());
+
+    Some(decoded.strip_prefix("\u{ef}\u{bb}\u{bf}").map(str::to_string).unwrap_or(decoded))
+}
+
 /// What a FileLoader candidate produced.
 pub enum Loaded {
     /// `javascript:` / `ecmascript:` / `vrmlscript:` source (no resolved URL).
@@ -175,11 +196,19 @@ impl Runtime {
                 let r = base.join(candidate).map_err(|_| format!("TypeError: Failed to construct 'URL': Invalid URL"))?;
                 resolved = Some(r.clone());
 
+                // `if (this .dataAsString)`: a data URL that is not base64 is decoded here and handed to the callback as text.
+                if loader.data_as_string {
+                    if let Some(text) = data_url_text(candidate) {
+                        return accept(self, Loaded::Data(text.into_bytes(), r));
+                    }
+                }
+
                 if loader.data_as_string && r.scheme() == "data" {
                     return Err("TypeError: Failed to fetch".to_string());
                 }
 
-                let data = self.fetcher.fetch(&r)?;
+                // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
+                let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" { nodes::shaders::fetch_data_url(candidate)? } else { self.fetcher.fetch(&r)? };
                 accept(self, Loaded::Data(x3d_parse::gunzip(&data), r))
             })();
 
@@ -238,7 +267,19 @@ impl Runtime {
             return self.movie_load(node);
         }
 
-        if type_name == "Inline" {
+        if type_name == "BufferAudioSource" {
+            return self.buffer_load(node);
+        }
+
+        if type_name == "FontLibrary" {
+            return self.font_library_load(node);
+        }
+
+        if matches!(type_name.as_str(), "FontStyle" | "ScreenFontStyle") {
+            return self.font_style_load(node);
+        }
+
+        if type_name == "Inline" || type_name == "InlineGeometry" {
             // The request may have been replaced, cancelled or disposed since it was queued.
             if self.inline_request_is_current(node, generation) {
                 self.inline_load(node, generation);
@@ -247,15 +288,104 @@ impl Runtime {
             return;
         }
 
+        if type_name == "ShaderPart" {
+            return self.shader_part_load(node);
+        }
+
         let loader = FileLoader { type_name: type_name.clone(), base: self.base_url(node), data_as_string: false };
         let urls = self.url_strings(node);
 
-        let ok = self.load_document(&loader, &urls, |_rt, loaded| match loaded {
+        let image_texture = type_name == "ImageTexture";
+        let atlas = type_name == "ImageTextureAtlas";
+        let image_3d = type_name == "ImageTexture3D";
+        let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
             Loaded::Script(_) => Err("Error: Couldn't parse X3D. No suitable file handler found.".into()),
-            Loaded::Data(..) => Ok(()),
+            Loaded::Data(data, _) => {
+                // ImageTexture.setImage: setTextureData before COMPLETE_STATE.
+                if image_texture {
+                    rt.image_texture_set_image(node, &data);
+                }
+                if atlas {
+                    return rt.image_texture_atlas_set_image(node, &data);
+                }
+                if image_3d {
+                    return rt.image_texture_3d_set_data(node, &data);
+                }
+                Ok(())
+            }
         });
 
+        // ImageTexture.loadData with `data === null`: clearTexture, then FAILED_STATE.
+        if !ok && image_texture {
+            self.decoded_images.retain(|(n, ..)| *n != node);
+            self.set_texture_2d_size(node, 1, 1);
+        }
+
+        // ImageTextureAtlas: clearTexture, updateOutputs (0, 0, 0, 0), FAILED_STATE; on success the
+        // outputs and COMPLETE_STATE wait for the decode.
+        if atlas {
+            if ok {
+                return;
+            }
+            self.image_texture_atlas_clear(node);
+        }
+
+        // ImageTexture3D: clearTexture, updateOutputs (0, 0, 0, 0), FAILED_STATE (the outputs and the
+        // texture were set by the parser before COMPLETE_STATE).
+        if image_3d && !ok {
+            self.image_texture_3d_clear(node);
+        }
+
         self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
+    }
+
+    /// BufferAudioSource.loadData: the FileLoader's ArrayBuffer is decoded (decodeAudioData)
+    /// before COMPLETE_STATE; no URL: `setMediaElement (null)`, FAILED_STATE. A file that does not
+    /// decode rejects the async callback: the state stays IN_PROGRESS.
+    fn buffer_load(&mut self, node: NodeId) {
+        let loader = FileLoader { type_name: "BufferAudioSource".into(), base: self.base_url(node), data_as_string: false };
+        let urls = self.url_strings(node);
+        let mut decoded = None;
+
+        let ok = self.load_document(&loader, &urls, |_, loaded| match loaded {
+            Loaded::Script(_) => Err("Error: No suitable file handler found.".into()),
+            Loaded::Data(data, _) => {
+                decoded = Some(data.to_vec());
+                Ok(())
+            }
+        });
+
+        if !ok {
+            self.buffer_load_start(node);
+            self.set_load_state(node, nodes::LoadState::Failed);
+            return;
+        }
+
+        if let Some(bytes) = decoded {
+            if self.defer_audio_decodes {
+                self.pending_audio_decodes.push((node, bytes));
+            } else {
+                self.buffer_decoded(node, bytes);
+            }
+        }
+    }
+
+    /// The end of `await setArrayBuffer (data)`: COMPLETE_STATE unless decoding rejected.
+    fn buffer_decoded(&mut self, node: NodeId, bytes: Vec<u8>) {
+        if self.buffer_set_array_buffer(node, bytes).is_ok() {
+            self.set_load_state(node, nodes::LoadState::Complete);
+        }
+    }
+
+    /// The decodes held by `defer_audio_decodes`, resolved in request order.
+    pub fn flush_audio_decodes(&mut self) {
+        for (node, bytes) in std::mem::take(&mut self.pending_audio_decodes) {
+            if self.sound_has_source(node) {
+                self.buffer_decoded(node, bytes);
+            }
+        }
+
+        self.run_tasks();
     }
 
     /// MovieTexture.loadData: one attempt per URL, each with its own FileLoader (GIF/PNG) or a
@@ -306,13 +436,16 @@ impl Runtime {
         self.set_load_state(node, nodes::LoadState::Failed);
     }
 
-    /// X3DFontStyleNode.initialize → requestImmediateLoad → loadData (font selection only).
-    ///
-    /// Each family name is tried in order, with "SERIF" appended: a default family (SERIF,
-    /// SANS, TYPEWRITER) is X_ITE's own font and always loads; a FontLibrary lookup finds
-    /// nothing (FontLibrary is not ported); a family that looks like a font file URL is fetched
-    /// through browser.loadFont (cached per URL); anything else warns.
+    /// X3DFontStyleNode.initialize: `family` and `style` request a new load (`set_url__`), and so does the
+    /// initialize itself: loadData starts after `await $.sleep (0)`, a macrotask.
     pub(crate) fn font_style_initialize(&mut self, node: NodeId) {
+        self.interest(node, "family", Cb::FontStyleReload);
+        self.interest(node, "style", Cb::FontStyleReload);
+        self.tasks.push_back(Task::UrlLoad(node, 0));
+    }
+
+    /// X3DFontStyleNode.loadData (font selection only): the snapshot of `family` with "SERIF" appended.
+    pub(crate) fn font_style_load(&mut self, node: NodeId) {
         let style = match self.pre_value(node, "style") {
             Some(FieldValue::SFString(s)) => s.clone(),
             _ => String::new(),
@@ -323,18 +456,37 @@ impl Runtime {
         };
 
         family.push("SERIF".into());
+        self.font_style_continue(node, family, 0, style);
+    }
 
+    /// The family loop of X3DFontStyleNode.loadData from entry `from`. Each family name is tried in order: a default
+    /// family (SERIF, SANS, TYPEWRITER) is X_ITE's own font and always loads; then the FontLibrary table of the
+    /// node's execution context, where X_ITE waits for as long as a FontLibrary is still loading (the loop is
+    /// parked in `pending_font_styles` and goes on when a FontLibrary load ends); a family that looks like a font
+    /// file URL is fetched through browser.loadFont (cached per URL); anything else warns.
+    pub(crate) fn font_style_continue(&mut self, node: NodeId, family: Vec<String>, from: usize, style: String) {
         let Ok(base) = url::Url::parse(&self.base_url(node)) else {
             return;
         };
 
-        for f in family {
+        for (index, f) in family.iter().enumerate().skip(from) {
             if matches!(f.as_str(), "SERIF" | "SANS" | "TYPEWRITER") {
+                return self.font_style_chose(node, None);
+            }
+
+            // `browser .getFont (executionContext, fontFamily)`: `this .font` is what this load found; a library that
+            // registers later changes nothing until the next load.
+            if let Some(font) = self.font_library_font(self.scene.node(node).ctx, f) {
+                return self.font_style_chose(node, Some(font));
+            }
+
+            if self.font_library_loading() {
+                self.pending_font_styles.push(crate::font_library::PendingFontStyle { node, family: family.clone(), index, style });
                 return;
             }
 
             // `new URL (fontFamily, base)` throws for an invalid URL: loadData rejects silently.
-            let Ok(file_url) = base.join(&f) else {
+            let Ok(file_url) = base.join(f) else {
                 return;
             };
 
@@ -358,7 +510,11 @@ impl Runtime {
                         let mut parsed: Option<Result<std::rc::Rc<x3d_text::Font>, x3d_text::FontError>> = None;
                         let ok = self.load_document(&loader, std::slice::from_ref(&href), |_, loaded| {
                             if let Loaded::Data(data, _) = loaded {
-                                parsed = Some(x3d_text::Font::parse(&data).map(std::rc::Rc::new));
+                                // `OpenType .parse` throws inside the loader's callback: loadDocumentError, next url.
+                                match crate::font_library::parse_font_file(&data) {
+                                    Ok(font) => parsed = Some(Ok(std::rc::Rc::new(font))),
+                                    Err(_) => return Err(crate::font_library::font_error_text(&data)),
+                                }
                             }
 
                             Ok(())
@@ -379,11 +535,29 @@ impl Runtime {
                 };
 
                 if ok {
-                    return;
+                    return self.font_style_chose(node, None);
                 }
             } else {
                 self.log_warn(format!("Couldn't find font family '{f}' with style '{style}'."));
             }
         }
+
+        self.font_style_chose(node, None);
     }
+}
+
+/// `x3d_parse::parse_bytes`, with GLTF2Parser / GLB2Parser loading the buffers of a glTF through
+/// `fetcher` (FileLoader resolves them against the scene's url).
+pub fn parse_bytes_with_fetcher(fetcher: &dyn Fetcher, data: &[u8], url: &str) -> Result<Scene, x3d_parse::LoadError> {
+    let fetch = |uri: &str, base: &str| -> Result<Vec<u8>, String> {
+        if uri.trim_start().starts_with("data:") {
+            return x3d_parse::gltf_default_fetch(uri, base);
+        }
+
+        let resolved = url::Url::parse(base).and_then(|b| b.join(uri.trim())).map_err(|_| "TypeError: Failed to construct 'URL': Invalid URL".to_string())?;
+
+        fetcher.fetch(&resolved)
+    };
+
+    x3d_parse::with_gltf_fetcher(&fetch, || x3d_parse::parse_bytes(data, url))
 }

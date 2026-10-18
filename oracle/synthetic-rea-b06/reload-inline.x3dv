@@ -1,0 +1,23 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF I Inline { url "reload/reload-content.x3dv" }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF SC Script {
+  inputOnly SFTime tick
+  initializeOnly SFNode inline USE I
+  directOutput TRUE
+  initializeOnly SFFloat s0 -1
+  url "ecmascript:
+var done = [ ];
+function tick (v)
+{
+  if (s0 < 0) s0 = v;
+  var f = Math .round ((v - s0) * 60);
+  if (f >= 40 && !done[0]) { done[0] = true; inline .load = false; }
+  if (f >= 90 && !done[1]) { done[1] = true; inline .load = true; }
+}
+"
+}
+ROUTE TS.time TO SC.tick

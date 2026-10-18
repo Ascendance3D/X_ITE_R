@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='3.3'>
+  <Scene>
+    <TimeSensor DEF='Clock' cycleInterval='2' loop='true'/>
+    <PositionInterpolator DEF='Pos' key='0 0.5 1' keyValue='0 0 0, 1 0 0, 0 0 0'/>
+    <Transform DEF='Mover'>
+      <Shape>
+        <Box/>
+      </Shape>
+    </Transform>
+    <ROUTE fromNode='Clock' fromField='fraction_changed' toNode='Pos' toField='set_fraction'/>
+    <ROUTE fromNode='Pos' fromField='value_changed' toNode='Mover' toField='translation'/>
+    <!-- unknown node name on the source side -->
+    <ROUTE fromNode='NoSuchNode' fromField='fraction_changed' toNode='Mover' toField='translation'/>
+    <!-- wrong field name on the source side -->
+    <ROUTE fromNode='Clock' fromField='no_such_field' toNode='Mover' toField='translation'/>
+  </Scene>
+</X3D>

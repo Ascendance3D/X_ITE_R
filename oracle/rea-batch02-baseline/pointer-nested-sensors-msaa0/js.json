@@ -1,0 +1,142 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.5 0.5 0.5\n    }\n  }\n  geometry Box {\n    size 30 30 0.1\n  }\n}\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF TSG TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material DEF MG Material {\n          diffuseColor 1 0.2 0.2\n        }\n      }\n      geometry Sphere {\n        radius 1.5\n      }\n    }\n    Transform {\n      translation 0 -3 0\n      children [\n        DEF TSI TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 1 0.2\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      ]\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF TSD TouchSensor {\n      enabled FALSE\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.2 1\n        }\n      }\n      geometry Box { }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  tg\n  inputOnly      SFTime  ti\n  inputOutput    SFInt32 c0 0\n  inputOutput    SFInt32 cg 0\n  inputOutput    SFInt32 ci 0\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  mg USE MG\n\n  url \"javascript:\nfunction t0 (v) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.1 * c0, 0.5); }\nfunction tg (v) { cg = cg + 1; mg .diffuseColor = new SFColor (1, 0.2 + 0.3 * cg, 0.2); }\nfunction ti (v) { ci = ci + 1; }\n\"\n  directOutput TRUE\n}\n\nROUTE TS0.touchTime TO S.t0\nROUTE TSG.touchTime TO S.tg\nROUTE TSI.touchTime TO S.ti\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.5 0.7 0.5\n    }\n  }\n  geometry Box {\n    size 30 30 0.1\n  }\n}\n\nTransform {\n  translation -2.5 0 0\n  children [\n    DEF TSG TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material DEF MG Material {\n          diffuseColor 1 0.5 0.2\n        }\n      }\n      geometry Sphere {\n        radius 1.5\n      }\n    }\n    Transform {\n      translation 0 -3 0\n      children [\n        DEF TSI TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 1 0.2\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      ]\n    }\n  ]\n}\n\nTransform {\n  translation 2.5 0 0\n  children [\n    DEF TSD TouchSensor {\n      enabled FALSE\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.2 1\n        }\n      }\n      geometry Box { }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  tg\n  inputOnly      SFTime  ti\n  inputOutput    SFInt32 c0 2\n  inputOutput    SFInt32 cg 1\n  inputOutput    SFInt32 ci 1\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  mg USE MG\n\n  url \"javascript:\nfunction t0 (v) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.1 * c0, 0.5); }\nfunction tg (v) { cg = cg + 1; mg .diffuseColor = new SFColor (1, 0.2 + 0.3 * cg, 0.2); }\nfunction ti (v) { ci = ci + 1; }\n\"\n  directOutput TRUE\n}\n\nROUTE TS0.touchTime TO S.t0\nROUTE TSG.touchTime TO S.tg\nROUTE TSI.touchTime TO S.ti\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,1097 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        11.799999952316284
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        11.733333349227905
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0.30000007152557373,
+        0,
+        11.499999817212426
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0.4499998807907133,
+        0,
+        11.44999996688631
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0.3749998738368383,
+        0,
+        11.34166666291378
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0.2916665961344975,
+        0,
+        11.043518614327468
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0.27777767512533913,
+        0,
+        10.993827124804625
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0.5375000175502578,
+        0,
+        10.849722184082609
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0.6479168064616303,
+        0,
+        10.908101814108377
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0.539930698873448,
+        0,
+        10.890084761643813
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "63": {
+      "position": [
+        0.7499423384681734,
+        0,
+        10.741737256666362
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0.8332777301465342,
+        0,
+        10.71426553189081
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "69": {
+      "position": [
+        1.2499549865692074,
+        0,
+        10.576906809766413
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "75": {
+      "position": [
+        1.2749634524196125,
+        0.30000007152557373,
+        10.46976690239994
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "81": {
+      "position": [
+        1.0624694185132597,
+        0.45000020265578655,
+        10.591472412706153
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "87": {
+      "position": [
+        0.885391217857169,
+        0.37500019570191157,
+        10.626226909260566
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "88": {
+      "position": [
+        0.8525989809335712,
+        0.3611113124423575,
+        10.603033341533404
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "93": {
+      "position": [
+        1.0378259701774937,
+        0.3125001407331851,
+        10.521855721954353
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "99": {
+      "position": [
+        1.064855008904658,
+        0.5604164876319828,
+        10.434879843778589
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "105": {
+      "position": [
+        2.887379908896037,
+        0.6670138659208646,
+        9.462399258550022
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "I1",
+      "description": "i1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "111": {
+      "position": [
+        3.7394842110876425,
+        0.5558448346232083,
+        9.151999000655309
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "112": {
+      "position": [
+        3.6009849242765313,
+        0.5352580079842042,
+        9.257480421348845
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "117": {
+      "position": [
+        3.1162369140986073,
+        0.463204073556156,
+        9.426665661025957
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "123": {
+      "position": [
+        2.896863916268245,
+        0.38600336780804057,
+        9.522221446773173
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "129": {
+      "position": [
+        2.61405350251232,
+        0.6216693503771467,
+        9.601851135026209
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "135": {
+      "position": [
+        2.1783776659865453,
+        0.7180579114474739,
+        9.868209299293909
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "136": {
+      "position": [
+        2.0976970864965097,
+        0.6914631986446551,
+        9.947164437225211
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "141": {
+      "position": [
+        1.8153145070787389,
+        0.598381557110109,
+        10.023507871601108
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "147": {
+      "position": [
+        1.4119114168651663,
+        0.46540792178480217,
+        10.018283901864045
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A1",
+      "description": "a1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "153": {
+      "position": [
+        1.4496992164267652,
+        0.378974987957875,
+        10.014888318233666
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A2",
+      "description": "a2",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "159": {
+      "position": [
+        1.4080827416931356,
+        0.6158122635748668,
+        10.012406933784144
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "160": {
+      "position": [
+        1.3559313977919913,
+        0.7041157352996095,
+        10.011947416561627
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "165": {
+      "position": [
+        1.1734021472029639,
+        0.7131769885440136,
+        10.21033910485535
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "171": {
+      "position": [
+        0.9126460454144336,
+        0.5546931713281467,
+        10.608041631353771
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "177": {
+      "position": [
+        0.7431546968048224,
+        0.751678907826772,
+        10.666548073515678
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "183": {
+      "position": [
+        0.6192955449078994,
+        0.8263991971439992,
+        10.75545676667275
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "184": {
+      "position": [
+        0.5963586941409602,
+        0.7957918478506514,
+        10.801550917761915
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "189": {
+      "position": [
+        0.5160797069951855,
+        0.9886657490906146,
+        10.762880620731835
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "195": {
+      "position": [
+        0.43006637447234297,
+        1.0238882032000163,
+        10.83573388561318
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "P",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "201": {
+      "position": [
+        0.358388605160485,
+        1.1532401335705629,
+        10.829778297615626
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "207": {
+      "position": [
+        0.2787467192749773,
+        1.5636310791036863,
+        10.64538318142776
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "208": {
+      "position": [
+        0.26547307953910604,
+        1.6320295292571814,
+        10.614650680381132
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "214": {
+      "position": [
+        0.1858311461833182,
+        2.0424207194024575,
+        10.430255454285174
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "218": {
+      "position": [
+        0.13273653976955302,
+        2.3160147646285907,
+        10.307325340190566
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "220": {
+      "position": [
+        0.10618921282753035,
+        2.4528119095477336,
+        10.245860228189215
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "H1",
+      "description": "h1",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  displayed FALSE\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  displayed FALSE\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  displayed FALSE\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  displayed FALSE\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  displayed FALSE\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "63": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "69": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "75": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "81": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "87": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "93": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "99": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "105": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "111": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "117": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "123": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "129": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "135": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "141": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "147": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "153": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "159": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "165": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "171": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "177": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "183": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "189": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 Kn p Kn h1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "195": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 Kn p Kn h1 Kn p \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "201": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 Kn p Kn h1 Kn p Kv h1 \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "207": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    NULL\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 Kn p Kn h1 Kn p Kv h1 Kc \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "218": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    NULL\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 Kn p Kn h1 Kn p Kv h1 Kc \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n",
+    "220": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Navigation : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF P Viewpoint {\n  description \"plain\"\n  position 0 0 12\n}\n\nDEF TOUR ViewpointGroup {\n  description \"Tour\"\n  displayed FALSE\n  children [\n    DEF A1 Viewpoint {\n      description \"a1\"\n    }\n    DEF A2 Viewpoint {\n      description \"a2\"\n      position 3 0 10\n    }\n    DEF ANON Viewpoint {\n      position -3 0 10\n    }\n    NULL\n    DEF INNER ViewpointGroup {\n      description \"Inner\"\n      size 4 4 4\n      center 20 0 0\n      children DEF I1 Viewpoint {\n        description \"i1\"\n        position 20 0 1\n      }\n    }\n  ]\n}\n\nDEF HIDDEN ViewpointGroup {\n  description \"Hidden\"\n  children DEF H1 Viewpoint {\n    description \"h1\"\n    position 0 3 10\n  }\n}\n\nDEF EMPTY ViewpointGroup {\n  description \"Empty\"\n  size 1 1 1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere { }\n}\n\nTransform {\n  translation 20 0 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.8 0.2\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFBool   on_p\n  inputOnly      SFBool   on_a1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFBool   on_i1\n  inputOnly      SFBool   on_h1\n  inputOnly      SFBool   on_anon\n  inputOutput    SFString log \"I true 4 4 4 p Kn a1 Kn a2 Kn p Kn a1 Kd Kn a2 Kn p Kn a1 Kn a2 Ks Kn h1 Kn p Kn a1 Kn a2 Kn h1 Ki i1 Kn p Kn a1 Kn a2 Kn h1 Kn p Kn a1 Kx Kn a2 Kn h1 Kn p Kz Kn h1 Kn p Kn h1 Kn p Kv h1 Kc \"\n  initializeOnly SFNode   hidden USE HIDDEN\n  initializeOnly SFNode   inner USE INNER\n  initializeOnly SFNode   tour USE TOUR\n  initializeOnly SFNode   i1 USE I1\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }\nfunction b (n, v) { if (v) log = log + n + ' '; }\nfunction on_p (v) { b ('p', v); }\nfunction on_a1 (v) { b ('a1', v); }\nfunction on_a2 (v) { b ('a2', v); }\nfunction on_i1 (v) { b ('i1', v); }\nfunction on_h1 (v) { b ('h1', v); }\nfunction on_anon (v) { b ('anon', v); }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'n') Browser .nextViewpoint ();\n   if (k == 'v') Browser .previousViewpoint ();\n   if (k == 'd') hidden .displayed = true;\n   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);\n   if (k == 'i') i1 .set_bind = true;\n   if (k == 'x') tour .displayed = false;\n   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);\n   if (k == 'c') tour .children [3] = null;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE P.isBound TO R.on_p\nROUTE A1.isBound TO R.on_a1\nROUTE A2.isBound TO R.on_a2\nROUTE I1.isBound TO R.on_i1\nROUTE H1.isBound TO R.on_h1\nROUTE ANON.isBound TO R.on_anon\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

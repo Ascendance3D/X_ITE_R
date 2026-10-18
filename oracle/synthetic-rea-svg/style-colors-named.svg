@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<rect x="0" width="9" height="9" fill="red"/><rect x="10" width="9" height="9" fill="Blue"/><rect x="20" width="9" height="9" fill="LIME"/><rect x="30" width="9" height="9" fill="rebeccapurple"/><rect x="40" width="9" height="9" fill="darkslategray"/><rect x="50" width="9" height="9" fill="transparent"/><rect x="60" width="9" height="9" fill="currentColor"/><rect x="70" width="9" height="9" fill="currentcolor"/>
+</svg>

@@ -1,0 +1,31 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT Networking:3
+# Every multi-valued field type, including empty lists and multi-element node lists.
+DEF Fields Script {
+  field MFBool mfBool [TRUE FALSE TRUE]
+  field MFInt32 mfInt32 [1, -2, 3]
+  field MFFloat mfFloat [0.5 1.5 -0.25]
+  field MFDouble mfDouble [0.1 2.5]
+  field MFTime mfTime [0 1.5]
+  field MFString mfString ["a" "b"]
+  field MFVec2f mfVec2f [1 2, 3 4]
+  field MFVec3f mfVec3f [1 2 3, 4 5 6]
+  field MFVec4f mfVec4f [1 2 3 4]
+  field MFVec2d mfVec2d [0.5 0.25]
+  field MFVec3d mfVec3d [1 2 3, 4 5 6]
+  field MFVec4d mfVec4d [1 2 3 4, 5 6 7 8]
+  field MFRotation mfRotation [0 1 0 1, 1 0 0 2]
+  field MFColor mfColor [1 0 0, 0 1 0]
+  field MFColorRGBA mfColorRGBA [1 0 0 1, 0 0 1 0.5]
+  field MFImage mfImage [1 1 1 0xff, 2 1 1 0x0 0x80]
+  field MFMatrix3f mfMatrix3f [1 0 0 0 1 0 0 0 1]
+  field MFMatrix3d mfMatrix3d [2 0 0 0 2 0 0 0 2]
+  field MFMatrix4f mfMatrix4f [1 0 0 0 0 1 0 0 0 0 1 0 5 6 7 1]
+  field MFMatrix4d mfMatrix4d [1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]
+  field MFNode mfNodeEmpty []
+  field MFNode mfNodeMany [Transform { } Group { children [ ] }]
+  field MFFloat mfEmpty []
+  field MFString mfEmptyString [""]
+}

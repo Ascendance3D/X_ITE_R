@@ -1,0 +1,594 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "63": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "66": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "75": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "78": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "87": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "99": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "102": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "111": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "114": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "123": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "126": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "135": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "138": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "144": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "145": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 0.999999999999999 0 0.523598395751119\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  singleFrame FALSE\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 96\n  height 96\n  children [\n    DEF V2 Viewpoint {\n      position 0 0 6\n    }\n    DEF B2 Background {\n      skyColor 0.2 0.5 0.2\n    }\n    USE SPIN\n  ]\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 USE B2\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 0.837757283399105\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  singleFrame FALSE\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 96\n  height 96\n  children [\n    DEF V2 Viewpoint {\n      position 0 0 6\n    }\n    DEF B2 Background {\n      skyColor 0.2 0.5 0.2\n    }\n    USE SPIN\n  ]\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 USE B2\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 1.570795\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  singleFrame FALSE\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  singleFrame FALSE\n  width 96\n  height 96\n  children [\n    DEF V2 Viewpoint {\n      position 0 0 6\n    }\n    DEF B2 Background {\n      skyColor 0.2 0.5 0.2\n    }\n    USE SPIN\n  ]\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 USE B2\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 2.19911296254933\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  singleFrame FALSE\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 160\n  height 64\n  children [\n    DEF V2 Viewpoint {\n      position 0 0 6\n    }\n    DEF B2 Background {\n      skyColor 0.2 0.5 0.2\n    }\n    USE SPIN\n  ]\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 USE B2\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 2.82743092509866\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 160\n  height 64\n  children [\n    DEF V2 Viewpoint {\n      position 0 0 6\n    }\n    DEF B2 Background {\n      skyColor 0.2 0.5 0.2\n    }\n    USE SPIN\n  ]\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 USE B2\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "66": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 3.45574907490134\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 160\n  height 64\n  children [\n    DEF V2 Viewpoint {\n      position 0 0 6\n    }\n    DEF B2 Background {\n      skyColor 0.2 0.5 0.2\n      transparency 0.5\n    }\n    USE SPIN\n  ]\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 USE B2\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "78": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 4.08406703745067\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 160\n  height 64\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 4.712385\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 160\n  height 64\n  depthMap TRUE\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 Kf A2.5000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "102": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 5.34070296254933\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 0\n  height 64\n  depthMap TRUE\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 Kf A2.5000 Kg A1.0000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "114": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 0.999999999999993 0 5.96902092509866\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  updateInterval 0.2\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 64\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 Kf A2.5000 Kg A1.0000 Kh A0.5000 \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "126": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 0.999999999999998 0 0.314159074901343\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  updateInterval 0\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 64\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 Kf A2.5000 Kg A1.0000 Kh A0.5000 Ki \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "138": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 0.942477037450672\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  singleFrame FALSE\n  updateInterval 0\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 64\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 Kf A2.5000 Kg A1.0000 Kh A0.5000 Ki Kj \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "144": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 1.25663592509866\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  singleFrame FALSE\n  updateInterval 0\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 64\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 Kf A2.5000 Kg A1.0000 Kh A0.5000 Ki Kj \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n",
+    "145": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing : 4\nCOMPONENT TextureProjection : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT EnvironmentalEffects : 4\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Picking : 3\n\nViewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.1 0.1 0.2\n}\n\nDEF SPIN Transform {\n  translation 0 2.5 -2\n  rotation 0 1 0 1.30899589575112\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.6 0.1\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nDEF TS TimeSensor {\n  cycleInterval 4\n  loop TRUE\n}\n\nDEF OI OrientationInterpolator {\n  key [\n    0,\n    0.5,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 3.14159,\n    0 1 0 6.28318\n  ]\n}\n\nDEF RT RenderedTexture {\n  singleFrame FALSE\n  updateInterval 0\n}\n\nTransform {\n  translation -3 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF RT2 RenderedTexture {\n  width 64\n}\n\nTransform {\n  translation 0.5 -2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture USE RT2\n    }\n    geometry IndexedFaceSet {\n      solid FALSE\n      coordIndex [\n        0,\n        1,\n        2,\n        3,\n        -1\n      ]\n      texCoord TextureCoordinate {\n        point [\n          0 0,\n          1 0,\n          1 1,\n          0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1.3 -1.3 0,\n          1.3 -1.3 0,\n          1.3 1.3 0,\n          -1.3 1.3 0\n        ]\n      }\n    }\n  }\n}\n\nDEF P TextureProjector {\n  location 3.6 -2 4\n  direction 0 0 -1\n  fieldOfView 0.5\n  texture USE RT2\n}\n\nTransform {\n  translation 3.6 -2 -0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Box {\n      size 2.4 2.4 0.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFFloat  on_aspect\n  inputOutput    SFString log \"A1.0000 A1.0000 Ka A1.0000 Kb A2.5000 Kc Kd Ke A2.5000 Kf A2.5000 Kg A1.0000 Kh A0.5000 Ki Kj \"\n  initializeOnly SFNode   rt USE RT\n  initializeOnly SFNode   rt2 USE RT2\n  initializeOnly SFNode   b2 DEF B2 Background {\n    skyColor 0.2 0.5 0.2\n    transparency 0.5\n  }\n\n  url \"javascript:\nfunction on_aspect (value) { log = log + 'A' + value .toFixed (4) + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rt2 .singleFrame = false;\n   if (k == 'b') { rt2 .singleFrame = true; rt2 .width = 160; rt2 .height = 64; }\n   if (k == 'c') rt .singleFrame = true;\n   if (k == 'd') b2 .transparency = 0.5;\n   if (k == 'e') rt2 .children = new MFNode ();\n   if (k == 'f') rt2 .depthMap = true;\n   if (k == 'g') rt2 .width = 0;\n   if (k == 'h') { rt2 .depthMap = false; rt2 .width = 64; rt2 .height = 128; }\n   if (k == 'i') rt .updateInterval = 0;\n   if (k == 'j') rt .singleFrame = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.fraction_changed TO OI.set_fraction\nROUTE OI.value_changed TO SPIN.set_rotation\nROUTE K.keyPress TO R.on_key\nROUTE P.aspectRatio TO R.on_aspect\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,149 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+Viewpoint { position 0 0 16 }
+NavigationInfo { headlight TRUE }
+DEF T1 Transform { translation -3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 transparency 0.3 } } geometry Box { size 2 2 2 } } }
+DEF T2 Transform { translation -1.5 0.3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 transparency 0.3 } } geometry Sphere { radius 1 } } }
+DEF T3 Transform { translation 3 0 0 rotation 0 0 1 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 transparency 0.3 } } geometry Cone { bottomRadius 1 height 2 } } }
+DEF T4 Transform { translation 1 -2.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 transparency 0.3 } } geometry Box { size 1 1 1 } } }
+DEF T5 Transform { translation 5.5 1.4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 transparency 0.3 } } geometry Box { size 1 1 1 } } }
+DEF T6 Transform { translation 5.5 -1.4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.8 transparency 0.3 } } geometry Box { size 1 1 1 } } }
+DEF MOVER Transform { translation -7 0 0 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF LINE IndexedLineSet { coord Coordinate { point [ -1 0 0, 1 0 0, 0 -1 0.2, 0 1 0.2 ] } coordIndex [ 0 1 -1 2 3 -1 ] } }
+  DEF BC LinePickSensor { intersectionType "BOUNDS" sortOrder "CLOSEST" pickingGeometry USE LINE pickTarget [ USE T1 USE T2 USE T3 USE T5 USE T6 ] }
+  DEF BA LinePickSensor { intersectionType "BOUNDS" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE T1 USE T2 USE T3 USE T5 USE T6 ] }
+  DEF BS LinePickSensor { intersectionType "BOUNDS" sortOrder "ALL_SORTED" pickingGeometry USE LINE pickTarget [ USE T1 USE T2 USE T3 USE T5 USE T6 ] }
+  DEF BN LinePickSensor { intersectionType "BOUNDS" sortOrder "ANY" pickingGeometry USE LINE pickTarget [ USE T1 USE T2 USE T3 USE T5 USE T6 ] }
+  DEF GC LinePickSensor { intersectionType "GEOMETRY" sortOrder "CLOSEST" pickingGeometry USE LINE pickTarget [ USE T1 USE T2 USE T3 USE T5 USE T6 ] }
+  DEF GA LinePickSensor { intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE LINE pickTarget [ USE T1 USE T2 USE T3 USE T5 USE T6 ] }
+  DEF GS LinePickSensor { intersectionType "GEOMETRY" sortOrder "ALL_SORTED" pickingGeometry USE LINE pickTarget [ USE T1 USE T2 USE T3 USE T5 USE T6 ] }
+] }
+DEF CLOCK TimeSensor { cycleInterval 4 loop TRUE }
+DEF PATH PositionInterpolator { key [ 0 1 ] keyValue [ -7 0 0, 7 0 0 ] }
+ROUTE CLOCK.fraction_changed TO PATH.set_fraction
+ROUTE PATH.value_changed TO MOVER.set_translation
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool on_BC_a
+  inputOutput SFBool BC_a FALSE
+  inputOutput SFInt32 BC_a_count 0
+  inputOnly MFNode on_BC_g
+  inputOutput MFNode BC_g [ ]
+  inputOutput SFInt32 BC_g_count 0
+  inputOnly SFBool on_BA_a
+  inputOutput SFBool BA_a FALSE
+  inputOutput SFInt32 BA_a_count 0
+  inputOnly MFNode on_BA_g
+  inputOutput MFNode BA_g [ ]
+  inputOutput SFInt32 BA_g_count 0
+  inputOnly SFBool on_BS_a
+  inputOutput SFBool BS_a FALSE
+  inputOutput SFInt32 BS_a_count 0
+  inputOnly MFNode on_BS_g
+  inputOutput MFNode BS_g [ ]
+  inputOutput SFInt32 BS_g_count 0
+  inputOnly SFBool on_BN_a
+  inputOutput SFBool BN_a FALSE
+  inputOutput SFInt32 BN_a_count 0
+  inputOnly MFNode on_BN_g
+  inputOutput MFNode BN_g [ ]
+  inputOutput SFInt32 BN_g_count 0
+  inputOnly SFBool on_GC_a
+  inputOutput SFBool GC_a FALSE
+  inputOutput SFInt32 GC_a_count 0
+  inputOnly MFNode on_GC_g
+  inputOutput MFNode GC_g [ ]
+  inputOutput SFInt32 GC_g_count 0
+  inputOnly MFVec3f on_GC_p
+  inputOutput MFVec3f GC_p [ ]
+  inputOutput SFInt32 GC_p_count 0
+  inputOnly MFVec3f on_GC_n
+  inputOutput MFVec3f GC_n [ ]
+  inputOutput SFInt32 GC_n_count 0
+  inputOnly MFVec3f on_GC_t
+  inputOutput MFVec3f GC_t [ ]
+  inputOutput SFInt32 GC_t_count 0
+  inputOnly SFBool on_GA_a
+  inputOutput SFBool GA_a FALSE
+  inputOutput SFInt32 GA_a_count 0
+  inputOnly MFNode on_GA_g
+  inputOutput MFNode GA_g [ ]
+  inputOutput SFInt32 GA_g_count 0
+  inputOnly MFVec3f on_GA_p
+  inputOutput MFVec3f GA_p [ ]
+  inputOutput SFInt32 GA_p_count 0
+  inputOnly MFVec3f on_GA_n
+  inputOutput MFVec3f GA_n [ ]
+  inputOutput SFInt32 GA_n_count 0
+  inputOnly MFVec3f on_GA_t
+  inputOutput MFVec3f GA_t [ ]
+  inputOutput SFInt32 GA_t_count 0
+  inputOnly SFBool on_GS_a
+  inputOutput SFBool GS_a FALSE
+  inputOutput SFInt32 GS_a_count 0
+  inputOnly MFNode on_GS_g
+  inputOutput MFNode GS_g [ ]
+  inputOutput SFInt32 GS_g_count 0
+  inputOnly MFVec3f on_GS_p
+  inputOutput MFVec3f GS_p [ ]
+  inputOutput SFInt32 GS_p_count 0
+  inputOnly MFVec3f on_GS_n
+  inputOutput MFVec3f GS_n [ ]
+  inputOutput SFInt32 GS_n_count 0
+  inputOnly MFVec3f on_GS_t
+  inputOutput MFVec3f GS_t [ ]
+  inputOutput SFInt32 GS_t_count 0
+  inputOutput SFString log ""
+  url "javascript:
+function on_BC_a (value) { BC_a = value; BC_a_count = BC_a_count + 1; log = log + 'BC_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BC_g (value) { BC_g = value; BC_g_count = BC_g_count + 1; log = log + 'BC_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BA_a (value) { BA_a = value; BA_a_count = BA_a_count + 1; log = log + 'BA_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BA_g (value) { BA_g = value; BA_g_count = BA_g_count + 1; log = log + 'BA_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BS_a (value) { BS_a = value; BS_a_count = BS_a_count + 1; log = log + 'BS_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BS_g (value) { BS_g = value; BS_g_count = BS_g_count + 1; log = log + 'BS_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BN_a (value) { BN_a = value; BN_a_count = BN_a_count + 1; log = log + 'BN_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_BN_g (value) { BN_g = value; BN_g_count = BN_g_count + 1; log = log + 'BN_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GC_a (value) { GC_a = value; GC_a_count = GC_a_count + 1; log = log + 'GC_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GC_g (value) { GC_g = value; GC_g_count = GC_g_count + 1; log = log + 'GC_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GC_p (value) { GC_p = value; GC_p_count = GC_p_count + 1; log = log + 'GC_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GC_n (value) { GC_n = value; GC_n_count = GC_n_count + 1; }
+function on_GC_t (value) { GC_t = value; GC_t_count = GC_t_count + 1; }
+function on_GA_a (value) { GA_a = value; GA_a_count = GA_a_count + 1; log = log + 'GA_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GA_g (value) { GA_g = value; GA_g_count = GA_g_count + 1; log = log + 'GA_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GA_p (value) { GA_p = value; GA_p_count = GA_p_count + 1; log = log + 'GA_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GA_n (value) { GA_n = value; GA_n_count = GA_n_count + 1; }
+function on_GA_t (value) { GA_t = value; GA_t_count = GA_t_count + 1; }
+function on_GS_a (value) { GS_a = value; GS_a_count = GS_a_count + 1; log = log + 'GS_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GS_g (value) { GS_g = value; GS_g_count = GS_g_count + 1; log = log + 'GS_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GS_p (value) { GS_p = value; GS_p_count = GS_p_count + 1; log = log + 'GS_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_GS_n (value) { GS_n = value; GS_n_count = GS_n_count + 1; }
+function on_GS_t (value) { GS_t = value; GS_t_count = GS_t_count + 1; }
+"
+}
+ROUTE BC.isActive TO R.on_BC_a
+ROUTE BC.pickedGeometry TO R.on_BC_g
+ROUTE BA.isActive TO R.on_BA_a
+ROUTE BA.pickedGeometry TO R.on_BA_g
+ROUTE BS.isActive TO R.on_BS_a
+ROUTE BS.pickedGeometry TO R.on_BS_g
+ROUTE BN.isActive TO R.on_BN_a
+ROUTE BN.pickedGeometry TO R.on_BN_g
+ROUTE GC.isActive TO R.on_GC_a
+ROUTE GC.pickedGeometry TO R.on_GC_g
+ROUTE GC.pickedPoint TO R.on_GC_p
+ROUTE GC.pickedNormal TO R.on_GC_n
+ROUTE GC.pickedTextureCoordinate TO R.on_GC_t
+ROUTE GA.isActive TO R.on_GA_a
+ROUTE GA.pickedGeometry TO R.on_GA_g
+ROUTE GA.pickedPoint TO R.on_GA_p
+ROUTE GA.pickedNormal TO R.on_GA_n
+ROUTE GA.pickedTextureCoordinate TO R.on_GA_t
+ROUTE GS.isActive TO R.on_GS_a
+ROUTE GS.pickedGeometry TO R.on_GS_g
+ROUTE GS.pickedPoint TO R.on_GS_p
+ROUTE GS.pickedNormal TO R.on_GS_n
+ROUTE GS.pickedTextureCoordinate TO R.on_GS_t

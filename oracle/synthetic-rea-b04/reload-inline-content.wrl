@@ -1,0 +1,25 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT NURBS:4
+COMPONENT HAnim:3
+COMPONENT Navigation:3
+# REA batch 04 reload test content (crates/x3d-viewer/tests/rea_b04_reload.rs): one node of each
+# batch 04 kind that keeps runtime state.
+DEF SET NurbsSet {
+  tessellationScale 2
+  geometry DEF PATCH NurbsPatchSurface { uDimension 3 vDimension 3 controlPoint Coordinate { point [ -1 -1 0, 0 -1 0.5, 1 -1 0, -1 0 0.5, 0 0 1, 1 0 0.5, -1 1 0, 0 1 0.5, 1 1 0 ] } }
+}
+Shape { geometry USE PATCH }
+DEF NPI NurbsPositionInterpolator { controlPoint Coordinate { point [ 0 0 0, 1 1 0, 2 0 0 ] } }
+DEF VG ViewpointGroup { description "group" size 2 2 2 children Viewpoint { description "inside" } }
+DEF H HAnimHumanoid {
+  skeleton DEF J HAnimJoint { name "l_elbow" skinCoordIndex [0 1 2] skinCoordWeight [1 1 1] }
+  joints USE J
+  skinCoord DEF SK Coordinate { point [ 0 0 0, 1 0 0, 0 1 0 ] }
+  skin Shape { geometry IndexedFaceSet { coord USE SK coordIndex [0 1 2 -1] } }
+  motions DEF M HAnimMotion { joints "l_elbow" channels "1 Zrotation" values [0, 90] frameDuration 1 loop TRUE }
+  children DEF P HAnimPose { children HAnimJoint { name "l_elbow" } }
+}
+DEF C TimeSensor { loop TRUE cycleInterval 1 }
+ROUTE C.fraction_changed TO NPI.set_fraction
+EXPORT J

@@ -1,0 +1,77 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 5 }
+NavigationInfo { headlight FALSE }
+Fog { color 0.2 0.3 0.8 visibilityRange 9 fogType "LINEAR" }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }   shaders [ ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+uniform x3d_FogParameters x3d_Fog;
+void main()
+{
+float d = length (vP);
+   float f = clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0);
+   vec3 c = mix (x3d_Fog.color, vec3 (0.7, 0.4, 0.2) * (0.3 + 0.7 * abs (vN.z)), f);
+   gl_FragColor = vec4 (c, 1.0);
+}
+" } ] } ] } geometry Sphere { radius 1 } }}
+Transform { translation 1.5 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }   shaders [ ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+uniform x3d_FogParameters x3d_Fog;
+void main()
+{
+float d = length (vP);
+   float f = clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0);
+   vec3 c = mix (x3d_Fog.color, vec3 (0.7, 0.4, 0.2) * (0.3 + 0.7 * abs (vN.z)), f);
+   gl_FragColor = vec4 (c, 1.0);
+}
+" } ] } ] } geometry Sphere { radius 1 } }}

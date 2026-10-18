@@ -1,0 +1,315 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.39",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "grad-linear-on-circle.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2094c2031b7b1750672fbded07d88994d91e8793169898cae3def45bbd0ded02",
+   "pngSha256": "0bbc11eb5018c7d0a01150a3810896330ca17b2febc3b0dfd70f84fe38918ebb",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "grad-linear-on-polygon-holes.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4c77a7a7211e943f05ffb698f2d68eae924955055724f888b74440f139cb33c3",
+   "pngSha256": "412f861d958af62e0cfa601593000cf0bdd8ee223904c338c74ba9306181d045",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "grad-linear-on-star-evenodd.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "10174161772a5942ba6e348122312cfd8a1bc01e675e0e333b889236420bfb44",
+   "pngSha256": "8ee1a89615e316150459732f778abee129b8d2b483f52bb0df94563a67f0a71f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "grad-radial-focal.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8bd851a2b14dfa3ff49cd6ca6c8b0592b42cfc381e03194857143e881ce217a6",
+   "pngSha256": "1d74067f1c7bff601e90e74957efb17772af8357890f644a9ce9f48c817a3105",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "grad-radial-on-circle.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "48b6283af2ebe84629c47d1bd390c2191dd6ec099b7c9df08d90b8c3572f8bfd",
+   "pngSha256": "9f8f90b037b9ff0beff6a5611c9e2ec547534c13127e5f50e1013abbeb19f6dd",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "path-arc-large.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e6194a91c6a5d3c51cebbda7e085799e1d9a021e252935427124745528eb45e3",
+   "pngSha256": "2cef9ea30f777bad18c2009867523db141ee4e376720b80a2a95159be7e5f563",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "path-cubic.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e9e89bc980fd914f4ba767da827c625d4779370e9d01bf1a942dbc6561efd3b2",
+   "pngSha256": "61a8cf3c0900523acc47e23861f82fd0e06d74ce86b3981b554e5b1296bfb65d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "path-quadratic.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6bb2011dcace1c62f4d33733c42415f5fffb3d7dc823b7292a300fb206192301",
+   "pngSha256": "42382d7766e63d64f22ac6dbd6d7cf5e858adbb82df693e0e8592a3da5603734",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "path-star-evenodd.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4447f0cafa5b868e439127a7190b7b6abe9f872e70dcac0b6e97dec3bda6ca87",
+   "pngSha256": "2405b084e3f4297fb0fbe8c49f083e6b98cee98dadea00352a9d486be0fb7d4c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "path-star-nonzero.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "fc30c9422e880d644e792b5e229eaf409c029795966ed9f523603e7e2eb920ab",
+   "pngSha256": "4b80267e7778092694b5c5cde24060c882a6158446215c2fb2f01aeb8d1989db",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "root-viewbox-wide.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "914894a163de0dce26251562cc4990701bdddd4bd0d37fa429d35aaf9c561151",
+   "pngSha256": "ac7d955b433a72e4dbc5a830b93f8b4442d8de50ceb19a113d03226da5aee9c4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "shape-circle-stroke.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5ab7dcfa732cd2cba02f8131d7d1dd4b2c8a23fecb6be748b09f42cfcd9cc791",
+   "pngSha256": "feb1e0f122a02d6934c4121e82679f4e74562b09891106420c2eb776620cc2f8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "shape-ellipse.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "67a06acfbee66af61c9b49e4789b8e68a2bf4ed9521e83863bbf18e5aa7e601c",
+   "pngSha256": "0be3a0d2de75dfc2967940b470b1b4bb6d8b6bd259c717188025db03195031f6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "shape-polygon-evenodd.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "fbc93c804cd8e18ca16b74e99fa5dd4a4cbd5ceb92c8f1c8be6a386938660c32",
+   "pngSha256": "600a2f7f7ac656d47bc8aad52633b9abbe4ad89c5317aea3acc88c9fd22b8aaa",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "shape-rect-rounded.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3cc4022330b21d9700b9643b94b77430faa92a27dea05c77337a4c603caf35aa",
+   "pngSha256": "a8a3d272eb6b360a19e06f51320f76cf4bcd5b0ba1bf1543535945ad9fde5962",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "shape-rect-stroke.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3c5d5883871ed7af9e7ec1462e6fe9c97f33c71a75c1aebf9b4de2c0dbc276f0",
+   "pngSha256": "e5f88667cc8c86cbf4bb42745d40250518786e922907bdca60ebccd40781b28d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "struct-use-group.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ef9c247122607a74996ee16d013344bc8268d5a23d941d84203394a2b0be44ae",
+   "pngSha256": "7ef17cb99d4ceab03cd30d09e23fd4d9d265909fe631c07b2f6b56053a475b1d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "struct-use-image.svg",
+   "ok": true,
+   "log": [
+    "error: ImageTexture: Couldn't load URL 'http://oracle/synthetic-rea-svg-render/tex.png'. Error: Not Found"
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f5fb04aa5b882706b9309e885f19477261336ef76a150c3b4d3489dfac3953ec",
+   "pngSha256": "49c8c56d509296669f01cf18365984d4b4a3920b9da04b137eb0443d6eefe29f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "style-colors-hex.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "54b163bce9ead8ff0185d9277253e8f83b58dde08927a93013ac446be507aa1e",
+   "pngSha256": "6be3001a3c738feff272e402643037821e59aab8ad55a32321b8895e800d2389",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "tess-comb.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f2a3b01f66375d8293e4514e7dc7f0695a52723f238086b8c1d81607ef59cef8",
+   "pngSha256": "3958808d2498b1506acca7fdc93227646bcae39b2a6b6d8ca0928d2673e3ec8e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "tess-curves-blob.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "9f8c8a2f0812c567c97ba9c94b8131fe4af0d26e5251e0a908e8314dc35d2dda",
+   "pngSha256": "3c16408e5b76e4ea60fb061bb4662e1e38746cb3a51b97f4ac76c38a25b97b0a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "tess-multi-00.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3e2aa5d9f3117a8a95804a5490c582f9aca73b53cbb299ec01ce593050e34261",
+   "pngSha256": "0481d81acfc4e99b57d55c9ae391cd0fa410e1e90fb588758fa963a894f74fe1",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "tess-random-03.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0f69ba7b4507a1cd7a04747285b1f8bd6c3e9e23115d936e2ddcde2d360d7579",
+   "pngSha256": "9c5fa270c659b96604ad14d28999262fcc2d0e761a2075f74114b06199e3a171",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "tess-spiral.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "03f31e853d95899d28f8c22c79c54a875c5cc12f34b0d43a6cec92fa9df4b09c",
+   "pngSha256": "1421242906f1ebb41fbb810b6fcbb2115a5e593befdc01133d8c56a9e7a22290",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "transform-02.svg",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cfd65c87ab5372c0c5670ad2e58f72f33e6b139a1b7d90bd60893660f5eb391e",
+   "pngSha256": "49cfb75dfe78f9b1103a6ba98e4fc66229ef125c7acb8404464aad7685fa2e45",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

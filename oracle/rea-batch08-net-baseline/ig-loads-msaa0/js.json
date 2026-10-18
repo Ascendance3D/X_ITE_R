@@ -1,0 +1,129 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 0.6\n  location 0 0 10\n}\n\nTransform {\n  translation -3 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L0 InlineGeometry {\n      url [\n        \"ig/missing.x3dv\",\n        \"ig/box.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation -1.5 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L1 InlineGeometry {\n      url [\n        \"ig/none.x3dv\",\n        \"ig/cone.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L2 InlineGeometry {\n      url [\n        \"ig/broken.x3dv\",\n        \"ig/sphere.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 1.5 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L3 InlineGeometry {\n      load FALSE\n      url \"ig/box.x3dv\"\n    }\n  }\n}\n\nTransform {\n  translation 3 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L4 InlineGeometry { }\n  }\n}\n\nTransform {\n  translation -3 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L5 InlineGeometry {\n      url \"data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Sphere%20%7B%20radius%200.8%20%7D%20%7D\"\n    }\n  }\n}\n\nTransform {\n  translation -1.5 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L6 InlineGeometry {\n      url \"data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Cone%20%7B%20%7D%20%7D%0AShape%20%7B%20geometry%20Box%20%7B%20%7D%20%7D\"\n    }\n  }\n}\n\nTransform {\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L7 InlineGeometry {\n      url [\n        \"\",\n        \"ig/box.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L8 InlineGeometry {\n      url [\n        \"ig/text.txt\",\n        \"ig/missing2.x3dv\"\n      ]\n    }\n  }\n}\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 0.6\n  location 0 0 10\n}\n\nTransform {\n  translation -3 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L0 InlineGeometry {\n      url [\n        \"ig/missing.x3dv\",\n        \"ig/box.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation -1.5 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L1 InlineGeometry {\n      url [\n        \"ig/none.x3dv\",\n        \"ig/cone.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L2 InlineGeometry {\n      url [\n        \"ig/broken.x3dv\",\n        \"ig/sphere.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 1.5 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L3 InlineGeometry {\n      load FALSE\n      url \"ig/box.x3dv\"\n    }\n  }\n}\n\nTransform {\n  translation 3 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L4 InlineGeometry { }\n  }\n}\n\nTransform {\n  translation -3 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L5 InlineGeometry {\n      url \"data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Sphere%20%7B%20radius%200.8%20%7D%20%7D\"\n    }\n  }\n}\n\nTransform {\n  translation -1.5 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L6 InlineGeometry {\n      url \"data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Cone%20%7B%20%7D%20%7D%0AShape%20%7B%20geometry%20Box%20%7B%20%7D%20%7D\"\n    }\n  }\n}\n\nTransform {\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L7 InlineGeometry {\n      url [\n        \"\",\n        \"ig/box.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L8 InlineGeometry {\n      url [\n        \"ig/text.txt\",\n        \"ig/missing2.x3dv\"\n      ]\n    }\n  }\n}\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  intensity 0.6\n  location 0 0 10\n}\n\nTransform {\n  translation -3 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L0 InlineGeometry {\n      url [\n        \"ig/missing.x3dv\",\n        \"ig/box.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation -1.5 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L1 InlineGeometry {\n      url [\n        \"ig/none.x3dv\",\n        \"ig/cone.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L2 InlineGeometry {\n      url [\n        \"ig/broken.x3dv\",\n        \"ig/sphere.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 1.5 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L3 InlineGeometry {\n      load FALSE\n      url \"ig/box.x3dv\"\n    }\n  }\n}\n\nTransform {\n  translation 3 2 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L4 InlineGeometry { }\n  }\n}\n\nTransform {\n  translation -3 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L5 InlineGeometry {\n      url \"data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Sphere%20%7B%20radius%200.8%20%7D%20%7D\"\n    }\n  }\n}\n\nTransform {\n  translation -1.5 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L6 InlineGeometry {\n      url \"data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Cone%20%7B%20%7D%20%7D%0AShape%20%7B%20geometry%20Box%20%7B%20%7D%20%7D\"\n    }\n  }\n}\n\nTransform {\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L7 InlineGeometry {\n      url [\n        \"\",\n        \"ig/box.x3dv\"\n      ]\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 0.5 0.5 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.2\n        specularColor 0.6 0.6 0.6\n        shininess 0.4\n      }\n    }\n    geometry DEF L8 InlineGeometry {\n      url [\n        \"ig/text.txt\",\n        \"ig/missing2.x3dv\"\n      ]\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Error: Expected '}' at the end of node body.",
+    "error: InlineGeometry: Couldn't load any of the 2 URLs, tried in this order:",
+    "warn: InlineGeometry: Couldn't load URL 'http://oracle/synthetic-rea-b08-net/ig/broken.x3dv', trying URL 2 of 2. Error: ",
+    "warn: InlineGeometry: Couldn't load URL 'http://oracle/synthetic-rea-b08-net/ig/missing.x3dv', trying URL 2 of 2. Error: Not Found",
+    "warn: InlineGeometry: Couldn't load URL 'http://oracle/synthetic-rea-b08-net/ig/none.x3dv', trying URL 2 of 2. Error: No X3DGeometryNode found.",
+    "warn: InlineGeometry: Couldn't load URL 'http://oracle/synthetic-rea-b08-net/ig/text.txt', trying URL 2 of 2. Error: Couldn't parse X3D. No suitable file handler found for 'http://oracle/synthetic-rea-b08-net/ig/text.txt'.",
+    "warn: InlineGeometry: Couldn't load empty URL, trying URL 2 of 2. Error: Empty URL."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

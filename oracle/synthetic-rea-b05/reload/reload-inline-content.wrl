@@ -1,0 +1,28 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+DEF O OscillatorSource { frequency 220 periodicWave PeriodicWave { type "SAWTOOTH" } }
+DEF D AudioDestination {
+  children Gain { gain 0.5 children BiquadFilter { children Delay { delayTime 0.01 children WaveShaper { curve [ -1 0 1 ] children Convolver { buffer [ 1 0 0.5 ] children DynamicsCompressor { children Analyser {
+    children ChannelSplitter {
+      children ChannelMerger { children [ USE O BufferAudioSource { load FALSE numberOfChannels 1 sampleRate 48000 bufferLength 4 loop TRUE buffer [ 0 0.5 0 -0.5 ] } ] }
+      outputs [ ChannelSelector { channelSelection 1 } Gain { } ]
+    }
+  } } } } } } }
+}
+StreamAudioDestination { streamIdentifier "reload" children OscillatorSource { frequency 300 } }
+AudioDestination { children [ StreamAudioSource { streamIdentifier "reload" } MicrophoneSource { } ] }
+Transform { translation 2 0 -2 children SpatialSound { children OscillatorSource { frequency 440 } } }
+ListenerPointSource { position 0 0 3 }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  inputOnly SFTime set_time
+  outputOnly SFTime start
+  initializeOnly SFInt32 n 0
+  url "ecmascript:
+function set_time (value) { if (++ n === 3) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
+EXPORT O

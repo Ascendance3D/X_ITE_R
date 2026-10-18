@@ -10,16 +10,31 @@
 //! between frames for an interactive viewer.
 //! [`compare`] measures images against the render oracle (oracle/x_ite-shot.mjs).
 
+pub mod bbox_display;
 pub mod compare;
+pub mod extras;
+pub mod composed;
 pub mod fog;
 pub mod geometry;
+pub mod geometry2d;
+pub mod glsl_compat;
 pub mod gpu;
+pub mod shader_gpu;
+pub mod hanim;
+pub mod layer;
 pub mod load;
+pub mod nurbs;
 pub mod sg;
+pub mod splats;
+pub mod scatter_gpu;
+pub mod splats_gpu;
+pub mod style;
 pub mod tess;
 pub mod text;
 pub mod texture;
 pub mod traverse;
+pub mod volume;
+pub mod volume_gpu;
 
 use std::path::Path;
 
@@ -34,7 +49,9 @@ pub struct Shot {
 
 /// Load a world from the oracle directory and render it like oracle/x_ite-pin/src/shot.html.
 pub fn render_file(gpu: &mut gpu::Gpu, oracle_root: &Path, file: &Path, width: u32, height: u32) -> Result<Shot, String> {
-    let rt = load::load_world(oracle_root, file, true)?;
+    let mut rt = load::load_world(oracle_root, file, true)?;
+    // The still is the last of several frames (x_ite-shot.mjs draws 10).
+    rt.rendered_textures_settled();
     let frame = traverse::Builder::new(&rt).build(width, height);
     let rgba = gpu.render(&frame, width, height);
     Ok(Shot { width, height, rgba, unsupported: frame.unsupported.into_iter().collect(), log: rt.log.clone() })

@@ -1,0 +1,20 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Geometry2D:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+COMPONENT Lighting:3
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+Transform { translation -4.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/jpeg-unsupported.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/unknown-syntax.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/unknown-photometric.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 4.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/deflated.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -4.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/no-prefix.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -1.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/no-pixels.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 1.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url [ "vol/jpeg-unsupported.dcm" "vol/mono2-explicit.dcm" ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 4.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url [ "vol/not-a-volume.nrrd" "vol/mono2-implicit.dcm" ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }

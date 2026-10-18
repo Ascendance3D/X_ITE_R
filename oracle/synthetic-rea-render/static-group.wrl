@@ -1,0 +1,29 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Grouping:3
+COMPONENT Lighting:2
+COMPONENT Navigation:2
+# Synthetic REA render world: StaticGroup drops local lights and Billboard rotation and uses the
+# LOD level and Switch choice of getShapes; a plain Group beside it for contrast. Authored.
+NavigationInfo { headlight FALSE }
+DirectionalLight { direction 0 0 -1 intensity 0.6 }
+Transform {
+  translation -2.5 0 0
+  children StaticGroup {
+    children [
+      PointLight { location 0 0 2 color 1 0 0 radius 10 }
+      Billboard { axisOfRotation 0 1 0 children Transform { rotation 0 1 0 0.8 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } } geometry Box { size 1.5 1.5 0.3 } } } }
+      Transform { translation 0 -2 0 children Switch { whichChoice 0 children [ Shape { appearance Appearance { material Material { diffuseColor 0 1 0 } } geometry Sphere { radius 0.6 } } Shape { geometry Box { } } ] } }
+    ]
+  }
+}
+Transform {
+  translation 2.5 0 0
+  children Group {
+    children [
+      PointLight { location 0 0 2 color 1 0 0 radius 10 }
+      Billboard { axisOfRotation 0 1 0 children Transform { rotation 0 1 0 0.8 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } } geometry Box { size 1.5 1.5 0.3 } } } }
+      Transform { translation 0 -2 0 children Switch { whichChoice 0 children [ Shape { appearance Appearance { material Material { diffuseColor 0 1 0 } } geometry Sphere { radius 0.6 } } Shape { geometry Box { } } ] } }
+    ]
+  }
+}

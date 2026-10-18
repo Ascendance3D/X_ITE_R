@@ -1,0 +1,29 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+# Synthetic REA oracle world: X3DLayerNode.getUserViewpoints with EnableInlineViewpoints true.
+# The Inline's Viewpoint and Background are in the lists but not bound first
+# (BindableList.getBound); Browser.nextViewpoint cycles through the Inline's viewpoint only
+# with the option TRUE. Authored.
+Inline { url "browser-options-assets/inline-vp.wrl" }
+Viewpoint { description "root A" position 0 0 10 }
+Viewpoint { description "root B" position 0 5 10 orientation 1 0 0 -0.4 }
+Background { skyColor 0.1 0.1 0.3 }
+DirectionalLight { direction -0.4 -0.6 -1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.9 } } geometry Box { } }
+DEF S Script {
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    function initialize () {
+      Browser .setBrowserOption ('EnableInlineViewpoints', true);
+    }
+    function cycle (v) {
+      step = step + 1;
+      if (step >= 2 && step <= 5)
+        Browser .nextViewpoint ();
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.25 loop TRUE }
+ROUTE STEP.cycleTime TO S.cycle

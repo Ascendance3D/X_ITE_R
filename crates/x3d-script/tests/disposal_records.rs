@@ -98,7 +98,7 @@ fn arena(rt: &Runtime) -> (usize, usize) {
 /// Every cached scene is a live context that still has its PROTO declarations.
 fn assert_cache_sound(rt: &Runtime, at: &str) {
     for (key, entry) in &rt.extern_cache {
-        if let CacheEntry::Ready(c) = entry {
+        if let CacheEntry::Ready(c, _) = entry {
             assert!(!rt.ctx_dead(*c), "{at}: cached scene {key} (context {c}) was disposed");
             assert!(!rt.scene.contexts[*c].protos.is_empty(), "{at}: cached scene {key} (context {c}) lost its PROTOs");
         }

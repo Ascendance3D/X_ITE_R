@@ -1,0 +1,68 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT KeyDeviceSensor:2
+# Synthetic REA oracle world: KeySensor and StringSensor. Only one key device sensor is enabled at
+# a time (the last one enabled disables the others); keyPress / keyRelease text, action keys,
+# modifier keys, isActive; StringSensor typing, Backspace (deletionAllowed), Enter, Escape.
+# Authored; no archive content.
+DEF KS KeySensor { }
+DEF SS StringSensor { }
+DEF OUT Script {
+  inputOnly SFString kp
+  inputOnly SFString kr
+  inputOnly SFInt32 ap
+  inputOnly SFInt32 ar
+  inputOnly SFBool sh
+  inputOnly SFBool ct
+  inputOnly SFBool al
+  inputOnly SFBool ka
+  inputOnly SFBool ke
+  inputOnly SFString et
+  inputOnly SFString ft
+  inputOnly SFBool sa
+  inputOnly SFBool se
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOutput SFNode ks USE KS
+  inputOutput SFNode ss USE SS
+  url "ecmascript:
+    function esc (s) { var r = ''; for (var i = 0; i < s .length; ++ i) { var c = s .charCodeAt (i); r += c < 32 || c == 127 ? '\\\\' + c : s .charAt (i); } return r; }
+    function add (n, v) { hist = hist + ' ' + n + '=' + v + '@' + step; }
+    function kp (v) { add ('kp', esc (v)); }
+    function kr (v) { add ('kr', esc (v)); }
+    function ap (v) { add ('ap', v); }
+    function ar (v) { add ('ar', v); }
+    function sh (v) { add ('sh', v); }
+    function ct (v) { add ('ct', v); }
+    function al (v) { add ('al', v); }
+    function ka (v) { add ('ka', v); }
+    function ke (v) { add ('ke', v); }
+    function et (v) { add ('et', esc (v)); }
+    function ft (v) { add ('ft', esc (v)); }
+    function sa (v) { add ('sa', v); }
+    function se (v) { add ('se', v); }
+    function cycle (v)
+    {
+      step = step + 1;
+      if (step == 3) ks .enabled = true;
+      if (step == 5) ss .enabled = true;
+      if (step == 6) ss .deletionAllowed = false;
+    }
+  "
+}
+DEF TS TimeSensor { cycleInterval 0.5 loop TRUE }
+ROUTE TS.cycleTime TO OUT.cycle
+ROUTE KS.keyPress TO OUT.kp
+ROUTE KS.keyRelease TO OUT.kr
+ROUTE KS.actionKeyPress TO OUT.ap
+ROUTE KS.actionKeyRelease TO OUT.ar
+ROUTE KS.shiftKey TO OUT.sh
+ROUTE KS.controlKey TO OUT.ct
+ROUTE KS.altKey TO OUT.al
+ROUTE KS.isActive TO OUT.ka
+ROUTE KS.enabled_changed TO OUT.ke
+ROUTE SS.enteredText TO OUT.et
+ROUTE SS.finalText TO OUT.ft
+ROUTE SS.isActive TO OUT.sa
+ROUTE SS.enabled_changed TO OUT.se

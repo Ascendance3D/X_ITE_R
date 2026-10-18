@@ -1,0 +1,139 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.39",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "inst-geometries.wrl",
+   "ok": true,
+   "log": [
+    "warn: Parser error at line 19: Unknown node type or proto 'Text'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "912daccf818deb29051c6291ea1ec69743290d97012c28f52c0a1ec63e16a90a",
+   "pngSha256": "085f493740a24018cd395521fa5f7fae1eeb0b10be1a7d326b0717dd06a0534d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-lengths.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f95fe343a49065d251fed071561bf15a8a71affaa6a2e96ba6471056a99c2a13",
+   "pngSha256": "1cb8eb9173181cd262b706ee58d8a5fe4ea28862c5ed0c9d2a7262788def1729",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-pbr-ibl.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8cc7aeb4479be7face08f8702b0fb0e93f772a90b3c4bc692a22a9878f842d68",
+   "pngSha256": "a71832d91e33c3a7eeeb454c8f7782a693812b4a723ff59373d9a3cf17ae8c5a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-runtime.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ad3903cd845953f7706afce2bc1dc9f2b7a7f28d7b759b98f574231229184af1",
+   "pngSha256": "68ab7c26fa8180b8c2a6c612bbc32f67f62c3ee9ff4f996e7189c6980b34716d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-scale-orientation.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4bcee8b76acc8ac3147c1c45b061834d6290dca72fc53056f66e6c25295525c1",
+   "pngSha256": "bc30d0242d7aeae48a64eb17d5821f147266b6d5a92411b1c25c25c111c3541e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-shadows.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "70990ef62de56c2009bec74ec4227954556a83ae97a33cfbe2ebab98cb35c3d9",
+   "pngSha256": "e5b884066a1a273a9bfc402a2e3a0b695e2474994d564fb9a0cebe2e94c4400a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-transforms.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0d913130c21919fc5041b0d5f0a4a4be1207baf6c27b54e2d01b01b4d5fa4858",
+   "pngSha256": "b05846c5f70f69f8a7e23f695a0e30bdb05d30257ad1322f6ca3d84dc8d38397",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-transparent-textured.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6f1bbd26e58af5017dab9f341219099b916dd2a0af31a80b8e4b3e3ced2b545a",
+   "pngSha256": "16b7be2a909a4c235cd3641e3a7df2a3bb3b078ea7042be1a7de2de9d24ab611",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-twosided-layers.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "fb3dc781dc11c8af7140e99b7c79b22f7be487767662b38bb86185dfbefbbad5",
+   "pngSha256": "014aa7996cc7532c6bb15fe0bc4c5adc4b996c1594746bd67446c9508b0238da",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

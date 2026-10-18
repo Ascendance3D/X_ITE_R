@@ -1,0 +1,101 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "materials": [
+  {
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.8,
+     0.4,
+     0.2,
+     1.0
+    ],
+    "metallicFactor": 0.2,
+    "roughnessFactor": 0.6
+   },
+   "alphaMode": "OPAQUE"
+  }
+ ],
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 1,
+      "COLOR_0": 0
+     },
+     "indices": 2,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "scene": 0,
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 64
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 64,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 112,
+   "byteLength": 12
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC4"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -1,
+    -1,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 124,
+   "uri": "data:application/octet-stream;base64,AACAPwAAAAAAAAAAAACAPwAAAAAAAIA/AAAAAAAAAD8AAAAAAAAAAAAAgD8AAIA+AACAPwAAgD8AAIA/AACAPwAAgL8AAIC/AAAAAAAAgD8AAIC/AAAAAAAAgD8AAIA/AAAAAAAAgL8AAIA/AAAAAAAAAQACAAAAAgADAA=="
+  }
+ ]
+}

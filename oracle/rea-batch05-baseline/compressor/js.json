@@ -1,0 +1,102 @@
+{
+ "ok": true,
+ "poses": {
+  "40": {
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Sound : 2\n\nAudioDestination {\n  children DynamicsCompressor {\n    children DEF O OscillatorSource {\n      frequency 220\n      periodicWave PeriodicWave {\n        type \"SAWTOOTH\"\n      }\n      startTime 946684800.048\n    }\n  }\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime  set_time\n  outputOnly     SFTime  start\n  initializeOnly SFInt32 n 49\n\n  url \"ecmascript:\nfunction set_time (value) { if (++ n === 12) start = value; }\n\"\n}\n\nROUTE T.time TO S.set_time\nROUTE S.start TO O.set_startTime\n"
+ },
+ "prints": [],
+ "log": [],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "audioSuspend": [
+  768,
+  1536,
+  2304,
+  3072,
+  3840,
+  4608,
+  5376,
+  6144,
+  6912,
+  7680,
+  8448,
+  9216,
+  9984,
+  10752,
+  11520,
+  12288,
+  13056,
+  13824,
+  14592,
+  15360,
+  16128,
+  16896,
+  17664,
+  18432,
+  19200,
+  19968,
+  20736,
+  21504,
+  22272,
+  23040,
+  23808,
+  24576,
+  25344,
+  26112,
+  26880,
+  27648,
+  28416,
+  29184,
+  29952,
+  30720
+ ],
+ "console": [],
+ "audio": {
+  "sampleRate": 48000,
+  "length": 31232,
+  "channels": 2,
+  "file": "js.audio.f32"
+ }
+}

@@ -1,0 +1,26 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT Shape:4
+# Synthetic REA oracle world: the Shading browser option WIREFRAME, set by a Script
+# (X3DShadersContext.setShading, Material getMaterialKey). Authored; checker64.png is self-made.
+Viewpoint { position 0 0 9 }
+NavigationInfo { type "NONE" }
+Background { skyAngle [ 0.8 1.6 ] skyColor [ 0.1 0.1 0.3 0.2 0.3 0.5 0.4 0.4 0.4 ] groundAngle [ 1.2 ] groundColor [ 0.1 0.08 0.05 0.2 0.15 0.1 ] }
+DirectionalLight { direction -0.4 -0.6 -1 }
+Transform { translation -2.2 1.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.8 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 emissiveColor 0.05 0 0.1 } texture ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry Box { size 2 2 2 } } }
+Transform { translation 1 1.2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.5 0.9 specularColor 1 1 1 shininess 0.6 } } geometry Sphere { radius 1.1 } } }
+Transform { translation 3.2 1.2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 transparency 0.4 } texture ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0.6, 0.8 0.8 0, -0.8 0.8 -0.6 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Shape { appearance Appearance { material Material { emissiveColor 1 1 0.3 } lineProperties LineProperties { linewidthScaleFactor 4 } } geometry IndexedLineSet { coord Coordinate { point [ -4 -1 0, -1.5 -2.5 0, 0 -1.2 0 ] } coordIndex [ 0 1 2 -1 ] } }
+Shape { appearance Appearance { material Material { emissiveColor 0.3 1 0.6 } lineProperties LineProperties { linewidthScaleFactor 14 linetype 3 } } geometry IndexedLineSet { coord Coordinate { point [ 0.5 -1.3 0, 3.8 -2.6 0 ] } coordIndex [ 0 1 -1 ] } }
+Shape { appearance Appearance { material Material { emissiveColor 1 0.4 1 } } geometry LineSet { vertexCount [ 2 ] coord Coordinate { point [ -4 -3.3 0, 4 -3.1 0 ] } } }
+Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } pointProperties PointProperties { pointSizeScaleFactor 4 } } geometry PointSet { coord Coordinate { point [ -3 -3.8 0, -2 -3.8 0, -1 -3.8 0 ] } } }
+Shape { geometry PointSet { coord Coordinate { point [ 1 -3.8 0, 2 -3.8 0, 3 -3.8 0 ] } } }
+DEF S Script {
+  inputOutput SFString hist ""
+  url "ecmascript:
+    function initialize () {
+      Browser .setBrowserOption ('Shading', 'WIREFRAME');
+    }
+  "
+}

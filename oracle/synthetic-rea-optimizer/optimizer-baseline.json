@@ -1,0 +1,97 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "file": "combine.wrl",
+   "ok": true,
+   "options": {
+    "none": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nDEF A Transform {\n  translation 1 2 3\n  rotation 0 1 0 0.5\n  scale 2 2 2\n  children DEF B Transform {\n    translation -1 0 0.5\n    rotation 1 0 0 0.25\n    scale 1 3 1\n    scaleOrientation 0 0 1 0.3\n    center 0.5 0 0\n    children Shape {\n      geometry Box { }\n    }\n  }\n}\n\nTransform {\n  translation 0 5 0\n  rotation 0 0 1 1.5707963267949\n  children DirectionalLight {\n    direction 1 0 0\n  }\n}\n\nTransform {\n  translation 3 0 0\n  scale 2 1 1\n  children PointLight {\n    location 1 1 1\n  }\n}\n\nTransform {\n  rotation 0 1 0 1\n  children SpotLight {\n    location 0 1 0\n  }\n}\n\nTransform {\n  translation 0 0 10\n  rotation 0 1 0 0.75\n  children Viewpoint {\n    position 1 2 3\n    orientation 1 0 0 0.2\n    centerOfRotation 1 1 1\n  }\n}\n\nTransform {\n  children [\n    Shape {\n      geometry Sphere { }\n    }\n    Shape {\n      geometry Cone { }\n    }\n  ]\n}\n\nGroup {\n  children Transform {\n    children Shape {\n      geometry Cylinder { }\n    }\n  }\n}\n\nTransform {\n  visible FALSE\n  children Shape {\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 1 0 0\n  children Transform {\n    visible FALSE\n    children Shape {\n      geometry Box {\n        size 3 3 3\n      }\n    }\n  }\n}\n\nDEF Shared Transform {\n  translation 0 1 0\n  children Shape {\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 5 5 5\n  children USE Shared\n}\n\nDEF Routed Transform {\n  children Shape {\n    geometry Sphere {\n      radius 3\n    }\n  }\n}\n\nDEF Clock TimeSensor { }\n\nTransform {\n  scale 1 2 1\n  children HAnimHumanoid {\n    translation 1 0 0\n    skeleton HAnimJoint {\n      name \"root\"\n    }\n  }\n}\n\nROUTE Clock.isActive TO Routed.set_visible\n",
+     "error": null
+    },
+    "remove": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nDEF A Transform {\n  translation 1 2 3\n  rotation 0 1 0 0.5\n  scale 2 2 2\n  children DEF B Transform {\n    translation -1 0 0.5\n    rotation 1 0 0 0.25\n    scale 1 3 1\n    scaleOrientation 0 0 1 0.3\n    center 0.5 0 0\n    children Shape {\n      geometry Box { }\n    }\n  }\n}\n\nTransform {\n  translation 0 5 0\n  rotation 0 0 1 1.5707963267949\n  children DirectionalLight {\n    direction 1 0 0\n  }\n}\n\nTransform {\n  translation 3 0 0\n  scale 2 1 1\n  children PointLight {\n    location 1 1 1\n  }\n}\n\nTransform {\n  rotation 0 1 0 1\n  children SpotLight {\n    location 0 1 0\n  }\n}\n\nTransform {\n  translation 0 0 10\n  rotation 0 1 0 0.75\n  children Viewpoint {\n    position 1 2 3\n    orientation 1 0 0 0.2\n    centerOfRotation 1 1 1\n  }\n}\n\nTransform {\n  children [\n    Shape {\n      geometry Sphere { }\n    }\n    Shape {\n      geometry Cone { }\n    }\n  ]\n}\n\nGroup {\n  children Transform {\n    children Shape {\n      geometry Cylinder { }\n    }\n  }\n}\n\nTransform {\n  visible FALSE\n  children Shape {\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 1 0 0\n  children Transform {\n    visible FALSE\n    children Shape {\n      geometry Box {\n        size 3 3 3\n      }\n    }\n  }\n}\n\nDEF Shared Transform {\n  translation 0 1 0\n  children Shape {\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 5 5 5\n  children USE Shared\n}\n\nDEF Routed Transform {\n  children Shape {\n    geometry Sphere {\n      radius 3\n    }\n  }\n}\n\nDEF Clock TimeSensor { }\n\nTransform {\n  scale 1 2 1\n  children HAnimHumanoid {\n    translation 1 0 0\n    skeleton HAnimJoint {\n      name \"root\"\n    }\n  }\n}\n\nROUTE Clock.isActive TO Routed.set_visible\n",
+     "error": null
+    },
+    "combine": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nDEF B Transform {\n  translation 0.101843 2 4.357008\n  rotation 0.438758192352207 0.891593951829381 -0.112033359786682 0.55784506536414\n  scale 2 6 2\n  scaleOrientation -0.140569679893234 0.930092149925069 0.33936522765669 0.837955180610701\n  center 0.5 0 0\n  children Shape {\n    geometry Box { }\n  }\n}\n\nDirectionalLight {\n  direction 2.220446e-16 1 0\n}\n\nPointLight {\n  location 5 1 1\n}\n\nSpotLight {\n  location 0 1 0\n  direction -0.841471 0 -0.5403023\n}\n\nViewpoint {\n  position 2.776605 2 11.51343\n  orientation 0.245840987725772 0.964467658181581 -0.0967695462206713 0.77498772039601\n  centerOfRotation 1.413328 1 10.05005\n}\n\nShape {\n  geometry Sphere { }\n}\n\nShape {\n  geometry Cone { }\n}\n\nGroup {\n  children Shape {\n    geometry Cylinder { }\n  }\n}\n\nTransform {\n  visible FALSE\n  children Shape {\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 1 0 0\n  children Transform {\n    visible FALSE\n    children Shape {\n      geometry Box {\n        size 3 3 3\n      }\n    }\n  }\n}\n\nDEF Shared Transform {\n  translation 0 1 0\n  children Shape {\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 5 5 5\n  children USE Shared\n}\n\nDEF Routed Transform {\n  children Shape {\n    geometry Sphere {\n      radius 3\n    }\n  }\n}\n\nDEF Clock TimeSensor { }\n\nHAnimHumanoid {\n  translation 1 0 0\n  scale 1 2 1\n  skeleton HAnimJoint {\n    name \"root\"\n  }\n}\n\nROUTE Clock.isActive TO Routed.set_visible\n",
+     "error": null
+    },
+    "all": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nDEF B Transform {\n  translation 0.101843 2 4.357008\n  rotation 0.438758192352207 0.891593951829381 -0.112033359786682 0.55784506536414\n  scale 2 6 2\n  scaleOrientation -0.140569679893234 0.930092149925069 0.33936522765669 0.837955180610701\n  center 0.5 0 0\n  children Shape {\n    geometry Box { }\n  }\n}\n\nDirectionalLight {\n  direction 2.220446e-16 1 0\n}\n\nPointLight {\n  location 5 1 1\n}\n\nSpotLight {\n  location 0 1 0\n  direction -0.841471 0 -0.5403023\n}\n\nViewpoint {\n  position 2.776605 2 11.51343\n  orientation 0.245840987725772 0.964467658181581 -0.0967695462206713 0.77498772039601\n  centerOfRotation 1.413328 1 10.05005\n}\n\nShape {\n  geometry Sphere { }\n}\n\nShape {\n  geometry Cone { }\n}\n\nGroup {\n  children Shape {\n    geometry Cylinder { }\n  }\n}\n\nTransform {\n  visible FALSE\n  children Shape {\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 1 0 0\n  children Transform {\n    visible FALSE\n    children Shape {\n      geometry Box {\n        size 3 3 3\n      }\n    }\n  }\n}\n\nDEF Shared Transform {\n  translation 0 1 0\n  children Shape {\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 5 5 5\n  children USE Shared\n}\n\nDEF Routed Transform {\n  children Shape {\n    geometry Sphere {\n      radius 3\n    }\n  }\n}\n\nDEF Clock TimeSensor { }\n\nHAnimHumanoid {\n  translation 1 0 0\n  scale 1 2 1\n  skeleton HAnimJoint {\n    name \"root\"\n  }\n}\n\nROUTE Clock.isActive TO Routed.set_visible\n",
+     "error": null
+    }
+   },
+   "log": []
+  },
+  {
+   "file": "empty-groups.wrl",
+   "ok": true,
+   "options": {
+    "none": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF Outer Group {\n  children [\n    DEF EmptyGroup Group { }\n    DEF EmptyTransform Transform {\n      translation 1 0 0\n    }\n    Anchor {\n      children Group {\n        children Group { }\n      }\n    }\n    Switch {\n      whichChoice 0\n      children Group { }\n    }\n    Collision { }\n    LOD {\n      children Shape {\n        geometry Box { }\n      }\n    }\n    Transform {\n      children Shape {\n        geometry Sphere { }\n      }\n    }\n  ]\n}\n\nDEF Lonely Group { }\n\nShape {\n  geometry Cone { }\n}\n\nEXPORT EmptyGroup\nEXPORT Lonely AS L\n",
+     "error": null
+    },
+    "remove": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF Outer Group {\n  children [\n    Switch {\n      whichChoice 0\n      children Group { }\n    }\n    LOD {\n      children Shape {\n        geometry Box { }\n      }\n    }\n    Transform {\n      children Shape {\n        geometry Sphere { }\n      }\n    }\n  ]\n}\n\nShape {\n  geometry Cone { }\n}\n",
+     "error": null
+    },
+    "combine": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF Outer Group {\n  children [\n    DEF EmptyGroup Group { }\n    DEF EmptyTransform Transform {\n      translation 1 0 0\n    }\n    Anchor {\n      children Group {\n        children Group { }\n      }\n    }\n    Switch {\n      whichChoice 0\n      children Group { }\n    }\n    Collision { }\n    LOD {\n      children Shape {\n        geometry Box { }\n      }\n    }\n    Shape {\n      geometry Sphere { }\n    }\n  ]\n}\n\nDEF Lonely Group { }\n\nShape {\n  geometry Cone { }\n}\n\nEXPORT EmptyGroup\nEXPORT Lonely AS L\n",
+     "error": null
+    },
+    "all": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF Outer Group {\n  children [\n    Switch {\n      whichChoice 0\n      children Group { }\n    }\n    LOD {\n      children Shape {\n        geometry Box { }\n      }\n    }\n    Shape {\n      geometry Sphere { }\n    }\n  ]\n}\n\nShape {\n  geometry Cone { }\n}\n",
+     "error": null
+    }
+   },
+   "log": []
+  },
+  {
+   "file": "hanim.wrl",
+   "ok": true,
+   "options": {
+    "none": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nHAnimHumanoid {\n  skeleton DEF J1 HAnimJoint {\n    name \"humanoid_root\"\n    children [\n      HAnimSegment {\n        name \"pelvis\"\n      }\n      DEF J2 HAnimJoint {\n        name \"sacroiliac\"\n        children HAnimSite {\n          name \"s\"\n        }\n      }\n    ]\n  }\n  joints [\n    USE J1\n    USE J2\n  ]\n}\n\nGroup { }\n\nHAnimHumanoid { }\n",
+     "error": null
+    },
+    "remove": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nHAnimHumanoid {\n  skeleton DEF J1 HAnimJoint {\n    name \"humanoid_root\"\n    children [\n      HAnimSegment {\n        name \"pelvis\"\n      }\n      DEF J2 HAnimJoint {\n        name \"sacroiliac\"\n        children HAnimSite {\n          name \"s\"\n        }\n      }\n    ]\n  }\n  joints [\n    USE J1\n    USE J2\n  ]\n}\n",
+     "error": null
+    },
+    "combine": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nHAnimHumanoid {\n  skeleton DEF J1 HAnimJoint {\n    name \"humanoid_root\"\n    children [\n      HAnimSegment {\n        name \"pelvis\"\n      }\n      DEF J2 HAnimJoint {\n        name \"sacroiliac\"\n        children HAnimSite {\n          name \"s\"\n        }\n      }\n    ]\n  }\n  joints [\n    USE J1\n    USE J2\n  ]\n}\n\nGroup { }\n\nHAnimHumanoid { }\n",
+     "error": null
+    },
+    "all": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT HAnim : 1\n\nHAnimHumanoid {\n  skeleton DEF J1 HAnimJoint {\n    name \"humanoid_root\"\n    children [\n      HAnimSegment {\n        name \"pelvis\"\n      }\n      DEF J2 HAnimJoint {\n        name \"sacroiliac\"\n        children HAnimSite {\n          name \"s\"\n        }\n      }\n    ]\n  }\n  joints [\n    USE J1\n    USE J2\n  ]\n}\n",
+     "error": null
+    }
+   },
+   "log": []
+  },
+  {
+   "file": "interpolators.wrl",
+   "ok": true,
+   "options": {
+    "none": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF T Transform {\n  children Shape {\n    geometry Box { }\n  }\n}\n\nDEF P PositionInterpolator {\n  key 0\n  keyValue 4 5 6\n}\n\nDEF O OrientationInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 1\n  ]\n}\n\nDEF S ScalarInterpolator {\n  key 0.5\n  keyValue 0.25\n}\n\nDEF M Material { }\n\nDEF Clock TimeSensor { }\n\nShape {\n  appearance Appearance {\n    material USE M\n  }\n  geometry Sphere { }\n}\n\nROUTE Clock.fraction_changed TO P.set_fraction\nROUTE P.value_changed TO T.set_translation\nROUTE Clock.fraction_changed TO O.set_fraction\nROUTE O.value_changed TO T.set_rotation\nROUTE S.value_changed TO M.set_transparency\n",
+     "error": null
+    },
+    "remove": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF T Transform {\n  children Shape {\n    geometry Box { }\n  }\n}\n\nDEF P PositionInterpolator {\n  key 0\n  keyValue 4 5 6\n}\n\nDEF O OrientationInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 1\n  ]\n}\n\nDEF S ScalarInterpolator {\n  key 0.5\n  keyValue 0.25\n}\n\nDEF M Material { }\n\nDEF Clock TimeSensor { }\n\nShape {\n  appearance Appearance {\n    material USE M\n  }\n  geometry Sphere { }\n}\n\nROUTE Clock.fraction_changed TO P.set_fraction\nROUTE P.value_changed TO T.set_translation\nROUTE Clock.fraction_changed TO O.set_fraction\nROUTE O.value_changed TO T.set_rotation\nROUTE S.value_changed TO M.set_transparency\n",
+     "error": null
+    },
+    "combine": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF T Transform {\n  children Shape {\n    geometry Box { }\n  }\n}\n\nDEF P PositionInterpolator {\n  key 0\n  keyValue 4 5 6\n}\n\nDEF O OrientationInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 1\n  ]\n}\n\nDEF S ScalarInterpolator {\n  key 0.5\n  keyValue 0.25\n}\n\nDEF M Material { }\n\nDEF Clock TimeSensor { }\n\nShape {\n  appearance Appearance {\n    material USE M\n  }\n  geometry Sphere { }\n}\n\nROUTE Clock.fraction_changed TO P.set_fraction\nROUTE P.value_changed TO T.set_translation\nROUTE Clock.fraction_changed TO O.set_fraction\nROUTE O.value_changed TO T.set_rotation\nROUTE S.value_changed TO M.set_transparency\n",
+     "error": null
+    },
+    "all": {
+     "value": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nDEF T Transform {\n  translation 4 5 6\n  children Shape {\n    geometry Box { }\n  }\n}\n\nDEF P PositionInterpolator {\n  key 0\n  keyValue 4 5 6\n}\n\nDEF O OrientationInterpolator {\n  key [\n    0,\n    1\n  ]\n  keyValue [\n    0 1 0 0,\n    0 1 0 1\n  ]\n}\n\nDEF S ScalarInterpolator {\n  key 0.5\n  keyValue 0.25\n}\n\nDEF M Material {\n  transparency 0.25\n}\n\nDEF Clock TimeSensor { }\n\nShape {\n  appearance Appearance {\n    material USE M\n  }\n  geometry Sphere { }\n}\n\nROUTE Clock.fraction_changed TO P.set_fraction\nROUTE Clock.fraction_changed TO O.set_fraction\nROUTE O.value_changed TO T.set_rotation\n",
+     "error": null
+    }
+   },
+   "log": []
+  }
+ ]
+}

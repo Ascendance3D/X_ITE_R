@@ -1,0 +1,97 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\nCOMPONENT Geometry2D : 2\nCOMPONENT Text : 1\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nTransform {\n  translation -3 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.6 0.3\n      }\n    }\n    geometry Sphere { }\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.6 0.8\n      }\n    }\n    geometry Cone { }\n  }\n}\n\nTransform {\n  translation 3 2 0\n  rotation 1 0 0 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.6 0.8 0.3\n      }\n    }\n    geometry Cylinder {\n      height 1.5\n    }\n  }\n}\n\nTransform {\n  translation -3 -0.7 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        emissiveColor 1 1 0.4\n      }\n    }\n    geometry Circle2D { }\n  }\n}\n\nTransform {\n  translation 0 -0.7 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        emissiveColor 0.4 1 1\n      }\n    }\n    geometry Disk2D {\n      innerRadius 0.4\n    }\n  }\n}\n\nTransform {\n  translation 3 -0.7 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        emissiveColor 1 0.5 1\n      }\n    }\n    geometry ArcClose2D {\n      startAngle 0.3\n      endAngle 4\n    }\n  }\n}\n\nTransform {\n  translation -4.5 -3.2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        emissiveColor 1 1 1\n      }\n    }\n    geometry Text {\n      string [\n        \"Quality g\",\n        \"WWW\"\n      ]\n      length [\n        6,\n        0\n      ]\n      fontStyle FontStyle {\n        size 0.9\n      }\n    }\n  }\n}\n\nTransform {\n  translation 3.3 -3 0\n  rotation 1 0 0 -1.2\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"../synthetic-rea-render2/checker64.png\"\n      }\n    }\n    geometry Rectangle2D {\n      size 2.5 6\n    }\n  }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 5\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('PrimitiveQuality', 'LOW');\n      Browser .setBrowserOption ('TextureQuality', 'LOW');\n      Browser .setBrowserOption ('TextCompression', 'SCALING');\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step == 2) {\n        Browser .setBrowserOption ('PrimitiveQuality', 'HIGH');\n        Browser .setBrowserOption ('TextureQuality', 'HIGH');\n        Browser .setBrowserOption ('TextCompression', 'CHAR_SPACING');\n      }\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+#VRML V2.0 utf8
+Group {
+  children [
+    Shape {
+      appearance Appearance { material Material { diffuseColor 0 1 0 transparency 0.5 } }
+      geometry Sphere { radius 2 }
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight FALSE }
+Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }   shaders [ ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url [ "shaders/missing.vs" "shaders/basic.vs" ] } ShaderPart { type "FRAGMENT"  url [ "shaders/broken.fs" "shaders/missing.fs" "shaders/orange.fs" ] } ] } ] } geometry Sphere { radius 1.2 } }

@@ -1,0 +1,54 @@
+{
+ "settle": true,
+ "console": true,
+ "dumpInlines": true,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 150,
+ "capture": [
+  3,
+  10,
+  30,
+  40,
+  60,
+  70,
+  90,
+  100,
+  120,
+  149
+ ],
+ "dump": [
+  3,
+  10,
+  40,
+  70,
+  100,
+  149
+ ],
+ "events": [
+  {
+   "frame": 4,
+   "type": "mousemove",
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 4,
+   "type": "mousedown",
+   "button": 0,
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 5,
+   "type": "mouseup",
+   "button": 0,
+   "x": 5,
+   "y": 507
+  }
+ ]
+}

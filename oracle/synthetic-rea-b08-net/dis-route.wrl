@@ -1,0 +1,56 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 8 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+
+DEF RX ReceiverPdu { bboxSize 2 2 2 bboxDisplay TRUE address "127.0.0.1" port 41234 networkMode "networkReader" }
+DEF SG SignalPdu { bboxSize 1 1 1 bboxCenter 2 0 0 bboxDisplay TRUE address "127.0.0.1" port 41236 networkMode "networkWriter" }
+DEF EM DISEntityManager { address "127.0.0.1" port 41234 }
+DEF K KeySensor { }
+DEF T BooleanToggle { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFBool seen
+  inputOnly SFTime seen_time
+  inputOnly SFInt32 seen_int
+  inputOnly MFNode seen_nodes
+  outputOnly SFBool t_set
+  inputOutput SFString log ""
+  url "javascript:
+function on_key (k) { log = log + 'K' + k + ' '; t_set = true; }
+function seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }
+function seen_time (v, t) { log = log + 'time:' + v + ' '; }
+function seen_int (v, t) { log = log + 'int:' + v + ' '; }
+function seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE R.t_set TO T.set_boolean
+ROUTE T.toggle TO RX.set_bboxDisplay
+ROUTE T.toggle TO SG.set_enabled
+ROUTE T.toggle TO RX.set_visible
+ROUTE RX.isActive TO R.seen
+ROUTE RX.isNetworkReader TO R.seen
+ROUTE RX.isNetworkWriter TO R.seen
+ROUTE RX.isStandAlone TO R.seen
+ROUTE RX.isRtpHeaderHeard TO R.seen
+ROUTE RX.timestamp TO R.seen_time
+ROUTE SG.isActive TO R.seen
+ROUTE SG.isNetworkWriter TO R.seen
+ROUTE SG.timestamp TO R.seen_time
+ROUTE EM.addedEntities TO R.seen_nodes
+ROUTE EM.removedEntities TO R.seen_nodes
+ROUTE RX.enabled_changed TO R.seen
+ROUTE RX.visible_changed TO R.seen
+ROUTE SG.enabled_changed TO R.seen
+

@@ -1,0 +1,118 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        1,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "front",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        4.6666669845581055
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "site view",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "site view",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT HAnim : 1\n\nViewpoint {\n  description \"front\"\n  position 0 1 6\n}\n\nDEF H HAnimHumanoid {\n  version \"\"\n  skeleton DEF J HAnimJoint {\n    name \"humanoid_root\"\n    children [\n      DEF S HAnimSite {\n        name \"x_pt\"\n        translation 1 0 0\n        children Shape {\n          geometry Box {\n            size 0.4 0.4 0.4\n          }\n        }\n      }\n      DEF SEG HAnimSegment {\n        name \"seg\"\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 1 0 0\n            }\n          }\n          geometry Sphere {\n            radius 0.3\n          }\n        }\n      }\n      Shape {\n        geometry Cone { }\n      }\n    ]\n  }\n  joints USE J\n  segments USE SEG\n  sites USE S\n  viewpoints DEF HS HAnimSite {\n    name \"cam_pt\"\n    translation 0 1 4\n    children Viewpoint {\n      description \"site view\"\n    }\n  }\n}\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT HAnim : 1\n\nViewpoint {\n  description \"front\"\n  position 0 1 6\n}\n\nDEF H HAnimHumanoid {\n  version \"\"\n  skeleton DEF J HAnimJoint {\n    name \"humanoid_root\"\n    children [\n      DEF S HAnimSite {\n        name \"x_pt\"\n        translation 1 0 0\n        children Shape {\n          geometry Box {\n            size 0.4 0.4 0.4\n          }\n        }\n      }\n      DEF SEG HAnimSegment {\n        name \"seg\"\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 1 0 0\n            }\n          }\n          geometry Sphere {\n            radius 0.3\n          }\n        }\n      }\n      Shape {\n        geometry Cone { }\n      }\n    ]\n  }\n  joints USE J\n  segments USE SEG\n  sites USE S\n  viewpoints DEF HS HAnimSite {\n    name \"cam_pt\"\n    translation 0 1 4\n    children Viewpoint {\n      description \"site view\"\n    }\n  }\n}\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT HAnim : 1\n\nViewpoint {\n  description \"front\"\n  position 0 1 6\n}\n\nDEF H HAnimHumanoid {\n  version \"\"\n  skeleton DEF J HAnimJoint {\n    name \"humanoid_root\"\n    children [\n      DEF S HAnimSite {\n        name \"x_pt\"\n        translation 1 0 0\n        children Shape {\n          geometry Box {\n            size 0.4 0.4 0.4\n          }\n        }\n      }\n      DEF SEG HAnimSegment {\n        name \"seg\"\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 1 0 0\n            }\n          }\n          geometry Sphere {\n            radius 0.3\n          }\n        }\n      }\n      Shape {\n        geometry Cone { }\n      }\n    ]\n  }\n  joints USE J\n  segments USE SEG\n  sites USE S\n  viewpoints DEF HS HAnimSite {\n    name \"cam_pt\"\n    translation 0 1 4\n    children Viewpoint {\n      description \"site view\"\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

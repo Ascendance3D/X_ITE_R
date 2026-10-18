@@ -1,0 +1,48 @@
+#X3D V4.0 utf8
+# REA batch 04: X_ITE 16.5.0's dormant IconAnnotation cannot initialize (X3DUrlObject.initialize
+# reads _load, which IconAnnotation does not define), so the reference is
+# icon-annotation-ref.wrl: the same world with GeoMetadata, X_ITE's other X3DUrlObject whose
+# requestImmediateLoad is empty, in its place (oracle/rea-batch04-baseline/standins.json).
+PROFILE Interchange
+COMPONENT Annotation:1
+COMPONENT Geospatial:1
+COMPONENT Networking:3
+COMPONENT KeyDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 6 }
+DEF IA IconAnnotation { url "checker.png" }
+Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.9 } } geometry Sphere { radius 0.5 } }
+DEF LS LoadSensor { children USE IA }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly MFString on_url
+  inputOnly SFTime on_refresh
+  inputOnly SFBool on_loaded
+  inputOnly SFBool on_active
+  inputOnly SFFloat on_progress
+  inputOutput SFString log ""
+  initializeOnly SFNode ia USE IA
+  url "javascript:
+function initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }
+function on_url (v) { log = log + 'U' + v + ' '; }
+function on_refresh (v) { log = log + 'R' + v + ' '; }
+function on_loaded (v) { log = log + 'L' + v + ' '; }
+function on_active (v) { log = log + 'A' + v + ' '; }
+function on_progress (v) { log = log + 'P' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') ia .url = new MFString ('other.png');
+   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }
+   if (k == 'c') ia .url = new MFString ();
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE IA.url_changed TO R.on_url
+ROUTE IA.autoRefresh_changed TO R.on_refresh
+ROUTE LS.isLoaded TO R.on_loaded
+ROUTE LS.isActive TO R.on_active
+ROUTE LS.progress TO R.on_progress

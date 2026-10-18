@@ -1,0 +1,12 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 12
+  particleLifetime 3
+  lifetimeVariation 0
+  emitter DEF EM PointEmitter { position 0.3 2 -0.2 direction 0 0 0 speed 0.5 variation 0.5 mass 1 surfaceArea 3 }
+  physics [ DEF W1 WindPhysicsModel { direction 0 0 0 speed 1.5 gustiness 0.3 turbulence 0.2 } BoundedPhysicsModel { damping 0.6 geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -10 0 -10, 10 0 -10, 10 0 10, -10 0 10 ] } coordIndex [ 0 3 2 1 -1 ] } } ]
+}

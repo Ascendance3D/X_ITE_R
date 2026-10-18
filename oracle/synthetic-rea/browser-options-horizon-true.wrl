@@ -1,0 +1,19 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+# Synthetic REA oracle world: the StraightenHorizon option (TRUE, set by a Script before the drag)
+# in the EXAMINE viewer: with TRUE the rotation keeps the horizon level (ExamineViewer
+# getHorizonRotation), with FALSE it follows the trackball. Authored.
+NavigationInfo { type "EXAMINE" }
+Viewpoint { position 0 0 10 }
+Transform { rotation 0 0 1 0.3 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.2 } } geometry Box { size 4 1 1 } } }
+Transform { translation 0 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.5 0.8 } } geometry Sphere { radius 0.5 } } }
+DEF OUT Script {
+  inputOutput SFString hist ""
+  url "ecmascript:
+    function initialize () {
+      Browser .setBrowserOption ('StraightenHorizon', true);
+      hist = 'sh=' + Browser .getBrowserOption ('StraightenHorizon');
+    }
+  "
+}

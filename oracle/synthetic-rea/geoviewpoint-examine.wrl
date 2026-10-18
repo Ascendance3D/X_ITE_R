@@ -1,0 +1,40 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Geospatial:2
+COMPONENT Scripting:1
+# Synthetic REA oracle world: GeoViewpoint with a GeoOrigin (rotateYUp TRUE). A plain Viewpoint
+# is bound first; a Script binds the GeoViewpoint (different class: TELEPORT) and the EXAMINE
+# viewer then rotates about the geo centerOfRotation with the horizon straightened to the geo up
+# vector. Authored.
+DEF ORIGIN GeoOrigin { geoSystem [ "GD" "WE" ] geoCoords 37.4 -122.1 0 rotateYUp TRUE }
+NavigationInfo { type [ "EXAMINE" "ANY" ] }
+Viewpoint { description "plain" position 0 50 600 }
+DEF GV GeoViewpoint {
+  geoOrigin USE ORIGIN
+  description "geo"
+  position 37.398 -122.1 300
+  orientation 1 0 0 0.9
+  centerOfRotation 37.4 -122.1 0
+}
+Background { skyColor [ 0.1 0.2 0.5, 0.6 0.7 0.9 ] skyAngle [ 1.4 ] groundColor [ 0.2 0.15 0.1, 0.4 0.35 0.2 ] groundAngle [ 1.5 ] }
+DirectionalLight { direction -0.3 -1 -0.5 }
+GeoLocation {
+  geoOrigin USE ORIGIN
+  geoCoords 37.4 -122.1 0
+  children [
+    Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 } } geometry Box { size 80 80 80 } }
+    Transform { translation 120 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.3 } } geometry Sphere { radius 30 } } }
+    Transform { translation 0 120 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.8 } } geometry Cone { bottomRadius 30 height 60 } } }
+  ]
+}
+DEF S Script {
+  inputOnly SFTime tick
+  inputOutput SFInt32 n 0
+  outputOnly SFBool bind
+  url "ecmascript:
+    function tick (v) { n = n + 1; if (n == 3) bind = true; }
+  "
+}
+DEF T TimeSensor { cycleInterval 0.1 loop TRUE }
+ROUTE T.cycleTime TO S.tick
+ROUTE S.bind TO GV.set_bind

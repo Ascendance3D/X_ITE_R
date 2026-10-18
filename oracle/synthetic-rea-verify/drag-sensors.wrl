@@ -1,0 +1,54 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA-verify oracle world: PlaneSensor, SphereSensor and CylinderSensor, each over its own Box, driven by pointer drags. Authored; no archive content.
+Viewpoint { position 0 0 10 }
+Transform {
+  translation -2.5 0 0
+  children [
+    DEF PL PlaneSensor { }
+    Shape { geometry Box { size 1.5 1.5 1.5 } }
+  ]
+}
+Transform {
+  translation 0 0 0
+  children [
+    DEF SP SphereSensor { }
+    Shape { geometry Box { size 1.5 1.5 1.5 } }
+  ]
+}
+Transform {
+  translation 2.5 0 0
+  children [
+    DEF CY CylinderSensor { }
+    Shape { geometry Box { size 1.5 1.5 1.5 } }
+  ]
+}
+DEF OBS Script {
+  inputOutput SFBool plOver FALSE
+  inputOutput SFBool plActive FALSE
+  inputOutput SFVec3f plTrans 0 0 0
+  inputOutput SFVec3f plTrack 0 0 0
+  inputOutput SFBool spOver FALSE
+  inputOutput SFBool spActive FALSE
+  inputOutput SFRotation spRot 0 0 1 0
+  inputOutput SFVec3f spTrack 0 0 0
+  inputOutput SFBool cyOver FALSE
+  inputOutput SFBool cyActive FALSE
+  inputOutput SFRotation cyRot 0 0 1 0
+  inputOutput SFVec3f cyTrack 0 0 0
+  url "ecmascript:
+function noop () { }
+"
+}
+ROUTE PL.isOver TO OBS.plOver
+ROUTE PL.isActive TO OBS.plActive
+ROUTE PL.translation_changed TO OBS.plTrans
+ROUTE PL.trackPoint_changed TO OBS.plTrack
+ROUTE SP.isOver TO OBS.spOver
+ROUTE SP.isActive TO OBS.spActive
+ROUTE SP.rotation_changed TO OBS.spRot
+ROUTE SP.trackPoint_changed TO OBS.spTrack
+ROUTE CY.isOver TO OBS.cyOver
+ROUTE CY.isActive TO OBS.cyActive
+ROUTE CY.rotation_changed TO OBS.cyRot
+ROUTE CY.trackPoint_changed TO OBS.cyTrack

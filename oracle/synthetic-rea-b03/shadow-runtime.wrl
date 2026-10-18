@@ -1,0 +1,41 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Lighting:3
+COMPONENT Layering:1
+COMPONENT Rendering:5
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Interpolation:1
+COMPONENT Time:1
+NavigationInfo { headlight FALSE }
+Viewpoint { position 0.013 6.07 16.11 orientation 1 0 0 -0.3517 }
+DirectionalLight { global TRUE direction 0 -1 0 intensity 0.25 }
+DEF L DirectionalLight { direction -0.5 -1 -0.4 shadows TRUE }
+DEF P PointLight { location 3 3 2 radius 30 intensity 0.6 }
+Transform { translation 0 -1 0 children Shape {  appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Box { size 16 0.2 12 } } }
+DEF M Transform { translation -3 1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 } } geometry Sphere { } } }
+Transform { translation 0 0.5 1 children Shape {  appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Box { size 1.5 1.5 1.5 } } }
+DEF C TimeSensor { cycleInterval 4 loop TRUE }
+DEF PI PositionInterpolator { key [ 0 0.5 1 ] keyValue [ -3 1 0, 3 2 -1, -3 1 0 ] }
+ROUTE C.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO M.set_translation
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode l USE L
+  initializeOnly SFNode p USE P
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') l .shadows = false;
+   if (k == 'b') l .shadows = true;
+   if (k == 'c') l .shadowIntensity = 0.4;
+   if (k == 'd') l .shadowColor = new SFColor (0.5, 0, 0);
+   if (k == 'e') l .shadowMapSize = 128;
+   if (k == 'f') p .shadows = true;
+   if (k == 'g') l .direction = new SFVec3f (0.5, -1, 0.2);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

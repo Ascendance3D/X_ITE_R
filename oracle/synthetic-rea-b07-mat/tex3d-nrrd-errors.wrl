@@ -1,0 +1,32 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Geometry2D:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+COMPONENT Lighting:3
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+Transform { translation -5.0 4.4 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-type.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -2.5 4.4 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-encoding.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 0.0 4.4 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-dimension.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 2.5 4.4 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-dimension-none.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 5.0 4.4 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-sizes.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -5.0 2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-endian.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -2.5 2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/short-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 0.0 2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/short-gzip.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 2.5 2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-gzip.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 5.0 2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bad-hex.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -5.0 0.0 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/empty-hex.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -2.5 0.0 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/too-big.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 0.0 0.0 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/not-a-volume.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 2.5 0.0 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/tiny-file.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 5.0 0.0 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/nrrd-version-only.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -5.0 -2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/nrrd-crlf.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -2.5 -2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/no-sizes.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 0.0 -2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url [ "vol/bad-type.nrrd" "vol/missing.nrrd" "vol/tiny-u8.nrrd" ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 2.5 -2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url [ "vol/not-a-volume.nrrd" "vol/u8-raw.nrrd" ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 5.0 -2.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url [ "" "vol/u8-gzip.nrrd" ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }

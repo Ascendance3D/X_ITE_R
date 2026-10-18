@@ -1,0 +1,9958 @@
+{
+ "ok": true,
+ "poses": {
+  "1": {
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  },
+  "30": {
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  },
+  "60": {
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  },
+  "120": {
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT RigidBodyPhysics : 2\n\nDEF RBC RigidBodyCollection {\n  gravity 0 0 0\n  bodies [\n    DEF A RigidBody {\n      position -2.88641 0 0\n      orientation 0 0 0.999999999999975 0.113587974525855\n      linearVelocity 3 0 0\n      angularVelocity 0 0 3\n      linearDampingFactor 0.5\n      angularDampingFactor 0.5\n      geometry DEF A_C CollidableShape {\n        translation -2.88641 0 0\n        rotation 0 0 0.999999999999975 0.113587974525855\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF B RigidBody {\n      position 0.1119478 0 0\n      orientation 0 0 1.00000000000001 0.11290336111054\n      linearVelocity 2.913782 0 0\n      angularVelocity 0 0 2.963911\n      autoDamp TRUE\n      linearDampingFactor 0.5\n      angularDampingFactor 0.25\n      geometry DEF B_C CollidableShape {\n        translation 0.1119478 0 0\n        rotation 0 0 1.00000000000001 0.11290336111054\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF C RigidBody {\n      position 3.113586 0 0\n      orientation 0 0 0.999999999999971 0.113585617171668\n      linearVelocity 2.999874 0 0\n      angularVelocity 0 0 2.999874\n      autoDamp TRUE\n      geometry DEF C_C CollidableShape {\n        translation 3.113586 0 0\n        rotation 0 0 0.999999999999971 0.113585617171668\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n  ]\n}\n",
+  "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT RigidBodyPhysics : 2\n\nDEF RBC RigidBodyCollection {\n  gravity 0 0 0\n  bodies [\n    DEF A RigidBody {\n      position -1.874208 0 0\n      orientation 0 0 1 1.12578657016092\n      linearVelocity 3 0 0\n      angularVelocity 0 0 3\n      linearDampingFactor 0.5\n      angularDampingFactor 0.5\n      geometry DEF A_C CollidableShape {\n        translation -1.874208 0 0\n        rotation 0 0 1 1.12578657016092\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF B RigidBody {\n      position 0.9777054 0 0\n      orientation 0 0 1 1.06088766228677\n      linearVelocity 2.247009 0 0\n      angularVelocity 0 0 2.660894\n      autoDamp TRUE\n      linearDampingFactor 0.5\n      angularDampingFactor 0.25\n      geometry DEF B_C CollidableShape {\n        translation 0.9777054 0 0\n        rotation 0 0 1 1.06088766228677\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF C RigidBody {\n      position 4.125551 0 0\n      orientation 0 0 1 1.12555287494827\n      linearVelocity 2.998753 0 0\n      angularVelocity 0 0 2.998753\n      autoDamp TRUE\n      geometry DEF C_C CollidableShape {\n        translation 4.125551 0 0\n        rotation 0 0 1 1.12555287494827\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n  ]\n}\n",
+  "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT RigidBodyPhysics : 2\n\nDEF RBC RigidBodyCollection {\n  gravity 0 0 0\n  bodies [\n    DEF A RigidBody {\n      position -0.5642136 0 0\n      orientation 0 0 1 2.43577885431295\n      linearVelocity 3 0 0\n      angularVelocity 0 0 3\n      linearDampingFactor 0.5\n      angularDampingFactor 0.5\n      geometry DEF A_C CollidableShape {\n        translation -0.5642136 0 0\n        rotation 0 0 1 2.43577885431295\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF B RigidBody {\n      position 1.810943 0 0\n      orientation 0 0 1 2.14536068042619\n      linearVelocity 1.605278 0 0\n      angularVelocity 0 0 2.314246\n      autoDamp TRUE\n      linearDampingFactor 0.5\n      angularDampingFactor 0.25\n      geometry DEF B_C CollidableShape {\n        translation 1.810943 0 0\n        rotation 0 0 1 2.14536068042619\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF C RigidBody {\n      position 5.434684 0 0\n      orientation 0 0 1 2.43468337871353\n      linearVelocity 2.997292 0 0\n      angularVelocity 0 0 2.997292\n      autoDamp TRUE\n      geometry DEF C_C CollidableShape {\n        translation 5.434684 0 0\n        rotation 0 0 1 2.43468337871353\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n  ]\n}\n",
+  "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT RigidBodyPhysics : 2\n\nDEF RBC RigidBodyCollection {\n  gravity 0 0 0\n  bodies [\n    DEF A RigidBody {\n      position 1.949615 -0.1239318 1.595679e-7\n      orientation 5.42906115664109e-7 -4.94339778175363e-8 -0.999999999999851 1.32250143585118\n      linearVelocity 2.309856 -0.4731499 7.729914e-7\n      angularVelocity 1.758674e-6 -2.774545e-6 2.355113\n      linearDampingFactor 0.5\n      angularDampingFactor 0.5\n      geometry DEF A_C CollidableShape {\n        translation 1.949615 -0.1239318 1.595679e-7\n        rotation 5.42906115664109e-7 -4.94339778175363e-8 -0.999999999999851 1.32250143585118\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF B RigidBody {\n      position 3.015138 0.1122948 -1.475162e-7\n      orientation -2.5866433791106e-7 1.93348776720238e-7 0.999999999999948 3.20485456993173\n      linearVelocity 1.368341 0.3869277 -6.581011e-7\n      angularVelocity -1.444368e-6 -2.658856e-6 -1.000064\n      autoDamp TRUE\n      linearDampingFactor 0.5\n      angularDampingFactor 0.25\n      geometry DEF B_C CollidableShape {\n        translation 3.015138 0.1122948 -1.475162e-7\n        rotation -2.5866433791106e-7 1.93348776720238e-7 0.999999999999948 3.20485456993173\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n    DEF C RigidBody {\n      position 8.125224 0 0\n      orientation 0 0 -1 1.15797173438227\n      linearVelocity 2.994287 0 0\n      angularVelocity 0 0 2.994287\n      autoDamp TRUE\n      geometry DEF C_C CollidableShape {\n        translation 8.125224 0 0\n        rotation 0 0 -1 1.15797173438227\n        shape Shape {\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    }\n  ]\n}\n"
+ },
+ "prints": [],
+ "log": [],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "physics": {
+  "dt": [
+   {
+    "frame": 0,
+    "dt": 0.0011111111111111111
+   },
+   {
+    "frame": 0,
+    "dt": 0.002148148148148148
+   },
+   {
+    "frame": 0,
+    "dt": 0.003116049382716049
+   },
+   {
+    "frame": 0,
+    "dt": 0.004019423868312757
+   },
+   {
+    "frame": 0,
+    "dt": 0.004862573388203018
+   },
+   {
+    "frame": 0,
+    "dt": 0.0056495129401005935
+   },
+   {
+    "frame": 0,
+    "dt": 0.0063839898552049985
+   },
+   {
+    "frame": 0,
+    "dt": 0.007069501642635776
+   },
+   {
+    "frame": 1,
+    "dt": 0.007709312644237835
+   },
+   {
+    "frame": 2,
+    "dt": 0.008306469579066424
+   },
+   {
+    "frame": 3,
+    "dt": 0.008863816051573107
+   },
+   {
+    "frame": 4,
+    "dt": 0.009384006092579344
+   },
+   {
+    "frame": 5,
+    "dt": 0.009869516797518497
+   },
+   {
+    "frame": 6,
+    "dt": 0.010322660122128376
+   },
+   {
+    "frame": 7,
+    "dt": 0.010745593891764263
+   },
+   {
+    "frame": 8,
+    "dt": 0.011140332076757757
+   },
+   {
+    "frame": 9,
+    "dt": 0.011508754382751684
+   },
+   {
+    "frame": 10,
+    "dt": 0.011852615201679349
+   },
+   {
+    "frame": 11,
+    "dt": 0.012173551966011836
+   },
+   {
+    "frame": 12,
+    "dt": 0.012473092946055492
+   },
+   {
+    "frame": 13,
+    "dt": 0.01275266452742957
+   },
+   {
+    "frame": 14,
+    "dt": 0.01301359800337871
+   },
+   {
+    "frame": 15,
+    "dt": 0.013257135914264574
+   },
+   {
+    "frame": 16,
+    "dt": 0.013484437964424714
+   },
+   {
+    "frame": 17,
+    "dt": 0.013696586544574178
+   },
+   {
+    "frame": 18,
+    "dt": 0.01389459188604701
+   },
+   {
+    "frame": 19,
+    "dt": 0.014079396871421653
+   },
+   {
+    "frame": 20,
+    "dt": 0.014251881524437987
+   },
+   {
+    "frame": 21,
+    "dt": 0.014412867200586566
+   },
+   {
+    "frame": 22,
+    "dt": 0.014563120498325238
+   },
+   {
+    "frame": 23,
+    "dt": 0.014703356909547998
+   },
+   {
+    "frame": 24,
+    "dt": 0.014834244226689244
+   },
+   {
+    "frame": 25,
+    "dt": 0.014956405722687739
+   },
+   {
+    "frame": 26,
+    "dt": 0.015070423118953001
+   },
+   {
+    "frame": 27,
+    "dt": 0.015176839355467245
+   },
+   {
+    "frame": 28,
+    "dt": 0.015276161176213872
+   },
+   {
+    "frame": 29,
+    "dt": 0.015368861542244058
+   },
+   {
+    "frame": 30,
+    "dt": 0.015455381883872233
+   },
+   {
+    "frame": 31,
+    "dt": 0.015536134202725196
+   },
+   {
+    "frame": 32,
+    "dt": 0.015611503033654628
+   },
+   {
+    "frame": 33,
+    "dt": 0.01568184727585543
+   },
+   {
+    "frame": 34,
+    "dt": 0.015747501901909513
+   },
+   {
+    "frame": 35,
+    "dt": 0.015808779552893323
+   },
+   {
+    "frame": 36,
+    "dt": 0.01586597202714488
+   },
+   {
+    "frame": 37,
+    "dt": 0.015919351669779664
+   },
+   {
+    "frame": 38,
+    "dt": 0.01596917266957213
+   },
+   {
+    "frame": 39,
+    "dt": 0.016015672269378434
+   },
+   {
+    "frame": 40,
+    "dt": 0.016059071895864318
+   },
+   {
+    "frame": 41,
+    "dt": 0.016099578213917807
+   },
+   {
+    "frame": 42,
+    "dt": 0.01613738411076773
+   },
+   {
+    "frame": 43,
+    "dt": 0.016172669614494324
+   },
+   {
+    "frame": 44,
+    "dt": 0.016205602751305816
+   },
+   {
+    "frame": 45,
+    "dt": 0.016236340345663205
+   },
+   {
+    "frame": 46,
+    "dt": 0.016265028767063434
+   },
+   {
+    "frame": 47,
+    "dt": 0.016291804627036985
+   },
+   {
+    "frame": 48,
+    "dt": 0.016316795429678965
+   },
+   {
+    "frame": 49,
+    "dt": 0.016340120178811476
+   },
+   {
+    "frame": 50,
+    "dt": 0.016361889944668487
+   },
+   {
+    "frame": 51,
+    "dt": 0.0163822083928017
+   },
+   {
+    "frame": 52,
+    "dt": 0.01640117227772603
+   },
+   {
+    "frame": 53,
+    "dt": 0.01641887190365541
+   },
+   {
+    "frame": 54,
+    "dt": 0.016435391554522828
+   },
+   {
+    "frame": 55,
+    "dt": 0.016450809895332416
+   },
+   {
+    "frame": 56,
+    "dt": 0.0164652003467547
+   },
+   {
+    "frame": 57,
+    "dt": 0.01647863143474883
+   },
+   {
+    "frame": 58,
+    "dt": 0.016491167116876686
+   },
+   {
+    "frame": 59,
+    "dt": 0.016502867086862685
+   },
+   {
+    "frame": 60,
+    "dt": 0.016513787058849615
+   },
+   {
+    "frame": 61,
+    "dt": 0.016523979032704084
+   },
+   {
+    "frame": 62,
+    "dt": 0.016533491541634922
+   },
+   {
+    "frame": 63,
+    "dt": 0.016542369883303706
+   },
+   {
+    "frame": 64,
+    "dt": 0.0165506563355279
+   },
+   {
+    "frame": 65,
+    "dt": 0.016558390357603817
+   },
+   {
+    "frame": 66,
+    "dt": 0.016565608778208007
+   },
+   {
+    "frame": 67,
+    "dt": 0.016572345970771916
+   },
+   {
+    "frame": 68,
+    "dt": 0.0165786340171649
+   },
+   {
+    "frame": 69,
+    "dt": 0.016584502860465016
+   },
+   {
+    "frame": 70,
+    "dt": 0.016589980447545127
+   },
+   {
+    "frame": 71,
+    "dt": 0.01659509286215323
+   },
+   {
+    "frame": 72,
+    "dt": 0.01659986444912079
+   },
+   {
+    "frame": 73,
+    "dt": 0.016604317930290515
+   },
+   {
+    "frame": 74,
+    "dt": 0.01660847451271559
+   },
+   {
+    "frame": 75,
+    "dt": 0.01661235398964566
+   },
+   {
+    "frame": 76,
+    "dt": 0.016615974834780393
+   },
+   {
+    "frame": 77,
+    "dt": 0.016619354290239478
+   },
+   {
+    "frame": 78,
+    "dt": 0.016622508448667958
+   },
+   {
+    "frame": 79,
+    "dt": 0.01662545232986787
+   },
+   {
+    "frame": 80,
+    "dt": 0.016628199952321124
+   },
+   {
+    "frame": 81,
+    "dt": 0.01663076439994416
+   },
+   {
+    "frame": 82,
+    "dt": 0.01663315788439233
+   },
+   {
+    "frame": 83,
+    "dt": 0.01663539180321062
+   },
+   {
+    "frame": 84,
+    "dt": 0.016637476794107688
+   },
+   {
+    "frame": 85,
+    "dt": 0.016639422785611622
+   },
+   {
+    "frame": 86,
+    "dt": 0.016641239044348624
+   },
+   {
+    "frame": 87,
+    "dt": 0.016642934219169826
+   },
+   {
+    "frame": 88,
+    "dt": 0.016644516382336282
+   },
+   {
+    "frame": 89,
+    "dt": 0.016645993067958307
+   },
+   {
+    "frame": 90,
+    "dt": 0.016647371307872198
+   },
+   {
+    "frame": 91,
+    "dt": 0.016648657665125164
+   },
+   {
+    "frame": 92,
+    "dt": 0.01664985826522793
+   },
+   {
+    "frame": 93,
+    "dt": 0.016650978825323844
+   },
+   {
+    "frame": 94,
+    "dt": 0.016652024681413365
+   },
+   {
+    "frame": 95,
+    "dt": 0.016653000813763585
+   },
+   {
+    "frame": 96,
+    "dt": 0.016653911870623792
+   },
+   {
+    "frame": 97,
+    "dt": 0.016654762190359985
+   },
+   {
+    "frame": 98,
+    "dt": 0.016655555822113765
+   },
+   {
+    "frame": 99,
+    "dt": 0.016656296545083958
+   },
+   {
+    "frame": 100,
+    "dt": 0.016656987886522805
+   },
+   {
+    "frame": 101,
+    "dt": 0.016657633138532395
+   },
+   {
+    "frame": 102,
+    "dt": 0.016658235373741347
+   },
+   {
+    "frame": 103,
+    "dt": 0.016658797459936366
+   },
+   {
+    "frame": 104,
+    "dt": 0.016659322073718386
+   },
+   {
+    "frame": 105,
+    "dt": 0.016659811713248273
+   },
+   {
+    "frame": 106,
+    "dt": 0.016660268710142832
+   },
+   {
+    "frame": 107,
+    "dt": 0.016660695240577752
+   },
+   {
+    "frame": 108,
+    "dt": 0.016661093335650346
+   },
+   {
+    "frame": 109,
+    "dt": 0.016661464891051435
+   },
+   {
+    "frame": 110,
+    "dt": 0.016661811676092448
+   },
+   {
+    "frame": 111,
+    "dt": 0.016662135342130728
+   },
+   {
+    "frame": 112,
+    "dt": 0.016662437430433122
+   },
+   {
+    "frame": 113,
+    "dt": 0.01666271937951536
+   },
+   {
+    "frame": 114,
+    "dt": 0.016662982531992113
+   },
+   {
+    "frame": 115,
+    "dt": 0.016663228140970418
+   },
+   {
+    "frame": 116,
+    "dt": 0.016663457376016835
+   },
+   {
+    "frame": 117,
+    "dt": 0.016663671328726825
+   },
+   {
+    "frame": 118,
+    "dt": 0.016663871017922813
+   },
+   {
+    "frame": 119,
+    "dt": 0.016664057394505737
+   },
+   {
+    "frame": 120,
+    "dt": 0.01666423134598313
+   }
+  ],
+  "frames": {
+   "0": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.9072256088256836,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999764,
+      0.09277283798041955
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.0916767567396164,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999742,
+      0.0923158014402674
+     ],
+     "linearVelocity": [
+      2.9293935298919678,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.970491886138916
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.0927722454071045,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999346,
+      0.09277126759892079
+     ],
+     "linearVelocity": [
+      2.9998974800109863,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9998974800109863
+     ],
+     "@bodyActive": true
+    }
+   },
+   "1": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.8864095211029053,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999746,
+      0.11358797452585458
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.11194778978824615,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000011,
+      0.11290336111053971
+     ],
+     "linearVelocity": [
+      2.9137818813323975,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.963911294937134
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.113586187362671,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999705,
+      0.1135856171716682
+     ],
+     "linearVelocity": [
+      2.999873638153076,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999873638153076
+     ],
+     "@bodyActive": true
+    }
+   },
+   "2": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.8639819622039795,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000017,
+      0.13601546897028577
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.13366812467575073,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000102,
+      0.13503457032154342
+     ],
+     "linearVelocity": [
+      2.8970541954040527,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9568371772766113
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.136012077331543,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999791,
+      0.13601204829067842
+     ],
+     "linearVelocity": [
+      2.999849796295166,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999849796295166
+     ],
+     "@bodyActive": true
+    }
+   },
+   "3": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.840050220489502,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999776,
+      0.15994773937754347
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.15670832991600037,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999973,
+      0.15859249381475626
+     ],
+     "linearVelocity": [
+      2.8793094158172607,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9493069648742676
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.1599438190460205,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000007,
+      0.15994304679753296
+     ],
+     "linearVelocity": [
+      2.999823570251465,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999823570251465
+     ],
+     "@bodyActive": true
+    }
+   },
+   "4": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.8147130012512207,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000193,
+      0.185284570612648
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.18094691634178162,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000304,
+      0.18346756158076852
+     ],
+     "linearVelocity": [
+      2.8606417179107666,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9413557052612305
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.18527889251709,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000022,
+      0.18527825414795776
+     ],
+     "linearVelocity": [
+      2.9997949600219727,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9997949600219727
+     ],
+     "@bodyActive": true
+    }
+   },
+   "5": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.78806471824646,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999976,
+      0.21193225755646738
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.2062699943780899,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999873,
+      0.20955728558702985
+     ],
+     "linearVelocity": [
+      2.8411386013031006,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9330170154571533
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.2119250297546387,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999869,
+      0.21192396035835312
+     ],
+     "linearVelocity": [
+      2.9997663497924805,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9997663497924805
+     ],
+     "@bodyActive": true
+    }
+   },
+   "6": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.760193347930908,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000033,
+      0.23980345316001322
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.2325710654258728,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000024,
+      0.23676575682995749
+     ],
+     "linearVelocity": [
+      2.820882558822632,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9243199825286865
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.2397942543029785,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999907,
+      0.2397928368261919
+     ],
+     "linearVelocity": [
+      2.9997353553771973,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9997353553771973
+     ],
+     "@bodyActive": true
+    }
+   },
+   "7": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.731180429458618,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000029,
+      0.2688165007906974
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.2597505450248718,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000027,
+      0.26500327545396724
+     ],
+     "linearVelocity": [
+      2.799949884414673,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9152936935424805
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.2688050270080566,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999993,
+      0.2688031778195747
+     ],
+     "linearVelocity": [
+      2.999701976776123,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999701976776123
+     ],
+     "@bodyActive": true
+    }
+   },
+   "8": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.701101064682007,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000049,
+      0.2988954390865595
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.28771552443504333,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000009,
+      0.29418611053874555
+     ],
+     "linearVelocity": [
+      2.778412342071533,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.905965566635132
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.298880100250244,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999976,
+      0.29887902287910884
+     ],
+     "linearVelocity": [
+      2.999668598175049,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999668598175049
+     ],
+     "@bodyActive": true
+    }
+   },
+   "9": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.6700282096862793,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000003,
+      0.32996914901656016
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.31637945771217346,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000016,
+      0.3242359740244789
+     ],
+     "linearVelocity": [
+      2.7563364505767822,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.896360397338867
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.3299508094787598,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000056,
+      0.3299491101852279
+     ],
+     "linearVelocity": [
+      2.9996352195739746,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9996352195739746
+     ],
+     "@bodyActive": true
+    }
+   },
+   "10": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.638026237487793,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      0.3619711853062919
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.34566184878349304,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      0.35507986966592175
+     ],
+     "linearVelocity": [
+      2.7337841987609863,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.8865010738372803
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.3619484901428223,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.3619470776524309
+     ],
+     "linearVelocity": [
+      2.9995994567871094,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9995994567871094
+     ],
+     "@bodyActive": true
+    }
+   },
+   "11": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.6051573753356934,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999969,
+      0.39483977111740715
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.37548768520355225,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000001,
+      0.3866495655023076
+     ],
+     "linearVelocity": [
+      2.710813522338867,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.8764100074768066
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.394813060760498,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      0.39481108525053543
+     ],
+     "linearVelocity": [
+      2.999563694000244,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999563694000244
+     ],
+     "@bodyActive": true
+    }
+   },
+   "12": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.571479558944702,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000001,
+      0.4285172165836481
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.40578749775886536,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000009,
+      0.41888165890469303
+     ],
+     "linearVelocity": [
+      2.6874778270721436,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.866107225418091
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.4284844398498535,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000001,
+      0.42848331715100085
+     ],
+     "linearVelocity": [
+      2.999525547027588,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999525547027588
+     ],
+     "@bodyActive": true
+    }
+   },
+   "13": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.537046432495117,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000016,
+      0.46294936808274606
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.4364967942237854,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.45171682750991343
+     ],
+     "linearVelocity": [
+      2.6638264656066895,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.855611562728882
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.4629111289978027,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.46290981197072195
+     ],
+     "linearVelocity": [
+      2.9994874000549316,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9994874000549316
+     ],
+     "@bodyActive": true
+    }
+   },
+   "14": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.5019094944000244,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999987,
+      0.49808618483339867
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.46755585074424744,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999996,
+      0.4850997902256403
+     ],
+     "linearVelocity": [
+      2.6399059295654297,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.8449409008026123
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.4980416297912598,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.4980403580182917
+     ],
+     "linearVelocity": [
+      2.9994492530822754,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9994492530822754
+     ],
+     "@bodyActive": true
+    }
+   },
+   "15": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.466115951538086,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000022,
+      0.5338804768180373
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.4989094138145447,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      0.5189793823887687
+     ],
+     "linearVelocity": [
+      2.6157586574554443,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.834111452102661
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.5338287353515625,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999986,
+      0.5338276407049072
+     ],
+     "linearVelocity": [
+      2.999408721923828,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999408721923828
+     ],
+     "@bodyActive": true
+    }
+   },
+   "16": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.42970871925354,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.5702883669574498
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.5305063724517822,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999992,
+      0.5533075441246244
+     ],
+     "linearVelocity": [
+      2.591423988342285,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.82313871383667
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.5702295303344727,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      0.5702282377162475
+     ],
+     "linearVelocity": [
+      2.999368190765381,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999368190765381
+     ],
+     "@bodyActive": true
+    }
+   },
+   "17": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.392728567123413,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000018,
+      0.6072689614554883
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.5622994899749756,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.5880396147012976
+     ],
+     "linearVelocity": [
+      2.5669381618499756,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.8120367527008057
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.6072027683258057,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.6072008125957992
+     ],
+     "linearVelocity": [
+      2.9993276596069336,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9993276596069336
+     ],
+     "@bodyActive": true
+    }
+   },
+   "18": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.3552141189575195,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.6447843999469199
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.5942452549934387,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.6231342887878561
+     ],
+     "linearVelocity": [
+      2.542334794998169,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.800818681716919
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.6447088718414307,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      0.6447075540286743
+     ],
+     "linearVelocity": [
+      2.9992871284484863,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9992871284484863
+     ],
+     "@bodyActive": true
+    }
+   },
+   "19": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.31719970703125,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.999999999999999,
+      0.6827987798167402
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.6263036131858826,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      0.6585529296290926
+     ],
+     "linearVelocity": [
+      2.5176446437835693,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.789497137069702
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.6827147006988525,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.6827125124842154
+     ],
+     "linearVelocity": [
+      2.999244213104248,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999244213104248
+     ],
+     "@bodyActive": true
+    }
+   },
+   "20": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.278719663619995,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      0.7212788118083538
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.6584376692771912,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      0.6942598112066926
+     ],
+     "linearVelocity": [
+      2.492896318435669,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.7780840396881104
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.721184015274048,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      0.7211826098441494
+     ],
+     "linearVelocity": [
+      2.9992012977600098,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9992012977600098
+     ],
+     "@bodyActive": true
+    }
+   },
+   "21": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.2398040294647217,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      0.7601935336355411
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.6906135082244873,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.000000000000001,
+      0.7302211638299534
+     ],
+     "linearVelocity": [
+      2.4681155681610107,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.766589879989624
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.7600889205932617,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      0.7600868019547542
+     ],
+     "linearVelocity": [
+      2.9991583824157715,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9991583824157715
+     ],
+     "@bodyActive": true
+    }
+   },
+   "22": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.2004828453063965,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.7995140281438854
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.7227999567985535,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      0.7664066002348978
+     ],
+     "linearVelocity": [
+      2.4433271884918213,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.755023956298828
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.7993972301483154,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.7993959724465985
+     ],
+     "linearVelocity": [
+      2.999115467071533,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999115467071533
+     ],
+     "@bodyActive": true
+    }
+   },
+   "23": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.1607840061187744,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999993,
+      0.8392131051212339
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.7549683451652527,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      0.8027869101816469
+     ],
+     "linearVelocity": [
+      2.4185523986816406,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.7433950901031494
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.8390843868255615,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      0.8390831094858655
+     ],
+     "linearVelocity": [
+      2.999070167541504,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.999070167541504
+     ],
+     "@bodyActive": true
+    }
+   },
+   "24": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.1207311153411865,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      0.8792655381067201
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.7870925664901733,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.8393353604057733
+     ],
+     "linearVelocity": [
+      2.3938117027282715,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.731712579727173
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.879124402999878,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      0.879122835642619
+     ],
+     "linearVelocity": [
+      2.9990248680114746,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9990248680114746
+     ],
+     "@bodyActive": true
+    }
+   },
+   "25": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.080347776412964,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      0.919647857130009
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.8191487193107605,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999994,
+      0.8760272221503572
+     ],
+     "linearVelocity": [
+      2.3691232204437256,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.7199840545654297
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.919492721557617,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      0.919491865172229
+     ],
+     "linearVelocity": [
+      2.9989795684814453,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9989795684814453
+     ],
+     "@bodyActive": true
+    }
+   },
+   "26": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -2.0396575927734375,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.9603379621161654
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.8511146903038025,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.9128394330230143
+     ],
+     "linearVelocity": [
+      2.344503879547119,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.708217144012451
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      3.9601681232452393,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.9601678737577211
+     ],
+     "linearVelocity": [
+      2.998934268951416,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998934268951416
+     ],
+     "@bodyActive": true
+    }
+   },
+   "27": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.9986798763275146,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.0013153234540093
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.8829706907272339,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      0.9497507640385606
+     ],
+     "linearVelocity": [
+      2.319969415664673,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.6964187622070312
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.0011305809021,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.0011303628026524
+     ],
+     "linearVelocity": [
+      2.9988889694213867,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9988889694213867
+     ],
+     "@bodyActive": true
+    }
+   },
+   "28": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.9574339389801025,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      1.0425609546307508
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.914698600769043,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      0.9867412174176983
+     ],
+     "linearVelocity": [
+      2.2955338954925537,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.6845948696136475
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.042359352111816,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      1.0423603807902666
+     ],
+     "linearVelocity": [
+      2.9988436698913574,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9988436698913574
+     ],
+     "@bodyActive": true
+    }
+   },
+   "29": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.9159380197525024,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.0840570046022189
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.9462818503379822,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.0237924299665457
+     ],
+     "linearVelocity": [
+      2.271209955215454,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.6727514266967773
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.083837509155273,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999996,
+      1.083840111672189
+     ],
+     "linearVelocity": [
+      2.998798370361328,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998798370361328
+     ],
+     "@bodyActive": true
+    }
+   },
+   "30": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.8742082118988037,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999996,
+      1.1257865701609173
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      0.9777053594589233,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000007,
+      1.0608876622867682
+     ],
+     "linearVelocity": [
+      2.2470085620880127,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.6608941555023193
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.125551223754883,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.1255528749482737
+     ],
+     "linearVelocity": [
+      2.998753070831299,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998753070831299
+     ],
+     "@bodyActive": true
+    }
+   },
+   "31": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.8322606086730957,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.1677342162732325
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.0089555978775024,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      1.0980107451156145
+     ],
+     "linearVelocity": [
+      2.222940683364868,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.6490278244018555
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.167479515075684,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.1674826397556783
+     ],
+     "linearVelocity": [
+      2.9987053871154785,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9987053871154785
+     ],
+     "@bodyActive": true
+    }
+   },
+   "32": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.7901091575622559,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.2098852908921032
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.040020227432251,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999996,
+      1.1351471079152793
+     ],
+     "linearVelocity": [
+      2.1990156173706055,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.637157440185547
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.209613800048828,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      1.2096151972700293
+     ],
+     "linearVelocity": [
+      2.998657703399658,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998657703399658
+     ],
+     "@bodyActive": true
+    }
+   },
+   "33": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.7477678060531616,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.252226256682428
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.0708882808685303,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.1722833028395423
+     ],
+     "linearVelocity": [
+      2.1752421855926514,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.6252870559692383
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.251936912536621,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.251937178060728
+     ],
+     "linearVelocity": [
+      2.998610019683838,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998610019683838
+     ],
+     "@bodyActive": true
+    }
+   },
+   "34": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.7052494287490845,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.29474454644338
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.101549744606018,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999996,
+      1.209406640769016
+     ],
+     "linearVelocity": [
+      2.151627779006958,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.6134209632873535
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.294435977935791,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.2944353630242755
+     ],
+     "linearVelocity": [
+      2.9985623359680176,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9985623359680176
+     ],
+     "@bodyActive": true
+    }
+   },
+   "35": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.66256582736969,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.337428130062854
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.1319957971572876,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.2465059624187103
+     ],
+     "linearVelocity": [
+      2.1281790733337402,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.601562261581421
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.337098121643066,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.337098149793613
+     ],
+     "linearVelocity": [
+      2.9985146522521973,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9985146522521973
+     ],
+     "@bodyActive": true
+    }
+   },
+   "36": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.6197277307510376,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999997,
+      1.3802660725635332
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.1622182130813599,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.2835702043187116
+     ],
+     "linearVelocity": [
+      2.104902744293213,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.589715003967285
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.3799147605896,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.3799148325586648
+     ],
+     "linearVelocity": [
+      2.998466968536377,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998466968536377
+     ],
+     "@bodyActive": true
+    }
+   },
+   "37": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.576745867729187,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.4232481847088947
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.192210078239441,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000004,
+      1.3205896547312141
+     ],
+     "linearVelocity": [
+      2.081803798675537,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.5778820514678955
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.422873020172119,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.422874672396303
+     ],
+     "linearVelocity": [
+      2.9984192848205566,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9984192848205566
+     ],
+     "@bodyActive": true
+    }
+   },
+   "38": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.5336288213729858,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.4663650438597744
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.2219651937484741,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.3575546557918525
+     ],
+     "linearVelocity": [
+      2.058887481689453,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.566066265106201
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.465968132019043,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.4659684895418956
+     ],
+     "linearVelocity": [
+      2.9983716011047363,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9983716011047363
+     ],
+     "@bodyActive": true
+    }
+   },
+   "39": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.4903862476348877,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.5096075120518104
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.2514779567718506,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.3944569960786029
+     ],
+     "linearVelocity": [
+      2.0361576080322266,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.5542705059051514
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.509188175201416,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.5091870232514832
+     ],
+     "linearVelocity": [
+      2.998323917388916,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998323917388916
+     ],
+     "@bodyActive": true
+    }
+   },
+   "40": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.4470267295837402,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.552967299644718
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.2807437181472778,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999997,
+      1.4312889280722738
+     ],
+     "linearVelocity": [
+      2.0136184692382812,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.542497396469116
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.552524089813232,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.5525220419564036
+     ],
+     "linearVelocity": [
+      2.9982762336730957,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9982762336730957
+     ],
+     "@bodyActive": true
+    }
+   },
+   "41": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.4035577774047852,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.5964362211323984
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.3097580671310425,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.4680436438885305
+     ],
+     "linearVelocity": [
+      1.9912724494934082,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.5307488441467285
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.5959672927856445,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.5959655713741518
+     ],
+     "linearVelocity": [
+      2.9982285499572754,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9982285499572754
+     ],
+     "@bodyActive": true
+    }
+   },
+   "42": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.3599869012832642,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.6400070017231527
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.3385177850723267,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.5047140602631621
+     ],
+     "linearVelocity": [
+      1.9691230058670044,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.5190272331237793
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.6395134925842285,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.639510556942864
+     ],
+     "linearVelocity": [
+      2.998180866241455,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998180866241455
+     ],
+     "@bodyActive": true
+    }
+   },
+   "43": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.316320538520813,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999997,
+      1.6836731525720434
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.3670191764831543,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.5412944015748955
+     ],
+     "linearVelocity": [
+      1.9471722841262817,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.5073344707489014
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.683154106140137,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999997,
+      1.6831501251289174
+     ],
+     "linearVelocity": [
+      2.9981331825256348,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9981331825256348
+     ],
+     "@bodyActive": true
+    }
+   },
+   "44": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.2725651264190674,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.7274284171978942
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.395259976387024,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.5777787250224746
+     ],
+     "linearVelocity": [
+      1.9254224300384521,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.4956724643707275
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.7268805503845215,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999997,
+      1.726877647740805
+     ],
+     "linearVelocity": [
+      2.9980854988098145,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9980854988098145
+     ],
+     "@bodyActive": true
+    }
+   },
+   "45": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.228727102279663,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.771266410558923
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.423237919807434,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.6141621729047735
+     ],
+     "linearVelocity": [
+      1.9038748741149902,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.4840426445007324
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.770688533782959,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.7706874524288647
+     ],
+     "linearVelocity": [
+      2.998037815093994,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.998037815093994
+     ],
+     "@bodyActive": true
+    }
+   },
+   "46": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.1848118305206299,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.8151821590660244
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.4509512186050415,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.6504397658840402
+     ],
+     "linearVelocity": [
+      1.8825310468673706,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.4724464416503906
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.814573764801025,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.8145742627105075
+     ],
+     "linearVelocity": [
+      2.997990131378174,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997990131378174
+     ],
+     "@bodyActive": true
+    }
+   },
+   "47": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.1408236026763916,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.859170174866289
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.4783989191055298,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999997,
+      1.6866074054877487
+     ],
+     "linearVelocity": [
+      1.8613916635513306,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.460885524749756
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.858531951904297,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.8585322130209891
+     ],
+     "linearVelocity": [
+      2.9979424476623535,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9979424476623535
+     ],
+     "@bodyActive": true
+    }
+   },
+   "48": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.096767783164978,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      1.9032253717452223
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.5055797100067139,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.722661011179632
+     ],
+     "linearVelocity": [
+      1.8404580354690552,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.4493608474731445
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.902556896209717,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.902557176156022
+     ],
+     "linearVelocity": [
+      2.997892379760742,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997892379760742
+     ],
+     "@bodyActive": true
+    }
+   },
+   "49": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.052649736404419,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.9473436203838326
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.5324928760528564,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.7585972579830735
+     ],
+     "linearVelocity": [
+      1.8197304010391235,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.4378738403320312
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.946643829345703,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.9466442813110636
+     ],
+     "linearVelocity": [
+      2.997842311859131,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997842311859131
+     ],
+     "@bodyActive": true
+    }
+   },
+   "50": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -1.0084726810455322,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.991520545658213
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.559138298034668,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.7944123970771944
+     ],
+     "linearVelocity": [
+      1.7992089986801147,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.4264254570007324
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      4.990789413452148,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.990789368840978
+     ],
+     "linearVelocity": [
+      2.9977922439575195,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9977922439575195
+     ],
+     "@bodyActive": true
+    }
+   },
+   "51": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.9642409086227417,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.0357528031678873
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.5855156183242798,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.8301031625086561
+     ],
+     "linearVelocity": [
+      1.778894066810608,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.4150171279907227
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.034987926483154,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.034988392748519
+     ],
+     "linearVelocity": [
+      2.997742176055908,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997742176055908
+     ],
+     "@bodyActive": true
+    }
+   },
+   "52": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.9199576377868652,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.080036084633275
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.61162531375885,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.8656674437140546
+     ],
+     "linearVelocity": [
+      1.758785367012024,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.40364933013916
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.079237937927246,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.0792379483280725
+     ],
+     "linearVelocity": [
+      2.997692108154297,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997692108154297
+     ],
+     "@bodyActive": true
+    }
+   },
+   "53": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.8756266236305237,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.124366975099731
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.637467384338379,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      1.9011024397527012
+     ],
+     "linearVelocity": [
+      1.7388827800750732,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.392322540283203
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.12353515625,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      2.123534354710674
+     ],
+     "linearVelocity": [
+      2.9976420402526855,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9976420402526855
+     ],
+     "@bodyActive": true
+    }
+   },
+   "54": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.8312510848045349,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.168742484536105
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.663042664527893,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      1.9364060590088716
+     ],
+     "linearVelocity": [
+      1.7191855907440186,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.381037950515747
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.167875289916992,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.167874601180551
+     ],
+     "linearVelocity": [
+      2.997591972351074,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997591972351074
+     ],
+     "@bodyActive": true
+    }
+   },
+   "55": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.7868337035179138,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.2131595971792555
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.6883519887924194,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      1.9715758392081861
+     ],
+     "linearVelocity": [
+      1.699693202972412,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.36979603767395
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.2122578620910645,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.2122556917158085
+     ],
+     "linearVelocity": [
+      2.997541904449463,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997541904449463
+     ],
+     "@bodyActive": true
+    }
+   },
+   "56": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.7423776984214783,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.257615554342797
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.7133959531784058,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.0066099356681257
+     ],
+     "linearVelocity": [
+      1.6804051399230957,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.35859751701355
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.256675720214844,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.256674915081514
+     ],
+     "linearVelocity": [
+      2.9974918365478516,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9974918365478516
+     ],
+     "@bodyActive": true
+    }
+   },
+   "57": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.6978852152824402,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.3021078223229283
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.7381757497787476,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.0415068768995006
+     ],
+     "linearVelocity": [
+      1.6613205671310425,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.347442626953125
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.301131725311279,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.3011296283848264
+     ],
+     "linearVelocity": [
+      2.9974417686462402,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9974417686462402
+     ],
+     "@bodyActive": true
+    }
+   },
+   "58": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.6533589363098145,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.346633903600296
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.7626926898956299,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.0762651686601967
+     ],
+     "linearVelocity": [
+      1.642438530921936,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.336332082748413
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.345617771148682,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.345617539244153
+     ],
+     "linearVelocity": [
+      2.997391700744629,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997391700744629
+     ],
+     "@bodyActive": true
+    }
+   },
+   "59": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.608801007270813,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.3911916863049414
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.7869479656219482,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.1108834686401456
+     ],
+     "linearVelocity": [
+      1.6237579584121704,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.3252663612365723
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.390138149261475,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.390136110730217
+     ],
+     "linearVelocity": [
+      2.9973416328430176,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9973416328430176
+     ],
+     "@bodyActive": true
+    }
+   },
+   "60": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.5642135739326477,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.435778854312954
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.810943365097046,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.1453606804261893
+     ],
+     "linearVelocity": [
+      1.60527765750885,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.3142459392547607
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.4346842765808105,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.434683378713531
+     ],
+     "linearVelocity": [
+      2.9972915649414062,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9972915649414062
+     ],
+     "@bodyActive": true
+    }
+   },
+   "61": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.5195987820625305,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.4803936253311347
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.834680199623108,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      2.1796955719033595
+     ],
+     "linearVelocity": [
+      1.5869964361190796,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.3032708168029785
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.4792585372924805,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.479257418800051
+     ],
+     "linearVelocity": [
+      2.997241497039795,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997241497039795
+     ],
+     "@bodyActive": true
+    }
+   },
+   "62": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.47495824098587036,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.525033950699921
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.8581602573394775,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.2138870929931866
+     ],
+     "linearVelocity": [
+      1.5689131021499634,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.292341470718384
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.523856163024902,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.5238564493878255
+     ],
+     "linearVelocity": [
+      2.9971914291381836,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9971914291381836
+     ],
+     "@bodyActive": true
+    }
+   },
+   "63": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.43029382824897766,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.5696983253318484
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.881385087966919,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.24793485039338
+     ],
+     "linearVelocity": [
+      1.5510262250900269,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.2814583778381348
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.568479537963867,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.5684787103991455
+     ],
+     "linearVelocity": [
+      2.9971413612365723,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9971413612365723
+     ],
+     "@bodyActive": true
+    }
+   },
+   "64": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.38560715317726135,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.614385114387999
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.9043564796447754,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.2818377752112973
+     ],
+     "linearVelocity": [
+      1.533334732055664,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.2706212997436523
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.613124370574951,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.613122711643586
+     ],
+     "linearVelocity": [
+      2.997091293334961,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.997091293334961
+     ],
+     "@bodyActive": true
+    }
+   },
+   "65": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.3408995568752289,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.659092745846564
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.9270763397216797,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      2.3155954486527994
+     ],
+     "linearVelocity": [
+      1.5158365964889526,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.259830951690674
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.657787322998047,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.6577867313471186
+     ],
+     "linearVelocity": [
+      2.9970412254333496,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9970412254333496
+     ],
+     "@bodyActive": true
+    }
+   },
+   "66": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.2961723804473877,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.7038197815871885
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.9495468139648438,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.349207362720565
+     ],
+     "linearVelocity": [
+      1.498530626296997,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.249086856842041
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.702470779418945,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      2.7024694658158848
+     ],
+     "linearVelocity": [
+      2.9969911575317383,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9969911575317383
+     ],
+     "@bodyActive": true
+    }
+   },
+   "67": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.25142696499824524,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.7485651538582094
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.9717696905136108,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.382672905107627
+     ],
+     "linearVelocity": [
+      1.4814152717590332,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.2383899688720703
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.747171401977539,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.7471695522969215
+     ],
+     "linearVelocity": [
+      2.996941089630127,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.996941089630127
+     ],
+     "@bodyActive": true
+    }
+   },
+   "68": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.20666465163230896,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.7933274106581307
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      1.9937469959259033,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.4159919570620576
+     ],
+     "linearVelocity": [
+      1.464489221572876,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.2277395725250244
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.791889190673828,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.7918858941127045
+     ],
+     "linearVelocity": [
+      2.9968910217285156,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9968910217285156
+     ],
+     "@bodyActive": true
+    }
+   },
+   "69": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.16188651323318481,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.8381055111986346
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.0154807567596436,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.449164031413705
+     ],
+     "linearVelocity": [
+      1.4477505683898926,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.2171361446380615
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.836619853973389,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.8366172376360836
+     ],
+     "linearVelocity": [
+      2.9968409538269043,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9968409538269043
+     ],
+     "@bodyActive": true
+    }
+   },
+   "70": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.11709360778331757,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.8828984769287427
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.036973237991333,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.482189266854075
+     ],
+     "linearVelocity": [
+      1.431198000907898,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.2065799236297607
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.881363868713379,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.881362696989505
+     ],
+     "linearVelocity": [
+      2.996790885925293,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.996790885925293
+     ],
+     "@bodyActive": true
+    }
+   },
+   "71": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.07228683680295944,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.9277052140673794
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.0582265853881836,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.515067195478246
+     ],
+     "linearVelocity": [
+      1.4148294925689697,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.196070671081543
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.926121711730957,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.9261211416032453
+     ],
+     "linearVelocity": [
+      2.9967408180236816,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9967408180236816
+     ],
+     "@bodyActive": true
+    }
+   },
+   "72": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      -0.027467193081974983,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      2.972524822877324
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.079242706298828,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.547797989010443
+     ],
+     "linearVelocity": [
+      1.3986436128616333,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.185608386993408
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      5.970890998840332,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.9708917306710165
+     ],
+     "linearVelocity": [
+      2.9966907501220703,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9966907501220703
+     ],
+     "@bodyActive": true
+    }
+   },
+   "73": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.017364468425512314,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.0173564927755523
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.1000237464904785,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.5803816471858108
+     ],
+     "linearVelocity": [
+      1.3826384544372559,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.1751930713653564
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.0156731605529785,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.015673568511378
+     ],
+     "linearVelocity": [
+      2.996640682220459,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.996640682220459
+     ],
+     "@bodyActive": true
+    }
+   },
+   "74": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.06220735237002373,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.0621993614316287
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.1205718517303467,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.612818120571952
+     ],
+     "linearVelocity": [
+      1.3668125867843628,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.1648247241973877
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.060463905334473,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.0604658816647565
+     ],
+     "linearVelocity": [
+      2.9965906143188477,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9965906143188477
+     ],
+     "@bodyActive": true
+    }
+   },
+   "75": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.10706072300672531,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.1070527083209023
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.140890121459961,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.64510756739194
+     ],
+     "linearVelocity": [
+      1.3511642217636108,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.154503583908081
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.105267524719238,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.105267891681112
+     ],
+     "linearVelocity": [
+      2.9965405464172363,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9965405464172363
+     ],
+     "@bodyActive": true
+    }
+   },
+   "76": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.15192387998104095,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.1519158414440187
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.160979986190796,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.677249957703927
+     ],
+     "linearVelocity": [
+      1.3356914520263672,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.1442296504974365
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.150079727172852,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.150078917347694
+     ],
+     "linearVelocity": [
+      2.996490478515625,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.996490478515625
+     ],
+     "@bodyActive": true
+    }
+   },
+   "77": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.19679616391658783,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.1967881007308385
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.1808440685272217,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.7092454933029035
+     ],
+     "linearVelocity": [
+      1.3203929662704468,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.1340019702911377
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.1949005126953125,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.19489831057882
+     ],
+     "linearVelocity": [
+      2.9964404106140137,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9964404106140137
+     ],
+     "@bodyActive": true
+    }
+   },
+   "78": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.24167689681053162,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.2416688552122266
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.200484037399292,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.7410945522733146
+     ],
+     "linearVelocity": [
+      1.3052667379379272,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.123821496963501
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.239727020263672,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.2397254622101808
+     ],
+     "linearVelocity": [
+      2.9963903427124023,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9963903427124023
+     ],
+     "@bodyActive": true
+    }
+   },
+   "79": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.2865655720233917,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.2865575743472975
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.219902276992798,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      2.7727971666518605
+     ],
+     "linearVelocity": [
+      1.2903112173080444,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.1136884689331055
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.284560680389404,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.2845598198525043
+     ],
+     "linearVelocity": [
+      2.996340274810791,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.996340274810791
+     ],
+     "@bodyActive": true
+    }
+   },
+   "80": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.33146172761917114,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.3314536931968277
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.2391014099121094,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.8043536839394316
+     ],
+     "linearVelocity": [
+      1.275524616241455,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.1036009788513184
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.329402923583984,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.3294008053059114
+     ],
+     "linearVelocity": [
+      2.9962902069091797,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9962902069091797
+     ],
+     "@bodyActive": true
+    }
+   },
+   "81": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.3763648569583893,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.376356775238053
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.2580835819244385,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.835764506649924
+     ],
+     "linearVelocity": [
+      1.260905385017395,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.0935611724853516
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.374249458312988,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.3742479376440193
+     ],
+     "linearVelocity": [
+      2.9962401390075684,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9962401390075684
+     ],
+     "@bodyActive": true
+    }
+   },
+   "82": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.42127442359924316,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.421266298413461
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.276850700378418,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.867029866467057
+     ],
+     "linearVelocity": [
+      1.2464512586593628,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.083566665649414
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.419101715087891,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.4191008240892713
+     ],
+     "linearVelocity": [
+      2.996190071105957,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.996190071105957
+     ],
+     "@bodyActive": true
+    }
+   },
+   "83": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.4661898910999298,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.466181871093513
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.295405149459839,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      2.898150171793107
+     ],
+     "linearVelocity": [
+      1.2321611642837524,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.073619842529297
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.463961124420166,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.463958840333588
+     ],
+     "linearVelocity": [
+      2.9961400032043457,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9961400032043457
+     ],
+     "@bodyActive": true
+    }
+   },
+   "84": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.5111110210418701,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.5111030015455897
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.313749313354492,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      2.9291257898769043
+     ],
+     "linearVelocity": [
+      1.2180331945419312,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.063718318939209
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.508824825286865,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.508821924415852
+     ],
+     "linearVelocity": [
+      2.9960899353027344,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9960899353027344
+     ],
+     "@bodyActive": true
+    }
+   },
+   "85": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.5560374855995178,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.556029442799039
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.3318850994110107,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.959957129258222
+     ],
+     "linearVelocity": [
+      1.2040654420852661,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.0538628101348877
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.553692817687988,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.5536894227085343
+     ],
+     "linearVelocity": [
+      2.996039867401123,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.996039867401123
+     ],
+     "@bodyActive": true
+    }
+   },
+   "86": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.6009687781333923,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999998,
+      3.6009608084488627
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.3498146533966064,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      2.990644588688021
+     ],
+     "linearVelocity": [
+      1.1902564764022827,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.0440542697906494
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.598565101623535,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.5985610851359215
+     ],
+     "linearVelocity": [
+      2.9959897994995117,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9959897994995117
+     ],
+     "@bodyActive": true
+    }
+   },
+   "87": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.6459048986434937,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.6458967162895277
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.3675405979156494,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.0211885493984165
+     ],
+     "linearVelocity": [
+      1.1766045093536377,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.0342910289764404
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.643441677093506,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.6434365568454856
+     ],
+     "linearVelocity": [
+      2.9959397315979004,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9959397315979004
+     ],
+     "@bodyActive": true
+    }
+   },
+   "88": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.6908453106880188,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.6908368037442405
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.3850648403167725,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.0515895081285023
+     ],
+     "linearVelocity": [
+      1.163107991218567,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.0245730876922607
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.688322067260742,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.6883155255738806
+     ],
+     "linearVelocity": [
+      2.995889663696289,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995889663696289
+     ],
+     "@bodyActive": true
+    }
+   },
+   "89": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.7357894778251648,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.735780920766274
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.4023897647857666,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.0818479191798107
+     ],
+     "linearVelocity": [
+      1.149765133857727,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.0149006843566895
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.733202934265137,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.7331977537716057
+     ],
+     "linearVelocity": [
+      2.9958395957946777,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9958395957946777
+     ],
+     "@bodyActive": true
+    }
+   },
+   "90": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.7807374000549316,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.780728676926979
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.4195172786712646,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.1119642671125063
+     ],
+     "linearVelocity": [
+      1.136574149131775,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.0052738189697266
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.778088092803955,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.7780830703567863
+     ],
+     "linearVelocity": [
+      2.9957895278930664,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9957895278930664
+     ],
+     "@bodyActive": true
+    }
+   },
+   "91": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.8256885409355164,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.825679996984295
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.4364495277404785,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.141939027003745
+     ],
+     "linearVelocity": [
+      1.1235334873199463,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9956923723220825
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.822977542877197,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.8229710375014507
+     ],
+     "linearVelocity": [
+      2.995739459991455,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995739459991455
+     ],
+     "@bodyActive": true
+    }
+   },
+   "92": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.870642900466919,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.870634665304016
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.45318865776062,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.1717727144390033
+     ],
+     "linearVelocity": [
+      1.110641598701477,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9861562252044678
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.8678669929504395,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.8678614802828166
+     ],
+     "linearVelocity": [
+      2.9956893920898438,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9956893920898438
+     ],
+     "@bodyActive": true
+    }
+   },
+   "93": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.9156004786491394,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.9155921735874393
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.4697368144989014,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.2014658293358793
+     ],
+     "linearVelocity": [
+      1.097896695137024,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9766649007797241
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.9127607345581055,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.912754156783519
+     ],
+     "linearVelocity": [
+      2.9956393241882324,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9956393241882324
+     ],
+     "@bodyActive": true
+    }
+   },
+   "94": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      0.9605607390403748,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.960552602481158
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.486096143722534,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.2310189089213344
+     ],
+     "linearVelocity": [
+      1.0852973461151123,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9672183990478516
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      6.9576544761657715,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.9576490138565066
+     ],
+     "linearVelocity": [
+      2.995589256286621,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995589256286621
+     ],
+     "@bodyActive": true
+    }
+   },
+   "95": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.0055238008499146,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      4.005515830663192
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.5022687911987305,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.260432478360871
+     ],
+     "linearVelocity": [
+      1.0728418827056885,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.957816481590271
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.002552509307861,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      4.002545537508294
+     ],
+     "linearVelocity": [
+      2.9955391883850098,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9955391883850098
+     ],
+     "@bodyActive": true
+    }
+   },
+   "96": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.0504894256591797,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      4.050481424735932
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.518256664276123,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.2897070402933553
+     ],
+     "linearVelocity": [
+      1.0605286359786987,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9484587907791138
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.047450542449951,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      4.047443875219978
+     ],
+     "linearVelocity": [
+      2.9954891204833984,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9954891204833984
+     ],
+     "@bodyActive": true
+    }
+   },
+   "97": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.0954571962356567,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      4.095449178151322
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.534061908721924,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.3188432270601593
+     ],
+     "linearVelocity": [
+      1.048356056213379,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.939145565032959
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.092348575592041,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      4.092343563727862
+     ],
+     "linearVelocity": [
+      2.995439052581787,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995439052581787
+     ],
+     "@bodyActive": true
+    }
+   },
+   "98": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.1404271125793457,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      4.140419215956388
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.5496864318847656,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.3478414833816563
+     ],
+     "linearVelocity": [
+      1.0363227128982544,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9298763275146484
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.137250900268555,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      4.1372448373488755
+     ],
+     "linearVelocity": [
+      2.995388984680176,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995388984680176
+     ],
+     "@bodyActive": true
+    }
+   },
+   "99": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.1853991746902466,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      4.1853909193742185
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.5651323795318604,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.37670246737695
+     ],
+     "linearVelocity": [
+      1.024426817893982,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9206510782241821
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.182153224945068,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      4.182147398704557
+     ],
+     "linearVelocity": [
+      2.9953389167785645,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9953389167785645
+     ],
+     "@bodyActive": true
+    }
+   },
+   "100": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.2303733825683594,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      2.0528203737728346
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.5804014205932617,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1,
+      3.405426623571232
+     ],
+     "linearVelocity": [
+      1.0126670598983765,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9114694595336914
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.227055549621582,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1.0000000000000002,
+      2.056134317282401
+     ],
+     "linearVelocity": [
+      2.995288848876953,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995288848876953
+     ],
+     "@bodyActive": true
+    }
+   },
+   "101": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.2753486633300781,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999999,
+      2.007844862936302
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.5954957008361816,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      0.9999999999999999,
+      3.4340145358414076
+     ],
+     "linearVelocity": [
+      1.0010417699813843,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.9023314714431763
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.271960735321045,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      2.0112297159124557
+     ],
+     "linearVelocity": [
+      2.995238780975342,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995238780975342
+     ],
+     "@bodyActive": true
+    }
+   },
+   "102": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.3203260898590088,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      1.9628678065340135
+     ],
+     "linearVelocity": [
+      3,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      3
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.610417366027832,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      1.0000000000000002,
+      3.4624668489197097
+     ],
+     "linearVelocity": [
+      0.9895495772361755,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      1.893236756324768
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.316867351531982,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999999,
+      1.966324149804141
+     ],
+     "linearVelocity": [
+      2.9951887130737305,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9951887130737305
+     ],
+     "@bodyActive": true
+    }
+   },
+   "103": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.3607240915298462,
+      -0.0032039224170148373,
+      -7.275313684829143e-11
+     ],
+     "orientation": [
+      -1.8194222465821172e-10,
+      2.2202246364522404e-10,
+      -1.0000000000000002,
+      1.9224165952582193
+     ],
+     "linearVelocity": [
+      2.3067798614501953,
+      -0.46415281295776367,
+      7.024231862828856e-09
+     ],
+     "angularVelocity": [
+      5.211855125253351e-08,
+      1.3876515936317446e-08,
+      2.395308494567871
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.6297407150268555,
+      0.0031979787163436413,
+      7.268355362022305e-11
+     ],
+     "orientation": [
+      1.678309514555169e-10,
+      -6.526582983016919e-11,
+      0.9999999999999999,
+      3.4708161813458225
+     ],
+     "linearVelocity": [
+      1.668241262435913,
+      0.46193742752075195,
+      -7.074582697441656e-09
+     ],
+     "angularVelocity": [
+      -1.2534613347270351e-08,
+      -1.8714338523295737e-08,
+      -1.0559898614883423
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.36177396774292,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      1.9214181281953346
+     ],
+     "linearVelocity": [
+      2.995138645172119,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995138645172119
+     ],
+     "@bodyActive": true
+    }
+   },
+   "104": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.3954012393951416,
+      -0.010428798384964466,
+      -3.5862814939946475e-09
+     ],
+     "orientation": [
+      -9.30255274942201e-09,
+      2.3272811359733182e-09,
+      -0.9999999999999999,
+      1.8876877128763627
+     ],
+     "linearVelocity": [
+      2.3107106685638428,
+      -0.475654661655426,
+      1.5126590824365849e-07
+     ],
+     "angularVelocity": [
+      3.7137419894861523e-07,
+      -5.223730568104656e-07,
+      2.3439574241638184
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.654519557952881,
+      0.01034823339432478,
+      3.576964724416598e-09
+     ],
+     "orientation": [
+      6.295224598257194e-09,
+      -3.998224900651285e-09,
+      0.9999999999999999,
+      3.454175815825139
+     ],
+     "linearVelocity": [
+      1.6452202796936035,
+      0.4679528474807739,
+      -1.5373581163657946e-07
+     ],
+     "angularVelocity": [
+      -3.281587623860105e-07,
+      -5.611593678622739e-07,
+      -1.0876567363739014
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.406680583953857,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999999,
+      1.876511269113506
+     ],
+     "linearVelocity": [
+      2.995088577270508,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.995088577270508
+     ],
+     "@bodyActive": true
+    }
+   },
+   "105": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.430026888847351,
+      -0.017499485984444618,
+      -1.4312036000774242e-08
+     ],
+     "orientation": [
+      -3.7369007390137216e-08,
+      8.478344019530608e-09,
+      -0.9999999999999993,
+      1.8522704558273784
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.6790666580200195,
+      0.017263464629650116,
+      1.4116666946506484e-08
+     ],
+     "orientation": [
+      2.4896782160454554e-08,
+      -1.6071542006136396e-08,
+      0.9999999999999994,
+      3.4380981357934663
+     ],
+     "linearVelocity": [
+      1.6271716356277466,
+      0.46011751890182495,
+      -7.825848342690733e-07
+     ],
+     "angularVelocity": [
+      -1.5520475926678046e-06,
+      -2.857075969586731e-06,
+      -1.0746209621429443
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.451587200164795,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      1.831603852340262
+     ],
+     "linearVelocity": [
+      2.9950385093688965,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9950385093688965
+     ],
+     "@bodyActive": true
+    }
+   },
+   "106": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.464661717414856,
+      -0.024594012647867203,
+      -2.721617820000688e-09
+     ],
+     "orientation": [
+      -6.893290952362165e-09,
+      5.436825569811225e-09,
+      -1,
+      1.816957061295301
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.703324556350708,
+      0.02412288822233677,
+      2.4499069439798404e-09
+     ],
+     "orientation": [
+      5.126087649077657e-09,
+      -1.4701521821849954e-09,
+      1.0000000000000002,
+      3.4220235565254145
+     ],
+     "linearVelocity": [
+      1.6084890365600586,
+      0.45483461022377014,
+      -7.735995950497454e-07
+     ],
+     "angularVelocity": [
+      -1.544626684335526e-06,
+      -2.843415131792426e-06,
+      -1.0694829225540161
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.496493816375732,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999999,
+      1.7866960514452972
+     ],
+     "linearVelocity": [
+      2.994988441467285,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994988441467285
+     ],
+     "@bodyActive": true
+    }
+   },
+   "107": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.4992976188659668,
+      -0.03168872371315956,
+      8.869097456454256e-09
+     ],
+     "orientation": [
+      2.4434292562166065e-08,
+      2.3102824669071076e-09,
+      -0.9999999999999996,
+      1.7816431648374402
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.727304458618164,
+      0.030903726816177368,
+      -9.08319552905823e-09
+     ],
+     "orientation": [
+      -1.4506088549047184e-08,
+      1.3028936364018949e-08,
+      0.9999999999999997,
+      3.406025492421757
+     ],
+     "linearVelocity": [
+      1.5900206565856934,
+      0.44961223006248474,
+      -7.647172424185555e-07
+     ],
+     "angularVelocity": [
+      -1.5372410189229413e-06,
+      -2.829819322869298e-06,
+      -1.0643689632415771
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.54140043258667,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999997,
+      1.7417875494390322
+     ],
+     "linearVelocity": [
+      2.994938373565674,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994938373565674
+     ],
+     "@bodyActive": true
+    }
+   },
+   "108": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.5339335203170776,
+      -0.03878360241651535,
+      2.046009406342364e-08
+     ],
+     "orientation": [
+      5.667028791002105e-08,
+      -9.06921265717761e-10,
+      -0.9999999999999984,
+      1.7463282929959472
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.751009702682495,
+      0.037606868892908096,
+      -2.0484147711385958e-08
+     ],
+     "orientation": [
+      -3.400342901178552e-08,
+      2.742844497439222e-08,
+      0.9999999999999992,
+      3.390103577514738
+     ],
+     "linearVelocity": [
+      1.5717637538909912,
+      0.44444969296455383,
+      -7.559366395071265e-07
+     ],
+     "angularVelocity": [
+      -1.5298904827432125e-06,
+      -2.8162883154436713e-06,
+      -1.0592797994613647
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.586308479309082,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1.0000000000000002,
+      1.6968788432939814
+     ],
+     "linearVelocity": [
+      2.9948883056640625,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9948883056640625
+     ],
+     "@bodyActive": true
+    }
+   },
+   "109": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.5685704946517944,
+      -0.04587864875793457,
+      3.20513464657779e-08
+     ],
+     "orientation": [
+      8.987574317262838e-08,
+      -4.220883325592348e-09,
+      -0.9999999999999959,
+      1.71101285252333
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.7744431495666504,
+      0.04423319175839424,
+      -3.175443907821318e-08
+     ],
+     "orientation": [
+      -5.336949983914621e-08,
+      4.173100496686633e-08,
+      0.9999999999999977,
+      3.3742573124517716
+     ],
+     "linearVelocity": [
+      1.5537160634994507,
+      0.4393463432788849,
+      -7.472567062905e-07
+     ],
+     "angularVelocity": [
+      -1.522574962109502e-06,
+      -2.8028214273945196e-06,
+      -1.054214596748352
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.631218433380127,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      1.6519700104059647
+     ],
+     "linearVelocity": [
+      2.994838237762451,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994838237762451
+     ],
+     "@bodyActive": true
+    }
+   },
+   "110": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.6032085418701172,
+      -0.052973829209804535,
+      4.364284222901915e-08
+     ],
+     "orientation": [
+      1.241166944071396e-07,
+      -7.638186064270355e-09,
+      -0.9999999999999922,
+      1.675696503265726
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.7976083755493164,
+      0.050783563405275345,
+      -4.28955573283929e-08
+     ],
+     "orientation": [
+      -7.260779820066852e-08,
+      5.593919286184218e-08,
+      0.9999999999999959,
+      3.3584865099822294
+     ],
+     "linearVelocity": [
+      1.5358754396438599,
+      0.434301495552063,
+      -7.386761353700422e-07
+     ],
+     "angularVelocity": [
+      -1.5152942296481342e-06,
+      -2.7894188860955182e-06,
+      -1.0491732358932495
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.676129341125488,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1.0000000000000002,
+      1.6070609567863707
+     ],
+     "linearVelocity": [
+      2.99478816986084,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.99478816986084
+     ],
+     "@bodyActive": true
+    }
+   },
+   "111": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.63784658908844,
+      -0.060069143772125244,
+      5.523456181322217e-08
+     ],
+     "orientation": [
+      1.5946466083570244e-07,
+      -1.1165957344773e-08,
+      -0.9999999999999872,
+      1.6403794689575033
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.8205080032348633,
+      0.05725884437561035,
+      -5.3908951969106056e-08
+     ],
+     "orientation": [
+      -9.172170432266396e-08,
+      7.005553326614221e-08,
+      0.9999999999999933,
+      3.3427908418871533
+     ],
+     "linearVelocity": [
+      1.5182390213012695,
+      0.4293144643306732,
+      -7.301940172510513e-07
+     ],
+     "angularVelocity": [
+      -1.508048399045947e-06,
+      -2.7760802367993165e-06,
+      -1.0441557168960571
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.72104024887085,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      1.5621518970358572
+     ],
+     "linearVelocity": [
+      2.9947381019592285,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9947381019592285
+     ],
+     "@bodyActive": true
+    }
+   },
+   "112": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.6724857091903687,
+      -0.0671645924448967,
+      6.682650166567328e-08
+     ],
+     "orientation": [
+      1.9599735099008557e-07,
+      -1.4811971230522595e-08,
+      -0.9999999999999806,
+      1.6050618740067522
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.843144655227661,
+      0.06365988403558731,
+      -6.479608316567464e-08
+     ],
+     "orientation": [
+      -1.1071451718212588e-07,
+      8.408243993181587e-08,
+      0.9999999999999905,
+      3.3271700037540954
+     ],
+     "linearVelocity": [
+      1.5008049011230469,
+      0.42438462376594543,
+      -7.218092719085689e-07
+     ],
+     "angularVelocity": [
+      -1.5008366744950763e-06,
+      -2.762804797384888e-06,
+      -1.039162039756775
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.765951156616211,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1.0000000000000002,
+      1.5172426093409497
+     ],
+     "linearVelocity": [
+      2.994688034057617,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994688034057617
+     ],
+     "@bodyActive": true
+    }
+   },
+   "113": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.7071248292922974,
+      -0.0742601752281189,
+      7.841863691737672e-08
+     ],
+     "orientation": [
+      2.3379926119440572e-07,
+      -1.85846596905604e-08,
+      -0.9999999999999724,
+      1.5697434985096075
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.8655219078063965,
+      0.06998752057552338,
+      -7.555837555628386e-08
+     ],
+     "orientation": [
+      -1.2958938889291883e-07,
+      9.802225393741222e-08,
+      0.999999999999987,
+      3.31162353245681
+     ],
+     "linearVelocity": [
+      1.4835706949234009,
+      0.4195113182067871,
+      -7.135204782571236e-07
+     ],
+     "angularVelocity": [
+      -1.4936592833691975e-06,
+      -2.749592795225908e-06,
+      -1.0341922044754028
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.810862064361572,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999999,
+      1.4723332987348652
+     ],
+     "linearVelocity": [
+      2.994637966156006,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994637966156006
+     ],
+     "@bodyActive": true
+    }
+   },
+   "114": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.741765022277832,
+      -0.08135582506656647,
+      9.001096401561881e-08
+     ],
+     "orientation": [
+      2.7296250674435367e-07,
+      -2.2493194577593028e-08,
+      -0.9999999999999627,
+      1.5344245419741203
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.8876426219940186,
+      0.076242595911026,
+      -8.619725377911891e-08
+     ],
+     "orientation": [
+      -1.483494847592267e-07,
+      1.118772722510694e-07,
+      0.999999999999983,
+      3.2961512013673513
+     ],
+     "linearVelocity": [
+      1.46653413772583,
+      0.4146938621997833,
+      -7.053267836454324e-07
+     ],
+     "angularVelocity": [
+      -1.486516453041986e-06,
+      -2.736443775575026e-06,
+      -1.029246211051941
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.855772972106934,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999997,
+      1.4274240092304225
+     ],
+     "linearVelocity": [
+      2.9945878982543945,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9945878982543945
+     ],
+     "@bodyActive": true
+    }
+   },
+   "115": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.7764052152633667,
+      -0.08845160901546478,
+      1.0160341901155334e-07
+     ],
+     "orientation": [
+      3.1358770502190017e-07,
+      -2.6547649006880145e-08,
+      -0.9999999999999503,
+      1.4991051177620327
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.9095094203948975,
+      0.08242592960596085,
+      -9.671411760336923e-08
+     ],
+     "orientation": [
+      -1.669978224670766e-07,
+      1.2564977159761746e-07,
+      0.9999999999999784,
+      3.280752626003039
+     ],
+     "linearVelocity": [
+      1.449692964553833,
+      0.4099316895008087,
+      -6.97227108048537e-07
+     ],
+     "angularVelocity": [
+      -1.4794070466450648e-06,
+      -2.7233572836848907e-06,
+      -1.0243240594863892
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.900683879852295,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      1.382514907852139
+     ],
+     "linearVelocity": [
+      2.994537830352783,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994537830352783
+     ],
+     "@bodyActive": true
+    }
+   },
+   "116": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.8110464811325073,
+      -0.09554746001958847,
+      1.1319606585402653e-07
+     ],
+     "orientation": [
+      3.557850985041634e-07,
+      -3.0759015101975626e-08,
+      -0.9999999999999364,
+      1.4637853406113621
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.9311254024505615,
+      0.08853834122419357,
+      -1.071103454819422e-07
+     ],
+     "orientation": [
+      -1.8553740430471067e-07,
+      1.393419185842824e-07,
+      0.9999999999999732,
+      3.265427474706301
+     ],
+     "linearVelocity": [
+      1.4330450296401978,
+      0.40522411465644836,
+      -6.892202577546414e-07
+     ],
+     "angularVelocity": [
+      -1.47233174629946e-06,
+      -2.7103333195555024e-06,
+      -1.0194257497787476
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.945594310760498,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1.0000000000000002,
+      1.337605761383544
+     ],
+     "linearVelocity": [
+      2.994487762451172,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994487762451172
+     ],
+     "@bodyActive": true
+    }
+   },
+   "117": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.845687747001648,
+      -0.1026434451341629,
+      1.2478884059419215e-07
+     ],
+     "orientation": [
+      3.996755596008255e-07,
+      -3.513932572611044e-08,
+      -0.9999999999999195,
+      1.4284647390760379
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.95249342918396,
+      0.09458064287900925,
+      -1.173873158677452e-07
+     ],
+     "orientation": [
+      -2.0397106043231217e-07,
+      1.5295584817940937e-07,
+      0.9999999999999676,
+      3.2501754451833027
+     ],
+     "linearVelocity": [
+      1.4165881872177124,
+      0.40057048201560974,
+      -6.813053232690436e-07
+     ],
+     "angularVelocity": [
+      -1.4652905520051718e-06,
+      -2.6973716558131855e-06,
+      -1.0145502090454102
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      7.990503787994385,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999998,
+      1.2926969959550156
+     ],
+     "linearVelocity": [
+      2.9944376945495605,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9944376945495605
+     ],
+     "@bodyActive": true
+    }
+   },
+   "118": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.8803300857543945,
+      -0.10973949730396271,
+      1.363817432320502e-07
+     ],
+     "orientation": [
+      4.453920618559148e-07,
+      -3.970190822214641e-08,
+      -0.9999999999998999,
+      1.3931439620634647
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.973616600036621,
+      0.10055362433195114,
+      -1.2754640010825824e-07
+     ],
+     "orientation": [
+      -2.2230168509471408e-07,
+      1.6649365561717904e-07,
+      0.9999999999999614,
+      3.2349961929024884
+     ],
+     "linearVelocity": [
+      1.4003199338912964,
+      0.39597031474113464,
+      -6.734812245667854e-07
+     ],
+     "angularVelocity": [
+      -1.4582828953280114e-06,
+      -2.6844716103369137e-06,
+      -1.0096983909606934
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      8.03541088104248,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1,
+      1.2477883841122444
+     ],
+     "linearVelocity": [
+      2.994387626647949,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994387626647949
+     ],
+     "@bodyActive": true
+    }
+   },
+   "119": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.9149724245071411,
+      -0.11683561652898788,
+      1.479747737676007e-07
+     ],
+     "orientation": [
+      4.930816488972727e-07,
+      -4.446140874281563e-08,
+      -0.9999999999998771,
+      1.3578227109188432
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      2.994497299194336,
+      0.10645808279514313,
+      -1.3758891270754248e-07
+     ],
+     "orientation": [
+      -2.4053194562193803e-07,
+      1.7995732405087043e-07,
+      0.9999999999999548,
+      3.2198893468651257
+     ],
+     "linearVelocity": [
+      1.3842384815216064,
+      0.39142292737960815,
+      -6.657467679360707e-07
+     ],
+     "angularVelocity": [
+      -1.4513087762679788e-06,
+      -2.671633183126687e-06,
+      -1.0048693418502808
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      8.080317497253418,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -1.0000000000000004,
+      1.2028799133352819
+     ],
+     "linearVelocity": [
+      2.994337558746338,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.994337558746338
+     ],
+     "@bodyActive": true
+    }
+   },
+   "120": {
+    "A": {
+     "type": "RigidBody",
+     "position": [
+      1.9496147632598877,
+      -0.12393180280923843,
+      1.5956793220084364e-07
+     ],
+     "orientation": [
+      5.429061156641088e-07,
+      -4.943397781753626e-08,
+      -0.9999999999998513,
+      1.3225014358511842
+     ],
+     "linearVelocity": [
+      2.3098556995391846,
+      -0.4731499254703522,
+      7.729913704679348e-07
+     ],
+     "angularVelocity": [
+      1.7586735339136794e-06,
+      -2.774544554995373e-06,
+      2.3551130294799805
+     ],
+     "@bodyActive": true
+    },
+    "B": {
+     "type": "RigidBody",
+     "position": [
+      3.0151383876800537,
+      0.11229478567838669,
+      -1.4751620369679586e-07
+     ],
+     "orientation": [
+      -2.5866433791106035e-07,
+      1.9334877672023778e-07,
+      0.9999999999999479,
+      3.2048545699317312
+     ],
+     "linearVelocity": [
+      1.3683414459228516,
+      0.38692769408226013,
+      -6.581011007256166e-07
+     ],
+     "angularVelocity": [
+      -1.4443677400777233e-06,
+      -2.65885614680883e-06,
+      -1.0000635385513306
+     ],
+     "@bodyActive": true
+    },
+    "C": {
+     "type": "RigidBody",
+     "position": [
+      8.125224113464355,
+      0,
+      0
+     ],
+     "orientation": [
+      0,
+      0,
+      -0.9999999999999996,
+      1.157971734382266
+     ],
+     "linearVelocity": [
+      2.9942874908447266,
+      0,
+      0
+     ],
+     "angularVelocity": [
+      0,
+      0,
+      2.9942874908447266
+     ],
+     "@bodyActive": true
+    }
+   }
+  }
+ },
+ "console": []
+}

@@ -1,0 +1,91 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT NURBS:4
+COMPONENT KeyDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 9 14 orientation 1 0 0 -0.55 }
+DirectionalLight { direction -0.3 -1 -0.5 }
+Transform { translation -3 0 -1 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } texture ImageTexture { url "checker.png" } }
+  geometry DEF P NurbsPatchSurface { uDimension 5 vDimension 4 solid FALSE controlPoint DEF PC Coordinate { point [ -2 0.0 -1.5, -1 0.385423 -1.5, 0 0.206201 -1.5, 1 -0.275106 -1.5, 2 -0.353382 -1.5, -2 0.0 -0.5, -1 0.239583 -0.5, 0 0.128176 -0.5, 1 -0.171009 -0.5, 2 -0.219666 -0.5, -2 -0.0 0.5, -1 -0.087569 0.5, 0 -0.046849 0.5, 1 0.062505 0.5, 2 0.080289 0.5, -2 -0.0 1.5, -1 -0.34845 1.5, 0 -0.18642 1.5, 1 0.248716 1.5, 2 0.319483 1.5 ] } }
+} }
+Transform { translation 3 0 -1 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.4 0.7 0.9 } }
+  geometry DEF T NurbsTrimmedSurface { uDimension 5 vDimension 4 solid FALSE controlPoint USE PC
+    trimmingContour [ DEF C2 Contour2D { children [ DEF PL ContourPolyline2D { controlPoint [0.1 0.1, 0.9 0.1, 0.9 0.9, 0.1 0.9, 0.1 0.1] } ] } ] }
+} }
+Transform { translation 0 2.5 -3 children Shape {
+  appearance Appearance { material Material { emissiveColor 1 1 0 } }
+  geometry DEF CU NurbsCurve { tessellation 24 controlPoint Coordinate { point [-3 0 0, -1 1.5 0, 1 -1 0, 3 1 0] } }
+} }
+Transform { translation 0 -1.5 2 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.9 0.5 0.3 } }
+  geometry DEF SW NurbsSweptSurface { solid FALSE
+    crossSectionCurve DEF CS ContourPolyline2D { controlPoint [0.3 0, 0 0.3, -0.3 0, 0 -0.3, 0.3 0] }
+    trajectoryCurve NurbsCurve { tessellation 10 controlPoint Coordinate { point [-3 0 0, -1 1 0, 1 0 1, 3 0.5 0] } } }
+} }
+DEF MOVER Transform { children Shape { appearance Appearance { material Material { diffuseColor 1 0.2 0.2 } } geometry Box { size 0.4 0.4 0.4 } } }
+DEF NS NurbsSet { geometry [ USE P ] }
+DEF PI NurbsPositionInterpolator { controlPoint DEF IC Coordinate { point [-3 3 0, -1 5 1, 1 2 0, 3 4 -1] } }
+DEF OI NurbsOrientationInterpolator { controlPoint USE IC }
+DEF SI NurbsSurfaceInterpolator { uDimension 5 vDimension 4 controlPoint USE PC }
+DEF NEWPL ContourPolyline2D { controlPoint [0.3 0.3, 0.7 0.3, 0.7 0.7, 0.3 0.7, 0.3 0.3] }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly MFNode on_children
+  inputOnly MFNode on_contours
+  inputOnly MFNode on_geometry
+  inputOnly SFVec3f on_position
+  inputOnly SFRotation on_orientation
+  inputOnly SFVec3f on_surface_position
+  inputOnly SFVec3f on_surface_normal
+  inputOutput SFString log ""
+  initializeOnly SFNode p USE P
+  initializeOnly SFNode pc USE PC
+  initializeOnly SFNode t USE T
+  initializeOnly SFNode c2 USE C2
+  initializeOnly SFNode pl USE PL
+  initializeOnly SFNode newpl USE NEWPL
+  initializeOnly SFNode cu USE CU
+  initializeOnly SFNode cs USE CS
+  initializeOnly SFNode ns USE NS
+  initializeOnly SFNode pi USE PI
+  initializeOnly SFNode oi USE OI
+  initializeOnly SFNode si USE SI
+  url "javascript:
+function on_children (v) { log = log + 'C' + v .length + ' '; }
+function on_contours (v) { log = log + 'T' + v .length + ' '; }
+function on_geometry (v) { log = log + 'G' + v .length + ' '; }
+function on_position (v) { log = log + 'P' + v + ' '; }
+function on_orientation (v) { log = log + 'O' + v + ' '; }
+function on_surface_position (v) { log = log + 'SP' + v + ' '; }
+function on_surface_normal (v) { log = log + 'SN' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') pc .point [7] = new SFVec3f (0, 1.5, -0.5);
+   if (k == 'b') { p .uTessellation = 4; p .vTessellation = 3; }
+   if (k == 'c') ns .tessellationScale = 2.5;
+   if (k == 'd') { ns .removeGeometry = new MFNode (p); ns .addGeometry = new MFNode (t, t); }
+   if (k == 'e') t .removeTrimmingContour = new MFNode (c2);
+   if (k == 'f') { t .addTrimmingContour = new MFNode (c2); c2 .removeChildren = new MFNode (pl); c2 .addChildren = new MFNode (newpl, newpl); }
+   if (k == 'g') { pi .set_fraction = 0.25; oi .set_fraction = 0.6; si .set_fraction = new SFVec2f (0.3, 0.7); }
+   if (k == 'h') { cu .tessellation = 6; cs .controlPoint = new MFVec2d (new SFVec2d (0.5, 0), new SFVec2d (0, 0.2), new SFVec2d (-0.5, 0), new SFVec2d (0.5, 0)); }
+   if (k == 'i') { p .weight = new MFDouble (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1); c2 .removeChildren = new MFNode (); }
+   if (k == 'j') { pi .order = 2; pi .set_fraction = 0.5; oi .set_fraction = 1.5; si .set_fraction = new SFVec2f (-1, 2); pi .set_fraction = -0.25; }
+   if (k == 'k') { t .addTrimmingContour = new MFNode (); ns .geometry = new MFNode (); }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE C2.children_changed TO R.on_children
+ROUTE T.trimmingContour_changed TO R.on_contours
+ROUTE NS.geometry_changed TO R.on_geometry
+ROUTE PI.value_changed TO R.on_position
+ROUTE PI.value_changed TO MOVER.set_translation
+ROUTE OI.value_changed TO R.on_orientation
+ROUTE OI.value_changed TO MOVER.set_rotation
+ROUTE SI.position_changed TO R.on_surface_position
+ROUTE SI.normal_changed TO R.on_surface_normal

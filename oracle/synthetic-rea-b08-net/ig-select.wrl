@@ -1,0 +1,33 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 12 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+PointLight { location 0 0 10 intensity 0.6 }
+Transform { translation -4.350 3.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I0 InlineGeometry { url "ig/nested.x3dv"  } } }
+Transform { translation -2.900 3.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I1 InlineGeometry { url "ig/multi.x3dv"  } } }
+Transform { translation -1.450 3.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I2 InlineGeometry { url "ig/multi.x3dv#G2"  } } }
+Transform { translation 0.000 3.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I3 InlineGeometry { url "ig/multi.x3dv#G3G"  } } }
+Transform { translation 1.450 3.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I4 InlineGeometry { url "ig/multi.x3dv#G3"  } } }
+Transform { translation 2.900 3.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I5 InlineGeometry { url "ig/multi.x3dv#NOGEO"  } } }
+Transform { translation 4.350 3.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I6 InlineGeometry { url "ig/multi.x3dv#MISSING"  } } }
+Transform { translation -4.350 1.500 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I7 InlineGeometry { url "ig/none.x3dv"  } } }
+Transform { translation -2.900 1.500 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I8 InlineGeometry { url "ig/box.wrl"  } } }
+Transform { translation -1.450 1.500 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I9 InlineGeometry { url "ig/box.x3d"  } } }
+Transform { translation 0.000 1.500 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I10 InlineGeometry { url "ig/inline-inside.x3dv"  } } }
+Transform { translation 1.450 1.500 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I11 InlineGeometry { url "ig/proto.x3dv"  } } }
+Transform { translation 2.900 1.500 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I12 InlineGeometry { url "ig/routes.x3dv"  } } }
+Transform { translation 4.350 1.500 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I13 InlineGeometry { url "ig/script.x3dv"  } } }
+Transform { translation -4.350 0.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I14 InlineGeometry { url "ig/broken.x3dv"  } } }
+Transform { translation -2.900 0.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I15 InlineGeometry { url "ig/text.txt"  } } }
+Transform { translation -1.450 0.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I16 InlineGeometry { url "ig/missing.x3dv"  } } }
+Transform { translation 0.000 0.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I17 InlineGeometry { url "ig/dup.x3dv" solid TRUE } } }
+Transform { translation 1.450 0.000 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I18 InlineGeometry { url "ig/dup.x3dv"  } } }

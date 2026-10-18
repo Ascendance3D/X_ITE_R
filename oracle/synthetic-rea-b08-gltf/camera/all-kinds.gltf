@@ -1,0 +1,149 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "Mesh"
+  },
+  {
+   "camera": 0,
+   "translation": [
+    0,
+    0,
+    5
+   ]
+  },
+  {
+   "camera": 1,
+   "translation": [
+    5,
+    0,
+    0
+   ],
+   "rotation": [
+    0,
+    0.7071068,
+    0,
+    0.7071068
+   ]
+  },
+  {
+   "camera": 2
+  },
+  {
+   "camera": 3,
+   "translation": [
+    0,
+    3,
+    0
+   ]
+  },
+  {
+   "camera": 4
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ]
+  }
+ ],
+ "scene": 0,
+ "cameras": [
+  {
+   "name": "Perspective_Cam",
+   "type": "perspective",
+   "perspective": {
+    "yfov": 0.6,
+    "znear": 0.05,
+    "zfar": 200,
+    "aspectRatio": 1.5
+   }
+  },
+  {
+   "type": "orthographic",
+   "orthographic": {
+    "xmag": 3,
+    "ymag": 2,
+    "znear": 0.2,
+    "zfar": 100
+   }
+  },
+  {
+   "type": "perspective",
+   "perspective": {
+    "yfov": 0.8
+   }
+  },
+  {
+   "type": "orthographic",
+   "orthographic": {}
+  },
+  {
+   "type": "bogus"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 12
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -1,
+    -1,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 60,
+   "uri": "data:application/octet-stream;base64,AACAvwAAgL8AAAAAAACAPwAAgL8AAAAAAACAPwAAgD8AAAAAAACAvwAAgD8AAAAAAAABAAIAAAACAAMA"
+  }
+ ]
+}

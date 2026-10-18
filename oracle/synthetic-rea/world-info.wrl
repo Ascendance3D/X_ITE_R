@@ -1,0 +1,31 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+# Synthetic REA oracle world: X3DExecutionContext.getWorldInfos: live WorldInfos of the context in
+# initialize order; one inside a PROTO body (other context); one made by createNode. Authored.
+PROTO P [ ] { WorldInfo { title "in proto" } }
+DEF W1 WorldInfo { title "first" info [ "a" "b" ] }
+P { }
+DEF OUT Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOutput SFNode keep NULL
+  url "ecmascript:
+    function list () {
+      var w = Browser .currentScene .getWorldInfos ();
+      var s = ' ' + w .length;
+      for (var i = 0; i < w .length; ++ i) s = s + ':' + w [i] .title;
+      return s;
+    }
+    function initialize () { hist = hist + list (); }
+    function cycle (v) {
+      step = step + 1;
+      if (step == 2) { keep = Browser .currentScene .createNode ('WorldInfo'); keep .title = 'made'; }
+      hist = hist + list ();
+    }
+  "
+}
+DEF W2 WorldInfo { title "second" }
+DEF STEP TimeSensor { cycleInterval 0.25 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

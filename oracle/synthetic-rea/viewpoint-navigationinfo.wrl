@@ -1,0 +1,27 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+# Synthetic REA oracle world: X3D 4 Viewpoint.navigationInfo. Binding the second Viewpoint sends
+# its isBound to the referenced NavigationInfo (set_bind), so the viewer type and the headlight
+# change with it; unbinding sends FALSE. Authored.
+DEF NAV1 NavigationInfo { type "EXAMINE" headlight TRUE }
+DEF NAV2 NavigationInfo { type "FLY" headlight FALSE }
+DEF VP1 Viewpoint { description "one" position 0 0 8 navigationInfo USE NAV1 }
+DEF VP2 Viewpoint { description "two" position 3 1 7 orientation 0 1 0 0.4 navigationInfo USE NAV2 }
+DirectionalLight { direction 0 -1 -1 intensity 0.3 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 } } geometry Box { } }
+DEF S Script {
+  inputOnly SFTime tick
+  inputOutput SFInt32 n 0
+  outputOnly SFBool bind2
+  url "ecmascript:
+    function tick (v) {
+      n = n + 1;
+      if (n == 3) bind2 = true;
+      if (n == 7) bind2 = false;
+    }
+  "
+}
+DEF T TimeSensor { cycleInterval 0.1 loop TRUE }
+ROUTE T.cycleTime TO S.tick
+ROUTE S.bind2 TO VP2.set_bind

@@ -1,0 +1,74 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Navigation:3
+COMPONENT KeyDeviceSensor:1
+COMPONENT Scripting:1
+DEF P Viewpoint { description "plain" position 0 0 12 }
+DEF TOUR ViewpointGroup {
+  description "Tour"
+  children [
+    DEF A1 Viewpoint { description "a1" position 0 0 10 }
+    DEF A2 Viewpoint { description "a2" position 3 0 10 }
+    DEF ANON Viewpoint { position -3 0 10 }
+    Transform { translation 0 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Box { } } }
+    DEF INNER ViewpointGroup {
+      description "Inner"
+      center 20 0 0
+      size 4 4 4
+      children DEF I1 Viewpoint { description "i1" position 20 0 1 }
+    }
+  ]
+}
+DEF HIDDEN ViewpointGroup {
+  description "Hidden"
+  displayed FALSE
+  children DEF H1 Viewpoint { description "h1" position 0 3 10 }
+}
+DEF EMPTY ViewpointGroup { description "Empty" size 1 1 1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.9 } } geometry Sphere { } }
+Transform { translation 20 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.8 0.2 } } geometry Cone { } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFBool on_p
+  inputOnly SFBool on_a1
+  inputOnly SFBool on_a2
+  inputOnly SFBool on_i1
+  inputOnly SFBool on_h1
+  inputOnly SFBool on_anon
+  inputOutput SFString log ""
+  initializeOnly SFNode hidden USE HIDDEN
+  initializeOnly SFNode inner USE INNER
+  initializeOnly SFNode tour USE TOUR
+  initializeOnly SFNode i1 USE I1
+  url "javascript:
+function initialize () { log = 'I ' + tour .displayed + ' ' + inner .size + ' '; }
+function b (n, v) { if (v) log = log + n + ' '; }
+function on_p (v) { b ('p', v); }
+function on_a1 (v) { b ('a1', v); }
+function on_a2 (v) { b ('a2', v); }
+function on_i1 (v) { b ('i1', v); }
+function on_h1 (v) { b ('h1', v); }
+function on_anon (v) { b ('anon', v); }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'n') Browser .nextViewpoint ();
+   if (k == 'v') Browser .previousViewpoint ();
+   if (k == 'd') hidden .displayed = true;
+   if (k == 's') hidden .size = new SFVec3f (0, 0, 0);
+   if (k == 'i') i1 .set_bind = true;
+   if (k == 'x') tour .displayed = false;
+   if (k == 'z') tour .size = new SFVec3f (0, 0, 0);
+   if (k == 'c') tour .children [3] = null;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE P.isBound TO R.on_p
+ROUTE A1.isBound TO R.on_a1
+ROUTE A2.isBound TO R.on_a2
+ROUTE I1.isBound TO R.on_i1
+ROUTE H1.isBound TO R.on_h1
+ROUTE ANON.isBound TO R.on_anon

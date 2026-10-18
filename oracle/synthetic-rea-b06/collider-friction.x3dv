@@ -1,0 +1,22 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF R0 RigidBodyCollection { collider DEF CC0 CollisionCollection { appliedParameters [ "FRICTION_COEFFICIENT_2" ] frictionCoefficients 0 0 collidables [ USE F0_C USE B0_C ] }
+  bodies [ DEF F0 RigidBody { fixed TRUE position 0 0 0 geometry DEF F0_C CollidableShape { shape Shape { geometry Box { size 60 1 10 } } } }
+           DEF B0 RigidBody { mass 1 position 0 1.02 0 linearVelocity 6 0 0 angularVelocity 0 0 0 geometry DEF B0_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ] }
+DEF R1 RigidBodyCollection { collider DEF CC1 CollisionCollection { appliedParameters [ "FRICTION_COEFFICIENT_2" ] frictionCoefficients 0.5 0 collidables [ USE F1_C USE B1_C ] }
+  bodies [ DEF F1 RigidBody { fixed TRUE position 30 0 0 geometry DEF F1_C CollidableShape { shape Shape { geometry Box { size 60 1 10 } } } }
+           DEF B1 RigidBody { mass 1 position 30 1.02 0 linearVelocity 6 0 0 angularVelocity 0 0 0 geometry DEF B1_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ] }
+DEF R2 RigidBodyCollection { collider DEF CC2 CollisionCollection { appliedParameters [ "FRICTION_COEFFICIENT_2" ] frictionCoefficients 1.0 0 collidables [ USE F2_C USE B2_C ] }
+  bodies [ DEF F2 RigidBody { fixed TRUE position 60 0 0 geometry DEF F2_C CollidableShape { shape Shape { geometry Box { size 60 1 10 } } } }
+           DEF B2 RigidBody { mass 1 position 60 1.02 0 linearVelocity 6 0 0 angularVelocity 0 0 0 geometry DEF B2_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ] }
+DEF R3 RigidBodyCollection { collider DEF CC3 CollisionCollection { appliedParameters [ "BOUNCE" ] frictionCoefficients 0.5 0 collidables [ USE F3_C USE B3_C ] }
+  bodies [ DEF F3 RigidBody { fixed TRUE position 90 0 0 geometry DEF F3_C CollidableShape { shape Shape { geometry Box { size 60 1 10 } } } }
+           DEF B3 RigidBody { mass 1 position 90 1.02 0 linearVelocity 6 0 0 angularVelocity 0 0 0 geometry DEF B3_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ] }
+DEF R4 RigidBodyCollection { collider DEF CC4 CollisionCollection { appliedParameters [ "FRICTION_COEFFICIENT_2" ] frictionCoefficients 0.5 0.5 collidables [ USE F4_C USE B4_C ] }
+  bodies [ DEF F4 RigidBody { fixed TRUE position 120 0 0 geometry DEF F4_C CollidableShape { shape Shape { geometry Box { size 60 1 10 } } } }
+           DEF B4 RigidBody { mass 1 position 120 1.02 0 linearVelocity 6 0 0 angularVelocity 0 0 -12 geometry DEF B4_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF R5 RigidBodyCollection { collider DEF CC5 CollisionCollection { appliedParameters [ "FRICTION_COEFFICIENT_2" ] frictionCoefficients 0.5 0 collidables [ USE F5_C USE B5_C ] }
+  bodies [ DEF F5 RigidBody { fixed TRUE position 150 0 0 geometry DEF F5_C CollidableShape { shape Shape { geometry Box { size 60 1 10 } } } }
+           DEF B5 RigidBody { mass 1 position 150 1.02 0 linearVelocity 6 0 0 angularVelocity 0 0 -12 geometry DEF B5_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }

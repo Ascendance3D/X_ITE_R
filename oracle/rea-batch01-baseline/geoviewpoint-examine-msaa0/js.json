@@ -1,0 +1,168 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        50,
+        600
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        50,
+        600
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "plain",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        -2.4835125017722067e-10,
+        299.99612570460886,
+        221.9807425443978
+      ],
+      "orientation": [
+        1.0000000000000004,
+        2.9502800564593716e-17,
+        3.193985873982989e-17,
+        0.900034906585042
+      ],
+      "centerOfRotation": [
+        2.173101999350498e-10,
+        -9.313225746154785e-10,
+        -4.69299266114831e-10
+      ],
+      "viewpoint": "GV",
+      "description": "geo",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        -86.61338945681716,
+        353.02841822062226,
+        84.51143232591335
+      ],
+      "orientation": [
+        0.5699064898703012,
+        -0.7858263573402378,
+        0.24017395552616416,
+        0.98450533536688
+      ],
+      "centerOfRotation": [
+        2.173101999350498e-10,
+        -9.313225746154785e-10,
+        -4.69299266114831e-10
+      ],
+      "viewpoint": "GV",
+      "description": "geo",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        -86.61634563110218,
+        353.0269339980926,
+        84.51460252376572
+      ],
+      "orientation": [
+        0.5699151194329689,
+        -0.7858191606535316,
+        0.24017702511165448,
+        0.9845109970379777
+      ],
+      "centerOfRotation": [
+        2.173101999350498e-10,
+        -9.313225746154785e-10,
+        -4.69299266114831e-10
+      ],
+      "viewpoint": "GV",
+      "description": "geo",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        -86.61634563110218,
+        353.0269339980926,
+        84.51460252376572
+      ],
+      "orientation": [
+        0.5699151194329689,
+        -0.7858191606535316,
+        0.24017702511165448,
+        0.9845109970379777
+      ],
+      "centerOfRotation": [
+        2.173101999350498e-10,
+        -9.313225746154785e-10,
+        -4.69299266114831e-10
+      ],
+      "viewpoint": "GV",
+      "description": "geo",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 37.4 -122.1 0\n  rotateYUp TRUE\n}\n\nNavigationInfo { }\n\nViewpoint {\n  description \"plain\"\n  position 0 50 600\n}\n\nDEF GV GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"geo\"\n  position 37.398 -122.1 300\n  orientation 1 0 0 0.9\n  centerOfRotation 37.4 -122.1 0\n}\n\nBackground {\n  skyAngle 1.4\n  skyColor [\n    0.1 0.2 0.5,\n    0.6 0.7 0.9\n  ]\n  groundAngle 1.5\n  groundColor [\n    0.2 0.15 0.1,\n    0.4 0.35 0.2\n  ]\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.5\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 37.4 -122.1 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 80 80 80\n      }\n    }\n    Transform {\n      translation 120 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.7 0.3\n          }\n        }\n        geometry Sphere {\n          radius 30\n        }\n      }\n    }\n    Transform {\n      translation 0 120 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.3 0.8\n          }\n        }\n        geometry Cone {\n          height 60\n          bottomRadius 30\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 1\n  outputOnly  SFBool  bind\n\n  url \"ecmascript:\n    function tick (v) { n = n + 1; if (n == 3) bind = true; }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV.set_bind\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 37.4 -122.1 0\n  rotateYUp TRUE\n}\n\nNavigationInfo { }\n\nViewpoint {\n  description \"plain\"\n  position 0 50 600\n}\n\nDEF GV GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"geo\"\n  position 37.398 -122.1 300\n  orientation 1 0 0 0.9\n  centerOfRotation 37.4 -122.1 0\n}\n\nBackground {\n  skyAngle 1.4\n  skyColor [\n    0.1 0.2 0.5,\n    0.6 0.7 0.9\n  ]\n  groundAngle 1.5\n  groundColor [\n    0.2 0.15 0.1,\n    0.4 0.35 0.2\n  ]\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.5\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 37.4 -122.1 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 80 80 80\n      }\n    }\n    Transform {\n      translation 120 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.7 0.3\n          }\n        }\n        geometry Sphere {\n          radius 30\n        }\n      }\n    }\n    Transform {\n      translation 0 120 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.3 0.8\n          }\n        }\n        geometry Cone {\n          height 60\n          bottomRadius 30\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 2\n  outputOnly  SFBool  bind\n\n  url \"ecmascript:\n    function tick (v) { n = n + 1; if (n == 3) bind = true; }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV.set_bind\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 37.4 -122.1 0\n  rotateYUp TRUE\n}\n\nNavigationInfo { }\n\nViewpoint {\n  description \"plain\"\n  position 0 50 600\n}\n\nDEF GV GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"geo\"\n  position 37.398 -122.1 300\n  orientation 1 0 0 0.9\n  centerOfRotation 37.4 -122.1 0\n}\n\nBackground {\n  skyAngle 1.4\n  skyColor [\n    0.1 0.2 0.5,\n    0.6 0.7 0.9\n  ]\n  groundAngle 1.5\n  groundColor [\n    0.2 0.15 0.1,\n    0.4 0.35 0.2\n  ]\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.5\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 37.4 -122.1 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 80 80 80\n      }\n    }\n    Transform {\n      translation 120 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.7 0.3\n          }\n        }\n        geometry Sphere {\n          radius 30\n        }\n      }\n    }\n    Transform {\n      translation 0 120 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.3 0.8\n          }\n        }\n        geometry Cone {\n          height 60\n          bottomRadius 30\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 7\n  outputOnly  SFBool  bind\n\n  url \"ecmascript:\n    function tick (v) { n = n + 1; if (n == 3) bind = true; }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV.set_bind\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 37.4 -122.1 0\n  rotateYUp TRUE\n}\n\nNavigationInfo { }\n\nViewpoint {\n  description \"plain\"\n  position 0 50 600\n}\n\nDEF GV GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"geo\"\n  position 37.398 -122.1 300\n  orientation 1 0 0 0.9\n  centerOfRotation 37.4 -122.1 0\n}\n\nBackground {\n  skyAngle 1.4\n  skyColor [\n    0.1 0.2 0.5,\n    0.6 0.7 0.9\n  ]\n  groundAngle 1.5\n  groundColor [\n    0.2 0.15 0.1,\n    0.4 0.35 0.2\n  ]\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.5\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 37.4 -122.1 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 80 80 80\n      }\n    }\n    Transform {\n      translation 120 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.7 0.3\n          }\n        }\n        geometry Sphere {\n          radius 30\n        }\n      }\n    }\n    Transform {\n      translation 0 120 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.3 0.8\n          }\n        }\n        geometry Cone {\n          height 60\n          bottomRadius 30\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 14\n  outputOnly  SFBool  bind\n\n  url \"ecmascript:\n    function tick (v) { n = n + 1; if (n == 3) bind = true; }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV.set_bind\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 37.4 -122.1 0\n  rotateYUp TRUE\n}\n\nNavigationInfo { }\n\nViewpoint {\n  description \"plain\"\n  position 0 50 600\n}\n\nDEF GV GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"geo\"\n  position 37.398 -122.1 300\n  orientation 1 0 0 0.9\n  centerOfRotation 37.4 -122.1 0\n}\n\nBackground {\n  skyAngle 1.4\n  skyColor [\n    0.1 0.2 0.5,\n    0.6 0.7 0.9\n  ]\n  groundAngle 1.5\n  groundColor [\n    0.2 0.15 0.1,\n    0.4 0.35 0.2\n  ]\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.5\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 37.4 -122.1 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 80 80 80\n      }\n    }\n    Transform {\n      translation 120 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.7 0.3\n          }\n        }\n        geometry Sphere {\n          radius 30\n        }\n      }\n    }\n    Transform {\n      translation 0 120 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.3 0.8\n          }\n        }\n        geometry Cone {\n          height 60\n          bottomRadius 30\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 20\n  outputOnly  SFBool  bind\n\n  url \"ecmascript:\n    function tick (v) { n = n + 1; if (n == 3) bind = true; }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV.set_bind\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 37.4 -122.1 0\n  rotateYUp TRUE\n}\n\nNavigationInfo { }\n\nViewpoint {\n  description \"plain\"\n  position 0 50 600\n}\n\nDEF GV GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"geo\"\n  position 37.398 -122.1 300\n  orientation 1 0 0 0.9\n  centerOfRotation 37.4 -122.1 0\n}\n\nBackground {\n  skyAngle 1.4\n  skyColor [\n    0.1 0.2 0.5,\n    0.6 0.7 0.9\n  ]\n  groundAngle 1.5\n  groundColor [\n    0.2 0.15 0.1,\n    0.4 0.35 0.2\n  ]\n}\n\nDirectionalLight {\n  direction -0.3 -1 -0.5\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 37.4 -122.1 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 80 80 80\n      }\n    }\n    Transform {\n      translation 120 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.7 0.3\n          }\n        }\n        geometry Sphere {\n          radius 30\n        }\n      }\n    }\n    Transform {\n      translation 0 120 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.3 0.8\n          }\n        }\n        geometry Cone {\n          height 60\n          bottomRadius 30\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 30\n  outputOnly  SFBool  bind\n\n  url \"ecmascript:\n    function tick (v) { n = n + 1; if (n == 3) bind = true; }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV.set_bind\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

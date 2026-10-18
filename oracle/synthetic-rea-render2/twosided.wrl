@@ -1,0 +1,21 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Shape:5
+COMPONENT Rendering:5
+COMPONENT Texturing:3
+COMPONENT X_ITE:1
+# REA batch 01 synthetic: TwoSidedMaterial and Appearance.backMaterial, front and back faces.
+Viewpoint { position 0 0 9 }
+NavigationInfo { type "NONE" }
+Background { skyColor 0.1 0.1 0.1 }
+DirectionalLight { direction 0 0 -1 intensity 0.6 }
+PointLight { location 0 3 4 intensity 0.8 }
+DEF Q IndexedFaceSet { solid FALSE coord Coordinate { point [ -1 -1 0, 1 -1 0, 1 1 0, -1 1 0 ] } coordIndex [ 0 1 2 3 -1 ] }
+Transform { translation -3 1.6 0 rotation 0 1 0 0.6 children Shape { appearance Appearance { material TwoSidedMaterial { separateBackColor TRUE diffuseColor 1 0 0 backDiffuseColor 0 0 1 backSpecularColor 1 1 1 backShininess 0.8 } } geometry USE Q } }
+Transform { translation -1 1.6 0 rotation 0 1 0 2.6 children Shape { appearance Appearance { material TwoSidedMaterial { separateBackColor TRUE diffuseColor 1 0 0 backDiffuseColor 0 0 1 backEmissiveColor 0.2 0.2 0 backAmbientIntensity 3 } } geometry USE Q } }
+Transform { translation 1 1.6 0 rotation 0 1 0 2.6 children Shape { appearance Appearance { material TwoSidedMaterial { separateBackColor FALSE diffuseColor 1 0 0 backDiffuseColor 0 0 1 } } geometry USE Q } }
+Transform { translation 3 1.6 0 rotation 0 1 0 2.6 children Shape { appearance Appearance { material TwoSidedMaterial { separateBackColor TRUE diffuseColor 1 1 0 backDiffuseColor 0 1 1 backTransparency 0.6 } } geometry USE Q } }
+Transform { translation -3 -1.6 0 rotation 0 1 0 2.6 children Shape { appearance Appearance { material Material { diffuseColor 1 0.5 0 } backMaterial Material { diffuseColor 0.5 0 1 } } geometry USE Q } }
+Transform { translation -1 -1.6 0 rotation 0 1 0 2.6 children Shape { appearance Appearance { material Material { diffuseColor 1 0.5 0 } backMaterial UnlitMaterial { emissiveColor 0 1 0.5 } } geometry USE Q } }
+Transform { translation 1 -1.6 0 rotation 0 1 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0.5 0 } backMaterial UnlitMaterial { emissiveColor 0 1 0.5 transparency 0.5 } } geometry USE Q } }
+Transform { translation 3 -1.6 0 rotation 1 0 0 2.0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } backMaterial Material { diffuseColor 1 0 1 } } geometry Sphere { } } }

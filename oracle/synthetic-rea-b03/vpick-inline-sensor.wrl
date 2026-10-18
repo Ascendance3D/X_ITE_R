@@ -1,0 +1,15 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+DEF T Transform { children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.9 0.9 transparency 0.3 } } geometry Sphere { radius 1 } } }
+DEF M Transform { translation -6 0 0 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 0 } } geometry DEF P PointSet { coord Coordinate { point [ 0 0 0, 0.6 0.4 0 ] } } }
+  DEF IP PointPickSensor { intersectionType "GEOMETRY" pickingGeometry USE P pickTarget USE T }
+  DEF IV VolumePickSensor { intersectionType "GEOMETRY" pickingGeometry Cone { bottomRadius 0.4 height 0.8 } pickTarget USE T }
+] }
+EXPORT IP
+EXPORT IV
+EXPORT M

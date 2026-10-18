@@ -1,0 +1,131 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 5 }
+NavigationInfo { headlight FALSE }
+Transform { translation -1.3 0 0 children [ DirectionalLight { direction 0 -1 -1 intensity 1 global FALSE color 0.2 1 0.2 } Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 specularColor 0.7 0.7 0.7 shininess 0.4 ambientIntensity 0.3 emissiveColor 0.02 0.02 0.05 }   shaders [ ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+struct Dummy { float x; };
+uniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];
+uniform x3d_MaterialParameters x3d_Material;
+void main()
+{
+vec3 N = normalize (vN);
+   vec3 V = normalize (-vP);
+   vec3 c = x3d_Material.emissiveColor;
+   for (int i = 0; i < x3d_MaxLights; ++ i)
+   {
+      if (x3d_LightSource [i] .type == x3d_NoneLight)
+         break;
+      vec3 L;
+      float att = 1.0;
+      if (x3d_LightSource [i] .type == x3d_DirectionalLight)
+         L = normalize (-x3d_LightSource [i] .direction);
+      else
+      {
+         vec3 d = x3d_LightSource [i] .location - vP;
+         L = normalize (d);
+         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);
+         if (x3d_LightSource [i] .type == x3d_SpotLight)
+         {
+            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));
+            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;
+         }
+      }
+      float diff = max (dot (N, L), 0.0);
+      vec3 H = normalize (L + V);
+      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);
+      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);
+      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;
+   }
+   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);
+}
+" } ] } ] } geometry Sphere { radius 0.9 } } ] }
+Transform { translation 1.3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 specularColor 0.7 0.7 0.7 shininess 0.4 ambientIntensity 0.3 emissiveColor 0.02 0.02 0.05 }   shaders [ ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+struct Dummy { float x; };
+uniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];
+uniform x3d_MaterialParameters x3d_Material;
+void main()
+{
+vec3 N = normalize (vN);
+   vec3 V = normalize (-vP);
+   vec3 c = x3d_Material.emissiveColor;
+   for (int i = 0; i < x3d_MaxLights; ++ i)
+   {
+      if (x3d_LightSource [i] .type == x3d_NoneLight)
+         break;
+      vec3 L;
+      float att = 1.0;
+      if (x3d_LightSource [i] .type == x3d_DirectionalLight)
+         L = normalize (-x3d_LightSource [i] .direction);
+      else
+      {
+         vec3 d = x3d_LightSource [i] .location - vP;
+         L = normalize (d);
+         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);
+         if (x3d_LightSource [i] .type == x3d_SpotLight)
+         {
+            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));
+            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;
+         }
+      }
+      float diff = max (dot (N, L), 0.0);
+      vec3 H = normalize (L + V);
+      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);
+      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);
+      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;
+   }
+   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);
+}
+" } ] } ] } geometry Sphere { radius 0.9 } }}
+PointLight { location 0 2 2 intensity 1 color 1 1 0.5 radius 30 }

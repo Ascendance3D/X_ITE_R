@@ -1,0 +1,14 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT Layering:2
+COMPONENT Navigation:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Interpolation:1
+COMPONENT X_ITE:1
+COMPONENT GaussianSplats:1
+Viewpoint { position 0 0 7 }
+Background { skyColor 0.2 0.2 0.28 }
+Inline { url "gs-data.ply" }

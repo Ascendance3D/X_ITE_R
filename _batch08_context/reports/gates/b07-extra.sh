@@ -1,0 +1,10 @@
+# Batch 07 suites, sourced by run.sh ($G, $R set there; cwd = worktree)
+python3 -I oracle/tools/rea_b07_ps.py check --driver $R/x3d-particles-drive --jobs 12 --json $G/b07-ps.json > $G/b07-ps.log 2>&1; echo "b07 particles oracle exit $? : $(tail -n 1 $G/b07-ps.log)" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-viewer --test particles_b07 -- --nocapture --test-threads 4 > $G/b07-ps-tests.log 2>&1; echo "b07 particles tests exit $? : $(grep '^test result' $G/b07-ps-tests.log | tr '\n' ' ')" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-runtime --test particles_b07_units > $G/b07-ps-units.log 2>&1; echo "b07 particles units exit $? : $(grep '^test result' $G/b07-ps-units.log | tr '\n' ' ')" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-render --test render_rea_b07_vol -- --nocapture > $G/b07-vol-render.log 2>&1; echo "b07 vol render exit $? : $(grep -E 'shots checked|^test result' $G/b07-vol-render.log | tr '\n' ' ')" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-viewer --test rea_batch07_vol -- --nocapture > $G/b07-vol-viewer.log 2>&1; echo "b07 vol viewer exit $? : $(grep -E 'cases checked|^test result' $G/b07-vol-viewer.log | tr '\n' ' ')" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-viewer --test rea_b07_vol_reload -- --nocapture > $G/b07-vol-reload.log 2>&1; echo "b07 vol reload exit $? : $(grep '^test result' $G/b07-vol-reload.log | tr '\n' ' ')" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-render --test render_rea_b07_mat -- --nocapture > $G/b07-mat-render.log 2>&1; echo "b07 mat render exit $? : $(grep -E 'shots checked|^test result' $G/b07-mat-render.log | tr '\n' ' ')" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-viewer --test rea_batch07_mat -- --nocapture > $G/b07-mat-viewer.log 2>&1; echo "b07 mat viewer exit $? : $(grep -E 'cases checked|^test result' $G/b07-mat-viewer.log | tr '\n' ' ')" >> $G/summary.txt
+cargo test --release -j 12 -p x3d-viewer --test rea_b07_mat_reload -- --nocapture > $G/b07-mat-reload.log 2>&1; echo "b07 mat reload exit $? : $(grep '^test result' $G/b07-mat-reload.log | tr '\n' ' ')" >> $G/summary.txt

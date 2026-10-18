@@ -1,0 +1,18 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+# Synthetic X3DOptimizer case: empty grouping nodes, names and exports of removed nodes.
+DEF Outer Group {
+  children [
+    DEF EmptyGroup Group { }
+    DEF EmptyTransform Transform { translation 1 0 0 }
+    Anchor { children Group { children Group { } } }
+    Switch { whichChoice 0 children [ Group { } ] }
+    Collision { children [ ] }
+    LOD { children [ Shape { geometry Box { } } ] }
+    Transform { children Shape { geometry Sphere { } } }
+  ]
+}
+DEF Lonely Group { }
+Shape { geometry Cone { } }
+EXPORT EmptyGroup
+EXPORT Lonely AS L

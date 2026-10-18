@@ -1,0 +1,189 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 105,
+ "capture": [
+  8,
+  20,
+  40,
+  50,
+  60,
+  70,
+  80,
+  100
+ ],
+ "dump": [
+  8,
+  20,
+  40,
+  50,
+  60,
+  70,
+  80,
+  100,
+  104
+ ],
+ "events": [
+  {
+   "frame": 10,
+   "type": "mousemove",
+   "x": 380,
+   "y": 250
+  },
+  {
+   "frame": 10,
+   "type": "mousedown",
+   "button": 0,
+   "x": 380,
+   "y": 250
+  },
+  {
+   "frame": 11,
+   "type": "mousemove",
+   "x": 395,
+   "y": 255
+  },
+  {
+   "frame": 12,
+   "type": "mousemove",
+   "x": 410,
+   "y": 260
+  },
+  {
+   "frame": 13,
+   "type": "mousemove",
+   "x": 425,
+   "y": 265
+  },
+  {
+   "frame": 14,
+   "type": "mousemove",
+   "x": 440,
+   "y": 270
+  },
+  {
+   "frame": 15,
+   "type": "mouseup",
+   "button": 0,
+   "x": 440,
+   "y": 270
+  },
+  {
+   "frame": 25,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 30,
+   "type": "mousemove",
+   "x": 100,
+   "y": 400
+  },
+  {
+   "frame": 30,
+   "type": "mousedown",
+   "button": 0,
+   "x": 100,
+   "y": 400
+  },
+  {
+   "frame": 31,
+   "type": "mousemove",
+   "x": 115,
+   "y": 405
+  },
+  {
+   "frame": 32,
+   "type": "mousemove",
+   "x": 130,
+   "y": 410
+  },
+  {
+   "frame": 33,
+   "type": "mousemove",
+   "x": 145,
+   "y": 415
+  },
+  {
+   "frame": 34,
+   "type": "mousemove",
+   "x": 160,
+   "y": 420
+  },
+  {
+   "frame": 35,
+   "type": "mouseup",
+   "button": 0,
+   "x": 160,
+   "y": 420
+  },
+  {
+   "frame": 45,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 55,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 65,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 75,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 90,
+   "type": "mousemove",
+   "x": 380,
+   "y": 250
+  },
+  {
+   "frame": 90,
+   "type": "mousedown",
+   "button": 0,
+   "x": 380,
+   "y": 250
+  },
+  {
+   "frame": 91,
+   "type": "mousemove",
+   "x": 367,
+   "y": 245
+  },
+  {
+   "frame": 92,
+   "type": "mousemove",
+   "x": 355,
+   "y": 240
+  },
+  {
+   "frame": 93,
+   "type": "mousemove",
+   "x": 342,
+   "y": 235
+  },
+  {
+   "frame": 94,
+   "type": "mousemove",
+   "x": 330,
+   "y": 230
+  },
+  {
+   "frame": 95,
+   "type": "mouseup",
+   "button": 0,
+   "x": 330,
+   "y": 230
+  }
+ ]
+}

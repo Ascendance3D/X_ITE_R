@@ -1,0 +1,191 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "root A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0.8333331346511841,
+        10
+      ],
+      "orientation": [
+        -1.0000000000000682,
+        0,
+        0,
+        0.066666650772091
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "root B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0.9722223348087766,
+        10
+      ],
+      "orientation": [
+        -1.0000000000000364,
+        0,
+        0,
+        0.07777778678470186
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "root A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        1.5787035582242197,
+        9.999999999999998
+      ],
+      "orientation": [
+        -1.0000000000000102,
+        0,
+        0,
+        0.12629628607078744
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "root B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        0,
+        1.5436729531450055,
+        9.999999999999996
+      ],
+      "orientation": [
+        -1.0000000000000178,
+        0,
+        0,
+        0.1234938395659134
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "root A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "85": {
+      "position": [
+        0,
+        1.0805710892839215,
+        9.999999999999998
+      ],
+      "orientation": [
+        -1.0000000000000218,
+        0,
+        0,
+        0.0864456894627325
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "root A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0.6174692254228376,
+        9.999999999999998
+      ],
+      "orientation": [
+        -0.999999999999991,
+        0,
+        0,
+        0.0493975393595536
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "root A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nInline {\n  url \"browser-options-assets/inline-vp.wrl\"\n}\n\nViewpoint {\n  description \"root A\"\n}\n\nViewpoint {\n  description \"root B\"\n  position 0 5 10\n  orientation 1 0 0 -0.4\n}\n\nBackground {\n  skyColor 0.1 0.1 0.3\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 1\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('EnableInlineViewpoints', false);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step >= 2 && step <= 5)\n        Browser .nextViewpoint ();\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nInline {\n  url \"browser-options-assets/inline-vp.wrl\"\n}\n\nViewpoint {\n  description \"root A\"\n}\n\nViewpoint {\n  description \"root B\"\n  position 0 5 10\n  orientation 1 0 0 -0.4\n}\n\nBackground {\n  skyColor 0.1 0.1 0.3\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 2\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('EnableInlineViewpoints', false);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step >= 2 && step <= 5)\n        Browser .nextViewpoint ();\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nInline {\n  url \"browser-options-assets/inline-vp.wrl\"\n}\n\nViewpoint {\n  description \"root A\"\n}\n\nViewpoint {\n  description \"root B\"\n  position 0 5 10\n  orientation 1 0 0 -0.4\n}\n\nBackground {\n  skyColor 0.1 0.1 0.3\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 3\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('EnableInlineViewpoints', false);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step >= 2 && step <= 5)\n        Browser .nextViewpoint ();\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nInline {\n  url \"browser-options-assets/inline-vp.wrl\"\n}\n\nViewpoint {\n  description \"root A\"\n}\n\nViewpoint {\n  description \"root B\"\n  position 0 5 10\n  orientation 1 0 0 -0.4\n}\n\nBackground {\n  skyColor 0.1 0.1 0.3\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 4\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('EnableInlineViewpoints', false);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step >= 2 && step <= 5)\n        Browser .nextViewpoint ();\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "70": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nInline {\n  url \"browser-options-assets/inline-vp.wrl\"\n}\n\nViewpoint {\n  description \"root A\"\n}\n\nViewpoint {\n  description \"root B\"\n  position 0 5 10\n  orientation 1 0 0 -0.4\n}\n\nBackground {\n  skyColor 0.1 0.1 0.3\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 5\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('EnableInlineViewpoints', false);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step >= 2 && step <= 5)\n        Browser .nextViewpoint ();\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "85": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nInline {\n  url \"browser-options-assets/inline-vp.wrl\"\n}\n\nViewpoint {\n  description \"root A\"\n}\n\nViewpoint {\n  description \"root B\"\n  position 0 5 10\n  orientation 1 0 0 -0.4\n}\n\nBackground {\n  skyColor 0.1 0.1 0.3\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 6\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('EnableInlineViewpoints', false);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step >= 2 && step <= 5)\n        Browser .nextViewpoint ();\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nInline {\n  url \"browser-options-assets/inline-vp.wrl\"\n}\n\nViewpoint {\n  description \"root A\"\n}\n\nViewpoint {\n  description \"root B\"\n  position 0 5 10\n  orientation 1 0 0 -0.4\n}\n\nBackground {\n  skyColor 0.1 0.1 0.3\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOutput SFInt32 step 7\n  inputOnly   SFTime  cycle\n\n  url \"ecmascript:\n    function initialize () {\n      Browser .setBrowserOption ('EnableInlineViewpoints', false);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step >= 2 && step <= 5)\n        Browser .nextViewpoint ();\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

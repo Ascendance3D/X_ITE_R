@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Full" version="4.0">
+<Scene>
+<Viewpoint position="0 0 4"/>
+<NavigationInfo headlight="false"/>
+<Shape>
+  <Appearance>
+    <ComposedShader language="GLSL" DEF="CS">
+      <field name="f" type="SFFloat" accessType="inputOutput" value="0.4"/>
+      <field name="v3" type="SFVec3f" accessType="inputOutput" value="0.1 0.5 0.9"/>
+      <field name="map" type="SFNode" accessType="inputOutput"><ImageTexture url='"../synthetic-rea-b03/proj-checker.png"'/></field>
+      <field name="arr" type="MFFloat" accessType="inputOutput" value="0.1 0.2 0.3"/>
+      <ShaderPart type="VERTEX" containerField="parts" url='"data:x-shader/x-vertex,%0Aattribute%20vec4%20x3d_Vertex;%0Aattribute%20vec3%20x3d_Normal;%0Aattribute%20vec4%20x3d_TexCoord0;%0Aattribute%20vec4%20x3d_Color;%0Auniform%20mat4%20x3d_ProjectionMatrix;%0Auniform%20mat4%20x3d_ModelViewMatrix;%0Auniform%20mat3%20x3d_NormalMatrix;%0Avarying%20vec3%20vN;%0Avarying%20vec3%20vP;%0Avarying%20vec2%20vT;%0Avarying%20vec4%20vC;%0Avoid%20main()%0A{%0A%20%20%20vec4%20p%20=%20x3d_ModelViewMatrix%20*%20x3d_Vertex;%0A%20%20%20vP%20=%20p.xyz;%0A%20%20%20vN%20=%20normalize%20(x3d_NormalMatrix%20*%20x3d_Normal);%0A%20%20%20vT%20=%20x3d_TexCoord0.st;%0A%20%20%20vC%20=%20x3d_Color;%0A%20%20%20gl_Position%20=%20x3d_ProjectionMatrix%20*%20p;%0A}%0A"'/>
+      <ShaderPart type="FRAGMENT" containerField="parts"><![CDATA[
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+uniform float f;
+uniform vec3 v3;
+uniform sampler2D map;
+uniform float arr [3];
+void main() { gl_FragColor = vec4 (v3 * f + texture2D (map, vT).rgb * 0.5 + vec3 (arr [0], arr [1], arr [2]) * 0.3, 1.0); }
+]]></ShaderPart>
+    </ComposedShader>
+  </Appearance>
+  <Box size="2 2 2"/>
+</Shape>
+</Scene>
+</X3D>

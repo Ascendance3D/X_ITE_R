@@ -1,0 +1,19 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT CubeMapTexturing:3
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Lighting:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+Transform { translation -4.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture3D { image [ 3 2 2 ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture3D { image [ 0 2 2 2 1 2 3 4 5 6 7 8 ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture3D { image [ 5 1 1 1 255 ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 4.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture3D { image [ 3 -1 2 2 ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -3 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture3D { image [ 3 0 2 2 ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 0 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture3D { image [ 3 2 2 2 0xff0000 0x00ff00 0x0000ff ] } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 3 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture3D { } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }

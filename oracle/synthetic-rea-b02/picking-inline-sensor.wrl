@@ -1,0 +1,13 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+DEF TT Transform { translation -1 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.9 0.9 transparency 0.3 } } geometry Sphere { radius 0.8 } } }
+DEF M Transform { translation -6 -2 0 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 0 } } geometry DEF L IndexedLineSet { coord Coordinate { point [ -1 0 0, 1 0 0, 0 -1 0.2, 0 1 0.2 ] } coordIndex [ 0 1 -1 2 3 -1 ] } }
+  DEF IN LinePickSensor { intersectionType "GEOMETRY" pickingGeometry USE L pickTarget USE TT }
+] }
+EXPORT IN
+EXPORT M

@@ -1,0 +1,21 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Scripting:1
+COMPONENT PointingDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+SpotLight { location -2.5 2 3 direction 0.6 -0.5 -0.6 intensity 3 cutOffAngle 0.6 beamWidth 0.3 radius 15 color 1 0.7 0.5 }
+
+Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.2 0.8 0.3 emissiveColor 0.3 0 0 } }
+  geometry IndexedLineSet { coord Coordinate { point [ -2 -1 0, 2 -1 0, 2 1 0, -2 1 0 ] } coordIndex [ 0 1 2 3 0 -1 ] } }
+Shape { appearance Appearance { material SpecularGlossinessMaterial { diffuseColor 0.2 0.4 1 } pointProperties PointProperties { pointSizeScaleFactor 6 } }
+  geometry PointSet { coord Coordinate { point [ -1 0 0, 0 0 0, 1 0 0 ] } } }
+Transform { translation 0 -1.8 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 }
+  texture ImageTexture { url "pbr/base.png" } } geometry IndexedLineSet { coord Coordinate { point [ -2 0 0, 2 0 0 ] } coordIndex [ 0 1 -1 ] } } }
+

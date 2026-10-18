@@ -1,0 +1,101 @@
+{
+  "ok": true,
+  "poses": {
+    "5": {
+      "position": [
+        0,
+        40,
+        160
+      ],
+      "orientation": [
+        0.9999999999999966,
+        0,
+        0,
+        6.033185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        40,
+        160
+      ],
+      "orientation": [
+        0.9999999999999966,
+        0,
+        0,
+        6.033185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        40,
+        160
+      ],
+      "orientation": [
+        0.9999999999999966,
+        0,
+        0,
+        6.033185307179585
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nViewpoint {\n  position 0 40 160\n  orientation 1 0 0 -0.25\n}\n\nDEF LOD1 GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30 10 0\n  range 50\n  rootNode DEF _1 Group {\n    children [\n      DEF TS TouchSensor { }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.7 0.9\n          }\n        }\n        geometry Box {\n          size 60 20 60\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly   SFBool   active\n  inputOnly   SFVec3f  point\n  inputOutput MFString events [ ]\n\n  url \"ecmascript:\n    function active (v) { events [events .length] = 'active ' + v; }\n    function point (v) { events [events .length] = 'point ' + v .x + ' ' + v .y + ' ' + v .z; }\n  \"\n}\n\nROUTE TS.isActive TO S.active\nROUTE TS.hitPoint_changed TO S.point\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nViewpoint {\n  position 0 40 160\n  orientation 1 0 0 -0.25\n}\n\nDEF LOD1 GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30 10 0\n  range 50\n  rootNode DEF _1 Group {\n    children [\n      DEF TS TouchSensor { }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.7 0.9\n          }\n        }\n        geometry Box {\n          size 60 20 60\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly   SFBool   active\n  inputOnly   SFVec3f  point\n  inputOutput MFString events [\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\",\n    \"active true\",\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\",\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\",\n    \"active false\",\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\"\n  ]\n\n  url \"ecmascript:\n    function active (v) { events [events .length] = 'active ' + v; }\n    function point (v) { events [events .length] = 'point ' + v .x + ' ' + v .y + ' ' + v .z; }\n  \"\n}\n\nROUTE TS.isActive TO S.active\nROUTE TS.hitPoint_changed TO S.point\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 30 10 0\n  rotateYUp TRUE\n}\n\nViewpoint {\n  position 0 40 160\n  orientation 1 0 0 -0.25\n}\n\nDEF LOD1 GeoLOD {\n  geoOrigin USE ORIGIN\n  center 30 10 0\n  range 50\n  rootNode DEF _1 Group {\n    children [\n      DEF TS TouchSensor { }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.7 0.9\n          }\n        }\n        geometry Box {\n          size 60 20 60\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly   SFBool   active\n  inputOnly   SFVec3f  point\n  inputOutput MFString events [\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\",\n    \"active true\",\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\",\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\",\n    \"active false\",\n    \"point 0.14630316197872162 0.30523577772400756 30.00000573221763\"\n  ]\n\n  url \"ecmascript:\n    function active (v) { events [events .length] = 'active ' + v; }\n    function point (v) { events [events .length] = 'point ' + v .x + ' ' + v .y + ' ' + v .z; }\n  \"\n}\n\nROUTE TS.isActive TO S.active\nROUTE TS.hitPoint_changed TO S.point\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Node type 'TouchSensor' does not match component/profile statements in 'http://oracle/synthetic-rea/geolod-touch.wrl'."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "viewport": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,1682 @@
+{
+ "schema": {
+  "name": "port-factory-state",
+  "version": 1,
+  "description": "Machine-readable state for the private X_ITE 16.5.0 -> Rust port factory. Plain JSON, no tool-specific format. Gap authority is the REA ledger (ledger_path); this file only tracks factory progress. Written only by .port-factory/tools/{sync,next,record}.py.",
+  "fields": {
+   "counts": "ledger status counts (COMPLETE, PARTIAL, MISSING, DIFFERENT, NOT_TESTED) and total; only COMPLETE counts toward coverage",
+   "coverage_pct": "COMPLETE / total * 100",
+   "active": "task currently being worked: {id, started, attempts, status_at_start, missing} or null",
+   "completed": "[{id, date, source ('pre-factory' or 'factory'), evidence (paths), note}]",
+   "test_results": "[{id, time, verdict PASS|FAIL|BLOCKED, kind focused|integration, command, evidence, note}] newest last",
+   "blockers": "[{id, date, note, resolved}]; a BLOCKED oracle is not a pass",
+   "owner_decisions": "[{date, decision}] recorded verbatim; never deleted",
+   "backlog_top": "top 20 of the ranked open backlog (see backlog.md for the full list)"
+  }
+ },
+ "ledger_path": "/home/ryan/Projects/cybertown/.reports/xite-rust-full-port-rea-completion/ledger/ledger.json",
+ "worktree": "/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup",
+ "active": null,
+ "completed": [
+  {
+   "id": "node:IndexedQuadSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:QuadSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:MetadataBoolean",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "x3d-scene node table; corpus parse/print"
+   ],
+   "note": "x_ite-dump scene text"
+  },
+  {
+   "id": "node:MetadataDouble",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "x3d-scene node table; corpus parse/print"
+   ],
+   "note": "x_ite-dump scene text"
+  },
+  {
+   "id": "node:MetadataFloat",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "x3d-scene node table; corpus parse/print"
+   ],
+   "note": "x_ite-dump scene text"
+  },
+  {
+   "id": "node:MetadataInteger",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "x3d-scene node table; corpus parse/print"
+   ],
+   "note": "x_ite-dump scene text"
+  },
+  {
+   "id": "node:MetadataString",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "x3d-scene node table; corpus parse/print"
+   ],
+   "note": "x_ite-dump scene text"
+  },
+  {
+   "id": "node:ProximitySensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+   ],
+   "note": "x10_compare exact"
+  },
+  {
+   "id": "node:TransformSensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/transform-sensor.wrl"
+   ],
+   "note": "x10_compare exact (401 checks)"
+  },
+  {
+   "id": "node:VisibilitySensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+   ],
+   "note": "x10_compare exact"
+  },
+  {
+   "id": "node:BooleanFilter",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/event-utils.wrl (200 frames, 401 checks)"
+   ],
+   "note": "x10_compare scene text exact at every frame"
+  },
+  {
+   "id": "node:BooleanSequencer",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/event-utils.wrl (200 frames, 401 checks)"
+   ],
+   "note": "x10_compare scene text exact at every frame"
+  },
+  {
+   "id": "node:BooleanToggle",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/event-utils.wrl (200 frames, 401 checks)"
+   ],
+   "note": "x10_compare scene text exact at every frame"
+  },
+  {
+   "id": "node:BooleanTrigger",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/event-utils.wrl (200 frames, 401 checks)"
+   ],
+   "note": "x10_compare scene text exact at every frame"
+  },
+  {
+   "id": "node:IntegerSequencer",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/event-utils.wrl (200 frames, 401 checks)"
+   ],
+   "note": "x10_compare scene text exact at every frame"
+  },
+  {
+   "id": "node:IntegerTrigger",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/event-utils.wrl (200 frames, 401 checks)"
+   ],
+   "note": "x10_compare scene text exact at every frame"
+  },
+  {
+   "id": "node:TimeTrigger",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/event-utils.wrl (200 frames, 401 checks)"
+   ],
+   "note": "x10_compare scene text exact at every frame"
+  },
+  {
+   "id": "node:ColorChaser",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:ColorDamper",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:CoordinateChaser",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:CoordinateDamper",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:OrientationChaser",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:OrientationDamper",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:PositionChaser",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:PositionChaser2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:PositionDamper",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:PositionDamper2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:ScalarChaser",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:ScalarDamper",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:TexCoordChaser2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:TexCoordDamper2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-followers (10 worlds)"
+   ],
+   "note": "x10_compare.py: scene text exact at dumped frames vs pinned X_ITE"
+  },
+  {
+   "id": "node:Arc2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:ArcClose2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:Circle2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:Disk2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:Polyline2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:Polypoint2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:Rectangle2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:TriangleSet2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (x_ite-geometry-rea.mjs, every array exact incl. tangents); oracle/synthetic-rea-render/geom2d.wrl (pixels within threshold 8 / 0.5%)"
+   ],
+   "note": "X3DGeometryNode arrays exact; GPU image compare"
+  },
+  {
+   "id": "node:Box",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:Cone",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:Cylinder",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:ElevationGrid",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:Extrusion",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:IndexedFaceSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:Sphere",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:GeoCoordinate",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (geo_*), crates/x3d-render/tests/geometry_rea.rs"
+   ],
+   "note": "geometry oracle exact, 80/80 cases (8 geo cases: GD/UTM/GC, rotateYUp, easting_first, flat color, short grid)"
+  },
+  {
+   "id": "node:GeoElevationGrid",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json (geo_*), crates/x3d-render/tests/geometry_rea.rs"
+   ],
+   "note": "geometry oracle exact, 80/80 cases (8 geo cases: GD/UTM/GC, rotateYUp, easting_first, flat color, short grid)"
+  },
+  {
+   "id": "node:GeoLocation",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geospatial.wrl"
+   ],
+   "note": "x10_compare exact (301 checks): GD/UTM/GC, easting_first, longitude_first, S hemisphere, MOON/IN ellipsoids, GeoOrigin rotateYUp TRUE/FALSE"
+  },
+  {
+   "id": "node:GeoOrigin",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geospatial.wrl"
+   ],
+   "note": "x10_compare exact (301 checks): GD/UTM/GC, easting_first, longitude_first, S hemisphere, MOON/IN ellipsoids, GeoOrigin rotateYUp TRUE/FALSE"
+  },
+  {
+   "id": "node:GeoPositionInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geospatial.wrl"
+   ],
+   "note": "x10_compare exact (301 checks): GD/UTM/GC, easting_first, longitude_first, S hemisphere, MOON/IN ellipsoids, GeoOrigin rotateYUp TRUE/FALSE"
+  },
+  {
+   "id": "node:GeoTransform",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geospatial.wrl"
+   ],
+   "note": "x10_compare exact (301 checks): GD/UTM/GC, easting_first, longitude_first, S hemisphere, MOON/IN ellipsoids, GeoOrigin rotateYUp TRUE/FALSE"
+  },
+  {
+   "id": "node:Group",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+   ],
+   "note": "x10_compare exact"
+  },
+  {
+   "id": "node:Switch",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+   ],
+   "note": "x10_compare exact"
+  },
+  {
+   "id": "node:Transform",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+   ],
+   "note": "x10_compare exact"
+  },
+  {
+   "id": "node:ColorInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:CoordinateInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:CoordinateInterpolator2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:EaseInEaseOut",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/interp-ext.wrl (130 frames, 261 checks, full double log)"
+   ],
+   "note": "x10_compare scene text exact"
+  },
+  {
+   "id": "node:NormalInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:OrientationInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:PositionInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:PositionInterpolator2D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:ScalarInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "synthetic-x6, synthetic-followers, corpus X1/Items scene dumps"
+   ],
+   "note": "scene text / event trace exact"
+  },
+  {
+   "id": "node:SplineScalarInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/interp-ext.wrl (130 frames, 261 checks, full double log)"
+   ],
+   "note": "x10_compare scene text exact"
+  },
+  {
+   "id": "node:SquadOrientationInterpolator",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/interp-ext.wrl (130 frames, 261 checks, full double log)"
+   ],
+   "note": "x10_compare scene text exact"
+  },
+  {
+   "id": "node:KeySensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/key-sensors.wrl"
+   ],
+   "note": "x10_compare exact (341 checks, settle)"
+  },
+  {
+   "id": "node:StringSensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/key-sensors.wrl"
+   ],
+   "note": "x10_compare exact (341 checks, settle)"
+  },
+  {
+   "id": "node:LOD",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/lod.wrl, oracle/synthetic-rea-verify/switch-lod-billboard.wrl"
+   ],
+   "note": "x10_compare exact (281 + 241 checks)"
+  },
+  {
+   "id": "node:NavigationInfo",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-verify/bind-stack.wrl + corpus suites"
+   ],
+   "note": "x10_compare exact (241 checks)"
+  },
+  {
+   "id": "node:LoadSensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/load-sensor.wrl, load-sensor-fail.wrl"
+   ],
+   "note": "x10_compare scene text exact (401 + 7 checks, settle)"
+  },
+  {
+   "id": "node:IndexedTriangleFanSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:IndexedTriangleSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:IndexedTriangleStripSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:LineSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:TriangleFanSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:TriangleSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:TriangleStripSet",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geometry-cases.json: 72 cases, every X3DGeometryNode array exact (vertices, normals, colors, all texCoord channels, fogDepths, tangents, attribs, bbox); synthetic-rea-render pixels; Items2 GPU corpus"
+   ],
+   "note": "x_ite-geometry-rea.mjs + x3d-render tests/geometry_rea.rs"
+  },
+  {
+   "id": "node:TimeSensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "corpus X1, Items, synthetic suites"
+   ],
+   "note": "scene text exact at frames"
+  },
+  {
+   "id": "sub:serialize.vrml",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "every corpus suite compares toVRMLString exactly"
+   ],
+   "note": ""
+  },
+  {
+   "id": "sub:routing.routes",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "corpus + synthetic event traces"
+   ],
+   "note": ""
+  },
+  {
+   "id": "sub:routing.event-loop",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "followers, x6, inline scripts traces"
+   ],
+   "note": ""
+  },
+  {
+   "id": "node:GeoProximitySensor",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/geo-proximity.wrl"
+   ],
+   "note": "x10_compare exact (401 checks)"
+  },
+  {
+   "id": "node:StaticGroup",
+   "date": "2026-10-16",
+   "source": "factory",
+   "evidence": [
+    "oracle/synthetic-rea/static-group.wrl"
+   ],
+   "note": "behavior 121 checks exact; render within tolerance"
+  },
+  {
+   "id": "sub:serialize.xml",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-scene/tests/xml_json_oracle.rs (parse-only), crates/x3d-script/tests/xml_json_runtime.rs (full load)"
+   ],
+   "note": "oracle/x_ite-xmljson.mjs: 18 synthetic worlds + 47 corpus-x0 files exact in XML and JSON after full load (36 + 94 comparisons), incl. IMPORT/EXPORT, PROTO/EXTERNPROTO, Script CDATA, UNIT"
+  },
+  {
+   "id": "sub:serialize.json",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-scene/tests/xml_json_oracle.rs (parse-only), crates/x3d-script/tests/xml_json_runtime.rs (full load)"
+   ],
+   "note": "oracle/x_ite-xmljson.mjs: 18 synthetic worlds + 47 corpus-x0 files exact in XML and JSON after full load (36 + 94 comparisons), incl. IMPORT/EXPORT, PROTO/EXTERNPROTO, Script CDATA, UNIT"
+  },
+  {
+   "id": "node:WorldInfo",
+   "date": "2026-10-16",
+   "source": "factory",
+   "evidence": [
+    "oracle/synthetic-rea/world-info.wrl"
+   ],
+   "note": "121 checks exact"
+  },
+  {
+   "id": "sub:exec.scene",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea/sai-scene.wrl"
+   ],
+   "note": "x10_compare exact, 121 checks, 52 SAI probes incl. scene text after metadata/root/named/export/component changes"
+  },
+  {
+   "id": "node:CADAssembly",
+   "date": "2026-10-16",
+   "source": "factory",
+   "evidence": [
+    "oracle/synthetic-rea-render/cad.wrl"
+   ],
+   "note": "x_ite-shot vs x3d-shot: max diff 1, 2 px (threshold 8 / 0.5%)"
+  },
+  {
+   "id": "node:CADFace",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-render/cad.wrl"
+   ],
+   "note": "x_ite-shot vs x3d-shot: max diff 1, 2 px (threshold 8 / 0.5%)"
+  },
+  {
+   "id": "node:CADLayer",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-render/cad.wrl"
+   ],
+   "note": "x_ite-shot vs x3d-shot: max diff 1, 2 px (threshold 8 / 0.5%)"
+  },
+  {
+   "id": "node:CADPart",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "oracle/synthetic-rea-render/cad.wrl"
+   ],
+   "note": "x_ite-shot vs x3d-shot: max diff 1, 2 px (threshold 8 / 0.5%)"
+  },
+  {
+   "id": "node:ComposedCubeMapTexture",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/cube-*.wrl vs pinned X_ITE: cube-composed, cube-composed-v33, cube-image still + cube-runtime stepped, MSAA 0 and 4"
+  },
+  {
+   "id": "node:GeneratedCubeMapTexture",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/gencube-*.wrl vs pinned X_ITE: 6 still worlds + gencube-runtime stepped (two mirrors, update ALWAYS/NONE/NEXT_FRAME_ONLY->NONE, size change, size 0), MSAA 0 and 4"
+  },
+  {
+   "id": "node:ImageCubeMapTexture",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/cube-*.wrl vs pinned X_ITE: cube-composed, cube-composed-v33, cube-image still + cube-runtime stepped, MSAA 0 and 4"
+  },
+  {
+   "id": "node:GeoLOD",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-viewer/tests/rea_batch01.rs (geolod MSAA 0/4, geolod-touch)"
+   ],
+   "note": "x10_compare scene text (level_changed/children log), poses, images; geolod-touch with --text-tol 1e-3 (hit point 3.6e-4, same on a plain Group)"
+  },
+  {
+   "id": "node:GeoViewpoint",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-viewer/tests/rea_batch01.rs (geoviewpoint-examine, -fly, -walk, -legacy, -legacy-xml, viewpoint-navigationinfo)"
+   ],
+   "note": "x10_compare scene text, poses within 1e-4, images, MSAA 0 and 4 (fly)"
+  },
+  {
+   "id": "node:ClipPlane",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs; crates/x3d-viewer/tests/rea_batch01.rs (clip-pick, clip-walk)"
+   ],
+   "note": "render2 clipplane MSAA 0/4 within tolerance; x10_compare clip-pick and clip-walk exact"
+  },
+  {
+   "id": "node:FillProperties",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs"
+   ],
+   "note": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4"
+  },
+  {
+   "id": "node:LineProperties",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs"
+   ],
+   "note": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4"
+  },
+  {
+   "id": "node:PointProperties",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs"
+   ],
+   "note": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4"
+  },
+  {
+   "id": "node:TwoSidedMaterial",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs"
+   ],
+   "note": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4"
+  },
+  {
+   "id": "node:UnlitMaterial",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs"
+   ],
+   "note": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4"
+  },
+  {
+   "id": "node:MultiTexture",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/multitex-*.wrl vs pinned X_ITE: 6 still worlds + multitex-runtime stepped, MSAA 0 and 4, within threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:MultiTextureTransform",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/multitex-*.wrl vs pinned X_ITE: 6 still worlds + multitex-runtime stepped, MSAA 0 and 4, within threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:TextureProperties",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs; crates/x3d-viewer/tests/rea_batch01.rs (textureprops-v33-dump)"
+   ],
+   "note": "render2 textureprops and textureprops-v33 MSAA 0/4 within tolerance; legacy (<=3.3) FASTEST defaults in scene text exact"
+  },
+  {
+   "id": "node:TextureTransform3D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/multitex-*.wrl vs pinned X_ITE: 6 still worlds + multitex-runtime stepped, MSAA 0 and 4, within threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:TextureTransformMatrix3D",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/multitex-*.wrl vs pinned X_ITE: 6 still worlds + multitex-runtime stepped, MSAA 0 and 4, within threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:BlendMode",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs"
+   ],
+   "note": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4"
+  },
+  {
+   "id": "node:DepthMode",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs"
+   ],
+   "note": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4"
+  },
+  {
+   "id": "sub:parse.xml",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-parse/tests/formats_rea.rs"
+   ],
+   "note": "oracle/x_ite-formats.mjs baseline oracle/synthetic-rea-formats/formats-baseline.json: toVRMLString/toXMLString/toJSONString exact, 153/153 checks (xml 14, json 9, stl 4, ply 7, obj 5 inputs)"
+  },
+  {
+   "id": "sub:parse.json",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-parse/tests/formats_rea.rs"
+   ],
+   "note": "oracle/x_ite-formats.mjs baseline oracle/synthetic-rea-formats/formats-baseline.json: toVRMLString/toXMLString/toJSONString exact, 153/153 checks (xml 14, json 9, stl 4, ply 7, obj 5 inputs)"
+  },
+  {
+   "id": "sub:parse.obj",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-parse/tests/formats_rea.rs"
+   ],
+   "note": "oracle/x_ite-formats.mjs baseline oracle/synthetic-rea-formats/formats-baseline.json: toVRMLString/toXMLString/toJSONString exact, 153/153 checks (xml 14, json 9, stl 4, ply 7, obj 5 inputs)"
+  },
+  {
+   "id": "sub:parse.ply",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-parse/tests/formats_rea.rs"
+   ],
+   "note": "oracle/x_ite-formats.mjs baseline oracle/synthetic-rea-formats/formats-baseline.json: toVRMLString/toXMLString/toJSONString exact, 153/153 checks (xml 14, json 9, stl 4, ply 7, obj 5 inputs)"
+  },
+  {
+   "id": "sub:parse.stl",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-parse/tests/formats_rea.rs"
+   ],
+   "note": "oracle/x_ite-formats.mjs baseline oracle/synthetic-rea-formats/formats-baseline.json: toVRMLString/toXMLString/toJSONString exact, 153/153 checks (xml 14, json 9, stl 4, ply 7, obj 5 inputs)"
+  },
+  {
+   "id": "sub:parse.optimizer",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-parse/tests/optimizer_rea.rs"
+   ],
+   "note": "X3DOptimizer output exact vs pinned X_ITE, 16/16 (4 worlds x 4 option sets)"
+  },
+  {
+   "id": "sub:browser.options",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-viewer/tests/rea_batch01.rs; crates/x3d-runtime/src/browser_options.rs unit tests"
+   ],
+   "note": "x10_compare: browser-options 107/107 probes; effects, horizon, quality, friction, loadurl, inline-viewpoints, shading (7 worlds, MSAA 0 and 4), shading-wireframe/point-collision"
+  },
+  {
+   "id": "sub:browser.properties",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-viewer/tests/rea_batch01.rs; crates/x3d-runtime/src/browser_options.rs unit tests"
+   ],
+   "note": "x10_compare: browser-options 107/107 probes; effects, horizon, quality, friction, loadurl, inline-viewpoints, shading (7 worlds, MSAA 0 and 4), shading-wireframe/point-collision"
+  },
+  {
+   "id": "sub:render.clip-planes",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea2.rs (clipplane); crates/x3d-viewer/tests/rea_batch01.rs (clip-pick, clip-walk)"
+   ],
+   "note": "render2 clipplane.wrl (scope, transforms incl. rotation and scale, nested groups, disabled and zero planes, 7 planes at once, root-level plane) within threshold 8 / 0.5% at MSAA 0 and MSAA 4; pointer and collision passes exact"
+  },
+  {
+   "id": "sub:render.multi-texture",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/multitex-*.wrl, MSAA 0 and 4"
+  },
+  {
+   "id": "node:EnvironmentLight",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/pbr-*.wrl vs pinned X_ITE: 17 still worlds + pbr-runtime, pbr-ibl-generated, pbr-shading-flat stepped, MSAA 0 and 4, threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:PhysicalMaterial",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_reload.rs (reload/unload retention)"
+   ],
+   "note": "oracle/synthetic-rea-b02/pbr-*.wrl vs pinned X_ITE: 17 still worlds + pbr-runtime, pbr-ibl-generated, pbr-shading-flat stepped, MSAA 0 and 4, threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:SpecularGlossinessMaterial",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/pbr-*.wrl vs pinned X_ITE: 17 still worlds + pbr-runtime, pbr-ibl-generated, pbr-shading-flat stepped, MSAA 0 and 4, threshold 8 / 0.5%"
+  },
+  {
+   "id": "sub:render.pbr",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/pbr-*.wrl vs pinned X_ITE: 17 still worlds + pbr-runtime, pbr-ibl-generated, pbr-shading-flat stepped, MSAA 0 and 4, threshold 8 / 0.5%"
+  },
+  {
+   "id": "sub:render.tone-mapping",
+   "date": "2026-10-16",
+   "source": "pre-factory",
+   "evidence": [
+    "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log"
+   ],
+   "note": "oracle/synthetic-rea-b02/pbr-tone-*.wrl, pbr-exposure.wrl, pbr-colorspace-*.wrl, pbr-runtime (ToneMapping/Exposure/ColorSpace changed at run time), MSAA 0 and 4"
+  },
+  {
+   "id": "node:Layer",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)"
+   ],
+   "note": "oracle/synthetic-rea-b02/{layers,viewport,layout}-*.wrl vs pinned X_ITE: 16 still worlds at 512x512 MSAA 0+4 and at 640x360 and 300x500; stepped layers-runtime, layers-nav, layers-drag, layers-walk, layers-bind-light, layers-pickable-v33, pointer-nested-sensors, pointer-anchor-sensors at MSAA 0+4; threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:LayerSet",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)"
+   ],
+   "note": "oracle/synthetic-rea-b02/{layers,viewport,layout}-*.wrl vs pinned X_ITE: 16 still worlds at 512x512 MSAA 0+4 and at 640x360 and 300x500; stepped layers-runtime, layers-nav, layers-drag, layers-walk, layers-bind-light, layers-pickable-v33, pointer-nested-sensors, pointer-anchor-sensors at MSAA 0+4; threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:Viewport",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)"
+   ],
+   "note": "oracle/synthetic-rea-b02/{layers,viewport,layout}-*.wrl vs pinned X_ITE: 16 still worlds at 512x512 MSAA 0+4 and at 640x360 and 300x500; stepped layers-runtime, layers-nav, layers-drag, layers-walk, layers-bind-light, layers-pickable-v33, pointer-nested-sensors, pointer-anchor-sensors at MSAA 0+4; threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:Layout",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)"
+   ],
+   "note": "oracle/synthetic-rea-b02/{layers,viewport,layout}-*.wrl vs pinned X_ITE: 16 still worlds at 512x512 MSAA 0+4 and at 640x360 and 300x500; stepped layers-runtime, layers-nav, layers-drag, layers-walk, layers-bind-light, layers-pickable-v33, pointer-nested-sensors, pointer-anchor-sensors at MSAA 0+4; threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:LayoutLayer",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)"
+   ],
+   "note": "oracle/synthetic-rea-b02/{layers,viewport,layout}-*.wrl vs pinned X_ITE: 16 still worlds at 512x512 MSAA 0+4 and at 640x360 and 300x500; stepped layers-runtime, layers-nav, layers-drag, layers-walk, layers-bind-light, layers-pickable-v33, pointer-nested-sensors, pointer-anchor-sensors at MSAA 0+4; threshold 8 / 0.5%"
+  },
+  {
+   "id": "node:LinePickSensor",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases picking-sweep, picking-groups, picking-layers, MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (pick_sensors_survive_inline_reloads)"
+   ],
+   "note": "oracle/synthetic-rea-b02/picking-*.wrl vs pinned X_ITE: scene-text dumps every 6-10 frames incl. an ordered event log of every isActive/pickedGeometry/pickedPoint event (298, 139, 79+ entries), MSAA 0 and 4"
+  },
+  {
+   "id": "node:PickableGroup",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases picking-sweep, picking-groups, picking-layers, MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (pick_sensors_survive_inline_reloads)"
+   ],
+   "note": "oracle/synthetic-rea-b02/picking-*.wrl vs pinned X_ITE: scene-text dumps every 6-10 frames incl. an ordered event log of every isActive/pickedGeometry/pickedPoint event (298, 139, 79+ entries), MSAA 0 and 4"
+  },
+  {
+   "id": "sub:picking.engine",
+   "date": "2026-10-17",
+   "source": "pre-factory",
+   "evidence": [
+    "crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases picking-sweep, picking-groups, picking-layers, MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (pick_sensors_survive_inline_reloads)"
+   ],
+   "note": "oracle/synthetic-rea-b02/picking-*.wrl vs pinned X_ITE: scene-text dumps every 6-10 frames incl. an ordered event log of every isActive/pickedGeometry/pickedPoint event (298, 139, 79+ entries), MSAA 0 and 4"
+  }
+ ],
+ "test_results": [
+  {
+   "id": "node:StaticGroup",
+   "time": "2026-10-16T07:24:52-04:00",
+   "verdict": "PASS",
+   "kind": "focused",
+   "command": "run_rea_suite.py static-group; x_ite-shot + x3d-shot compare synthetic-rea-render",
+   "evidence": "oracle/synthetic-rea/static-group.wrl",
+   "note": "behavior 121 checks exact; render within tolerance"
+  },
+  {
+   "id": "node:WorldInfo",
+   "time": "2026-10-16T07:41:19-04:00",
+   "verdict": "PASS",
+   "kind": "focused",
+   "command": "run_rea_suite.py world-info",
+   "evidence": "oracle/synthetic-rea/world-info.wrl",
+   "note": "121 checks exact"
+  },
+  {
+   "id": "sub:exec.scene",
+   "time": "2026-10-16T07:53:09-04:00",
+   "verdict": "PASS",
+   "kind": "focused",
+   "command": "run_rea_suite.py sai-scene",
+   "evidence": "oracle/synthetic-rea/sai-scene.wrl",
+   "note": "52 SAI probes exact"
+  },
+  {
+   "id": "node:CADAssembly",
+   "time": "2026-10-16T07:59:15-04:00",
+   "verdict": "PASS",
+   "kind": "focused",
+   "command": "x_ite-shot + x3d-shot compare synthetic-rea-render",
+   "evidence": "oracle/synthetic-rea-render/cad.wrl",
+   "note": "render max diff 1"
+  },
+  {
+   "id": "node:GeoTouchSensor",
+   "time": "2026-10-16T07:59:15-04:00",
+   "verdict": "FAIL",
+   "kind": "focused",
+   "command": "run_rea_suite.py geo-touch",
+   "evidence": "oracle/synthetic-rea/geo-touch.wrl",
+   "note": "inherited pointer gaps; see ledger"
+  },
+  {
+   "id": "node:MultiTexture",
+   "time": "2026-10-16T23:07:23-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:MultiTextureTransform",
+   "time": "2026-10-16T23:07:24-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:TextureTransform3D",
+   "time": "2026-10-16T23:07:24-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:TextureTransformMatrix3D",
+   "time": "2026-10-16T23:07:24-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "sub:render.multi-texture",
+   "time": "2026-10-16T23:07:25-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:ComposedCubeMapTexture",
+   "time": "2026-10-16T23:07:25-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:ImageCubeMapTexture",
+   "time": "2026-10-16T23:07:25-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:GeneratedCubeMapTexture",
+   "time": "2026-10-16T23:07:26-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: still images + stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:PhysicalMaterial",
+   "time": "2026-10-16T23:37:18-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: 17 PBR still worlds + 3 stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test incl. filtered environment maps; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:SpecularGlossinessMaterial",
+   "time": "2026-10-16T23:37:18-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: 17 PBR still worlds + 3 stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test incl. filtered environment maps; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "node:EnvironmentLight",
+   "time": "2026-10-16T23:37:18-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: 17 PBR still worlds + 3 stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test incl. filtered environment maps; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "sub:render.pbr",
+   "time": "2026-10-16T23:37:19-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: 17 PBR still worlds + 3 stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test incl. filtered environment maps; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "sub:render.tone-mapping",
+   "time": "2026-10-16T23:37:19-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_reload",
+   "evidence": "/home/ryan/Projects/cybertown/.reports/xite-rust-rea-batch-02/evidence/progress.log",
+   "note": "REA batch 02: 17 PBR still worlds + 3 stepped cases MSAA 0/4 vs pinned X_ITE, reload/retention test incl. filtered environment maps; GPU items2 294/296 unchanged"
+  },
+  {
+   "id": "rea-b02-node-LayerSet",
+   "time": "2026-10-17T00:32:10-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "node:LayerSet COMPLETE: stills 512 (MSAA 0+4) + 2 window sizes, 14 stepped cases MSAA 0+4, reload/slot-reuse tests"
+  },
+  {
+   "id": "rea-b02-node-Layer",
+   "time": "2026-10-17T00:32:10-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "node:Layer COMPLETE: stills 512 (MSAA 0+4) + 2 window sizes, 14 stepped cases MSAA 0+4, reload/slot-reuse tests"
+  },
+  {
+   "id": "rea-b02-node-Viewport",
+   "time": "2026-10-17T00:32:10-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "node:Viewport COMPLETE: stills 512 (MSAA 0+4) + 2 window sizes, 14 stepped cases MSAA 0+4, reload/slot-reuse tests"
+  },
+  {
+   "id": "rea-b02-node-LayoutLayer",
+   "time": "2026-10-17T00:32:11-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "node:LayoutLayer COMPLETE: stills 512 (MSAA 0+4) + 2 window sizes, 14 stepped cases MSAA 0+4, reload/slot-reuse tests"
+  },
+  {
+   "id": "rea-b02-node-Layout",
+   "time": "2026-10-17T00:32:11-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-render --test render_rea_b02; cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "node:Layout COMPLETE: stills 512 (MSAA 0+4) + 2 window sizes, 14 stepped cases MSAA 0+4, reload/slot-reuse tests"
+  },
+  {
+   "id": "rea-b02-sub-picking.engine",
+   "time": "2026-10-17T01:00:03-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "sub:picking.engine COMPLETE: picking-sweep/groups/layers stepped vs X_ITE MSAA 0+4, ordered event logs; inline reload test"
+  },
+  {
+   "id": "rea-b02-node-LinePickSensor",
+   "time": "2026-10-17T01:00:03-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "node:LinePickSensor COMPLETE: picking-sweep/groups/layers stepped vs X_ITE MSAA 0+4, ordered event logs; inline reload test"
+  },
+  {
+   "id": "rea-b02-node-PickableGroup",
+   "time": "2026-10-17T01:00:04-04:00",
+   "verdict": "PASS",
+   "kind": "integration",
+   "command": "cargo test --release -p x3d-viewer --test rea_batch02 --test rea_b02_layers",
+   "evidence": "oracle/rea-batch02-baseline/cases.txt",
+   "note": "node:PickableGroup COMPLETE: picking-sweep/groups/layers stepped vs X_ITE MSAA 0+4, ordered event logs; inline reload test"
+  }
+ ],
+ "blockers": [],
+ "owner_decisions": [
+  {
+   "date": "2026-10-17",
+   "decision": "Batch 04: X_ITE does not have a full VRML NURBS implementation; add the missing features from the ISO docs. NURBS follows ISO everywhere, even where X_ITE has the feature (e.g. rational weights). Where Rust then differs from X_ITE the row is DIFFERENT, not COMPLETE. ISO sources: /home/ryan/Projects/cybertown/new-items/reference/iso-iec-19775-1-v4.0-x3d and /home/ryan/Projects/cybertown/new-items/reference/iso-14772-vrml97"
+  },
+  {
+   "date": "2026-10-17",
+   "decision": "Batch 04: the 6 Annotation rows are BLOCKED (X_ITE 16.5.0 disables the Annotation component; local ISO 19775-1 V4.0 has no Annotation clause). Replace them with 6 other MISSING rows the X_ITE oracle can test: ViewpointGroup, HAnimHumanoid, HAnimDisplacer, HAnimMotion, HAnimPose, AcousticProperties."
+  },
+  {
+   "date": "2026-10-17",
+   "decision": "Batch 04: write new Rust code for the 6 Annotation nodes anyway; test against X_ITE dormant Annotation classes enabled only in an oracle test page (no upstream change). Annotation rows end DIFFERENT (shipped X_ITE rejects the component). Keep the 6 replacements too: batch = 26 rows."
+  }
+ ],
+ "counts": {
+  "total": 346,
+  "MISSING": 128,
+  "COMPLETE": 133,
+  "PARTIAL": 44,
+  "NOT_TESTED": 34,
+  "DIFFERENT": 7
+ },
+ "coverage_pct": 38.4,
+ "backlog_top": [
+  {
+   "id": "node:DirectionalLight",
+   "kind": "node",
+   "component": "Lighting",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 3,
+   "priority": 1
+  },
+  {
+   "id": "node:LayoutGroup",
+   "kind": "node",
+   "component": "Layout",
+   "status": "NOT_TESTED",
+   "missing": "runtime layout/viewport field change not compared",
+   "blocked_by": null,
+   "component_open": 3,
+   "priority": 2
+  },
+  {
+   "id": "node:PointLight",
+   "kind": "node",
+   "component": "Lighting",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 3,
+   "priority": 3
+  },
+  {
+   "id": "node:ScreenFontStyle",
+   "kind": "node",
+   "component": "Layout",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 3,
+   "priority": 4
+  },
+  {
+   "id": "node:ScreenGroup",
+   "kind": "node",
+   "component": "Layout",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 3,
+   "priority": 5
+  },
+  {
+   "id": "node:SpotLight",
+   "kind": "node",
+   "component": "Lighting",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 3,
+   "priority": 6
+  },
+  {
+   "id": "node:Appearance",
+   "kind": "node",
+   "component": "Shape",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 4,
+   "priority": 7
+  },
+  {
+   "id": "node:FontStyle",
+   "kind": "node",
+   "component": "Text",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 4,
+   "priority": 8
+  },
+  {
+   "id": "node:Material",
+   "kind": "node",
+   "component": "Shape",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 4,
+   "priority": 9
+  },
+  {
+   "id": "node:Shape",
+   "kind": "node",
+   "component": "Shape",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 4,
+   "priority": 10
+  },
+  {
+   "id": "node:Text",
+   "kind": "node",
+   "component": "Text",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 4,
+   "priority": 11
+  },
+  {
+   "id": "node:LocalFog",
+   "kind": "node",
+   "component": "EnvironmentalEffects",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 5,
+   "priority": 12
+  },
+  {
+   "id": "node:TextureBackground",
+   "kind": "node",
+   "component": "EnvironmentalEffects",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 5,
+   "priority": 13
+  },
+  {
+   "id": "node:EspduTransform",
+   "kind": "node",
+   "component": "DIS",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 6,
+   "priority": 14
+  },
+  {
+   "id": "node:TextureCoordinate3D",
+   "kind": "node",
+   "component": "Texturing3D",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 6,
+   "priority": 15
+  },
+  {
+   "id": "node:TextureCoordinate4D",
+   "kind": "node",
+   "component": "Texturing3D",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 6,
+   "priority": 16
+  },
+  {
+   "id": "node:HAnimJoint",
+   "kind": "node",
+   "component": "HAnim",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 7,
+   "priority": 17
+  },
+  {
+   "id": "node:HAnimSegment",
+   "kind": "node",
+   "component": "HAnim",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 7,
+   "priority": 18
+  },
+  {
+   "id": "node:HAnimSite",
+   "kind": "node",
+   "component": "HAnim",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 7,
+   "priority": 19
+  },
+  {
+   "id": "node:ImageTexture",
+   "kind": "node",
+   "component": "Texturing",
+   "status": "NOT_TESTED",
+   "missing": "see behavior",
+   "blocked_by": null,
+   "component_open": 8,
+   "priority": 20
+  }
+ ],
+ "updated": "2026-10-17T01:00:04-04:00"
+}

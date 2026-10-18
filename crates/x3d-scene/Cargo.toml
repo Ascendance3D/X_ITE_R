@@ -9,3 +9,6 @@ description = "Minimal X3D scene model and VRML generator, ported from X_ITE (MI
 [dependencies]
 x3d-fields = { path = "../x3d-fields" }
 serde_json = { version = "1", features = ["float_roundtrip"] }
+
+[dev-dependencies]
+x3d-parse = { path = "../x3d-parse" }

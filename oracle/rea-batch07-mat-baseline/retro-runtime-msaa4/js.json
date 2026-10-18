@@ -1,0 +1,416 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "110": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "130": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "169": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "170": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension { }\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 1\n  retroreflectionTexture ImageTexture {\n    url \"../synthetic-rea-b02/pbr/occlusion.png\"\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"\"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection 1\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 1\n  retroreflectionTexture ImageTexture {\n    url \"../synthetic-rea-b02/pbr/occlusion.png\"\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection 7\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 1\n  retroreflectionTexture ImageTexture {\n    url \"../synthetic-rea-b02/pbr/occlusion.png\"\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 1\n  retroreflectionTexture ImageTexture {\n    url \"../synthetic-rea-b02/pbr/occlusion.png\"\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTexture ImageTexture {\n    url \"../synthetic-rea-b02/pbr/occlusion.png\"\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTexture PixelTexture { }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "70": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions RetroreflectionMaterialExtension {\n    retroreflection 1\n  }\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions RetroreflectionMaterialExtension {\n    retroreflection 0.3\n  }\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R3\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "110": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions RetroreflectionMaterialExtension {\n    retroreflection 0.3\n  }\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions RetroreflectionMaterialExtension {\n    retroreflection 0.3\n  }\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF G1 Group { }\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "130": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions RetroreflectionMaterialExtension {\n    retroreflection 0.3\n  }\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "169": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions RetroreflectionMaterialExtension {\n    retroreflection 0.3\n  }\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "170": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Texturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nEnvironmentLight {\n  specularTexture ImageCubeMapTexture {\n    url \"../synthetic-rea-b02/pbr/env.png\"\n  }\n}\n\nDirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nPointLight {\n  color 0.6 0.8 1\n  intensity 2\n  attenuation 0 0 1\n  location 2.5 2 3\n  radius 20\n}\n\nDEF R1 RetroreflectionMaterialExtension {\n  retroreflection -2\n}\n\nDEF R3 RetroreflectionMaterialExtension {\n  retroreflection 0.5\n  retroreflectionTextureMapping \"nothing\"\n  retroreflectionTexture PixelTexture {\n    image 2 2 1\n      0x20 0xff\n      0xff 0x20\n  }\n}\n\nDEF M1 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions USE R1\n}\n\nDEF M2 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n  extensions RetroreflectionMaterialExtension {\n    retroreflection 0.3\n  }\n}\n\nDEF M3 PhysicalMaterial {\n  baseColor 0.9 0.6 0.3\n  roughness 0.25\n}\n\nDEF G1 Group {\n  children DEF S1 Transform {\n    translation -1.4 0.6 0\n    children Shape {\n      appearance Appearance {\n        material USE M1\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M2\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 1.4 0.6 0\n  children Shape {\n    appearance Appearance {\n      material USE M3\n    }\n    geometry Sphere {\n      radius 0.6\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl \"\n  initializeOnly SFNode   r1 USE R1\n  initializeOnly SFNode   r3 USE R3\n  initializeOnly SFNode   m2 USE M2\n  initializeOnly SFNode   m3 USE M3\n  initializeOnly SFNode   g1 USE G1\n  initializeOnly SFNode   s1 USE S1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') r1 .retroreflection = 1;\n   if (k == 'b') r1 .retroreflection = 7;\n   if (k == 'c') r1 .retroreflection = -2;\n   if (k == 'd') r3 .retroreflection = 0.5;\n   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }\n   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';\n   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }\n   if (k == 'i') made .retroreflection = 0.3;\n   if (k == 'j') m3 .extensions = new MFNode ();\n   if (k == 'k') g1 .removeChildren = new MFNode (s1);\n   if (k == 'l') g1 .addChildren = new MFNode (s1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='3.3'>
+  <head>
+    <component name='Geospatial' level='1'/>
+  </head>
+  <Scene>
+    <NavigationInfo headlight='TRUE' speed='1.0' visibilityLimit='0' type='"WALK" "ANY"' avatarSize='0.25 1.6 0.75'/>
+    <DirectionalLight on='true' global='false' intensity='0.5' ambientIntensity='0.1' color='1 0 0' direction='0 -1 0'/>
+    <SpotLight on='false' radius='12.5' beamWidth='0.7' cutOffAngle='1.2' location='0 5 0' direction='0 -1 0'/>
+    <Material diffuseColor='0.1 0.2 0.3' emissiveColor='1 1 1' shininess='0.5' transparency='0.25' ambientIntensity='0.2' specularColor='0 0 0'/>
+    <Fog color='0.5 0.5 0.5' fogType='LINEAR' visibilityRange='100'/>
+    <TextureProperties borderColor='0.1 0.2 0.3 0.4' boundaryModeS='REPEAT' minificationFilter='AVG_PIXEL'/>
+    <IntegerTrigger integerKey='0x10' set_boolean='false'/>
+    <TimeSensor cycleInterval='2.5' startTime='0.25' stopTime='10' loop='false'/>
+    <Rectangle2D size='2 1'/>
+    <Box size='1 2 3'/>
+    <GeoViewpoint position='1234.5 -678.25 9.0' orientation='0 1 0 0' description='synthetic viewpoint'/>
+    <GeoElevationGrid xDimension='2' zDimension='2' xSpacing='2.5' zSpacing='1' height='0 1 2 3'>
+      <GeoOrigin geoCoords='10 20 30'/>
+    </GeoElevationGrid>
+    <Transform rotation='0 1 0 1.57'>
+      <Shape>
+        <Appearance>
+          <ImageTexture url='"a.png"'/>
+        </Appearance>
+        <Box/>
+      </Shape>
+    </Transform>
+    <Shape>
+      <Appearance>
+        <PixelTexture image='2 2 3 0xFF0000 0x00FF00 0x0000FF 0xFFFFFF'/>
+      </Appearance>
+      <Box/>
+    </Shape>
+    <Anchor description='say &quot;hi&quot; &amp; &lt;bye&gt; \ back\slash'>
+      <Shape>
+        <Sphere/>
+      </Shape>
+    </Anchor>
+    <WorldInfo title='q&quot;uote &amp; &lt;tag&gt; back\slash' info='"done"'/>
+  </Scene>
+</X3D>

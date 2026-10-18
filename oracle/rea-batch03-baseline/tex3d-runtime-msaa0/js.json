@@ -1,0 +1,331 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "66": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "78": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "102": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "114": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "126": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "129": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "130": {
+      "position": [
+        0,
+        0,
+        15
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          3,\n          4,\n          4,\n          4,\n          0,\n          5242880,\n          10485760,\n          15728640,\n          20480,\n          5263360,\n          10506240,\n          15749120,\n          40960,\n          5283840,\n          10526720,\n          15769600,\n          61440,\n          5304320,\n          10547200,\n          15790080,\n          80,\n          5242960,\n          10485840,\n          15728720,\n          20560,\n          5263440,\n          10506320,\n          15749200,\n          41040,\n          5283920,\n          10526800,\n          15769680,\n          61520,\n          5304400,\n          10547280,\n          15790160,\n          160,\n          5243040,\n          10485920,\n          15728800,\n          20640,\n          5263520,\n          10506400,\n          15749280,\n          41120,\n          5284000,\n          10526880,\n          15769760,\n          61600,\n          5304480,\n          10547360,\n          15790240,\n          240,\n          5243120,\n          10486000,\n          15728880,\n          20720,\n          5263600,\n          10506480,\n          15749360,\n          41200,\n          5284080,\n          10526960,\n          15769840,\n          61680,\n          5304560,\n          10547440,\n          15790320\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D {\n        texture [\n          PixelTexture {\n            image 2 2 4\n              0xe62828ff 0x28e628ff\n              0x2828e6ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x28c83cff 0x3c28c8ff\n              0xc83c28ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x3250e6ff 0xe63250ff\n              0x50e632ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0xdcd228ff 0x28dcd2ff\n              0xd228dcff 0xffffffff\n          }\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"atlas-4x4.png\"\n        slicesOverX 4\n        slicesOverY 4\n        numberOfSlices 16\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          3,\n          4,\n          4,\n          4,\n          0,\n          5242880,\n          10485760,\n          15728640,\n          20480,\n          5263360,\n          10506240,\n          15749120,\n          40960,\n          5283840,\n          10526720,\n          15769600,\n          61440,\n          5304320,\n          10547200,\n          15790080,\n          80,\n          5242960,\n          10485840,\n          15728720,\n          20560,\n          5263440,\n          10506320,\n          15749200,\n          41040,\n          5283920,\n          10526800,\n          15769680,\n          61520,\n          5304400,\n          10547280,\n          15790160,\n          160,\n          5243040,\n          10485920,\n          15728800,\n          20640,\n          5263520,\n          10506400,\n          15749280,\n          41120,\n          5284000,\n          10526880,\n          15769760,\n          61600,\n          5304480,\n          10547360,\n          15790240,\n          240,\n          5243120,\n          10486000,\n          15728880,\n          20720,\n          5263600,\n          10506480,\n          15749360,\n          41200,\n          5284080,\n          10526960,\n          15769840,\n          61680,\n          5304560,\n          10547440,\n          15790320\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D {\n        texture [\n          PixelTexture {\n            image 2 2 4\n              0xe62828ff 0x28e628ff\n              0x2828e6ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x28c83cff 0x3c28c8ff\n              0xc83c28ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x3250e6ff 0xe63250ff\n              0x50e632ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0xdcd228ff 0x28dcd2ff\n              0xd228dcff 0xffffffff\n          }\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"atlas-4x4.png\"\n        slicesOverX 4\n        slicesOverY 4\n        numberOfSlices 16\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          1,\n          2,\n          2,\n          2,\n          0,\n          80,\n          160,\n          240,\n          40,\n          120,\n          200,\n          255\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D {\n        texture [\n          PixelTexture {\n            image 2 2 4\n              0xe62828ff 0x28e628ff\n              0x2828e6ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x28c83cff 0x3c28c8ff\n              0xc83c28ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x3250e6ff 0xe63250ff\n              0x50e632ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0xdcd228ff 0x28dcd2ff\n              0xd228dcff 0xffffffff\n          }\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"atlas-4x4.png\"\n        slicesOverX 4\n        slicesOverY 4\n        numberOfSlices 16\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D {\n        texture [\n          PixelTexture {\n            image 2 2 4\n              0xe62828ff 0x28e628ff\n              0x2828e6ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x28c83cff 0x3c28c8ff\n              0xc83c28ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0x3250e6ff 0xe63250ff\n              0x50e632ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0xdcd228ff 0x28dcd2ff\n              0xd228dcff 0xffffffff\n          }\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"atlas-4x4.png\"\n        slicesOverX 4\n        slicesOverY 4\n        numberOfSlices 16\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D {\n        texture [\n          PixelTexture {\n            image 2 2 4\n              0x3250e6ff 0xe63250ff\n              0x50e632ff 0xffffffff\n          }\n          PixelTexture {\n            image 2 2 4\n              0xe62828ff 0x28e628ff\n              0x2828e6ff 0xffffffff\n          }\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"atlas-4x4.png\"\n        slicesOverX 4\n        slicesOverY 4\n        numberOfSlices 16\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "66": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"atlas-4x4.png\"\n        slicesOverX 4\n        slicesOverY 4\n        numberOfSlices 16\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "78": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"atlas-4x4.png\"\n        slicesOverX 2\n        slicesOverY 4\n        numberOfSlices 2\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd Ke \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url [\n          \"atlas-4x4.png\",\n          \"x.png\"\n        ]\n        slicesOverX 2\n        slicesOverY 4\n        numberOfSlices 2\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd Ke Kf W32 H16 D2 C4 Ltrue \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "102": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"missing-atlas.png\"\n        slicesOverX 2\n        slicesOverY 4\n        numberOfSlices 2\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd Ke Kf W32 H16 D2 C4 Ltrue Kg W0 H0 D0 C0 Lfalse \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "114": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        load FALSE\n        url \"missing-atlas.png\"\n        slicesOverX 2\n        slicesOverY 4\n        numberOfSlices 2\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd Ke Kf W32 H16 D2 C4 Ltrue Kg W0 H0 D0 C0 Lfalse Kh \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "126": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"missing-atlas.png\"\n        slicesOverX 2\n        slicesOverY 4\n        numberOfSlices 2\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd Ke Kf W32 H16 D2 C4 Ltrue Kg W0 H0 D0 C0 Lfalse Kh Ki \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "129": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"missing-atlas.png\"\n        slicesOverX 2\n        slicesOverY 4\n        numberOfSlices 2\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd Ke Kf W32 H16 D2 C4 Ltrue Kg W0 H0 D0 C0 Lfalse Kh Ki \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n",
+    "130": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Texturing3D : 2\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT Lighting : 3\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Networking : 4\n\nViewpoint {\n  position 0 0 15\n}\n\nNavigationInfo { }\n\nDEF S1 Transform {\n  translation -3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF P PixelTexture3D {\n        image [\n          7,\n          1,\n          1,\n          1,\n          5\n        ]\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S2 Transform {\n  translation 0 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF C ComposedTexture3D { }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF S3 Transform {\n  translation 3 1.5 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 1 1\n      }\n      texture DEF A ImageTextureAtlas {\n        url \"missing-atlas.png\"\n        slicesOverX 2\n        slicesOverY 4\n        numberOfSlices 2\n      }\n      textureTransform TextureTransform3D {\n        translation 0.5 0.5 0.5\n        scale 0.5 0.5 0.5\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF LS LoadSensor {\n  children USE A\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      SFInt32  on_width\n  inputOnly      SFInt32  on_height\n  inputOnly      SFInt32  on_depth\n  inputOnly      SFInt32  on_color\n  inputOnly      SFBool   on_loaded\n  inputOutput    SFString log \"W16 H16 D16 C4 Ltrue Ka Kb Kc Kd Ke Kf W32 H16 D2 C4 Ltrue Kg W0 H0 D0 C0 Lfalse Kh Ki \"\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   c USE C\n  initializeOnly SFNode   a USE A\n\n  url \"javascript:\nfunction on_width (v) { log = log + 'W' + v + ' '; }\nfunction on_height (v) { log = log + 'H' + v + ' '; }\nfunction on_depth (v) { log = log + 'D' + v + ' '; }\nfunction on_color (v) { log = log + 'C' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') p .image = new MFInt32 (1, 2, 2, 2, 0, 80, 160, 240, 40, 120, 200, 255);\n   if (k == 'b') p .image = new MFInt32 (7, 1, 1, 1, 5);\n   if (k == 'c') c .texture = new MFNode (c .texture [2], c .texture [0]);\n   if (k == 'd') c .texture = new MFNode ();\n   if (k == 'e') { a .slicesOverX = 2; a .numberOfSlices = 2; }\n   if (k == 'f') a .url = new MFString ('atlas-4x4.png', 'x.png');\n   if (k == 'g') a .url = new MFString ('missing-atlas.png');\n   if (k == 'h') a .load = false;\n   if (k == 'i') a .load = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE A.width TO R.on_width\nROUTE A.height TO R.on_height\nROUTE A.depth TO R.on_depth\nROUTE A.colorDepth TO R.on_color\nROUTE LS.isLoaded TO R.on_loaded\n"
+  },
+  "prints": [],
+  "log": [
+    "error: ImageTextureAtlas: Couldn't load URL 'http://oracle/synthetic-rea-b03/missing-atlas.png'. Error: Not Found"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

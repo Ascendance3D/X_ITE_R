@@ -1,0 +1,26 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight TRUE }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.1 }   shaders [ ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ] } ] } geometry Sphere { radius 1.2 } }

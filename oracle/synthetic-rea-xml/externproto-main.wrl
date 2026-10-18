@@ -1,0 +1,10 @@
+#VRML V2.0 utf8
+# EXTERNPROTO referencing a local library; its instance and a ROUTE into it.
+EXTERNPROTO Widget [
+  eventIn SFColor set_color
+  field SFFloat size
+  exposedField MFString tags
+] [ "externproto-lib.wrl#Widget", "http://127.0.0.1:9/absent.wrl#Widget" ]
+DEF W Widget { size 2 tags ["a" "b"] }
+DEF Clk TimeSensor { cycleInterval 1 loop TRUE }
+ROUTE Clk.fraction_changed TO W.set_color

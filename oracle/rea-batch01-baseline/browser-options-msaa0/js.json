@@ -1,0 +1,76 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "150": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput SFString hist \" o.SplashScreen=boolean:false o.Dashboard=boolean:true o.Rubberband=boolean:true o.EnableInlineViewpoints=boolean:true o.Antialiased=boolean:false o.TextureQuality=string:MEDIUM o.PrimitiveQuality=string:MEDIUM o.QualityWhenMoving=string:SAME o.Shading=string:GOURAUD o.MotionBlur=boolean:false o.AlwaysUpdateGeometries=boolean:false o.AutoUpdate=boolean:false o.Cache=boolean:true o.ColorSpace=string:LINEAR_WHEN_PHYSICAL_MATERIAL o.ContentScale=number:1 o.ContextMenu=boolean:false o.Debug=boolean:false o.Exposure=number:1 o.DisplayColorSpace=string:SRGB o.Gravity=number:9.80665 o.LoadUrlObjects=boolean:true o.LogarithmicDepthBuffer=boolean:false o.MaximumFrameRate=number:80 o.MetadataReference=string: o.Multisampling=number:4 o.Mute=boolean:false o.Notifications=boolean:false o.OrderIndependentTransparency=boolean:false o.SoundIntensity=number:1 o.StraightenHorizon=boolean:true o.TextCompression=string:CHAR_SPACING o.Timings=boolean:false o.ToneMapping=string:NONE o.WallFriction=number:0 o.XRSessionMode=string:IMMERSIVE_VR o.AntiAliased=boolean:false o.gravity=ERR o.Nope=ERR r.Shading=string:GOURAUD r.MaxTextureSize=number:32768 r.TextureUnits=number:64 r.MaxLights=number:8 r.Antialiased=boolean:true r.ColorDepth=number:32 r.TextureMemory=number:NaN r.ContentScale=number:1 r.LogarithmicDepthBuffer=boolean:false r.MaxAnisotropicDegree=number:16 r.MaxSamples=number:8 r.Multisampling=number:0 r.PixelsPerPoint=number:1.3333333333333333 r.SoundDestinations=number:0 r.XRSession=boolean:false r.AntiAliased=boolean:true r.shading=ERR r.Nope=ERR b.ABSTRACT_NODES=boolean:true b.CONCRETE_NODES=boolean:true b.EXTERNAL_INTERACTIONS=boolean:true b.PROTOTYPE_CREATE=boolean:true b.DOM_IMPORT=boolean:true b.XML_ENCODING=boolean:true b.CLASSIC_VRML_ENCODING=boolean:true b.BINARY_ENCODING=boolean:false b.abstract_nodes=ERR b.Nope=ERR\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n    var options = ['SplashScreen', 'Dashboard', 'Rubberband', 'EnableInlineViewpoints', 'Antialiased', 'TextureQuality',\n      'PrimitiveQuality', 'QualityWhenMoving', 'Shading', 'MotionBlur', 'AlwaysUpdateGeometries', 'AutoUpdate', 'Cache',\n      'ColorSpace', 'ContentScale', 'ContextMenu', 'Debug', 'Exposure', 'DisplayColorSpace', 'Gravity', 'LoadUrlObjects',\n      'LogarithmicDepthBuffer', 'MaximumFrameRate', 'MetadataReference', 'Multisampling', 'Mute', 'Notifications',\n      'OrderIndependentTransparency', 'SoundIntensity', 'StraightenHorizon', 'TextCompression', 'Timings', 'ToneMapping',\n      'WallFriction', 'XRSessionMode', 'AntiAliased', 'gravity', 'Nope'];\n    var rendering = ['Shading', 'MaxTextureSize', 'TextureUnits', 'MaxLights', 'Antialiased', 'ColorDepth', 'TextureMemory',\n      'ContentScale', 'LogarithmicDepthBuffer', 'MaxAnisotropicDegree', 'MaxSamples', 'Multisampling', 'PixelsPerPoint',\n      'SoundDestinations', 'XRSession', 'AntiAliased', 'shading', 'Nope'];\n    var properties = ['ABSTRACT_NODES', 'CONCRETE_NODES', 'EXTERNAL_INTERACTIONS', 'PROTOTYPE_CREATE', 'DOM_IMPORT',\n      'XML_ENCODING', 'CLASSIC_VRML_ENCODING', 'BINARY_ENCODING', 'abstract_nodes', 'Nope'];\n    function show (v) { return typeof v + ':' + v; }\n    function p (name, f) {\n      var v;\n      try { v = f (); } catch (e) { v = 'ERR'; }\n      hist = hist + ' ' + name + '=' + v;\n    }\n    function o (name) { p ('o.' + name, function () { return show (Browser .getBrowserOption (name)); }); }\n    function r (name) { p ('r.' + name, function () { return show (Browser .getRenderingProperty (name)); }); }\n    function b (name) { p ('b.' + name, function () { return show (Browser .getBrowserProperty (name)); }); }\n    function set (name, value) { p ('set.' + name, function () { Browser .setBrowserOption (name, value); return show (Browser .getBrowserOption (name)); }); }\n    function initialize () {\n      options .forEach (o);\n      rendering .forEach (r);\n      properties .forEach (b);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step == 2) {\n        set ('Shading', 'PHONG');\n        r ('Shading');\n        set ('Gravity', '3.5');\n        set ('Multisampling', 20.7);\n        set ('ContentScale', 2);\n        set ('LogarithmicDepthBuffer', 'yes');\n        set ('StraightenHorizon', 0);\n        set ('TextCompression', 5);\n        set ('Exposure', '');\n        set ('MotionBlur', 'x');\n        set ('AntiAliased', true);\n        set ('Nope', 1);\n      }\n      if (step == 3) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale', 'LogarithmicDepthBuffer'] .forEach (r);\n        set ('Shading', 'POINTSET');\n        set ('Multisampling', -3);\n        set ('ContentScale', 0);\n      }\n      if (step == 4) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);\n        set ('Shading', 'wireframe');\n        set ('Antialiased', false);\n        set ('Multisampling', 2);\n        set ('ContentScale', -1);\n      }\n      if (step == 5) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);\n        set ('Shading', 'FLAT');\n        set ('Antialiased', true);\n        set ('ContentScale', -2.5);\n      }\n      if (step == 6) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);\n        set ('Shading', 'WIREFRAME');\n      }\n      if (step == 7) {\n        r ('Shading');\n      }\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO OUT.cycle\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF OUT Script {\n  inputOutput SFString hist \" o.SplashScreen=boolean:false o.Dashboard=boolean:true o.Rubberband=boolean:true o.EnableInlineViewpoints=boolean:true o.Antialiased=boolean:false o.TextureQuality=string:MEDIUM o.PrimitiveQuality=string:MEDIUM o.QualityWhenMoving=string:SAME o.Shading=string:GOURAUD o.MotionBlur=boolean:false o.AlwaysUpdateGeometries=boolean:false o.AutoUpdate=boolean:false o.Cache=boolean:true o.ColorSpace=string:LINEAR_WHEN_PHYSICAL_MATERIAL o.ContentScale=number:1 o.ContextMenu=boolean:false o.Debug=boolean:false o.Exposure=number:1 o.DisplayColorSpace=string:SRGB o.Gravity=number:9.80665 o.LoadUrlObjects=boolean:true o.LogarithmicDepthBuffer=boolean:false o.MaximumFrameRate=number:80 o.MetadataReference=string: o.Multisampling=number:4 o.Mute=boolean:false o.Notifications=boolean:false o.OrderIndependentTransparency=boolean:false o.SoundIntensity=number:1 o.StraightenHorizon=boolean:true o.TextCompression=string:CHAR_SPACING o.Timings=boolean:false o.ToneMapping=string:NONE o.WallFriction=number:0 o.XRSessionMode=string:IMMERSIVE_VR o.AntiAliased=boolean:false o.gravity=ERR o.Nope=ERR r.Shading=string:GOURAUD r.MaxTextureSize=number:32768 r.TextureUnits=number:64 r.MaxLights=number:8 r.Antialiased=boolean:true r.ColorDepth=number:32 r.TextureMemory=number:NaN r.ContentScale=number:1 r.LogarithmicDepthBuffer=boolean:false r.MaxAnisotropicDegree=number:16 r.MaxSamples=number:8 r.Multisampling=number:0 r.PixelsPerPoint=number:1.3333333333333333 r.SoundDestinations=number:0 r.XRSession=boolean:false r.AntiAliased=boolean:true r.shading=ERR r.Nope=ERR b.ABSTRACT_NODES=boolean:true b.CONCRETE_NODES=boolean:true b.EXTERNAL_INTERACTIONS=boolean:true b.PROTOTYPE_CREATE=boolean:true b.DOM_IMPORT=boolean:true b.XML_ENCODING=boolean:true b.CLASSIC_VRML_ENCODING=boolean:true b.BINARY_ENCODING=boolean:false b.abstract_nodes=ERR b.Nope=ERR set.Shading=string:PHONG r.Shading=string:GOURAUD set.Gravity=number:3.5 set.Multisampling=number:20 set.ContentScale=number:2 set.LogarithmicDepthBuffer=boolean:true set.StraightenHorizon=boolean:false set.TextCompression=string:5 set.Exposure=number:0 set.MotionBlur=boolean:true set.AntiAliased=boolean:true set.Nope=ERR r.Shading=string:PHONG r.Multisampling=number:8 r.Antialiased=boolean:true r.ContentScale=number:2 r.LogarithmicDepthBuffer=boolean:true set.Shading=string:POINTSET set.Multisampling=number:-3 set.ContentScale=number:0 r.Shading=string:POINT r.Multisampling=number:0 r.Antialiased=boolean:false r.ContentScale=number:0.001953125 set.Shading=string:wireframe set.Antialiased=boolean:false set.Multisampling=number:2 set.ContentScale=number:-1 r.Shading=string:GOURAUD r.Multisampling=number:0 r.Antialiased=boolean:true r.ContentScale=number:1 set.Shading=string:FLAT set.Antialiased=boolean:true set.ContentScale=number:-2.5 r.Shading=string:FLAT r.Multisampling=number:2 r.Antialiased=boolean:true r.ContentScale=number:0.001953125 set.Shading=string:WIREFRAME r.Shading=string:WIREFRAME\"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n    var options = ['SplashScreen', 'Dashboard', 'Rubberband', 'EnableInlineViewpoints', 'Antialiased', 'TextureQuality',\n      'PrimitiveQuality', 'QualityWhenMoving', 'Shading', 'MotionBlur', 'AlwaysUpdateGeometries', 'AutoUpdate', 'Cache',\n      'ColorSpace', 'ContentScale', 'ContextMenu', 'Debug', 'Exposure', 'DisplayColorSpace', 'Gravity', 'LoadUrlObjects',\n      'LogarithmicDepthBuffer', 'MaximumFrameRate', 'MetadataReference', 'Multisampling', 'Mute', 'Notifications',\n      'OrderIndependentTransparency', 'SoundIntensity', 'StraightenHorizon', 'TextCompression', 'Timings', 'ToneMapping',\n      'WallFriction', 'XRSessionMode', 'AntiAliased', 'gravity', 'Nope'];\n    var rendering = ['Shading', 'MaxTextureSize', 'TextureUnits', 'MaxLights', 'Antialiased', 'ColorDepth', 'TextureMemory',\n      'ContentScale', 'LogarithmicDepthBuffer', 'MaxAnisotropicDegree', 'MaxSamples', 'Multisampling', 'PixelsPerPoint',\n      'SoundDestinations', 'XRSession', 'AntiAliased', 'shading', 'Nope'];\n    var properties = ['ABSTRACT_NODES', 'CONCRETE_NODES', 'EXTERNAL_INTERACTIONS', 'PROTOTYPE_CREATE', 'DOM_IMPORT',\n      'XML_ENCODING', 'CLASSIC_VRML_ENCODING', 'BINARY_ENCODING', 'abstract_nodes', 'Nope'];\n    function show (v) { return typeof v + ':' + v; }\n    function p (name, f) {\n      var v;\n      try { v = f (); } catch (e) { v = 'ERR'; }\n      hist = hist + ' ' + name + '=' + v;\n    }\n    function o (name) { p ('o.' + name, function () { return show (Browser .getBrowserOption (name)); }); }\n    function r (name) { p ('r.' + name, function () { return show (Browser .getRenderingProperty (name)); }); }\n    function b (name) { p ('b.' + name, function () { return show (Browser .getBrowserProperty (name)); }); }\n    function set (name, value) { p ('set.' + name, function () { Browser .setBrowserOption (name, value); return show (Browser .getBrowserOption (name)); }); }\n    function initialize () {\n      options .forEach (o);\n      rendering .forEach (r);\n      properties .forEach (b);\n    }\n    function cycle (v) {\n      step = step + 1;\n      if (step == 2) {\n        set ('Shading', 'PHONG');\n        r ('Shading');\n        set ('Gravity', '3.5');\n        set ('Multisampling', 20.7);\n        set ('ContentScale', 2);\n        set ('LogarithmicDepthBuffer', 'yes');\n        set ('StraightenHorizon', 0);\n        set ('TextCompression', 5);\n        set ('Exposure', '');\n        set ('MotionBlur', 'x');\n        set ('AntiAliased', true);\n        set ('Nope', 1);\n      }\n      if (step == 3) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale', 'LogarithmicDepthBuffer'] .forEach (r);\n        set ('Shading', 'POINTSET');\n        set ('Multisampling', -3);\n        set ('ContentScale', 0);\n      }\n      if (step == 4) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);\n        set ('Shading', 'wireframe');\n        set ('Antialiased', false);\n        set ('Multisampling', 2);\n        set ('ContentScale', -1);\n      }\n      if (step == 5) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);\n        set ('Shading', 'FLAT');\n        set ('Antialiased', true);\n        set ('ContentScale', -2.5);\n      }\n      if (step == 6) {\n        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);\n        set ('Shading', 'WIREFRAME');\n      }\n      if (step == 7) {\n        r ('Shading');\n      }\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO OUT.cycle\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

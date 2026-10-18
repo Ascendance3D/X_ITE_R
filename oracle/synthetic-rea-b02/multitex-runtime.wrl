@@ -1,0 +1,81 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Texturing:3
+COMPONENT Texturing3D:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 3 }
+Background { skyColor 0.2 0.25 0.3 }
+NavigationInfo { headlight FALSE type "NONE" }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+DEF T1 PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e }
+DEF T3 PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff }
+Group { children [
+  DEF TS TouchSensor { }
+  Transform { translation -0.55 0 0 children Shape {
+    appearance Appearance {
+      material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 }
+      texture DEF MT MultiTexture { mode [ "MODULATE" "ADD" ] texture [ USE T1 USE T3 ] }
+      textureTransform DEF MTT MultiTextureTransform { textureTransform [ DEF TT3 TextureTransform3D { } ] }
+    }
+    geometry DEF G IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] }
+      texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+  } }
+  Transform { translation 0.55 0 0 children Shape {
+    appearance Appearance {
+      material Material { diffuseColor 0.8 0.6 0.4 }
+      texture USE T1
+      textureTransform DEF TM3 TextureTransformMatrix3D { }
+    }
+    geometry USE G
+  } }
+] }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFTime touch
+  initializeOnly SFNode mt USE MT
+  initializeOnly SFNode mtt USE MTT
+  initializeOnly SFNode tt3 USE TT3
+  initializeOnly SFNode tm3 USE TM3
+  initializeOnly SFNode t1 USE T1
+  initializeOnly SFNode t3 USE T3
+  inputOutput SFInt32 step 0
+  url "javascript:
+function touch (value)
+{
+   step = step + 1;
+   switch (step)
+   {
+      case 1:
+         mt .mode = new MFString ('MODULATE', 'SUBTRACT');
+         tt3 .scale = new SFVec3f (2, 2, 1);
+         tm3 .matrix = new SFMatrix4f (2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.25, 0, 0, 1);
+         break;
+      case 2:
+         mt .color = new SFColor (0.1, 0.8, 0.3);
+         mt .alpha = 0.25;
+         mt .mode = new MFString ('MODULATE', 'BLENDFACTORALPHA');
+         tt3 .rotation = new SFRotation (0, 0, 1, 0.5);
+         tt3 .center = new SFVec3f (0.5, 0.5, 0);
+         break;
+      case 3:
+         mt .source = new MFString ('', 'FACTOR');
+         mt .function = new MFString ('COMPLEMENT');
+         mtt .textureTransform = new MFNode (Browser .currentScene .createNode ('TextureTransform'), tt3);
+         break;
+      case 4:
+         mt .texture = new MFNode (t3, t1, t3);
+         mt .mode = new MFString ('REPLACE', 'MODULATE2X', 'ADD');
+         mt .source = new MFString ();
+         mt .function = new MFString ();
+         tt3 .translation = new SFVec3f (0.25, 0.1, 0);
+         break;
+      case 5:
+         mt .texture = new MFNode ();
+         mtt .textureTransform = new MFNode ();
+         break;
+   }
+}
+"
+}
+ROUTE TS.touchTime TO S.touch

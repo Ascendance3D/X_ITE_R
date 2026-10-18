@@ -1,0 +1,35 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { bodies [ DEF A RigidBody { fixed TRUE position 0 5 0 geometry DEF A_C CollidableShape { shape Shape { geometry Box { size 0.5 0.5 0.5 } } } }
+  DEF B RigidBody { mass 1 position 1.5 5 0 geometry DEF B_C CollidableShape { shape Shape { geometry Box { size 3 0.4 0.4 } } } }
+  DEF C RigidBody { mass 1 position 1 5 6 geometry DEF C_C CollidableShape { shape Shape { geometry Sphere { radius 0.3 } } } } ]
+  joints [ DEF J SingleAxisHingeJoint { body1 USE A body2 USE B anchorPoint 0 5 0 axis 0 0 1 forceOutput [ "angle" "angleRate" "body2AnchorPoint" ] }
+           DEF J2 BallJoint { body1 USE A body2 USE C anchorPoint 0 5 6 forceOutput [ "ALL" ] } ] }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF SC Script {
+  inputOnly SFTime tick
+  outputOnly SFVec3f an
+  outputOnly SFVec3f ax
+  outputOnly SFFloat mn
+  outputOnly MFString fo
+  initializeOnly SFFloat s0 -1
+  url "ecmascript:
+var done = [ ];
+function tick (v)
+{
+  if (s0 < 0) s0 = v;
+  var f = Math .round ((v - s0) * 60);
+  if (f >= 30 && !done[0]) { done[0] = true; an = new SFVec3f (0, 5, 1); }
+  if (f >= 60 && !done[1]) { done[1] = true; ax = new SFVec3f (0, 1, 0); }
+  if (f >= 90 && !done[2]) { done[2] = true; mn = -0.2; }
+  if (f >= 120 && !done[3]) { done[3] = true; fo = new MFString ('NONE'); }
+}
+"
+}
+ROUTE TS.time TO SC.tick
+ROUTE SC.an TO J2.set_anchorPoint
+ROUTE SC.ax TO J.set_axis
+ROUTE SC.mn TO J.set_minAngle
+ROUTE SC.fo TO J2.set_forceOutput

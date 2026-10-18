@@ -1,0 +1,623 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "68": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "76": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "84": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "92": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "108": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "116": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "124": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "132": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "140": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "148": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "156": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "164": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "172": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "180": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "209": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "210": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"\"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      enabled FALSE\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      visible FALSE\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "68": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkReader\"\n      port 41234\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "76": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      networkMode \"networkWriter\"\n      port 41236\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "84": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "92": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      children DEF TM DISEntityTypeMapping { }\n      port 41234\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm USE TM\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping { }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "108": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "116": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "124": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn \"\n  initializeOnly SFNode   rx DEF RX ReceiverPdu {\n    description \"changed\"\n    bboxSize 2 1 1\n    bboxCenter -2.5 2 0\n    networkMode \"networkWriter\"\n    port 5000\n    whichGeometry 2\n  }\n  initializeOnly SFNode   sg DEF SG SignalPdu {\n    bboxSize 1 2 1\n    bboxCenter 0 2 0\n    address \"127.0.0.1\"\n    data [\n      9,\n      8,\n      7\n    ]\n    dataLength 3\n    networkMode \"networkWriter\"\n    port 41236\n    sampleRate 44100\n    samples 3\n  }\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "132": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "140": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "148": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.7 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 0.8 0.8 0.8\n      }\n    }\n    ReceiverPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 1\n      bboxCenter 0 -2 0\n    }\n    SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 1\n      bboxCenter -2 -2 0\n    }\n    TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 1\n      bboxCenter 2 -2 0\n    }\n    DISEntityManager { }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "156": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.7 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 0.8 0.8 0.8\n      }\n    }\n    ReceiverPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 1\n      bboxCenter 0 -2 0\n      enabled FALSE\n    }\n    SignalPdu {\n      visible FALSE\n      bboxDisplay TRUE\n      bboxSize 1 1 1\n      bboxCenter -2 -2 0\n    }\n    TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 2 2 2\n      bboxCenter 2 -2 0\n    }\n    DISEntityManager {\n      children DISEntityTypeMapping { }\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "164": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.7 0.3 0.2\n        }\n      }\n      geometry Box {\n        size 0.8 0.8 0.8\n      }\n    }\n    ReceiverPdu {\n      bboxSize 1 1 1\n      bboxCenter 0 -2 0\n      enabled FALSE\n    }\n    SignalPdu {\n      visible FALSE\n      bboxSize 1 1 1\n      bboxCenter -2 -2 0\n    }\n    TransmitterPdu {\n      bboxSize 2 2 2\n      bboxCenter 2 -2 0\n    }\n    DISEntityManager {\n      children DISEntityTypeMapping { }\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "172": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"changed\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks Kt \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "180": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"false false false false false -1 0 SFNode\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks Kt Ku \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "209": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"false false false false false -1 0 SFNode\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks Kt Ku \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "210": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 9\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF G Group {\n  children [\n    DEF TX TransmitterPdu {\n      bboxDisplay TRUE\n      bboxSize 1 1 3\n      bboxCenter 2.5 2 0\n      antennaLocation 7 8 9\n      frequency 123456\n      power 55.5\n      transmitState 2\n    }\n    DEF EM DISEntityManager {\n      address \"127.0.0.1\"\n      applicationID 12\n      port 6000\n      siteID 11\n    }\n    DEF RX ReceiverPdu {\n      description \"false false false false false -1 0 SFNode\"\n      bboxDisplay TRUE\n      bboxSize 2 1 1\n      bboxCenter -2.5 2 0\n      networkMode \"networkWriter\"\n      port 5000\n      whichGeometry 2\n    }\n    DEF SG SignalPdu {\n      bboxDisplay TRUE\n      bboxSize 1 2 1\n      bboxCenter 0 2 0\n      address \"127.0.0.1\"\n      data [\n        9,\n        8,\n        7\n      ]\n      dataLength 3\n      networkMode \"networkWriter\"\n      port 41236\n      sampleRate 44100\n      samples 3\n    }\n  ]\n}\n\nDEF G2 Group {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.7 0.3 0.2\n      }\n    }\n    geometry Box {\n      size 0.8 0.8 0.8\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko Kp Kq Kr Ks Kt Ku \"\n  initializeOnly SFNode   rx USE RX\n  initializeOnly SFNode   sg USE SG\n  initializeOnly SFNode   tx USE TX\n  initializeOnly SFNode   em USE EM\n  initializeOnly SFNode   tm DEF TM DISEntityTypeMapping {\n    description \"mapped\"\n    load FALSE\n    url [\n      \"a.xml\",\n      \"b.xml\"\n    ]\n  }\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   g2 USE G2\n\n  url \"javascript:\nvar made = [ ];\nvar got = '';\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') rx .enabled = false;\n   if (k == 'b') rx .enabled = true;\n   if (k == 'c') rx .visible = false;\n   if (k == 'd') rx .visible = true;\n   if (k == 'e') rx .bboxDisplay = false;\n   if (k == 'f') rx .bboxDisplay = true;\n   if (k == 'g') rx .description = 'changed';\n   if (k == 'h') { rx .port = 5000; rx .address = 'localhost'; rx .networkMode = 'networkWriter'; rx .whichGeometry = 2; }\n   if (k == 'i') { sg .data = new MFInt32 (9, 8, 7); sg .dataLength = 3; sg .sampleRate = 44100; sg .samples = 3; }\n   if (k == 'j') { tx .power = 55.5; tx .frequency = 123456; tx .transmitState = 2; tx .antennaLocation = new SFVec3f (7, 8, 9); }\n   if (k == 'k') { em .siteID = 11; em .applicationID = 12; em .port = 6000; em .children = new MFNode (); }\n   if (k == 'l') { tm .url = new MFString ('a.xml', 'b.xml'); tm .load = false; tm .description = 'mapped'; }\n   if (k == 'm') { rx .bboxDisplay = false; sg .bboxDisplay = false; }\n   if (k == 'n') g .removeChildren = new MFNode (rx, sg);\n   if (k == 'o') g .addChildren = new MFNode (rx, sg);\n   if (k == 'p') { rx .bboxDisplay = true; sg .bboxDisplay = true; }\n   if (k == 'q') { made = [ Browser .currentScene .createNode ('ReceiverPdu'), Browser .currentScene .createNode ('SignalPdu'), Browser .currentScene .createNode ('TransmitterPdu'), Browser .currentScene .createNode ('DISEntityManager'), Browser .currentScene .createNode ('DISEntityTypeMapping') ];\n                   made [0] .bboxSize = new SFVec3f (1, 1, 1); made [0] .bboxCenter = new SFVec3f (0, -2, 0); made [0] .bboxDisplay = true;\n                   made [1] .bboxSize = new SFVec3f (1, 1, 1); made [1] .bboxCenter = new SFVec3f (-2, -2, 0); made [1] .bboxDisplay = true;\n                   made [2] .bboxSize = new SFVec3f (1, 1, 1); made [2] .bboxCenter = new SFVec3f (2, -2, 0); made [2] .bboxDisplay = true;\n                   g2 .addChildren = new MFNode (made [0], made [1], made [2], made [3]); }\n   if (k == 'r') { made [0] .enabled = false; made [1] .visible = false; made [2] .bboxSize = new SFVec3f (2, 2, 2); made [3] .children = new MFNode (made [4]); }\n   if (k == 's') { made [0] .bboxDisplay = false; made [1] .bboxDisplay = false; made [2] .bboxDisplay = false; }\n   if (k == 't') g2 .removeChildren = new MFNode (made [0], made [1], made [2], made [3]);\n   if (k == 'u') { got = rx .isActive + ' ' + rx .isNetworkReader + ' ' + rx .isNetworkWriter + ' ' + rx .isStandAlone + ' ' + rx .isRtpHeaderHeard + ' ' + rx .timestamp + ' ' + rx .receivedPower + ' ' + rx .getTypeName (); rx .description = got; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 8 description "zero" }
+Background { skyColor [ 0.15 0.2 0.35, 0.5 0.55 0.6 ] skyAngle 1.5 groundColor [ 0.25 0.2 0.15, 0.4 0.35 0.3 ] groundAngle 1.5 }
+Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.2 } } geometry Box { size 2 2 2 } } }
+Transform { translation 1.5 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.3 } } geometry Sphere { radius 1.2 } } }
+Transform { translation 0 -2 -1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.8 0.2 } } geometry Cone { } } }
+LayerSet { activeLayer 0 order [ 0 1 ] layers [
+LayoutLayer { layout NULL children [
+Transform { translation 0.5 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry Box { size 0.5 0.5 0.5 } } }
+Transform { translation -0.6 -0.6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.9 } } geometry Sphere { radius 0.3 } } }
+] }
+] }

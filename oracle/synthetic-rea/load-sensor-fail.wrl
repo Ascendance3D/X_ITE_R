@@ -1,0 +1,18 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Networking:3
+# Synthetic REA oracle world: LoadSensor whose only url object fails at start-up. Authored.
+# Only the final state is compared: X_ITE runs real-time frames while a world loads, so whether
+# the sensor's first isActive TRUE and the failure fall into one frame (and collapse) varies.
+# The fixed-timing run-time failure is covered by load-sensor.wrl (step 8).
+DEF IN3 Inline { url "load-sensor-missing-file.wrl" }
+DEF LS2 LoadSensor { children [ USE IN3 ] }
+DEF OUT Script {
+  inputOutput SFBool a2 TRUE
+  inputOutput SFBool l2 TRUE
+  inputOutput SFFloat p2 -1
+  url "ecmascript: function initialize () { }"
+}
+ROUTE LS2.isActive TO OUT.a2
+ROUTE LS2.isLoaded TO OUT.l2
+ROUTE LS2.progress TO OUT.p2

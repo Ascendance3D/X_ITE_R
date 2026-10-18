@@ -1,0 +1,55 @@
+{
+  "ok": true,
+  "poses": {
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\n\nViewpoint { }\n\nLayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    Layer {\n      pickable FALSE\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.3 0.3\n          }\n        }\n        geometry Box { }\n      }\n    }\n    NULL\n  ]\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Parser error at line 7: Unknown node type or proto 'LayoutLayer'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      256,
+      256
+    ],
+    "viewport": [
+      0,
+      0,
+      256,
+      256
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

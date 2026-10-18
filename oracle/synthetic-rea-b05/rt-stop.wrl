@@ -1,0 +1,21 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+DEF G Gain { gain 0.8 children DEF F BiquadFilter { frequency 800 children DEF W WaveShaper { curve [ -1 0 1 ] children DEF Y Delay { delayTime 0.002 children DEF O OscillatorSource { frequency 220 periodicWave PeriodicWave { type "SAWTOOTH" } } } } } } AudioDestination { children USE G }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  inputOnly SFTime set_time
+  outputOnly SFTime start
+  initializeOnly SFInt32 n 0
+  url "ecmascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
+DEF K Script { directOutput TRUE initializeOnly SFNode g USE G initializeOnly SFNode f USE F initializeOnly SFNode w USE W initializeOnly SFNode y USE Y initializeOnly SFNode o USE O inputOnly SFTime set_time initializeOnly SFInt32 n 0 url "ecmascript:
+function set_time (value) { ++ n;
+   if (n === 34) { o.stopTime = value; }
+}
+" }
+ROUTE T.time TO K.set_time

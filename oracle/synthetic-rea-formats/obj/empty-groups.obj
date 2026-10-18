@@ -1,0 +1,11 @@
+# synthetic groups and objects without faces, plus an unknown material (newly authored)
+o empty_object
+g empty_a
+g empty_b
+o filled_object
+v 0 0 0
+v 1 0 0
+v 0 1 0
+g filled_group
+usemtl no_such_material
+f 1 2 3

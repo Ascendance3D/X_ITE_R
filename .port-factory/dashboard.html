@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Port Factory</title>
+<style>
+body{font:14px system-ui,sans-serif;margin:0;background:#12151a;color:#dde;padding:16px}
+h1{font-size:18px;margin:0 0 4px}h2{font-size:14px;margin:0 0 8px;color:#9ab}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}
+.card{background:#1b2028;border:1px solid #2a323d;border-radius:6px;padding:12px;overflow:auto;max-height:420px}
+table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:2px 6px;border-bottom:1px solid #2a323d;font-size:12px;vertical-align:top}
+.bar{height:14px;background:#2a323d;border-radius:7px;overflow:hidden}.bar>div{height:100%;background:#4caf75}
+.PASS{color:#4caf75}.FAIL{color:#e5534b}.BLOCKED{color:#e0a030}code{color:#9cf}.dim{color:#789}
+</style></head><body>
+<h1>Port Factory <span id="st" class="dim"></span></h1>
+<div class="dim" id="sub"></div>
+<div class="grid">
+<div class="card"><h2>Coverage (COMPLETE only)</h2><div class="bar"><div id="bar"></div></div><p id="counts"></p></div>
+<div class="card"><h2>Active task</h2><div id="active"></div></div>
+<div class="card"><h2>Blockers</h2><div id="blk"></div></div>
+<div class="card"><h2>Last test results</h2><div id="tests"></div></div>
+<div class="card"><h2>Recent completions</h2><div id="done"></div></div>
+<div class="card"><h2>Backlog top 20</h2><div id="bl"></div></div>
+</div>
+<script>
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $=id=>document.getElementById(id);
+const tbl=(rows)=>rows.length?"<table>"+rows.join("")+"</table>":'<span class="dim">none</span>';
+async function poll(){
+ try{
+  const s=await (await fetch("state.json?t="+Date.now(),{cache:"no-store"})).json();
+  const c=s.counts||{};
+  $("bar").style.width=(s.coverage_pct||0)+"%";
+  $("counts").innerHTML=`<b>${s.coverage_pct}%</b> (${c.COMPLETE}/${c.total}) &nbsp; PARTIAL ${c.PARTIAL||0} &middot; NOT_TESTED ${c.NOT_TESTED||0} &middot; DIFFERENT ${c.DIFFERENT||0} &middot; MISSING ${c.MISSING||0}`;
+  const a=s.active;
+  $("active").innerHTML=a?`<code>${esc(a.id)}</code> (${esc(a.status_at_start)})<br>started ${esc(a.started)}, attempts ${a.attempts}<br>${esc(a.missing)}<br><span class="dim">${esc(a.upstream)}</span>`:'<span class="dim">no active task</span>';
+  $("blk").innerHTML=tbl((s.blockers||[]).filter(b=>!b.resolved).map(b=>`<tr><td><code>${esc(b.id)}</code></td><td>${esc(b.date)}</td><td>${esc(b.note)}</td></tr>`));
+  $("tests").innerHTML=tbl((s.test_results||[]).slice(-10).reverse().map(t=>`<tr><td class="${t.verdict}">${t.verdict}</td><td><code>${esc(t.id)}</code></td><td>${esc(t.kind)}</td><td>${esc(t.note)}</td></tr>`));
+  $("done").innerHTML=tbl((s.completed||[]).filter(x=>x.source==="factory").concat((s.completed||[]).filter(x=>x.source!=="factory")).slice(0,10).map(x=>`<tr><td><code>${esc(x.id)}</code></td><td>${esc(x.date)}</td><td>${esc(x.source)}</td></tr>`));
+  $("bl").innerHTML=tbl((s.backlog_top||[]).map(b=>`<tr><td>#${b.priority}</td><td><code>${esc(b.id)}</code></td><td>${esc(b.status)}</td><td>${b.blocked_by?'<span class="BLOCKED">'+esc(b.blocked_by)+'</span>':''}</td></tr>`));
+  $("sub").textContent="state updated "+s.updated;
+  $("st").textContent="";
+ }catch(e){$("st").textContent="(error: "+e.message+")"}
+}
+poll();setInterval(poll,3000);
+</script></body></html>

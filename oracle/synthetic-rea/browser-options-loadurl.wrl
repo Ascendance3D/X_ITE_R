@@ -1,0 +1,43 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT Networking:3
+# Synthetic REA oracle world: the LoadUrlObjects option. With FALSE requestImmediateLoad returns
+# before loading: a url change keeps the loaded Inline and ImageTexture, new url objects (an
+# Inline, a Script) do not load. Setting it TRUE again loads nothing until the next url change.
+# Authored.
+Viewpoint { position 0 0 10 }
+NavigationInfo { type "NONE" }
+DirectionalLight { direction -0.4 -0.6 -1 }
+DEF I Transform { translation -2.5 1.5 0 children DEF IN Inline { url "browser-options-assets/red.wrl" } }
+Transform { translation 2.5 1.5 0 children Shape { appearance Appearance { texture DEF TEX ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry Box { size 2 2 2 } } }
+DEF ROOT Transform { translation 0 -2 0 }
+DEF S Script {
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOutput SFString hist ""
+  inputOutput SFNode inline USE IN
+  inputOutput SFNode tex USE TEX
+  inputOutput SFNode root USE ROOT
+  url "ecmascript:
+    function cycle (v) {
+      step = step + 1;
+      if (step == 2) {
+        Browser .setBrowserOption ('LoadUrlObjects', false);
+        hist = 'opt=' + Browser .getBrowserOption ('LoadUrlObjects');
+        inline .url = new MFString ('browser-options-assets/blue.wrl');
+        tex .url = new MFString ('../synthetic-rea-render2/checker8.png');
+        var n = Browser .createVrmlFromString ('Transform { translation -1.5 0 0 children Inline { url \"browser-options-assets/blue.wrl\" } } Script { url \"ecmascript: function initialize () { print (\\'new script ran\\'); }\" }');
+        root .children = n;
+      }
+      if (step == 4) {
+        Browser .setBrowserOption ('LoadUrlObjects', true);
+      }
+      if (step == 6) {
+        inline .url = new MFString ('browser-options-assets/blue.wrl', 'x.wrl');
+      }
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.25 loop TRUE }
+ROUTE STEP.cycleTime TO S.cycle

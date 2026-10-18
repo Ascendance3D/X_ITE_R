@@ -1,0 +1,16 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT HAnim:1
+# Synthetic X3DOptimizer case: HAnim joints inside and outside a skeleton.
+HAnimHumanoid {
+  skeleton DEF J1 HAnimJoint {
+    name "humanoid_root"
+    children [
+      HAnimSegment { name "pelvis" }
+      DEF J2 HAnimJoint { name "sacroiliac" children HAnimSite { name "s" } }
+    ]
+  }
+  joints [ USE J1 USE J2 ]
+}
+Group { children HAnimJoint { name "stray" } }
+HAnimHumanoid { }

@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection {  bodies [ DEF A RigidBody { fixed TRUE position 0 5 0 geometry DEF A_C CollidableShape { shape Shape { geometry Box { size 0.5 0.5 0.5 } } } }
+  DEF B RigidBody { mass 1 position 0 4 0 geometry DEF B_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ]
+  joints [ DEF J SliderJoint { body1 USE A body2 USE B axis 0 1 0 minSeparation -1 maxSeparation 1 } ] }

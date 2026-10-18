@@ -1,0 +1,25 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Geospatial:2
+# Synthetic REA oracle world: GeoViewpoint without a GeoOrigin (geocentric coordinates). FLY
+# navigation: the speed grows with the elevation (getSpeedFactor), the up vector is the geo
+# normal, the far value is 1e9 and the depth buffer is logarithmic. Authored.
+NavigationInfo { type [ "FLY" "ANY" ] headlight TRUE }
+GeoViewpoint {
+  description "fly"
+  position 51.5 -0.12 1500
+  orientation 1 0 0 1.2
+  speedFactor 0.5
+}
+Background { skyColor [ 0.3 0.4 0.7 ] }
+GeoLocation {
+  geoCoords 51.51 -0.12 0
+  children [
+    Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Box { size 300 300 300 } }
+    Transform { translation 600 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.4 } } geometry Sphere { radius 150 } } }
+  ]
+}
+GeoLocation {
+  geoCoords 51.53 -0.10 0
+  children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.9 } } geometry Cylinder { radius 200 height 800 } }
+}

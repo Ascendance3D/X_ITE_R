@@ -1,0 +1,15 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+# Synthetic X3DOptimizer case: interpolators with one key folded into their target.
+DEF T Transform { children Shape { geometry Box { } } }
+DEF P PositionInterpolator { key 0 keyValue 4 5 6 }
+DEF O OrientationInterpolator { key [ 0 1 ] keyValue [ 0 1 0 0, 0 1 0 1 ] }
+DEF S ScalarInterpolator { key 0.5 keyValue 0.25 }
+DEF M Material { }
+DEF Clock TimeSensor { }
+ROUTE Clock.fraction_changed TO P.set_fraction
+ROUTE P.value_changed TO T.set_translation
+ROUTE Clock.fraction_changed TO O.set_fraction
+ROUTE O.value_changed TO T.set_rotation
+ROUTE S.value_changed TO M.set_transparency
+Shape { appearance Appearance { material USE M } geometry Sphere { } }

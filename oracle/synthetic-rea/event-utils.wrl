@@ -1,0 +1,79 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT EventUtilities:1
+# Synthetic REA oracle world: BooleanFilter, BooleanSequencer, BooleanToggle, BooleanTrigger, IntegerSequencer, IntegerTrigger, TimeTrigger. Authored; no archive content.
+Viewpoint { position 0 0 20 }
+DEF T TimeSensor { cycleInterval 1.3 loop TRUE }
+DEF DRV Script {
+  inputOnly SFFloat set_f
+  outputOnly SFBool b
+  outputOnly SFTime tt
+  outputOnly SFBool nxt
+  outputOnly SFBool prv
+  inputOutput SFInt32 n 0
+  url "ecmascript:
+function set_f (f, ts) {
+  n = n + 1;
+  if (n % 3 == 0) b = (n % 2 == 0);
+  if (n % 7 == 0) tt = ts;
+  if (n % 11 == 0) nxt = true;
+  if (n % 13 == 0) prv = true;
+}
+"
+}
+DEF BF BooleanFilter { }
+DEF BT BooleanToggle { }
+DEF BTR BooleanTrigger { }
+DEF IT IntegerTrigger { integerKey 42 }
+DEF TT TimeTrigger { }
+DEF BS BooleanSequencer { key [0 0.25 0.5 0.75 1] keyValue [TRUE FALSE TRUE TRUE FALSE] }
+DEF IS IntegerSequencer { key [0 0.2 0.4 0.6 0.8] keyValue [1 2 3 4 5] }
+DEF IS2 IntegerSequencer { key [0 0.5 1] keyValue [7 8 9] }
+DEF OUT Script {
+  inputOutput SFBool bfT FALSE
+  inputOutput SFBool bfF TRUE
+  inputOutput SFBool bfN FALSE
+  inputOutput SFBool bt FALSE
+  inputOutput SFBool btr FALSE
+  inputOutput SFInt32 it 0
+  inputOutput SFTime tt 0
+  inputOutput SFBool bs FALSE
+  inputOutput SFInt32 is 0
+  inputOutput SFInt32 is2 0
+  inputOnly SFBool lb
+  inputOnly SFInt32 li
+  inputOnly SFTime lt
+  inputOutput SFString log ""
+  url "ecmascript:
+function lb (v, ts) { log = log + 'b' + (v ? 1 : 0) + ' '; if (log.length > 400) log = log.substring (200); }
+function li (v, ts) { log = log + 'i' + v + ' '; if (log.length > 400) log = log.substring (200); }
+function lt (v, ts) { log = log + 't' + (v - 946684800).toFixed (4) + ' '; }
+"
+}
+ROUTE T.fraction_changed TO DRV.set_f
+ROUTE T.fraction_changed TO BS.set_fraction
+ROUTE T.fraction_changed TO IS.set_fraction
+ROUTE DRV.nxt TO IS2.next
+ROUTE DRV.prv TO IS2.previous
+ROUTE DRV.nxt TO BS.next
+ROUTE DRV.b TO BF.set_boolean
+ROUTE DRV.b TO BT.set_boolean
+ROUTE DRV.b TO IT.set_boolean
+ROUTE DRV.b TO TT.set_boolean
+ROUTE DRV.tt TO BTR.set_triggerTime
+ROUTE BF.inputTrue TO OUT.bfT
+ROUTE BF.inputFalse TO OUT.bfF
+ROUTE BF.inputNegate TO OUT.bfN
+ROUTE BT.toggle TO OUT.bt
+ROUTE BTR.triggerTrue TO OUT.btr
+ROUTE IT.triggerValue TO OUT.it
+ROUTE TT.triggerTime TO OUT.tt
+ROUTE BS.value_changed TO OUT.bs
+ROUTE IS.value_changed TO OUT.is
+ROUTE IS2.value_changed TO OUT.is2
+ROUTE BS.value_changed TO OUT.lb
+ROUTE IS.value_changed TO OUT.li
+ROUTE IS2.value_changed TO OUT.li
+ROUTE BT.toggle TO OUT.lb
+ROUTE TT.triggerTime TO OUT.lt
+ROUTE BTR.triggerTrue TO OUT.lb

@@ -1,0 +1,116 @@
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1080:4
+     |
+1080 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 3 warnings
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/r0-3-e-retention-cleanup/crates/x3d-viewer)
+warning: function `setup` is never used
+   --> crates/x3d-viewer/tests/multi_viewer_b08.rs:270:4
+    |
+270 | fn setup() -> Option<Rig> {
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `x3d-viewer` (test "multi_viewer_b08") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 1.58s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/multi_viewer_b08.rs (/tmp/b08/multiview/build/release/deps/multi_viewer_b08-302956cd6d42bd38)
+
+running 10 tests
+test unload_prints_stay_per_viewer ... ok
+test resources_released_per_viewer ... FAILED
+test random_stream_is_shared_on_the_thread ... ok
+test scripts_two_viewers_interleaved_msaa4 ... FAILED
+test scripts_two_viewers_interleaved_msaa0 ... FAILED
+test independent_reload ... FAILED
+test independent_drop ... FAILED
+test rendering_options_stay_per_viewer ... FAILED
+test particles_and_physics_three_viewers_msaa4 ... ok
+test particles_and_physics_three_viewers_msaa0 ... ok
+
+failures:
+
+---- resources_released_per_viewer stdout ----
+
+thread '<unnamed>' (682352) panicked at crates/x3d-viewer/tests/multi_viewer_b08.rs:546:9:
+assertion `left == right` failed: B's GPU resources after 5 reloads
+  left: [12, 0, 0, 1, 0, 0, 0]
+ right: [2, 0, 0, 1, 0, 0, 0]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'resources_released_per_viewer' (682123) panicked at crates/x3d-viewer/src/embed.rs:41:101:
+viewer thread panicked: Any { .. }
+
+---- scripts_two_viewers_interleaved_msaa4 stdout ----
+
+thread '<unnamed>' (682186) panicked at crates/x3d-scene/src/scene.rs:1013:60:
+index out of bounds: the len is 0 but the index is 1
+
+thread 'scripts_two_viewers_interleaved_msaa4' (682125) panicked at crates/x3d-viewer/src/embed.rs:41:101:
+viewer thread panicked: Any { .. }
+
+---- scripts_two_viewers_interleaved_msaa0 stdout ----
+
+thread '<unnamed>' (682357) panicked at crates/x3d-scene/src/scene.rs:1013:60:
+index out of bounds: the len is 0 but the index is 1
+
+thread 'scripts_two_viewers_interleaved_msaa0' (682124) panicked at crates/x3d-viewer/src/embed.rs:41:101:
+viewer thread panicked: Any { .. }
+
+---- independent_reload stdout ----
+
+thread '<unnamed>' (682327) panicked at crates/x3d-scene/src/scene.rs:1013:60:
+index out of bounds: the len is 0 but the index is 1
+
+thread 'independent_reload' (682118) panicked at crates/x3d-viewer/src/embed.rs:41:101:
+viewer thread panicked: Any { .. }
+
+---- independent_drop stdout ----
+
+thread '<unnamed>' (682183) panicked at crates/x3d-scene/src/scene.rs:1013:60:
+index out of bounds: the len is 0 but the index is 1
+
+thread 'independent_drop' (682117) panicked at crates/x3d-viewer/src/embed.rs:41:101:
+viewer thread panicked: Any { .. }
+
+---- rendering_options_stay_per_viewer stdout ----
+
+thread '<unnamed>' (682252) panicked at crates/x3d-viewer/tests/multi_viewer_b08.rs:505:9:
+B screenshot after A stepped: 132 pixels off
+
+thread 'rendering_options_stay_per_viewer' (682122) panicked at crates/x3d-viewer/src/embed.rs:41:101:
+viewer thread panicked: Any { .. }
+
+
+failures:
+    independent_drop
+    independent_reload
+    rendering_options_stay_per_viewer
+    resources_released_per_viewer
+    scripts_two_viewers_interleaved_msaa0
+    scripts_two_viewers_interleaved_msaa4
+
+test result: FAILED. 4 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.70s
+
+error: test failed, to rerun pass `-p x3d-viewer --test multi_viewer_b08`

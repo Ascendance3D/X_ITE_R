@@ -1,0 +1,298 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "149": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "150": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "70": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "149": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA-verify oracle world: static Anchor nodes with description and parameter fields (not clicked). Authored; no archive content.
+Viewpoint { position 0 0 10 }
+DEF A1 Anchor {
+  description "Synthetic anchor one"
+  parameter [ "target=_blank" ]
+  url [ "anchor-target-one.wrl#Entry" ]
+  children [
+    Transform {
+      translation -2 0 0
+      children [ Shape { geometry Box { size 1 1 1 } } ]
+    }
+  ]
+}
+DEF A2 Anchor {
+  description "Synthetic anchor two"
+  parameter [ "a=b" "c=d" ]
+  url [ "anchor-target-two.wrl" ]
+  children [
+    Transform {
+      translation 2 0 0
+      children [ Shape { geometry Sphere { } } ]
+    }
+  ]
+}
+DEF A3 Anchor {
+  children [ Shape { geometry Cone { } } ]
+}

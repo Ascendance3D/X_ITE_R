@@ -1,0 +1,50 @@
+#X3D V4.0 utf8
+# REA batch 04: X_ITE 16.5.0's dormant AnnotationLayer cannot initialize (X3DLayerNode.initialize
+# reads _hidden, _visible and _children, which AnnotationLayer does not define), so the reference is
+# annotation-layer-ref.wrl: the same world with an empty Layer in its place. Rust must render and
+# log this world exactly as X_ITE does the reference (tools/rea_b04.py annotation-layer).
+PROFILE Interchange
+COMPONENT Annotation:1
+COMPONENT Layering:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 8 }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.3 } } geometry Box { } } }
+DEF LSET LayerSet {
+  order [ 0 1 2 ]
+  activeLayer 1
+  layers [
+    DEF L1 Layer {
+      viewport Viewport { clipBoundary [ 0.5 1 0 1 ] }
+      children [
+        Viewpoint { position 0 0 6 }
+        Transform { translation 0.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.9 0.3 } } geometry Sphere { } } }
+      ]
+    }
+    DEF AL AnnotationLayer { shownGroupID [ "group-1" ] viewport Viewport { clipBoundary [ 0 0.5 0 0.5 ] } }
+  ]
+}
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFBool on_pickable
+  inputOutput SFString log ""
+  initializeOnly SFNode set USE LSET
+  initializeOnly SFNode al USE AL
+  url "javascript:
+function initialize () { log = 'I ' + al .isPickable + ' '; }
+function on_pickable (v) { log = log + 'K' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') set .activeLayer = 2;
+   if (k == 'b') set .order = new MFInt32 (0, 2, 1);
+   if (k == 'c') set .order = new MFInt32 (2);
+   if (k == 'd') set .order = new MFInt32 (1, 2);
+   if (k == 'e') { al .isPickable = false; set .order = new MFInt32 (0, 1, 2); set .activeLayer = 1; }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE AL.isPickable_changed TO R.on_pickable

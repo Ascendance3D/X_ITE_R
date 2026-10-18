@@ -18,6 +18,8 @@ pub struct CShape {
     pub geometry: Rc<Geometry>,
     /// Shape model-view matrix (view space of the active viewpoint).
     pub model_view: Matrix4,
+    /// The ClipPlanes in scope, in the same view space (renderContext .clipPlanes).
+    pub clip_planes: Vec<[f64; 4]>,
 }
 
 pub struct Closest {
@@ -27,9 +29,20 @@ pub struct Closest {
     pub hit: bool,
 }
 
+/// How the collision depth pass draws triangles. Shading WIREFRAME sets the GL polygon mode
+/// globally (`gl .LINE`), so X_ITE's collision and gravity depth renders inherit it; POINT only
+/// changes the primitive mode of the display shaders (measured: the avatar still stands).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Fill {
+    #[default]
+    Triangles,
+    Edges,
+}
+
 #[derive(Default)]
 pub struct World {
     pub shapes: Vec<CShape>,
+    pub fill: Fill,
 }
 
 /// The collision camera: `viewpoint model · translate (userPosition) · rotate (rotation)`,
@@ -59,6 +72,9 @@ impl World {
             let mut m = shape.model_view;
             m.mult_right(view);
 
+            // The depth shader's clip planes, moved into the collision camera's space.
+            let planes: Vec<[f64; 4]> = shape.clip_planes.iter().map(|p| x3d_render::traverse::plane_mult_right(*p, view)).collect();
+
             // Bounding box reject.
             let (mut lo, mut hi) = (Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY), Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY));
             for i in 0..8 {
@@ -81,6 +97,94 @@ impl World {
 
             for t3 in 0..g.vertex_count() / 3 {
                 let (a, bb, c) = (tri(t3 * 3), tri(t3 * 3 + 1), tri(t3 * 3 + 2));
+
+                if self.fill != Fill::Triangles {
+                    let mut e1 = bb;
+                    e1.subtract(&a);
+                    let mut e2 = c;
+                    e2.subtract(&a);
+                    let mut nrm = e1;
+                    nrm.cross(&e2).normalize();
+
+                    let mut sample = |px: f64, py: f64, z: f64| {
+                        let depth = -z;
+
+                        if depth < near || depth > far {
+                            return;
+                        }
+
+                        if !planes.is_empty() && x3d_render::traverse::is_clipped(&planes, &Vector3::new(px, py, z)) {
+                            return;
+                        }
+
+                        if best.as_ref().is_none_or(|(d, _)| depth < *d) {
+                            best = Some((depth, nrm));
+                        }
+                    };
+
+                    let to_pixel = |p: &Vector3| ((p.x - l) / (r - l) * n as f64, (p.y - b) / (t - b) * n as f64);
+
+                    {
+                        // GL clips the polygon before it draws its edges, so a triangle cut by
+                        // the near or far plane gets an edge along that plane (Sutherland-Hodgman
+                        // against z = -near and z = -far; x and y fall in the guard band).
+                        let mut polygon = vec![a, bb, c];
+
+                        for (plane_z, keep_behind) in [(-near, true), (-far, false)] {
+                            let inside = |p: &Vector3| if keep_behind { p.z <= plane_z } else { p.z >= plane_z };
+                            let mut out = Vec::with_capacity(polygon.len() + 1);
+
+                            for i in 0..polygon.len() {
+                                let (p, q) = (polygon[i], polygon[(i + 1) % polygon.len()]);
+
+                                if inside(&p) {
+                                    out.push(p);
+                                }
+
+                                if inside(&p) != inside(&q) {
+                                    let s = (plane_z - p.z) / (q.z - p.z);
+                                    out.push(Vector3::new(p.x + s * (q.x - p.x), p.y + s * (q.y - p.y), plane_z));
+                                }
+                            }
+
+                            polygon = out;
+                        }
+
+                        // A 1 pixel line: along its major axis, the pixel row (column) of the
+                        // line at each pixel center it passes.
+                        let edges: Vec<(Vector3, Vector3)> = (0..polygon.len()).map(|i| (polygon[i], polygon[(i + 1) % polygon.len()])).collect();
+
+                        for (p, q) in edges {
+                            let ((x0, y0), (x1, y1)) = (to_pixel(&p), to_pixel(&q));
+                            let x_major = (x1 - x0).abs() >= (y1 - y0).abs();
+                            let (u0, u1, v0, v1) = if x_major { (x0, x1, y0, y1) } else { (y0, y1, x0, x1) };
+
+                            if u0 == u1 {
+                                continue;
+                            }
+
+                            let (lo, hi) = (u0.min(u1), u0.max(u1));
+                            let first = ((lo - 0.5).ceil()).max(0.0) as i64;
+                            let last = ((hi - 0.5).ceil()).min(n as f64) as i64;
+
+                            for i in first..last {
+                                let center = i as f64 + 0.5;
+                                let s = (center - u0) / (u1 - u0);
+                                let v = v0 + s * (v1 - v0);
+
+                                if v < 0.0 || v >= n as f64 {
+                                    continue;
+                                }
+
+                                let (px, py) = if x_major { (center, v.floor() + 0.5) } else { (v.floor() + 0.5, center) };
+                                let z = p.z + s * (q.z - p.z);
+                                sample(l + px * (r - l) / n as f64, b + py * (t - b) / n as f64, z);
+                            }
+                        }
+                    }
+
+                    continue;
+                }
 
                 let (min_x, max_x) = (a.x.min(bb.x).min(c.x), a.x.max(bb.x).max(c.x));
                 let (min_y, max_y) = (a.y.min(bb.y).min(c.y), a.y.max(bb.y).max(c.y));
@@ -119,6 +223,10 @@ impl World {
                             continue;
                         }
 
+                        if !planes.is_empty() && x3d_render::traverse::is_clipped(&planes, &Vector3::new(px, py, z)) {
+                            continue;
+                        }
+
                         if best.as_ref().is_none_or(|(d, _)| depth < *d) {
                             let mut e1 = bb;
                             e1.subtract(&a);
@@ -151,8 +259,9 @@ impl World {
 
         let mut rotation = Rotation4::identity();
         rotation.set_vectors(&Vector3::new(0.0, 0.0, -1.0), direction);
-        // localOrientation = orientation field ^-1 * getOrientation () = identity.
-        let rotation = x3d_render::traverse::straighten(&rotation, &Vector3::Y_AXIS);
+        // localOrientation = orientation field ^-1 * getOrientation ().
+        rotation.mult_right(&base.local_orientation());
+        let rotation = base.straighten_horizon(vp, &rotation);
 
         let far = (radius * 2.0).max(avatar_height * 2.0);
         let view = camera_matrix(vp, base, &rotation);
@@ -192,7 +301,7 @@ impl World {
                 let plane = Plane3::new(point, closest.normal);
                 let closest_pt = plane.get_closest_point_to_point(&translation);
 
-                let plane = Plane3::new(Vector3::ZERO, Vector3::Y_AXIS);
+                let plane = Plane3::new(Vector3::ZERO, base.up_vector(vp, false));
                 let mut constrained = plane.get_closest_point_to_point(&closest_pt);
 
                 constrained.subtract(&point).normalize().multiply(length * (1.0 - friction));
@@ -220,7 +329,7 @@ impl World {
         let near = vp.near_distance(base, nav);
         let far = radius.max(avatar_height) * 2.0;
 
-        let up = Vector3::Y_AXIS;
+        let up = base.up_vector(vp, false);
         let mut down = Rotation4::identity();
         down.set_vectors(&Vector3::Z_AXIS, &up);
 

@@ -1,0 +1,6 @@
+     Running tests/physics_b06_baseline.rs (/tmp/b08/physics/build/release/deps/physics_b06_baseline-7a9f03c9877170eb)
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+     Running tests/physics_b06_lifecycle.rs (/tmp/b08/physics/build/release/deps/physics_b06_lifecycle-d7c36a9b5d03c4f0)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+     Running tests/rea_b03_pick_vectors.rs (/tmp/b08/physics/build/release/deps/rea_b03_pick_vectors-d1736d53995a9780)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s

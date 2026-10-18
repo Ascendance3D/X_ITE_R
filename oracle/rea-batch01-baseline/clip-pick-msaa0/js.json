@@ -1,0 +1,76 @@
+{
+  "ok": true,
+  "poses": {
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Rendering : 5\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.3 -0.4 -1\n}\n\nTransform {\n  children [\n    ClipPlane { }\n    DEF TS1 TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry Sphere {\n        radius 2\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF TS2 TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0.6 1\n        }\n      }\n      geometry Box {\n        size 8 8 0.2\n      }\n    }\n  ]\n}\n\nDEF REC Script {\n  inputOnly   SFBool  front\n  inputOnly   SFBool  back\n  inputOutput MFInt32 presses [\n    2,\n    2,\n    2,\n    2,\n    2,\n    2,\n    2,\n    2\n  ]\n\n  url \"javascript:\n    function front (value) { if (value) presses [presses .length] = 1; }\n    function back (value) { if (value) presses [presses .length] = 2; }\n  \"\n}\n\nROUTE TS1.isActive TO REC.front\nROUTE TS2.isActive TO REC.back\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Rendering : 5\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.3 -0.4 -1\n}\n\nTransform {\n  children [\n    ClipPlane { }\n    DEF TS1 TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 1 0 0\n        }\n      }\n      geometry Sphere {\n        radius 2\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF TS2 TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0.6 1\n        }\n      }\n      geometry Box {\n        size 8 8 0.2\n      }\n    }\n  ]\n}\n\nDEF REC Script {\n  inputOnly   SFBool  front\n  inputOnly   SFBool  back\n  inputOutput MFInt32 presses [\n    2,\n    2,\n    2,\n    2,\n    2,\n    2,\n    2,\n    2,\n    1,\n    1,\n    1,\n    1,\n    1,\n    1,\n    1,\n    2\n  ]\n\n  url \"javascript:\n    function front (value) { if (value) presses [presses .length] = 1; }\n    function back (value) { if (value) presses [presses .length] = 2; }\n  \"\n}\n\nROUTE TS1.isActive TO REC.front\nROUTE TS2.isActive TO REC.back\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

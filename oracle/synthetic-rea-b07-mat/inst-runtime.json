@@ -1,0 +1,172 @@
+{
+ "settle": true,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 230,
+ "capture": [
+  12,
+  20,
+  30,
+  40,
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160,
+  170,
+  180,
+  190,
+  200
+ ],
+ "dump": [
+  10,
+  20,
+  30,
+  40,
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160,
+  170,
+  180,
+  190,
+  200,
+  229
+ ],
+ "events": [
+  {
+   "frame": 4,
+   "type": "mousemove",
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 4,
+   "type": "mousedown",
+   "button": 0,
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 5,
+   "type": "mouseup",
+   "button": 0,
+   "x": 5,
+   "y": 507
+  },
+  {
+   "frame": 16,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 26,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 36,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 46,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 56,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 66,
+   "type": "key",
+   "key": "f"
+  },
+  {
+   "frame": 76,
+   "type": "key",
+   "key": "g"
+  },
+  {
+   "frame": 86,
+   "type": "key",
+   "key": "h"
+  },
+  {
+   "frame": 96,
+   "type": "key",
+   "key": "i"
+  },
+  {
+   "frame": 106,
+   "type": "key",
+   "key": "j"
+  },
+  {
+   "frame": 116,
+   "type": "key",
+   "key": "k"
+  },
+  {
+   "frame": 126,
+   "type": "key",
+   "key": "l"
+  },
+  {
+   "frame": 136,
+   "type": "key",
+   "key": "m"
+  },
+  {
+   "frame": 146,
+   "type": "key",
+   "key": "n"
+  },
+  {
+   "frame": 156,
+   "type": "key",
+   "key": "o"
+  },
+  {
+   "frame": 166,
+   "type": "key",
+   "key": "p"
+  },
+  {
+   "frame": 176,
+   "type": "key",
+   "key": "q"
+  },
+  {
+   "frame": 186,
+   "type": "key",
+   "key": "r"
+  },
+  {
+   "frame": 196,
+   "type": "key",
+   "key": "s"
+  }
+ ]
+}

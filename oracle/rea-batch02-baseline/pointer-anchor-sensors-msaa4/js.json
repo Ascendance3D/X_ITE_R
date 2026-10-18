@@ -1,0 +1,141 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "start",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "start",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "start",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "start",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  description \"start\"\n}\n\nDEF V2 Viewpoint {\n  description \"anchored\"\n  position 0 1 12\n}\n\nGroup {\n  children [\n    DEF OUTER PlaneSensor { }\n    DEF A1 Anchor {\n      description \"drag anchor\"\n      url \"#V2\"\n      children [\n        DEF PS PlaneSensor { }\n        Transform {\n          translation -2 0 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.3 0.2\n              }\n            }\n            geometry Box { }\n          }\n        }\n      ]\n    }\n    DEF A2 Anchor {\n      description \"plain anchor\"\n      url \"#V2\"\n      children Transform {\n        translation 2.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 0.3 0.9\n            }\n          }\n          geometry Box { }\n        }\n      }\n    }\n    Transform {\n      translation 0 -3 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 3 1 1\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFBool  outer\n  inputOnly   SFBool  inner\n  inputOutput SFInt32 o 0\n  inputOutput SFInt32 i 0\n\n  url \"javascript:\nfunction outer (v) { if (v) o = o + 1; }\nfunction inner (v) { if (v) i = i + 1; }\n\"\n}\n\nROUTE OUTER.isActive TO S.outer\nROUTE PS.isActive TO S.inner\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  description \"start\"\n}\n\nDEF V2 Viewpoint {\n  description \"anchored\"\n  position 0 1 12\n}\n\nGroup {\n  children [\n    DEF OUTER PlaneSensor { }\n    DEF A1 Anchor {\n      description \"drag anchor\"\n      url \"#V2\"\n      children [\n        DEF PS PlaneSensor {\n          offset 0.2912438 0.2038707 0\n        }\n        Transform {\n          translation -2 0 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.3 0.2\n              }\n            }\n            geometry Box { }\n          }\n        }\n      ]\n    }\n    DEF A2 Anchor {\n      description \"plain anchor\"\n      url \"#V2\"\n      children Transform {\n        translation 2.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 0.3 0.9\n            }\n          }\n          geometry Box { }\n        }\n      }\n    }\n    Transform {\n      translation 0 -3 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 3 1 1\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFBool  outer\n  inputOnly   SFBool  inner\n  inputOutput SFInt32 o 0\n  inputOutput SFInt32 i 1\n\n  url \"javascript:\nfunction outer (v) { if (v) o = o + 1; }\nfunction inner (v) { if (v) i = i + 1; }\n\"\n}\n\nROUTE OUTER.isActive TO S.outer\nROUTE PS.isActive TO S.inner\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  description \"start\"\n}\n\nDEF V2 Viewpoint {\n  description \"anchored\"\n  position 0 1 12\n}\n\nGroup {\n  children [\n    DEF OUTER PlaneSensor {\n      offset 0.3689089 0.153712 0\n    }\n    DEF A1 Anchor {\n      description \"drag anchor\"\n      url \"#V2\"\n      children [\n        DEF PS PlaneSensor {\n          offset 0.2912438 0.2038707 0\n        }\n        Transform {\n          translation -2 0 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.3 0.2\n              }\n            }\n            geometry Box { }\n          }\n        }\n      ]\n    }\n    DEF A2 Anchor {\n      description \"plain anchor\"\n      url \"#V2\"\n      children Transform {\n        translation 2.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 0.3 0.9\n            }\n          }\n          geometry Box { }\n        }\n      }\n    }\n    Transform {\n      translation 0 -3 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 3 1 1\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFBool  outer\n  inputOnly   SFBool  inner\n  inputOutput SFInt32 o 1\n  inputOutput SFInt32 i 1\n\n  url \"javascript:\nfunction outer (v) { if (v) o = o + 1; }\nfunction inner (v) { if (v) i = i + 1; }\n\"\n}\n\nROUTE OUTER.isActive TO S.outer\nROUTE PS.isActive TO S.inner\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nDEF V1 Viewpoint {\n  description \"start\"\n}\n\nDEF V2 Viewpoint {\n  description \"anchored\"\n  position 0 1 12\n}\n\nGroup {\n  children [\n    DEF OUTER PlaneSensor {\n      offset 0.3689089 0.153712 0\n    }\n    DEF A1 Anchor {\n      description \"drag anchor\"\n      url \"#V2\"\n      children [\n        DEF PS PlaneSensor {\n          offset 0.2912438 0.2038707 0\n        }\n        Transform {\n          translation -2 0 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.3 0.2\n              }\n            }\n            geometry Box { }\n          }\n        }\n      ]\n    }\n    DEF A2 Anchor {\n      description \"plain anchor\"\n      url \"#V2\"\n      children Transform {\n        translation 2.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 0.3 0.9\n            }\n          }\n          geometry Box { }\n        }\n      }\n    }\n    Transform {\n      translation 0 -3 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 3 1 1\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFBool  outer\n  inputOnly   SFBool  inner\n  inputOutput SFInt32 o 1\n  inputOutput SFInt32 i 1\n\n  url \"javascript:\nfunction outer (v) { if (v) o = o + 1; }\nfunction inner (v) { if (v) i = i + 1; }\n\"\n}\n\nROUTE OUTER.isActive TO S.outer\nROUTE PS.isActive TO S.inner\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

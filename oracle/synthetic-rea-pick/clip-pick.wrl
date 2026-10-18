@@ -1,0 +1,28 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Rendering:5
+# REA batch 01 synthetic: the pointing pass ignores clipped parts; a ray through a clipped part
+# reaches the shape behind it.
+Viewpoint { position 0 0 10 }
+NavigationInfo { type "NONE" }
+DirectionalLight { direction -0.3 -0.4 -1 }
+Transform { children [
+  ClipPlane { plane 0 1 0 0 }
+  DEF TS1 TouchSensor { }
+  Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Sphere { radius 2 } }
+] }
+Transform { translation 0 0 -3 children [
+  DEF TS2 TouchSensor { }
+  Shape { appearance Appearance { material Material { diffuseColor 0 0.6 1 } } geometry Box { size 8 8 0.2 } }
+] }
+DEF REC Script {
+  inputOnly SFBool front
+  inputOnly SFBool back
+  inputOutput MFInt32 presses [ ]
+  url "javascript:
+    function front (value) { if (value) presses [presses .length] = 1; }
+    function back (value) { if (value) presses [presses .length] = 2; }
+  "
+}
+ROUTE TS1.isActive TO REC.front
+ROUTE TS2.isActive TO REC.back

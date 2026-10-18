@@ -1,0 +1,57 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "../synthetic-rea-b02/pbr/env.png" } }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+DEF R1 RetroreflectionMaterialExtension { retroreflection 0 }
+DEF R3 RetroreflectionMaterialExtension { retroreflection 1 retroreflectionTexture ImageTexture { url "../synthetic-rea-b02/pbr/occlusion.png" } }
+DEF M1 PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.25 extensions [ USE R1 ] }
+DEF M2 PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.25 }
+DEF M3 PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.25 extensions [ USE R3 ] }
+DEF G1 Group { children [
+  DEF S1 Transform { translation -1.4 0.6 0 children Shape { appearance Appearance { material USE M1 } geometry Sphere { radius 0.6 } } }
+] }
+DEF S2 Transform { translation 0 0.6 0 children Shape { appearance Appearance { material USE M2 } geometry Sphere { radius 0.6 } } }
+DEF S3 Transform { translation 1.4 0.6 0 children Shape { appearance Appearance { material USE M3 } geometry Sphere { radius 0.6 } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode r1 USE R1
+  initializeOnly SFNode r3 USE R3
+  initializeOnly SFNode m2 USE M2
+  initializeOnly SFNode m3 USE M3
+  initializeOnly SFNode g1 USE G1
+  initializeOnly SFNode s1 USE S1
+  url "javascript:
+var made = null;
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') r1 .retroreflection = 1;
+   if (k == 'b') r1 .retroreflection = 7;
+   if (k == 'c') r1 .retroreflection = -2;
+   if (k == 'd') r3 .retroreflection = 0.5;
+   if (k == 'e') r3 .retroreflectionTexture = Browser .currentScene .createNode ('PixelTexture');
+   if (k == 'f') { var p = r3 .retroreflectionTexture; p .image = new SFImage (2, 2, 1, new MFInt32 (0x20, 0xff, 0xff, 0x20)); }
+   if (k == 'g') r3 .retroreflectionTextureMapping = 'nothing';
+   if (k == 'h') { made = Browser .currentScene .createNode ('RetroreflectionMaterialExtension'); made .retroreflection = 1; m2 .extensions = new MFNode (made); }
+   if (k == 'i') made .retroreflection = 0.3;
+   if (k == 'j') m3 .extensions = new MFNode ();
+   if (k == 'k') g1 .removeChildren = new MFNode (s1);
+   if (k == 'l') g1 .addChildren = new MFNode (s1);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

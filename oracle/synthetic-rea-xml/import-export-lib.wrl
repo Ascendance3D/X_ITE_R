@@ -1,0 +1,8 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT Networking:3
+DEF LibBox Transform { children [ Shape { geometry Box { size 1 2 3 } } ] }
+DEF LibScript Script { field SFString name "lib" }
+EXPORT LibBox
+EXPORT LibScript AS PublicScript

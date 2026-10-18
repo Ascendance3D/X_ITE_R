@@ -1,0 +1,28 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing:4
+COMPONENT TextureProjection:2
+COMPONENT CubeMapTexturing:3
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Lighting:3
+COMPONENT EnvironmentalEffects:4
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Picking:3
+Viewpoint { position 0 0 14 }
+Background { skyColor [ 0.1 0.1 0.1 ] }
+Transform { translation -3 2 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 } } geometry Sphere { radius 1 } } }
+Transform { translation 0 2.5 -3 rotation 1 1 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Box { size 1.6 1.6 1.6 } } }
+Transform { translation 3 2 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.4 0.9 } } geometry Cone { bottomRadius 1 height 2 } } }
+DEF RT RenderedTexture { width 128 height 128 children [ Viewpoint { position 0 0 5 } Background { skyColor [ 0.3 0.1 0.1 ] } Transform { rotation 0 1 0 0.6 children [ Shape { appearance Appearance { material Material { diffuseColor 1 0.8 0.2 } } geometry Box { size 1.2 1.2 1.2 } } Transform { translation 1.6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 1 } } geometry Sphere { radius 0.6 } } } ] } ] }
+Transform { translation -4.5 -2.2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture MultiTexture { mode [ "MODULATE" "ADD" ] texture [ USE RT PixelTexture { image 2 2 3 0x202020 0x404040 0x404040 0x202020 } ] }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1.3 -1.3 0, 1.3 -1.3 0, 1.3 1.3 0, -1.3 1.3 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -1.5 -2.2 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0.6 baseTexture USE RT } texture USE RT  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1.3 -1.3 0, 1.3 -1.3 0, 1.3 1.3 0, -1.3 1.3 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+TextureProjector { location 1.5 -2.2 4 direction 0 0 -1 upVector 0 1 0 fieldOfView 0.5 texture USE RT }
+Transform { translation 1.5 -2.2 -0.5 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } } geometry Box { size 2.6 2.6 0.2 } } }
+Transform { translation 4.5 -2.2 0 children Shape { appearance Appearance { material Material { diffuseColor 0 0 0 specularColor 0.2 0.2 0.2 } texture GeneratedCubeMapTexture { update "ALWAYS" size 64 } } geometry Sphere { radius 1.2 } } }
+DEF PG PickableGroup { children [ Transform { translation 4.5 2.2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture USE RT  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.75 -0.75 0, 0.75 -0.75 0, 0.75 0.75 0, -0.75 0.75 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } } ] }
+LayerSet { order [ 0 1 2 ] layers [
+  Layer { viewport Viewport { clipBoundary [ 0.7 1 0.7 1 ] } children [ Viewpoint { position 0 0 5 } Background { skyColor [ 0.2 0.2 0.2 ] } Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture RenderedTexture { width 64 height 64 }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1.3 -1.3 0, 1.3 -1.3 0, 1.3 1.3 0, -1.3 1.3 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } } Transform { translation 0 0 -2 children Shape { appearance Appearance { material Material { diffuseColor 1 0 1 } } geometry Sphere { } } } ] }
+  LayoutLayer { layout Layout { size [ 0.25 0.25 ] sizeUnits [ "FRACTION" "FRACTION" ] align [ "LEFT" "TOP" ] } children [ Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture USE RT } geometry Rectangle2D { size 0.25 0.25 } } ] }
+] }

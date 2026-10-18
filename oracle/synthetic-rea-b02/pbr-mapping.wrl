@@ -1,0 +1,24 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Scripting:1
+COMPONENT PointingDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+SpotLight { location -2.5 2 3 direction 0.6 -0.5 -0.6 intensity 3 cutOffAngle 0.6 beamWidth 0.3 radius 15 color 1 0.7 0.5 }
+
+Transform { translation -1.2 0 0 children Shape { appearance Appearance { material PhysicalMaterial { metallic 0 roughness 0.5
+  baseTexture ImageTexture { url "pbr/base.png" } baseTextureMapping "big"
+  normalTexture ImageTexture { url "pbr/normal.png" } normalTextureMapping "small" }
+  textureTransform MultiTextureTransform { textureTransform [ TextureTransform { mapping "small" scale 3 3 } TextureTransform { mapping "big" scale 0.5 0.5 } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1 -1 0, 1 -1 0, 1 1 0, -1 1 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    texCoord MultiTextureCoordinate { texCoord [ TextureCoordinate { mapping "small" point [ 0 0, 1 0, 1 1, 0 1 ] } TextureCoordinate { mapping "big" point [ 0 0, 2 0, 2 2, 0 2 ] } ] } } } }
+Transform { translation 1.2 0 0 children Shape { appearance Appearance { material PhysicalMaterial { metallic 0 roughness 0.5 baseColor 1 0.4 0.4 }
+  backMaterial PhysicalMaterial { metallic 1 roughness 0.2 baseColor 0.4 0.8 1 } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0.6, 0.9 0.9 0, -0.9 0.9 -0.6 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+

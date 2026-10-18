@@ -1,0 +1,43 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Scripting:1
+COMPONENT PointingDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+SpotLight { location -2.5 2 3 direction 0.6 -0.5 -0.6 intensity 3 cutOffAngle 0.6 beamWidth 0.3 radius 15 color 1 0.7 0.5 }
+NavigationInfo { type "NONE" }
+DEF TS TouchSensor { }
+DEF ENV EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "pbr/env.png" } }
+DEF MAT PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.2 baseTexture ImageTexture { url "pbr/base.png" } normalTexture ImageTexture { url "pbr/normal.png" } }
+DEF SGM SpecularGlossinessMaterial { diffuseColor 0.4 0.5 0.9 specularColor 0.5 0.5 0.5 glossiness 0.9 }
+Transform { translation 0 0 0 children Shape { appearance Appearance { material USE MAT } geometry Sphere { radius 1.2 } } }
+Transform { translation -2.2 0 0 children Shape { appearance Appearance { material USE SGM } geometry Sphere { radius 0.8 } } }
+Transform { translation 2.2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 } texture ImageTexture { url "pbr/base.png" } } geometry Box { size 1.2 1.2 1.2 } } }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFTime touch
+  initializeOnly SFNode mat USE MAT
+  initializeOnly SFNode sgm USE SGM
+  initializeOnly SFNode env USE ENV
+  initializeOnly SFNode other ImageTexture { url "pbr/base-alpha.png" }
+  initializeOnly SFNode composed ComposedCubeMapTexture { frontTexture ImageTexture { url "pbr/env-front.png" } backTexture ImageTexture { url "pbr/env-back.png" } leftTexture ImageTexture { url "pbr/env-left.png" } rightTexture ImageTexture { url "pbr/env-right.png" } topTexture ImageTexture { url "pbr/env-top.png" } bottomTexture ImageTexture { url "pbr/env-bottom.png" } }
+  inputOutput SFInt32 step 0
+  url "javascript:
+function touch (value)
+{
+   step = step + 1;
+
+   if (step == 1) { mat .metallic = 0.2; mat .roughness = 0.7; mat .baseColor = new SFColor (0.4, 0.9, 0.5); env .intensity = 0.4; env .rotation = new SFRotation (0, 1, 0, 1.5); }
+   if (step == 2) { mat .baseTexture = other; mat .normalScale = 0.3; sgm .glossiness = 0.2; Browser .setBrowserOption ('ToneMapping', 'ACES_NARKOWICZ'); }
+   if (step == 3) { env .specularTexture = composed; env .intensity = 1.2; Browser .setBrowserOption ('Exposure', 0.7); }
+   if (step == 4) { env .on = false; mat .emissiveColor = new SFColor (0.2, 0, 0.3); Browser .setBrowserOption ('ColorSpace', 'LINEAR'); }
+}
+"
+}
+ROUTE TS.touchTime TO S.touch

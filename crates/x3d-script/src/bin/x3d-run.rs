@@ -1,4 +1,5 @@
-//! x3d-run dump <file> [--oracle <dir>] [--no-scripts]    print scene.toVRMLString () after load
+//! x3d-run dump <file> [--oracle <dir>] [--no-scripts] [--format vrml|xml|json]
+//!                                                         print scene.toVRMLString () (or XML / JSON) after load
 //! x3d-run compare <baseline.json> <corpus-dir> [--known <tsv>] [--out <dir>] [--no-scripts] [--logs]
 //!
 //! The corpus directory must sit directly inside the oracle directory (served as http://oracle/).
@@ -6,7 +7,7 @@
 use std::collections::HashMap;
 use std::path::Path;
 use std::process::ExitCode;
-use x3d_script::compare::{Outcome, compare_corpus, run_world};
+use x3d_script::compare::{DumpFormat, Outcome, compare_corpus, run_world_as};
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
@@ -18,7 +19,12 @@ fn main() -> ExitCode {
         Some("dump") if args.len() >= 3 => {
             let file = std::fs::canonicalize(&args[2]).expect("file");
             let oracle = opt("--oracle").map(|o| std::fs::canonicalize(o).unwrap()).unwrap_or_else(|| file.parent().unwrap().parent().unwrap().to_path_buf());
-            let r = std::thread::Builder::new().stack_size(64 << 20).spawn(move || run_world(&oracle, &file, scripts)).unwrap().join().unwrap();
+            let format = match opt("--format").as_deref() {
+                Some("xml") => DumpFormat::Xml,
+                Some("json") => DumpFormat::Json,
+                _ => DumpFormat::Vrml,
+            };
+            let r = std::thread::Builder::new().stack_size(64 << 20).spawn(move || run_world_as(&oracle, &file, scripts, format)).unwrap().join().unwrap();
 
             if flag("--log") {
                 for l in &r.log {
@@ -39,7 +45,7 @@ fn main() -> ExitCode {
         }
         Some("compare") if args.len() >= 4 => compare(&args[2], &args[3], opt("--known"), opt("--out"), scripts, flag("--logs")),
         _ => {
-            eprintln!("usage: x3d-run dump <file> [--oracle <dir>] [--no-scripts] [--log]\n       x3d-run compare <baseline.json> <corpus-dir> [--known <tsv>] [--out <dir>] [--no-scripts] [--logs]");
+            eprintln!("usage: x3d-run dump <file> [--oracle <dir>] [--no-scripts] [--log] [--format vrml|xml|json]\n       x3d-run compare <baseline.json> <corpus-dir> [--known <tsv>] [--out <dir>] [--no-scripts] [--logs]");
             ExitCode::from(2)
         }
     }

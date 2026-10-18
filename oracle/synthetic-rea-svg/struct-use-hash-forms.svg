@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<rect id="sp" width="10" height="10"/><use href="#sp" x="20"/><use href="  #sp" x="40"/><use href="foo.svg#sp" x="60"/><use href="#sp#x" x="80"/><use href="#SP" x="100"/>
+</svg>
