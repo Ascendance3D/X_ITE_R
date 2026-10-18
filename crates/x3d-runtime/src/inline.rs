@@ -74,7 +74,22 @@ const COMPLETE: i32 = 2;
 const FAILED: i32 = 3;
 
 impl Runtime {
+    /// Inline and InlineGeometry: both ask a FileLoader for an X3DScene (`createX3DFromURL`) and keep it as their
+    /// internal scene.
+    pub(crate) fn is_scene_loader(&self, node: NodeId) -> bool {
+        matches!(self.builtin_name(node), Some("Inline" | "InlineGeometry"))
+    }
+
     /// The X3DUrlObject load state of a node.
+    /// The url an ImageTexture shows: `Some (url of the last load request)`, `Some ([])` before
+    /// any request, `None` for a node without url object state (then its field is used).
+    pub fn texture_url(&self, node: NodeId) -> Option<Vec<String>> {
+        match self.nrt(node).map(|n| &n.state) {
+            Some(nodes::State::UrlObject(s)) => Some(s.requested_url.clone().unwrap_or_default()),
+            _ => None,
+        }
+    }
+
     pub fn url_load_state(&self, node: NodeId) -> LoadState {
         match self.nrt(node).map(|n| &n.state) {
             Some(nodes::State::UrlObject(s)) => s.load_state,
@@ -92,10 +107,7 @@ impl Runtime {
             _ => return,
         }
 
-        if self.builtin_name(node) != Some("Inline") {
-            return;
-        }
-
+        // `this ._loadState = value` of every X3DUrlObject.
         if let Some(k) = self.private_field(node, "loadState") {
             let value = match state {
                 LoadState::NotStarted => NOT_STARTED,
@@ -105,6 +117,20 @@ impl Runtime {
             };
 
             self.set_value(k, FieldValue::SFInt32(value));
+        }
+
+        // BufferAudioSource: X3DUrlObject.setLoadState restarts the auto refresh timer after
+        // COMPLETE and after FAILED.
+        if self.builtin_name(node) == Some("BufferAudioSource") {
+            if matches!(state, LoadState::Complete | LoadState::Failed) {
+                self.inline_auto_refresh_complete(node);
+            }
+
+            return;
+        }
+
+        if !self.is_scene_loader(node) {
+            return;
         }
 
         // X3DUrlObject.setLoadState: COMPLETE restarts the auto refresh timer. X_ITE does so after
@@ -140,7 +166,7 @@ impl Runtime {
 
         let inlines = (0..self.scene.nodes.len() as NodeId)
             .filter(|&n| {
-                self.builtin_name(n) == Some("Inline")
+                self.is_scene_loader(n)
                     && self.url_load_state(n) == LoadState::InProgress
                     && self.scene.scene_root(self.scene.node(n).ctx) == root
             })
@@ -156,7 +182,19 @@ impl Runtime {
         self.interest(node, "load", Cb::UrlSetLoad);
         self.interest(node, "url", Cb::UrlSetUrl);
 
-        if self.builtin_name(node) == Some("Inline") {
+        if self.builtin_name(node) == Some("InlineGeometry") {
+            self.interest(node, "solid", Cb::InlineGeometrySolid);
+            self.interest(node, "smooth", Cb::InlineGeometrySmooth);
+        }
+
+        // FontLibrary buffers its requests like an Inline (`_loadData`), but has no auto refresh timer here.
+        if self.builtin_name(node) == Some("FontLibrary") {
+            if let Some(k) = self.private_field(node, "loadData") {
+                self.add_interest(k, node, Cb::UrlLoadData);
+            }
+        }
+
+        if self.is_scene_loader(node) {
             if let Some(k) = self.private_field(node, "loadData") {
                 self.add_interest(k, node, Cb::UrlLoadData);
             }
@@ -174,7 +212,19 @@ impl Runtime {
             return;
         }
 
-        if self.url_state_missing(node) {
+        let script = self.builtin_name(node) == Some("Script");
+
+        if self.url_state_missing(node) && !script {
+            return;
+        }
+
+        // A Script of a disposed scene takes no more loads.
+        if script && matches!(self.nrt(node).map(|n| &n.state), Some(nodes::State::Script(s)) if s.closed) {
+            return;
+        }
+
+        // `if (!browser .getBrowserOption ("LoadUrlObjects") && …) return;` (no private scene here).
+        if !self.browser_options.load_url_objects() {
             return;
         }
 
@@ -189,9 +239,15 @@ impl Runtime {
 
         self.set_load_state(node, LoadState::InProgress);
 
+        let urls = self.url_strings(node);
+
+        if let nodes::State::UrlObject(st) = &mut self.nrt_mut(node).state {
+            st.requested_url = Some(urls);
+        }
+
         // `if (this .isInitialized ()) this ._loadData = time; else this .loadData ()`: the field
         // event is the buffer that makes several requests before it is processed one load.
-        if self.builtin_name(node) == Some("Inline") && self.nrt(node).is_some_and(|n| n.initialized) {
+        if matches!(self.builtin_name(node), Some("Inline" | "InlineGeometry" | "FontLibrary" | "Script" | "BufferAudioSource")) && self.nrt(node).is_some_and(|n| n.initialized) {
             if let Some(k) = self.private_field(node, "loadData") {
                 let t = self.now;
                 self.set_value(k, FieldValue::SFTime(t));
@@ -216,7 +272,12 @@ impl Runtime {
     /// Inline.loadData: `this .fileLoader ?.abort ()`, then a new FileLoader whose fetch is a macrotask.
     /// Only an Inline has a request identity; the other nodes that fetch keep generation 0.
     fn url_start_load(&mut self, node: NodeId) {
-        let generation = if self.builtin_name(node) == Some("Inline") { self.inline_abort(node) } else { 0 };
+        let generation = if self.is_scene_loader(node) { self.inline_abort(node) } else { 0 };
+
+        // BufferAudioSource.loadData: `this .setMediaElement (null)`, then the FileLoader.
+        if self.builtin_name(node) == Some("BufferAudioSource") {
+            self.buffer_load_start(node);
+        }
 
         self.tasks.push_back(Task::UrlLoad(node, generation));
     }
@@ -266,9 +327,28 @@ impl Runtime {
     /// `unloadData ()`: an Inline aborts its request and replaces its scene by the browser's empty
     /// default scene.
     fn unload_data(&mut self, node: NodeId) {
-        if self.builtin_name(node) == Some("Inline") {
-            self.inline_abort(node);
-            self.set_internal_scene(node, SceneArg::Default);
+        match self.builtin_name(node) {
+            Some("Inline") => {
+                self.inline_abort(node);
+                self.set_internal_scene(node, SceneArg::Default);
+            }
+            // InlineGeometry.unloadData: `fileLoader ?.abort ()`, `unlockGeometry ()`, `setInternalScene (null)`.
+            Some("InlineGeometry") => {
+                self.inline_abort(node);
+                self.set_internal_scene(node, SceneArg::None);
+            }
+            Some("Script") => self.script_unload_data(node),
+            Some("BufferAudioSource") => self.buffer_unload_data(node),
+            // ImageTexture.unloadData: clearTexture (an image still decoding is dropped).
+            Some("ImageTexture") => {
+                self.decoded_images.retain(|(n, ..)| *n != node);
+                self.set_texture_2d_size(node, 1, 1)
+            }
+            // ImageTextureAtlas.unloadData: clearTexture, updateOutputs (0, 0, 0, 0).
+            Some("ImageTextureAtlas") => self.image_texture_atlas_clear(node),
+            // ImageTexture3D.unloadData: clearTexture, updateOutputs (0, 0, 0, 0).
+            Some("ImageTexture3D") => self.image_texture_3d_clear(node),
+            _ => {}
         }
     }
 
@@ -304,7 +384,11 @@ impl Runtime {
             Cb::UrlLoadData => {
                 // A request that was cancelled before its event was processed (`load` FALSE) loads nothing.
                 if self.url_load_state(node) == LoadState::InProgress {
-                    self.url_start_load(node);
+                    if self.builtin_name(node) == Some("Script") {
+                        self.script_load_data(node);
+                    } else {
+                        self.url_start_load(node);
+                    }
                 }
             }
             Cb::UrlSetAutoRefresh => self.inline_auto_refresh_changed(node),
@@ -314,7 +398,7 @@ impl Runtime {
 
     /// Inline.loadData → FileLoader.createX3DFromURL (url, null, setInternalScene).
     pub(crate) fn inline_load(&mut self, node: NodeId, generation: u64) {
-        let loader = FileLoader { type_name: "Inline".into(), base: self.base_url(node), data_as_string: true };
+        let loader = FileLoader { type_name: self.type_name(node), base: self.base_url(node), data_as_string: true };
         let urls = self.url_strings(node);
 
         let ok = self.load_document(&loader, &urls, |rt, loaded| match loaded {
@@ -328,6 +412,17 @@ impl Runtime {
         }
     }
 
+    /// SVGParser reads the PrimitiveQuality and TextureQuality browser options when it is constructed.
+    pub(crate) fn sync_svg_quality(&self) {
+        let quality = |name: &str| match self.browser_options.get_option(name).map(|v| v.as_str()) {
+            Some("LOW") => x3d_parse::SvgQuality::Low,
+            Some("HIGH") => x3d_parse::SvgQuality::High,
+            _ => x3d_parse::SvgQuality::Medium,
+        };
+
+        x3d_parse::set_svg_quality(quality("PrimitiveQuality"), quality("TextureQuality"));
+    }
+
     /// FileLoader.createX3DFromString for an Inline: parse the scene into a new X3DScene, set up
     /// its nodes (Scripts initialize in the microtasks that follow) and wait for its loadCount.
     fn inline_scene(&mut self, node: NodeId, generation: u64, data: &[u8], url: &url::Url) -> Result<(), String> {
@@ -335,12 +430,25 @@ impl Runtime {
             return Err("Error: Cyclic Inline: the scene is already being loaded by a scene that contains this Inline.".into());
         }
 
-        let mut scene = match x3d_parse::parse_bytes(data, url.as_str()) {
+        self.sync_svg_quality();
+
+        // GLTF2Parser loads its buffers through the same fetcher as the Inline itself.
+        let parsed = crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url.as_str());
+
+        let mut scene = match parsed {
             Ok(scene) => scene,
+            // GLTF2Parser / GLB2Parser: the thrown JS error text, nothing logged before it.
+            Err(x3d_parse::LoadError::Parse(e)) if e.line == 0 && ["TypeError: ", "RangeError: ", "Error: "].iter().any(|p| e.message.starts_with(p)) => {
+                return Err(e.message);
+            }
             Err(x3d_parse::LoadError::Parse(e)) => {
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
                 self.log_error(format!("Error: {}", e.message));
                 return Err(format!("Error: \n{e}"));
+            }
+            // GoldenGate.parseIntoScene names the url of a file that no parser handles; Inline keeps the shorter text.
+            Err(x3d_parse::LoadError::NoHandler) if self.builtin_name(node) == Some("InlineGeometry") || url.path().ends_with(".gltf") || url.path().ends_with(".glb") => {
+                return Err(format!("Error: Couldn't parse X3D. No suitable file handler found for '{url}'."));
             }
             Err(e) => return Err(format!("Error: {e}")),
         };
@@ -369,6 +477,16 @@ impl Runtime {
             self.pending_scenes.retain(|p| p.ctx != root);
             self.dispose_scene(root);
             return Ok(());
+        }
+
+        // InlineGeometry.setInternalScene throws when the scene has no geometry (or no node of the url's name):
+        // FileLoader.set_loadCount__ passes it to `reject`, the error of this candidate url.
+        if self.builtin_name(node) == Some("InlineGeometry") {
+            if let Err(e) = self.inline_geometry_find(root, url) {
+                self.pending_scenes.retain(|p| p.ctx != root);
+                self.dispose_scene(root);
+                return Err(e);
+            }
         }
 
         // FileLoader.setScene: `scene ._loadCount .addEvent ()`.
@@ -516,6 +634,32 @@ impl Runtime {
             self.dispose_scene(old);
         }
 
+        // InlineGeometry.setInternalScene: the geometry of the scene, `set_solid__`, `set_smooth__`, then the state.
+        if self.builtin_name(node) == Some("InlineGeometry") {
+            self.inline_geometry_clear(node);
+
+            if let SceneArg::Scene(ctx) = scene {
+                self.inline_scenes.insert(node, ctx);
+                self.inline_live.insert(ctx, true);
+            }
+
+            let state = self.inline_geometry_state(node, scene).unwrap_or(LoadState::Failed);
+
+            // A scene without a geometry is not kept (X_ITE keeps it until the next one replaces it).
+            if let (SceneArg::Scene(ctx), LoadState::Failed) = (scene, state) {
+                self.inline_scenes.remove(&node);
+                self.dispose_scene(ctx);
+            }
+
+            self.refresh_live();
+            self.set_load_state(node, state);
+
+            // `X3DChildObject .prototype .addEvent .call (this)`: an event on every field that holds the node (the
+            // Shape's `geometry` reads its geometry again; a LoadSensor's `children` is reset).
+            self.add_node_parents_event(node);
+            return;
+        }
+
         match scene {
             SceneArg::Scene(ctx) => {
                 // scene .setExecutionContext (…); scene .setLive (true); this .set_live__ ()
@@ -561,6 +705,18 @@ impl Runtime {
         self.ctx_live(self.scene.node(node).ctx) || even
     }
 
+    /// WorldInfo.setLive: add to or remove from its execution context's worldInfos.
+    pub(crate) fn world_info_set_live(&mut self, node: NodeId, live: bool) {
+        let ctx = self.scene.node(node).ctx;
+        let list = self.world_infos.entry(ctx).or_default();
+
+        if live {
+            list.push(node);
+        } else if let Some(i) = list.iter().position(|&n| n == node) {
+            list.remove(i);
+        }
+    }
+
     /// Register a node for live changes (`this .getLive () .addInterest ("set_live__", this)`).
     pub(crate) fn watch_live(&mut self, node: NodeId) {
         let state = self.time_node_live(node);
@@ -575,7 +731,27 @@ impl Runtime {
 
             if now != last {
                 self.live_watchers[i].1 = now;
-                self.time_set_live(node, now);
+
+                if matches!(self.builtin_name(node), Some("KeySensor" | "StringSensor")) {
+                    self.key_set_live(node, now);
+                } else if self.builtin_name(node) == Some("TransformSensor") {
+                    self.transform_sensor_set_enabled(node);
+                } else if matches!(self.builtin_name(node), Some("LinePickSensor" | "PointPickSensor" | "PrimitivePickSensor" | "VolumePickSensor")) {
+                    self.pick_sensor_set_live(node);
+                } else if matches!(self.builtin_name(node), Some("AudioDestination" | "StreamAudioDestination" | "SpatialSound")) {
+                    self.sound_set_live(node);
+                } else if self.builtin_name(node) == Some("ParticleSystem") {
+                    self.particle_system_set_live(node);
+                } else if self.physics_watches_live(node) {
+                    self.physics_set_live(node);
+                } else {
+                    self.time_set_live(node, now);
+
+                    // BufferAudioSource.set_live__: X3DUrlObject.set_live__ too.
+                    if self.builtin_name(node) == Some("BufferAudioSource") {
+                        self.buffer_url_set_live(node, now);
+                    }
+                }
             }
         }
 
@@ -599,6 +775,7 @@ impl Runtime {
     ///
     /// * routes are deleted, scenes go not live;
     /// * a nested Inline cancels its request and drops the scene it has parsed (X_ITE lets it finish);
+    ///   so does an EXTERNPROTO declaration of the scene (R0.3-E);
     /// * a Script gets `shutdown ()` (VRML97 4.12.3; X_ITE has none), then stops getting
     ///   `prepareEvents`, `eventsProcessed` and field events (X_ITE keeps calling them for ever).
     pub(crate) fn dispose_scene(&mut self, root: CtxId) {
@@ -629,9 +806,17 @@ impl Runtime {
         }
 
         for &n in &nodes {
-            if self.builtin_name(n) == Some("Inline") {
+            if self.is_scene_loader(n) {
                 self.inline_close(n);
             }
+        }
+
+        // The EXTERNPROTO declarations of the disposed contexts stop loading too (R0.3-E): a scene that
+        // a late fetch would merge under a disposed context is never disposed or released.
+        let externs: Vec<ExternId> = (0..self.scene.externprotos.len()).filter(|&e| !self.scene.extern_slots.is_free(e) && inside_set.contains(&self.scene.externprotos[e].ctx)).collect();
+
+        for e in externs {
+            self.extern_close(e);
         }
 
         // Nothing refers to the scene any more, unless a live field, route or context does: the nodes
@@ -648,6 +833,23 @@ impl Runtime {
 
         self.live_watchers.retain(|(n, _)| !dead.contains(n));
         self.followers.retain(|n| !dead.contains(n));
+        self.key_sensors.retain(|n| !dead.contains(n));
+        self.transform_sensors.retain(|n| !dead.contains(n));
+        self.pick_sensors.retain(|n| !dead.contains(n));
+        self.layer_object_types.retain(|n, _| !dead.contains(n));
+        self.nurbs_scales.retain(|n, _| !dead.contains(n));
+        self.viewpoint_groups.retain(|n, _| !dead.contains(n));
+        self.hanim_humanoids.retain(|n, _| !dead.contains(n));
+        self.hanim_poses.retain(|n, _| !dead.contains(n));
+        self.hanim_motions.retain(|n, _| !dead.contains(n));
+        self.nurbs_set_members.retain(|n, _| !dead.contains(n));
+        for members in self.nurbs_set_members.values_mut() {
+            members.retain(|n| !dead.contains(n));
+        }
+        for list in self.world_infos.values_mut() {
+            list.retain(|n| !dead.contains(n));
+        }
+        self.world_infos.retain(|_, list| !list.is_empty());
     }
 
     /// The world is unloaded (or replaced by another one): every Script in it gets `shutdown ()`
@@ -700,6 +902,8 @@ impl Runtime {
             self.dispose_scene(c);
         }
 
+        self.inline_geometry_clear(node);
+
         if self.url_load_state(node) == LoadState::InProgress {
             self.set_load_state(node, LoadState::NotStarted);
         }
@@ -734,6 +938,11 @@ impl Runtime {
         }
     }
 
+    /// X3DUrlObject.set_autoRefresh__ of a BufferAudioSource (its set_live__).
+    pub(crate) fn url_set_auto_refresh(&mut self, node: NodeId) {
+        self.inline_auto_refresh_changed(node);
+    }
+
     /// X3DUrlObject.set_autoRefresh__ (`autoRefresh` or `autoRefreshTimeLimit` was set).
     fn inline_auto_refresh_changed(&mut self, node: NodeId) {
         if self.url_load_state(node) != LoadState::Complete {
@@ -754,7 +963,7 @@ impl Runtime {
     pub(crate) fn inline_next_timer(&self, now: f64) -> Option<(f64, NodeId)> {
         (0..self.scene.nodes.len() as NodeId)
             .filter_map(|n| match self.nrt(n).map(|r| &r.state) {
-                Some(nodes::State::UrlObject(s)) if self.builtin_name(n) == Some("Inline") => s.timer.map(|due| (due, n)),
+                Some(nodes::State::UrlObject(s)) if matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry" | "BufferAudioSource")) => s.timer.map(|due| (due, n)),
                 _ => None,
             })
             .filter(|(due, _)| *due <= now * 1000.0)
@@ -798,7 +1007,7 @@ impl Runtime {
         InlineDiagnostics {
             pending_scenes: self.pending_scenes.len(),
             frame_waiters: self.frame_waiters.len(),
-            in_progress: (0..self.scene.nodes.len() as NodeId).filter(|&n| self.builtin_name(n) == Some("Inline") && self.url_load_state(n) == LoadState::InProgress).count(),
+            in_progress: (0..self.scene.nodes.len() as NodeId).filter(|&n| self.is_scene_loader(n) && self.url_load_state(n) == LoadState::InProgress).count(),
             live_scenes: live.len(),
             orphan_live_scenes: live.iter().filter(|c| !shown.contains(c)).count(),
             timers: (0..self.scene.nodes.len() as NodeId).filter(|&n| matches!(self.nrt(n).map(|r| &r.state), Some(nodes::State::UrlObject(s)) if s.timer.is_some())).count(),

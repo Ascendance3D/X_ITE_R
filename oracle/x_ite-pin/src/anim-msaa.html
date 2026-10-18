@@ -15,6 +15,11 @@
 <script src="../node_modules/libtess/libtess.cat.js"></script>
 <script src="../node_modules/@create3000/libgif/libgif.js"></script>
 <script src="../node_modules/apng-js/lib/index.js"></script>
+<!-- Texturing3D (DICOM) libraries, as upstream x_ite.html loads them (REA batch 02). -->
+<script src="../node_modules/CharLS.js/dist/charLS-DynamicMemory-browser.js"></script>
+<script src="../node_modules/dicom-parser/dist/dicomParser.js"></script>
+<script src="../node_modules/jpeg-js/lib/decoder.js"></script>
+<script src="../node_modules/OpenJPEG.js/dist/openJPEG-DynamicMemory-browser.js"></script>
 <script>
 // Canvas size from ?w=&h= (default 512x512, as anim.html).
 { const q = new URLSearchParams (location .search), w = +q .get ("w") || 512, h = +q .get ("h") || 512, aa = q .get ("aa") === "1", ms = q .get ("ms");
@@ -27,6 +32,14 @@ await import ("./x_ite.js");
 
 const canvasElement = document .getElementById ("c");
 const browser       = canvasElement .browser;
+
+// REA batch 04 (oracle pages only, not X_ITE source): X_ITE 16.5.0 ships the Annotation component
+// classes (assets/components/AnnotationComponent.js) but leaves their registration commented out in
+// Configuration/SupportedComponents.js. Register the component with those commented values so the
+// dormant classes serve as the reference for the Rust Annotation nodes. No world of the existing
+// corpora names the component, so no earlier baseline depends on its absence.
+browser .addSupportedComponent ({ name: "Annotation", title: "Annotation", level: 2, external: true,
+   providerURL: new URL ("assets/components/AnnotationComponent.js", location .href) .href, dependencies: [ ] });
 const X3D           = window [Symbol .for ("X_ITE.X3D")];
 const traverse      = browser [Symbol .for ("X_ITE.X3DBrowserContext.traverse")];
 const realDateNow   = Date .now .bind (Date);

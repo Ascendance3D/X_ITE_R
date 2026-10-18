@@ -68,7 +68,7 @@ fn functional(s: &str) -> Option<[f64; 4]> {
 
     let channel = |a: &str| -> Option<f64> {
         match a.strip_suffix('%') {
-            Some(p) => Some((p.parse::<f64>().ok()? * 2.55).clamp(0.0, 255.0)),
+            Some(p) => Some((p.parse::<f64>().ok()? / 100.0 * 255.0).clamp(0.0, 255.0)),
             None => Some(a.parse::<f64>().ok()?.clamp(0.0, 255.0)),
         }
     };
@@ -89,48 +89,75 @@ fn functional(s: &str) -> Option<[f64; 4]> {
             Some(rgb(r, g, b, alpha(args.get(3))?))
         }
         "hsl" | "hsla" if args.len() == 3 || args.len() == 4 => {
-            let h = args[0].trim_end_matches("deg").parse::<f64>().ok()?.rem_euclid(360.0) / 360.0;
+            // Angle units of CSS Color 4: deg (default), grad, rad, turn.
+            let h = if let Some(v) = args[0].strip_suffix("deg") {
+                v.parse::<f64>().ok()?
+            } else if let Some(v) = args[0].strip_suffix("grad") {
+                v.parse::<f64>().ok()? * 0.9
+            } else if let Some(v) = args[0].strip_suffix("rad") {
+                v.parse::<f64>().ok()? * 180.0 / std::f64::consts::PI
+            } else if let Some(v) = args[0].strip_suffix("turn") {
+                v.parse::<f64>().ok()? * 360.0
+            } else {
+                args[0].parse::<f64>().ok()?
+            };
             let s = (args[1].strip_suffix('%')?.parse::<f64>().ok()? / 100.0).clamp(0.0, 1.0);
             let l = (args[2].strip_suffix('%')?.parse::<f64>().ok()? / 100.0).clamp(0.0, 1.0);
-            let q = if l < 0.5 { l * (1.0 + s) } else { l + s - l * s };
-            let p = 2.0 * l - q;
-            let f = |t: f64| {
-                let t = t.rem_euclid(1.0);
-                let v = if t < 1.0 / 6.0 {
-                    p + (q - p) * 6.0 * t
-                } else if t < 0.5 {
-                    q
-                } else if t < 2.0 / 3.0 {
-                    p + (q - p) * (2.0 / 3.0 - t) * 6.0
+
+            // CSS Color 4 hue-to-rgb with the hue in sixths. Blink keeps the channel as a 32-bit
+            // float and scales it in 32-bit before rounding: `f32` cast first, then `* 255`.
+            let hue = h.rem_euclid(360.0) / 60.0;
+            let t2 = if l <= 0.5 { l * (s + 1.0) } else { l + s - l * s };
+            let t1 = l * 2.0 - t2;
+            let f = |mut hv: f64| {
+                if hv < 0.0 {
+                    hv += 6.0;
+                }
+
+                if hv >= 6.0 {
+                    hv -= 6.0;
+                }
+
+                let v = if hv < 1.0 {
+                    (t2 - t1) * hv + t1
+                } else if hv < 3.0 {
+                    t2
+                } else if hv < 4.0 {
+                    (t2 - t1) * (4.0 - hv) + t1
                 } else {
-                    p
+                    t1
                 };
-                (v * 255.0).round()
+
+                ((v as f32 * 255.0f32) as f64 + 0.5).floor()
             };
-            Some(rgb(f(h + 1.0 / 3.0), f(h), f(h - 1.0 / 3.0), alpha(args.get(3))?))
+
+            Some(rgb(f(hue + 2.0), f(hue), f(hue - 2.0), alpha(args.get(3))?))
         }
         _ => None,
     }
 }
 
-/// Returns `[r, g, b, a]` in [0, 1] like X3DParser.convertColor.
-pub fn convert_color(value: &str) -> [f64; 4] {
+/// The computed color of `value` as a CSS parser would give it, or `None` where the browser
+/// ignores the declaration (an invalid color keeps the wrapper's color, see `convert_color`).
+pub fn try_convert_color(value: &str) -> Option<[f64; 4]> {
     let lower = value.to_ascii_lowercase();
 
     if lower == "transparent" {
-        return [0.0, 0.0, 0.0, 0.0];
+        return Some([0.0, 0.0, 0.0, 0.0]);
     }
 
     if let Some(h) = lower.strip_prefix('#') {
-        return hex(h).unwrap_or(WHITE);
+        return hex(h);
     }
 
     if lower.ends_with(')') {
-        return functional(&lower).unwrap_or(WHITE);
+        return functional(&lower);
     }
 
-    match NAMED.iter().find(|(n, _)| *n == lower) {
-        Some((_, c)) => rgb(((c >> 16) & 0xff) as f64, ((c >> 8) & 0xff) as f64, (c & 0xff) as f64, 1.0),
-        None => WHITE,
-    }
+    NAMED.iter().find(|(n, _)| *n == lower).map(|(_, c)| rgb(((c >> 16) & 0xff) as f64, ((c >> 8) & 0xff) as f64, (c & 0xff) as f64, 1.0))
+}
+
+/// Returns `[r, g, b, a]` in [0, 1] like X3DParser.convertColor.
+pub fn convert_color(value: &str) -> [f64; 4] {
+    try_convert_color(value).unwrap_or(WHITE)
 }

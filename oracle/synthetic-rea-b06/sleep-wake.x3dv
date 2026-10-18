@@ -1,0 +1,24 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { bodies [ DEF F RigidBody { position 0 0 0 fixed TRUE geometry DEF F_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } }
+  DEF B RigidBody { mass 1 position 0 1.2 0 autoDisable TRUE disableTime 0.5 disableLinearSpeed 0.5 disableAngularSpeed 0.5 geometry DEF B_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } }
+  DEF B2 RigidBody { mass 1 position 3 1.2 0 autoDisable FALSE disableTime 0.5 disableLinearSpeed 0.5 disableAngularSpeed 0.5 geometry DEF B2_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ] }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF SC Script {
+  inputOnly SFTime tick
+  outputOnly SFVec3f lv
+  initializeOnly SFFloat s0 -1
+  url "ecmascript:
+var done = [ ];
+function tick (v)
+{
+  if (s0 < 0) s0 = v;
+  var f = Math .round ((v - s0) * 60);
+  if (f >= 240 && !done[0]) { done[0] = true; lv = new SFVec3f (2, 5, 0); }
+}
+"
+}
+ROUTE TS.time TO SC.tick
+ROUTE SC.lv TO B.set_linearVelocity

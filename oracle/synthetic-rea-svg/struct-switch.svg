@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<switch><rect width="30" height="30" fill="red"/><circle cx="60" cy="15" r="15" fill="blue"/></switch><switch transform="translate(0 50)"><rect width="30" height="30" fill="green"/></switch>
+</svg>

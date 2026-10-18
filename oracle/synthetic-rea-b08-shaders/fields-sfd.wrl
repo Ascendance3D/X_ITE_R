@@ -1,0 +1,51 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight FALSE }
+Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }   shaders [ ComposedShader { language "GLSL"  field SFDouble d 0.3
+      field SFTime t 2
+      field SFVec2d v2 0.3 0.6
+      field SFVec3d v3 0.4 0.1 0.2
+      field SFVec4d v4 0.3 0.5 0.1 1
+      field SFMatrix3d m3 0.5 0 0 0 1 0 0 0 1.5
+      field SFMatrix4d m4 1 0 0 0 0 1 0 0 0 0 1 0 0.1 0.1 0.1 1 parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+uniform float d;
+uniform float t;
+uniform vec2 v2;
+uniform vec3 v3;
+uniform vec4 v4;
+uniform mat3 m3;
+uniform mat4 m4;
+void main()
+{
+vec3 c = vec3 (d, t / 4.0, 0.2) + vec3 (v2, 0.0) * 0.4 + v3 * 0.3 + v4.xyz * 0.2;
+   c += (m3 * vec3 (0.2, 0.0, 0.5)).zxy * 0.3 + (m4 * vec4 (0.5, 0.1, 0.2, 1.0)).xyz * 0.2;
+   gl_FragColor = vec4 (c, 1.0);
+}
+" } ] } ] } geometry Sphere { radius 1.3 } }

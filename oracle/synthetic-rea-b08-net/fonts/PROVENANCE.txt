@@ -1,0 +1,13 @@
+Fonts for the FontLibrary worlds of REA batch 08, lane net. Freely licensed, taken from the pinned X_ITE checkout.
+
+PTSans-Regular.woff2 / PTSans-Regular.ttf / PTSans-Regular.woff / PTSans-Bold.ttf
+  Source: oracle/x_ite-pin/src/assets/fonts/PT_Sans (the woff2 files X_ITE ships).
+  Font: PT Sans by ParaType. License: SIL Open Font License 1.1.
+  The .ttf and .woff files were made from the shipped woff2 files with fontTools (same outlines); the .woff2 is the shipped file.
+
+DroidSerif-Italic.ttf
+  Source: oracle/x_ite-pin/src/assets/fonts/Droid (the shipped woff2, converted to ttf with fontTools).
+  Font: Droid Serif by Steve Matteson (Ascender / Google). License: Apache License 2.0.
+
+notfont.ttf
+  Eleven bytes of plain text. Authored for this lane. Not a font: opentype.js rejects it with "Unsupported OpenType signature".

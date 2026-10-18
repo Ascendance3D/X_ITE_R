@@ -1,0 +1,4 @@
+gs-runtime oracle/synthetic-rea-b08-gs/gs-runtime.wrl oracle/synthetic-rea-b08-gs/gs-runtime.json 0
+gs-runtime oracle/synthetic-rea-b08-gs/gs-runtime.wrl oracle/synthetic-rea-b08-gs/gs-runtime.json 4
+gs-route oracle/synthetic-rea-b08-gs/gs-route.wrl oracle/synthetic-rea-b08-gs/gs-route.json 0
+gs-route oracle/synthetic-rea-b08-gs/gs-route.wrl oracle/synthetic-rea-b08-gs/gs-route.json 4

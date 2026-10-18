@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        9
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Texturing : 3\n\nViewpoint {\n  position 0 0 9\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nBackground {\n  skyColor 0.1 0.1 0.1\n}\n\nDEF Q IndexedFaceSet {\n  texCoordIndex [\n    0,\n    1,\n    2,\n    3,\n    -1\n  ]\n  coordIndex [\n    0,\n    1,\n    2,\n    3,\n    -1\n  ]\n  texCoord TextureCoordinate {\n    point [\n      0 0,\n      1 0,\n      1 1,\n      0 1\n    ]\n  }\n  coord Coordinate {\n    point [\n      -1 -1 0,\n      1 -1 0,\n      1 1 0,\n      -1 1 0\n    ]\n  }\n}\n\nTransform {\n  translation -3 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker8.png\"\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation -0.9 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker8.png\"\n        textureProperties TextureProperties {\n          minificationFilter \"FASTEST\"\n          magnificationFilter \"FASTEST\"\n          textureCompression \"FASTEST\"\n        }\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation 1.2 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker64.png\"\n        textureProperties TextureProperties {\n          minificationFilter \"FASTEST\"\n          magnificationFilter \"NEAREST_PIXEL\"\n          textureCompression \"FASTEST\"\n        }\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation 3.3 2.2 0\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker64.png\"\n        textureProperties TextureProperties {\n          minificationFilter \"FASTEST\"\n          magnificationFilter \"FASTEST\"\n          boundaryModeS \"CLAMP_TO_EDGE\"\n          boundaryModeT \"MIRRORED_REPEAT\"\n          textureCompression \"FASTEST\"\n        }\n      }\n      textureTransform TextureTransform {\n        scale 3 3\n        center 0.5 0.5\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation -1.8 -0.6 -2\n  rotation 1 0 0 -1.35\n  scale 1.6 3 1\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker64.png\"\n        textureProperties TextureProperties {\n          generateMipMaps TRUE\n          minificationFilter \"AVG_PIXEL_AVG_MIPMAP\"\n          magnificationFilter \"FASTEST\"\n          textureCompression \"FASTEST\"\n        }\n      }\n      textureTransform TextureTransform {\n        scale 6 6\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation 1.8 -0.6 -2\n  rotation 1 0 0 -1.35\n  scale 1.6 3 1\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker64.png\"\n        textureProperties TextureProperties {\n          generateMipMaps TRUE\n          minificationFilter \"NICEST\"\n          magnificationFilter \"FASTEST\"\n          textureCompression \"FASTEST\"\n        }\n      }\n      textureTransform TextureTransform {\n        scale 6 6\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation -3 -2.8 0\n  scale 0.6 0.6 1\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker64.png\"\n        textureProperties TextureProperties {\n          generateMipMaps TRUE\n          minificationFilter \"NEAREST_PIXEL_NEAREST_MIPMAP\"\n          magnificationFilter \"FASTEST\"\n          textureCompression \"FASTEST\"\n        }\n      }\n      textureTransform TextureTransform {\n        scale 8 8\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation 0 -2.8 0\n  scale 0.6 0.6 1\n  children Shape {\n    appearance Appearance {\n      texture PixelTexture {\n        image 4 4 3\n          0xff0000 0xff00 0xff 0xffffff\n          0xff00 0xff 0xffffff 0xff0000\n          0xff 0xffffff 0xff0000 0xff00\n          0xffffff 0xff0000 0xff00 0xff\n        textureProperties TextureProperties {\n          generateMipMaps TRUE\n          minificationFilter \"FASTEST\"\n          magnificationFilter \"AVG_PIXEL\"\n          textureCompression \"FASTEST\"\n        }\n      }\n    }\n    geometry USE Q\n  }\n}\n\nTransform {\n  translation 3 -2.8 0\n  scale 0.6 0.6 1\n  children Shape {\n    appearance Appearance {\n      texture ImageTexture {\n        url \"checker64.png\"\n        textureProperties TextureProperties {\n          minificationFilter \"BOGUS\"\n          magnificationFilter \"BOGUS\"\n          boundaryModeS \"BOGUS\"\n          textureCompression \"FASTEST\"\n        }\n      }\n      textureTransform TextureTransform {\n        scale 8 8\n      }\n    }\n    geometry USE Q\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "console": []
+}

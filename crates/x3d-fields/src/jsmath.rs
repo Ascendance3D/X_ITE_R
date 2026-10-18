@@ -67,6 +67,10 @@ pub fn asin(x: f64) -> f64 {
     if chrome() { core_math::asin(x) } else { libm::asin(x) }
 }
 
+pub fn atan(x: f64) -> f64 {
+    if chrome() { core_math::atan(x) } else { libm::atan(x) }
+}
+
 pub fn atan2(y: f64, x: f64) -> f64 {
     if chrome() { core_math::atan2(y, x) } else { libm::atan2(y, x) }
 }
@@ -77,6 +81,25 @@ pub fn log10(x: f64) -> f64 {
 
 pub fn sqrt(x: f64) -> f64 {
     x.sqrt()
+}
+
+/// V8 `Math.pow` and `**`: NaN for a NaN exponent and for ±1 ** ±Infinity, `x * x` for 2,
+/// `sqrt` for 0.5 on a finite non-negative base, otherwise the platform `pow` (glibc, correctly
+/// rounded). Checked bit for bit against node's V8 on 100,221 inputs, edge values included.
+pub fn pow(x: f64, y: f64) -> f64 {
+    if y.is_nan() || (y.is_infinite() && (x == 1.0 || x == -1.0)) {
+        return f64::NAN;
+    }
+
+    if y == 2.0 {
+        return x * x;
+    }
+
+    if y == 0.5 && x.is_finite() && !x.is_sign_negative() {
+        return x.sqrt();
+    }
+
+    x.powf(y)
 }
 
 /// V8 `Math.hypot` (src/builtins/math.tq: MathHypot): scaled sum of squares with Kahan

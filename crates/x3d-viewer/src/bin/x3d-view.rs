@@ -34,6 +34,9 @@ fn main() {
 
     let opts = Options { path: PathBuf::from(path), oracle: opt("--oracle").map(PathBuf::from), script, png: opt("--png").map(PathBuf::from), size, msaa: opt("--msaa").and_then(|v| v.parse().ok()), depth: opt("--depth").map(|v| x3d_viewer::embed::DepthMode::parse(&v).unwrap_or_else(|| { eprintln!("--depth: standard, log or reversed"); std::process::exit(2) })) };
 
+    // The Sound component plays on the default output device.
+    x3d_runtime::sound::set_default_mode(x3d_runtime::sound::AudioMode::Realtime);
+
     // QuickJS wants a big stack (x3d-shot uses the same 256 MB).
     let r = std::thread::Builder::new().stack_size(256 << 20).spawn(move || run(opts)).unwrap().join().unwrap();
 

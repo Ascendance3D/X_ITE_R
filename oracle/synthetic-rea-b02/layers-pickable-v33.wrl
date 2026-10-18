@@ -1,0 +1,9 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+Viewpoint { position 0 0 10 }
+LayerSet { order [ 0 1 2 ] layers [
+  Layer { isPickable FALSE children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 } } geometry Box { } } }
+  LayoutLayer { isPickable FALSE }
+] }
+

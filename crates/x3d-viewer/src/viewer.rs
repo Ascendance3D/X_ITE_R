@@ -4,23 +4,68 @@
 //! deterministic.
 
 use crate::collision::{CShape, World};
-use crate::layer::{BBox, DEFAULT, Layer, NavInfo, VpBase, bbox_transform, factor_simple};
+use crate::layer::{BBox, DEFAULT, Layer, NavInfo, VpBase, bbox_transform, is_default};
 use crate::lookat::Box3;
 use crate::nav::{Cx, Env, Input, LookAtRequest, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
-use crate::walk::{NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan};
+use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan};
 use std::collections::HashMap;
 use std::path::Path;
 use std::rc::Rc;
 use x3d_fields::math::{Matrix4, Rotation4, Vector3, Vector4};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_render::geometry::Geometry;
+use x3d_render::layer::{self as layers, LayerKey, LayoutCamera};
 use x3d_render::traverse::{Builder, CameraOverride, Frame};
 use x3d_runtime::{LocalFetcher, Runtime};
 use x3d_script::compare::{ORACLE_PREFIX, encode_path};
 
-const GRAVITY: f64 = 9.80665;
-const WALL_FRICTION: f64 = 0.0;
+/// RenderingProperties changes for the renderer ([`Viewer3d::take_rendering_changes`]).
+#[derive(Clone, Debug, Default)]
+pub struct RenderingChanges {
+    pub samples: Option<u32>,
+    /// X3DRenderObject.set_renderKey__: the LogarithmicDepthBuffer rendering property or the
+    /// bound viewpoint's getLogarithmicDepthBuffer (GeoViewpoint).
+    pub log_depth: Option<bool>,
+    pub shading: Option<x3d_render::gpu::ShadingMode>,
+    /// The LogarithmicDepthBuffer rendering property alone (getMaxFarValue reads it).
+    pub property_log_depth: bool,
+}
+
+impl RenderingChanges {
+    /// Apply the changes to `renderer`.
+    pub fn apply(&self, renderer: &mut x3d_render::gpu::Renderer) {
+        if let Some(n) = self.samples {
+            renderer.set_sample_count(n);
+        }
+
+        if let Some(l) = self.log_depth {
+            renderer.set_depth_mode(if l { x3d_render::gpu::DepthMode::Logarithmic } else { x3d_render::gpu::DepthMode::Standard });
+            x3d_render::traverse::set_logarithmic_depth_buffer(self.property_log_depth);
+        }
+
+        if let Some(s) = self.shading {
+            renderer.set_shading(s);
+        }
+    }
+}
+
+/// Samples, logarithmic depth (`geo`: a GeoViewpoint is bound) and Shading.
+fn rendering_state(rt: &Runtime, geo: bool) -> (u32, bool, String) {
+    let b = &rt.browser_options;
+    (b.multisampling(), b.logarithmic_depth_buffer() || geo, b.rendering.get("Shading").map(|v| v.as_str().to_string()).unwrap_or_default())
+}
+
+/// The `<x3d-canvas>` attributes of the oracle pages (anim.html, anim-sized.html).
+pub const ORACLE_PAGE_ATTRIBUTES: &[(&str, &str)] = &[
+    ("antialiased", "false"),
+    ("preserveDrawingBuffer", "true"),
+    ("splashScreen", "false"),
+    ("contextMenu", "false"),
+    ("notifications", "false"),
+    ("timings", "false"),
+    ("contentScale", "1"),
+];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Key {
@@ -31,7 +76,7 @@ pub enum Key {
 }
 
 /// A user event in viewport pixels (origin bottom left).
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub enum UiEvent {
     MouseDown { button: u8, x: f64, y: f64 },
     MouseUp { button: u8, x: f64, y: f64 },
@@ -41,6 +86,9 @@ pub enum UiEvent {
     DblClick { x: f64, y: f64 },
     Key(Key),
     Mods { shift: bool, ctrl: bool, alt: bool },
+    /// A DOM keydown / keyup of the browser element: `key` is `event .key`.
+    KeyDown { key: String },
+    KeyUp { key: String },
 }
 
 #[derive(Default)]
@@ -49,6 +97,16 @@ struct ProxState {
     traversed: bool,
     registered: bool,
     seen_camera: bool,
+    /// The layer whose DISPLAY traversal reached the sensor last (its viewpoint updates it).
+    layer: LayerKey,
+}
+
+/// The state of a layer (X3DLayerNode) other than the one in [`Viewer3d::layer`].
+pub struct LayerSlot {
+    pub key: LayerKey,
+    pub layer: Layer,
+    pub scan_cam: Scan,
+    pub scan_display: Scan,
 }
 
 pub struct Viewer3d {
@@ -56,6 +114,8 @@ pub struct Viewer3d {
     pub layer: Layer,
     pub nav: Viewer,
     nav_info_node: NodeId,
+    /// The bound NavigationInfo's `_viewer` (set_type__) the browser's viewer follows.
+    nav_viewer: String,
     pub pointer: Pointer,
     pub width: u32,
     pub height: u32,
@@ -77,12 +137,24 @@ pub struct Viewer3d {
     /// `currentFrameRate` still returns the wall-clock rate of the page's own early frames, so
     /// oracle/x_ite-anim*.mjs pin that property for scripts with `"pinFrameRate": true`.
     pub pinned_frame_rate: Option<f64>,
+    /// The RenderingProperties Multisampling, LogarithmicDepthBuffer and Shading the renderer
+    /// was last told about ([`Viewer3d::take_rendering_changes`]).
+    synced_rendering: (u32, bool, String),
+    /// The LogarithmicDepthBuffer rendering property the camera last used.
+    camera_log_depth: bool,
     gravity_speed: f64,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
+    /// The Ammo state of the pick shapes (X3DPickSensorNode.getPickShape).
+    pub pick_shapes: crate::pick_shapes::PickShapes,
     /// Geometry and textures kept between frames (rebuilt only when their nodes change).
     pub render_cache: x3d_render::traverse::RenderCache,
     pub scan_cam: Scan,
     pub scan_display: Scan,
+    /// LOD frame rate averages and the levels the DISPLAY traversal changed (LOD.changeLevel).
+    pub lod_pass: crate::walk::LodPass,
+    /// GeneratedCubeMapTextures drawn with update NEXT_FRAME_ONLY in the last frame: renderTexture
+    /// sets update to NONE while drawing, the event is processed in the next frame.
+    generated_none: Vec<NodeRef>,
     prox: HashMap<(Vec<NodeId>, NodeId), ProxState>,
     vis: HashMap<(Vec<NodeId>, NodeId), ProxState>,
     verify_motion: Option<(f64, f64)>,
@@ -90,6 +162,18 @@ pub struct Viewer3d {
     pub status: String,
     pub anchors: Vec<AnchorActivation>,
     pub frame_count: u64,
+    /// The layer whose state `layer`, `scan_cam` and `scan_display` hold: the active layer
+    /// (navigation, viewpoint lists), except while a pass visits the layers one by one.
+    current: LayerKey,
+    /// The other layers' states (LayerSet).
+    others: Vec<LayerSlot>,
+    /// LayerSet.getLayers: the layers drawn this frame, in order.
+    drawn: Vec<LayerKey>,
+    /// X3DWorld.getActiveLayer: the layer navigation acts on (`None`: no displayed layer).
+    active: Option<LayerKey>,
+    /// X3DPointingDeviceSensorContext.getPointingLayer: the layer of the pressed hit while the
+    /// button is down.
+    pointing_layer: Option<LayerKey>,
 }
 
 fn geom_of(root: &Runtime, cache: &mut HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>, s: &ShapeInst) -> Option<Rc<Geometry>> {
@@ -121,7 +205,16 @@ impl Viewer3d {
     /// [`Viewer3d::load_pinned`] that can also record the console output in order
     /// ([`Runtime::console`]) from the first message on.
     pub fn load_opts(file: &Path, oracle_root: Option<&Path>, t0: f64, width: u32, height: u32, pinned_frame_rate: Option<f64>, record_console: bool) -> Result<Viewer3d, String> {
+        Self::load_attributes(file, oracle_root, t0, width, height, pinned_frame_rate, record_console, ORACLE_PAGE_ATTRIBUTES)
+    }
+
+    /// [`Viewer3d::load_opts`] with the `<x3d-canvas>` attributes of the page (BrowserOptions.reset
+    /// applies them before the world loads), like [`ORACLE_PAGE_ATTRIBUTES`].
+    #[allow(clippy::too_many_arguments)]
+    pub fn load_attributes(file: &Path, oracle_root: Option<&Path>, t0: f64, width: u32, height: u32, pinned_frame_rate: Option<f64>, record_console: bool, attributes: &[(&str, &str)]) -> Result<Viewer3d, String> {
         x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
+        // The geometry the ParticleSystems emitters and bounded models sample.
+        x3d_render::traverse::install_particle_geometry();
 
         let file = std::fs::canonicalize(file).map_err(|e| format!("{}: {e}", file.display()))?;
         let found = file.ancestors().skip(1).find(|d| d.file_name().is_some_and(|n| n == "oracle")).map(|d| d.to_path_buf());
@@ -137,9 +230,12 @@ impl Viewer3d {
         let fetcher = Box::new(LocalFetcher { root: root.to_path_buf(), prefix: ORACLE_PREFIX.to_string() });
         let mut rt = Runtime::new(scene, fetcher);
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
+        x3d_render::shader_gpu::install(&mut rt);
         rt.live = true;
         rt.now = t0;
         rt.record_console = record_console;
+        rt.browser_options = x3d_runtime::browser_options::BrowserOptions::new(width, height);
+        rt.browser_options.apply_attributes(attributes);
 
         if let Some(rate) = pinned_frame_rate {
             rt.frame_rate = rate;
@@ -154,11 +250,15 @@ impl Viewer3d {
     }
 
     pub fn from_runtime(rt: Runtime, t0: f64, width: u32, height: u32) -> Viewer3d {
+        let synced_rendering = rendering_state(&rt, false);
         let mut v = Viewer3d {
+            camera_log_depth: synced_rendering.1,
+            synced_rendering,
             rt,
             layer: Layer::new(),
             nav: Viewer::None,
             nav_info_node: DEFAULT,
+            nav_viewer: String::new(),
             pointer: Pointer::new(),
             width,
             height,
@@ -174,15 +274,23 @@ impl Viewer3d {
             pinned_frame_rate: None,
             gravity_speed: 0.0,
             geom_cache: HashMap::new(),
+            pick_shapes: Default::default(),
             render_cache: Default::default(),
             scan_cam: Scan::default(),
             scan_display: Scan::default(),
+            lod_pass: Default::default(),
+            generated_none: vec![],
             prox: HashMap::new(),
             vis: HashMap::new(),
             verify_motion: None,
             status: String::new(),
             anchors: vec![],
             frame_count: 0,
+            current: None,
+            others: vec![],
+            drawn: vec![None],
+            active: Some(None),
+            pointing_layer: None,
         };
 
         v.layer.viewport = (width as f64, height as f64);
@@ -205,7 +313,148 @@ impl Viewer3d {
     pub fn resize(&mut self, width: u32, height: u32) {
         self.width = width.max(1);
         self.height = height.max(1);
-        self.layer.viewport = (self.width as f64, self.height as f64);
+        self.layer_sizes();
+        self.rt.browser_options.set_canvas_size(self.width, self.height);
+    }
+
+    // --- layers ------------------------------------------------------------------------------
+
+    /// The viewport rectangle of layer `key` (X3DLayerNode viewportNode .getRectangle ()).
+    pub fn layer_rect(&self, key: LayerKey) -> [f64; 4] {
+        layers::layer_viewport(&x3d_render::sg::Sg::new(&self.rt), key, self.viewport())
+    }
+
+    /// The layers' viewport sizes (getLookAtDistance, viewAll).
+    fn layer_sizes(&mut self) {
+        let r = self.layer_rect(self.current);
+        self.layer.viewport = (r[2], r[3]);
+
+        for i in 0..self.others.len() {
+            let r = self.layer_rect(self.others[i].key);
+            self.others[i].layer.viewport = (r[2], r[3]);
+        }
+    }
+
+    /// Swap the state of layer `key` into `layer`, `scan_cam` and `scan_display` (a new layer
+    /// starts with its default bindables).
+    fn swap_to(&mut self, key: LayerKey) {
+        if key == self.current {
+            return;
+        }
+
+        let i = match self.others.iter().position(|s| s.key == key) {
+            Some(i) => i,
+            None => {
+                let layout = key.is_some_and(|n| self.rt.builtin_name(n) == Some("LayoutLayer"));
+                let mut layer = if layout { Layer::new_layout() } else { Layer::new() };
+                let r = self.layer_rect(key);
+                layer.viewport = (r[2], r[3]);
+                self.others.push(LayerSlot { key, layer, scan_cam: Scan::default(), scan_display: Scan::default() });
+                self.others.len() - 1
+            }
+        };
+
+        let slot = &mut self.others[i];
+        std::mem::swap(&mut slot.layer, &mut self.layer);
+        std::mem::swap(&mut slot.scan_cam, &mut self.scan_cam);
+        std::mem::swap(&mut slot.scan_display, &mut self.scan_display);
+        slot.key = self.current;
+        self.current = key;
+    }
+
+    /// How many layer states the viewer keeps (layer 0 and every layer it met).
+    pub fn layer_slots(&self) -> usize {
+        1 + self.others.len()
+    }
+
+    /// LayerSet.getLayers: the layers drawn in the last frame, in order.
+    pub fn drawn_layers(&self) -> &[LayerKey] {
+        &self.drawn
+    }
+
+    /// The layer navigation and the viewpoint lists use: the active layer, else layer 0.
+    fn home_layer(&self) -> LayerKey {
+        self.active.unwrap_or(None)
+    }
+
+    /// X3DWorld and LayerSet: the layers drawn this frame and the active layer, whose state is
+    /// swapped in.
+    fn update_layers(&mut self) {
+        let sg = x3d_render::sg::Sg::new(&self.rt);
+        let drawn = layers::drawn_layers(&sg);
+        let active = layers::active_layer(&sg);
+        self.drawn = drawn;
+        self.active = active;
+        self.swap_to(self.home_layer());
+        self.layer_sizes();
+    }
+
+    /// The walk of the current layer: its children, viewport rectangle, and the bound viewpoint
+    /// its Layout nodes read.
+    fn layer_walk(&self) -> LayerWalk {
+        let base = self.base();
+        let nav = self.nav_info();
+        let vp = self.layer.vps.get(&self.layer.viewpoint()).cloned().unwrap_or_default();
+        let content_scale = self.rt.browser_options.rendering.get("ContentScale").map_or(1.0, |v| v.as_f64());
+
+        LayerWalk {
+            key: self.current,
+            viewport: self.layer_rect(self.current),
+            layout: LayoutCamera {
+                ortho: base.is_ortho.then(|| (vp.user_size_x(&base), vp.user_size_y(&base))),
+                fov: vp.user_fov(&base),
+                near: vp.near_distance(&base, &nav),
+                content_scale,
+            },
+        }
+    }
+
+    /// X3DLayerNode `pointerEvents` (layer 0: TRUE).
+    fn pointer_events(&self, key: LayerKey) -> bool {
+        key.is_none_or(|n| self.rt.get_bool(n, "pointerEvents"))
+    }
+
+    /// The pointing camera of layer `key`.
+    fn pick_camera_of(&mut self, key: LayerKey) -> PickCamera {
+        let home = self.current;
+        self.swap_to(key);
+        let cam = self.pick_camera();
+        self.swap_to(home);
+        cam
+    }
+
+    /// The frame buffer size X3DRenderingContext.reshape gives the canvas: its size × the
+    /// ContentScale option, limited to MAX_VIEWPORT_DIMS.
+    pub fn framebuffer_size(&self) -> (u32, u32) {
+        self.rt.browser_options.framebuffer
+    }
+
+    /// The RenderingProperties the renderer follows, when they changed since the last call
+    /// (a Script's `setBrowserOption`): Multisampling (the sample count),
+    /// LogarithmicDepthBuffer and Shading. [`Viewer3d::step`] already switched the process-wide
+    /// LogarithmicDepthBuffer property (`getMaxFarValue`) for the camera.
+    pub fn take_rendering_changes(&mut self) -> RenderingChanges {
+        let now = rendering_state(&self.rt, self.base().geo.is_some());
+        let old = std::mem::replace(&mut self.synced_rendering, now.clone());
+
+        RenderingChanges {
+            samples: (now.0 != old.0).then_some(now.0),
+            log_depth: (now.1 != old.1).then_some(now.1),
+            shading: (now.2 != old.2).then(|| x3d_render::gpu::ShadingMode::from_rendering_property(&now.2)),
+            property_log_depth: self.rt.browser_options.logarithmic_depth_buffer(),
+        }
+    }
+
+    /// The RenderingProperties the renderer starts with (see [`Viewer3d::take_rendering_changes`]).
+    pub fn rendering_properties(&self) -> RenderingChanges {
+        let now = rendering_state(&self.rt, self.base().geo.is_some());
+
+        RenderingChanges {
+            samples: Some(now.0),
+            log_depth: Some(now.1),
+            shading: Some(x3d_render::gpu::ShadingMode::from_rendering_property(&now.2)),
+            property_log_depth: self.rt.browser_options.logarithmic_depth_buffer(),
+        }
     }
 
     pub fn title(&self) -> String {
@@ -226,7 +475,7 @@ impl Viewer3d {
 
     /// The scene bounding box in world space (X3DLayerNode.getBBox), from shape bounding boxes.
     fn scene_bbox(&mut self) -> Option<BBox> {
-        let s = scan(&self.rt, &Matrix4::IDENTITY, true);
+        let s = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
         let mut min = Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
         let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
         let mut any = false;
@@ -243,12 +492,21 @@ impl Viewer3d {
         any.then_some(BBox { min, max })
     }
 
+    /// X3DWorld.bindBindables: layer 0 and every layer of the LayerSet bind their first bindables.
     fn bind_world(&mut self) {
-        self.scan_cam = scan(&self.rt, &Matrix4::IDENTITY, true);
-        let bbox = self.scene_bbox();
-        let scan_cam = std::mem::take(&mut self.scan_cam);
-        self.layer.bind_bindables(&mut self.rt, &scan_cam, None, &move || bbox);
-        self.scan_cam = scan_cam;
+        self.update_layers();
+        let all = layers::all_layers(&x3d_render::sg::Sg::new(&self.rt));
+
+        for key in all {
+            self.swap_to(key);
+            self.scan_cam = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
+            let bbox = self.scene_bbox();
+            let scan_cam = std::mem::take(&mut self.scan_cam);
+            self.layer.bind_bindables(&mut self.rt, &scan_cam, None, &move || bbox);
+            self.scan_cam = scan_cam;
+        }
+
+        self.swap_to(self.home_layer());
         self.rt.process_events();
         self.set_active_navigation_info(true);
         self.refresh_display_scan();
@@ -276,6 +534,7 @@ impl Viewer3d {
 
         self.nav_info_node = node;
         let kind = self.nav_info().viewer();
+        self.nav_viewer = kind.clone();
         self.set_viewer(&kind);
     }
 
@@ -304,8 +563,10 @@ impl Viewer3d {
             shift: self.shift,
             ctrl: self.ctrl,
             alt: self.alt,
-            viewport: self.viewport(),
-            straighten: self.straighten,
+            // X3DViewer.getViewport: the active layer's rectangle.
+            viewport: self.layer_rect(self.home_layer()),
+            // getStraightenHorizon (): the StraightenHorizon option, unless the host overrides it.
+            straighten: self.straighten && self.rt.browser_options.straighten_horizon(),
         }
     }
 
@@ -315,10 +576,11 @@ impl Viewer3d {
         let nav = self.nav_info();
         let vp = self.layer.vp(self.layer.viewpoint()).clone();
         let (near, far) = (vp.near_distance(&base, &nav), vp.far_distance(&base, &nav));
+        let r = self.layer_rect(self.current);
 
         PickCamera {
-            projection: vp.projection(&base, near, far, self.width as f64, self.height as f64),
-            viewport: Vector4::new(0.0, 0.0, self.width as f64, self.height as f64),
+            projection: vp.projection(&base, near, far, r[2], r[3]),
+            viewport: Vector4::new(r[0], r[1], r[2], r[3]),
             view: vp.view,
             near,
             far,
@@ -344,6 +606,24 @@ impl Viewer3d {
             rt.frame_rate = rate;
             rt.process_phase(name);
         });
+
+        // X3DBrowser.bindViewpoint sets `set_bind` while the Script runs, so the viewpoint is
+        // bound in the same frame (at its time), not in the next one.
+        self.browser_requests();
+    }
+
+    /// Scripts' requests of the browser: X3DBrowser.nextViewpoint, previousViewpoint,
+    /// firstViewpoint, lastViewpoint.
+    fn browser_requests(&mut self) {
+        for r in std::mem::take(&mut self.rt.browser_requests) {
+            match r.as_str() {
+                "nextViewpoint" => self.next_viewpoint(1),
+                "previousViewpoint" => self.next_viewpoint(-1),
+                "firstViewpoint" => self.first_viewpoint(),
+                "lastViewpoint" => self.last_viewpoint(),
+                _ => {}
+            }
+        }
     }
 
     /// Nodes the runtime released since the last call: nothing the viewer remembers of them may
@@ -358,15 +638,47 @@ impl Viewer3d {
 
         let dead = |key: &(Vec<NodeId>, NodeId)| released.contains(&key.1) || key.0.iter().any(|n| released.contains(n));
 
+        // A released layer node goes with its state (layer 0 takes its place while it is current).
+        if self.current.is_some_and(|n| released.contains(&n)) {
+            self.swap_to(None);
+        }
+
+        self.others.retain(|s| s.key.is_none_or(|n| !released.contains(&n)));
+        self.drawn.retain(|k| k.is_none_or(|n| !released.contains(&n)));
+
+        if self.pointing_layer.is_some_and(|k| k.is_some_and(|n| released.contains(&n))) {
+            self.pointing_layer = None;
+        }
+
         self.layer.forget(&released);
+
+        for s in &mut self.others {
+            s.layer.forget(&released);
+        }
+
         self.prox.retain(|k, _| !dead(k));
         self.vis.retain(|k, _| !dead(k));
+        self.lod_pass.static_done.retain(|k| !dead(k));
         self.geom_cache.retain(|k, _| !dead(k));
+        self.pick_shapes.retain(|n| !released.contains(&n));
         self.pointer.forget(&released);
     }
 
     /// One iteration of X3DBrowserContext [_traverse] at browser time `now`
     /// (advanceTime has set getCurrentTime to `now`).
+    /// X3DTimeContext.advanceTime's frame rate limit: a live browser skips a frame that comes
+    /// sooner than 1 / MaximumFrameRate after the last one (the oracle pages replace
+    /// advanceTime, so the harnesses step every frame).
+    pub fn frame_due(&self, now: f64) -> bool {
+        let max = self.rt.browser_options.get_option("MaximumFrameRate").map_or(80.0, |v| v.as_f64());
+
+        // `interval <= 1 / Math .max (MaximumFrameRate, 1)` skips; a NaN limit never does.
+        match self.last_time {
+            Some(last) => !(now - last <= 1.0 / x3d_fields::jsmath::js_max(max, 1.0)),
+            None => true,
+        }
+    }
+
     pub fn step(&mut self, now: f64) {
         if let Some(last) = self.last_time {
             let dt = now - last;
@@ -387,24 +699,47 @@ impl Viewer3d {
         // Timeouts that fired between frames (setTimeout).
         self.for_each_rt(&mut |rt| rt.fire_timeouts(now));
 
-        // Scripts' requests of the browser (Browser.nextViewpoint ...).
-        for r in std::mem::take(&mut self.rt.browser_requests) {
-            match r.as_str() {
-                "nextViewpoint" => self.next_viewpoint(1),
-                "previousViewpoint" => self.next_viewpoint(-1),
-                "firstViewpoint" => self.first_viewpoint(),
-                "lastViewpoint" => self.last_viewpoint(),
-                _ => {}
+        // Scripts' requests of the browser made between frames (Browser.nextViewpoint ...).
+        self.browser_requests();
+
+        // The update fields the last frame's GeneratedCubeMapTexture passes set to NONE.
+        for n in std::mem::take(&mut self.generated_none) {
+            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path) {
+                if let Some(k) = rt.pre(n.node, "update") {
+                    rt.set_value(k, FieldValue::SFString("NONE".into()));
+                }
             }
         }
 
         // Prepare and time events.
+        self.sync_active_layer();
         self.phase("prepareEvents");
         self.prepare_viewer();
         self.phase("timePrepareEvents");
         self.phase("timeEvents");
         self.layer.tick(&mut self.rt);
+
+        for s in &mut self.others {
+            s.layer.tick(&mut self.rt);
+        }
+
         self.rt.process_events();
+
+        // X3DViewpointNode.getMaxFarValue reads the LogarithmicDepthBuffer rendering property,
+        // which a Script's setBrowserOption changes in the events above.
+        let log_depth = self.rt.browser_options.logarithmic_depth_buffer();
+
+        if log_depth != self.camera_log_depth {
+            self.camera_log_depth = log_depth;
+            x3d_render::traverse::set_logarithmic_depth_buffer(log_depth);
+        }
+
+        // set_PrimitiveQuality__, set_TextureQuality__ and getTextCompression for the geometries
+        // and textures built on this thread.
+        let options = &self.rt.browser_options;
+        let quality = |name: &str| x3d_render::traverse::Quality::from_option(options.get_option(name).map_or("", |v| v.as_str()));
+        let scaling = options.get_option("TextCompression").is_some_and(|v| v.as_str() == "SCALING");
+        x3d_render::traverse::set_browser_qualities(quality("PrimitiveQuality"), quality("TextureQuality"), scaling);
 
         // Camera.
         self.camera_pass();
@@ -416,12 +751,14 @@ impl Viewer3d {
 
         // Sensor events.
         self.sensor_pass();
+        self.picking_pass();
         self.phase("sensorEvents");
 
-        // Display.
+        // Display: the DISPLAY traversal (LOD.changeLevel), then displayFinishEvents.
         self.phase("displayEvents");
-        self.refresh_display_scan();
+        self.display_scan();
         self.display_pass();
+        self.phase("displayFinishEvents");
         self.phase("finishEvents");
 
         if let Some((x, y)) = self.verify_motion.take() {
@@ -445,8 +782,9 @@ impl Viewer3d {
         let world = self.collision_world();
         let (bb, nv) = (base.clone(), nav.clone());
         let vp = self.layer.vp(vp_node);
+        let wall_friction = self.rt.browser_options.wall_friction();
         let mut constrain = |t: Vector3, v: &crate::layer::Vp| match &world {
-            Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, WALL_FRICTION),
+            Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, wall_friction),
             None => t,
         };
         let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain, requests: vec![] };
@@ -455,29 +793,59 @@ impl Viewer3d {
 
     /// X3DLayerNode.camera and the NavigationContext reactions.
     fn camera_pass(&mut self) {
-        self.scan_cam = scan(&self.rt, &Matrix4::IDENTITY, true);
-
+        // A new active layer changes the browser's active viewpoint and navigation info too.
         let before_vp = self.layer.viewpoint();
         let before_nav = self.layer.navigation_info();
+        self.update_layers();
+        let home = self.current;
 
-        let bbox = if self.scan_cam.viewpoints.iter().any(|(n, _)| {
-            let b = VpBase::read(&self.rt, n.node);
-            b.view_all
-        }) {
-            self.scene_bbox()
-        } else {
-            None
-        };
+        // LayerSet.traverse (CAMERA): each layer drawn, in order.
+        for key in self.drawn.clone() {
+            self.swap_to(key);
+            self.scan_cam = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
 
-        let scan_cam = std::mem::take(&mut self.scan_cam);
-        self.layer.camera(&mut self.rt, &scan_cam, &move || bbox);
-        self.scan_cam = scan_cam;
+            let bbox = if self.scan_cam.viewpoints.iter().any(|(n, _)| {
+                let b = VpBase::read(&self.rt, n.node);
+                b.view_all
+            }) {
+                self.scene_bbox()
+            } else {
+                None
+            };
+
+            let scan_cam = std::mem::take(&mut self.scan_cam);
+            self.layer.camera(&mut self.rt, &scan_cam, &move || bbox);
+            self.scan_cam = scan_cam;
+        }
+
+        self.swap_to(home);
         self.rt.process_events();
 
+        self.bindables_changed(before_vp, before_nav);
+
+        // A NavigationInfo transitionStart disconnects the ExamineViewer's spin.
+        // (NavigationInfo ._transitionStart .addInterest ("disconnect"))
+        let cur = self.layer.viewpoint();
+        let base = self.base();
+        self.layer.vp(cur).update(&base);
+    }
+
+    /// X3DNavigationContext: the browser's active navigation info and viewpoint follow the
+    /// active layer's stacks (set_activeNavigationInfo__, set_activeViewpoint__).
+    fn bindables_changed(&mut self, before_vp: NodeId, before_nav: NodeId) {
         if self.layer.navigation_info() != before_nav {
             self.set_active_navigation_info(false);
         } else if self.layer.navigation_info() != self.nav_info_node {
             self.set_active_navigation_info(false);
+        } else {
+            // NavigationInfo.set_type__ of the bound node: `_viewer .addFieldInterest (browser
+            // ._viewer)`, so a new type switches the viewer.
+            let kind = self.nav_info().viewer();
+
+            if kind != self.nav_viewer {
+                self.nav_viewer = kind.clone();
+                self.set_viewer(&kind);
+            }
         }
 
         if self.layer.viewpoint() != before_vp {
@@ -491,11 +859,25 @@ impl Viewer3d {
             self.nav.active_viewpoint_changed(&mut cx);
         }
 
-        // A NavigationInfo transitionStart disconnects the ExamineViewer's spin.
-        // (NavigationInfo ._transitionStart .addInterest ("disconnect"))
-        let cur = self.layer.viewpoint();
-        let base = self.base();
-        self.layer.vp(cur).update(&base);
+    }
+
+    /// X3DWorld.set_activeLayer__: a Script's or a key handler's new activeLayer takes effect while
+    /// its events are processed, before the next frame's navigation (the viewer stops acting on
+    /// the old layer's viewpoint at once).
+    fn sync_active_layer(&mut self) {
+        let (before_vp, before_nav, before) = (self.layer.viewpoint(), self.layer.navigation_info(), self.current);
+        let sg = x3d_render::sg::Sg::new(&self.rt);
+        let active = layers::active_layer(&sg);
+
+        if active == self.active {
+            return;
+        }
+
+        self.update_layers();
+
+        if self.current != before {
+            self.bindables_changed(before_vp, before_nav);
+        }
     }
 
     /// Whether the COLLISION traversal runs and the shapes it would collect.
@@ -521,11 +903,17 @@ impl Viewer3d {
             }
 
             if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
-                shapes.push(CShape { geometry: g, model_view: s.model_view });
+                shapes.push(CShape { geometry: g, model_view: s.model_view, clip_planes: s.clip_planes.clone() });
             }
         }
 
-        Some(World { shapes })
+        // Shading WIREFRAME is global GL state (the polygon mode) for X_ITE's depth renders too.
+        let fill = match self.rt.browser_options.rendering.get("Shading").map(|v| v.as_str()) {
+            Some("WIREFRAME") => crate::collision::Fill::Edges,
+            _ => crate::collision::Fill::Triangles,
+        };
+
+        Some(World { shapes, fill })
     }
 
     fn collision_pass(&mut self) {
@@ -541,7 +929,10 @@ impl Viewer3d {
         let frame_rate = self.frame_rate;
         let vp = self.layer.vp(vp_node).clone();
 
-        if let Some(d) = world.gravitate(&vp, &base, &nav, &mut speed, frame_rate, GRAVITY) {
+        // X3DRenderObject.gravitate: `getBrowserOptions () ._Gravity .getValue ()`.
+        let gravity = self.rt.browser_options.gravity();
+
+        if let Some(d) = world.gravitate(&vp, &base, &nav, &mut speed, frame_rate, gravity) {
             let v = self.layer.vp(vp_node);
             v.position_offset.add(&d);
         }
@@ -551,21 +942,124 @@ impl Viewer3d {
 
     /// Recompute the display scan with the current view (X3DLayerNode.display traversal of the
     /// pointer, sensor and collision data).
+    /// The DISPLAY traversal: like [`Self::refresh_display_scan`], and each LOD visited changes its
+    /// level (LOD.changeLevel: `this ._level_changed = level`).
+    fn display_scan(&mut self) {
+        let mut lod = std::mem::take(&mut self.lod_pass);
+        lod.levels.clear();
+        lod.current_frame_rate = self.pinned_frame_rate.unwrap_or(self.frame_rate);
+        let home = self.current;
+
+        for key in self.drawn.clone() {
+            self.swap_to(key);
+            let vp_node = self.layer.viewpoint();
+            let view = self.layer.vp(vp_node).view;
+            self.scan_display = crate::walk::scan_display(&self.rt, &self.layer_walk(), &view, &mut lod);
+        }
+
+        self.clear_undrawn_scans();
+        self.swap_to(home);
+
+        for key in std::mem::take(&mut lod.static_reached) {
+            lod.static_done.insert(key);
+        }
+
+        for (n, level) in std::mem::take(&mut lod.changes) {
+            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path) {
+                if let Some(k) = rt.pre(n.node, "level_changed") {
+                    rt.set_value(k, FieldValue::SFInt32(level));
+                }
+            }
+        }
+
+        for (n, level) in std::mem::take(&mut lod.geo_changes) {
+            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path) {
+                rt.geo_lod_change_level(n.node, level);
+            }
+        }
+
+        // GeneratedCubeMapTexture.renderTexture (this frame's draw): `if (this ._update .equals
+        // ("NEXT_FRAME_ONLY")) this ._update = "NONE"`, processed in the next frame.
+        self.generated_none = std::mem::take(&mut lod.generated_once);
+
+        // RenderedTexture.traverse: the textures the renderer draws this frame.
+        self.for_each_rt(&mut |rt| rt.rendered_now.clear());
+        let now_ms = self.date_now * 1000.0;
+
+        for r in std::mem::take(&mut lod.rendered_reached) {
+            if let Some(rt) = rt_at_mut(&mut self.rt, &r.path) {
+                if rt.rendered_texture_traverse(r.node, now_ms) {
+                    rt.rendered_now.push(r.node);
+                }
+            }
+        }
+
+        // GeoLOD.traverse draws what changeLevel left, before the frame's remaining events.
+        for n in std::mem::take(&mut lod.geo_visited) {
+            if let Some(rt) = rt_at_mut(&mut self.rt, &n.path) {
+                rt.geo_lod_display(n.node);
+            }
+        }
+
+        self.lod_pass = lod;
+    }
+
     fn refresh_display_scan(&mut self) {
-        let vp_node = self.layer.viewpoint();
-        let view = self.layer.vp(vp_node).view;
-        self.scan_display = scan(&self.rt, &view, false);
+        let home = self.current;
+
+        for key in self.drawn.clone() {
+            self.swap_to(key);
+            let vp_node = self.layer.viewpoint();
+            let view = self.layer.vp(vp_node).view;
+            self.scan_display = scan(&self.rt, &self.layer_walk(), &view, false);
+        }
+
+        self.clear_undrawn_scans();
+        self.swap_to(home);
+    }
+
+    /// A layer that is not drawn is not traversed: nothing of it can be hit or collided with.
+    fn clear_undrawn_scans(&mut self) {
+        if !self.drawn.contains(&self.current) {
+            self.scan_display = Scan::default();
+        }
+
+        for s in &mut self.others {
+            if !self.drawn.contains(&s.key) {
+                s.scan_display = Scan::default();
+            }
+        }
     }
 
     // ProximitySensor / VisibilitySensor (EnvironmentalSensor): CAMERA + DISPLAY traversals and
     // the sensorEvents update.
     fn display_pass(&mut self) {
+        let home = self.current;
+
+        for key in self.drawn.clone() {
+            self.swap_to(key);
+            self.display_pass_layer();
+        }
+
+        self.swap_to(home);
+    }
+
+    fn display_pass_layer(&mut self) {
+        let key = self.current;
         let vp_node = self.layer.viewpoint();
         let base = self.base();
         let nav = self.nav_info();
         let vpv = self.layer.vp(vp_node).clone();
         let (near, far) = (vpv.near_distance(&base, &nav), vpv.far_distance(&base, &nav));
-        let proj = vpv.projection(&base, near, far, self.width as f64, self.height as f64);
+        let r = self.layer_rect(key);
+        let proj = vpv.projection(&base, near, far, r[2], r[3]);
+
+        // SpatialSound.traverse and ListenerPointSource.traverse (visible objects, DISPLAY).
+        for e in self.scan_display.sounds.clone() {
+            if let Some(rt) = rt_at_mut(&mut self.rt, &e.node.path) {
+                rt.sound_traverse(e.node.node, &e.model_view);
+            }
+        }
 
         for e in self.scan_display.proximity.clone() {
             let key = (e.node.path.to_vec(), e.node.node);
@@ -576,12 +1070,13 @@ impl Viewer3d {
                 _ => Vector3::ZERO,
             };
             let center = match rt.pre_value(e.node.node, "center") {
-                Some(FieldValue::SFVec3f(v)) => *v,
+                Some(FieldValue::SFVec3f(v) | FieldValue::SFVec3d(v)) => *v,
                 _ => Vector3::ZERO,
             };
 
             let st = self.prox.entry(key).or_default();
             st.traversed = true;
+            st.layer = self.current;
 
             if enabled {
                 st.registered = true;
@@ -611,12 +1106,13 @@ impl Viewer3d {
                 _ => Vector3::ZERO,
             };
             let center = match rt.pre_value(e.node.node, "center") {
-                Some(FieldValue::SFVec3f(v)) => *v,
+                Some(FieldValue::SFVec3f(v) | FieldValue::SFVec3d(v)) => *v,
                 _ => Vector3::ZERO,
             };
 
             let st = self.vis.entry(key).or_default();
             st.traversed = true;
+            st.layer = self.current;
 
             if enabled {
                 st.registered = true;
@@ -635,16 +1131,98 @@ impl Viewer3d {
     }
 
     /// The sensorEvents interests of ProximitySensor.update and VisibilitySensor.update.
+    /// X3DPickingContext.picking (a sensorEvents interest while TransformSensors or pick sensors are
+    /// enabled): the PICKING traversal of the layers, then TransformSensor.process and
+    /// X3DPickSensorNode.process in the browser's set orders.
+    fn picking_pass(&mut self) {
+        if self.rt.transform_sensors.is_empty() && self.rt.pick_sensors.is_empty() {
+            return;
+        }
+
+        let sensors = self.rt.transform_sensors.clone();
+        let targets: std::collections::HashSet<NodeId> = sensors.iter().filter_map(|&s| self.rt.transform_sensor_target(s)).collect();
+        let pick = crate::picking::PickInput::new(&self.rt);
+        // X3DLayerNode.picking: the layers drawn whose `pickable` is TRUE.
+        let mut scan = Scan::default();
+        let home = self.current;
+
+        for key in self.drawn.clone() {
+            if key.is_some_and(|n| !self.rt.get_bool(n, "pickable")) {
+                continue;
+            }
+
+            // X3DLayerNode constructor: the layer's group is a PickableGroup when its scene has
+            // the Picking component.
+            let ctx = key.map_or(x3d_scene::ROOT, |n| self.rt.scene.node(n).ctx);
+            let pickable_layer = self.rt.scene.has_component_in(ctx, "Picking");
+
+            self.swap_to(key);
+            let object_type = key.and_then(|n| self.rt.layer_object_types.get(&n).cloned());
+            let s = crate::walk::scan_picking(&self.rt, &self.layer_walk(), &targets, &pick, pickable_layer, object_type.as_deref());
+            scan.transform_sensors.extend(s.transform_sensors);
+            scan.pick_targets.extend(s.pick_targets);
+            scan.pick_sensor_matrices.extend(s.pick_sensor_matrices);
+            scan.pick_collected.extend(s.pick_collected);
+        }
+
+        self.swap_to(home);
+        self.rt.now = self.time;
+
+        for s in sensors {
+            let models = scan.transform_sensors.iter().filter(|e| e.node.node == s).map(|e| e.model_view).collect();
+            let target = self.rt.transform_sensor_target(s);
+            let target_matrices = scan.pick_targets.iter().filter(|(n, _)| Some(*n) == target).map(|(_, m)| *m).collect();
+            self.rt.transform_sensor_process(s, models, target_matrices);
+        }
+
+        if pick.sensors.is_empty() {
+            return;
+        }
+
+        let mut geometry = HashMap::new();
+
+        for g in crate::picking::geometry_nodes(&self.rt, &pick.sensors, &scan.pick_collected) {
+            let built = self.geom_cache.entry((vec![], g)).or_insert_with(|| x3d_render::traverse::geometry_of(&self.rt, g).filter(|g| g.vertex_count() > 0).map(Rc::new)).clone();
+            geometry.insert(g, built);
+        }
+
+        for s in &pick.sensors {
+            let models: Vec<Matrix4> = scan.pick_sensor_matrices.iter().filter(|(n, _)| *n == s.node).map(|(_, m)| *m).collect();
+            let collected = scan.pick_collected.iter().filter(|(n, _, _)| *n == s.node).map(|(_, g, m)| (*g, *m)).collect();
+
+            match self.rt.builtin_name(s.node) {
+                Some("LinePickSensor") => crate::picking::line_pick_process(&mut self.rt, &geometry, s.node, &models, collected),
+                Some("PointPickSensor" | "PrimitivePickSensor" | "VolumePickSensor") => crate::picking::volume_pick_process(&mut self.rt, &mut self.pick_shapes, &geometry, s.node, &models, collected),
+                _ => {}
+            }
+        }
+    }
+
     fn sensor_pass(&mut self) {
+        let home = self.current;
+
+        for st in self.prox.values_mut() {
+            st.seen_camera = false;
+        }
+
+        // ProximitySensor.update uses the viewpoint of the layer that traversed it.
+        for key in self.drawn.clone() {
+            self.swap_to(key);
+            self.sensor_pass_layer(Some(key));
+        }
+
+        self.swap_to(home);
+        self.sensor_pass_layer(None);
+    }
+
+    /// The sensors of layer `only`; with `None` the ProximitySensors of no layer drawn, then
+    /// the VisibilitySensors.
+    fn sensor_pass_layer(&mut self, only: Option<LayerKey>) {
         let now = self.time;
         let vp_node = self.layer.viewpoint();
         let base = self.base();
         let vpv = self.layer.vp(vp_node).clone();
-
-        // CAMERA pass data: which sensors were reached, their model matrices.
-        for st in self.prox.values_mut() {
-            st.seen_camera = false;
-        }
+        let drawn = self.drawn.clone();
 
         let cam_prox: HashMap<(Vec<NodeId>, NodeId), Matrix4> = self.scan_cam.proximity.iter().map(|e| ((e.node.path.to_vec(), e.node.node), e.model_view)).collect();
         let cam_vis: Vec<(Vec<NodeId>, NodeId)> = self.scan_cam.visibility.iter().map(|e| (e.node.path.to_vec(), e.node.node)).collect();
@@ -656,6 +1234,12 @@ impl Viewer3d {
 
             if !st.registered {
                 continue;
+            }
+
+            match only {
+                Some(layer) if st.layer != layer => continue,
+                None if drawn.contains(&st.layer) => continue,
+                _ => {}
             }
 
             let seen = cam_prox.get(&key).copied();
@@ -671,11 +1255,15 @@ impl Viewer3d {
                 let mut cor_m = vpv.model;
                 cor_m.translate(&vpv.user_center_of_rotation(&base));
                 cor_m.mult_right(&inv_model);
-                let (cor, _, _, _) = factor_simple(&cor_m);
+                // ProximitySensor.update: Matrix4.getTransform (the full decomposition).
+                let mut cor = Vector3::ZERO;
+                cor_m.get_transform(Some(&mut cor), None, None, None, None);
 
                 let mut m = inv_model;
                 m.mult_left(&vpv.camera_space);
-                let (position, orientation, _, _) = factor_simple(&m);
+                let (mut position, mut orientation) = (Vector3::ZERO, Rotation4::identity());
+                m.get_transform(Some(&mut position), Some(&mut orientation), None, None, None);
+                let (position, orientation) = (position, orientation);
 
                 let set = |rt: &mut Runtime, name: &str, v: FieldValue| {
                     if let Some(k) = rt.pre(n, name) {
@@ -683,9 +1271,20 @@ impl Viewer3d {
                     }
                 };
 
+                // GeoProximitySensor.set_position__: geoCoord_changed follows every position_changed.
+                let geo = rt.builtin_name(n) == Some("GeoProximitySensor");
+                let set_position = |rt: &mut Runtime| {
+                    set(rt, "position_changed", FieldValue::SFVec3f(position));
+
+                    if geo {
+                        let g = rt.geo_object(n).get_geo_coord(&position);
+                        set(rt, "geoCoord_changed", FieldValue::SFVec3d(g));
+                    }
+                };
+
                 if rt.get_bool(n, "isActive") {
                     if !matches!(rt.pre_value(n, "position_changed"), Some(FieldValue::SFVec3f(p)) if p.equals(&position)) {
-                        set(rt, "position_changed", FieldValue::SFVec3f(position));
+                        set_position(rt);
                     }
 
                     if !matches!(rt.pre_value(n, "orientation_changed"), Some(FieldValue::SFRotation(o)) if o.equals(&orientation)) {
@@ -698,7 +1297,7 @@ impl Viewer3d {
                 } else {
                     set(rt, "isActive", FieldValue::SFBool(true));
                     set(rt, "enterTime", FieldValue::SFTime(now));
-                    set(rt, "position_changed", FieldValue::SFVec3f(position));
+                    set_position(rt);
                     set(rt, "orientation_changed", FieldValue::SFRotation(orientation));
                     set(rt, "centerOfRotation_changed", FieldValue::SFVec3f(cor));
                 }
@@ -720,6 +1319,10 @@ impl Viewer3d {
             }
 
             st.traversed = false;
+        }
+
+        if only.is_some() {
+            return;
         }
 
         let keys: Vec<_> = self.vis.keys().cloned().collect();
@@ -768,17 +1371,27 @@ impl Viewer3d {
     // --- viewpoints --------------------------------------------------------------------------
 
     /// X3DLayerNode.getUserViewpoints: viewpoints of the world with a description.
+    /// X3DLayerNode.getUserViewpoints: the viewpoints with a description, without the ones of
+    /// Inline scenes when the EnableInlineViewpoints option is FALSE.
     pub fn user_viewpoints(&self) -> Vec<NodeId> {
+        let inline_viewpoints = self.rt.browser_options.get_option("EnableInlineViewpoints").is_some_and(|v| v.as_bool());
+
         self.layer
             .viewpoint_list()
             .iter()
             .copied()
-            .filter(|n| *n != DEFAULT && !VpBase::read(&self.rt, *n).description.is_empty())
+            .filter(|n| !is_default(*n) && !self.layer.descriptions(*n).is_empty())
+            .filter(|n| inline_viewpoints || self.rt.scene.scene_root(self.rt.scene.node(*n).ctx) == x3d_scene::ROOT)
             .collect()
     }
 
+    /// ContextMenu: the viewpoint's descriptions joined by " » " (with the enclosing
+    /// ViewpointGroup descriptions first); its own description before the first CAMERA pass.
     pub fn viewpoint_description(&self, n: NodeId) -> String {
-        VpBase::read(&self.rt, n).description
+        match self.layer.descriptions(n) {
+            [] => VpBase::read(&self.rt, n).description,
+            d => d.join(" » "),
+        }
     }
 
     /// X3DBrowser.bindViewpoint.
@@ -846,6 +1459,7 @@ impl Viewer3d {
 
         // The event handler returned: pending microtasks run and the loads they wait for complete.
         self.rt.settle();
+        self.sync_active_layer();
     }
 
     fn input_event(&mut self, ev: UiEvent) {
@@ -855,6 +1469,8 @@ impl Viewer3d {
                 self.ctrl = ctrl;
                 self.alt = alt;
             }
+            UiEvent::KeyDown { key } => self.key_event(true, &key),
+            UiEvent::KeyUp { key } => self.key_event(false, &key),
             UiEvent::Key(k) => match k {
                 Key::Home => self.first_viewpoint(),
                 Key::End => self.last_viewpoint(),
@@ -870,6 +1486,19 @@ impl Viewer3d {
     }
 
     fn viewer_input(&mut self, ev: Input) {
+        // No displayed active layer: nothing to navigate.
+        if self.active.is_none() {
+            return;
+        }
+
+        // The viewers' mousedown and wheel: only inside the active layer's viewport
+        // (X3DViewer.isPointerInRectangle).
+        if let Input::MouseDown { x, y, .. } | Input::Wheel { x, y, .. } = ev {
+            if !layers::pointer_in_rectangle(&self.layer_rect(self.current), x, y) {
+                return;
+            }
+        }
+
         let base = self.base();
         let nav = self.nav_info();
         let env = self.env();
@@ -877,8 +1506,9 @@ impl Viewer3d {
         let world = self.collision_world();
         let (bb, nv) = (base.clone(), nav.clone());
         let vp = self.layer.vp(vp_node);
+        let wall_friction = self.rt.browser_options.wall_friction();
         let mut constrain = |t: Vector3, v: &crate::layer::Vp| match &world {
-            Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, WALL_FRICTION),
+            Some(w) => w.constrain_translation(v, &bb, &nv, t, true, true, wall_friction),
             None => t,
         };
         let mut cx = Cx { env: &env, base: &base, vp, nav: &nav, constrain: &mut constrain, requests: vec![] };
@@ -928,18 +1558,58 @@ impl Viewer3d {
     }
 
     fn has_sensors(&self) -> bool {
-        self.scan_display.shapes.iter().any(|s| !s.sensors.is_empty())
+        let any = |s: &Scan| s.shapes.iter().any(|s| !s.sensors.is_empty());
+
+        any(&self.scan_display) || self.others.iter().any(|l| any(&l.scan_display))
     }
 
+    /// X3DPointingDeviceSensorContext.touch: the POINTER traversal of every layer drawn, in
+    /// order, into one pointing buffer: each layer clears the depth, so the last layer with a
+    /// shape under the pointer wins. A layer takes part with `pointerEvents` TRUE and the pointer
+    /// in its viewport, or while it holds the pointer (pointingLayer: only that one).
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
-        let cam = self.pick_camera();
-        let shapes = std::mem::take(&mut self.scan_display.shapes);
-        let mut cache = std::mem::take(&mut self.geom_cache);
-        let rt = &self.rt;
-        let hit = pick(&shapes, &mut |s| geom_of(rt, &mut cache, s), &cam, x, y);
-        self.geom_cache = cache;
-        self.scan_display.shapes = shapes;
-        hit
+        let home = self.current;
+        let mut hit: Option<Hit> = None;
+
+        for key in self.drawn.clone() {
+            if !self.pointer_events(key) {
+                continue;
+            }
+
+            match self.pointing_layer {
+                Some(p) if p != key => continue,
+                Some(_) => {}
+                None if !layers::pointer_in_rectangle(&self.layer_rect(key), x, y) => continue,
+                None => {}
+            }
+
+            self.swap_to(key);
+            let cam = self.pick_camera();
+            let shapes = std::mem::take(&mut self.scan_display.shapes);
+            let mut cache = std::mem::take(&mut self.geom_cache);
+            let rt = &self.rt;
+            let mut h = pick(&shapes, &mut |s| geom_of(rt, &mut cache, s), &cam, x, y, self.pointing_layer.is_some());
+            self.geom_cache = cache;
+            self.scan_display.shapes = shapes;
+            h.layer = key;
+
+            // No hit: the ray of the pointing layer (hit .pointingLayerNode .getHitRay ()).
+            if h.id || hit.as_ref().is_none_or(|b| !b.id) {
+                hit = Some(h);
+            }
+        }
+
+        self.swap_to(home);
+
+        match hit {
+            Some(h) => h,
+            // The pointing layer is not drawn any more: no hit, and its last hit ray (hit .ray
+            // .assign (hit .pointingLayerNode .getHitRay ()), not traversed since).
+            None => match self.pointing_layer {
+                Some(layer) => Hit { pointer: x3d_fields::math::Vector2::new(x, y), ray: self.pointer.hit.ray.copy(), view_matrix: self.pointer.hit.view_matrix, layer, ..Hit::default() },
+                None => Hit { pointer: x3d_fields::math::Vector2::new(x, y), ..Hit::default() },
+            },
+        }
     }
 
     fn collect_pointer_output(&mut self) {
@@ -955,6 +1625,30 @@ impl Viewer3d {
         }
     }
 
+    /// The element's keydown / keyup listeners: X3DCoreContext (modifier state, viewpoint keys) and
+    /// X3DKeyDeviceSensorContext (the key device sensors, then processEvents).
+    fn key_event(&mut self, down: bool, key: &str) {
+        let e = x3d_runtime::nodes::key_sensor::KeyEvent { key: key.to_string(), code: x3d_runtime::nodes::key_sensor::key_code(key) };
+
+        match (e.code, down) {
+            (16, d) => self.shift = d,
+            (17, d) => self.ctrl = d,
+            (18, d) => self.alt = d,
+            (36, true) => self.first_viewpoint(),
+            (35, true) => self.last_viewpoint(),
+            (33, true) => self.next_viewpoint(-1),
+            (34, true) => self.next_viewpoint(1),
+            _ => {}
+        }
+
+        // Must advance time, because the events are processed now (advanceOnlyTime).
+        if self.advance_only_time {
+            self.rt.now = self.date_now;
+        }
+
+        self.rt.key_event(down, &e);
+    }
+
     fn mouse_down(&mut self, button: u8, x: f64, y: f64) {
         if button == 0 && self.has_sensors() {
             if self.advance_only_time {
@@ -962,12 +1656,22 @@ impl Viewer3d {
             }
 
             let hit = self.do_pick(x, y);
-            let cam = self.pick_camera();
+            let cam = self.pick_camera_of(hit.layer);
             let now = if self.advance_only_time { self.date_now } else { self.time };
+            let id = hit.id;
+            let layer = hit.layer;
             let pressed = self.pointer.button_press(&mut self.rt, hit, &cam, now);
+
+            // hit .pointingLayerNode = hit .layerNode.
+            if id {
+                self.pointing_layer = Some(layer);
+            }
+
             self.collect_pointer_output();
 
             if pressed {
+                // PointingDevice.mousedown → onverifymotion: motion after the next frame.
+                self.verify_motion = Some((x, y));
                 return;
             }
         }
@@ -977,8 +1681,9 @@ impl Viewer3d {
 
     fn mouse_up(&mut self, button: u8, x: f64, y: f64) {
         if button == 0 && self.pointer.is_active() {
-            let cam = self.pick_camera();
+            let cam = self.pick_camera_of(self.pointing_layer.unwrap_or(self.pointer.hit.layer));
             let now = if self.advance_only_time { self.date_now } else { self.time };
+            self.pointing_layer = None;
             self.pointer.button_release(&mut self.rt, &cam, now);
             self.collect_pointer_output();
             // PointingDevice.onverifymotion: motion after the next frame.
@@ -999,7 +1704,7 @@ impl Viewer3d {
         }
 
         let hit = if self.nav.is_active() { self.pointer.hit.clone() } else { self.do_pick(x, y) };
-        let cam = self.pick_camera();
+        let cam = self.pick_camera_of(self.pointing_layer.unwrap_or(hit.layer));
         let now = if self.advance_only_time { self.date_now } else { self.time };
         self.pointer.motion(&mut self.rt, hit, &cam, now);
         self.collect_pointer_output();
@@ -1009,30 +1714,47 @@ impl Viewer3d {
 
     /// The frame for the renderer: the bound viewpoint's camera and bindables.
     pub fn build_frame(&mut self) -> Frame {
-        let base = self.base();
-        let nav = self.nav_info();
-        let vp = self.layer.vp(self.layer.viewpoint()).clone();
-        let bg = self.layer.background();
-        let fog = self.layer.fog();
-        let vp_node = self.layer.viewpoint();
-        let nav_node = self.layer.navigation_info();
+        let mut cameras = vec![(self.current, self.camera_override(&self.layer, &self.scan_cam, self.current))];
 
-        let background = if bg == DEFAULT { None } else { self.scan_cam.backgrounds.iter().find(|(n, _)| n.node == bg).map(|(n, m)| (n.node, *m)) };
+        for s in &self.others {
+            cameras.push((s.key, self.camera_override(&s.layer, &s.scan_cam, s.key)));
+        }
 
         let mut b = Builder::new(&self.rt).with_cache(&mut self.render_cache);
-        b.camera = Some(CameraOverride {
+        b.camera = cameras.iter().find(|(k, _)| k.is_none()).map(|(_, c)| c.clone());
+        b.layer_cameras = cameras.into_iter().filter(|(k, _)| k.is_some()).collect();
+        b.build(self.width, self.height)
+    }
+
+    /// The bound viewpoint's camera and the bindables of a layer for the renderer.
+    fn camera_override(&self, layer: &Layer, scan_cam: &Scan, key: LayerKey) -> CameraOverride {
+        let vp_node = layer.viewpoint();
+        let nav_node = layer.navigation_info();
+        let base = VpBase::read(&self.rt, vp_node);
+        let nav = NavInfo::read(&self.rt, nav_node);
+        let vp = layer.vps.get(&vp_node).cloned().unwrap_or_default();
+        let bg = layer.background();
+        let fog = layer.fog();
+        let r = self.layer_rect(key);
+
+        let background = if bg == DEFAULT { None } else { scan_cam.backgrounds.iter().find(|(n, _)| n.node == bg).map(|(n, m)| (n.node, *m)) };
+
+        CameraOverride {
             camera_space: vp.camera_space,
             fov: vp.user_fov(&base),
             near: vp.near_distance(&base, &nav),
             far: vp.far_distance(&base, &nav),
-            projection: base.is_ortho.then(|| vp.projection(&base, vp.near_distance(&base, &nav), vp.far_distance(&base, &nav), self.width as f64, self.height as f64)),
+            projection: base.is_ortho.then(|| vp.projection(&base, vp.near_distance(&base, &nav), vp.far_distance(&base, &nav), r[2], r[3])),
             headlight: nav.headlight,
-            viewpoint: (vp_node != DEFAULT).then_some(vp_node),
+            viewpoint: (!is_default(vp_node)).then_some(vp_node),
             navigation_info: (nav_node != DEFAULT).then_some(nav_node),
             background,
             fog: (fog != DEFAULT).then_some(fog),
-        });
-        b.build(self.width, self.height)
+            // X3DBackgroundNode scales the background by getMaxFarValue (the OrthoViewpoint's
+            // 1e4 is not used here: the background radius stays 1e5 for it).
+            max_far: if base.geo.is_some() { 1e9 } else { crate::layer::max_far() },
+            ortho_size: base.is_ortho.then(|| (vp.user_size_x(&base), vp.user_size_y(&base))),
+        }
     }
 
     pub fn log(&self) -> &[String] {

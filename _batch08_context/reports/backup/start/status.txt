@@ -1,0 +1,266 @@
+ M Cargo.lock
+ M crates/r0-2-c-tests/tests/api_surface.rs
+ M crates/r0-2-c-tests/tests/future_gate.rs
+ M crates/r0-2-c-tests/tests/parser_scene.rs
+ M crates/x3d-fields/src/generator.rs
+ M crates/x3d-fields/src/jsmath.rs
+ M crates/x3d-fields/src/math/quaternion.rs
+ M crates/x3d-fields/src/math/rotation.rs
+ M crates/x3d-fields/src/value.rs
+ M crates/x3d-parse/Cargo.toml
+ M crates/x3d-parse/src/lexer.rs
+ M crates/x3d-parse/src/lib.rs
+ M crates/x3d-parse/src/parser.rs
+ M crates/x3d-render/Cargo.toml
+ M crates/x3d-render/src/geometry.rs
+ M crates/x3d-render/src/gpu.rs
+ M crates/x3d-render/src/lib.rs
+ M crates/x3d-render/src/sg.rs
+ M crates/x3d-render/src/text.rs
+ M crates/x3d-render/src/texture.rs
+ M crates/x3d-render/src/traverse.rs
+ M crates/x3d-render/src/x3d.wgsl
+ M crates/x3d-runtime/Cargo.toml
+ M crates/x3d-runtime/src/events.rs
+ M crates/x3d-runtime/src/extern_proto.rs
+ M crates/x3d-runtime/src/inline.rs
+ M crates/x3d-runtime/src/lib.rs
+ M crates/x3d-runtime/src/loader.rs
+ M crates/x3d-runtime/src/nodes/interp.rs
+ M crates/x3d-runtime/src/nodes/mod.rs
+ M crates/x3d-runtime/src/nodes/time.rs
+ M crates/x3d-runtime/src/release.rs
+ M crates/x3d-runtime/src/script.rs
+ M crates/x3d-scene/Cargo.toml
+ M crates/x3d-scene/data/x_ite-nodes.json
+ M crates/x3d-scene/src/lib.rs
+ M crates/x3d-scene/src/nodes.rs
+ M crates/x3d-scene/src/scene.rs
+ M crates/x3d-scene/src/setup.rs
+ M crates/x3d-scene/src/vrml.rs
+ M crates/x3d-script/src/bin/x3d-run.rs
+ M crates/x3d-script/src/compare.rs
+ M crates/x3d-script/src/engine.rs
+ M crates/x3d-script/src/prelude.js
+ M crates/x3d-script/tests/disposal_records.rs
+ M crates/x3d-text/src/libtess.rs
+ M crates/x3d-viewer/src/bin/x3d-drive.rs
+ M crates/x3d-viewer/src/bin/x3d-view.rs
+ M crates/x3d-viewer/src/collision.rs
+ M crates/x3d-viewer/src/embed.rs
+ M crates/x3d-viewer/src/layer.rs
+ M crates/x3d-viewer/src/lib.rs
+ M crates/x3d-viewer/src/lookat.rs
+ M crates/x3d-viewer/src/nav.rs
+ M crates/x3d-viewer/src/nav/lookat.rs
+ M crates/x3d-viewer/src/pointer.rs
+ M crates/x3d-viewer/src/script.rs
+ M crates/x3d-viewer/src/viewer.rs
+ M crates/x3d-viewer/src/walk.rs
+ M crates/x3d-viewer/tests/pointer_slot_reuse.rs
+ M crates/x3d/tests/reference.rs
+ M oracle/tools/trim_nodes.py
+ M oracle/tools/x10_compare.py
+ M oracle/x_ite-anim-msaa.mjs
+ M oracle/x_ite-anim.mjs
+ M oracle/x_ite-nodes.json
+ M oracle/x_ite-nodes.mjs
+ M oracle/x_ite-pin/src/anim-msaa.html
+ M oracle/x_ite-pin/src/anim-sized.html
+ M oracle/x_ite-pin/src/anim.html
+ M oracle/x_ite-pin/src/dump.html
+ M oracle/x_ite-pin/src/shot-msaa.html
+ M oracle/x_ite-pin/src/shot.html
+?? .claude/
+?? .port-factory/
+?? crates/x3d-parse/src/dom.rs
+?? crates/x3d-parse/src/formats.rs
+?? crates/x3d-parse/src/json.rs
+?? crates/x3d-parse/src/optimizer.rs
+?? crates/x3d-parse/src/xml.rs
+?? crates/x3d-parse/tests/formats_rea.rs
+?? crates/x3d-parse/tests/optimizer_rea.rs
+?? crates/x3d-render/src/composed.rs
+?? crates/x3d-render/src/extras.rs
+?? crates/x3d-render/src/filter.wgsl
+?? crates/x3d-render/src/geometry2d.rs
+?? crates/x3d-render/src/hanim.rs
+?? crates/x3d-render/src/layer.rs
+?? crates/x3d-render/src/nurbs.rs
+?? crates/x3d-render/src/shadow.wgsl
+?? crates/x3d-render/src/style.rs
+?? crates/x3d-render/src/volume.rs
+?? crates/x3d-render/src/volume.wgsl
+?? crates/x3d-render/src/volume_gpu.rs
+?? crates/x3d-render/tests/geometry_rea.rs
+?? crates/x3d-render/tests/rea_b04_geometry.rs
+?? crates/x3d-render/tests/rea_b04_nurbs_iso.rs
+?? crates/x3d-render/tests/render_rea2.rs
+?? crates/x3d-render/tests/render_rea_b02.rs
+?? crates/x3d-render/tests/render_rea_b03.rs
+?? crates/x3d-render/tests/render_rea_b04.rs
+?? crates/x3d-render/tests/render_rea_b07_mat.rs
+?? crates/x3d-render/tests/render_rea_b07_vol.rs
+?? crates/x3d-runtime/src/browser_options.rs
+?? crates/x3d-runtime/src/bullet.rs
+?? crates/x3d-runtime/src/geo.rs
+?? crates/x3d-runtime/src/nodes/geo.rs
+?? crates/x3d-runtime/src/nodes/hanim.rs
+?? crates/x3d-runtime/src/nodes/image_texture_3d.rs
+?? crates/x3d-runtime/src/nodes/image_texture_3d/
+?? crates/x3d-runtime/src/nodes/key_sensor.rs
+?? crates/x3d-runtime/src/nodes/load_sensor.rs
+?? crates/x3d-runtime/src/nodes/nurbs.rs
+?? crates/x3d-runtime/src/nodes/particle_systems.rs
+?? crates/x3d-runtime/src/nodes/pick_sensor.rs
+?? crates/x3d-runtime/src/nodes/rigid_body_physics.rs
+?? crates/x3d-runtime/src/nodes/rigid_body_physics/
+?? crates/x3d-runtime/src/nodes/sound.rs
+?? crates/x3d-runtime/src/nodes/texture_projector.rs
+?? crates/x3d-runtime/src/nodes/transform_sensor.rs
+?? crates/x3d-runtime/src/nodes/viewpoint_group.rs
+?? crates/x3d-runtime/src/nurbs.rs
+?? crates/x3d-runtime/src/particles.rs
+?? crates/x3d-runtime/src/physics/
+?? crates/x3d-runtime/src/sound/
+?? crates/x3d-runtime/tests/bullet_box_box.rs
+?? crates/x3d-runtime/tests/bullet_dyn_scenes.rs
+?? crates/x3d-runtime/tests/data/
+?? crates/x3d-runtime/tests/geometry_provider_bare.rs
+?? crates/x3d-runtime/tests/geometry_provider_installed.rs
+?? crates/x3d-runtime/tests/particles_b07_units.rs
+?? crates/x3d-scene/data/x_ite-nodes-annotation.json
+?? crates/x3d-scene/src/json.rs
+?? crates/x3d-scene/src/xml.rs
+?? crates/x3d-scene/tests/
+?? crates/x3d-script/tests/retention_tables.rs
+?? crates/x3d-script/tests/xml_json_runtime.rs
+?? crates/x3d-viewer/src/bin/x3d-particles-drive.rs
+?? crates/x3d-viewer/src/bullet.rs
+?? crates/x3d-viewer/src/pick_shapes.rs
+?? crates/x3d-viewer/src/picking.rs
+?? crates/x3d-viewer/tests/geometry_provider_viewer.rs
+?? crates/x3d-viewer/tests/particles_b06_common/
+?? crates/x3d-viewer/tests/particles_b06_events.rs
+?? crates/x3d-viewer/tests/particles_b06_exact.rs
+?? crates/x3d-viewer/tests/particles_b06_retention.rs
+?? crates/x3d-viewer/tests/particles_b06_stat.rs
+?? crates/x3d-viewer/tests/particles_b06_unreachable.rs
+?? crates/x3d-viewer/tests/particles_b07.rs
+?? crates/x3d-viewer/tests/physics_b06_baseline.rs
+?? crates/x3d-viewer/tests/physics_b06_lifecycle.rs
+?? crates/x3d-viewer/tests/rea_b02_layers.rs
+?? crates/x3d-viewer/tests/rea_b02_reload.rs
+?? crates/x3d-viewer/tests/rea_b03_pick_vectors.rs
+?? crates/x3d-viewer/tests/rea_b03_reload.rs
+?? crates/x3d-viewer/tests/rea_b03_render_reload.rs
+?? crates/x3d-viewer/tests/rea_b04_reload.rs
+?? crates/x3d-viewer/tests/rea_b04_render_reload.rs
+?? crates/x3d-viewer/tests/rea_b05_reload.rs
+?? crates/x3d-viewer/tests/rea_b07_mat_reload.rs
+?? crates/x3d-viewer/tests/rea_b07_vol_reload.rs
+?? crates/x3d-viewer/tests/rea_batch01.rs
+?? crates/x3d-viewer/tests/rea_batch02.rs
+?? crates/x3d-viewer/tests/rea_batch03.rs
+?? crates/x3d-viewer/tests/rea_batch04.rs
+?? crates/x3d-viewer/tests/rea_batch07_mat.rs
+?? crates/x3d-viewer/tests/rea_batch07_vol.rs
+?? crates/x3d-viewer/tests/retention_viewer.rs
+?? evidence/
+?? oracle/pick-vectors/
+?? oracle/rea-batch01-baseline/
+?? oracle/rea-batch02-baseline/
+?? oracle/rea-batch03-baseline/
+?? oracle/rea-batch04-baseline/
+?? oracle/rea-batch05-baseline/
+?? oracle/rea-batch06-baseline/
+?? oracle/rea-batch07-mat-baseline/
+?? oracle/rea-batch07-ps-baseline/
+?? oracle/rea-batch07-vol-baseline/
+?? oracle/render-items-baseline
+?? oracle/render-items2-baseline
+?? oracle/render-msaa4-items-baseline
+?? oracle/render-msaa4-items2-baseline
+?? oracle/render-msaa4-rea-b02-baseline/
+?? oracle/render-msaa4-rea-b03-baseline/
+?? oracle/render-msaa4-rea-b04-baseline/
+?? oracle/render-msaa4-rea-b07-mat-baseline/
+?? oracle/render-msaa4-rea-b07-vol-baseline/
+?? oracle/render-msaa4-rea2-baseline/
+?? oracle/render-msaa4-x8-baseline
+?? oracle/render-msaa8-items-baseline
+?? oracle/render-msaa8-x8-baseline
+?? oracle/render-rea-b02-baseline/
+?? oracle/render-rea-b02-sizes-baseline/
+?? oracle/render-rea-b03-baseline/
+?? oracle/render-rea-b04-baseline/
+?? oracle/render-rea-b07-mat-baseline/
+?? oracle/render-rea-b07-vol-baseline/
+?? oracle/render-rea2-baseline/
+?? oracle/render-synthetic-x8-baseline
+?? oracle/synthetic-rea-b02/
+?? oracle/synthetic-rea-b03/
+?? oracle/synthetic-rea-b04/
+?? oracle/synthetic-rea-b05/
+?? oracle/synthetic-rea-b06/
+?? oracle/synthetic-rea-b07-mat/
+?? oracle/synthetic-rea-b07-probe/
+?? oracle/synthetic-rea-b07-ps/
+?? oracle/synthetic-rea-b07-vol/
+?? oracle/synthetic-rea-formats/
+?? oracle/synthetic-rea-optimizer/
+?? oracle/synthetic-rea-pick/
+?? oracle/synthetic-rea-render/
+?? oracle/synthetic-rea-render2-known/
+?? oracle/synthetic-rea-render2/
+?? oracle/synthetic-rea-verify/
+?? oracle/synthetic-rea-xml/
+?? oracle/synthetic-rea/
+?? oracle/tools/__pycache__/
+?? oracle/tools/ammo_dyn_meshes.json
+?? oracle/tools/ammo_dyn_vectors.mjs
+?? oracle/tools/ammo_pick_vectors.mjs
+?? oracle/tools/gen_rea_b02_cube.py
+?? oracle/tools/gen_rea_b02_gencube.py
+?? oracle/tools/gen_rea_b02_layers.py
+?? oracle/tools/gen_rea_b02_multitex.py
+?? oracle/tools/gen_rea_b02_pbr.py
+?? oracle/tools/gen_rea_b02_picking.py
+?? oracle/tools/gen_rea_b03_lights.py
+?? oracle/tools/gen_rea_b03_materials.py
+?? oracle/tools/gen_rea_b03_picking.py
+?? oracle/tools/gen_rea_b03_projectors.py
+?? oracle/tools/gen_rea_b03_rendered.py
+?? oracle/tools/gen_rea_b03_shadows.py
+?? oracle/tools/gen_rea_b03_texture3d.py
+?? oracle/tools/gen_rea_b04_hanim.py
+?? oracle/tools/gen_rea_b04_nurbs.py
+?? oracle/tools/gen_rea_b04_stills.py
+?? oracle/tools/gen_rea_b05.py
+?? oracle/tools/gen_rea_b06.py
+?? oracle/tools/gen_rea_b06_particles.py
+?? oracle/tools/gen_rea_b07_mat.py
+?? oracle/tools/gen_rea_b07_ps.py
+?? oracle/tools/gen_rea_b07_vol.py
+?? oracle/tools/rea_b02.py
+?? oracle/tools/rea_b03.py
+?? oracle/tools/rea_b04.py
+?? oracle/tools/rea_b05.py
+?? oracle/tools/rea_b06.py
+?? oracle/tools/rea_b06_particles.py
+?? oracle/tools/rea_b07_mat.py
+?? oracle/tools/rea_b07_ps.py
+?? oracle/tools/rea_b07_vol.py
+?? oracle/tools/run_rea_suite.py
+?? oracle/tools/x_ite_particles.mjs
+?? oracle/tools/x_ite_particles_b07.mjs
+?? oracle/tools/x_ite_particles_events.mjs
+?? oracle/tools/x_ite_probe.mjs
+?? oracle/x_ite-formats.mjs
+?? oracle/x_ite-geometry-rea.mjs
+?? oracle/x_ite-nodes-annotation.json
+?? oracle/x_ite-nodes-annotation.mjs
+?? oracle/x_ite-optimizer.mjs
+?? oracle/x_ite-pin/src/nodes.html
+?? oracle/x_ite-xmljson.mjs
+?? upstream

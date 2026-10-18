@@ -1,0 +1,141 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.39",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "inst-geometries.wrl",
+   "ok": true,
+   "log": [
+    "warn: Parser error at line 19: Unknown node type or proto 'Text'. You probably have insufficient component/profile statements, and/or an inappropriate specification version."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "c51cf189cc606f671df7d16ce3ddf5914a53f197c7bda56ebd74d54adcb5cbda",
+   "pngSha256": "98ca19e4e35677c2ba388bf77ed11dcf8c483d6b38b1c5d82221e2f62b1e452a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-lengths.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3bc93a50b4f42b8ec7061ada78ebfc0eefb3cf8d23698320dd55246ae5eed1bb",
+   "pngSha256": "38b72b4dfb2cd68c42b3676b849fb1bba55cb9cc6424cde5b6d8222bc765b3e0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-pbr-ibl.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "73c77ac39089e5ff61ce08b481019be7e9a24d2e480e6ca42b10a57f87a557f2",
+   "pngSha256": "56ecc30f43c856cc2f4f9e55c114f4fce7126da8dcc7c50c99e0a74ff6b68c43",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-runtime.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "733d86bd436fb29cda46435c11e2b25fbd3fc4e25f70a14de045a48f37a48446",
+   "pngSha256": "afc7e17022df1703e6e6e90342deaee62ca98a9c125e18ffc747d92ab309b8dc",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-scale-orientation.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7e4fd846155a87e0156ca81c07dde82b1e953bb5ec8ca8a9b68018831e2954bc",
+   "pngSha256": "2547d5c53ff2dc698cb265076df3bd1f67e80cee265999d8a5fbcba0e557b265",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-shadows.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6a40cce54fe00470746b295cfb174d09d4a4933a9816ff8542178d60db777746",
+   "pngSha256": "336c966ac83cb9f135acc2451bf4035f841ca8d393ad2a3c2fc7422f9e22195f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-transforms.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "fe266f82d37d237b74d08489c21e103daf5e20a5ebfefd6dc4162420fa8bc703",
+   "pngSha256": "c70bd2d39f48cda148b26292343f24fa81c88fdeda433c6ee376f32f013d4206",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-transparent-textured.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a8b2d85b4421a5a445de7562441cea95fb9ec5ddcddb48b858b9f324e8f206bb",
+   "pngSha256": "2f07f71e7de7b7d5e6cf368b7da83744179a95a8b61d39403e1d847b54b10cde",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "inst-twosided-layers.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "35c7e682b6e6388f2129bfd4015c0494cdc906a91152bbe9c0ade4939ee1c882",
+   "pngSha256": "9233da58076eff27e9f81bcbdb0e651fc6238b95e116d8660b2c8f6e0c6469ad",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

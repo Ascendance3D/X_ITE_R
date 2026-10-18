@@ -18,6 +18,11 @@ args = sys.argv[1:]
 opt = lambda n, d=None: args[args.index(n) + 1] if n in args else d
 pos = [a for i, a in enumerate(args) if not a.startswith("--") and not (i and args[i - 1].startswith("--"))]
 world, script, out = pos[:3]
+# REA batch 04 (additive): --rs-world W drives Rust with W while X_ITE runs `world`, a stand-in
+# reference (oracle/synthetic-rea-b04/annotation-layer*.wrl); each --rs-sub "old=>new" is applied
+# to the Rust scene text before it is compared, so only the named differences are excused.
+rs_world = opt("--rs-world", world)
+rs_subs = [args[i + 1].split("=>", 1) for i, a in enumerate(args) if a == "--rs-sub"]
 tol = float(opt("--pose-tol", "1e-4"))
 target = opt("--target", os.path.join(root, "target-viewer", "release"))  # release: a stale debug build gave a false GPU-layout crash
 os.makedirs(out, exist_ok=True)
@@ -32,7 +37,7 @@ msaa = opt("--msaa")  # additive: X_ITE antialiased with N samples vs Rust N sam
 cmd = ["node", os.path.join(root, "oracle", anim if not msaa else "x_ite-anim-msaa.mjs"), world, script, "--out", js_json] + (["--ms", msaa] if msaa else [])
 if imgs: cmd += ["--png-dir", os.path.join(out, "js")]
 subprocess.run(cmd, check=False, timeout=180, cwd=root)
-cmd = [os.path.join(target, "x3d-drive"), world, script, "--oracle", os.path.join(root, "oracle"), "--out", rs_json, "--warmup-from", js_json]
+cmd = [os.path.join(target, "x3d-drive"), rs_world, script, "--oracle", os.path.join(root, "oracle"), "--out", rs_json, "--warmup-from", js_json]
 if msaa: cmd += ["--msaa", msaa, "--gl-samples"]
 if imgs: cmd += ["--png-dir", os.path.join(out, "rs")]
 subprocess.run(cmd, check=False, timeout=180, cwd=root)
@@ -66,6 +71,8 @@ def text_equal(a, b):
 
 for k, a in js["vrml"].items():
     b = rs["vrml"].get(k)
+    for o, n in rs_subs:
+        b = b.replace(o, n) if b is not None else b
     eq, worst = text_equal(a, b)
     report(eq, f"scene text equal at frame {k}" + ("" if not worst else f" (numbers within {worst:.1e})"))
     if not eq:

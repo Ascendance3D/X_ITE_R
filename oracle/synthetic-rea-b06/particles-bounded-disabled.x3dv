@@ -1,0 +1,12 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 12
+  particleLifetime 2
+  lifetimeVariation 0.25
+  emitter PointEmitter { position 0.3 2 -0.2 direction 0 -1 0 speed 3 variation 0.25 }
+  physics [ BoundedPhysicsModel { enabled FALSE geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -10 0 -10, 10 0 -10, 10 0 10, -10 0 10 ] } coordIndex [ 0 3 2 1 -1 ] } } ]
+}

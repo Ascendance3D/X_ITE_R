@@ -1,0 +1,117 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.39",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "nurbs-curve.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cfa615995223e37f871686bc77dbb28fbca3e36f03e3553324f6f7634df30b3b",
+   "pngSha256": "980de4fc4997c7afe46dcf6a6affc9a222a6f610a3c67fef5362e902ad28df4b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "nurbs-patch-tex.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a8df6d3c59f4c40991a60316bb48bb9caefb303c143b52d62e3171bd6b91605a",
+   "pngSha256": "c7f3b1462d74aa57dfbabdf71777c87f06359fa21ea9f5b67bbc163e4674bd92",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "nurbs-patch.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "902c7fc5922842e8d30dc24877b024fd41662e9768a9850ee3903bf24b9eb07c",
+   "pngSha256": "df57345abb27a0fc870480d49a3d3cc9b15c729e4c51c2c978ee32583b821bbe",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "nurbs-runtime.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b4accf524f593bf7fe992e6afb29aeec1d046dcba6c414c22e16df8b72e4d0e7",
+   "pngSha256": "263273dbe688139ef45b30eaded3668df28764aff5977c7e9f547e851fb216df",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "nurbs-set.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2b53f5a3915ef3012e357ddf11f20172345275ce549444fd9286ae8f41b815db",
+   "pngSha256": "909a3c7ef3212b7400c06de82b1a75068e9f275eb6749e60960b0524e864a199",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "nurbs-swept.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "805c08dcf89a5ec48781dc99141e3402a09895b4a7d4556e2f12b17ecdb01470",
+   "pngSha256": "e01a01a58d01893e8c4479eb2743fe67e473718ac84bd9a43dc48d78ab68c2b9",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "nurbs-trimmed.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "15a469be6dfd29d11d1d312a52bcef6cdfdb17dd88d47285dd75811b2582dad8",
+   "pngSha256": "88022b6dd57f817f0e8cc925cdad9830197f922d16f358a2772213a939d5b518",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

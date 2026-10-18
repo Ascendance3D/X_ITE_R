@@ -1,0 +1,9 @@
+#VRML V2.0 utf8
+PROTO Widget [
+  eventIn SFColor set_color
+  field SFFloat size 1
+  exposedField MFString tags []
+]
+{
+  Shape { geometry Box { size 1 1 1 } }
+}

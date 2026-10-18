@@ -1,0 +1,26 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+Viewpoint { position 0 0 5 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+DEF Inl Inline { url "../render/tex-nearest.gltf" }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode inl USE Inl
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'u') inl .load = false;
+   if (k == 'l') inl .load = true;
+   if (k == 'g') inl .url = new MFString ('../glb/textured.glb');
+   if (k == 'h') inl .url = new MFString ('../render/tex-nearest.gltf');
+   if (k == 'm') inl .url = new MFString ('../nothing/missing.gltf', '../render/mat-pbr-metal.gltf');
+   if (k == 'n') inl .url = new MFString ('../invalid/version-1.gltf');
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

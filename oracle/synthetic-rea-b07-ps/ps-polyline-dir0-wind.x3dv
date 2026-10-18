@@ -1,0 +1,12 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 12
+  particleLifetime 1
+  lifetimeVariation 0.25
+  emitter DEF EM PolylineEmitter { direction 0 0 0 speed 1 variation 0.25 mass 1 surfaceArea 4 coordIndex [ 0 1 2 3 -1 ] coord DEF C Coordinate { point [ 0 0 0, 1 0 0, 1 2 0, 3 2 1 ] } }
+  physics [ DEF W1 WindPhysicsModel { direction 1 0 0 speed 1.5 gustiness 0.3 } ]
+}

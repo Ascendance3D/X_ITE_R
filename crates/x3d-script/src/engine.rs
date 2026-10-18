@@ -28,21 +28,163 @@ enum Slot {
     Field(FKey),
     Value(FieldValue),
     Element(u32, usize),
+    /// Released: on the free list, reached by no JavaScript object (R0.3-E).
+    Free,
 }
 
+/// Field handles (R0.3-E, `JS_SLOT_TABLE_GROWTH`).
+///
+/// A handle is a slot index. JavaScript sees it with the slot's generation in the high bits
+/// (`generation * 2^32 + index`, exact in a double), so a number kept from before a slot was released
+/// never reads or writes the slot's next value: [`decode`] rejects it.
+///
+/// A slot lives while something can reach it:
+///
+/// * `owners`: JavaScript objects that hold the handle (every field object, and the holder each
+///   Script field accessor closes over). prelude.js counts them in (`own`) and a `FinalizationRegistry`
+///   counts them out (`disown`) when QuickJS frees the object.
+/// * `children`: element views (`Slot::Element`) of an MF slot.
+/// * `attached`: the field slot of a node field, while the node lives.
+///
+/// A slot that none of these holds is released: when its last owner goes, when its node is released,
+/// or at the end of the host call that made it (a value JavaScript never wrapped).
 struct State {
     rt: *mut Runtime,
     slots: Vec<Slot>,
+    generations: Vec<u32>,
+    owners: Vec<u32>,
+    children: Vec<u32>,
+    free: Vec<u32>,
+    /// Slots made during the current host call that no owner took yet.
+    fresh: Vec<u32>,
     attached: HashMap<FKey, u32>,
     description: String,
 }
 
+/// What the field handle table holds (for tests and diagnostics).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct SlotStats {
+    /// Length and capacity of the slot table.
+    pub len: usize,
+    pub capacity: usize,
+    /// Released slots waiting to be handed out again.
+    pub free: usize,
+    /// Node fields that have a field slot.
+    pub attached: usize,
+}
+
+/// The field handle table of the script host that ran last on this thread.
+pub fn slot_stats() -> SlotStats {
+    STATES.with(|s| match s.borrow().get(&CURRENT.get()) {
+        Some(s) => stats_of(s),
+        None => LAST_DROPPED.get(),
+    })
+}
+
+/// Script hosts alive on this thread (each with its own field handle table).
+pub fn live_hosts() -> usize {
+    STATES.with(|s| s.borrow().len())
+}
+
+fn stats_of(s: &State) -> SlotStats {
+    SlotStats { len: s.slots.len(), capacity: s.slots.capacity(), free: s.free.len(), attached: s.attached.len() }
+}
+
+/// A handle as JavaScript sees it.
+fn encode(h: u32) -> f64 {
+    let generation = with_state(|s| s.generations[h as usize]);
+    generation as f64 * 4294967296.0 + h as f64
+}
+
+/// The slot of a handle from JavaScript, if the slot was not released since.
+fn decode(x: f64) -> Option<u32> {
+    if !(x >= 0.0) || x.fract() != 0.0 || x >= 9007199254740992.0 {
+        return None;
+    }
+
+    let (generation, h) = ((x / 4294967296.0).floor(), (x % 4294967296.0) as u32);
+
+    with_state(|s| {
+        let live = (h as usize) < s.slots.len() && !matches!(s.slots[h as usize], Slot::Free) && s.generations[h as usize] as f64 == generation;
+        live.then_some(h)
+    })
+}
+
+impl State {
+    fn alloc(&mut self, slot: Slot) -> u32 {
+        if let Slot::Element(parent, _) = slot {
+            self.children[parent as usize] += 1;
+        }
+
+        let h = match self.free.pop() {
+            Some(h) => {
+                self.slots[h as usize] = slot;
+                h
+            }
+            None => {
+                self.slots.push(slot);
+                self.generations.push(0);
+                self.owners.push(0);
+                self.children.push(0);
+                (self.slots.len() - 1) as u32
+            }
+        };
+
+        self.fresh.push(h);
+        h
+    }
+
+    /// Release the slot if nothing holds it any more (see [`State`]).
+    fn try_free(&mut self, h: u32) {
+        let i = h as usize;
+
+        if matches!(self.slots[i], Slot::Free) || self.owners[i] > 0 || self.children[i] > 0 {
+            return;
+        }
+
+        if let Slot::Field(k) = self.slots[i] {
+            if self.attached.get(&k) == Some(&h) {
+                return;
+            }
+        }
+
+        let parent = match self.slots[i] {
+            Slot::Element(p, _) => Some(p),
+            _ => None,
+        };
+
+        self.slots[i] = Slot::Free;
+        self.generations[i] = self.generations[i].wrapping_add(1);
+        self.free.push(h);
+
+        if let Some(p) = parent {
+            self.children[p as usize] -= 1;
+            self.try_free(p);
+        }
+    }
+
+    /// The end of a host call: what JavaScript did not take is released.
+    fn release_fresh(&mut self) {
+        for h in std::mem::take(&mut self.fresh) {
+            self.try_free(h);
+        }
+    }
+}
+
+// Several hosts share a thread (several EmbeddedViewers on one page, REA batch 08 `multiview`). Each host
+// owns a [`State`] under its id; native calls from JavaScript find theirs through `CURRENT`, which every
+// host entry point sets (`QuickJsHost::select`) before it runs JavaScript.
 thread_local! {
-    static STATE: RefCell<Option<State>> = const { RefCell::new(None) };
+    static STATES: RefCell<HashMap<u64, State>> = RefCell::new(HashMap::new());
+    static CURRENT: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
+    static NEXT_HOST: std::cell::Cell<u64> = const { std::cell::Cell::new(1) };
+    /// The table size of the last host that was dropped while it was the current one: what `slot_stats`
+    /// reports when no host is current.
+    static LAST_DROPPED: std::cell::Cell<SlotStats> = const { std::cell::Cell::new(SlotStats { len: 0, capacity: 0, free: 0, attached: 0 }) };
 }
 
 fn with_state<T>(f: impl FnOnce(&mut State) -> T) -> T {
-    STATE.with(|s| f(s.borrow_mut().as_mut().expect("script engine state")))
+    STATES.with(|s| f(s.borrow_mut().get_mut(&CURRENT.get()).expect("script engine state")))
 }
 
 /// The runtime of the world whose script is running.
@@ -53,8 +195,10 @@ fn rt<'a>() -> &'a mut Runtime {
 }
 
 pub struct QuickJsHost {
-    _runtime: rquickjs::Runtime,
-    context: Context,
+    /// This host's key in `STATES`.
+    id: u64,
+    _runtime: std::mem::ManuallyDrop<rquickjs::Runtime>,
+    context: std::mem::ManuallyDrop<Context>,
     deadline: std::rc::Rc<std::cell::Cell<Option<std::time::Instant>>>,
 }
 
@@ -77,7 +221,23 @@ impl QuickJsHost {
 
         let context = Context::full(&runtime).expect("QuickJS context");
 
-        STATE.with(|s| *s.borrow_mut() = Some(State { rt: std::ptr::null_mut(), slots: vec![], attached: HashMap::new(), description: String::new() }));
+        let id = NEXT_HOST.get();
+        NEXT_HOST.set(id + 1);
+
+        STATES.with(|s| {
+            s.borrow_mut().insert(id, State {
+                rt: std::ptr::null_mut(),
+                slots: vec![],
+                generations: vec![],
+                owners: vec![],
+                children: vec![],
+                free: vec![],
+                fresh: vec![],
+                attached: HashMap::new(),
+                description: String::new(),
+            });
+        });
+        CURRENT.set(id);
 
         context.with(|ctx| {
             let f = Function::new(ctx.clone(), native).expect("native __x");
@@ -89,12 +249,43 @@ impl QuickJsHost {
             }
         });
 
-        QuickJsHost { _runtime: runtime, context, deadline }
+        QuickJsHost { id, _runtime: std::mem::ManuallyDrop::new(runtime), context: std::mem::ManuallyDrop::new(context), deadline }
+    }
+
+    /// Make this host's table the one native calls from JavaScript use.
+    fn select(&self) {
+        CURRENT.set(self.id);
     }
 
     fn enter(&self, rt: &mut Runtime) {
+        self.select();
         with_state(|s| s.rt = rt as *mut Runtime);
         self.deadline.set(Some(std::time::Instant::now() + std::time::Duration::from_secs(10)));
+    }
+}
+
+impl Drop for QuickJsHost {
+    /// The JavaScript objects are freed while this host's table is still the current one (their finalizers
+    /// release handles); then the table goes. If it was the current one, `slot_stats` keeps its last size.
+    fn drop(&mut self) {
+        let before = CURRENT.replace(self.id);
+
+        // SAFETY: dropped once, context before runtime, never used again.
+        unsafe {
+            std::mem::ManuallyDrop::drop(&mut self.context);
+            std::mem::ManuallyDrop::drop(&mut self._runtime);
+        }
+
+        STATES.with(|s| {
+            let table = s.borrow_mut().remove(&self.id);
+
+            if before == self.id {
+                LAST_DROPPED.set(table.as_ref().map(stats_of).unwrap_or_default());
+                CURRENT.set(0);
+            } else {
+                CURRENT.set(before);
+            }
+        });
     }
 }
 
@@ -113,10 +304,10 @@ impl ScriptHost for QuickJsHost {
     fn create_context(&mut self, rt: &mut Runtime, node: NodeId, source: &str, callbacks: &[String]) -> Result<Vec<bool>, ScriptError> {
         self.enter(rt);
 
-        let fields: Vec<(String, u8, u32)> = (0..rt.scene.node(node).user_fields.len())
+        let fields: Vec<(String, u8, f64)> = (0..rt.scene.node(node).user_fields.len())
             .map(|i| {
                 let f = &rt.scene.node(node).user_fields[i];
-                (f.name.clone(), f.access, attach((node, FieldLoc::User(i))))
+                (f.name.clone(), f.access, encode(attach((node, FieldLoc::User(i)))))
             })
             .collect();
 
@@ -134,10 +325,14 @@ impl ScriptHost for QuickJsHost {
 
             let cbs: Vec<&str> = callbacks.iter().map(String::as_str).collect();
 
-            match create.call::<_, Vec<bool>>((node, source, cbs, list)) {
+            let result = match create.call::<_, Vec<bool>>((node, source, cbs, list)) {
                 Ok(v) => Ok(v),
                 Err(e) => Err(ScriptError(describe(&ctx, e))),
-            }
+            };
+
+            while ctx.execute_pending_job() {}
+            with_state(State::release_fresh);
+            result
         })
     }
 
@@ -161,6 +356,8 @@ impl ScriptHost for QuickJsHost {
             // Run pending promise jobs (async callbacks continue as microtasks).
             while ctx.execute_pending_job() {}
 
+            with_state(State::release_fresh);
+
             match result {
                 Ok(v) if v.is_undefined() => Ok(()),
                 Ok(v) => Err(ScriptError(v.get::<Coerced<String>>().map(|c| c.0).unwrap_or_default())),
@@ -170,7 +367,39 @@ impl ScriptHost for QuickJsHost {
     }
 
     fn destroy_context(&mut self, node: NodeId) {
+        self.select();
         self.destroy(node);
+        self.collect();
+    }
+
+    fn held_nodes(&mut self, rt: &mut Runtime) -> Option<Vec<NodeId>> {
+        self.enter(rt);
+        self.collect();
+
+        let mut held: Vec<NodeId> = self.context.with(|ctx| match ctx.globals().get::<_, Function>("__heldNodes") {
+            Ok(f) => f.call::<_, Vec<f64>>(()).ok().map(|ids| ids.into_iter().map(|i| i as NodeId).collect()),
+            Err(_) => None,
+        })?;
+
+        // Values that live JavaScript objects hold (`new MFNode (a, b)`, an SFNode field object), and the
+        // node whose field a live field object is.
+        with_state(|s| {
+            for (i, slot) in s.slots.iter().enumerate() {
+                if s.owners[i] == 0 && s.children[i] == 0 {
+                    continue;
+                }
+
+                match slot {
+                    Slot::Value(FieldValue::SFNode(Some(n))) => held.push(*n),
+                    Slot::Value(FieldValue::MFNode(list)) => held.extend(list.iter().flatten().copied()),
+                    Slot::Field(k) => held.push(k.0),
+                    _ => {}
+                }
+            }
+        });
+
+        self.context.with(|ctx| while ctx.execute_pending_job() {});
+        Some(held)
     }
 
     fn release_nodes(&mut self, rt: &mut Runtime, nodes: &[NodeId], tombstone: NodeId) {
@@ -179,8 +408,9 @@ impl ScriptHost for QuickJsHost {
         // A field handle of a released node keeps the value it had; it no longer reaches the field.
         let dead: std::collections::HashSet<NodeId> = nodes.iter().copied().collect();
 
-        with_state(|s| {
+        let detached: Vec<f64> = with_state(|s| {
             let stale: Vec<(FKey, u32)> = s.attached.iter().filter(|(k, _)| dead.contains(&k.0)).map(|(k, h)| (*k, *h)).collect();
+            let mut detached = vec![];
 
             for (k, h) in stale {
                 s.attached.remove(&k);
@@ -189,18 +419,33 @@ impl ScriptHost for QuickJsHost {
                 let value = unsafe { (*s.rt).value(k).clone() };
 
                 s.slots[h as usize] = Slot::Value(value);
+                detached.push(s.generations[h as usize] as f64 * 4294967296.0 + h as f64);
+                s.try_free(h);
             }
+
+            detached
         });
 
         self.context.with(|ctx| {
             if let Ok(f) = ctx.globals().get::<_, Function>("__release") {
-                let _ = f.call::<_, ()>((nodes.to_vec(), tombstone));
+                let _ = f.call::<_, ()>((nodes.to_vec(), tombstone, detached));
             }
         });
+
+        self.collect();
     }
 }
 
 impl QuickJsHost {
+    /// Collect the objects that a shut down or released Script left (they are in cycles, which
+    /// reference counting alone does not free), and run the finalizers that release their slots.
+    fn collect(&mut self) {
+        self._runtime.run_gc();
+
+        self.context.with(|ctx| while ctx.execute_pending_job() {});
+        with_state(State::release_fresh);
+    }
+
     fn destroy(&mut self, node: NodeId) {
         self.context.with(|ctx| {
             if let Ok(f) = ctx.globals().get::<_, Function>("__destroy") {
@@ -218,25 +463,18 @@ fn attach(k: FKey) -> u32 {
             return *h;
         }
 
-        s.slots.push(Slot::Field(k));
-        let h = (s.slots.len() - 1) as u32;
+        let h = s.alloc(Slot::Field(k));
         s.attached.insert(k, h);
         h
     })
 }
 
 fn detached(v: FieldValue) -> u32 {
-    with_state(|s| {
-        s.slots.push(Slot::Value(v));
-        (s.slots.len() - 1) as u32
-    })
+    with_state(|s| s.alloc(Slot::Value(v)))
 }
 
 fn element(parent: u32, i: usize) -> u32 {
-    with_state(|s| {
-        s.slots.push(Slot::Element(parent, i));
-        (s.slots.len() - 1) as u32
-    })
+    with_state(|s| s.alloc(Slot::Element(parent, i)))
 }
 
 fn slot(h: u32) -> Slot {
@@ -248,6 +486,8 @@ fn read(h: u32) -> FieldValue {
         Slot::Field(k) => rt().value(k).clone(),
         Slot::Value(v) => v,
         Slot::Element(p, i) => mf_get(&read(p), i).unwrap_or(FieldValue::SFBool(false)),
+        // Unreachable through `decode`; a released slot has no value.
+        Slot::Free => FieldValue::SFBool(false),
     }
 }
 
@@ -261,6 +501,7 @@ fn write(h: u32, v: FieldValue) {
             mf_set(&mut mf, i, &v);
             write(p, mf);
         }
+        Slot::Free => {}
     }
 }
 
@@ -519,9 +760,17 @@ fn obj_num<'js>(v: &Value<'js>, key: &str) -> Option<f64> {
     x.as_number()
 }
 
-/// A field handle passed from JS as `{ __h }`.
+/// A field handle passed from JS as `{ __h }` (none if its slot was released since).
 fn arg_handle(v: &Value<'_>) -> Option<u32> {
-    obj_num(v, "__h").filter(|x| !x.is_nan()).map(|x| x as u32)
+    obj_num(v, "__h").and_then(decode)
+}
+
+/// The field handle argument `i` of a native call; a released one throws.
+fn handle_at(ctx: &Ctx<'_>, args: &[Value<'_>], i: usize) -> rquickjs::Result<u32> {
+    match args.get(i).and_then(|v| v.as_number()).and_then(decode) {
+        Some(h) => Ok(h),
+        None => throw(ctx, "Error: X3DField handle is no longer valid."),
+    }
 }
 
 /// A node passed as `{ __n }` (or `null`): Some(None) for null.
@@ -651,7 +900,7 @@ fn primitive_or_handle<'js>(ctx: &Ctx<'js>, v: &FieldValue, h: u32, attached: bo
 
 fn handle_js<'js>(ctx: &Ctx<'js>, h: u32, ty: &str, attached: bool) -> Value<'js> {
     let o = Object::new(ctx.clone()).unwrap();
-    o.set("__h", h).unwrap();
+    o.set("__h", encode(h)).unwrap();
     o.set("__t", ty).unwrap();
     o.set("__a", attached).unwrap();
     o.into_value()
@@ -729,24 +978,42 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "new" => {
             let ty_name = str_arg(ctx, a, 0);
             let v = construct(ctx, &ty_name, &a[1.min(a.len())..])?;
-            Ok(Value::new_number(ctx.clone(), detached(v) as f64))
+            Ok(Value::new_number(ctx.clone(), encode(detached(v))))
+        }
+        // prelude.js: a JavaScript object took the handle, or one that held it was freed.
+        "own" => {
+            if let Some(h) = a.first().and_then(|v| v.as_number()).and_then(decode) {
+                with_state(|s| s.owners[h as usize] += 1);
+            }
+
+            Ok(undefined)
+        }
+        "disown" => {
+            if let Some(h) = a.first().and_then(|v| v.as_number()).and_then(decode) {
+                with_state(|s| {
+                    s.owners[h as usize] = s.owners[h as usize].saturating_sub(1);
+                    s.try_free(h);
+                });
+            }
+
+            Ok(undefined)
         }
         "fv" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             Ok(field_value_js(ctx, h))
         }
         "fname" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let n = slot_key(h).map(|k| rt().field(k).name.clone()).unwrap_or_default();
             Ok(rquickjs::String::from_str(ctx.clone(), &n)?.into_value())
         }
         "faccess" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let n = slot_key(h).map(|k| rt().field(k).access).unwrap_or(access::INPUT_OUTPUT);
             Ok(Value::new_int(ctx.clone(), n as i32))
         }
         "set" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let ty = read(h).field_type();
 
             if let Some(v) = a.get(1).and_then(|v| convert(ctx, ty, v)) {
@@ -756,42 +1023,42 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(undefined)
         }
         "copy" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             Ok(new_value_js(ctx, read(h)))
         }
         "eq" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let other = value_arg(a, 1);
             Ok(Value::new_bool(ctx.clone(), other.is_some_and(|o| read(h).equals(&o))))
         }
         "isdef" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             Ok(Value::new_bool(ctx.clone(), read(h).is_default_value()))
         }
         "str" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             Ok(rquickjs::String::from_str(ctx.clone(), &to_vrml(&read(h)))?.into_value())
         }
         "g" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             component_get(ctx, h, a.get(1))
         }
         "s" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             component_set(ctx, h, a.get(1), a.get(2));
             Ok(undefined)
         }
         "m" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let m = str_arg(ctx, a, 1);
             method(ctx, h, &m, &a[2.min(a.len())..])
         }
         "len" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             Ok(Value::new_int(ctx.clone(), read(h).len() as i32))
         }
         "setlen" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let n = num_arg(ctx, a, 1) as usize;
             let mut v = read(h);
             let st = sf_type_of(v.field_type());
@@ -808,7 +1075,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(undefined)
         }
         "at" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let i = num_arg(ctx, a, 1) as usize;
             let v = read(h);
 
@@ -819,7 +1086,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "put" => {
-            let h = num_arg(ctx, a, 0) as u32;
+            let h = handle_at(ctx, a, 0)?;
             let i = num_arg(ctx, a, 1) as usize;
             let mut v = read(h);
             let st = sf_type_of(v.field_type());
@@ -917,6 +1184,53 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             with_state(|s| s.description = d);
             Ok(undefined)
         }
+        // Browser.getBrowserOption / getBrowserProperty / getRenderingProperty: the field value,
+        // null for an unknown name.
+        "browserField" => {
+            let set = str_arg(ctx, a, 0);
+            let name = str_arg(ctx, a, 1);
+            let b = &rt().browser_options;
+            let fields = match set.as_str() {
+                "options" => &b.options,
+                "properties" => &b.properties,
+                _ => &b.rendering,
+            };
+
+            use x3d_runtime::browser_options::OptionValue;
+
+            Ok(match fields.get(&name) {
+                None => Value::new_null(ctx.clone()),
+                Some(OptionValue::Bool(v)) => Value::new_bool(ctx.clone(), *v),
+                Some(OptionValue::Int32(v)) => Value::new_int(ctx.clone(), *v),
+                Some(OptionValue::Float(v) | OptionValue::Double(v)) => Value::new_number(ctx.clone(), *v),
+                Some(OptionValue::String(v)) => rquickjs::String::from_str(ctx.clone(), v)?.into_value(),
+            })
+        }
+        "optionType" => {
+            let name = str_arg(ctx, a, 0);
+
+            Ok(match rt().browser_options.get_option(&name) {
+                None => Value::new_null(ctx.clone()),
+                Some(v) => rquickjs::String::from_str(ctx.clone(), v.type_name())?.into_value(),
+            })
+        }
+        // Browser.setBrowserOption: the value is already converted to the field type (prelude).
+        "setOption" => {
+            use x3d_runtime::browser_options::OptionValue;
+
+            let name = str_arg(ctx, a, 0);
+            let Some(current) = rt().browser_options.get_option(&name).cloned() else { return Ok(undefined) };
+            let value = match current {
+                OptionValue::Bool(_) => OptionValue::Bool(a.get(1).and_then(|v| v.as_bool()).unwrap_or(false)),
+                OptionValue::Int32(_) => OptionValue::Int32(num_arg(ctx, a, 1) as i32),
+                OptionValue::Float(_) => OptionValue::Float(num_arg(ctx, a, 1)),
+                OptionValue::Double(_) => OptionValue::Double(num_arg(ctx, a, 1)),
+                OptionValue::String(_) => OptionValue::String(str_arg(ctx, a, 1)),
+            };
+
+            rt().browser_options.set_option(&name, value);
+            Ok(undefined)
+        }
         "time" => Ok(Value::new_number(ctx.clone(), rt().now)),
         // Browser.nextViewpoint () and friends: queued for the viewer (X3DBrowser viewpoint API).
         "brequest" => {
@@ -987,6 +1301,338 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             Ok(undefined)
         }
+        // --- X3DScene / X3DExecutionContext (the script's own execution context)
+        "sceneInfo" => {
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let c = rt().scene.node(script).ctx;
+            let s = &rt().scene;
+            let o = Object::new(ctx.clone())?;
+            let root = s.scene_root(c);
+            let encoding = s.scene_infos.get(&root).map(|i| i.encoding.clone()).unwrap_or_else(|| s.encoding.clone());
+
+            o.set("isScene", s.is_scene_root(c))?;
+            o.set("encoding", encoding)?;
+            o.set("profile", s.profile_of(c).map(|p| p.to_string()))?;
+
+            let comps = Array::new(ctx.clone())?;
+            for (i, (n, l)) in s.components_of(c).iter().enumerate() {
+                let e = Array::new(ctx.clone())?;
+                e.set(0, n.as_str())?;
+                e.set(1, *l)?;
+                comps.set(i, e)?;
+            }
+            o.set("components", comps)?;
+
+            let units = Array::new(ctx.clone())?;
+            for (i, u) in s.units_of(c).iter().enumerate() {
+                let e = Array::new(ctx.clone())?;
+                e.set(0, u.category.as_str())?;
+                e.set(1, u.name.as_str())?;
+                e.set(2, u.conversion_factor)?;
+                units.set(i, e)?;
+            }
+            o.set("units", units)?;
+
+            let meta = Array::new(ctx.clone())?;
+            for (i, (k, v)) in s.meta_of(c).iter().enumerate() {
+                let e = Array::new(ctx.clone())?;
+                e.set(0, k.as_str())?;
+                e.set(1, v.as_str())?;
+                meta.set(i, e)?;
+            }
+            o.set("meta", meta)?;
+            Ok(o.into_value())
+        }
+        "profileComponents" => {
+            // ProfileInfo.components of a named profile (`[name, level]` pairs), null if unknown.
+            let name = str_arg(ctx, a, 0);
+            let Some(p) = rt().scene.table.profile(&name) else {
+                return Ok(Value::new_null(ctx.clone()));
+            };
+            let arr = Array::new(ctx.clone())?;
+            for (i, (n, l)) in p.components.iter().enumerate() {
+                let e = Array::new(ctx.clone())?;
+                e.set(0, n.as_str())?;
+                e.set(1, *l)?;
+                arr.set(i, e)?;
+            }
+            Ok(arr.into_value())
+        }
+        "hasComponent" => {
+            // X3DScene.hasComponent: the profile's (Full without one) or the scene's own components.
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
+            let c = rt().scene.node(script).ctx;
+            let s = &rt().scene;
+            let profile = s.profile_of(c).unwrap_or("Full");
+            let in_profile = s.table.profile(profile).is_some_and(|p| p.components.iter().any(|(n, l)| *n == name && level <= *l));
+            let in_scene = s.components_of(c).iter().any(|(n, l)| *n == name && level <= *l);
+            Ok(Value::new_bool(ctx.clone(), in_profile || in_scene))
+        }
+        "browserComponent" => {
+            // X3DBrowser.getComponent: the supported component, its level clamped to 1 … supported.
+            let (name, level) = (str_arg(ctx, a, 0), num_arg(ctx, a, 1) as i32);
+            match rt().scene.supported_component_level(&name) {
+                Some(max) => {
+                    let e = Array::new(ctx.clone())?;
+                    e.set(0, name.as_str())?;
+                    e.set(1, if level == 0 { max } else { level.clamp(1, max) })?;
+                    Ok(e.into_value())
+                }
+                None => throw(ctx, &format!("Component '{name}' at level '{level}' is not supported.")),
+            }
+        }
+        "addComponent" => {
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
+            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let comps = scene_components_mut(&mut rt().scene, root);
+
+            if comps.iter().any(|(n, _)| *n == name) {
+                return throw(ctx, &format!("Couldn't add component. Component '{name}' already exists."));
+            }
+
+            comps.push((name, level));
+            Ok(undefined)
+        }
+        "metaData" => {
+            // X3DScene.setMetaData / addMetaData / removeMetaData.
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
+            let values: Vec<String> = match a.get(3).and_then(|v| v.as_array()) {
+                Some(arr) => arr.iter::<Value>().filter_map(|v| v.ok()).map(|v| coerce_string(ctx, &v)).collect(),
+                None => vec![],
+            };
+
+            if mode != "remove" && name.is_empty() {
+                return throw(ctx, "Couldn't add metadata: name is empty.");
+            }
+
+            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let meta = scene_meta_mut(&mut rt().scene, root);
+
+            match mode.as_str() {
+                "set" => {
+                    let index = meta.iter().position(|(k, _)| *k == name);
+                    meta.retain(|(k, _)| *k != name);
+                    let index = index.unwrap_or(meta.len());
+
+                    for (i, v) in values.into_iter().enumerate() {
+                        meta.insert(index + i, (name.clone(), v));
+                    }
+                }
+                "add" => meta.extend(values.into_iter().map(|v| (name.clone(), v))),
+                _ => meta.retain(|(k, _)| *k != name),
+            }
+
+            Ok(undefined)
+        }
+        "protoDecls" => {
+            // protos / externprotos: name, isExternProto, fields (FieldDefinitionArray), urls.
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let extern_ = a.get(1).is_some_and(coerce_bool);
+            let c = rt().scene.node(script).ctx;
+            let arr = Array::new(ctx.clone())?;
+            let s = &rt().scene;
+            let decls: Vec<(String, Vec<x3d_scene::Field>, bool, Option<Vec<String>>)> = if extern_ {
+                s.ctx(c).externprotos.values().iter().map(|&e| {
+                    let d = &s.externprotos[e];
+                    (d.name.clone(), d.fields.clone(), d.has_metadata, Some(d.url.clone()))
+                }).collect()
+            } else {
+                s.ctx(c).protos.values().iter().map(|&p| {
+                    let d = &s.protos[p];
+                    (d.name.clone(), d.fields.clone(), d.has_metadata, None)
+                }).collect()
+            };
+
+            for (i, (name, fields, has_metadata, urls)) in decls.into_iter().enumerate() {
+                let o = Object::new(ctx.clone())?;
+                o.set("name", name.as_str())?;
+                o.set("isExternProto", urls.is_some())?;
+
+                let fa = Array::new(ctx.clone())?;
+                let mut defs: Vec<(String, i32, &'static str, FieldValue)> = vec![];
+
+                if has_metadata {
+                    defs.push(("metadata".into(), access::INPUT_OUTPUT as i32, "SFNode", FieldValue::SFNode(None)));
+                }
+
+                defs.extend(fields.iter().map(|f| (f.name.clone(), f.access as i32, f.ty().name(), f.value.clone())));
+
+                for (j, (fname, access, ty, value)) in defs.into_iter().enumerate() {
+                    let fo = Object::new(ctx.clone())?;
+                    fo.set("name", fname.as_str())?;
+                    fo.set("accessType", access)?;
+                    fo.set("dataType", ty)?;
+                    fo.set("value", new_value_js(ctx, value))?;
+                    fa.set(j, fo)?;
+                }
+
+                o.set("fields", fa)?;
+
+                if let Some(urls) = urls {
+                    o.set("urls", new_value_js(ctx, FieldValue::MFString(urls)))?;
+                }
+
+                arr.set(i, o)?;
+            }
+
+            Ok(arr.into_value())
+        }
+        "routeList" => {
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let c = rt().scene.node(script).ctx;
+            let routes: Vec<_> = rt().scene.ctx(c).routes.iter().map(|r| (r.source_node, r.source_field.clone(), r.destination_node, r.destination_field.clone())).collect();
+            let arr = Array::new(ctx.clone())?;
+
+            for (i, (sn, sf, dn, df)) in routes.into_iter().enumerate() {
+                let o = Object::new(ctx.clone())?;
+                o.set("sourceNode", node_js(ctx, Some(sn)))?;
+                o.set("sourceField", sf)?;
+                o.set("destinationNode", node_js(ctx, Some(dn)))?;
+                o.set("destinationField", df)?;
+                arr.set(i, o)?;
+            }
+
+            Ok(arr.into_value())
+        }
+        "rootNode" => {
+            // X3DScene.addRootNode / removeRootNode.
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let add = str_arg(ctx, a, 1) == "add";
+            let node = a.get(2).and_then(arg_node).flatten();
+            let c = rt().scene.node(script).ctx;
+            let roots = &mut rt().scene.ctx_mut(c).root_nodes;
+
+            if add {
+                if roots.contains(&node) {
+                    return Ok(undefined);
+                }
+
+                roots.push(node);
+            } else {
+                roots.retain(|n| *n != node);
+            }
+
+            rt().rebuild_parents();
+            Ok(undefined)
+        }
+        "namedNodeOp" => {
+            // X3DExecutionContext.addNamedNode / removeNamedNode.
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
+            let c = rt().scene.node(script).ctx;
+
+            if mode == "remove" {
+                rt().scene.remove_named_node(c, &name);
+                return Ok(undefined);
+            }
+
+            let Some(node) = a.get(3).and_then(arg_node).flatten() else {
+                return throw(ctx, "Couldn't add named node: node must be of type X3DNode.");
+            };
+
+            if rt().scene.get_named_node(c, &name).is_some() {
+                return throw(ctx, &format!("Couldn't add named node: node name '{name}' is already in use."));
+            }
+
+            // X3DExecutionContext.updateNamedNode checks.
+            if rt().scene.is_imported(node) {
+                return throw(ctx, "Couldn't add named node: node cannot be of type X3DImportedNodeInstance.");
+            }
+
+            if rt().scene.node(node).ctx != c {
+                return throw(ctx, "Couldn't update named node: node does not belong to this execution context.");
+            }
+
+            if name.is_empty() {
+                return throw(ctx, "Couldn't update named node: node name is empty.");
+            }
+
+            rt().scene.update_named_node(c, &name, node);
+            Ok(undefined)
+        }
+        "exportedNode" => {
+            // X3DScene.addExportedNode / getExportedNode.
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
+            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+
+            if mode == "get" {
+                return match rt().scene.get_exported_node(root, &name) {
+                    Some(n) => Ok(node_js(ctx, Some(n))),
+                    None => throw(ctx, &format!("Exported node '{name}' not found.")),
+                };
+            }
+
+            if rt().scene.get_exported_node(root, &name).is_some() {
+                return throw(ctx, &format!("Couldn't add exported node: exported name '{name}' already in use."));
+            }
+
+            let Some(node) = a.get(3).and_then(arg_node).flatten() else {
+                return throw(ctx, "Couldn't update exported node: node must be of type X3DNode.");
+            };
+
+            match rt().scene.update_exported_node(root, &name, node, "") {
+                Ok(()) => Ok(undefined),
+                Err(e) => throw(ctx, &e),
+            }
+        }
+        "nodeArrays" => {
+            // namedNodes (SFNode), importedNodes (X3DImportedNode), exportedNodes (X3DExportedNode).
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let which = str_arg(ctx, a, 1);
+            let c = rt().scene.node(script).ctx;
+            let s = &rt().scene;
+            let arr = Array::new(ctx.clone())?;
+
+            match which.as_str() {
+                "named" => {
+                    for (i, &n) in s.ctx(c).named_nodes.values().iter().enumerate() {
+                        arr.set(i, node_js(ctx, Some(n)))?;
+                    }
+                }
+                "imported" => {
+                    for (i, &id) in s.ctx(c).imported.values().iter().enumerate() {
+                        let m = &s.imported[id];
+                        let o = Object::new(ctx.clone())?;
+                        o.set("inlineNode", node_js(ctx, Some(m.inline)))?;
+                        o.set("exportedName", m.exported_name.as_str())?;
+                        o.set("importedName", m.imported_name.as_str())?;
+                        arr.set(i, o)?;
+                    }
+                }
+                _ => {
+                    let root = s.scene_root(c);
+                    for (i, &id) in s.ctx(root).exported.values().iter().enumerate() {
+                        let m = &s.exported[id];
+                        let o = Object::new(ctx.clone())?;
+                        o.set("exportedName", m.exported_name.as_str())?;
+                        o.set("localNode", node_js(ctx, Some(m.local)))?;
+                        arr.set(i, o)?;
+                    }
+                }
+            }
+
+            Ok(arr.into_value())
+        }
+        "sceneString" => {
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let text = match str_arg(ctx, a, 1).as_str() {
+                "xml" if root == x3d_scene::ROOT => rt().scene.to_xml_string(),
+                "json" if root == x3d_scene::ROOT => rt().scene.to_json_string(),
+                _ => rt().scene.to_vrml_string_ctx(root),
+            };
+            Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
+        }
+        "worldInfos" => {
+            let script = num_arg(ctx, a, 0) as NodeId;
+            let c = rt().scene.node(script).ctx;
+            let list: Vec<Option<NodeId>> = rt().world_infos.get(&c).map(|l| l.iter().map(|n| Some(*n)).collect()).unwrap_or_default();
+            Ok(new_value_js(ctx, FieldValue::MFNode(list)))
+        }
         "rootNodes" => {
             let script = num_arg(ctx, a, 0) as NodeId;
             let c = rt().scene.node(script).ctx;
@@ -998,7 +1644,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let ty = str_arg(ctx, a, 1);
             let c = rt().scene.node(script).ctx;
 
-            match rt().create_node_setup(c, &ty) {
+            match rt().create_node_script(c, &ty) {
                 Some(n) => Ok(node_js(ctx, Some(n))),
                 None => throw(ctx, &format!("Unknown node type '{ty}'.")),
             }
@@ -1024,6 +1670,24 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         other => throw(ctx, &format!("x3d-script: unknown native op '{other}'")),
+    }
+}
+
+/// The metadata list of the scene whose root context is `root` (the world's lives on Scene itself).
+fn scene_meta_mut(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId) -> &mut Vec<(String, String)> {
+    if s.scene_infos.contains_key(&root) {
+        &mut s.scene_infos.get_mut(&root).unwrap().meta
+    } else {
+        &mut s.meta
+    }
+}
+
+/// The COMPONENT list of the scene whose root context is `root`.
+fn scene_components_mut(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId) -> &mut Vec<(String, i32)> {
+    if s.scene_infos.contains_key(&root) {
+        &mut s.scene_infos.get_mut(&root).unwrap().components
+    } else {
+        &mut s.components
     }
 }
 
@@ -1381,5 +2045,56 @@ fn method<'js>(ctx: &Ctx<'js>, h: u32, m: &str, a: &[Value<'js>]) -> rquickjs::R
 
             throw(ctx, &format!("{}.{m} is not supported by the Rust port with these arguments", v.field_type().name()))
         }
+    }
+}
+
+#[cfg(test)]
+mod slot_tests {
+    use super::*;
+
+    /// A handle kept from before its slot was released does not reach the value that takes the slot.
+    #[test]
+    fn a_stale_handle_does_not_reach_a_reused_slot() {
+        let _host = QuickJsHost::new();
+        let h = detached(FieldValue::SFInt32(1));
+        let old = encode(h);
+
+        with_state(|s| s.owners[h as usize] += 1);
+        with_state(State::release_fresh);
+        assert_eq!(decode(old), Some(h), "an owned slot stays");
+
+        with_state(|s| {
+            s.owners[h as usize] -= 1;
+            s.try_free(h);
+        });
+        assert_eq!(decode(old), None, "a released slot rejects its handle");
+
+        let n = detached(FieldValue::SFInt32(2));
+
+        assert_eq!(n, h, "the slot is taken again");
+        assert_eq!(decode(old), None, "the old handle does not reach the new value");
+        assert!(matches!(decode(encode(n)).map(read), Some(FieldValue::SFInt32(2))), "the new handle works");
+    }
+
+    /// An element view keeps its MF slot; the MF slot goes after its last element.
+    #[test]
+    fn an_element_keeps_its_parent() {
+        let _host = QuickJsHost::new();
+        let mf = detached(FieldValue::MFInt32(vec![5, 6]));
+        let e = element(mf, 1);
+
+        with_state(|s| s.owners[e as usize] += 1);
+        with_state(State::release_fresh);
+        assert!(decode(encode(mf)).is_some(), "the parent of a live element stays");
+        assert!(matches!(read(e), FieldValue::SFInt32(6)));
+
+        let old = encode(mf);
+
+        with_state(|s| {
+            s.owners[e as usize] -= 1;
+            s.try_free(e);
+        });
+        assert_eq!(decode(old), None, "the parent goes with its last element");
+        assert_eq!(slot_stats().free, 2);
     }
 }

@@ -1,0 +1,123 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu { }\n\nDEF SG SignalPdu { }\n\nDEF TX TransmitterPdu { }\n\nDEF EM DISEntityManager { }\n\nDEF EM2 DISEntityManager { }\n\nDEF RX2 ReceiverPdu { }\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.2 0.5 0.7\n    }\n  }\n  geometry Sphere {\n    radius 0.6\n  }\n}\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu { }\n\nDEF SG SignalPdu { }\n\nDEF TX TransmitterPdu { }\n\nDEF EM DISEntityManager { }\n\nDEF EM2 DISEntityManager { }\n\nDEF RX2 ReceiverPdu { }\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.2 0.5 0.7\n    }\n  }\n  geometry Sphere {\n    radius 0.6\n  }\n}\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu { }\n\nDEF SG SignalPdu { }\n\nDEF TX TransmitterPdu { }\n\nDEF EM DISEntityManager { }\n\nDEF EM2 DISEntityManager { }\n\nDEF RX2 ReceiverPdu { }\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.2 0.5 0.7\n    }\n  }\n  geometry Sphere {\n    radius 0.6\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Parser error at line 18: Unknown field 'mapping' in class 'DISEntityManager'."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

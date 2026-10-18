@@ -1,0 +1,38 @@
+#X3D V3.2 utf8
+PROFILE Interchange
+COMPONENT Geospatial:1
+COMPONENT Scripting:1
+COMPONENT Navigation:2
+# Synthetic REA oracle world: GeoViewpoint in a 3.2 scene. navType and headlight are aliases of
+# its private NavigationInfo, which becomes its navigationInfo field and is bound with it.
+# The first GeoViewpoint flies without headlight; a Script binds the second (default navType
+# EXAMINE ANY, headlight TRUE) and later changes navType through a route. Authored.
+DEF ORIGIN GeoOrigin { geoCoords 47.6 -122.3 0 rotateYUp TRUE }
+NavigationInfo { type "WALK" headlight TRUE }
+DEF GV1 GeoViewpoint { geoOrigin USE ORIGIN description "one" position 47.598 -122.3 200 orientation 1 0 0 1.2 navType [ "FLY" "ANY" ] headlight FALSE }
+DEF GV2 GeoViewpoint { geoOrigin USE ORIGIN description "two" position 47.6 -122.302 250 orientation 0 1 0 -1.2 }
+GeoLocation {
+  geoOrigin USE ORIGIN
+  geoCoords 47.6 -122.3 0
+  children [
+    Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.2 } } geometry Box { size 60 60 60 } }
+    Transform { translation 0 0 80 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.6 0.8 } } geometry Sphere { radius 25 } } }
+  ]
+}
+DEF S Script {
+  inputOnly SFTime tick
+  inputOutput SFInt32 n 0
+  outputOnly SFBool bind
+  outputOnly MFString nav
+  url "ecmascript:
+    function tick (v) {
+      n = n + 1;
+      if (n == 3) bind = true;
+      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');
+    }
+  "
+}
+DEF T TimeSensor { cycleInterval 0.1 loop TRUE }
+ROUTE T.cycleTime TO S.tick
+ROUTE S.bind TO GV2.set_bind
+ROUTE S.nav TO GV2.set_navType

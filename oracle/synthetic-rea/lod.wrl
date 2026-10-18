@@ -1,0 +1,37 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA oracle world: LOD.changeLevel in the DISPLAY traversal. A LOD without range
+# (frame rate mode) with 2 and with 3 children, a range LOD, a forceTransitions LOD that steps one
+# level per frame, a USEd LOD, NULL and empty children. The viewer moves away and back.
+# Authored; no archive content.
+DEF VP Viewpoint { position 0 0 1 }
+DEF L2 LOD { children [ Shape { geometry Box { } } Shape { geometry Sphere { } } ] }
+DEF L3 LOD { children [ Group { } Group { } Group { } ] }
+DEF LR LOD { range [ 3 6 9 ] children [ Group { } Group { } Group { } Group { } ] }
+DEF LF LOD { forceTransitions TRUE range [ 3 6 9 ] children [ Group { } Group { } Group { } Group { } ] }
+DEF LE LOD { range [ 2 ] }
+Transform { translation 0 0 -4 children USE LR }
+DEF PI PositionInterpolator { key [ 0 0.5 1 ] keyValue [ 0 0 1, 0 0 14, 0 0 1 ] }
+DEF TS TimeSensor { cycleInterval 2 loop TRUE }
+DEF OUT Script {
+  inputOnly SFInt32 l2
+  inputOnly SFInt32 l3
+  inputOnly SFInt32 lr
+  inputOnly SFInt32 lf
+  inputOnly SFInt32 le
+  inputOutput SFString hist ""
+  url "ecmascript:
+    function l2 (value) { hist = hist + ' l2=' + value; }
+    function l3 (value) { hist = hist + ' l3=' + value; }
+    function lr (value) { hist = hist + ' lr=' + value; }
+    function lf (value) { hist = hist + ' lf=' + value; }
+    function le (value) { hist = hist + ' le=' + value; }
+  "
+}
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO VP.set_position
+ROUTE L2.level_changed TO OUT.l2
+ROUTE L3.level_changed TO OUT.l3
+ROUTE LR.level_changed TO OUT.lr
+ROUTE LF.level_changed TO OUT.lf
+ROUTE LE.level_changed TO OUT.le

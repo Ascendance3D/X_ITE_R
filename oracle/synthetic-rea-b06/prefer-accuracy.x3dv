@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF R1 RigidBodyCollection { preferAccuracy TRUE iterations 4 bodies [ DEF F1 RigidBody { position 0 0 0 fixed TRUE geometry DEF F1_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } } DEF A RigidBody { position 0 2 0 mass 1 angularVelocity 1 0 1 geometry DEF A_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } } ] }
+DEF R2 RigidBodyCollection { preferAccuracy FALSE iterations 25 bodies [ DEF F2 RigidBody { position 30 0 0 fixed TRUE geometry DEF F2_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } } DEF B RigidBody { position 30 2 0 mass 1 angularVelocity 1 0 1 geometry DEF B_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } } ] }
+DEF R3 RigidBodyCollection { preferAccuracy TRUE iterations 1 gravity 0 -2 1 bodies [ DEF F3 RigidBody { position 60 0 0 fixed TRUE geometry DEF F3_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } } DEF C RigidBody { position 60 2 0 mass 1 geometry DEF C_C CollidableShape {  shape Shape { geometry Sphere { radius 0.5 } } } } ] }

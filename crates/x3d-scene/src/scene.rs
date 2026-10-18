@@ -206,6 +206,39 @@ pub struct SceneInfo {
     pub profile: Option<String>,
     pub components: Vec<(String, i32)>,
     pub meta: Vec<(String, String)>,
+    pub units: Vec<UnitInfo>,
+}
+
+/// Configuration/UnitInfo.js: one UNIT statement (X3DScene keeps angle, force, length, mass).
+#[derive(Clone, Debug, PartialEq)]
+pub struct UnitInfo {
+    pub category: String,
+    pub name: String,
+    pub conversion_factor: f64,
+}
+
+/// X3DScene's initial UnitInfoArray: radian, newton, metre, kilogram, all 1.
+pub fn default_units() -> Vec<UnitInfo> {
+    [("angle", "radian"), ("force", "newton"), ("length", "metre"), ("mass", "kilogram")]
+        .iter()
+        .map(|(c, n)| UnitInfo { category: c.to_string(), name: n.to_string(), conversion_factor: 1.0 })
+        .collect()
+}
+
+/// The factor X3DScene.fromUnit multiplies with (toUnit divides): base categories use their own
+/// unit, derived ones the length or angle unit. X_ITE spells the acceleration case
+/// "acceleration:", so acceleration fields are never converted.
+pub fn unit_factor(units: &[UnitInfo], category: &str) -> f64 {
+    let get = |c: &str| units.iter().find(|u| u.category == c).map(|u| u.conversion_factor).unwrap_or(1.0);
+
+    match category {
+        "angle" | "force" | "length" | "mass" => get(category),
+        "angularRate" => get("angle"),
+        "area" => x3d_fields::jsmath::pow(get("length"), 2.0),
+        "speed" => get("length"),
+        "volume" => x3d_fields::jsmath::pow(get("length"), 3.0),
+        _ => 1.0,
+    }
 }
 
 #[derive(Debug)]
@@ -218,6 +251,8 @@ pub struct Scene {
     /// Ordered like X_ITE's ComponentInfoArray (update keeps the position).
     pub components: Vec<(String, i32)>,
     pub meta: Vec<(String, String)>,
+    /// X3DScene units (UNIT statements update the four default entries in place).
+    pub units: Vec<UnitInfo>,
     pub contexts: Vec<ExecutionContext>,
     pub nodes: Vec<Node>,
     pub protos: Vec<ProtoDecl>,
@@ -240,6 +275,121 @@ pub struct Scene {
     /// New nodes go to the end of the arena, never into a released slot: whoever sets this
     /// finds the nodes it creates as the range `len..` (SFNode.fromString).
     pub append_only: bool,
+    /// While `Some`, the id of every node that [`Scene::alloc_node`] and the `create_…` functions
+    /// hand out is recorded here (the runtime uses it to find the nodes a Script creates).
+    pub alloc_log: Option<Vec<NodeId>>,
+    /// Released slots and generations of the execution contexts, PROTO and EXTERNPROTO declarations,
+    /// IMPORT and EXPORT records (R0.3-E). The runtime releases a slot only when nothing names it any
+    /// more (see `x3d-runtime/src/release.rs`); [`Scene::merge`] and the `new_…` / `add_…` functions
+    /// hand it out again.
+    pub ctx_slots: SlotTable,
+    pub proto_slots: SlotTable,
+    pub extern_slots: SlotTable,
+    pub imported_slots: SlotTable,
+    pub exported_slots: SlotTable,
+}
+
+/// The released slots of one scene-wide table, and how often each slot was released.
+#[derive(Clone, Debug, Default)]
+pub struct SlotTable {
+    /// Released slots, ordered, so runs are found from the lowest id.
+    pub free: std::collections::BTreeSet<usize>,
+    /// Per slot: bumped every time the slot is released. A slot never released is generation 0.
+    pub generations: Vec<u32>,
+}
+
+impl SlotTable {
+    pub fn is_free(&self, id: usize) -> bool {
+        self.free.contains(&id)
+    }
+
+    pub fn generation(&self, id: usize) -> u32 {
+        self.generations.get(id).copied().unwrap_or(0)
+    }
+
+    /// Mark a slot released. Returns false if it already was.
+    fn release(&mut self, id: usize) -> bool {
+        if !self.free.insert(id) {
+            return false;
+        }
+
+        if self.generations.len() <= id {
+            self.generations.resize(id + 1, 0);
+        }
+
+        self.generations[id] = self.generations[id].wrapping_add(1);
+        true
+    }
+
+    /// The lowest released slot, taken out of the free set.
+    fn take(&mut self) -> Option<usize> {
+        self.free.pop_first()
+    }
+
+    /// The lowest released run of `len` consecutive slots, taken out of the free set.
+    fn take_run(&mut self, len: usize) -> Option<usize> {
+        if len == 0 || self.free.len() < len {
+            return None;
+        }
+
+        let (mut start, mut run) = (0, 0);
+        let mut prev: Option<usize> = None;
+
+        for &id in &self.free {
+            if prev.is_some_and(|p| p + 1 == id) {
+                run += 1;
+            } else {
+                start = id;
+                run = 1;
+            }
+
+            prev = Some(id);
+
+            if run == len {
+                for k in start..start + len {
+                    self.free.remove(&k);
+                }
+
+                return Some(start);
+            }
+        }
+
+        None
+    }
+}
+
+/// An execution context id together with the generation of its slot: it names that context and no
+/// context that takes the slot after it was released (see [`Scene::ctx_handle`]).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct CtxHandle {
+    pub id: CtxId,
+    pub generation: u32,
+}
+
+/// Put `items` at `at`: into a released run of the table, or at its end.
+fn place<T>(table: &mut Vec<T>, at: usize, items: Vec<T>) {
+    if at < table.len() {
+        for (i, item) in items.into_iter().enumerate() {
+            table[at + i] = item;
+        }
+    } else {
+        let mut items = items;
+        table.append(&mut items);
+    }
+}
+
+fn empty_context() -> ExecutionContext {
+    ExecutionContext {
+        parent: None,
+        outer: Outer::Inline(None),
+        root_nodes: vec![],
+        named_nodes: InfoArray::default(),
+        protos: InfoArray::default(),
+        externprotos: InfoArray::default(),
+        routes: vec![],
+        imported: InfoArray::default(),
+        exported: InfoArray::default(),
+    }
 }
 
 pub const ROOT: CtxId = 0;
@@ -256,6 +406,7 @@ impl Scene {
             world_url: world_url.to_string(),
             profile: None,
             components: vec![],
+            units: default_units(),
             meta: vec![],
             contexts: vec![ExecutionContext {
                 parent: None,
@@ -280,6 +431,12 @@ impl Scene {
             route_counter: 0,
             free_nodes: Default::default(),
             append_only: false,
+            alloc_log: None,
+            ctx_slots: Default::default(),
+            proto_slots: Default::default(),
+            extern_slots: Default::default(),
+            imported_slots: Default::default(),
+            exported_slots: Default::default(),
         }
     }
 
@@ -329,6 +486,36 @@ impl Scene {
         match self.scene_infos.get(&self.scene_root(ctx)) {
             Some(i) => &i.components,
             None => &self.components,
+        }
+    }
+
+    pub fn units_of(&self, ctx: CtxId) -> &[UnitInfo] {
+        match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.units,
+            None => &self.units,
+        }
+    }
+
+    /// Generator.ToUnit factors for printing `field_name` of `node` in context `ctx`: the field's
+    /// unit category factor (predefined fields only), and the angle factor.
+    pub fn unit_factors(&self, ctx: CtxId, node: Option<NodeId>, field_name: &str) -> (f64, f64) {
+        let units = self.units_of(ctx);
+        let unit = node.and_then(|n| match self.node(n).kind {
+            NodeKind::Builtin(t) => {
+                let spec = self.spec_version_of(ctx);
+                self.table.types[t].variant(spec).fields.iter().find(|d| d.name == field_name).and_then(|d| d.unit.clone())
+            }
+            _ => None,
+        });
+
+        (unit.map(|u| unit_factor(units, &u)).unwrap_or(1.0), unit_factor(units, "angle"))
+    }
+
+    /// X3DScene.updateUnit: only the four known categories, position kept.
+    pub fn update_unit(&mut self, category: &str, name: &str, conversion_factor: f64) {
+        if let Some(u) = self.units.iter_mut().find(|u| u.category == category) {
+            u.name = name.to_string();
+            u.conversion_factor = conversion_factor;
         }
     }
 
@@ -423,20 +610,69 @@ impl Scene {
 
     // --- execution contexts ---------------------------------------------------------------
 
+    /// A new context, in a released slot if there is one.
     pub fn new_context(&mut self, parent: CtxId, outer: Outer) -> CtxId {
-        self.contexts.push(ExecutionContext {
-            parent: Some(parent),
-            outer,
-            root_nodes: vec![],
-            named_nodes: InfoArray::default(),
-            protos: InfoArray::default(),
-            externprotos: InfoArray::default(),
-            routes: vec![],
-            imported: InfoArray::default(),
-            exported: InfoArray::default(),
-        });
+        let ctx = ExecutionContext { parent: Some(parent), outer, ..empty_context() };
 
-        self.contexts.len() - 1
+        match self.ctx_slots.take() {
+            Some(c) => {
+                self.contexts[c] = ctx;
+                c
+            }
+            None => {
+                self.contexts.push(ctx);
+                self.contexts.len() - 1
+            }
+        }
+    }
+
+    /// The context with the generation of its slot now.
+    pub fn ctx_handle(&self, id: CtxId) -> CtxHandle {
+        CtxHandle { id, generation: self.ctx_slots.generation(id) }
+    }
+
+    /// The context a handle names, if its slot was not released since the handle was taken.
+    pub fn resolve_ctx(&self, h: CtxHandle) -> Option<CtxId> {
+        (h.id < self.contexts.len() && !self.ctx_slots.is_free(h.id) && self.ctx_slots.generation(h.id) == h.generation).then_some(h.id)
+    }
+
+    // --- released table slots (R0.3-E) --------------------------------------------------------
+    //
+    // The caller has made sure that nothing names the slot any more: no context, record, node,
+    // cache entry or task. The slot is emptied and its generation bumped.
+
+    pub fn release_ctx(&mut self, id: CtxId) {
+        assert_ne!(id, ROOT, "the world's root context is never released");
+
+        if self.ctx_slots.release(id) {
+            self.contexts[id] = empty_context();
+            self.scene_infos.remove(&id);
+        }
+    }
+
+    pub fn release_proto(&mut self, id: ProtoId) {
+        if self.proto_slots.release(id) {
+            self.protos[id] = ProtoDecl { name: String::new(), ctx: ROOT, body: ROOT, fields: vec![], has_metadata: false };
+        }
+    }
+
+    pub fn release_extern(&mut self, id: ExternId) {
+        if self.extern_slots.release(id) {
+            self.externprotos[id] = ExternProtoDecl { name: String::new(), ctx: ROOT, fields: vec![], has_metadata: false, url: vec![], complete: false };
+        }
+    }
+
+    /// A released IMPORT record names no node: whoever walks the table skips released slots.
+    pub fn release_imported(&mut self, id: ImportedId) {
+        if self.imported_slots.release(id) {
+            self.imported[id] = ImportedNode { ctx: ROOT, inline: 0, exported_name: String::new(), imported_name: String::new(), description: String::new(), instance: 0 };
+        }
+    }
+
+    pub fn release_exported(&mut self, id: ExportedId) {
+        if self.exported_slots.release(id) {
+            self.exported[id] = ExportedNode { ctx: ROOT, exported_name: String::new(), local: 0, description: String::new() };
+        }
     }
 
     pub fn ctx(&self, id: CtxId) -> &ExecutionContext {
@@ -459,15 +695,23 @@ impl Scene {
 
     /// Put `node` into a released slot if there is one, else at the end of the arena.
     fn push_node(&mut self, node: Node) -> NodeId {
-        if !self.append_only {
-            if let Some(id) = self.free_nodes.pop_first() {
+        let reuse = if self.append_only { None } else { self.free_nodes.pop_first() };
+        let id = match reuse {
+            Some(id) => {
                 self.nodes[id as usize] = node;
-                return id;
+                id
             }
+            None => {
+                self.nodes.push(node);
+                (self.nodes.len() - 1) as NodeId
+            }
+        };
+
+        if let Some(log) = &mut self.alloc_log {
+            log.push(id);
         }
 
-        self.nodes.push(node);
-        (self.nodes.len() - 1) as NodeId
+        id
     }
 
     /// [`Scene::push_node`] for the runtime's own nodes.
@@ -558,9 +802,43 @@ impl Scene {
     }
 
     pub fn instantiate_builtin(&mut self, ctx: CtxId, index: usize) -> NodeId {
+        // TwoSidedMaterial constructor: X3D 4.0 deprecated the node.
+        if self.table.types[index].name == "TwoSidedMaterial" {
+            self.warn("TwoSidedMaterial is deprecated, please use Appearance backMaterial field instead.".into());
+        }
+
         let ty = &self.table.types[index];
         let variant = ty.variant(self.spec_version_of(ctx));
-        let fields = variant.fields.iter().map(|d| Field::new(&d.name, d.access, d.initial.clone())).collect();
+        let mut fields: Vec<Field> = variant.fields.iter().map(|d| Field::new(&d.name, d.access, d.initial.clone())).collect();
+
+        // TextureProperties constructor, legacy (specification version <= 3.3): FASTEST filters
+        // and compression, assigned like field values.
+        if ty.name == "TextureProperties" && self.spec_version_of(ctx).parse::<f64>().is_ok_and(|v| v <= 3.3) {
+            for f in fields.iter_mut().filter(|f| matches!(f.name.as_str(), "minificationFilter" | "magnificationFilter" | "textureCompression")) {
+                f.value = FieldValue::SFString("FASTEST".into());
+                f.modified = true;
+            }
+        }
+
+        // WindPhysicsModel constructor, legacy (specification version <= 3.3): `direction` starts at
+        // the zero vector (random directions), assigned like a field value.
+        if ty.name == "WindPhysicsModel" && self.spec_version_of(ctx).parse::<f64>().is_ok_and(|v| v <= 3.3) {
+            if let Some(f) = fields.iter_mut().find(|f| f.name == "direction") {
+                f.value = FieldValue::SFVec3f(Default::default());
+                f.modified = true;
+            }
+        }
+
+        // GeoViewpoint constructor: the child objects navType and headlight, aliases of the node
+        // for specification versions up to 3.2 (see [`Scene::child_alias`]).
+        let private_fields = if ty.name == "GeoViewpoint" {
+            vec![
+                Field::new("navType", access::INPUT_OUTPUT, FieldValue::MFString(vec!["EXAMINE".into(), "ANY".into()])),
+                Field::new("headlight", access::INPUT_OUTPUT, FieldValue::SFBool(true)),
+            ]
+        } else {
+            vec![]
+        };
 
         self.push_node(Node {
             kind: NodeKind::Builtin(index),
@@ -568,9 +846,31 @@ impl Scene {
             name: String::new(),
             fields,
             user_fields: vec![],
-            private_fields: vec![],
+            private_fields,
             can_user_defined_fields: variant.can_user_defined_fields,
         })
+    }
+
+    /// Whether `id` is a GeoViewpoint of a specification version up to 3.2, whose constructor
+    /// adds the aliases navType and headlight (and traverses its own NavigationInfo).
+    pub fn is_legacy_geo_viewpoint(&self, id: NodeId) -> bool {
+        matches!(self.node(id).kind, NodeKind::Builtin(i) if self.table.types[i].name == "GeoViewpoint")
+            && self.spec_version_of(self.node(id).ctx).trim().parse::<f64>().is_ok_and(|v| v <= 3.2)
+    }
+
+    /// X3DBaseNode.addAlias of a private child object (FieldDefinitionArray.alias), looked up
+    /// like a predefined field: the private index of `name`.
+    pub fn child_alias(&self, id: NodeId, name: &str) -> Option<usize> {
+        if !self.is_legacy_geo_viewpoint(id) {
+            return None;
+        }
+
+        let private = &self.node(id).private_fields;
+        let find = |n: &str| matches!(n, "navType" | "headlight").then(|| private.iter().position(|f| f.name == n)).flatten();
+
+        find(name)
+            .or_else(|| name.strip_prefix("set_").and_then(find))
+            .or_else(|| name.strip_suffix("_changed").and_then(find))
     }
 
     pub fn create_placeholder(&mut self, ctx: CtxId) -> NodeId {
@@ -704,7 +1004,7 @@ impl Scene {
             return Some(FieldLoc::User(i));
         }
 
-        self.get_predefined_field(id, name).map(FieldLoc::Pre)
+        self.get_predefined_field(id, name).map(FieldLoc::Pre).or_else(|| self.child_alias(id, name).map(FieldLoc::Priv))
     }
 
     pub fn field(&self, id: NodeId, loc: FieldLoc) -> &Field {
@@ -1054,7 +1354,7 @@ impl Scene {
             return Err("Couldn't update imported node: imported name is empty.".to_string());
         }
 
-        let id = self.imported.len();
+        let id = self.imported_slots.take().unwrap_or(self.imported.len());
         let instance = self.push_node(Node {
             kind: NodeKind::Imported(id),
             ctx,
@@ -1065,14 +1365,16 @@ impl Scene {
             can_user_defined_fields: false,
         });
 
-        self.imported.push(ImportedNode {
+        let record = ImportedNode {
             ctx,
             inline,
             exported_name: exported_name.to_string(),
             imported_name: imported_name.to_string(),
             description: description.to_string(),
             instance,
-        });
+        };
+
+        place(&mut self.imported, id, vec![record]);
         self.contexts[ctx].imported.add(imported_name, id).map_err(|e| e.to_string())?;
         Ok(id)
     }
@@ -1114,9 +1416,9 @@ impl Scene {
             return Err("Couldn't update exported node: node exported name is empty.".to_string());
         }
 
-        let id = self.exported.len();
+        let id = self.exported_slots.take().unwrap_or(self.exported.len());
 
-        self.exported.push(ExportedNode { ctx, exported_name: exported_name.to_string(), local, description: description.to_string() });
+        place(&mut self.exported, id, vec![ExportedNode { ctx, exported_name: exported_name.to_string(), local, description: description.to_string() }]);
         self.contexts[ctx].exported.update(exported_name, exported_name, id);
         Ok(())
     }
@@ -1127,6 +1429,84 @@ impl Scene {
     }
 
     /// X3DNode.hasRoutes.
+    /// X3DNode.getCloneCount of every node of a scene that only was parsed: one per SFNode or
+    /// MFNode field value holding it (node fields, PROTO and EXTERNPROTO interface fields), one
+    /// per root node entry. The runtime keeps its own counts (Runtime::publish_clone_counts).
+    pub fn parse_clone_counts(&self) -> std::collections::HashMap<NodeId, usize> {
+        let mut counts: std::collections::HashMap<NodeId, usize> = Default::default();
+        let mut add = |v: &FieldValue| match v {
+            FieldValue::SFNode(Some(n)) => *counts.entry(*n).or_default() += 1,
+            FieldValue::MFNode(list) => {
+                for n in list.iter().flatten() {
+                    *counts.entry(*n).or_default() += 1;
+                }
+            }
+            _ => {}
+        };
+
+        for (id, node) in self.nodes.iter().enumerate() {
+            if self.free_nodes.contains(&(id as NodeId)) {
+                continue;
+            }
+
+            for f in node.fields.iter().chain(node.user_fields.iter()) {
+                add(&f.value);
+            }
+        }
+
+        for f in self.protos.iter().flat_map(|p| p.fields.iter()).chain(self.externprotos.iter().flat_map(|p| p.fields.iter())) {
+            add(&f.value);
+        }
+
+        for c in &self.contexts {
+            for n in c.root_nodes.iter().flatten() {
+                *counts.entry(*n).or_default() += 1;
+            }
+        }
+
+        // X3DParser.setupNodes sets up every instance outside PROTO bodies: its body copies the
+        // PROTO body, and each body field with an IS reference that copies values
+        // (initializeOnly / inputOutput) holds the instance field's nodes once more.
+        for node in self.nodes.iter() {
+            let NodeKind::Instance(ProtoRef::Proto(p)) = node.kind else { continue };
+
+            if self.outer_proto(node.ctx).is_some() {
+                continue;
+            }
+
+            let proto = &self.protos[p];
+
+            for (index, pf) in proto.fields.iter().enumerate() {
+                let refs = self
+                    .nodes
+                    .iter()
+                    .filter(|n| n.ctx == proto.body)
+                    .flat_map(|n| n.fields.iter().chain(n.user_fields.iter()))
+                    .filter(|f| f.references.contains(&FieldRef { proto: p, index }) && matches!(f.access & pf.access, access::INITIALIZE_ONLY | access::INPUT_OUTPUT))
+                    .count();
+
+                if refs == 0 {
+                    continue;
+                }
+
+                let Some(f) = node.fields.iter().find(|f| f.name == pf.name) else { continue };
+
+                let held: Vec<NodeId> = match &f.value {
+                    FieldValue::SFNode(Some(n)) => vec![*n],
+                    FieldValue::MFNode(list) => list.iter().flatten().copied().collect(),
+                    _ => vec![],
+                };
+
+                for n in held {
+                    *counts.entry(n).or_default() += refs;
+                }
+            }
+        }
+
+        counts.retain(|_, c| *c > 1);
+        counts
+    }
+
     pub fn has_routes(&self, id: NodeId) -> bool {
         let node = self.node(id);
 
@@ -1179,6 +1559,7 @@ impl Scene {
             profile: other.profile.clone(),
             components: other.components.clone(),
             meta: other.meta.clone(),
+            units: other.units.clone(),
         };
         let m = self.merge(other, parent, outer);
 
@@ -1192,17 +1573,20 @@ impl Scene {
     pub fn merge(&mut self, mut other: Scene, parent: CtxId, outer: Option<NodeId>) -> MergeMap {
         let count = other.nodes.len();
         let node_offset = self.alloc_run(count).unwrap_or(self.nodes.len() as NodeId);
+        // Each table takes a released run of the merged scene's size, or goes to the end (R0.3-E):
+        // the ids of the merged scene stay one offset away from the ones it had.
+        let ctx_offset = self.ctx_slots.take_run(other.contexts.len()).unwrap_or(self.contexts.len());
         let m = MergeMap {
             node_offset,
             node_end: node_offset + count as NodeId,
-            ctx_offset: self.contexts.len(),
-            proto_offset: self.protos.len(),
-            extern_offset: self.externprotos.len(),
-            root_ctx: self.contexts.len(),
+            ctx_offset,
+            proto_offset: self.proto_slots.take_run(other.protos.len()).unwrap_or(self.protos.len()),
+            extern_offset: self.extern_slots.take_run(other.externprotos.len()).unwrap_or(self.externprotos.len()),
+            root_ctx: ctx_offset,
         };
 
-        let imported_offset = self.imported.len();
-        let exported_offset = self.exported.len();
+        let imported_offset = self.imported_slots.take_run(other.imported.len()).unwrap_or(self.imported.len());
+        let exported_offset = self.exported_slots.take_run(other.exported.len()).unwrap_or(self.exported.len());
         let route_offset = self.route_counter;
 
         let remap_value = |v: &mut FieldValue| match v {
@@ -1282,8 +1666,8 @@ impl Scene {
         }
 
         self.route_counter += other.route_counter;
-        self.imported.append(&mut other.imported);
-        self.exported.append(&mut other.exported);
+        place(&mut self.imported, imported_offset, std::mem::take(&mut other.imported));
+        place(&mut self.exported, exported_offset, std::mem::take(&mut other.exported));
 
         for p in &mut other.protos {
             p.ctx += m.ctx_offset;
@@ -1311,10 +1695,79 @@ impl Scene {
             self.nodes.append(&mut other.nodes);
         }
 
-        self.contexts.append(&mut other.contexts);
-        self.protos.append(&mut other.protos);
-        self.externprotos.append(&mut other.externprotos);
+        place(&mut self.contexts, m.ctx_offset, std::mem::take(&mut other.contexts));
+        place(&mut self.protos, m.proto_offset, std::mem::take(&mut other.protos));
+        place(&mut self.externprotos, m.extern_offset, std::mem::take(&mut other.externprotos));
 
         m
+    }
+}
+
+#[cfg(test)]
+mod slot_tests {
+    use super::*;
+
+    fn scene(text: &str) -> Scene {
+        // A parsed scene would need x3d-parse; build the tables by hand.
+        let mut s = Scene::new(text);
+
+        for _ in 0..4 {
+            s.new_context(ROOT, Outer::Inline(None));
+        }
+
+        s
+    }
+
+    /// A released slot gets a new generation; a handle of the old one resolves to nothing.
+    #[test]
+    fn released_context_slots_change_generation() {
+        let mut s = scene("a.wrl");
+        let old = s.ctx_handle(2);
+
+        s.release_ctx(2);
+        assert_eq!(s.resolve_ctx(old), None, "a released slot resolves to nothing");
+
+        let c = s.new_context(ROOT, Outer::Inline(None));
+
+        assert_eq!(c, 2, "the released slot is taken again");
+        assert_eq!(s.resolve_ctx(old), None, "the old handle does not reach the new context");
+        assert_eq!(s.resolve_ctx(s.ctx_handle(2)), Some(2));
+        assert_eq!(s.contexts.len(), 5, "no slot was added");
+    }
+
+    /// A merged scene takes a released run of its size, else it goes to the end.
+    #[test]
+    fn merge_takes_a_released_run() {
+        let mut s = scene("a.wrl");
+
+        s.release_ctx(1);
+        s.release_ctx(3);
+
+        let mut two = Scene::new("b.wrl");
+
+        two.new_context(ROOT, Outer::Scene);
+
+        let m = s.merge(two, ROOT, None);
+
+        assert_eq!(m.ctx_offset, 5, "no run of two: appended");
+
+        s.release_ctx(2);
+
+        let mut three = Scene::new("c.wrl");
+
+        three.new_context(ROOT, Outer::Scene);
+        three.new_context(1, Outer::Scene);
+
+        let m = s.merge(three, ROOT, None);
+
+        assert_eq!(m.ctx_offset, 1, "the run 1..4 is taken");
+        assert_eq!(s.contexts[2].parent, Some(1), "ids inside the scene keep their offset");
+        assert!(s.ctx_slots.free.is_empty());
+    }
+
+    #[test]
+    #[should_panic(expected = "never released")]
+    fn the_root_context_is_never_released() {
+        Scene::new("a.wrl").release_ctx(ROOT);
     }
 }

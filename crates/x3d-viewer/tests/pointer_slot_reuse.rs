@@ -96,9 +96,14 @@ fn output(sensor: &str) -> &'static str {
     }
 }
 
-/// The QA reproduction, inverted. The button goes down over an Anchor and a drag sensor of an
-/// Inline's scene, and over a sensor of the world around the Inline. The Inline unloads and loads
-/// a scene whose Anchor and sensor take the same slots; then the mouse moves and goes up.
+/// The QA reproduction, inverted. The button goes down over a drag sensor in an Anchor of an
+/// Inline's scene. The Inline unloads and loads a scene whose Anchor and sensor take the same
+/// slots; then the mouse moves and goes up.
+///
+/// The drag sensor is the innermost sensor of the box: it replaces the Anchor's own TouchSensor
+/// and the world's sensor around the Inline (renderObject.getSensors () .at (-1); REA batch 02
+/// fixtures pointer-anchor-sensors and pointer-nested-sensors check this against X_ITE), so
+/// neither of those is active or fires.
 fn held_drag_across_slot_reuse(sensor: &'static str) {
     big(move || {
         let d = dir(sensor);
@@ -113,7 +118,7 @@ fn held_drag_across_slot_reuse(sensor: &'static str) {
         w.input(UiEvent::MouseMove { x: 128.0, y: 128.0 });
         w.input(UiEvent::MouseDown { button: 0, x: 128.0, y: 128.0 });
         assert!(w.bool(s1, "isActive"), "{sensor}: the press activates S1");
-        assert!(w.bool(outer, "isActive"), "the press activates the world's sensor too");
+        assert!(!w.bool(outer, "isActive"), "the innermost sensor replaces the world's sensor");
 
         w.swap("sub_2.wrl");
 
@@ -128,14 +133,14 @@ fn held_drag_across_slot_reuse(sensor: &'static str) {
         w.input(UiEvent::MouseMove { x: 180.0, y: 140.0 });
         assert!(!w.bool(s2, "isActive"), "{sensor}: S2 was never pressed");
         assert_eq!(w.value(s2, output(sensor)), before, "{sensor}: the old drag drove S2");
-        assert!(w.bool(outer, "isActive"), "the world's sensor is still being dragged");
-        assert_ne!(w.value(outer, "translation_changed"), outer_before, "the world's sensor still gets the drag");
+        assert!(!w.bool(outer, "isActive"), "the world's sensor was never pressed");
+        assert_eq!(w.value(outer, "translation_changed"), outer_before, "the world's sensor got the drag");
 
         w.input(UiEvent::MouseUp { button: 0, x: 180.0, y: 140.0 });
         w.steps(1);
         assert!(!w.bool(s2, "isActive"), "{sensor}: S2 after the release");
         assert_eq!(w.value(s2, output(sensor)), before, "{sensor}: the release drove S2");
-        assert!(!w.bool(outer, "isActive"), "the release ends the world's drag");
+        assert!(!w.bool(outer, "isActive"), "the world's sensor after the release");
         assert!(w.v.anchors.is_empty(), "{sensor}: the old press activated the new Anchor: {:?}", w.v.anchors.iter().map(|a| &a.description).collect::<Vec<_>>());
 
         // A fresh click on the new scene works as usual.
@@ -147,9 +152,8 @@ fn held_drag_across_slot_reuse(sensor: &'static str) {
         w.input(UiEvent::MouseUp { button: 0, x: 150.0, y: 110.0 });
         assert!(!w.bool(s2, "isActive"));
 
-        // Released still over the box: the new Anchor fires, once.
-        let anchors: Vec<&str> = w.v.anchors.iter().map(|a| a.description.as_str()).collect();
-        assert_eq!(anchors, ["Anchor2"], "{sensor}: a click on the new Anchor activates it once");
+        // The drag sensor replaces the Anchor's TouchSensor: the Anchor does not fire.
+        assert!(w.v.anchors.is_empty(), "{sensor}: the drag sensor's click activated the Anchor: {:?}", w.v.anchors.iter().map(|a| &a.description).collect::<Vec<_>>());
 
         let _ = std::fs::remove_dir_all(&d);
     });
@@ -231,6 +235,37 @@ fn a_hover_does_not_carry_over_to_the_node_that_takes_its_slot() {
 
         w.input(UiEvent::MouseMove { x: 5.0, y: 5.0 });
         assert!(!w.bool(t2, "isOver"), "and that it left");
+
+        let _ = std::fs::remove_dir_all(&d);
+    });
+}
+
+/// A drag of the world's own sensor (outside the Inline) survives the Inline's swap: forgetting
+/// the released nodes keeps every other sensor's state.
+#[test]
+fn a_held_world_sensor_survives_an_inline_swap() {
+    big(|| {
+        let d = dir("world-drag");
+
+        write(&d, "sub_1.wrl", &anchored("PlaneSensor", 1));
+        write(&d, "sub_2.wrl", &anchored("PlaneSensor", 2));
+
+        let mut w = World::open(&d, "#VRML V2.0 utf8\nViewpoint { position 0 0 10 }\nGroup { children [ DEF Outer PlaneSensor { } Transform { translation -3 0 0 children Shape { geometry Box { size 2 2 2 } } } ] }\nDEF Inl Inline { url \"sub_1.wrl\" }\n");
+        let outer = w.named(ROOT, "Outer");
+
+        w.input(UiEvent::MouseMove { x: 35.0, y: 128.0 });
+        w.input(UiEvent::MouseDown { button: 0, x: 35.0, y: 128.0 });
+        assert!(w.bool(outer, "isActive"), "the press activates the world's sensor");
+
+        w.swap("sub_2.wrl");
+
+        let before = w.value(outer, "translation_changed");
+        w.input(UiEvent::MouseMove { x: 50.0, y: 140.0 });
+        assert!(w.bool(outer, "isActive"), "the world's sensor is still being dragged");
+        assert_ne!(w.value(outer, "translation_changed"), before, "the world's sensor still gets the drag");
+
+        w.input(UiEvent::MouseUp { button: 0, x: 50.0, y: 140.0 });
+        assert!(!w.bool(outer, "isActive"), "the release ends the world's drag");
 
         let _ = std::fs::remove_dir_all(&d);
     });

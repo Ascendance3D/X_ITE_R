@@ -1,0 +1,150 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 6 }
+NavigationInfo { headlight FALSE }
+DEF TIM TimeSensor { cycleInterval 1.2 loop TRUE }
+DEF INT ScalarInterpolator { key [ 0 0.5 1 ] keyValue [ 0.2 1 0.2 ] }
+ROUTE TIM.fraction_changed TO INT.set_fraction
+Transform { translation -1.4 0.8 0 children Shape { appearance Appearance { shaders [ DEF CS ComposedShader { language "GLSL" field SFColor tint 0.9 0.4 0.2 field SFFloat amount 1 field SFBool flag FALSE field MFFloat arr [ 0 0 ] field SFInt32 mode 0 parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+uniform vec3 tint;
+uniform float amount;
+uniform bool flag;
+uniform float arr [2];
+uniform int mode;
+void main()
+{
+   vec3 c = tint * (0.3 + 0.7 * abs (vN.z)) * amount + vec3 (arr [0], arr [1], 0.0);
+   if (flag) c = c.gbr;
+   if (mode == 1) c *= 0.5;
+   gl_FragColor = vec4 (c, 1.0);
+}
+" } ] } ] } geometry Sphere { radius 0.6 } } }
+Transform { translation 1.4 0.8 0 children Shape { appearance Appearance { shaders [ ComposedShader { language "GLSL" field SFColor tint 0.2 0.9 0.4 field SFFloat amount 0.5 field SFBool flag FALSE field MFFloat arr [ 0 0 ] field SFInt32 mode 0 parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+uniform vec3 tint;
+uniform float amount;
+uniform bool flag;
+uniform float arr [2];
+uniform int mode;
+void main()
+{
+   vec3 c = tint * (0.3 + 0.7 * abs (vN.z)) * amount + vec3 (arr [0], arr [1], 0.0);
+   if (flag) c = c.gbr;
+   if (mode == 1) c *= 0.5;
+   gl_FragColor = vec4 (c, 1.0);
+}
+" } ] } ] } geometry Box { size 1 1 1 } } }
+DEF RT Transform { translation 0 -1 0 children Shape { appearance Appearance { shaders [ DEF CS3 ComposedShader { language "GLSL" field SFColor tint 0.2 0.4 0.9 field SFFloat amount 1 field SFBool flag FALSE field MFFloat arr [ 0 0 ] field SFInt32 mode 0 parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+uniform vec3 tint;
+uniform float amount;
+uniform bool flag;
+uniform float arr [2];
+uniform int mode;
+void main()
+{
+   vec3 c = tint * (0.3 + 0.7 * abs (vN.z)) * amount + vec3 (arr [0], arr [1], 0.0);
+   if (flag) c = c.gbr;
+   if (mode == 1) c *= 0.5;
+   gl_FragColor = vec4 (c, 1.0);
+}
+" } ] } ] } geometry Sphere { radius 0.6 } } }
+ROUTE INT.value_changed TO CS3.amount
+DEF K KeySensor { }
+
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode cs USE CS
+  initializeOnly SFNode cs3 USE CS3
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') cs .tint = new SFColor (0.1, 0.9, 0.9);
+   if (k == 'b') cs .amount = 0.4;
+   if (k == 'c') cs .flag = true;
+   if (k == 'd') cs .arr = new MFFloat (0.3, 0.1);
+   if (k == 'e') cs .mode = 1;
+   if (k == 'f') cs .tint = new SFColor (0.9, 0.1, 0.1);
+   if (k == 'g') cs3 .flag = true;
+   if (k == 'h') { cs .flag = false; cs .mode = 0; }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

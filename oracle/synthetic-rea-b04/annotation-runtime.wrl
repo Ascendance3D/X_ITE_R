@@ -1,0 +1,87 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Annotation:1
+COMPONENT Geospatial:1
+COMPONENT Networking:3
+COMPONENT KeyDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 10 }
+DEF GA GroupAnnotation {
+  annotationGroupID "group-1"
+  displayPolicy "ALWAYS"
+  children [
+    Transform { translation -2.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.4 0.3 } } geometry Box { } } }
+  ]
+}
+DEF AT AnnotationTarget {
+  referencePoint 1 2 3
+  marker Shape { appearance Appearance { material Material { diffuseColor 0.2 0.9 0.2 } } geometry Sphere { radius 3 } }
+  leadLineStyle LineProperties { linewidthScaleFactor 2 }
+  annotations [
+    DEF TA TextAnnotation { annotationGroupID "group-1" text "hello" }
+    DEF UA URLAnnotation { url "http://annotation.invalid/a.html" }
+  ]
+}
+Transform { translation 2.5 0 0 children DEF TB TextAnnotation { text "child of a Transform" } }
+DEF GM GeoMetadata { url "checker.png" summary [ "title" "a test" ] data [ DEF D WorldInfo { title "data" } ] }
+DEF LS LoadSensor { children [ USE GM ] }
+DEF NEW Shape { appearance Appearance { material Material { diffuseColor 0.3 0.4 0.9 } } geometry Cone { } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFString on_text
+  inputOnly SFVec3f on_reference
+  inputOnly MFNode on_children
+  inputOnly SFBool on_visible
+  inputOnly MFString on_url
+  inputOnly SFBool on_loaded
+  inputOnly SFBool on_active
+  inputOnly SFFloat on_progress
+  inputOnly MFString on_summary
+  inputOnly SFString on_policy
+  inputOutput SFString log ""
+  initializeOnly SFNode ga USE GA
+  initializeOnly SFNode at USE AT
+  initializeOnly SFNode ta USE TA
+  initializeOnly SFNode ua USE UA
+  initializeOnly SFNode gm USE GM
+  initializeOnly SFNode extra USE NEW
+  url "javascript:
+function initialize () { log = 'I ' + ga .children .length + ' ' + at .annotations .length + ' '; }
+function on_text (v) { log = log + 'T' + v + ' '; }
+function on_reference (v) { log = log + 'R' + v + ' '; }
+function on_children (v) { log = log + 'C' + v .length + ' '; }
+function on_visible (v) { log = log + 'V' + v + ' '; }
+function on_url (v) { log = log + 'U' + v + ' '; }
+function on_loaded (v) { log = log + 'L' + v + ' '; }
+function on_active (v) { log = log + 'A' + v + ' '; }
+function on_progress (v) { log = log + 'P' + v + ' '; }
+function on_summary (v) { log = log + 'S' + v + ' '; }
+function on_policy (v) { log = log + 'D' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') ga .visible = false;
+   if (k == 'b') ga .visible = true;
+   if (k == 'c') ga .addChildren = new MFNode (extra);
+   if (k == 'd') ga .removeChildren = new MFNode (ga .children [0]);
+   if (k == 'e') { ta .text = 'world'; ta .contentType = 'text/html'; at .referencePoint = new SFVec3f (4, 5, 6); }
+   if (k == 'f') { ua .url = new MFString ('http://annotation.invalid/b.html'); }
+   if (k == 'g') { gm .summary = new MFString ('changed'); gm .url = new MFString ('other.txt'); gm .load = false; }
+   if (k == 'h') { gm .load = true; ga .displayPolicy = 'NEVER'; ga .enabled = false; at .marker = null; }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE TA.text_changed TO R.on_text
+ROUTE AT.referencePoint_changed TO R.on_reference
+ROUTE GA.children_changed TO R.on_children
+ROUTE GA.visible_changed TO R.on_visible
+ROUTE UA.url_changed TO R.on_url
+ROUTE GM.url_changed TO R.on_url
+ROUTE GM.summary_changed TO R.on_summary
+ROUTE GA.displayPolicy_changed TO R.on_policy
+ROUTE LS.isLoaded TO R.on_loaded
+ROUTE LS.isActive TO R.on_active
+ROUTE LS.progress TO R.on_progress

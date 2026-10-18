@@ -1,0 +1,19 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Shape:4
+COMPONENT Texturing:3
+# REA batch 01 synthetic: PointProperties size, attenuation, min/max clamps, colors, textures.
+Viewpoint { position 0 0 10 }
+NavigationInfo { type "NONE" }
+Background { skyColor 0.1 0.1 0.12 }
+DEF C Coordinate { point [ -1 0 0, -0.5 0.4 0, 0 0 0, 0.5 -0.4 0, 1 0 0 ] }
+Transform { translation -2.5 3 0 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 1 1 0 } pointProperties PointProperties { pointSizeScaleFactor 9 pointSizeMaxValue 20 } } geometry PointSet { coord USE C } } }
+Transform { translation 0 3 0 children Shape { appearance Appearance { material Material { emissiveColor 0 1 1 } pointProperties PointProperties { pointSizeScaleFactor 24 pointSizeMaxValue 40 } } geometry PointSet { coord USE C } } }
+Transform { translation 2.5 3 0 children Shape { appearance Appearance { pointProperties PointProperties { pointSizeScaleFactor 0.4 } } geometry PointSet { coord USE C } } }
+Transform { translation -2.5 1 0 children Shape { appearance Appearance { pointProperties PointProperties { pointSizeScaleFactor 300 pointSizeMinValue 2 pointSizeMaxValue 60 attenuation 1 1 1 } } geometry PointSet { coord USE C color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0, 1 0 1 ] } } } }
+Transform { translation 0 1 -6 children Shape { appearance Appearance { pointProperties PointProperties { pointSizeScaleFactor 15 pointSizeMinValue 4 pointSizeMaxValue 15 attenuation 0 0.1 0 } } geometry PointSet { coord USE C color ColorRGBA { color [ 1 0 0 1, 0 1 0 0.5, 0 0 1 1, 1 1 0 0.3, 1 0 1 1 ] } } } }
+Transform { translation 2.5 1 0 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 1 1 1 transparency 0.3 } pointProperties PointProperties { pointSizeScaleFactor 18 pointSizeMaxValue 18 } } geometry PointSet { coord USE C } } }
+Transform { translation -2.5 -1.5 0 children Shape { appearance Appearance { texture PixelTexture { image 2 2 3 0xFF0000 0x00FF00 0x0000FF 0xFFFFFF } pointProperties PointProperties { pointSizeScaleFactor 32 pointSizeMaxValue 32 } } geometry PointSet { coord USE C } } }
+Transform { translation 0 -1.5 0 children Shape { appearance Appearance { texture PixelTexture { image 2 2 4 0xFF0000FF 0x00FF0080 0x0000FF40 0xFFFFFF00 } textureTransform TextureTransform { rotation 0.5 } pointProperties PointProperties { pointSizeScaleFactor 28 pointSizeMaxValue 28 } } geometry PointSet { coord USE C } } }
+Transform { translation 2.5 -1.5 0 children Shape { appearance Appearance { pointProperties PointProperties { pointSizeScaleFactor -3 pointSizeMinValue 7 pointSizeMaxValue 5000 } } geometry PointSet { coord USE C } } }
+Transform { translation 0 -3.5 0 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 1 0.5 0 } } geometry PointSet { coord USE C } } }

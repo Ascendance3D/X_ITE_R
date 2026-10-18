@@ -1,0 +1,122 @@
+{
+  "ok": true,
+  "poses": {
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "150": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\nCOMPONENT Networking : 3\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nDEF I Transform {\n  translation -2.5 1.5 0\n  children DEF IN Inline {\n    url \"browser-options-assets/blue.wrl\"\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children Shape {\n    appearance Appearance {\n      texture DEF TEX ImageTexture {\n        url \"../synthetic-rea-render2/checker8.png\"\n      }\n    }\n    geometry Box { }\n  }\n}\n\nDEF ROOT Transform {\n  translation 0 -2 0\n  children [\n    DEF _1 Transform {\n      translation -1.5 0 0\n      children Inline {\n        global TRUE\n        url \"browser-options-assets/blue.wrl\"\n      }\n    }\n    DEF _2 Script {\n      url \"ecmascript: function initialize () { print ('new script ran'); }\"\n    }\n  ]\n}\n\nDEF S Script {\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOutput SFString hist \"opt=false\"\n  inputOutput SFNode   inline USE IN\n  inputOutput SFNode   tex USE TEX\n  inputOutput SFNode   root USE ROOT\n\n  url \"ecmascript:\n    function cycle (v) {\n      step = step + 1;\n      if (step == 2) {\n        Browser .setBrowserOption ('LoadUrlObjects', false);\n        hist = 'opt=' + Browser .getBrowserOption ('LoadUrlObjects');\n        inline .url = new MFString ('browser-options-assets/blue.wrl');\n        tex .url = new MFString ('../synthetic-rea-render2/checker8.png');\n        var n = Browser .createVrmlFromString ('Transform { translation -1.5 0 0 children Inline { url \\\"browser-options-assets/blue.wrl\\\" } } Script { url \\\"ecmascript: function initialize () { print (\\\\'new script ran\\\\'); }\\\" }');\n        root .children = n;\n      }\n      if (step == 4) {\n        Browser .setBrowserOption ('LoadUrlObjects', true);\n      }\n      if (step == 6) {\n        inline .url = new MFString ('browser-options-assets/blue.wrl', 'x.wrl');\n      }\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "70": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\nCOMPONENT Networking : 3\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nDEF I Transform {\n  translation -2.5 1.5 0\n  children DEF IN Inline {\n    url \"browser-options-assets/blue.wrl\"\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children Shape {\n    appearance Appearance {\n      texture DEF TEX ImageTexture {\n        url \"../synthetic-rea-render2/checker8.png\"\n      }\n    }\n    geometry Box { }\n  }\n}\n\nDEF ROOT Transform {\n  translation 0 -2 0\n  children [\n    DEF _1 Transform {\n      translation -1.5 0 0\n      children Inline {\n        global TRUE\n        url \"browser-options-assets/blue.wrl\"\n      }\n    }\n    DEF _2 Script {\n      url \"ecmascript: function initialize () { print ('new script ran'); }\"\n    }\n  ]\n}\n\nDEF S Script {\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOutput SFString hist \"opt=false\"\n  inputOutput SFNode   inline USE IN\n  inputOutput SFNode   tex USE TEX\n  inputOutput SFNode   root USE ROOT\n\n  url \"ecmascript:\n    function cycle (v) {\n      step = step + 1;\n      if (step == 2) {\n        Browser .setBrowserOption ('LoadUrlObjects', false);\n        hist = 'opt=' + Browser .getBrowserOption ('LoadUrlObjects');\n        inline .url = new MFString ('browser-options-assets/blue.wrl');\n        tex .url = new MFString ('../synthetic-rea-render2/checker8.png');\n        var n = Browser .createVrmlFromString ('Transform { translation -1.5 0 0 children Inline { url \\\"browser-options-assets/blue.wrl\\\" } } Script { url \\\"ecmascript: function initialize () { print (\\\\'new script ran\\\\'); }\\\" }');\n        root .children = n;\n      }\n      if (step == 4) {\n        Browser .setBrowserOption ('LoadUrlObjects', true);\n      }\n      if (step == 6) {\n        inline .url = new MFString ('browser-options-assets/blue.wrl', 'x.wrl');\n      }\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\nCOMPONENT Networking : 3\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nDEF I Transform {\n  translation -2.5 1.5 0\n  children DEF IN Inline {\n    url [\n      \"browser-options-assets/blue.wrl\",\n      \"x.wrl\"\n    ]\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children Shape {\n    appearance Appearance {\n      texture DEF TEX ImageTexture {\n        url \"../synthetic-rea-render2/checker8.png\"\n      }\n    }\n    geometry Box { }\n  }\n}\n\nDEF ROOT Transform {\n  translation 0 -2 0\n  children [\n    DEF _1 Transform {\n      translation -1.5 0 0\n      children Inline {\n        global TRUE\n        url \"browser-options-assets/blue.wrl\"\n      }\n    }\n    DEF _2 Script {\n      url \"ecmascript: function initialize () { print ('new script ran'); }\"\n    }\n  ]\n}\n\nDEF S Script {\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOutput SFString hist \"opt=false\"\n  inputOutput SFNode   inline USE IN\n  inputOutput SFNode   tex USE TEX\n  inputOutput SFNode   root USE ROOT\n\n  url \"ecmascript:\n    function cycle (v) {\n      step = step + 1;\n      if (step == 2) {\n        Browser .setBrowserOption ('LoadUrlObjects', false);\n        hist = 'opt=' + Browser .getBrowserOption ('LoadUrlObjects');\n        inline .url = new MFString ('browser-options-assets/blue.wrl');\n        tex .url = new MFString ('../synthetic-rea-render2/checker8.png');\n        var n = Browser .createVrmlFromString ('Transform { translation -1.5 0 0 children Inline { url \\\"browser-options-assets/blue.wrl\\\" } } Script { url \\\"ecmascript: function initialize () { print (\\\\'new script ran\\\\'); }\\\" }');\n        root .children = n;\n      }\n      if (step == 4) {\n        Browser .setBrowserOption ('LoadUrlObjects', true);\n      }\n      if (step == 6) {\n        inline .url = new MFString ('browser-options-assets/blue.wrl', 'x.wrl');\n      }\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\nCOMPONENT Networking : 3\n\nViewpoint { }\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nDEF I Transform {\n  translation -2.5 1.5 0\n  children DEF IN Inline {\n    url [\n      \"browser-options-assets/blue.wrl\",\n      \"x.wrl\"\n    ]\n  }\n}\n\nTransform {\n  translation 2.5 1.5 0\n  children Shape {\n    appearance Appearance {\n      texture DEF TEX ImageTexture {\n        url \"../synthetic-rea-render2/checker8.png\"\n      }\n    }\n    geometry Box { }\n  }\n}\n\nDEF ROOT Transform {\n  translation 0 -2 0\n  children [\n    DEF _1 Transform {\n      translation -1.5 0 0\n      children Inline {\n        global TRUE\n        url \"browser-options-assets/blue.wrl\"\n      }\n    }\n    DEF _2 Script {\n      url \"ecmascript: function initialize () { print ('new script ran'); }\"\n    }\n  ]\n}\n\nDEF S Script {\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOutput SFString hist \"opt=false\"\n  inputOutput SFNode   inline USE IN\n  inputOutput SFNode   tex USE TEX\n  inputOutput SFNode   root USE ROOT\n\n  url \"ecmascript:\n    function cycle (v) {\n      step = step + 1;\n      if (step == 2) {\n        Browser .setBrowserOption ('LoadUrlObjects', false);\n        hist = 'opt=' + Browser .getBrowserOption ('LoadUrlObjects');\n        inline .url = new MFString ('browser-options-assets/blue.wrl');\n        tex .url = new MFString ('../synthetic-rea-render2/checker8.png');\n        var n = Browser .createVrmlFromString ('Transform { translation -1.5 0 0 children Inline { url \\\"browser-options-assets/blue.wrl\\\" } } Script { url \\\"ecmascript: function initialize () { print (\\\\'new script ran\\\\'); }\\\" }');\n        root .children = n;\n      }\n      if (step == 4) {\n        Browser .setBrowserOption ('LoadUrlObjects', true);\n      }\n      if (step == 6) {\n        inline .url = new MFString ('browser-options-assets/blue.wrl', 'x.wrl');\n      }\n    }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.25\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO S.cycle\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

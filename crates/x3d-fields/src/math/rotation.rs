@@ -228,10 +228,31 @@ impl Rotation4 {
         self
     }
 
+    /// Rotation4.setEuler (x, y, z, order): an unknown order keeps the quaternion (still tainted).
+    pub fn set_euler_order(&mut self, x: f64, y: f64, z: f64, order: &str) -> &mut Self {
+        self.quaternion.set_euler_order(x, y, z, order);
+        self.tainted = true;
+        self
+    }
+
     pub fn slerp(&mut self, dest: &Rotation4, t: f64) -> &mut Self {
         self.quaternion.slerp(&dest.quaternion, t);
         self.tainted = true;
         self
+    }
+
+    /// Rotation4.squad (a, b, dest, t).
+    pub fn squad(&mut self, a: &Rotation4, b: &Rotation4, dest: &Rotation4, t: f64) -> &mut Self {
+        self.quaternion.squad(&a.quaternion, &b.quaternion, &dest.quaternion, t);
+        self.tainted = true;
+        self
+    }
+
+    /// Rotation4.spline (r0, r1, r2): a rotation made from Quaternion.spline, then normalized.
+    pub fn spline(r0: &Rotation4, r1: &Rotation4, r2: &Rotation4) -> Rotation4 {
+        let mut r = Rotation4 { x: 0.0, y: 0.0, z: 1.0, angle: 0.0, tainted: true, quaternion: Quaternion::spline(&r0.quaternion, &r1.quaternion, &r2.quaternion) };
+        r.normalize();
+        r
     }
 
     /// Rotation4.setVectors (Coin3D SbRotation algorithm).

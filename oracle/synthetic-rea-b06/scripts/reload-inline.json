@@ -1,0 +1,1 @@
+{"dt": 0.016666666666666666, "frames": 200, "warmup": 8, "dump": [1, 39, 41, 89, 91, 92, 120, 200], "console": true, "physics": {"nodes": {"I/RBC": ["enabled"], "I/B": ["position", "orientation", "linearVelocity", "angularVelocity", "@bodyActive"], "I/S": ["isActive", "intersections", "contacts"]}}, "settle": true, "dumpInlines": true}

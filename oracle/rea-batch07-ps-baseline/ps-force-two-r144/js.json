@@ -1,0 +1,6095 @@
+{
+ "ok": true,
+ "dt": 0.006944444444444444,
+ "t0": 946684800,
+ "frames": 216,
+ "warmup": 8,
+ "seed": 1983328422,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0069444,
+   "randomSeed": 2058058414.5208209,
+   "numParticles": 0,
+   "deltaTime": 0.0004629629629629629,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00046296295477077365,
+    0.0009259259095415473,
+    -0.0013888889225199819,
+    0,
+    0,
+    -0.0045370371080935,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0138888,
+   "randomSeed": 3502544626.1845,
+   "numParticles": 0,
+   "deltaTime": 0.0008950617283950617,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0008950617047958076,
+    0.0017901234095916152,
+    -0.0026851852890104055,
+    0,
+    0,
+    -0.008771604858338833,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 3,
+   "time": 946684800.0208334,
+   "randomSeed": 3043898377.291287,
+   "numParticles": 0,
+   "deltaTime": 0.0012983539094650204,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.001298353890888393,
+    0.002596707781776786,
+    -0.0038950617890805006,
+    0,
+    0,
+    -0.01272386871278286,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 4,
+   "time": 946684800.0277778,
+   "randomSeed": 997113089.7678415,
+   "numParticles": 0,
+   "deltaTime": 0.0016747599451303152,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0016747599001973867,
+    0.0033495198003947735,
+    -0.005024279933422804,
+    0,
+    0,
+    -0.01641264744102955,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 5,
+   "time": 946684800.0347222,
+   "randomSeed": 3390522605.2105823,
+   "numParticles": 0,
+   "deltaTime": 0.0020260722450845905,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0020260722376406193,
+    0.0040521444752812386,
+    -0.006078216712921858,
+    0,
+    0,
+    -0.01985550858080387,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 6,
+   "time": 946684800.0416666,
+   "randomSeed": 3371358680.2150445,
+   "numParticles": 0,
+   "deltaTime": 0.0023539637250419142,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0023539636749774218,
+    0.0047079273499548435,
+    -0.007061891257762909,
+    0,
+    0,
+    -0.02306884527206421,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 7,
+   "time": 946684800.0486112,
+   "randomSeed": 3225838534.248926,
+   "numParticles": 0,
+   "deltaTime": 0.002659995773002083,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0026599958073347807,
+    0.005319991614669561,
+    -0.007979987189173698,
+    0,
+    0,
+    -0.026067959144711494,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 8,
+   "time": 946684800.0555556,
+   "randomSeed": 3075126226.2840166,
+   "numParticles": 0,
+   "deltaTime": 0.0029456256844315734,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.002945625688880682,
+    0.005891251377761364,
+    -0.008836876600980759,
+    0,
+    0,
+    -0.02886713109910488,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 9,
+   "time": 946684800.0625,
+   "randomSeed": 1276288582.7028408,
+   "numParticles": 0,
+   "deltaTime": 0.003212213601765765,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0032122135162353516,
+    0.006424427032470703,
+    -0.009636640548706055,
+    0,
+    0,
+    -0.031479693949222565,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 10,
+   "time": 946684800.0694444,
+   "randomSeed": 3654011862.1492343,
+   "numParticles": 0,
+   "deltaTime": 0.003461028991277677,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.003461028914898634,
+    0.006922057829797268,
+    -0.01038308721035719,
+    0,
+    0,
+    -0.03391808271408081,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 11,
+   "time": 946684800.0763888,
+   "randomSeed": 1084080054.747593,
+   "numParticles": 0,
+   "deltaTime": 0.0036932566881554617,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0036932567600160837,
+    0.0073865135200321674,
+    -0.011079770512878895,
+    0,
+    0,
+    -0.03619391471147537,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 12,
+   "time": 946684800.0833334,
+   "randomSeed": 1699955399.6041982,
+   "numParticles": 0,
+   "deltaTime": 0.003910002538574727,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.003910002764314413,
+    0.007820005528628826,
+    -0.011730007827281952,
+    0,
+    0,
+    -0.03831802308559418,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 13,
+   "time": 946684800.0902778,
+   "randomSeed": 2116195364.5072849,
+   "numParticles": 0,
+   "deltaTime": 0.004112298665632707,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.004112298600375652,
+    0.008224597200751305,
+    -0.012336895801126957,
+    0,
+    0,
+    -0.04030052572488785,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 14,
+   "time": 946684800.0972222,
+   "randomSeed": 2686423285.3745184,
+   "numParticles": 0,
+   "deltaTime": 0.004301108384220156,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.004301108419895172,
+    0.008602216839790344,
+    -0.012903325259685516,
+    0,
+    0,
+    -0.04215086251497269,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 15,
+   "time": 946684800.1041666,
+   "randomSeed": 2261078284.4735518,
+   "numParticles": 0,
+   "deltaTime": 0.004477330788235108,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.004477330949157476,
+    0.008954661898314953,
+    -0.013431992381811142,
+    0,
+    0,
+    -0.04387784004211426,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 16,
+   "time": 946684800.1111112,
+   "randomSeed": 4212249970.019259,
+   "numParticles": 0,
+   "deltaTime": 0.004641805031982397,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0046418048441410065,
+    0.009283609688282013,
+    -0.013925415463745594,
+    0,
+    0,
+    -0.04548968747258186,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 17,
+   "time": 946684800.1180556,
+   "randomSeed": 416420168.90304464,
+   "numParticles": 0,
+   "deltaTime": 0.004795314326146534,
+   "creationTime": 946684800,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0047953142784535885,
+    0.009590628556907177,
+    -0.014385943301022053,
+    0,
+    0,
+    -0.046994078904390335,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 18,
+   "time": 946684800.125,
+   "randomSeed": 2779470819.3528543,
+   "numParticles": 1,
+   "deltaTime": 0.004938589667366395,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.004938589874655008,
+    0.009877179749310017,
+    -0.014815769158303738,
+    0,
+    0,
+    -0.048398178070783615,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 19,
+   "time": 946684800.1319444,
+   "randomSeed": 3043236586.2914414,
+   "numParticles": 1,
+   "deltaTime": 0.005072313319171599,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0050723133608698845,
+    0.010144626721739769,
+    -0.015216940082609653,
+    0,
+    0,
+    -0.04970867186784744,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 20,
+   "time": 946684800.1388888,
+   "randomSeed": 3056520681.288348,
+   "numParticles": 1,
+   "deltaTime": 0.0051971220608564555,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.005197122227400541,
+    0.010394244454801083,
+    -0.015591366216540337,
+    0,
+    0,
+    -0.05093179643154144,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 21,
+   "time": 946684800.1458334,
+   "randomSeed": 3523860528.1795373,
+   "numParticles": 1,
+   "deltaTime": 0.005313610219762321,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.005313610192388296,
+    0.010627220384776592,
+    -0.0159408301115036,
+    0,
+    0,
+    -0.05207338184118271,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 22,
+   "time": 946684800.1527778,
+   "randomSeed": 793312464.8152926,
+   "numParticles": 1,
+   "deltaTime": 0.005422332501407796,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00542233232408762,
+    0.01084466464817524,
+    -0.016266997903585434,
+    0,
+    0,
+    -0.0531388595700264,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 23,
+   "time": 946684800.1597222,
+   "randomSeed": 4159711674.0314918,
+   "numParticles": 1,
+   "deltaTime": 0.005523806630943573,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0055238064378499985,
+    0.011047612875699997,
+    -0.016571419313549995,
+    0,
+    0,
+    -0.054133303463459015,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 24,
+   "time": 946684800.1666666,
+   "randomSeed": 3786363582.1184187,
+   "numParticles": 1,
+   "deltaTime": 0.005618515818510297,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.005618515890091658,
+    0.011237031780183315,
+    -0.016855547204613686,
+    0,
+    0,
+    -0.0550614558160305,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 25,
+   "time": 946684800.1736112,
+   "randomSeed": 1292750462.699008,
+   "numParticles": 1,
+   "deltaTime": 0.00570691106023924,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.005706910975277424,
+    0.011413821950554848,
+    -0.017120733857154846,
+    0,
+    0,
+    -0.05592772737145424,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 26,
+   "time": 946684800.1805556,
+   "randomSeed": 2333304688.456735,
+   "numParticles": 1,
+   "deltaTime": 0.0057894132858529205,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.005789413116872311,
+    0.011578826233744621,
+    -0.017368240281939507,
+    0,
+    0,
+    -0.05673624947667122,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 27,
+   "time": 946684800.1875,
+   "randomSeed": 1602914758.6267924,
+   "numParticles": 1,
+   "deltaTime": 0.005866415363092356,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.005866415333002806,
+    0.011732830666005611,
+    -0.01759924553334713,
+    0,
+    0,
+    -0.05749087035655975,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 28,
+   "time": 946684800.1944444,
+   "randomSeed": 2879809752.329492,
+   "numParticles": 1,
+   "deltaTime": 0.005938283968515829,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00593828409910202,
+    0.01187656819820404,
+    -0.01781485229730606,
+    0,
+    0,
+    -0.05819518119096756,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 29,
+   "time": 946684800.2013888,
+   "randomSeed": 3919132977.087506,
+   "numParticles": 1,
+   "deltaTime": 0.006005361333577737,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006005361210554838,
+    0.012010722421109676,
+    -0.018016083166003227,
+    0,
+    0,
+    -0.05885254219174385,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 30,
+   "time": 946684800.2083334,
+   "randomSeed": 4280820534.003294,
+   "numParticles": 1,
+   "deltaTime": 0.006067966874302185,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006067967042326927,
+    0.012135934084653854,
+    -0.01820390112698078,
+    0,
+    0,
+    -0.05946607515215874,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 31,
+   "time": 946684800.2152778,
+   "randomSeed": 1740278524.5948098,
+   "numParticles": 1,
+   "deltaTime": 0.006126398712311669,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00612639868631959,
+    0.01225279737263918,
+    -0.018379196524620056,
+    0,
+    0,
+    -0.06003870815038681,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 32,
+   "time": 946684800.2222222,
+   "randomSeed": 1171137924.7273233,
+   "numParticles": 1,
+   "deltaTime": 0.006180935094453855,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006180935073643923,
+    0.012361870147287846,
+    -0.018542805686593056,
+    0,
+    0,
+    -0.060573164373636246,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 33,
+   "time": 946684800.2291666,
+   "randomSeed": 4212669688.019161,
+   "numParticles": 1,
+   "deltaTime": 0.006231835717786561,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006231835577636957,
+    0.012463671155273914,
+    -0.01869550719857216,
+    0,
+    0,
+    -0.06107198819518089,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 34,
+   "time": 946684800.2361112,
+   "randomSeed": 2581958017.398841,
+   "numParticles": 1,
+   "deltaTime": 0.006279342966230421,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00627934280782938,
+    0.01255868561565876,
+    -0.018838029354810715,
+    0,
+    0,
+    -0.06153756007552147,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 35,
+   "time": 946684800.2430556,
+   "randomSeed": 3156858498.2649865,
+   "numParticles": 1,
+   "deltaTime": 0.0063236830647780224,
+   "creationTime": 946684800.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006323683075606823,
+    0.012647366151213646,
+    -0.018971048295497894,
+    0,
+    0,
+    -0.06197209283709526,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 36,
+   "time": 946684800.25,
+   "randomSeed": 2608857349.392578,
+   "numParticles": 2,
+   "deltaTime": 0.006365067156755785,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006365067325532436,
+    0.012730134651064873,
+    -0.019095201045274734,
+    0,
+    0,
+    -0.06237765774130821,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 37,
+   "time": 946684800.2569444,
+   "randomSeed": 1338554743.6883435,
+   "numParticles": 2,
+   "deltaTime": 0.0064036923092683625,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006403692532330751,
+    0.012807385064661503,
+    -0.019211076200008392,
+    0,
+    0,
+    -0.06275618821382523,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 38,
+   "time": 946684800.2638888,
+   "randomSeed": 2286605823.467608,
+   "numParticles": 2,
+   "deltaTime": 0.006439742451613435,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006439742632210255,
+    0.01287948526442051,
+    -0.01931922696530819,
+    0,
+    0,
+    -0.06310947239398956,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 39,
+   "time": 946684800.2708334,
+   "randomSeed": 3841710727.105532,
+   "numParticles": 2,
+   "deltaTime": 0.0064733892511355026,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006473389454185963,
+    0.012946778908371925,
+    -0.019420167431235313,
+    0,
+    0,
+    -0.06343921273946762,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 40,
+   "time": 946684800.2777778,
+   "randomSeed": 705499491.8357381,
+   "numParticles": 2,
+   "deltaTime": 0.006504792930689432,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006504792720079422,
+    0.013009585440158844,
+    -0.019514378160238266,
+    0,
+    0,
+    -0.06374697387218475,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 41,
+   "time": 946684800.2847222,
+   "randomSeed": 1064402359.7521745,
+   "numParticles": 2,
+   "deltaTime": 0.006534103031606434,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006534102838486433,
+    0.013068205676972866,
+    -0.01960230991244316,
+    0,
+    0,
+    -0.06403420865535736,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 42,
+   "time": 946684800.2916666,
+   "randomSeed": 3183661546.258746,
+   "numParticles": 2,
+   "deltaTime": 0.006561459125795635,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006561459042131901,
+    0.013122918084263802,
+    -0.019684378057718277,
+    0,
+    0,
+    -0.06430230289697647,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 43,
+   "time": 946684800.2986112,
+   "randomSeed": 3315755829.2279906,
+   "numParticles": 2,
+   "deltaTime": 0.006586991480372222,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006586991250514984,
+    0.013173982501029968,
+    -0.019760973751544952,
+    0,
+    0,
+    -0.06455251574516296,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 44,
+   "time": 946684800.3055556,
+   "randomSeed": 3408676006.2063556,
+   "numParticles": 2,
+   "deltaTime": 0.006610821677977038,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006610821466892958,
+    0.013221642933785915,
+    -0.019832465797662735,
+    0,
+    0,
+    -0.06478605419397354,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 45,
+   "time": 946684800.3125,
+   "randomSeed": 1080310377.7484705,
+   "numParticles": 2,
+   "deltaTime": 0.006633063195741531,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0066330633126199245,
+    0.013266126625239849,
+    -0.019899189472198486,
+    0,
+    0,
+    -0.06500402092933655,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 46,
+   "time": 946684800.3194444,
+   "randomSeed": 2425247747.435328,
+   "numParticles": 2,
+   "deltaTime": 0.006653821945655059,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006653822027146816,
+    0.013307644054293633,
+    -0.019961465150117874,
+    0,
+    0,
+    -0.06520745158195496,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 47,
+   "time": 946684800.3263888,
+   "randomSeed": 3689675731.1409307,
+   "numParticles": 2,
+   "deltaTime": 0.006673196778907685,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006673196796327829,
+    0.013346393592655659,
+    -0.020019590854644775,
+    0,
+    0,
+    -0.06539732962846756,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 48,
+   "time": 946684800.3333334,
+   "randomSeed": 1721694007.5991368,
+   "numParticles": 2,
+   "deltaTime": 0.006691279956610135,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006691279821097851,
+    0.013382559642195702,
+    -0.020073840394616127,
+    0,
+    0,
+    -0.0655745416879654,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 49,
+   "time": 946684800.3402778,
+   "randomSeed": 3652550114.1495743,
+   "numParticles": 2,
+   "deltaTime": 0.006708157589132424,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00670815771445632,
+    0.01341631542891264,
+    -0.020124472677707672,
+    0,
+    0,
+    -0.0657399445772171,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 50,
+   "time": 946684800.3472222,
+   "randomSeed": 3428481559.2017446,
+   "numParticles": 2,
+   "deltaTime": 0.006723910046153225,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006723910104483366,
+    0.013447820208966732,
+    -0.02017172984778881,
+    0,
+    0,
+    -0.06589432060718536,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 51,
+   "time": 946684800.3541666,
+   "randomSeed": 835315605.8055129,
+   "numParticles": 2,
+   "deltaTime": 0.00673861233937264,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006738612428307533,
+    0.013477224856615067,
+    -0.0202158372849226,
+    0,
+    0,
+    -0.06603839993476868,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 52,
+   "time": 946684800.3611112,
+   "randomSeed": 1140579023.7344382,
+   "numParticles": 2,
+   "deltaTime": 0.00675233447971076,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006752334535121918,
+    0.013504669070243835,
+    -0.020257003605365753,
+    0,
+    0,
+    -0.06617287546396255,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 53,
+   "time": 946684800.3680556,
+   "randomSeed": 4226853701.015859,
+   "numParticles": 2,
+   "deltaTime": 0.0067651418106930055,
+   "creationTime": 946684800.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0067651416175067425,
+    0.013530283235013485,
+    -0.02029542624950409,
+    0,
+    0,
+    -0.06629838794469833,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 54,
+   "time": 946684800.375,
+   "randomSeed": 1589722357.629864,
+   "numParticles": 3,
+   "deltaTime": 0.006777095319609768,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006777095142751932,
+    0.013554190285503864,
+    -0.020331285893917084,
+    0,
+    0,
+    -0.06641553342342377,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 55,
+   "time": 946684800.3819444,
+   "randomSeed": 419577579.9023095,
+   "numParticles": 3,
+   "deltaTime": 0.00678825192793208,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006788251921534538,
+    0.013576503843069077,
+    -0.020364755764603615,
+    0,
+    0,
+    -0.06652487069368362,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 56,
+   "time": 946684800.3888888,
+   "randomSeed": 3110867838.275695,
+   "numParticles": 3,
+   "deltaTime": 0.006798664762366237,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006798664573580027,
+    0.013597329147160053,
+    -0.020395994186401367,
+    0,
+    0,
+    -0.06662691384553909,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 57,
+   "time": 946684800.3958334,
+   "randomSeed": 4060720490.0545397,
+   "numParticles": 3,
+   "deltaTime": 0.006808383407838118,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0068083833903074265,
+    0.013616766780614853,
+    -0.02042515017092228,
+    0,
+    0,
+    -0.06672215461730957,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 58,
+   "time": 946684800.4027778,
+   "randomSeed": 740590888.8275677,
+   "numParticles": 3,
+   "deltaTime": 0.006817454143611873,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006817454006522894,
+    0.013634908013045788,
+    -0.020452361553907394,
+    0,
+    0,
+    -0.06681104749441147,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 59,
+   "time": 946684800.4097222,
+   "randomSeed": 1715104677.600671,
+   "numParticles": 3,
+   "deltaTime": 0.006825920163667378,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006825920194387436,
+    0.013651840388774872,
+    -0.020477760583162308,
+    0,
+    0,
+    -0.06689401715993881,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 60,
+   "time": 946684800.4166666,
+   "randomSeed": 3349701529.220087,
+   "numParticles": 3,
+   "deltaTime": 0.00683382178238585,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006833822000771761,
+    0.013667644001543522,
+    -0.02050146460533142,
+    0,
+    0,
+    -0.06697145104408264,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 61,
+   "time": 946684800.4236112,
+   "randomSeed": 1950550742.545852,
+   "numParticles": 3,
+   "deltaTime": 0.00684119662652309,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006841196678578854,
+    0.013682393357157707,
+    -0.020523589104413986,
+    0,
+    0,
+    -0.0670437291264534,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 62,
+   "time": 946684800.4305556,
+   "randomSeed": 1484094210.6544573,
+   "numParticles": 3,
+   "deltaTime": 0.006848079814384514,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006848079618066549,
+    0.013696159236133099,
+    -0.02054424025118351,
+    0,
+    0,
+    -0.06711117923259735,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 63,
+   "time": 946684800.4375,
+   "randomSeed": 4281434438.003151,
+   "numParticles": 3,
+   "deltaTime": 0.006854504123055176,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006854504346847534,
+    0.013709008693695068,
+    -0.020563513040542603,
+    0,
+    0,
+    -0.06717414408922195,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 64,
+   "time": 946684800.4444444,
+   "randomSeed": 1329638.9996904193,
+   "numParticles": 3,
+   "deltaTime": 0.006860500144481128,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006860500201582909,
+    0.013721000403165817,
+    -0.020581500604748726,
+    0,
+    0,
+    -0.0672328993678093,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 65,
+   "time": 946684800.4513888,
+   "randomSeed": 4134069078.037462,
+   "numParticles": 3,
+   "deltaTime": 0.006866096431145349,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006866096518933773,
+    0.013732193037867546,
+    -0.020598288625478745,
+    0,
+    0,
+    -0.06728774309158325,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 66,
+   "time": 946684800.4583334,
+   "randomSeed": 1994543970.535609,
+   "numParticles": 3,
+   "deltaTime": 0.006871319632031955,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006871319841593504,
+    0.013742639683187008,
+    -0.020613959059119225,
+    0,
+    0,
+    -0.06733893603086472,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 67,
+   "time": 946684800.4652778,
+   "randomSeed": 6342152.998523353,
+   "numParticles": 3,
+   "deltaTime": 0.006876194619526122,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006876194849610329,
+    0.013752389699220657,
+    -0.020628584548830986,
+    0,
+    0,
+    -0.06738670915365219,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 68,
+   "time": 946684800.4722222,
+   "randomSeed": 3056065971.288454,
+   "numParticles": 3,
+   "deltaTime": 0.0068807446078540105,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006880744826048613,
+    0.013761489652097225,
+    -0.02064223401248455,
+    0,
+    0,
+    -0.06743130087852478,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 69,
+   "time": 946684800.4791666,
+   "randomSeed": 2590883651.396763,
+   "numParticles": 3,
+   "deltaTime": 0.006884991263626706,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006884991191327572,
+    0.013769982382655144,
+    -0.02065497450530529,
+    0,
+    0,
+    -0.0674729123711586,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 70,
+   "time": 946684800.4861112,
+   "randomSeed": 608234151.8583845,
+   "numParticles": 3,
+   "deltaTime": 0.006888954809014556,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006888954900205135,
+    0.01377790980041027,
+    -0.02066686376929283,
+    0,
+    0,
+    -0.06751175969839096,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 71,
+   "time": 946684800.4930556,
+   "randomSeed": 80803262.98118652,
+   "numParticles": 3,
+   "deltaTime": 0.006892654118043216,
+   "creationTime": 946684800.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006892654113471508,
+    0.013785308226943016,
+    -0.0206779632717371,
+    0,
+    0,
+    -0.067548006772995,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 72,
+   "time": 946684800.5,
+   "randomSeed": 4007136171.067016,
+   "numParticles": 4,
+   "deltaTime": 0.0068961068064699645,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006896106991916895,
+    0.01379221398383379,
+    -0.020688319578766823,
+    0,
+    0,
+    -0.06758184731006622,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 73,
+   "time": 946684800.5069444,
+   "randomSeed": 4276908041.0042048,
+   "numParticles": 4,
+   "deltaTime": 0.006899329315668263,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0068993293680250645,
+    0.013798658736050129,
+    -0.02069798856973648,
+    0,
+    0,
+    -0.06761343032121658,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 74,
+   "time": 946684800.5138888,
+   "randomSeed": 266346726.9379863,
+   "numParticles": 4,
+   "deltaTime": 0.006902336990920009,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006902337074279785,
+    0.01380467414855957,
+    -0.020707011222839355,
+    0,
+    0,
+    -0.06764290481805801,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 75,
+   "time": 946684800.5208334,
+   "randomSeed": 2958050518.311275,
+   "numParticles": 4,
+   "deltaTime": 0.006905144154488304,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006905144080519676,
+    0.013810288161039352,
+    -0.02071543224155903,
+    0,
+    0,
+    -0.06767041236162186,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 76,
+   "time": 946684800.5277778,
+   "randomSeed": 3145844556.267551,
+   "numParticles": 4,
+   "deltaTime": 0.006907764173818714,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006907764356583357,
+    0.013815528713166714,
+    -0.020723292604088783,
+    0,
+    0,
+    -0.06769608706235886,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 77,
+   "time": 946684800.5347222,
+   "randomSeed": 1066072440.7517856,
+   "numParticles": 4,
+   "deltaTime": 0.006910209525193763,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00691020954400301,
+    0.01382041908800602,
+    -0.020730627700686455,
+    0,
+    0,
+    -0.06772005558013916,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 78,
+   "time": 946684800.5416666,
+   "randomSeed": 3424798242.202602,
+   "numParticles": 4,
+   "deltaTime": 0.006912491853143809,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006912491749972105,
+    0.01382498349994421,
+    -0.020737474784255028,
+    0,
+    0,
+    -0.06774242222309113,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 79,
+   "time": 946684800.5486112,
+   "randomSeed": 221568997.94841194,
+   "numParticles": 4,
+   "deltaTime": 0.006914622025897184,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006914622150361538,
+    0.013829244300723076,
+    -0.02074386551976204,
+    0,
+    0,
+    -0.0677632987499237,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 80,
+   "time": 946684800.5555556,
+   "randomSeed": 2565239724.402734,
+   "numParticles": 4,
+   "deltaTime": 0.006916610187133669,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006916610058397055,
+    0.01383322011679411,
+    -0.020749829709529877,
+    0,
+    0,
+    -0.06778278201818466,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 81,
+   "time": 946684800.5625,
+   "randomSeed": 4190192418.024395,
+   "numParticles": 4,
+   "deltaTime": 0.006918465804287721,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006918465718626976,
+    0.013836931437253952,
+    -0.020755397155880928,
+    0,
+    0,
+    -0.06780096143484116,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 82,
+   "time": 946684800.5694444,
+   "randomSeed": 3211282053.252315,
+   "numParticles": 4,
+   "deltaTime": 0.006920197713631503,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069201975129544735,
+    0.013840395025908947,
+    -0.020760593935847282,
+    0,
+    0,
+    -0.06781794130802155,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 83,
+   "time": 946684800.5763888,
+   "randomSeed": 4144417673.035053,
+   "numParticles": 4,
+   "deltaTime": 0.006921814162352366,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006921814288944006,
+    0.013843628577888012,
+    -0.02076544240117073,
+    0,
+    0,
+    -0.0678337812423706,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 84,
+   "time": 946684800.5833334,
+   "randomSeed": 435346424.898638,
+   "numParticles": 4,
+   "deltaTime": 0.006923322847825171,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006923323031514883,
+    0.013846646063029766,
+    -0.020769968628883362,
+    0,
+    0,
+    -0.0678485631942749,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 85,
+   "time": 946684800.5902778,
+   "randomSeed": 786562682.8168641,
+   "numParticles": 4,
+   "deltaTime": 0.006924730954266456,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006924730725586414,
+    0.013849461451172829,
+    -0.020774193108081818,
+    0,
+    0,
+    -0.0678623616695404,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 86,
+   "time": 946684800.5972222,
+   "randomSeed": 326693308.9239358,
+   "numParticles": 4,
+   "deltaTime": 0.0069260451869449895,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006926045287400484,
+    0.013852090574800968,
+    -0.02077813632786274,
+    0,
+    0,
+    -0.06787524372339249,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 87,
+   "time": 946684800.6041666,
+   "randomSeed": 2775405838.3538003,
+   "numParticles": 4,
+   "deltaTime": 0.00692727180411162,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006927271839231253,
+    0.013854543678462505,
+    -0.02078181505203247,
+    0,
+    0,
+    -0.06788726150989532,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 88,
+   "time": 946684800.6111112,
+   "randomSeed": 20147169.995309122,
+   "numParticles": 4,
+   "deltaTime": 0.006928416646800475,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006928416434675455,
+    0.01385683286935091,
+    -0.020785249769687653,
+    0,
+    0,
+    -0.06789848208427429,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 89,
+   "time": 946684800.6180556,
+   "randomSeed": 560514019.8694952,
+   "numParticles": 4,
+   "deltaTime": 0.0069294851666434065,
+   "creationTime": 946684800.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006929485127329826,
+    0.013858970254659653,
+    -0.02078845538198948,
+    0,
+    0,
+    -0.06790895760059357,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 90,
+   "time": 946684800.625,
+   "randomSeed": 2306254449.463033,
+   "numParticles": 5,
+   "deltaTime": 0.006930482451830143,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069304825738072395,
+    0.013860965147614479,
+    -0.020791446790099144,
+    0,
+    0,
+    -0.06791872531175613,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 91,
+   "time": 946684800.6319444,
+   "randomSeed": 2469217418.4250903,
+   "numParticles": 5,
+   "deltaTime": 0.006931413251337763,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006931413430720568,
+    0.013862826861441135,
+    -0.02079423889517784,
+    0,
+    0,
+    -0.06792785227298737,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 92,
+   "time": 946684800.6388888,
+   "randomSeed": 1654159669.614861,
+   "numParticles": 5,
+   "deltaTime": 0.006932281997544876,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006932281889021397,
+    0.013864563778042793,
+    -0.020796846598386765,
+    0,
+    0,
+    -0.06793636083602905,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 93,
+   "time": 946684800.6458334,
+   "randomSeed": 688479371.8397009,
+   "numParticles": 5,
+   "deltaTime": 0.006933092827338181,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006933092605322599,
+    0.013866185210645199,
+    -0.02079927921295166,
+    0,
+    0,
+    -0.06794431060552597,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 94,
+   "time": 946684800.6527778,
+   "randomSeed": 1050315293.7554544,
+   "numParticles": 5,
+   "deltaTime": 0.006933849601811932,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006933849770575762,
+    0.013867699541151524,
+    -0.020801547914743423,
+    0,
+    0,
+    -0.06795172393321991,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 95,
+   "time": 946684800.6597222,
+   "randomSeed": 2508322189.4159856,
+   "numParticles": 5,
+   "deltaTime": 0.006934555924654099,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00693455571308732,
+    0.01386911142617464,
+    -0.02080366760492325,
+    0,
+    0,
+    -0.06795864552259445,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 96,
+   "time": 946684800.6666666,
+   "randomSeed": 1084027555.747605,
+   "numParticles": 5,
+   "deltaTime": 0.006935215159306789,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006935215089470148,
+    0.013870430178940296,
+    -0.02080564573407173,
+    0,
+    0,
+    -0.06796510517597198,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 97,
+   "time": 946684800.6736112,
+   "randomSeed": 100285737.9766504,
+   "numParticles": 5,
+   "deltaTime": 0.006935830444982633,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006935830228030682,
+    0.013871660456061363,
+    -0.02080749161541462,
+    0,
+    0,
+    -0.0679711401462555,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 98,
+   "time": 946684800.6805556,
+   "randomSeed": 1503599166.649916,
+   "numParticles": 5,
+   "deltaTime": 0.00693640471161342,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006936404854059219,
+    0.013872809708118439,
+    -0.020809214562177658,
+    0,
+    0,
+    -0.06797676533460617,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 99,
+   "time": 946684800.6875,
+   "randomSeed": 3429652981.201472,
+   "numParticles": 5,
+   "deltaTime": 0.006936940693802155,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006936940830200911,
+    0.013873881660401821,
+    -0.020810822024941444,
+    0,
+    0,
+    -0.067982017993927,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 100,
+   "time": 946684800.6944444,
+   "randomSeed": 4131467143.038068,
+   "numParticles": 5,
+   "deltaTime": 0.006937440943844975,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006937440950423479,
+    0.013874881900846958,
+    -0.020812323316931725,
+    0,
+    0,
+    -0.06798692047595978,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 101,
+   "time": 946684800.7013888,
+   "randomSeed": 2642622708.3847165,
+   "numParticles": 5,
+   "deltaTime": 0.0069379078438849395,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006937908008694649,
+    0.013875816017389297,
+    -0.020813724026083946,
+    0,
+    0,
+    -0.06799149513244629,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 102,
+   "time": 946684800.7083334,
+   "randomSeed": 997913342.7676553,
+   "numParticles": 5,
+   "deltaTime": 0.0069383436172555735,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069383434019982815,
+    0.013876686803996563,
+    -0.020815031602978706,
+    0,
+    0,
+    -0.06799576431512833,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 103,
+   "time": 946684800.7152778,
+   "randomSeed": 2232052699.48031,
+   "numParticles": 5,
+   "deltaTime": 0.0069387503390681655,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069387503899633884,
+    0.013877500779926777,
+    -0.020816251635551453,
+    0,
+    0,
+    -0.06799975037574768,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 104,
+   "time": 946684800.7222222,
+   "randomSeed": 1834033657.5729809,
+   "numParticles": 5,
+   "deltaTime": 0.006939129946093251,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006939129903912544,
+    0.013878259807825089,
+    -0.020817389711737633,
+    0,
+    0,
+    -0.06800347566604614,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 105,
+   "time": 946684800.7291666,
+   "randomSeed": 3660309240.147768,
+   "numParticles": 5,
+   "deltaTime": 0.006939484245983331,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069394842721521854,
+    0.013878968544304371,
+    -0.020818453282117844,
+    0,
+    0,
+    -0.06800694763660431,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 106,
+   "time": 946684800.7361112,
+   "randomSeed": 11978938.997210937,
+   "numParticles": 5,
+   "deltaTime": 0.006939814925880738,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006939814891666174,
+    0.013879629783332348,
+    -0.020819444209337234,
+    0,
+    0,
+    -0.06801018863916397,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 107,
+   "time": 946684800.7430556,
+   "randomSeed": 2711983786.368567,
+   "numParticles": 5,
+   "deltaTime": 0.006940123560451652,
+   "creationTime": 946684800.625,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006940123625099659,
+    0.013880247250199318,
+    -0.020820369943976402,
+    0,
+    0,
+    -0.06801321357488632,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 108,
+   "time": 946684800.75,
+   "randomSeed": 3035724446.2931905,
+   "numParticles": 6,
+   "deltaTime": 0.006940411619384506,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006940411403775215,
+    0.01388082280755043,
+    -0.020821234211325645,
+    0,
+    0,
+    -0.06801603734493256,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 109,
+   "time": 946684800.7569444,
+   "randomSeed": 3903898955.0910525,
+   "numParticles": 6,
+   "deltaTime": 0.006940680474388502,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006940680555999279,
+    0.013881361111998558,
+    -0.020822040736675262,
+    0,
+    0,
+    -0.06801866739988327,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 110,
+   "time": 946684800.7638888,
+   "randomSeed": 3435052458.2002144,
+   "numParticles": 6,
+   "deltaTime": 0.006940931405725564,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006940931547433138,
+    0.013881863094866276,
+    -0.0208227951079607,
+    0,
+    0,
+    -0.06802112609148026,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 111,
+   "time": 946684800.7708334,
+   "randomSeed": 4280127083.003455,
+   "numParticles": 6,
+   "deltaTime": 0.006941165608306823,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006941165775060654,
+    0.013882331550121307,
+    -0.02082349732518196,
+    0,
+    0,
+    -0.06802342087030411,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 112,
+   "time": 946684800.7777778,
+   "randomSeed": 1839865449.5716228,
+   "numParticles": 6,
+   "deltaTime": 0.006941384197382665,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006941384170204401,
+    0.013882768340408802,
+    -0.02082415297627449,
+    0,
+    0,
+    -0.06802556663751602,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 113,
+   "time": 946684800.7847222,
+   "randomSeed": 4269966407.0058208,
+   "numParticles": 6,
+   "deltaTime": 0.00694158821385345,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006941588129848242,
+    0.013883176259696484,
+    -0.020824763923883438,
+    0,
+    0,
+    -0.068027563393116,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 114,
+   "time": 946684800.7916666,
+   "randomSeed": 2568921882.4018764,
+   "numParticles": 6,
+   "deltaTime": 0.006941778629226183,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006941778585314751,
+    0.013883557170629501,
+    -0.020825335755944252,
+    0,
+    0,
+    -0.06802943348884583,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 115,
+   "time": 946684800.7986112,
+   "randomSeed": 2427172508.43488,
+   "numParticles": 6,
+   "deltaTime": 0.006941956350240735,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006941956467926502,
+    0.013883912935853004,
+    -0.020825868472456932,
+    0,
+    0,
+    -0.06803116947412491,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 116,
+   "time": 946684800.8055556,
+   "randomSeed": 2738459521.362403,
+   "numParticles": 6,
+   "deltaTime": 0.006942122223187648,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006942122243344784,
+    0.013884244486689568,
+    -0.020826365798711777,
+    0,
+    0,
+    -0.06803280115127563,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 117,
+   "time": 946684800.8125,
+   "randomSeed": 3561015318.1708865,
+   "numParticles": 6,
+   "deltaTime": 0.006942277037938102,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694227684289217,
+    0.01388455368578434,
+    -0.020826831459999084,
+    0,
+    0,
+    -0.06803431361913681,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 118,
+   "time": 946684800.8194444,
+   "randomSeed": 48043914.98881391,
+   "numParticles": 6,
+   "deltaTime": 0.006942421531705192,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006942421663552523,
+    0.013884843327105045,
+    -0.020827265456318855,
+    0,
+    0,
+    -0.06803572922945023,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 119,
+   "time": 946684800.8263888,
+   "randomSeed": 445515621.89627033,
+   "numParticles": 6,
+   "deltaTime": 0.006942556392554476,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006942556239664555,
+    0.01388511247932911,
+    -0.02082766965031624,
+    0,
+    0,
+    -0.06803705543279648,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 120,
+   "time": 946684800.8333334,
+   "randomSeed": 3957647763.0785384,
+   "numParticles": 6,
+   "deltaTime": 0.006942682262680474,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006942682433873415,
+    0.01388536486774683,
+    -0.020828045904636383,
+    0,
+    0,
+    -0.06803828477859497,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 121,
+   "time": 946684800.8402778,
+   "randomSeed": 2357915691.451005,
+   "numParticles": 6,
+   "deltaTime": 0.006942799741464739,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069427997805178165,
+    0.013885599561035633,
+    -0.020828399807214737,
+    0,
+    0,
+    -0.0680394396185875,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 122,
+   "time": 946684800.8472222,
+   "randomSeed": 1916338709.5538175,
+   "numParticles": 6,
+   "deltaTime": 0.006942909388330054,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006942909210920334,
+    0.013885818421840668,
+    -0.020828727632761,
+    0,
+    0,
+    -0.06804051250219345,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 123,
+   "time": 946684800.8541666,
+   "randomSeed": 3390036065.2106957,
+   "numParticles": 6,
+   "deltaTime": 0.006943011725404347,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069430116564035416,
+    0.013886023312807083,
+    -0.020829034969210625,
+    0,
+    0,
+    -0.06804151833057404,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 124,
+   "time": 946684800.8611112,
+   "randomSeed": 1080844831.748346,
+   "numParticles": 6,
+   "deltaTime": 0.00694310724000702,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694310711696744,
+    0.01388621423393488,
+    -0.020829321816563606,
+    0,
+    0,
+    -0.06804244965314865,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 125,
+   "time": 946684800.8680556,
+   "randomSeed": 3136322165.269768,
+   "numParticles": 6,
+   "deltaTime": 0.006943196386969515,
+   "creationTime": 946684800.75,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943196523934603,
+    0.013886393047869205,
+    -0.020829590037465096,
+    0,
+    0,
+    -0.06804332137107849,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 126,
+   "time": 946684800.875,
+   "randomSeed": 1137202996.7352242,
+   "numParticles": 7,
+   "deltaTime": 0.006943279590801177,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069432794116437435,
+    0.013886558823287487,
+    -0.020829839631915092,
+    0,
+    0,
+    -0.06804414093494415,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 127,
+   "time": 946684800.8819444,
+   "randomSeed": 3463392848.193616,
+   "numParticles": 7,
+   "deltaTime": 0.0069433572477107285,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943357177078724,
+    0.013886714354157448,
+    -0.020830072462558746,
+    0,
+    0,
+    -0.06804490089416504,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 128,
+   "time": 946684800.8888888,
+   "randomSeed": 1268094393.7047489,
+   "numParticles": 7,
+   "deltaTime": 0.006943429727492976,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943429820239544,
+    0.013886859640479088,
+    -0.020830288529396057,
+    0,
+    0,
+    -0.06804560869932175,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 129,
+   "time": 946684800.8958334,
+   "randomSeed": 2313599714.4613233,
+   "numParticles": 7,
+   "deltaTime": 0.00694349737528974,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069434973411262035,
+    0.013886994682252407,
+    -0.020830491557717323,
+    0,
+    0,
+    -0.06804627180099487,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 130,
+   "time": 946684800.9027778,
+   "randomSeed": 3839098589.10614,
+   "numParticles": 7,
+   "deltaTime": 0.006943560513233388,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943560671061277,
+    0.013887121342122555,
+    -0.020830681547522545,
+    0,
+    0,
+    -0.06804689019918442,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 131,
+   "time": 946684800.9097222,
+   "randomSeed": 466817589.8913106,
+   "numParticles": 7,
+   "deltaTime": 0.006943619441980792,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943619344383478,
+    0.013887238688766956,
+    -0.020830858498811722,
+    0,
+    0,
+    -0.06804747134447098,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 132,
+   "time": 946684800.9166666,
+   "randomSeed": 3681094340.1429286,
+   "numParticles": 7,
+   "deltaTime": 0.006943674442145036,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069436742924153805,
+    0.013887348584830761,
+    -0.020831022411584854,
+    0,
+    0,
+    -0.06804800778627396,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 133,
+   "time": 946684800.9236112,
+   "randomSeed": 1001280747.7668712,
+   "numParticles": 7,
+   "deltaTime": 0.0069437257756316635,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943725980818272,
+    0.013887451961636543,
+    -0.02083117701113224,
+    0,
+    0,
+    -0.06804851442575455,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 134,
+   "time": 946684800.9305556,
+   "randomSeed": 2055192443.5214882,
+   "numParticles": 7,
+   "deltaTime": 0.00694377368688585,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943773478269577,
+    0.013887546956539154,
+    -0.02083132043480873,
+    0,
+    0,
+    -0.06804898381233215,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 135,
+   "time": 946684800.9375,
+   "randomSeed": 1740950272.5946534,
+   "numParticles": 7,
+   "deltaTime": 0.006943818404056423,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943818181753159,
+    0.013887636363506317,
+    -0.020831454545259476,
+    0,
+    0,
+    -0.06804942339658737,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 136,
+   "time": 946684800.9444444,
+   "randomSeed": 2474346893.4238963,
+   "numParticles": 7,
+   "deltaTime": 0.006943860140082291,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943860091269016,
+    0.013887720182538033,
+    -0.020831581205129623,
+    0,
+    0,
+    -0.0680498257279396,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 137,
+   "time": 946684800.9513888,
+   "randomSeed": 22315188.99480434,
+   "numParticles": 7,
+   "deltaTime": 0.006943899093706435,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694389920681715,
+    0.0138877984136343,
+    -0.020831696689128876,
+    0,
+    0,
+    -0.06805021315813065,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 138,
+   "time": 946684800.9583334,
+   "randomSeed": 927948628.7839451,
+   "numParticles": 7,
+   "deltaTime": 0.006943935450422303,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694393552839756,
+    0.01388787105679512,
+    -0.02083180658519268,
+    0,
+    0,
+    -0.0680505707859993,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 139,
+   "time": 946684800.9652778,
+   "randomSeed": 2554302701.40528,
+   "numParticles": 7,
+   "deltaTime": 0.006943969383357113,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006943969521671534,
+    0.013887939043343067,
+    -0.020831909030675888,
+    0,
+    0,
+    -0.06805089861154556,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 140,
+   "time": 946684800.9722222,
+   "randomSeed": 1519498674.6462142,
+   "numParticles": 7,
+   "deltaTime": 0.006944001054096269,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069440011866390705,
+    0.013888002373278141,
+    -0.0208320040255785,
+    0,
+    0,
+    -0.06805121153593063,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 141,
+   "time": 946684800.9791666,
+   "randomSeed": 2260535274.473678,
+   "numParticles": 7,
+   "deltaTime": 0.006944030613452815,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944030523300171,
+    0.013888061046600342,
+    -0.020832091569900513,
+    0,
+    0,
+    -0.06805150210857391,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 142,
+   "time": 946684800.9861112,
+   "randomSeed": 3308010706.2297935,
+   "numParticles": 7,
+   "deltaTime": 0.006944058202185591,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944057997316122,
+    0.013888115994632244,
+    -0.020832175388932228,
+    0,
+    0,
+    -0.0680517703294754,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 143,
+   "time": 946684800.9930556,
+   "randomSeed": 1026528537.7609926,
+   "numParticles": 7,
+   "deltaTime": 0.006944083951669514,
+   "creationTime": 946684800.875,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944084074348211,
+    0.013888168148696423,
+    -0.020832251757383347,
+    0,
+    0,
+    -0.0680520236492157,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 144,
+   "time": 946684801,
+   "randomSeed": 4252856568.0098047,
+   "numParticles": 8,
+   "deltaTime": 0.006944107984521177,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944107823073864,
+    0.013888215646147728,
+    -0.020832324400544167,
+    0,
+    0,
+    -0.0680522546172142,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 145,
+   "time": 946684801.0069444,
+   "randomSeed": 3271407474.238316,
+   "numParticles": 8,
+   "deltaTime": 0.006944130415182728,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944130640476942,
+    0.013888261280953884,
+    -0.02083239145576954,
+    0,
+    0,
+    -0.06805247813463211,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 146,
+   "time": 946684801.0138888,
+   "randomSeed": 1444156181.6637561,
+   "numParticles": 8,
+   "deltaTime": 0.006944151350466843,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944151129573584,
+    0.013888302259147167,
+    -0.020832454785704613,
+    0,
+    0,
+    -0.06805268675088882,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 147,
+   "time": 946684801.0208334,
+   "randomSeed": 3955973410.078928,
+   "numParticles": 8,
+   "deltaTime": 0.00694417089006535,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069441706873476505,
+    0.013888341374695301,
+    -0.02083251252770424,
+    0,
+    0,
+    -0.06805287301540375,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 148,
+   "time": 946684801.0277778,
+   "randomSeed": 774618409.819645,
+   "numParticles": 8,
+   "deltaTime": 0.006944189127023956,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944189313799143,
+    0.013888378627598286,
+    -0.020832566544413567,
+    0,
+    0,
+    -0.06805305182933807,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 149,
+   "time": 946684801.0347222,
+   "randomSeed": 1046412586.756363,
+   "numParticles": 8,
+   "deltaTime": 0.006944206148185322,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944206077605486,
+    0.013888412155210972,
+    -0.020832618698477745,
+    0,
+    0,
+    -0.0680532231926918,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 150,
+   "time": 946684801.0416666,
+   "randomSeed": 1231911768.7131732,
+   "numParticles": 8,
+   "deltaTime": 0.006944222034602598,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944221910089254,
+    0.013888443820178509,
+    -0.020832665264606476,
+    0,
+    0,
+    -0.06805337965488434,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 151,
+   "time": 946684801.0486112,
+   "randomSeed": 3069028801.285436,
+   "numParticles": 8,
+   "deltaTime": 0.006944236861925387,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944236811250448,
+    0.013888473622500896,
+    -0.020832709968090057,
+    0,
+    0,
+    -0.06805352121591568,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 152,
+   "time": 946684801.0555556,
+   "randomSeed": 2629010731.3878856,
+   "numParticles": 8,
+   "deltaTime": 0.006944250700759992,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069442507810890675,
+    0.013888501562178135,
+    -0.02083275280892849,
+    0,
+    0,
+    -0.06805365532636642,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 153,
+   "time": 946684801.0625,
+   "randomSeed": 4119159351.0409336,
+   "numParticles": 8,
+   "deltaTime": 0.006944263617005622,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944263819605112,
+    0.013888527639210224,
+    -0.020832790061831474,
+    0,
+    0,
+    -0.06805378198623657,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 154,
+   "time": 946684801.0694444,
+   "randomSeed": 2480277989.4225154,
+   "numParticles": 8,
+   "deltaTime": 0.006944275672168211,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944275461137295,
+    0.01388855092227459,
+    -0.02083282731473446,
+    0,
+    0,
+    -0.06805390119552612,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 155,
+   "time": 946684801.0763888,
+   "randomSeed": 3553437171.172651,
+   "numParticles": 8,
+   "deltaTime": 0.006944286923653293,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069442871026694775,
+    0.013888574205338955,
+    -0.020832860842347145,
+    0,
+    0,
+    -0.06805401295423508,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 156,
+   "time": 946684801.0833334,
+   "randomSeed": 428605653.90020746,
+   "numParticles": 8,
+   "deltaTime": 0.0069442974250393695,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944297347217798,
+    0.013888594694435596,
+    -0.020832892507314682,
+    0,
+    0,
+    -0.06805411726236343,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 157,
+   "time": 946684801.0902778,
+   "randomSeed": 331578845.9227983,
+   "numParticles": 8,
+   "deltaTime": 0.006944307226333042,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944307126104832,
+    0.013888614252209663,
+    -0.02083292230963707,
+    0,
+    0,
+    -0.0680542141199112,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 158,
+   "time": 946684801.0972222,
+   "randomSeed": 701379645.8366973,
+   "numParticles": 8,
+   "deltaTime": 0.006944316374207136,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944316439330578,
+    0.013888632878661156,
+    -0.02083294838666916,
+    0,
+    0,
+    -0.06805430352687836,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 159,
+   "time": 946684801.1041666,
+   "randomSeed": 67342711.98432055,
+   "numParticles": 8,
+   "deltaTime": 0.006944324912222956,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944324821233749,
+    0.013888649642467499,
+    -0.020832974463701248,
+    0,
+    0,
+    -0.06805438548326492,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 160,
+   "time": 946684801.1111112,
+   "randomSeed": 3861544596.100914,
+   "numParticles": 8,
+   "deltaTime": 0.006944332881037722,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944332737475634,
+    0.013888665474951267,
+    -0.020832998678088188,
+    0,
+    0,
+    -0.06805445998907089,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 161,
+   "time": 946684801.1180556,
+   "randomSeed": 3635631575.1535134,
+   "numParticles": 8,
+   "deltaTime": 0.006944340318598171,
+   "creationTime": 946684801,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069443401880562305,
+    0.013888680376112461,
+    -0.02083302102982998,
+    0,
+    0,
+    -0.06805453449487686,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 162,
+   "time": 946684801.125,
+   "randomSeed": 332199520.9226538,
+   "numParticles": 9,
+   "deltaTime": 0.006944347260321256,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694434717297554,
+    0.01388869434595108,
+    -0.02083304151892662,
+    0,
+    0,
+    -0.06805460155010223,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 163,
+   "time": 946684801.1319444,
+   "randomSeed": 2741007445.3618093,
+   "numParticles": 9,
+   "deltaTime": 0.006944353739262802,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069443536922335625,
+    0.013888707384467125,
+    -0.020833062008023262,
+    0,
+    0,
+    -0.0680546686053276,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 164,
+   "time": 946684801.1388888,
+   "randomSeed": 4249018927.0106983,
+   "numParticles": 9,
+   "deltaTime": 0.006944359786274912,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069443597458302975,
+    0.013888719491660595,
+    -0.020833078771829605,
+    0,
+    0,
+    -0.06805472820997238,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 165,
+   "time": 946684801.1458334,
+   "randomSeed": 3936921105.083364,
+   "numParticles": 9,
+   "deltaTime": 0.006944365430152881,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944365333765745,
+    0.01388873066753149,
+    -0.020833095535635948,
+    0,
+    0,
+    -0.06805478036403656,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 166,
+   "time": 946684801.1527778,
+   "randomSeed": 1819652336.5763292,
+   "numParticles": 9,
+   "deltaTime": 0.006944370697772319,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944370921701193,
+    0.013888741843402386,
+    -0.02083311229944229,
+    0,
+    0,
+    -0.06805483251810074,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 167,
+   "time": 946684801.1597222,
+   "randomSeed": 147379304.96568558,
+   "numParticles": 9,
+   "deltaTime": 0.006944375614217128,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944375578314066,
+    0.013888751156628132,
+    -0.020833127200603485,
+    0,
+    0,
+    -0.06805488467216492,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 168,
+   "time": 946684801.1666666,
+   "randomSeed": 3140574206.2687783,
+   "numParticles": 9,
+   "deltaTime": 0.006944380202898949,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944380234926939,
+    0.013888760469853878,
+    -0.02083314023911953,
+    0,
+    0,
+    -0.0680549293756485,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 169,
+   "time": 946684801.1736112,
+   "randomSeed": 4266546715.006617,
+   "numParticles": 9,
+   "deltaTime": 0.00694438448566865,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944384425878525,
+    0.01388876885175705,
+    -0.020833153277635574,
+    0,
+    0,
+    -0.06805496662855148,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 170,
+   "time": 946684801.1805556,
+   "randomSeed": 112639071.97377416,
+   "numParticles": 9,
+   "deltaTime": 0.00694438848292037,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069443886168301105,
+    0.013888777233660221,
+    -0.02083316631615162,
+    0,
+    0,
+    -0.06805500388145447,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 171,
+   "time": 946684801.1875,
+   "randomSeed": 1903589010.556786,
+   "numParticles": 9,
+   "deltaTime": 0.006944392213688642,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944392342120409,
+    0.013888784684240818,
+    -0.020833177492022514,
+    0,
+    0,
+    -0.06805504113435745,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 172,
+   "time": 946684801.1944444,
+   "randomSeed": 1641073463.6179078,
+   "numParticles": 9,
+   "deltaTime": 0.006944395695739029,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694439560174942,
+    0.01388879120349884,
+    -0.02083318680524826,
+    0,
+    0,
+    -0.06805507838726044,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 173,
+   "time": 946684801.2013888,
+   "randomSeed": 507179393.88191307,
+   "numParticles": 9,
+   "deltaTime": 0.006944398945652724,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944398861378431,
+    0.013888797722756863,
+    -0.020833196118474007,
+    0,
+    0,
+    -0.06805510818958282,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 174,
+   "time": 946684801.2083334,
+   "randomSeed": 1705750500.602849,
+   "numParticles": 9,
+   "deltaTime": 0.006944401978905505,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069444021210074425,
+    0.013888804242014885,
+    -0.020833205431699753,
+    0,
+    0,
+    -0.06805513799190521,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 175,
+   "time": 946684801.2152778,
+   "randomSeed": 1481783155.6549954,
+   "numParticles": 9,
+   "deltaTime": 0.006944404809941435,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944404914975166,
+    0.013888809829950333,
+    -0.0208332147449255,
+    0,
+    0,
+    -0.0680551677942276,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 176,
+   "time": 946684801.2222222,
+   "randomSeed": 1982052941.5385172,
+   "numParticles": 9,
+   "deltaTime": 0.006944407452241635,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944407243281603,
+    0.013888814486563206,
+    -0.020833222195506096,
+    0,
+    0,
+    -0.06805519014596939,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 177,
+   "time": 946684801.2291666,
+   "randomSeed": 2194740724.488997,
+   "numParticles": 9,
+   "deltaTime": 0.00694440991838849,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944410037249327,
+    0.013888820074498653,
+    -0.020833229646086693,
+    0,
+    0,
+    -0.06805521994829178,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 178,
+   "time": 946684801.2361112,
+   "randomSeed": 2369671938.448268,
+   "numParticles": 9,
+   "deltaTime": 0.006944412220125554,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944412365555763,
+    0.013888824731111526,
+    -0.02083323709666729,
+    0,
+    0,
+    -0.06805524230003357,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 179,
+   "time": 946684801.2430556,
+   "randomSeed": 2212300844.4849086,
+   "numParticles": 9,
+   "deltaTime": 0.00694441436841348,
+   "creationTime": 946684801.125,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069444142282009125,
+    0.013888828456401825,
+    -0.020833242684602737,
+    0,
+    0,
+    -0.06805525720119476,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 180,
+   "time": 946684801.25,
+   "randomSeed": 3839274001.106099,
+   "numParticles": 10,
+   "deltaTime": 0.0069444163734822114,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944416556507349,
+    0.013888833113014698,
+    -0.020833248272538185,
+    0,
+    0,
+    -0.06805527955293655,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 181,
+   "time": 946684801.2569444,
+   "randomSeed": 705724607.8356857,
+   "numParticles": 10,
+   "deltaTime": 0.006944418244879694,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944418419152498,
+    0.013888836838304996,
+    -0.020833253860473633,
+    0,
+    0,
+    -0.06805530190467834,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 182,
+   "time": 946684801.2638888,
+   "randomSeed": 601007067.8600671,
+   "numParticles": 10,
+   "deltaTime": 0.006944419991517344,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694441981613636,
+    0.01388883963227272,
+    -0.02083325944840908,
+    0,
+    0,
+    -0.06805531680583954,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 183,
+   "time": 946684801.2708334,
+   "randomSeed": 149859223.9651082,
+   "numParticles": 10,
+   "deltaTime": 0.006944421621712484,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944421678781509,
+    0.013888843357563019,
+    -0.020833265036344528,
+    0,
+    0,
+    -0.06805533170700073,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 184,
+   "time": 946684801.2777778,
+   "randomSeed": 3603431534.1610107,
+   "numParticles": 10,
+   "deltaTime": 0.006944423143227948,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944423075765371,
+    0.013888846151530743,
+    -0.020833268761634827,
+    0,
+    0,
+    -0.06805534660816193,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 185,
+   "time": 946684801.2847222,
+   "randomSeed": 1932774089.549991,
+   "numParticles": 10,
+   "deltaTime": 0.006944424563309047,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944424472749233,
+    0.013888848945498466,
+    -0.020833274349570274,
+    0,
+    0,
+    -0.06805536150932312,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 186,
+   "time": 946684801.2916666,
+   "randomSeed": 3301774353.2312455,
+   "numParticles": 10,
+   "deltaTime": 0.006944425888718074,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944425869733095,
+    0.01388885173946619,
+    -0.020833278074860573,
+    0,
+    0,
+    -0.06805537641048431,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 187,
+   "time": 946684801.2986112,
+   "randomSeed": 3141289866.2686114,
+   "numParticles": 10,
+   "deltaTime": 0.006944427125766498,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944427266716957,
+    0.013888854533433914,
+    -0.02083328180015087,
+    0,
+    0,
+    -0.06805538386106491,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 188,
+   "time": 946684801.3055556,
+   "randomSeed": 1723028032.5988262,
+   "numParticles": 10,
+   "deltaTime": 0.006944428280345028,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944428198039532,
+    0.013888856396079063,
+    -0.02083328552544117,
+    0,
+    0,
+    -0.0680553987622261,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 189,
+   "time": 946684801.3125,
+   "randomSeed": 713221092.8339403,
+   "numParticles": 10,
+   "deltaTime": 0.006944429357951656,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944429129362106,
+    0.013888858258724213,
+    -0.02083328738808632,
+    0,
+    0,
+    -0.0680554062128067,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 190,
+   "time": 946684801.3194444,
+   "randomSeed": 149605762.9651672,
+   "numParticles": 10,
+   "deltaTime": 0.006944430363717843,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944430526345968,
+    0.013888861052691936,
+    -0.020833291113376617,
+    0,
+    0,
+    -0.0680554211139679,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 191,
+   "time": 946684801.3263888,
+   "randomSeed": 1279825467.7020173,
+   "numParticles": 10,
+   "deltaTime": 0.00694443130243295,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944431457668543,
+    0.013888862915337086,
+    -0.020833292976021767,
+    0,
+    0,
+    -0.06805542856454849,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 192,
+   "time": 946684801.3333334,
+   "randomSeed": 2136788544.50249,
+   "numParticles": 10,
+   "deltaTime": 0.00694443217856705,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069444323889911175,
+    0.013888864777982235,
+    -0.020833296701312065,
+    0,
+    0,
+    -0.06805543601512909,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 193,
+   "time": 946684801.3402778,
+   "randomSeed": 2574578912.400559,
+   "numParticles": 10,
+   "deltaTime": 0.006944432996292211,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944432854652405,
+    0.01388886570930481,
+    -0.020833298563957214,
+    0,
+    0,
+    -0.06805544346570969,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 194,
+   "time": 946684801.3472222,
+   "randomSeed": 2605365644.393391,
+   "numParticles": 10,
+   "deltaTime": 0.00694443375950236,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944433785974979,
+    0.013888867571949959,
+    -0.020833300426602364,
+    0,
+    0,
+    -0.06805545091629028,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 195,
+   "time": 946684801.3541666,
+   "randomSeed": 3321750535.2265944,
+   "numParticles": 10,
+   "deltaTime": 0.0069444344718318325,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944434251636267,
+    0.013888868503272533,
+    -0.020833304151892662,
+    0,
+    0,
+    -0.06805545836687088,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 196,
+   "time": 946684801.3611112,
+   "randomSeed": 2512046445.4151187,
+   "numParticles": 10,
+   "deltaTime": 0.006944435136672674,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944435182958841,
+    0.013888870365917683,
+    -0.02083330601453781,
+    0,
+    0,
+    -0.06805546581745148,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 197,
+   "time": 946684801.3680556,
+   "randomSeed": 41442632.99035089,
+   "numParticles": 10,
+   "deltaTime": 0.006944435757190792,
+   "creationTime": 946684801.25,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944435648620129,
+    0.013888871297240257,
+    -0.02083330787718296,
+    0,
+    0,
+    -0.06805547326803207,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 198,
+   "time": 946684801.375,
+   "randomSeed": 1391585218.6759963,
+   "numParticles": 11,
+   "deltaTime": 0.006944436336341036,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944436114281416,
+    0.013888872228562832,
+    -0.02083330973982811,
+    0,
+    0,
+    -0.06805547326803207,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 199,
+   "time": 946684801.3819444,
+   "randomSeed": 326622066.9239524,
+   "numParticles": 11,
+   "deltaTime": 0.006944436876881263,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069444370456039906,
+    0.013888874091207981,
+    -0.02083330973982811,
+    0,
+    0,
+    -0.06805548071861267,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 200,
+   "time": 946684801.3888888,
+   "randomSeed": 4256838333.0088778,
+   "numParticles": 11,
+   "deltaTime": 0.006944437381385476,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944437511265278,
+    0.013888875022530556,
+    -0.02083331160247326,
+    0,
+    0,
+    -0.06805548816919327,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 201,
+   "time": 946684801.3958334,
+   "randomSeed": 2074591659.5169716,
+   "numParticles": 11,
+   "deltaTime": 0.006944437852256073,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944437976926565,
+    0.01388887595385313,
+    -0.020833313465118408,
+    0,
+    0,
+    -0.06805548816919327,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 202,
+   "time": 946684801.4027778,
+   "randomSeed": 2132738270.5034332,
+   "numParticles": 11,
+   "deltaTime": 0.006944438291735298,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.0069444384425878525,
+    0.013888876885175705,
+    -0.020833315327763557,
+    0,
+    0,
+    -0.06805549561977386,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 203,
+   "time": 946684801.4097222,
+   "randomSeed": 304348768.9291383,
+   "numParticles": 11,
+   "deltaTime": 0.006944438701915908,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694443890824914,
+    0.01388887781649828,
+    -0.020833315327763557,
+    0,
+    0,
+    -0.06805549561977386,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 204,
+   "time": 946684801.4166666,
+   "randomSeed": 2845145211.337563,
+   "numParticles": 11,
+   "deltaTime": 0.006944439084751144,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.00694443890824914,
+    0.01388887781649828,
+    -0.020833317190408707,
+    0,
+    0,
+    -0.06805550307035446,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 205,
+   "time": 946684801.4236112,
+   "randomSeed": 2759051372.3576083,
+   "numParticles": 11,
+   "deltaTime": 0.0069444394420640305,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944439373910427,
+    0.013888878747820854,
+    -0.020833319053053856,
+    0,
+    0,
+    -0.06805550307035446,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 206,
+   "time": 946684801.4305556,
+   "randomSeed": 3090116337.280526,
+   "numParticles": 11,
+   "deltaTime": 0.006944439775556059,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944439839571714,
+    0.013888879679143429,
+    -0.020833319053053856,
+    0,
+    0,
+    -0.06805551052093506,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 207,
+   "time": 946684801.4375,
+   "randomSeed": 1534265352.642776,
+   "numParticles": 11,
+   "deltaTime": 0.006944440086815285,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944440305233002,
+    0.013888880610466003,
+    -0.020833320915699005,
+    0,
+    0,
+    -0.06805551052093506,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 208,
+   "time": 946684801.4444444,
+   "randomSeed": 3844209789.10495,
+   "numParticles": 11,
+   "deltaTime": 0.006944440377323895,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944440305233002,
+    0.013888880610466003,
+    -0.020833320915699005,
+    0,
+    0,
+    -0.06805551797151566,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 209,
+   "time": 946684801.4513888,
+   "randomSeed": 3299319161.2318172,
+   "numParticles": 11,
+   "deltaTime": 0.006944440648465265,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944440770894289,
+    0.013888881541788578,
+    -0.020833322778344154,
+    0,
+    0,
+    -0.06805551797151566,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 210,
+   "time": 946684801.4583334,
+   "randomSeed": 3108547885.2762346,
+   "numParticles": 11,
+   "deltaTime": 0.0069444409015305434,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944440770894289,
+    0.013888881541788578,
+    -0.020833322778344154,
+    0,
+    0,
+    -0.06805551797151566,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 211,
+   "time": 946684801.4652778,
+   "randomSeed": 2539420843.408745,
+   "numParticles": 11,
+   "deltaTime": 0.006944441137724804,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944441236555576,
+    0.013888882473111153,
+    -0.020833322778344154,
+    0,
+    0,
+    -0.06805552542209625,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 212,
+   "time": 946684801.4722222,
+   "randomSeed": 2555369394.4050317,
+   "numParticles": 11,
+   "deltaTime": 0.00694444135817278,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944441236555576,
+    0.013888882473111153,
+    -0.020833324640989304,
+    0,
+    0,
+    -0.06805552542209625,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 213,
+   "time": 946684801.4791666,
+   "randomSeed": 2267595210.4720345,
+   "numParticles": 11,
+   "deltaTime": 0.006944441563924224,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944441702216864,
+    0.013888883404433727,
+    -0.020833324640989304,
+    0,
+    0,
+    -0.06805552542209625,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 214,
+   "time": 946684801.4861112,
+   "randomSeed": 226917178.94716674,
+   "numParticles": 11,
+   "deltaTime": 0.006944441755958906,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944441702216864,
+    0.013888883404433727,
+    -0.020833324640989304,
+    0,
+    0,
+    -0.06805553287267685,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 215,
+   "time": 946684801.4930556,
+   "randomSeed": 2120051939.506387,
+   "numParticles": 11,
+   "deltaTime": 0.006944441935191276,
+   "creationTime": 946684801.375,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944442167878151,
+    0.013888884335756302,
+    -0.020833326503634453,
+    0,
+    0,
+    -0.06805553287267685,
+    0,
+    0
+   ],
+   "forceDraws": []
+  },
+  {
+   "frame": 216,
+   "time": 946684801.5,
+   "randomSeed": 554954406.8707896,
+   "numParticles": 12,
+   "deltaTime": 0.006944442102474821,
+   "creationTime": 946684801.5,
+   "createParticles": true,
+   "isActive": true,
+   "maxParticles": 12,
+   "numForces": 2,
+   "forces": [
+    0.006944442167878151,
+    0.013888884335756302,
+    -0.020833326503634453,
+    0,
+    0,
+    -0.06805553287267685,
+    0,
+    0
+   ],
+   "forceDraws": []
+  }
+ ],
+ "dumps": {
+  "1": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "2": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "3": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "4": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "5": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "6": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "7": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "8": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "9": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "10": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "11": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "12": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "13": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "14": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "15": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "16": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "17": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "18": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 0
+  },
+  "19": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 28
+  },
+  "20": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 56
+  },
+  "21": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 84
+  },
+  "22": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 112
+  },
+  "23": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 140
+  },
+  "24": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 168
+  },
+  "25": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 196
+  },
+  "26": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 224
+  },
+  "27": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 252
+  },
+  "28": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 280
+  },
+  "29": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 308
+  },
+  "30": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 336
+  },
+  "31": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 364
+  },
+  "32": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 392
+  },
+  "33": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 420
+  },
+  "34": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 448
+  },
+  "35": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 476
+  },
+  "36": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 504
+  },
+  "37": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 560
+  },
+  "38": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 616
+  },
+  "39": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 672
+  },
+  "40": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 728
+  },
+  "41": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 784
+  },
+  "42": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 840
+  },
+  "43": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 896
+  },
+  "44": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 952
+  },
+  "45": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1008
+  },
+  "46": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1064
+  },
+  "47": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1120
+  },
+  "48": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1176
+  },
+  "49": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1232
+  },
+  "50": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1288
+  },
+  "51": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1344
+  },
+  "52": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1400
+  },
+  "53": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 1456
+  },
+  "54": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 1512
+  },
+  "55": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 1596
+  },
+  "56": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 1680
+  },
+  "57": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 1764
+  },
+  "58": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 1848
+  },
+  "59": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 1932
+  },
+  "60": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2016
+  },
+  "61": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2100
+  },
+  "62": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2184
+  },
+  "63": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2268
+  },
+  "64": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2352
+  },
+  "65": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2436
+  },
+  "66": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2520
+  },
+  "67": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2604
+  },
+  "68": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2688
+  },
+  "69": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2772
+  },
+  "70": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2856
+  },
+  "71": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 2940
+  },
+  "72": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3024
+  },
+  "73": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3136
+  },
+  "74": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3248
+  },
+  "75": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3360
+  },
+  "76": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3472
+  },
+  "77": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3584
+  },
+  "78": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3696
+  },
+  "79": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3808
+  },
+  "80": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 3920
+  },
+  "81": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4032
+  },
+  "82": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4144
+  },
+  "83": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4256
+  },
+  "84": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4368
+  },
+  "85": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4480
+  },
+  "86": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4592
+  },
+  "87": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4704
+  },
+  "88": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4816
+  },
+  "89": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 4928
+  },
+  "90": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 5040
+  },
+  "91": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 5180
+  },
+  "92": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 5320
+  },
+  "93": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 5460
+  },
+  "94": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 5600
+  },
+  "95": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 5740
+  },
+  "96": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 5880
+  },
+  "97": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 6020
+  },
+  "98": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 6160
+  },
+  "99": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 6300
+  },
+  "100": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 6440
+  },
+  "101": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 6580
+  },
+  "102": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 6720
+  },
+  "103": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 6860
+  },
+  "104": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 7000
+  },
+  "105": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 7140
+  },
+  "106": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 7280
+  },
+  "107": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 7420
+  },
+  "108": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 7560
+  },
+  "109": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 7728
+  },
+  "110": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 7896
+  },
+  "111": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 8064
+  },
+  "112": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 8232
+  },
+  "113": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 8400
+  },
+  "114": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 8568
+  },
+  "115": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 8736
+  },
+  "116": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 8904
+  },
+  "117": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 9072
+  },
+  "118": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 9240
+  },
+  "119": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 9408
+  },
+  "120": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 9576
+  },
+  "121": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 9744
+  },
+  "122": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 9912
+  },
+  "123": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 10080
+  },
+  "124": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 10248
+  },
+  "125": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 10416
+  },
+  "126": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 10584
+  },
+  "127": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 10780
+  },
+  "128": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 10976
+  },
+  "129": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 11172
+  },
+  "130": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 11368
+  },
+  "131": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 11564
+  },
+  "132": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 11760
+  },
+  "133": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 11956
+  },
+  "134": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 12152
+  },
+  "135": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 12348
+  },
+  "136": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 12544
+  },
+  "137": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 12740
+  },
+  "138": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 12936
+  },
+  "139": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 13132
+  },
+  "140": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 13328
+  },
+  "141": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 13524
+  },
+  "142": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 13720
+  },
+  "143": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 13916
+  },
+  "144": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 14112
+  },
+  "145": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 14336
+  },
+  "146": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 14560
+  },
+  "147": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 14784
+  },
+  "148": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 15008
+  },
+  "149": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 15232
+  },
+  "150": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 15456
+  },
+  "151": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 15680
+  },
+  "152": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 15904
+  },
+  "153": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 16128
+  },
+  "154": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 16352
+  },
+  "155": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 16576
+  },
+  "156": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 16800
+  },
+  "157": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 17024
+  },
+  "158": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 17248
+  },
+  "159": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 17472
+  },
+  "160": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 17696
+  },
+  "161": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 17920
+  },
+  "162": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 18144
+  },
+  "163": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 18396
+  },
+  "164": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 18648
+  },
+  "165": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 18900
+  },
+  "166": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 19152
+  },
+  "167": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 19404
+  },
+  "168": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 19656
+  },
+  "169": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 19908
+  },
+  "170": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 20160
+  },
+  "171": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 20412
+  },
+  "172": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 20664
+  },
+  "173": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 20916
+  },
+  "174": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 21168
+  },
+  "175": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 21420
+  },
+  "176": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 21672
+  },
+  "177": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 21924
+  },
+  "178": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 22176
+  },
+  "179": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 22428
+  },
+  "180": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 22680
+  },
+  "181": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 22960
+  },
+  "182": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 23240
+  },
+  "183": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 23520
+  },
+  "184": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 23800
+  },
+  "185": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 24080
+  },
+  "186": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 24360
+  },
+  "187": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 24640
+  },
+  "188": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 24920
+  },
+  "189": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 25200
+  },
+  "190": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 25480
+  },
+  "191": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 25760
+  },
+  "192": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 26040
+  },
+  "193": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 26320
+  },
+  "194": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 26600
+  },
+  "195": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 26880
+  },
+  "196": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 27160
+  },
+  "197": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 27440
+  },
+  "198": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 27720
+  },
+  "199": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 28028
+  },
+  "200": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 28336
+  },
+  "201": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 28644
+  },
+  "202": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 28952
+  },
+  "203": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 29260
+  },
+  "204": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 29568
+  },
+  "205": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 29876
+  },
+  "206": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 30184
+  },
+  "207": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 30492
+  },
+  "208": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 30800
+  },
+  "209": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 31108
+  },
+  "210": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 31416
+  },
+  "211": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 31724
+  },
+  "212": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 32032
+  },
+  "213": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 32340
+  },
+  "214": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 32648
+  },
+  "215": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 32956
+  },
+  "216": {
+   "numParticles": 12,
+   "total": 12,
+   "offset": 33264
+  }
+ },
+ "log": [],
+ "vrmlLoad": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT ParticleSystems : 2\n\nDEF PS ParticleSystem {\n  geometryType \"POINT\"\n  maxParticles 12\n  particleLifetime 1.5\n  emitter DEF EM PointEmitter {\n    position 0 1 0\n    direction 1 0 0\n    speed 2\n    mass 1\n  }\n  physics [\n    DEF F1 ForcePhysicsModel {\n      force 1 2 -3\n    }\n    DEF F2 ForcePhysicsModel { }\n  ]\n}\n",
+ "init": {
+  "deltaTimeBeforeReset": 0.0029456256844315734,
+  "numParticlesAfterLoad": 0,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": false
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 12,
+  "particleLifetime": 1.5,
+  "lifetimeVariation": 0.25,
+  "emitter": "PointEmitter",
+  "numForces": 2,
+  "boundedHierarchyRoot": -1,
+  "stride": 28
+ },
+ "geometry": {
+  "numForces": 2
+ },
+ "vrmlEnd": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT ParticleSystems : 2\n\nDEF PS ParticleSystem {\n  geometryType \"POINT\"\n  maxParticles 12\n  particleLifetime 1.5\n  emitter DEF EM PointEmitter {\n    position 0 1 0\n    direction 1 0 0\n    speed 2\n    mass 1\n  }\n  physics [\n    DEF F1 ForcePhysicsModel {\n      force 1 2 -3\n    }\n    DEF F2 ForcePhysicsModel { }\n  ]\n}\n",
+ "console": [],
+ "animateCalls": 216,
+ "determinism": {
+  "runs": 2,
+  "same_Math_random_seed": 1983328422,
+  "bit_identical_f32": true,
+  "identical_json_incl_steps_forceDraws_geometry_scene_text": true,
+  "f32_bytes": 134400
+ },
+ "world": "oracle/synthetic-rea-b07-ps/ps-force-two-r144.x3dv",
+ "fileF32": "js.f32"
+}

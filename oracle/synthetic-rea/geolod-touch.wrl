@@ -1,0 +1,28 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Geospatial:1
+COMPONENT Scripting:1
+# Synthetic REA oracle world: pointing through a GeoLOD. The rootNode holds a TouchSensor with
+# its box; a click logs isActive and the hit point (getCoord frame, rotateYUp TRUE). Authored.
+DEF ORIGIN GeoOrigin { geoCoords 30 10 0 rotateYUp TRUE }
+Viewpoint { position 0 40 160 orientation 1 0 0 -0.25 }
+DEF LOD1 GeoLOD {
+  geoOrigin USE ORIGIN
+  center 30 10 0
+  range 50
+  rootNode Group { children [
+    DEF TS TouchSensor { }
+    Shape { appearance Appearance { material Material { diffuseColor 0.3 0.7 0.9 } } geometry Box { size 60 20 60 } }
+  ] }
+}
+DEF S Script {
+  inputOnly SFBool active
+  inputOnly SFVec3f point
+  inputOutput MFString events [ ]
+  url "ecmascript:
+    function active (v) { events [events .length] = 'active ' + v; }
+    function point (v) { events [events .length] = 'point ' + v .x + ' ' + v .y + ' ' + v .z; }
+  "
+}
+ROUTE TS.isActive TO S.active
+ROUTE TS.hitPoint_changed TO S.point

@@ -1,0 +1,302 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "65": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "75": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "85": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "89": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data [\n    DEF D WorldInfo {\n      title \"data\"\n    }\n    DEF B Transform {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n    load FALSE\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary [\n    \"title\",\n    \"a test\"\n  ]\n  data [\n    DEF D WorldInfo {\n      title \"data\"\n    }\n    DEF B Transform {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n    load FALSE\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  url \"checker.png\"\n  summary \"changed\"\n  data [\n    DEF D WorldInfo {\n      title \"data\"\n    }\n    DEF B Transform {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n    load FALSE\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  url \"other.txt\"\n  summary \"changed\"\n  data [\n    DEF D WorldInfo {\n      title \"data\"\n    }\n    DEF B Transform {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n    load FALSE\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  load FALSE\n  url \"other.txt\"\n  summary \"changed\"\n  data [\n    DEF D WorldInfo {\n      title \"data\"\n    }\n    DEF B Transform {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n    load FALSE\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" Kc Ofalse \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  url \"other.txt\"\n  summary \"changed\"\n  data [\n    DEF D WorldInfo {\n      title \"data\"\n    }\n    DEF B Transform {\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 1 0 0\n          }\n        }\n        geometry Box { }\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" Kc Ofalse Kd Otrue \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "65": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  description \"cleared\"\n  url \"other.txt\"\n  summary \"changed\"\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" Kc Ofalse Kd Otrue Ke D0 \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "75": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  description \"cleared\"\n  url \"other.txt\"\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n  summary \"changed\"\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" Kc Ofalse Kd Otrue Ke D0 Kf \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "85": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  description \"cleared\"\n  url \"other.txt\"\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n  summary \"changed\"\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" Kc Ofalse Kd Otrue Ke D0 Kf \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "89": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  description \"cleared\"\n  url \"other.txt\"\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n  summary \"changed\"\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" Kc Ofalse Kd Otrue Ke D0 Kf \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF GM GeoMetadata {\n  description \"cleared\"\n  url \"other.txt\"\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n  summary \"changed\"\n}\n\nTransform {\n  translation 2 0 0\n  children DEF GM2 GeoMetadata {\n    description \"inside a Transform\"\n  }\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE GM\n}\n\nDEF LS2 LoadSensor {\n  children USE GM2\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      MFString on_summary\n  inputOnly      MFNode   on_data\n  inputOnly      SFBool   on_load\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOnly      SFTime   on_time\n  inputOutput    SFString log \"I \\\"checker.png\\\" 2 GeoMetadata Atrue P0 Atrue Ka S\\\"changed\\\" Kb U\\\"other.txt\\\" Kc Ofalse Kd Otrue Ke D0 Kf \"\n  initializeOnly SFNode   gm USE GM\n  initializeOnly SFNode   gm2 USE GM2\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + gm .url + ' ' + gm .data .length + ' ' + gm .getNodeTypeName () + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_summary (v) { log = log + 'S' + v + ' '; }\nfunction on_data (v) { log = log + 'D' + v .length + ' '; }\nfunction on_load (v) { log = log + 'O' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_time (v) { log = log + 'T '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') gm .summary = new MFString ('changed');\n   if (k == 'b') gm .url = new MFString ('other.txt');\n   if (k == 'c') gm .load = false;\n   if (k == 'd') { gm .load = true; gm2 .load = true; }\n   if (k == 'e') { gm .data = new MFNode (); gm .description = 'cleared'; }\n   if (k == 'f') { gm .autoRefresh = 1; gm .autoRefreshTimeLimit = 2; }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE GM.url_changed TO R.on_url\nROUTE GM.summary_changed TO R.on_summary\nROUTE GM.data_changed TO R.on_data\nROUTE GM.load_changed TO R.on_load\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\nROUTE LS.loadTime TO R.on_time\nROUTE LS2.isLoaded TO R.on_loaded\nROUTE LS2.isActive TO R.on_active\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

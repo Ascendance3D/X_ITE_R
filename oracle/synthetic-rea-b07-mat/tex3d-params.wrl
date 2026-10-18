@@ -1,0 +1,25 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Geometry2D:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+COMPONENT Lighting:3
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+Transform { translation -4.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/u8-raw.nrrd" repeatS TRUE repeatT TRUE repeatR TRUE } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/tiny-u8.nrrd" repeatS TRUE repeatT TRUE repeatR TRUE } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/tiny-u8.nrrd" textureProperties TextureProperties { boundaryModeS "MIRRORED_REPEAT" boundaryModeT "REPEAT" boundaryModeR "CLAMP_TO_EDGE" magnificationFilter "AVG_PIXEL" minificationFilter "AVG_PIXEL" } } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 4.5 2.5 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/u8-raw.nrrd" textureProperties TextureProperties { generateMipMaps TRUE minificationFilter "NEAREST_PIXEL_NEAREST_MIPMAP" magnificationFilter "NEAREST_PIXEL" } } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -4.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rgba-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -1.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/la-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 1.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rgb-raw.nrrd" repeatS TRUE } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 4.5 -0.2999999999999998 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/wide-u8.nrrd" repeatR TRUE } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -4.5 -3.2 0  children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0.2 roughness 0.4 } texture ImageTexture3D { url "vol/rgb-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 -3.2 0  children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 1 1 1 } texture ImageTexture3D { url "vol/rgb-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 -3.2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture MultiTexture { mode [ "MODULATE" "ADD" ] texture [ ImageTexture3D { url "vol/rgb-raw.nrrd" } ImageTexture3D { url "vol/u8-raw.nrrd" } ] } textureTransform MultiTextureTransform { textureTransform [ TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } ] } } geometry Sphere { radius 0.9 } } }
+DEF SH ImageTexture3D { url "vol/rgb-raw.nrrd" }
+Transform { translation 4.5 -3.2 0 children [ Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture USE SH textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } Transform { translation 0 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture USE SH textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.3 0.3 0.3 } } geometry Box { size 0.5 0.5 0.5 } } } ] }

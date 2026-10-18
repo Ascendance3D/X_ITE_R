@@ -1,0 +1,59 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA-verify oracle world: NavigationInfo, Viewpoint and Background bind/unbind from a Script, isBound/bindTime routed back; Fog visibilityRange driven by the same Script (Fog is not a bindable node). Authored; no archive content.
+DEF V1 Viewpoint { position 0 0 10 description "V1" }
+DEF V2 Viewpoint { position 0 0 4 description "V2" }
+DEF NI1 NavigationInfo { type [ "EXAMINE" "ANY" ] }
+DEF NI2 NavigationInfo { type [ "WALK" "ANY" ] speed 2 }
+DEF BG1 Background { skyColor [ 1 1 1 ] }
+DEF BG2 Background { skyColor [ 1 0 0 ] }
+DEF FOG Fog { fogType "LINEAR" color 0.5 0.5 0.5 visibilityRange 30 }
+DEF T TimeSensor { cycleInterval 4 loop TRUE startTime 946684800 }
+DEF SEQ Script {
+  inputOnly SFFloat set_f
+  outputOnly SFBool v2Bind
+  outputOnly SFBool niBind
+  outputOnly SFBool bgBind
+  outputOnly SFFloat fogRange
+  inputOutput SFInt32 step -1
+  url "ecmascript:
+function set_f (f, ts) {
+  var s = Math.floor (f * 8);
+  if (s == step) return;
+  step = s;
+  if (s == 1) v2Bind = TRUE;
+  if (s == 2) v2Bind = FALSE;
+  if (s == 3) niBind = TRUE;
+  if (s == 4) bgBind = TRUE;
+  if (s == 5) v2Bind = TRUE;
+  if (s == 6) v2Bind = FALSE;
+  if (s == 7) { niBind = FALSE; bgBind = FALSE; }
+  fogRange = 10 + s;
+}
+"
+}
+Shape { geometry Box { size 2 2 2 } }
+DEF OBS Script {
+  inputOutput SFBool v1IsBound FALSE
+  inputOutput SFBool v2IsBound FALSE
+  inputOutput SFTime v2BindTime 0
+  inputOutput SFBool niIsBound FALSE
+  inputOutput SFTime niBindTime 0
+  inputOutput SFBool bg2IsBound FALSE
+  inputOutput SFTime bg2BindTime 0
+  url "ecmascript:
+function noop () { }
+"
+}
+ROUTE T.fraction_changed TO SEQ.set_f
+ROUTE SEQ.v2Bind TO V2.set_bind
+ROUTE SEQ.niBind TO NI2.set_bind
+ROUTE SEQ.bgBind TO BG2.set_bind
+ROUTE SEQ.fogRange TO FOG.set_visibilityRange
+ROUTE V1.isBound TO OBS.v1IsBound
+ROUTE V2.isBound TO OBS.v2IsBound
+ROUTE V2.bindTime TO OBS.v2BindTime
+ROUTE NI2.isBound TO OBS.niIsBound
+ROUTE NI2.bindTime TO OBS.niBindTime
+ROUTE BG2.isBound TO OBS.bg2IsBound
+ROUTE BG2.bindTime TO OBS.bg2BindTime

@@ -1,0 +1,17 @@
+#X3D V3.3 utf8
+PROFILE Full
+Group { children Script { field SFFloat a0 0 field MFFloat b0 [1 2 3] eventOut SFString o0 url "ecmascript: var pad0 = 0; function initialize() { o0 = 'x' + pad0; }" } }
+Group { children Script { field SFFloat a1 1 field MFFloat b1 [1 2 3] eventOut SFString o1 url "ecmascript: var pad1 = 1; function initialize() { o1 = 'x' + pad1; }" } }
+Group { children Script { field SFFloat a2 2 field MFFloat b2 [1 2 3] eventOut SFString o2 url "ecmascript: var pad2 = 2; function initialize() { o2 = 'x' + pad2; }" } }
+Group { children Script { field SFFloat a3 3 field MFFloat b3 [1 2 3] eventOut SFString o3 url "ecmascript: var pad3 = 3; function initialize() { o3 = 'x' + pad3; }" } }
+Viewpoint { position 0 0 8 }
+DEF T Transform { children [
+Shape { appearance Appearance { material Material { diffuseColor 0 0.5 1 } texture ImageTexture { url "tex.png" repeatS FALSE repeatT FALSE } } geometry Box { size 1.2 1.2 1.2 } }
+Transform { translation 1.8 0 0 children Shape { appearance Appearance { material Material {} texture PixelTexture { image 2 2 3 0xff0000 0x00ff00 0x0000ff 0xffff00 } } geometry Sphere { radius 0.6 } } }
+Inline { url "sub.x3dv" } ] }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF S Script { eventIn SFFloat f eventOut SFVec3f p eventOut SFRotation r
+url "ecmascript: var count = 0; var hist = []; function f(v) { count++; hist.push(count); p = new SFVec3f(Math.sin(count*0.17), Math.cos(count*0.17)*0.5, 0); r = new SFRotation(0,1,0,count*0.17); if (count % 10 == 0) print('B ' + count + ' ' + hist.length); }" }
+ROUTE TS.fraction_changed TO S.f
+ROUTE S.p TO T.set_translation
+ROUTE S.r TO T.set_rotation

@@ -1,0 +1,105 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "meshes": [
+  {
+   "name": "Shared",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "A",
+   "mesh": 0,
+   "translation": [
+    -3,
+    0,
+    0
+   ]
+  },
+  {
+   "name": "B",
+   "mesh": 0,
+   "translation": [
+    3,
+    0,
+    0
+   ],
+   "children": [
+    0
+   ]
+  },
+  {
+   "name": "Root",
+   "children": [
+    1,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0.7071068,
+    0.7071068
+   ]
+  }
+ ],
+ "scenes": [
+  {
+   "name": "Main",
+   "nodes": [
+    2
+   ]
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 12
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -1,
+    -1,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 60,
+   "uri": "data:application/octet-stream;base64,AACAvwAAgL8AAAAAAACAPwAAgL8AAAAAAACAPwAAgD8AAAAAAACAvwAAgD8AAAAAAAABAAIAAAACAAMA"
+  }
+ ]
+}

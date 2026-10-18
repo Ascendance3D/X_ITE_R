@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Full" version="4.0">
+<Scene>
+<ProtoDeclare name='P'><ProtoInterface><field name='f' type='SFFloat' accessType='inputOutput' value='1'/></ProtoInterface><ProtoBody><Box/></ProtoBody></ProtoDeclare><P f='2'/><p f='3'/><PROTOINSTANCE name='P'/><ProtoInstance name='P'><fieldValue name='f' value='4'/></ProtoInstance>
+</Scene>
+</X3D>

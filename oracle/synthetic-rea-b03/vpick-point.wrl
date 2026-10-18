@@ -1,0 +1,117 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+Viewpoint { position 1 0 26 }
+NavigationInfo { headlight TRUE }
+DEF TBOX Transform { translation -9 0 0 rotation 0 0 1 0.3 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 transparency 0.3 } } geometry Box { size 2 2 2 } } }
+DEF TSPH Transform { translation -6 0 0 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 transparency 0.3 } } geometry Sphere { radius 1 } } }
+DEF TCON Transform { translation -3 0 0 rotation 1 0 0 0.4 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 transparency 0.3 } } geometry Cone { bottomRadius 1 height 2 } } }
+DEF TCYL Transform { translation 0 0 0 rotation 0 0 1 0.6 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 transparency 0.3 } } geometry Cylinder { radius 1 height 2 } } }
+DEF THUL Transform { translation 3 0 0 rotation 0 1 0 0.5 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.8 transparency 0.3 } } geometry IndexedFaceSet { coord Coordinate { point [ 1.2 0 0, -1.2 0 0, 0 1.2 0, 0 -1.2 0, 0 0 1.2, 0 0 -1.2 ] }
+  coordIndex [ 0 2 4 -1 2 1 4 -1 1 3 4 -1 3 0 4 -1 2 0 5 -1 1 2 5 -1 3 1 5 -1 0 3 5 -1 ] } } }
+DEF TPCY Transform { translation 6 0 0 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.8 transparency 0.3 } } geometry Cylinder { radius 1 height 2 top FALSE solid FALSE } } }
+DEF TELE Transform { translation 8 -0.6 -1 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 transparency 0.3 } } geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.7 zSpacing 0.7 height [ 0 0.4 0.1 0, 0.3 1.2 0.8 0.2, 0 0.9 0.6 0.1, 0 0.2 0 0 ] solid FALSE } } }
+DEF TREC Transform { translation 11.5 0 0 rotation 0 1 0 0.3 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 transparency 0.3 } } geometry Rectangle2D { size 2 2 } } }
+DEF TLIN Transform { translation 14 0 0 rotation 0 0 1 0 scale 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 transparency 0.3 } } geometry LineSet { vertexCount 2 coord Coordinate { point [ -1 0 0, 1 0 0 ] } } } }
+DEF MOVER Transform { rotation 0 0 1 0.2 scale 1.3 0.9 1 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF PTS PointSet { coord Coordinate { point [ 0 0 0, 0 0.7 0.2, 0 -0.95 0, 0.97 0 0, -1.02 0.33 0, 0.5 0.5 0.5, -0.6 -0.6 -0.2, 0 1.1 0, 0.3 -0.2 0.9, 1.15 0.9 0 ] } } }
+  DEF PGS PointPickSensor { intersectionType "GEOMETRY" sortOrder "ALL_SORTED" pickingGeometry USE PTS pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+  DEF PGC PointPickSensor { intersectionType "GEOMETRY" sortOrder "CLOSEST" pickingGeometry USE PTS pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+  DEF PGN PointPickSensor { intersectionType "GEOMETRY" sortOrder "ANY" pickingGeometry USE PTS pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+  DEF PGA PointPickSensor { intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE PTS pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+  DEF PBA PointPickSensor { intersectionType "BOUNDS" sortOrder "ALL" pickingGeometry USE PTS pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+  DEF PBC PointPickSensor { intersectionType "BOUNDS" sortOrder "CLOSEST" pickingGeometry USE PTS pickTarget [ USE TBOX USE TSPH USE TCON USE TCYL USE THUL USE TPCY USE TELE USE TREC USE TLIN ] }
+] }
+DEF CLOCK TimeSensor { cycleInterval 6 loop TRUE }
+DEF PATH PositionInterpolator { key [ 0 1 ] keyValue [ -12 0.05 0.1, 16 -0.25 -0.1 ] }
+ROUTE CLOCK.fraction_changed TO PATH.set_fraction
+ROUTE PATH.value_changed TO MOVER.set_translation
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool on_PGS_a
+  inputOutput SFBool PGS_a FALSE
+  inputOutput SFInt32 PGS_a_count 0
+  inputOnly MFNode on_PGS_g
+  inputOutput MFNode PGS_g [ ]
+  inputOutput SFInt32 PGS_g_count 0
+  inputOnly MFVec3f on_PGS_p
+  inputOutput MFVec3f PGS_p [ ]
+  inputOutput SFInt32 PGS_p_count 0
+  inputOnly SFBool on_PGC_a
+  inputOutput SFBool PGC_a FALSE
+  inputOutput SFInt32 PGC_a_count 0
+  inputOnly MFNode on_PGC_g
+  inputOutput MFNode PGC_g [ ]
+  inputOutput SFInt32 PGC_g_count 0
+  inputOnly MFVec3f on_PGC_p
+  inputOutput MFVec3f PGC_p [ ]
+  inputOutput SFInt32 PGC_p_count 0
+  inputOnly SFBool on_PGN_a
+  inputOutput SFBool PGN_a FALSE
+  inputOutput SFInt32 PGN_a_count 0
+  inputOnly MFNode on_PGN_g
+  inputOutput MFNode PGN_g [ ]
+  inputOutput SFInt32 PGN_g_count 0
+  inputOnly MFVec3f on_PGN_p
+  inputOutput MFVec3f PGN_p [ ]
+  inputOutput SFInt32 PGN_p_count 0
+  inputOnly SFBool on_PGA_a
+  inputOutput SFBool PGA_a FALSE
+  inputOutput SFInt32 PGA_a_count 0
+  inputOnly MFNode on_PGA_g
+  inputOutput MFNode PGA_g [ ]
+  inputOutput SFInt32 PGA_g_count 0
+  inputOnly MFVec3f on_PGA_p
+  inputOutput MFVec3f PGA_p [ ]
+  inputOutput SFInt32 PGA_p_count 0
+  inputOnly SFBool on_PBA_a
+  inputOutput SFBool PBA_a FALSE
+  inputOutput SFInt32 PBA_a_count 0
+  inputOnly MFNode on_PBA_g
+  inputOutput MFNode PBA_g [ ]
+  inputOutput SFInt32 PBA_g_count 0
+  inputOnly SFBool on_PBC_a
+  inputOutput SFBool PBC_a FALSE
+  inputOutput SFInt32 PBC_a_count 0
+  inputOnly MFNode on_PBC_g
+  inputOutput MFNode PBC_g [ ]
+  inputOutput SFInt32 PBC_g_count 0
+  inputOutput SFString log ""
+  url "javascript:
+function on_PGS_a (value) { PGS_a = value; PGS_a_count = PGS_a_count + 1; log = log + 'PGS_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGS_g (value) { PGS_g = value; PGS_g_count = PGS_g_count + 1; log = log + 'PGS_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGS_p (value) { PGS_p = value; PGS_p_count = PGS_p_count + 1; log = log + 'PGS_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGC_a (value) { PGC_a = value; PGC_a_count = PGC_a_count + 1; log = log + 'PGC_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGC_g (value) { PGC_g = value; PGC_g_count = PGC_g_count + 1; log = log + 'PGC_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGC_p (value) { PGC_p = value; PGC_p_count = PGC_p_count + 1; log = log + 'PGC_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGN_a (value) { PGN_a = value; PGN_a_count = PGN_a_count + 1; log = log + 'PGN_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGN_g (value) { PGN_g = value; PGN_g_count = PGN_g_count + 1; log = log + 'PGN_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGN_p (value) { PGN_p = value; PGN_p_count = PGN_p_count + 1; log = log + 'PGN_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGA_a (value) { PGA_a = value; PGA_a_count = PGA_a_count + 1; log = log + 'PGA_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGA_g (value) { PGA_g = value; PGA_g_count = PGA_g_count + 1; log = log + 'PGA_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PGA_p (value) { PGA_p = value; PGA_p_count = PGA_p_count + 1; log = log + 'PGA_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PBA_a (value) { PBA_a = value; PBA_a_count = PBA_a_count + 1; log = log + 'PBA_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PBA_g (value) { PBA_g = value; PBA_g_count = PBA_g_count + 1; log = log + 'PBA_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PBC_a (value) { PBC_a = value; PBC_a_count = PBC_a_count + 1; log = log + 'PBC_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_PBC_g (value) { PBC_g = value; PBC_g_count = PBC_g_count + 1; log = log + 'PBC_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+"
+}
+ROUTE PGS.isActive TO R.on_PGS_a
+ROUTE PGS.pickedGeometry TO R.on_PGS_g
+ROUTE PGS.pickedPoint TO R.on_PGS_p
+ROUTE PGC.isActive TO R.on_PGC_a
+ROUTE PGC.pickedGeometry TO R.on_PGC_g
+ROUTE PGC.pickedPoint TO R.on_PGC_p
+ROUTE PGN.isActive TO R.on_PGN_a
+ROUTE PGN.pickedGeometry TO R.on_PGN_g
+ROUTE PGN.pickedPoint TO R.on_PGN_p
+ROUTE PGA.isActive TO R.on_PGA_a
+ROUTE PGA.pickedGeometry TO R.on_PGA_g
+ROUTE PGA.pickedPoint TO R.on_PGA_p
+ROUTE PBA.isActive TO R.on_PBA_a
+ROUTE PBA.pickedGeometry TO R.on_PBA_g
+ROUTE PBC.isActive TO R.on_PBC_a
+ROUTE PBC.pickedGeometry TO R.on_PBC_g

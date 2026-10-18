@@ -1,0 +1,1 @@
+{"world": "main.wrl", "authority": "XITE_COMPATIBILITY", "covers": ["glTF/GLB through Inline"], "dt": 0.1, "frames": 14, "actions": [{"frame": 4, "type": "load", "name": "Inl", "value": false}, {"frame": 7, "type": "load", "name": "Inl", "value": true}, {"frame": 9, "type": "load", "name": "Inl", "value": false}, {"frame": 11, "type": "load", "name": "Inl", "value": true}]}

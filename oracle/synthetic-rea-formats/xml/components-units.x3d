@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='4.0'>
+  <head>
+    <component name='Geospatial' level='1'/>
+    <unit category='length' name='km' conversionFactor='1000'/>
+    <unit category='angle' name='degree' conversionFactor='0.017453292519943295'/>
+    <meta name='generator' content='synthetic'/>
+  </head>
+  <Scene>
+    <Transform translation='1.5 0 -2.25' rotation='0 1 0 1.5707963267948966' scale='1 2.5 1'>
+      <Shape>
+        <Sphere radius='0.25'/>
+      </Shape>
+    </Transform>
+    <Transform translation='0.001 1e-3 -12.5E2' rotation='1 0 0 -0.5'>
+      <Shape>
+        <Cylinder height='1.25' radius='0.5' bottom='TRUE' side='FALSE' top='true'/>
+      </Shape>
+    </Transform>
+    <Transform rotation='0 0 1 3.14159265358979'>
+      <Shape>
+        <Cone bottomRadius='1' height='2'/>
+      </Shape>
+    </Transform>
+    <Viewpoint position='0 0 10' orientation='1 0 0 -0.5' fieldOfView='0.785'/>
+  </Scene>
+</X3D>

@@ -1,0 +1,99 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Interpolation:5
+# Synthetic REA oracle world: EaseInEaseOut, Spline*, SquadOrientationInterpolator. Authored for the full-port lane; no archive content.
+Viewpoint { position 0 0 20 }
+DEF T TimeSensor { cycleInterval 2 loop TRUE }
+DEF E1 EaseInEaseOut { key [0 0.5 1] easeInEaseOut [0 0, 0.3 0.4, 0.2 0.1] }
+DEF E2 EaseInEaseOut { key [0 0.4 1] easeInEaseOut [0.8 0.9, 0.7 0.6] }
+DEF E3 EaseInEaseOut { key [0 1] easeInEaseOut [-1 -1, -1 -1] }
+DEF E4 EaseInEaseOut { key [0 0.3 1] easeInEaseOut [0 0.5, 0 0, 0 0] }
+DEF SP1 SplinePositionInterpolator { key [0 0.25 0.6 1] keyValue [0 0 0, 1 2 0, 3 -1 1, 4 0 2] }
+DEF SP2 SplinePositionInterpolator { closed TRUE key [0 0.3 0.7 1] keyValue [0 0 0, 1 2 0, -2 1 1, 0 0 0] }
+DEF SP3 SplinePositionInterpolator { key [0 0.5 1] keyValue [0 0 0, 2 2 2, 4 0 1] keyVelocity [1 0 0, 0 1 0] }
+DEF SP4 SplinePositionInterpolator { key [0.5] keyValue [7 8 9] }
+DEF S2 SplinePositionInterpolator2D { key [0 0.2 0.5 1] keyValue [0 0, 1 1, 2 -1, 3 0] }
+DEF S2C SplinePositionInterpolator2D { closed TRUE key [0 0.5 1] keyValue [0 0, 1 3, 0 0] keyVelocity [0.5 0.5, 1 0, 0 1] }
+DEF SS1 SplineScalarInterpolator { key [0 0.1 0.5 0.9 1] keyValue [0 1 -2 3 0.5] }
+DEF SS2 SplineScalarInterpolator { key [0 0.5 1] keyValue [1 5] keyVelocity [2 3 4] normalizeVelocity TRUE }
+DEF SS3 SplineScalarInterpolator { closed TRUE key [0 0.25 0.5 1] keyValue [0 1 0.5 0] }
+DEF Q1 SquadOrientationInterpolator { key [0 0.3 0.6 1] keyValue [0 1 0 0, 0 1 0 1.5, 1 0 0 2, 0 0 1 3] }
+DEF Q2 SquadOrientationInterpolator { closed TRUE key [0 0.5 1] keyValue [0 1 0 0, 1 1 0 2.5, 0 1 0 0] }
+DEF Q3 SquadOrientationInterpolator { key [0 1] keyValue [0 1 0 0] }
+DEF OUT Script {
+  inputOutput SFFloat e1 0
+  inputOutput SFFloat e2 0
+  inputOutput SFFloat e3 0
+  inputOutput SFFloat e4 0
+  inputOutput SFVec3f sp1 0 0 0
+  inputOutput SFVec3f sp2 0 0 0
+  inputOutput SFVec3f sp3 0 0 0
+  inputOutput SFVec3f sp4 0 0 0
+  inputOutput SFVec2f s2 0 0
+  inputOutput SFVec2f s2c 0 0
+  inputOutput SFFloat ss1 0
+  inputOutput SFFloat ss2 0
+  inputOutput SFFloat ss3 0
+  inputOutput SFRotation q1 0 0 1 0
+  inputOutput SFRotation q2 0 0 1 0
+  inputOutput SFRotation q3 0 0 1 0
+  inputOnly SFFloat fe1
+  inputOnly SFVec3f fsp1
+  inputOnly SFVec3f fsp2
+  inputOnly SFVec3f fsp3
+  inputOnly SFVec2f fs2c
+  inputOnly SFFloat fss2
+  inputOnly SFRotation fq1
+  inputOnly SFRotation fq2
+  inputOutput SFString log ""
+  url "ecmascript:
+function fe1 (v) { log = 'e1 ' + v; }
+function fsp1 (v) { log = log + ' sp1 ' + v.x + ' ' + v.y + ' ' + v.z; }
+function fsp2 (v) { log = log + ' sp2 ' + v.x + ' ' + v.y + ' ' + v.z; }
+function fsp3 (v) { log = log + ' sp3 ' + v.x + ' ' + v.y + ' ' + v.z; }
+function fs2c (v) { log = log + ' s2c ' + v.x + ' ' + v.y; }
+function fss2 (v) { log = log + ' ss2 ' + v; }
+function fq1 (v) { log = log + ' q1 ' + v.x + ' ' + v.y + ' ' + v.z + ' ' + v.angle; }
+function fq2 (v) { log = log + ' q2 ' + v.x + ' ' + v.y + ' ' + v.z + ' ' + v.angle; }
+"
+}
+ROUTE T.fraction_changed TO E1.set_fraction
+ROUTE T.fraction_changed TO E2.set_fraction
+ROUTE T.fraction_changed TO E3.set_fraction
+ROUTE T.fraction_changed TO E4.set_fraction
+ROUTE T.fraction_changed TO SP1.set_fraction
+ROUTE T.fraction_changed TO SP2.set_fraction
+ROUTE T.fraction_changed TO SP3.set_fraction
+ROUTE T.fraction_changed TO SP4.set_fraction
+ROUTE T.fraction_changed TO S2.set_fraction
+ROUTE T.fraction_changed TO S2C.set_fraction
+ROUTE T.fraction_changed TO SS1.set_fraction
+ROUTE T.fraction_changed TO SS2.set_fraction
+ROUTE T.fraction_changed TO SS3.set_fraction
+ROUTE T.fraction_changed TO Q1.set_fraction
+ROUTE T.fraction_changed TO Q2.set_fraction
+ROUTE T.fraction_changed TO Q3.set_fraction
+ROUTE E1.modifiedFraction_changed TO OUT.e1
+ROUTE E2.modifiedFraction_changed TO OUT.e2
+ROUTE E3.modifiedFraction_changed TO OUT.e3
+ROUTE E4.modifiedFraction_changed TO OUT.e4
+ROUTE SP1.value_changed TO OUT.sp1
+ROUTE SP2.value_changed TO OUT.sp2
+ROUTE SP3.value_changed TO OUT.sp3
+ROUTE SP4.value_changed TO OUT.sp4
+ROUTE S2.value_changed TO OUT.s2
+ROUTE S2C.value_changed TO OUT.s2c
+ROUTE SS1.value_changed TO OUT.ss1
+ROUTE SS2.value_changed TO OUT.ss2
+ROUTE SS3.value_changed TO OUT.ss3
+ROUTE Q1.value_changed TO OUT.q1
+ROUTE Q2.value_changed TO OUT.q2
+ROUTE Q3.value_changed TO OUT.q3
+ROUTE E1.modifiedFraction_changed TO OUT.fe1
+ROUTE SP1.value_changed TO OUT.fsp1
+ROUTE SP2.value_changed TO OUT.fsp2
+ROUTE SP3.value_changed TO OUT.fsp3
+ROUTE S2C.value_changed TO OUT.fs2c
+ROUTE SS2.value_changed TO OUT.fss2
+ROUTE Q1.value_changed TO OUT.fq1
+ROUTE Q2.value_changed TO OUT.fq2

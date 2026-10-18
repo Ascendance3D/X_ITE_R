@@ -1,0 +1,65 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+DEF V0 Viewpoint { position 0 0 10 description "layer 0" }
+NavigationInfo { headlight FALSE }
+DirectionalLight { color 0.2 0.4 1 direction 0 0 -1 }
+Transform { translation -2.5 0 0 children Shape { appearance Appearance { material Material { } } geometry Sphere { radius 1.5 } } }
+LayerSet { order [ 0 1 2 ] layers [
+  Layer { viewport Viewport { clipBoundary [ 0.5 1 0 1 ] } children [
+    DEF V1A Viewpoint { position 0 0 10 description "layer 1 a" }
+    DEF V1B Viewpoint { position 0 2 14 description "layer 1 b" }
+    NavigationInfo { headlight FALSE }
+    PointLight { global TRUE color 1 0.2 0.1 location 0 0 6 }
+    DEF T1 TouchSensor { }
+    Shape { appearance Appearance { material Material { } } geometry Box { size 3 3 3 } }
+  ] }
+  DEF L2 Layer { isPickable FALSE pointerEvents FALSE viewport Viewport { clipBoundary [ 0.5 1 0 1 ] } children [
+    Viewpoint { position 0 0 10 }
+    DEF T2 TouchSensor { }
+    Transform { translation 0 -3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.3 } } geometry Box { size 2 1 2 } } }
+    Transform { scale 0.3 0.3 0.3 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.3 } } geometry Sphere { } } }
+  ] }
+] }
+DEF K KeySensor { }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFString key
+  inputOnly SFBool b0
+  inputOnly SFBool b1a
+  inputOnly SFBool b1b
+  inputOnly SFTime t1
+  inputOnly SFTime t2
+  inputOutput SFInt32 n0 0
+  inputOutput SFInt32 n1a 0
+  inputOutput SFInt32 n1b 0
+  inputOutput SFInt32 c1 0
+  inputOutput SFInt32 c2 0
+  inputOutput SFString last ""
+  initializeOnly SFNode l2 USE L2
+  initializeOnly SFNode v1b USE V1B
+  url "javascript:
+function key (value)
+{
+   if (value == 'b') v1b .set_bind = true;
+   if (value == 'u') v1b .set_bind = false;
+   if (value == 'p') l2 .pointerEvents = true;
+}
+function b0 (v) { n0 = n0 + 1; last = last + ' 0' + v; }
+function b1a (v) { n1a = n1a + 1; last = last + ' 1a' + v; }
+function b1b (v) { n1b = n1b + 1; last = last + ' 1b' + v; }
+function t1 () { c1 = c1 + 1; }
+function t2 () { c2 = c2 + 1; }
+"
+}
+ROUTE K.keyPress TO S.key
+ROUTE V0.isBound TO S.b0
+ROUTE V1A.isBound TO S.b1a
+ROUTE V1B.isBound TO S.b1b
+ROUTE T1.touchTime TO S.t1
+ROUTE T2.touchTime TO S.t2
+

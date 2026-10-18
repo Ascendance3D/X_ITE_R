@@ -1,0 +1,8 @@
+{"dt": 0.03333333333333333, "t0": 946684800, "frames": 120, "warmup": 8, "seed": 8803, "node": "PS", "dumpAll": true,
+ "events": [
+  {"frame": 20, "node": "EM", "field": "speed", "value": 1},
+  {"frame": 45, "node": "PS", "field": "createParticles", "value": false},
+  {"frame": 70, "node": "PS", "field": "createParticles", "value": true},
+  {"frame": 90, "node": "PS", "field": "particleLifetime", "value": 0.5},
+  {"frame": 100, "node": "PS", "field": "maxParticles", "value": 8}
+ ]}

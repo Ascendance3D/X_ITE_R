@@ -1,0 +1,20 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+# Synthetic REA oracle world: the Shading browser option GOURAUD in a specification version 3.3
+# file, where Material uses the Shading dependent getMaterialKey (X3D_GOURAUD_MATERIAL, or
+# X3D_PHONG_MATERIAL with PHONG). Authored; checker64.png is self-made.
+Viewpoint { position 0 0 9 }
+NavigationInfo { type "NONE" }
+DirectionalLight { direction -0.4 -0.6 -1 }
+Transform { translation -2.2 1.2 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.8 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 emissiveColor 0.05 0 0.1 } texture ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry Box { size 2 2 2 } } }
+Transform { translation 1 1.2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.5 0.9 specularColor 1 1 1 shininess 0.6 emissiveColor 0.1 0 0 } texture ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry Sphere { radius 1.1 } } }
+Transform { translation 3.2 1.2 0 children Shape { appearance Appearance { material TwoSidedMaterial { diffuseColor 0.8 0.3 0.3 emissiveColor 0 0.1 0 } texture ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0.6, 0.8 0.8 0, -0.8 0.8 -0.6 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -1 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.6 0.6 0.6 transparency 0.3 emissiveColor 0.2 0.1 0 } texture ImageTexture { url "../synthetic-rea-render2/checker64.png" } } geometry Cone { } } }
+DEF S Script {
+  url "ecmascript:
+    function initialize () {
+      Browser .setBrowserOption ('Shading', 'GOURAUD');
+    }
+  "
+}

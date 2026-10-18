@@ -1,0 +1,39 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Scripting:1
+COMPONENT PointingDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+NavigationInfo { type "NONE" headlight FALSE }
+DirectionalLight { direction 0 -1 -0.3 intensity 0.7 }
+DEF ENV EnvironmentLight { origin 0 0 0.5 specularTexture DEF GEN GeneratedCubeMapTexture { update "ALWAYS" size 32 } }
+DEF MOVER Transform { translation 3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0.2 0.1 emissiveColor 0.5 0.1 0 } } geometry Box { size 1 3 3 } } }
+Transform { translation -3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.1 0.8 0.2 emissiveColor 0 0.4 0.1 } } geometry Box { size 1 3 3 } } }
+Transform { translation 0 3 0 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.6 0.7 1 } } geometry Box { size 6 0.5 6 } } }
+Transform { translation -1.100 0.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.1 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.000 0.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.5 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.100 0.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 1 } } geometry Sphere { radius 0.45 } } }
+DEF TS TouchSensor { }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFTime touch
+  initializeOnly SFNode mover USE MOVER
+  initializeOnly SFNode gen USE GEN
+  initializeOnly SFNode env USE ENV
+  inputOutput SFInt32 step 0
+  url "javascript:
+function touch (value)
+{
+   step = step + 1;
+
+   if (step == 1) { mover .translation = new SFVec3f (0, -3, 0); }
+   if (step == 2) { gen .update = 'NONE'; mover .translation = new SFVec3f (3, 0, 0); }
+   if (step == 3) { gen .update = 'NEXT_FRAME_ONLY'; env .origin = new SFVec3f (0, 2, 0); }
+}
+"
+}
+ROUTE TS.touchTime TO S.touch

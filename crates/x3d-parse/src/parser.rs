@@ -40,12 +40,17 @@ pub struct Parser<'a> {
     value_f64: f64,
     value_string: String,
     pub scene: Scene,
-    contexts: Vec<CtxId>,
+    pub(crate) contexts: Vec<CtxId>,
     unknown_level: usize,
     /// X3DParser: per execution context, first DEF of each name.
-    named_nodes: HashMap<CtxId, HashMap<String, NodeId>>,
+    pub(crate) named_nodes: HashMap<CtxId, HashMap<String, NodeId>>,
+    /// X3DParser: per execution context, the imported nodes a Placeholder may resolve to
+    /// (X3DParser.getImportedNodes). Only the XML parser fills it.
+    pub(crate) imported_names: HashMap<CtxId, HashMap<String, NodeId>>,
     /// X3DParser: per execution context, unresolved forward USEs in insertion order.
-    placeholders: HashMap<CtxId, Vec<(String, NodeId)>>,
+    pub(crate) placeholders: HashMap<CtxId, Vec<(String, NodeId)>>,
+    /// The unit category of the predefined field whose value is being read (X3DField.getUnit).
+    pub(crate) field_unit: Option<String>,
 }
 
 impl<'a> Parser<'a> {
@@ -61,8 +66,18 @@ impl<'a> Parser<'a> {
             contexts: vec![ROOT],
             unknown_level: 0,
             named_nodes: HashMap::new(),
+            imported_names: HashMap::new(),
             placeholders: HashMap::new(),
+            field_unit: None,
         }
+    }
+
+    /// VRMLParser.setInput: read `input` from its start (the XML parser reads attribute values
+    /// with the VRML value grammar).
+    pub(crate) fn set_input(&mut self, input: &'a [u8]) {
+        self.input = input;
+        self.last_index = 0;
+        self.line_number = 1;
     }
 
     /// X3DField.fromVRMLString (value) on a fresh field, without a scene (no unit conversion).
@@ -101,23 +116,23 @@ impl<'a> Parser<'a> {
         Err(ParseError { message: message.into(), line: self.line_number })
     }
 
-    fn warn(&mut self, message: String) {
+    pub(crate) fn warn(&mut self, message: String) {
         self.scene.warn(message);
     }
 
-    fn ctx(&self) -> CtxId {
+    pub(crate) fn ctx(&self) -> CtxId {
         *self.contexts.last().unwrap()
     }
 
-    fn outer_proto(&self) -> Option<ProtoId> {
+    pub(crate) fn outer_proto(&self) -> Option<ProtoId> {
         self.scene.outer_proto(self.ctx())
     }
 
-    fn is_inside_proto_declaration(&self) -> bool {
+    pub(crate) fn is_inside_proto_declaration(&self) -> bool {
         self.outer_proto().is_some()
     }
 
-    fn outer_name(&self) -> String {
+    pub(crate) fn outer_name(&self) -> String {
         self.outer_proto().map(|p| self.scene.protos[p].name.clone()).unwrap_or_default()
     }
 
@@ -293,11 +308,15 @@ impl<'a> Parser<'a> {
 
                 if self.keyword(":") {
                     if self.int32() {
-                        if self.scene.table.component(&name).is_none() {
+                        let Some(max) = self.scene.table.component(&name).map(|c| c.level) else {
                             return self.err(format!("Component '{name}' is not supported."));
-                        }
+                        };
 
-                        return Ok(Some((name, jsmath::to_int32(self.value_f64))));
+                        // X3DBrowser.getComponent: Algorithm .clamp (level || component .level, 1, component .level).
+                        let level = jsmath::to_int32(self.value_f64);
+                        let level = if level == 0 { max } else { level }.clamp(1, max);
+
+                        return Ok(Some((name, level)));
                     }
 
                     return self.err("Expected a component support level.");
@@ -322,11 +341,13 @@ impl<'a> Parser<'a> {
 
         if self.keyword("UNIT") {
             if self.id() {
+                let category = self.result.clone();
+
                 if self.id() {
+                    let name = self.result.clone();
+
                     if self.double() {
-                        // UNIT conversion is not ported (X3D only; no VRML97 file can have it).
-                        let line = self.line_number;
-                        self.warn(format!("Parser error at line {line}. UNIT statements are not supported by the Rust port."));
+                        self.scene.update_unit(&category, &name, self.value_f64);
                         return Ok(true);
                     }
 
@@ -1000,7 +1021,7 @@ impl<'a> Parser<'a> {
         })
     }
 
-    fn proto_field_lookup(&self, proto: ProtoId, name: &str) -> Option<usize> {
+    pub(crate) fn proto_field_lookup(&self, proto: ProtoId, name: &str) -> Option<usize> {
         let fields = &self.scene.protos[proto].fields;
         let direct = |n: &str| fields.iter().position(|f| f.name == n);
 
@@ -1136,6 +1157,23 @@ impl<'a> Parser<'a> {
         let field_id = self.result.clone();
 
         let Some(index) = self.scene.get_predefined_field(node, &field_id) else {
+            // An alias of a private child object (GeoViewpoint navType and headlight up to 3.2).
+            if let Some(p) = self.scene.child_alias(node, &field_id) {
+                self.comments();
+
+                let field = &self.scene.node(node).private_fields[p];
+                let (ty, current) = (field.ty(), field.value.clone());
+
+                if let Some(v) = self.field_value(ty, &current)? {
+                    let f = &mut self.scene.node_mut(node).private_fields[p];
+                    f.value = v;
+                    f.modified = true;
+                    return Ok(true);
+                }
+
+                return self.err(format!("Couldn't read value for field '{field_id}'."));
+            }
+
             // Parse unknown field value.
             let (last_index, line_number) = (self.last_index, self.line_number);
 
@@ -1206,8 +1244,14 @@ impl<'a> Parser<'a> {
 
         if field.is_initializable() {
             let (ty, current) = (field.ty(), field.value.clone());
+            let field_name = field.name.clone();
 
-            if let Some(v) = self.field_value(ty, &current)? {
+            self.field_unit = self.field_unit_of(node, &field_name);
+
+            let parsed = self.field_value(ty, &current);
+            self.field_unit = None;
+
+            if let Some(v) = parsed? {
                 let f = &mut self.scene.node_mut(node).fields[index];
                 f.value = v;
                 f.modified = true;
@@ -1228,6 +1272,18 @@ impl<'a> Parser<'a> {
         self.warn(format!("Parser error at line {line}: Couldn't assign value to {} field '{field_id}'.", access::name(access_type)));
 
         Ok(true)
+    }
+
+    /// X3DField.getUnit of a predefined field of `node` (only builtin node types define units).
+    pub(crate) fn field_unit_of(&self, node: NodeId, field_name: &str) -> Option<String> {
+        match self.scene.node(node).kind {
+            NodeKind::Builtin(t) => {
+                let table = self.scene.table;
+                let spec = &self.scene.specification_version;
+                table.types[t].variant(spec).fields.iter().find(|d| d.name == field_name).and_then(|d| d.unit.clone())
+            }
+            _ => None,
+        }
     }
 
     // --- terminals ---------------------------------------------------------------------------
@@ -1288,7 +1344,7 @@ impl<'a> Parser<'a> {
     }
 
     /// VRMLParser.string: handles `\"` by checking for an odd number of trailing backslashes.
-    fn string(&mut self) -> bool {
+    pub(crate) fn string(&mut self) -> bool {
         self.comments();
 
         if self.input.get(self.last_index) != Some(&b'"') {
@@ -1343,7 +1399,33 @@ impl<'a> Parser<'a> {
     // --- field values ----------------------------------------------------------------------
 
     /// VRMLParser.fieldValue: `Some (new value)` or `None` (the JS `false`).
-    fn field_value(&mut self, ty: FieldType, current: &FieldValue) -> R<Option<FieldValue>> {
+    /// X3DParser.fromUnit (category, value) with this scene's units.
+    fn from_unit(&self, category: &str, value: f64) -> f64 {
+        let factor = x3d_scene::scene::unit_factor(&self.scene.units, category);
+        if factor == 1.0 { value } else { value * factor }
+    }
+
+    /// fromUnit (field .getUnit (), value) for every number of the field being read.
+    fn field_units(&self, mut v: Vec<f64>) -> Vec<f64> {
+        if let Some(u) = &self.field_unit {
+            let factor = x3d_scene::scene::unit_factor(&self.scene.units, u);
+            if factor != 1.0 {
+                for x in v.iter_mut() {
+                    *x *= factor;
+                }
+            }
+        }
+        v
+    }
+
+    fn field_unit_value(&self, value: f64) -> f64 {
+        match &self.field_unit {
+            Some(u) => self.from_unit(u, value),
+            None => value,
+        }
+    }
+
+    pub(crate) fn field_value(&mut self, ty: FieldType, current: &FieldValue) -> R<Option<FieldValue>> {
         use FieldType as T;
         use FieldValue as V;
 
@@ -1351,9 +1433,9 @@ impl<'a> Parser<'a> {
             T::SFBool => self.bool_().map(V::SFBool),
             T::SFColor => self.sfcolor_value()?.map(|c| V::SFColor(Color3::new(c[0], c[1], c[2]))),
             T::SFColorRGBA => self.sfcolorrgba_value()?.map(|c| V::SFColorRGBA(Color4::new(c[0], c[1], c[2], c[3]))),
-            T::SFDouble => self.double().then(|| V::SFDouble(self.value_f64)),
-            T::SFFloat => self.double().then(|| V::SFFloat(self.value_f64)),
-            T::SFTime => self.double().then(|| V::SFTime(self.value_f64)),
+            T::SFDouble => self.double().then(|| V::SFDouble(self.field_unit_value(self.value_f64))),
+            T::SFFloat => self.double().then(|| V::SFFloat(self.field_unit_value(self.value_f64))),
+            T::SFTime => self.double().then(|| V::SFTime(self.field_unit_value(self.value_f64))),
             T::SFImage => self.sfimage_value().map(V::SFImage),
             T::SFInt32 => self.int32().then(|| V::SFInt32(jsmath::to_int32(self.value_f64))),
             T::SFMatrix3d | T::SFMatrix3f => self.doubles_exact(9).map(|v| {
@@ -1379,20 +1461,20 @@ impl<'a> Parser<'a> {
                 r.set_x(v[0]);
                 r.set_y(v[1]);
                 r.set_z(v[2]);
-                r.set_angle(v[3]);
+                r.set_angle(self.from_unit("angle", v[3]));
                 V::SFRotation(r)
             }),
             T::SFString => self.string().then(|| V::SFString(self.value_string.clone())),
             T::SFVec2d | T::SFVec2f => self.doubles_exact(2).map(|v| {
-                let v = Vector2::from_slice(&v);
+                let v = Vector2::from_slice(&self.field_units(v));
                 if ty == T::SFVec2d { V::SFVec2d(v) } else { V::SFVec2f(v) }
             }),
             T::SFVec3d | T::SFVec3f => self.doubles_exact(3).map(|v| {
-                let v = Vector3::from_slice(&v);
+                let v = Vector3::from_slice(&self.field_units(v));
                 if ty == T::SFVec3d { V::SFVec3d(v) } else { V::SFVec3f(v) }
             }),
             T::SFVec4d | T::SFVec4f => self.doubles_exact(4).map(|v| {
-                let v = Vector4::from_slice(&v);
+                let v = Vector4::from_slice(&self.field_units(v));
                 if ty == T::SFVec4d { V::SFVec4d(v) } else { V::SFVec4f(v) }
             }),
             T::MFNode => self.mfnode_value()?,
@@ -1511,50 +1593,16 @@ impl<'a> Parser<'a> {
         single: impl Fn(&mut Self) -> R<Option<Vec<f64>>>,
         colors: bool,
     ) -> R<Option<FieldValue>> {
-        let mut value = FieldValue::default_for(ty);
-
         if let Some(v) = single(self)? {
+            let mut value = FieldValue::default_for(ty);
             let v = if colors { v.iter().map(|x| jsmath::clamp(*x, 0.0, 1.0)).collect() } else { v };
+            let v = self.mf_units(ty, colors, v);
             value.push_numbers(&v[..components]);
             return Ok(Some(value));
         }
 
         if self.keyword("[") {
-            let mut array = vec![];
-
-            if colors {
-                // sfcolorValues: single doubles, or whole colors (incl. HTML colors) pushed as components.
-                loop {
-                    if self.double() {
-                        array.push(self.value_f64);
-                        continue;
-                    }
-
-                    let color = if components == 3 { self.sfcolor_value()? } else { self.sfcolorrgba_value()? };
-
-                    match color {
-                        Some(c) => {
-                            for k in 0..components {
-                                array.push(jsmath::clamp(c[k], 0.0, 1.0));
-                            }
-                        }
-                        None => break,
-                    }
-                }
-            } else {
-                // sfdoubleValues / sfvecValues / sfmatrixValues, and for quaternions/rotations the
-                // element-wise loops, which consume the same doubles.
-                while self.double() {
-                    array.push(self.value_f64);
-                }
-
-                if matches!(ty, FieldType::MFRotation | FieldType::MFQuaternion) {
-                    let n = array.len() - array.len() % 4;
-                    array.truncate(n);
-                }
-            }
-
-            value.set_flat_numbers(&array);
+            let value = self.typed_values(ty, components, colors)?;
 
             if self.keyword("]") {
                 return Ok(Some(value));
@@ -1566,17 +1614,135 @@ impl<'a> Parser<'a> {
         Ok(None)
     }
 
+    /// fromUnit: each rotation's angle, or every number of a field with a unit.
+    fn mf_units(&self, ty: FieldType, colors: bool, mut v: Vec<f64>) -> Vec<f64> {
+        if ty == FieldType::MFRotation {
+            for a in v.iter_mut().skip(3).step_by(4) {
+                *a = self.from_unit("angle", *a);
+            }
+            v
+        } else if colors {
+            v
+        } else {
+            self.field_units(v)
+        }
+    }
+
+    /// The value list between the brackets of a typed-array MF field (sfcolorValues,
+    /// sfdoubleValues, sfvecValues, sfmatrixValues, sfquaternionValues, sfrotationValues).
+    fn typed_values(&mut self, ty: FieldType, components: usize, colors: bool) -> R<FieldValue> {
+        let mut value = FieldValue::default_for(ty);
+        let mut array = vec![];
+
+        if colors {
+            // sfcolorValues: single doubles, or whole colors (incl. HTML colors) pushed as components.
+            loop {
+                if self.double() {
+                    array.push(self.value_f64);
+                    continue;
+                }
+
+                let color = if components == 3 { self.sfcolor_value()? } else { self.sfcolorrgba_value()? };
+
+                match color {
+                    Some(c) => {
+                        for k in 0..components {
+                            array.push(jsmath::clamp(c[k], 0.0, 1.0));
+                        }
+                    }
+                    None => break,
+                }
+            }
+        } else {
+            // sfdoubleValues / sfvecValues / sfmatrixValues, and for quaternions/rotations the
+            // element-wise loops, which consume the same doubles.
+            while self.double() {
+                array.push(self.value_f64);
+            }
+
+            if matches!(ty, FieldType::MFRotation | FieldType::MFQuaternion) {
+                let n = array.len() - array.len() % 4;
+                array.truncate(n);
+            }
+        }
+
+        let array = self.mf_units(ty, colors, array);
+        value.set_flat_numbers(&array);
+        Ok(value)
+    }
+
+    /// The sf…Values functions the XML parser reads an MF attribute with: the value list without
+    /// brackets. The field is always set to what was read, even nothing. An MFNode attribute
+    /// clears the field.
+    pub(crate) fn sf_values(&mut self, ty: FieldType) -> R<FieldValue> {
+        use FieldType as T;
+
+        Ok(match ty {
+            T::MFNode => FieldValue::MFNode(vec![]),
+            T::MFString => FieldValue::MFString(self.string_values()),
+            T::MFBool => FieldValue::MFBool(self.bool_values()),
+            T::MFImage => FieldValue::MFImage(self.image_values()),
+            T::MFInt32 => FieldValue::MFInt32(self.int32_values()),
+            T::MFColor => self.typed_values(ty, 3, true)?,
+            T::MFColorRGBA => self.typed_values(ty, 4, true)?,
+            T::MFDouble | T::MFFloat | T::MFTime => self.typed_values(ty, 1, false)?,
+            T::MFMatrix3d | T::MFMatrix3f => self.typed_values(ty, 9, false)?,
+            T::MFMatrix4d | T::MFMatrix4f => self.typed_values(ty, 16, false)?,
+            T::MFQuaternion | T::MFRotation => self.typed_values(ty, 4, false)?,
+            T::MFVec2d | T::MFVec2f => self.typed_values(ty, 2, false)?,
+            T::MFVec3d | T::MFVec3f => self.typed_values(ty, 3, false)?,
+            T::MFVec4d | T::MFVec4f => self.typed_values(ty, 4, false)?,
+            _ => unreachable!("sf_values on an SF type"),
+        })
+    }
+
+    fn int32_values(&mut self) -> Vec<i32> {
+        let mut array = vec![];
+
+        while self.int32() {
+            array.push(jsmath::to_int32(self.value_f64));
+        }
+
+        array
+    }
+
+    fn bool_values(&mut self) -> Vec<bool> {
+        let mut array = vec![];
+
+        while let Some(b) = self.bool_() {
+            array.push(b);
+        }
+
+        array
+    }
+
+    pub(crate) fn string_values(&mut self) -> Vec<String> {
+        let mut array = vec![];
+
+        while self.string() {
+            array.push(self.value_string.clone());
+        }
+
+        array
+    }
+
+    fn image_values(&mut self) -> Vec<Image> {
+        let mut array = vec![];
+
+        while let Some(i) = self.sfimage_value() {
+            array.push(i);
+        }
+
+        array
+    }
+
     fn mf_int32(&mut self) -> R<Option<FieldValue>> {
         if self.int32() {
             return Ok(Some(FieldValue::MFInt32(vec![jsmath::to_int32(self.value_f64)])));
         }
 
         if self.keyword("[") {
-            let mut array = vec![];
-
-            while self.int32() {
-                array.push(jsmath::to_int32(self.value_f64));
-            }
+            let array = self.int32_values();
 
             if self.keyword("]") {
                 return Ok(Some(FieldValue::MFInt32(array)));
@@ -1594,11 +1760,7 @@ impl<'a> Parser<'a> {
         }
 
         if self.keyword("[") {
-            let mut array = vec![];
-
-            while let Some(b) = self.bool_() {
-                array.push(b);
-            }
+            let array = self.bool_values();
 
             if self.keyword("]") {
                 return Ok(Some(FieldValue::MFBool(array)));
@@ -1616,11 +1778,7 @@ impl<'a> Parser<'a> {
         }
 
         if self.keyword("[") {
-            let mut array = vec![];
-
-            while self.string() {
-                array.push(self.value_string.clone());
-            }
+            let array = self.string_values();
 
             if self.keyword("]") {
                 return Ok(Some(FieldValue::MFString(array)));
@@ -1638,11 +1796,7 @@ impl<'a> Parser<'a> {
         }
 
         if self.keyword("[") {
-            let mut array = vec![];
-
-            while let Some(i) = self.sfimage_value() {
-                array.push(i);
-            }
+            let array = self.image_values();
 
             if self.keyword("]") {
                 return Ok(Some(FieldValue::MFImage(array)));
@@ -1739,14 +1893,14 @@ impl<'a> Parser<'a> {
     // --- placeholders ------------------------------------------------------------------------
 
     /// X3DParser.setupNodes: resolve forward USEs of the current execution context.
-    fn setup_nodes(&mut self) {
+    pub(crate) fn setup_nodes(&mut self) {
         let ctx = self.ctx();
         let Some(list) = self.placeholders.remove(&ctx) else {
             return;
         };
 
         for (name, placeholder) in list {
-            let target = self.named_nodes.get(&ctx).and_then(|m| m.get(&name)).copied();
+            let target = self.named_nodes.get(&ctx).and_then(|m| m.get(&name)).copied().or_else(|| self.imported_names.get(&ctx).and_then(|m| m.get(&name)).copied());
 
             match target {
                 Some(node) => self.replace_node_references(placeholder, node),

@@ -1,0 +1,62 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+Viewpoint { position 0 0 10 }
+Background { skyColor 0.2 0.22 0.25 }
+DEF TS0 TouchSensor { }
+Shape { appearance Appearance { material DEF M0 Material { diffuseColor 0.5 0.5 0.5 } } geometry Box { size 30 30 0.1 } }
+Viewport { clipBoundary [ 0 0.4 0.6 1 ] children [
+  DEF TSV TouchSensor { }
+  Shape { appearance Appearance { material DEF MV Material { diffuseColor 0.9 0.6 0.1 } } geometry Sphere { radius 3 } }
+] }
+DEF LS LayerSet { order [ 0 1 ] layers [
+  DEF L1 Layer { viewport Viewport { clipBoundary [ 0.5 1 0 0.5 ] } children [
+    Viewpoint { position 0 0 6 }
+    DEF PS PlaneSensor { maxPosition 3 3 minPosition -3 -3 }
+    DEF T Transform { children Shape { appearance Appearance { material DEF M1 Material { diffuseColor 0.2 0.5 1 } } geometry Box { size 1.5 1.5 0.5 } } }
+  ] }
+] }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFTime t0
+  inputOnly SFTime tv
+  inputOnly SFBool over0
+  inputOutput SFInt32 c0 0
+  inputOutput SFInt32 cv 0
+  inputOutput SFInt32 o0 0
+  initializeOnly SFNode m0 USE M0
+  initializeOnly SFNode mv USE MV
+  url "javascript:
+function t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.2 * c0, 0.5); }
+function tv (value) { cv = cv + 1; mv .diffuseColor = new SFColor (0.9, 0.6, 0.1 + 0.3 * cv); }
+function over0 (value) { if (value) o0 = o0 + 1; }
+"
+}
+ROUTE PS.translation_changed TO T.set_translation
+ROUTE TS0.touchTime TO S.t0
+ROUTE TSV.touchTime TO S.tv
+ROUTE TS0.isOver TO S.over0
+DEF K KeySensor { }
+DEF S2 Script {
+  directOutput TRUE
+  inputOnly SFString key
+  initializeOnly SFNode l1 USE L1
+  initializeOnly SFNode ls USE LS
+  initializeOnly SFNode t USE T
+  initializeOnly SFNode ps USE PS
+  url "javascript:
+function key (value)
+{
+   if (value == 'r') { t .translation = new SFVec3f (0, 0, 0); ps .offset = new SFVec3f (0, 0, 0); }
+   if (value == 'h') l1 .visible = false;
+   if (value == 'v') l1 .visible = true;
+   if (value == 'o') ls .order = new MFInt32 (0);
+}
+"
+}
+ROUTE K.keyPress TO S2.key
+

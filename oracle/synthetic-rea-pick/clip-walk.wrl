@@ -1,0 +1,17 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Rendering:5
+# REA batch 01 synthetic: collision and gravity ignore clipped parts. The wall ahead is clipped
+# away where the avatar walks; the floor is clipped under the start position.
+Viewpoint { position 0 1.6 10 }
+NavigationInfo { type "WALK" speed 4 }
+DirectionalLight { direction -0.3 -0.6 -1 }
+Transform { translation 0 0 6 children [
+  ClipPlane { plane 0 1 0 -1 }
+  Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 } } geometry Box { size 10 4 0.3 } }
+] }
+Transform { translation 0 -0.1 0 children [
+  ClipPlane { plane 0 0 -1 8 }
+  Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.3 } } geometry Box { size 30 0.2 30 } }
+] }
+Transform { translation 0 -3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.2 0.6 } } geometry Box { size 30 0.2 30 } } }

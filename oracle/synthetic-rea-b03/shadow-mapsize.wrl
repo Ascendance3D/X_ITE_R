@@ -1,0 +1,18 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Lighting:3
+COMPONENT Layering:1
+COMPONENT Rendering:5
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Interpolation:1
+COMPONENT Time:1
+NavigationInfo { headlight FALSE }
+Viewpoint { position 0.013 6.07 16.11 orientation 1 0 0 -0.3517 }
+DirectionalLight { global TRUE direction 0 -1 0 intensity 0.25 }
+DirectionalLight { direction -0.5 -1 -0.4 shadows TRUE shadowMapSize 64 }
+Transform { translation 0 -1 0 children Shape {  appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Box { size 16 0.2 12 } } }
+Transform { translation -3 1 0 children Shape {  appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 } } geometry Sphere { radius 1 } } }
+Transform { translation 0 0.5 1 children Shape {  appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Box { size 1.5 1.5 1.5 } } }
+Transform { translation 3 0.5 -1 children Shape {  appearance Appearance { material Material { diffuseColor 0.3 0.4 0.9 } } geometry Cone { bottomRadius 1 height 2 } } }
+Transform { translation 1.5 1 -3 children Shape {  appearance Appearance { material Material { diffuseColor 0.9 0.9 0.2 } } geometry Cylinder { radius 0.4 height 3 } } }

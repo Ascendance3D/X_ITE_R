@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.2//EN" "https://www.web3d.org/specifications/x3d-3.2.dtd">
+<X3D profile='Interchange' version='3.2'>
+  <head>
+    <component name='Geospatial' level='1'/>
+    <meta name='description' content='Synthetic REA oracle world: GeoViewpoint navType and headlight attributes in a 3.2 XML scene (aliases of its private NavigationInfo). Authored.'/>
+  </head>
+  <Scene>
+    <GeoOrigin DEF='ORIGIN' geoCoords='47.6 -122.3 0' rotateYUp='true'/>
+    <GeoViewpoint DEF='GV' description='xml' position='47.598 -122.3 200' orientation='1 0 0 1.2' navType='"WALK" "ANY"' headlight='false'>
+      <GeoOrigin USE='ORIGIN' containerField='geoOrigin'/>
+    </GeoViewpoint>
+    <GeoLocation geoCoords='47.6 -122.3 0'>
+      <GeoOrigin USE='ORIGIN' containerField='geoOrigin'/>
+      <Shape><Appearance><Material diffuseColor='0.8 0.5 0.2'/></Appearance><Box size='60 60 60'/></Shape>
+    </GeoLocation>
+  </Scene>
+</X3D>

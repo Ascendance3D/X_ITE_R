@@ -1,0 +1,62 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 8 }
+Background { skyColor 0.2 0.25 0.3 }
+DEF TS0 TouchSensor { }
+Shape { appearance Appearance { material DEF M0 Material { diffuseColor 0.8 0.3 0.2 } } geometry Box { size 12 12 0.2 } }
+DEF LS LayerSet { order [ 0 1 2 ] layers [
+  DEF L1 Layer { viewport DEF V1 Viewport { clipBoundary [ 0.5 1 0.5 1 ] } children [
+    Viewpoint { position 0 0 6 }
+    Background { skyColor 0.3 0.1 0.4 }
+    DEF TS1 TouchSensor { }
+    Shape { appearance Appearance { material DEF M1 Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 3 3 0.5 } }
+  ] }
+  DEF L2 LayoutLayer { layout DEF LAY Layout { align [ "LEFT" "BOTTOM" ] offsetUnits [ "PIXEL" "PIXEL" ] offset [ 20 20 ] sizeUnits [ "PIXEL" "PIXEL" ] size [ 100 100 ] scaleMode [ "PIXEL" "PIXEL" ] } children [
+    DEF TS2 TouchSensor { }
+    Shape { appearance Appearance { material DEF M2 Material { emissiveColor 0.9 0.9 0.2 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -50 -50 0, 50 -50 0, 50 50 0, -50 50 0 ] } coordIndex [ 0 1 2 3 -1 ] } }
+  ] }
+] }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFTime t0
+  inputOnly SFTime t1
+  inputOnly SFTime t2
+  inputOutput SFInt32 c0 0
+  inputOutput SFInt32 c1 0
+  inputOutput SFInt32 c2 0
+  inputOutput SFInt32 step 0
+  initializeOnly SFNode ls USE LS
+  initializeOnly SFNode l1 USE L1
+  initializeOnly SFNode l2 USE L2
+  initializeOnly SFNode v1 USE V1
+  initializeOnly SFNode lay USE LAY
+  initializeOnly SFNode m0 USE M0
+  initializeOnly SFNode m1 USE M1
+  initializeOnly SFNode m2 USE M2
+  url "javascript:
+function t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.8, 0.3 + 0.15 * c0, 0.2); next (); }
+function t1 (value) { c1 = c1 + 1; m1 .diffuseColor = new SFColor (0.2 + 0.3 * c1, 0.4, 0.9); next (); }
+function t2 (value) { c2 = c2 + 1; m2 .emissiveColor = new SFColor (0.9, 0.9 - 0.3 * c2, 0.2); next (); }
+function next ()
+{
+   step = step + 1;
+
+   if (step == 1) { l1 .pointerEvents = false; }
+   if (step == 2) { l1 .pointerEvents = true; ls .order = new MFInt32 (1, 0, 2); }
+   if (step == 3) { ls .order = new MFInt32 (0, 1, 2); v1 .clipBoundary = new MFFloat (0, 0.5, 0.5, 1); }
+   if (step == 4) { lay .size = new MFFloat (150, 60); lay .offset = new MFFloat (0, 0); lay .align = new MFString ('CENTER', 'BOTTOM'); }
+   if (step == 5) { l1 .visible = false; }
+   if (step == 6) { ls .order = new MFInt32 (2, 1); l1 .visible = true; }
+   if (step == 7) { l1 .removeChildren = new MFNode (l1 .children [3]); }
+   if (step == 8) { l1 .addChildren = new MFNode (l2 .children [1]); }
+}
+"
+}
+ROUTE TS0.touchTime TO S.t0
+ROUTE TS1.touchTime TO S.t1
+ROUTE TS2.touchTime TO S.t2
+

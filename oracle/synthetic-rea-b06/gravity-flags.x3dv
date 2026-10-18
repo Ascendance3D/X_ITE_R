@@ -1,0 +1,8 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { gravity 0 -3 0  bodies [ DEF A RigidBody { position -3 10 0 mass 1 useGlobalGravity TRUE geometry DEF A_C CollidableShape {  shape Shape { geometry Sphere { radius 0.5 } } } }
+DEF B RigidBody { position 0 10 0 mass 1 useGlobalGravity FALSE linearVelocity 1 0 0 geometry DEF B_C CollidableShape {  shape Shape { geometry Sphere { radius 0.5 } } } }
+DEF C RigidBody { position 3 10 0 mass 1 fixed TRUE linearVelocity 5 5 5 angularVelocity 1 1 1 geometry DEF C_C CollidableShape {  shape Shape { geometry Sphere { radius 0.5 } } } }
+DEF D RigidBody { position 6 10 0 mass 1 useGlobalGravity FALSE forces [ 0 -2 0 ] geometry DEF D_C CollidableShape {  shape Shape { geometry Sphere { radius 0.5 } } } } ]  }

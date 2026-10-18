@@ -20,6 +20,8 @@ pub struct FieldDef {
     pub default: FieldValue,
     /// The value a fresh instance starts with (differs from `default` for a few nodes).
     pub initial: FieldValue,
+    /// X3DField.getUnit: the unit category ("length", "angle", "speed", ...), if any.
+    pub unit: Option<String>,
 }
 
 #[derive(Clone, Debug)]
@@ -41,12 +43,38 @@ pub struct NodeType {
     pub vrml2: NodeVariant,
     /// Definitions as seen by a node created in an X3D scene.
     pub x3d: NodeVariant,
+    /// Definitions as seen in an X3D 3.0 … 3.3 scene, where they differ from `x3d` (constructors
+    /// that test `getSpecificationVersion () <= 3.x`), by dumped version.
+    pub legacy: Vec<(f64, NodeVariant)>,
+    /// Definitions as seen in an X3D 4.1 scene, where they differ from `x3d` (constructors that
+    /// test `getSpecificationVersion () <= 4.0`, `x3d` being a 4.0 scene).
+    pub newer: Vec<(f64, NodeVariant)>,
 }
+
+/// The X3D 3.x versions dumped for `NodeType::legacy`.
+pub const LEGACY_VERSIONS: [f64; 4] = [3.0, 3.1, 3.2, 3.3];
 
 impl NodeType {
     pub fn variant(&self, spec_version: &str) -> &NodeVariant {
         // X_ITE tests `getSpecificationVersion () == 2.0` (loose equality with a number).
-        if spec_version.trim().parse::<f64>().ok() == Some(2.0) { &self.vrml2 } else { &self.x3d }
+        let Ok(v) = spec_version.trim().parse::<f64>() else {
+            return &self.x3d;
+        };
+
+        if v == 2.0 {
+            return &self.vrml2;
+        }
+
+        // A version above 4.0: the newest dumped scene not above it.
+        if v > 4.0 {
+            return self.newer.iter().filter(|(k, _)| *k <= v).last().map(|(_, x)| x).unwrap_or(&self.x3d);
+        }
+
+        // The dumped 3.x scene whose `<=` tests decide like this version's: the first one >= it.
+        match LEGACY_VERSIONS.iter().find(|&&k| v <= k) {
+            Some(&k) => self.legacy.iter().find(|(l, _)| *l == k).map(|(_, x)| x).unwrap_or(&self.x3d),
+            None => &self.x3d,
+        }
     }
 }
 
@@ -93,6 +121,7 @@ impl NodeTable {
 
 fn variant(json: &Value) -> NodeVariant {
     let initial = json["initial"].as_object().cloned().unwrap_or_default();
+    let units = json["units"].as_object().cloned().unwrap_or_default();
 
     let fields = json["fields"]
         .as_array()
@@ -108,7 +137,9 @@ fn variant(json: &Value) -> NodeVariant {
                 None => default.clone(),
             };
 
-            FieldDef { access, name, ty, default, initial }
+            let unit = units.get(&name).and_then(|u| u.as_str()).map(str::to_string);
+
+            FieldDef { access, name, ty, default, initial, unit }
         })
         .collect();
 
@@ -123,10 +154,15 @@ fn variant(json: &Value) -> NodeVariant {
 fn load() -> NodeTable {
     let json: Value = serde_json::from_str(include_str!("../data/x_ite-nodes.json")).expect("node table JSON");
 
+    // REA batch 04 (owner decision 2026-10-17): the Annotation component, which X_ITE 16.5.0 ships
+    // but does not register. Dumped from those classes by oracle/x_ite-nodes-annotation.mjs.
+    let annotation: Value = serde_json::from_str(include_str!("../data/x_ite-nodes-annotation.json")).expect("annotation node table JSON");
+
     let types: Vec<NodeType> = json["nodes"]
         .as_array()
         .unwrap()
         .iter()
+        .chain(annotation["nodes"].as_array().unwrap().iter())
         .map(|n| NodeType {
             name: n["typeName"].as_str().unwrap().to_string(),
             component: n["component"].as_str().unwrap().to_string(),
@@ -135,8 +171,19 @@ fn load() -> NodeTable {
             to: n["to"].as_str().unwrap().to_string(),
             vrml2: variant(&n["vrml2"]),
             x3d: variant(&n["x3d"]),
+            legacy: n["legacy"]
+                .as_object()
+                .map(|m| m.iter().map(|(k, v)| (k.parse::<f64>().expect("legacy version"), variant(v))).collect())
+                .unwrap_or_default(),
+            newer: n["newer"]
+                .as_object()
+                .map(|m| m.iter().map(|(k, v)| (k.parse::<f64>().expect("newer version"), variant(v))).collect())
+                .unwrap_or_default(),
         })
         .collect();
+
+    let mut types = types;
+    iso_overrides(&mut types);
 
     let by_name = types.iter().enumerate().map(|(i, t)| (t.name.clone(), i)).collect();
 
@@ -144,6 +191,7 @@ fn load() -> NodeTable {
         .as_array()
         .unwrap()
         .iter()
+        .chain(annotation["components"].as_array().unwrap().iter())
         .map(|c| ComponentDef {
             name: c["name"].as_str().unwrap().to_string(),
             level: c["level"].as_i64().unwrap() as i32,
@@ -176,6 +224,25 @@ fn load() -> NodeTable {
         components,
         profiles,
         vrml2_available: json["vrml2Available"].as_array().unwrap().iter().map(|s| s.as_str().unwrap().to_string()).collect(),
+    }
+}
+
+/// Field defaults where ISO/IEC 19775-1 and X_ITE 16.5.0 differ and the owner chose ISO (REA
+/// batch 04, 2026-10-17): NurbsSet bboxDisplay is TRUE in ISO 27.4.8, FALSE in X_ITE.
+fn iso_overrides(types: &mut [NodeType]) {
+    const OVERRIDES: &[(&str, &str, bool)] = &[("NurbsSet", "bboxDisplay", true)];
+
+    for (type_name, field, value) in OVERRIDES {
+        for t in types.iter_mut().filter(|t| t.name == *type_name) {
+            let variants = std::iter::once(&mut t.vrml2).chain(std::iter::once(&mut t.x3d)).chain(t.legacy.iter_mut().map(|(_, v)| v)).chain(t.newer.iter_mut().map(|(_, v)| v));
+
+            for v in variants {
+                for f in v.fields.iter_mut().filter(|f| f.name == *field) {
+                    f.default = FieldValue::SFBool(*value);
+                    f.initial = FieldValue::SFBool(*value);
+                }
+            }
+        }
     }
 }
 

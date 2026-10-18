@@ -1,0 +1,10 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+DEF TT Transform { translation -1 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.9 0.9 transparency 0.3 } } geometry Sphere { radius 0.8 } } }
+DEF M Transform { translation -6 -2 0 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 0 } } geometry DEF L PointSet { coord Coordinate { point [ -0.3 0 0, 0.3 0 0.1 ] } } }
+  DEF IN PointPickSensor { intersectionType "GEOMETRY" pickingGeometry USE L pickTarget USE TT }
+] }
+EXPORT IN
+EXPORT M

@@ -1,0 +1,14 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { bodies [ DEF F RigidBody { fixed TRUE geometry DEF F_C CollidableShape { shape Shape { geometry Box { size 20 1 20 } } } }
+  DEF A RigidBody { mass 1 position -1 3 0 geometry DEF A_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } }
+  DEF B RigidBody { mass 1 position 1 3 0 geometry DEF B_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } }
+  DEF D RigidBody { mass 1 position 3 3 0 geometry DEF D_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF SP CollisionSpace { useGeometry TRUE collidables [ USE A_C USE B_C ] }
+DEF SP2 CollisionSpace { collidables [ USE F_C USE D_C ] }
+DEF CC CollisionCollection { collidables [ USE SP USE SP2 ] }
+DEF S CollisionSensor { collider USE CC }
+DEF CC2 CollisionCollection { collidables [ USE SP USE B_C ] }
+DEF S2 CollisionSensor { collider USE CC2 }

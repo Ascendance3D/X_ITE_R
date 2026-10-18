@@ -1,0 +1,39 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+Viewpoint { position 0 0 9 description "zero" }
+Background { skyColor 0.15 0.2 0.25 }
+Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.2 } } geometry Box { size 2 2 2 } } }
+Transform { translation 1.5 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.3 } } geometry Sphere { radius 1.2 } } }
+DEF LS LayerSet { activeLayer 1 order [ 0 1 ] layers [
+  Layer { viewport Viewport { clipBoundary [ 0.4 1 0.3 1 ] } children [
+    Viewpoint { position 0 0 6 description "one" }
+    DEF VP1B Viewpoint { position 3 2 5 orientation 0 1 0 0.5 description "one-b" }
+    NavigationInfo { type [ "EXAMINE" "ANY" ] transitionType "LINEAR" transitionTime 0.5 }
+    Background { skyColor 0.35 0.2 0.4 }
+    Shape { appearance Appearance { material Material { diffuseColor 0.2 0.4 0.9 } } geometry Box { size 2 1 1.5 } }
+    Transform { translation 1.2 0.8 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 0.3 } } geometry Sphere { radius 0.4 } } }
+  ] }
+] }
+DEF K KeySensor { }
+DEF S Script {
+  directOutput TRUE
+  inputOnly SFString key
+  inputOutput SFInt32 keys 0
+  initializeOnly SFNode ls USE LS
+  initializeOnly SFNode b USE VP1B
+  url "javascript:
+function key (value)
+{
+   keys = keys + 1;
+   if (value == 'a') { ls .activeLayer = 0; }
+   if (value == 'b') { ls .activeLayer = 1; b .set_bind = true; }
+}
+"
+}
+ROUTE K.keyPress TO S.key
+

@@ -1,0 +1,26 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 8 description "zero" }
+Background { skyColor [ 0.15 0.2 0.35, 0.5 0.55 0.6 ] skyAngle 1.5 groundColor [ 0.25 0.2 0.15, 0.4 0.35 0.3 ] groundAngle 1.5 }
+Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.2 } } geometry Box { size 2 2 2 } } }
+Transform { translation 1.5 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.3 } } geometry Sphere { radius 1.2 } } }
+Transform { translation 0 -2 -1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.8 0.2 } } geometry Cone { } } }
+LayerSet { activeLayer 0 order [ 0 1 2 3 4 ] layers [
+LayoutLayer { layout Layout { align [ "LEFT" "TOP" ] offsetUnits [ "PIXEL" "PIXEL" ] offset [ 10 -10 ] sizeUnits [ "PIXEL" "PIXEL" ] size [ 120 80 ] scaleMode [ "PIXEL" "PIXEL" ] } children [
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { emissiveColor 1 0.3 0.3 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -60.0 -40.0 0, 60.0 -40.0 0, 60.0 40.0 0, -60.0 40.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+Transform { translation 0 0 0.1 children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -20.0 -20.0 0, 20.0 -20.0 0, 20.0 20.0 0, -20.0 20.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+] }
+LayoutLayer { layout Layout { align [ "RIGHT" "BOTTOM" ] offsetUnits [ "FRACTION" "FRACTION" ] offset [ -0.05 0.05 ] sizeUnits [ "FRACTION" "FRACTION" ] size [ 0.3 0.2 ] scaleMode [ "FRACTION" "FRACTION" ] } children [
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { emissiveColor 0.3 1 0.3 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+] }
+LayoutLayer { layout Layout { align [ "CENTER" "CENTER" ] offsetUnits [ "WORLD" "WORLD" ] offset [ 0 0 ] sizeUnits [ "FRACTION" "FRACTION" ] size [ 0.5 0.25 ] scaleMode [ "STRETCH" "STRETCH" ] } children [
+Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { emissiveColor 0.3 0.3 1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+] }
+LayoutLayer { layout Layout { align [ "RIGHT" "TOP" ] offsetUnits [ "PIXEL" "PIXEL" ] offset [ 0 0 ] sizeUnits [ "PIXEL" "PIXEL" ] size [ 101 61 ] scaleMode [ "PIXEL" "STRETCH" ] } children [
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { emissiveColor 1 1 0.2 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -50.5 -30.5 0, 50.5 -30.5 0, 50.5 30.5 0, -50.5 30.5 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+] }
+] }

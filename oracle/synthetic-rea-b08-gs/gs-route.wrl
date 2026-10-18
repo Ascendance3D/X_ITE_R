@@ -1,0 +1,44 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT Layering:2
+COMPONENT Navigation:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Interpolation:1
+COMPONENT X_ITE:1
+COMPONENT GaussianSplats:1
+Viewpoint { position 0 0 7 }
+Background { skyColor 0.2 0.2 0.28 }
+DEF S1 GaussianSplats {
+  positions [ -1.5 0.8 0, 0 0.8 0, 1.5 0.8 0 ]
+  orientations [ 0 0 0 1, 0 0 0 1, 0 0 0 1 ]
+  scales [ 0.3 0.15 0.1, 0.3 0.15 0.1, 0.3 0.15 0.1 ]
+  opacities [ 0.9 0.9 0.9 ]
+  sphericalHarmonicsDegree0Coef0 [ 1 0.2 0, 0 1 0.2, 0.2 0 1 ]
+}
+DEF T TimeSensor { cycleInterval 2 loop TRUE }
+DEF CI CoordinateInterpolator {
+  key [ 0 1 ]
+  keyValue [ -1.5 0.8 0, 0 0.8 0, 1.5 0.8 0,  -1.5 -0.8 0, 0 -0.2 0, 1.5 -0.8 0 ]
+}
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  outputOnly MFFloat opacity_out
+  outputOnly MFVec3f sh_out
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') opacity_out = new MFFloat (0.9, 0.4, 0.9);
+   if (k == 'b') sh_out = new MFVec3f (new SFVec3f (0, 1, 1), new SFVec3f (1, 0, 1), new SFVec3f (1, 1, 0));
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE R.opacity_out TO S1.set_opacities
+ROUTE R.sh_out TO S1.set_sphericalHarmonicsDegree0Coef0
+ROUTE T.fraction_changed TO CI.set_fraction
+ROUTE CI.value_changed TO S1.set_positions

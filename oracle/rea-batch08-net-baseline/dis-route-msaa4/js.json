@@ -1,0 +1,232 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "84": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "119": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu {\n  bboxDisplay TRUE\n  bboxSize 2 2 2\n  address \"127.0.0.1\"\n  networkMode \"networkReader\"\n  port 41234\n}\n\nDEF SG SignalPdu {\n  bboxDisplay TRUE\n  bboxSize 1 1 1\n  bboxCenter 2 0 0\n  address \"127.0.0.1\"\n  networkMode \"networkWriter\"\n  port 41236\n}\n\nDEF EM DISEntityManager {\n  address \"127.0.0.1\"\n  port 41234\n}\n\nDEF K KeySensor { }\n\nDEF T BooleanToggle { }\n\nDEF R Script {\n  inputOnly   SFString on_key\n  inputOnly   SFBool   seen\n  inputOnly   SFTime   seen_time\n  inputOnly   SFInt32  seen_int\n  inputOnly   MFNode   seen_nodes\n  outputOnly  SFBool   t_set\n  inputOutput SFString log \"\"\n\n  url \"javascript:\nfunction on_key (k) { log = log + 'K' + k + ' '; t_set = true; }\nfunction seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }\nfunction seen_time (v, t) { log = log + 'time:' + v + ' '; }\nfunction seen_int (v, t) { log = log + 'int:' + v + ' '; }\nfunction seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE R.t_set TO T.set_boolean\nROUTE T.toggle_changed TO RX.set_bboxDisplay\nROUTE T.toggle_changed TO SG.set_enabled\nROUTE T.toggle_changed TO RX.set_visible\nROUTE RX.isActive TO R.seen\nROUTE RX.isNetworkReader TO R.seen\nROUTE RX.isNetworkWriter TO R.seen\nROUTE RX.isStandAlone TO R.seen\nROUTE RX.isRtpHeaderHeard TO R.seen\nROUTE RX.timestamp TO R.seen_time\nROUTE SG.isActive TO R.seen\nROUTE SG.isNetworkWriter TO R.seen\nROUTE SG.timestamp TO R.seen_time\nROUTE EM.addedEntities TO R.seen_nodes\nROUTE EM.removedEntities TO R.seen_nodes\nROUTE RX.enabled_changed TO R.seen\nROUTE RX.visible_changed TO R.seen\nROUTE SG.enabled_changed TO R.seen\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu {\n  bboxDisplay TRUE\n  bboxSize 2 2 2\n  address \"127.0.0.1\"\n  networkMode \"networkReader\"\n  port 41234\n}\n\nDEF SG SignalPdu {\n  bboxDisplay TRUE\n  bboxSize 1 1 1\n  bboxCenter 2 0 0\n  address \"127.0.0.1\"\n  networkMode \"networkWriter\"\n  port 41236\n}\n\nDEF EM DISEntityManager {\n  address \"127.0.0.1\"\n  port 41234\n}\n\nDEF K KeySensor { }\n\nDEF T BooleanToggle {\n  toggle TRUE\n}\n\nDEF R Script {\n  inputOnly   SFString on_key\n  inputOnly   SFBool   seen\n  inputOnly   SFTime   seen_time\n  inputOnly   SFInt32  seen_int\n  inputOnly   MFNode   seen_nodes\n  outputOnly  SFBool   t_set\n  inputOutput SFString log \"Ka seen:true@946684800.6333333 seen:true@946684800.6333333 \"\n\n  url \"javascript:\nfunction on_key (k) { log = log + 'K' + k + ' '; t_set = true; }\nfunction seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }\nfunction seen_time (v, t) { log = log + 'time:' + v + ' '; }\nfunction seen_int (v, t) { log = log + 'int:' + v + ' '; }\nfunction seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE R.t_set TO T.set_boolean\nROUTE T.toggle_changed TO RX.set_bboxDisplay\nROUTE T.toggle_changed TO SG.set_enabled\nROUTE T.toggle_changed TO RX.set_visible\nROUTE RX.isActive TO R.seen\nROUTE RX.isNetworkReader TO R.seen\nROUTE RX.isNetworkWriter TO R.seen\nROUTE RX.isStandAlone TO R.seen\nROUTE RX.isRtpHeaderHeard TO R.seen\nROUTE RX.timestamp TO R.seen_time\nROUTE SG.isActive TO R.seen\nROUTE SG.isNetworkWriter TO R.seen\nROUTE SG.timestamp TO R.seen_time\nROUTE EM.addedEntities TO R.seen_nodes\nROUTE EM.removedEntities TO R.seen_nodes\nROUTE RX.enabled_changed TO R.seen\nROUTE RX.visible_changed TO R.seen\nROUTE SG.enabled_changed TO R.seen\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu {\n  visible FALSE\n  bboxSize 2 2 2\n  address \"127.0.0.1\"\n  networkMode \"networkReader\"\n  port 41234\n}\n\nDEF SG SignalPdu {\n  bboxDisplay TRUE\n  bboxSize 1 1 1\n  bboxCenter 2 0 0\n  enabled FALSE\n  address \"127.0.0.1\"\n  networkMode \"networkWriter\"\n  port 41236\n}\n\nDEF EM DISEntityManager {\n  address \"127.0.0.1\"\n  port 41234\n}\n\nDEF K KeySensor { }\n\nDEF T BooleanToggle { }\n\nDEF R Script {\n  inputOnly   SFString on_key\n  inputOnly   SFBool   seen\n  inputOnly   SFTime   seen_time\n  inputOnly   SFInt32  seen_int\n  inputOnly   MFNode   seen_nodes\n  outputOnly  SFBool   t_set\n  inputOutput SFString log \"Ka seen:true@946684800.6333333 seen:true@946684800.6333333 Ka seen:false@946684801.3 seen:false@946684801.3 \"\n\n  url \"javascript:\nfunction on_key (k) { log = log + 'K' + k + ' '; t_set = true; }\nfunction seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }\nfunction seen_time (v, t) { log = log + 'time:' + v + ' '; }\nfunction seen_int (v, t) { log = log + 'int:' + v + ' '; }\nfunction seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE R.t_set TO T.set_boolean\nROUTE T.toggle_changed TO RX.set_bboxDisplay\nROUTE T.toggle_changed TO SG.set_enabled\nROUTE T.toggle_changed TO RX.set_visible\nROUTE RX.isActive TO R.seen\nROUTE RX.isNetworkReader TO R.seen\nROUTE RX.isNetworkWriter TO R.seen\nROUTE RX.isStandAlone TO R.seen\nROUTE RX.isRtpHeaderHeard TO R.seen\nROUTE RX.timestamp TO R.seen_time\nROUTE SG.isActive TO R.seen\nROUTE SG.isNetworkWriter TO R.seen\nROUTE SG.timestamp TO R.seen_time\nROUTE EM.addedEntities TO R.seen_nodes\nROUTE EM.removedEntities TO R.seen_nodes\nROUTE RX.enabled_changed TO R.seen\nROUTE RX.visible_changed TO R.seen\nROUTE SG.enabled_changed TO R.seen\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu {\n  bboxDisplay TRUE\n  bboxSize 2 2 2\n  address \"127.0.0.1\"\n  networkMode \"networkReader\"\n  port 41234\n}\n\nDEF SG SignalPdu {\n  bboxDisplay TRUE\n  bboxSize 1 1 1\n  bboxCenter 2 0 0\n  address \"127.0.0.1\"\n  networkMode \"networkWriter\"\n  port 41236\n}\n\nDEF EM DISEntityManager {\n  address \"127.0.0.1\"\n  port 41234\n}\n\nDEF K KeySensor { }\n\nDEF T BooleanToggle {\n  toggle TRUE\n}\n\nDEF R Script {\n  inputOnly   SFString on_key\n  inputOnly   SFBool   seen\n  inputOnly   SFTime   seen_time\n  inputOnly   SFInt32  seen_int\n  inputOnly   MFNode   seen_nodes\n  outputOnly  SFBool   t_set\n  inputOutput SFString log \"Ka seen:true@946684800.6333333 seen:true@946684800.6333333 Ka seen:false@946684801.3 seen:false@946684801.3 Ka seen:true@946684801.9666667 seen:true@946684801.9666667 \"\n\n  url \"javascript:\nfunction on_key (k) { log = log + 'K' + k + ' '; t_set = true; }\nfunction seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }\nfunction seen_time (v, t) { log = log + 'time:' + v + ' '; }\nfunction seen_int (v, t) { log = log + 'int:' + v + ' '; }\nfunction seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE R.t_set TO T.set_boolean\nROUTE T.toggle_changed TO RX.set_bboxDisplay\nROUTE T.toggle_changed TO SG.set_enabled\nROUTE T.toggle_changed TO RX.set_visible\nROUTE RX.isActive TO R.seen\nROUTE RX.isNetworkReader TO R.seen\nROUTE RX.isNetworkWriter TO R.seen\nROUTE RX.isStandAlone TO R.seen\nROUTE RX.isRtpHeaderHeard TO R.seen\nROUTE RX.timestamp TO R.seen_time\nROUTE SG.isActive TO R.seen\nROUTE SG.isNetworkWriter TO R.seen\nROUTE SG.timestamp TO R.seen_time\nROUTE EM.addedEntities TO R.seen_nodes\nROUTE EM.removedEntities TO R.seen_nodes\nROUTE RX.enabled_changed TO R.seen\nROUTE RX.visible_changed TO R.seen\nROUTE SG.enabled_changed TO R.seen\n",
+    "84": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu {\n  visible FALSE\n  bboxSize 2 2 2\n  address \"127.0.0.1\"\n  networkMode \"networkReader\"\n  port 41234\n}\n\nDEF SG SignalPdu {\n  bboxDisplay TRUE\n  bboxSize 1 1 1\n  bboxCenter 2 0 0\n  enabled FALSE\n  address \"127.0.0.1\"\n  networkMode \"networkWriter\"\n  port 41236\n}\n\nDEF EM DISEntityManager {\n  address \"127.0.0.1\"\n  port 41234\n}\n\nDEF K KeySensor { }\n\nDEF T BooleanToggle { }\n\nDEF R Script {\n  inputOnly   SFString on_key\n  inputOnly   SFBool   seen\n  inputOnly   SFTime   seen_time\n  inputOnly   SFInt32  seen_int\n  inputOnly   MFNode   seen_nodes\n  outputOnly  SFBool   t_set\n  inputOutput SFString log \"Ka seen:true@946684800.6333333 seen:true@946684800.6333333 Ka seen:false@946684801.3 seen:false@946684801.3 Ka seen:true@946684801.9666667 seen:true@946684801.9666667 Ka seen:false@946684802.6333333 seen:false@946684802.6333333 \"\n\n  url \"javascript:\nfunction on_key (k) { log = log + 'K' + k + ' '; t_set = true; }\nfunction seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }\nfunction seen_time (v, t) { log = log + 'time:' + v + ' '; }\nfunction seen_int (v, t) { log = log + 'int:' + v + ' '; }\nfunction seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE R.t_set TO T.set_boolean\nROUTE T.toggle_changed TO RX.set_bboxDisplay\nROUTE T.toggle_changed TO SG.set_enabled\nROUTE T.toggle_changed TO RX.set_visible\nROUTE RX.isActive TO R.seen\nROUTE RX.isNetworkReader TO R.seen\nROUTE RX.isNetworkWriter TO R.seen\nROUTE RX.isStandAlone TO R.seen\nROUTE RX.isRtpHeaderHeard TO R.seen\nROUTE RX.timestamp TO R.seen_time\nROUTE SG.isActive TO R.seen\nROUTE SG.isNetworkWriter TO R.seen\nROUTE SG.timestamp TO R.seen_time\nROUTE EM.addedEntities TO R.seen_nodes\nROUTE EM.removedEntities TO R.seen_nodes\nROUTE RX.enabled_changed TO R.seen\nROUTE RX.visible_changed TO R.seen\nROUTE SG.enabled_changed TO R.seen\n",
+    "119": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu {\n  visible FALSE\n  bboxSize 2 2 2\n  address \"127.0.0.1\"\n  networkMode \"networkReader\"\n  port 41234\n}\n\nDEF SG SignalPdu {\n  bboxDisplay TRUE\n  bboxSize 1 1 1\n  bboxCenter 2 0 0\n  enabled FALSE\n  address \"127.0.0.1\"\n  networkMode \"networkWriter\"\n  port 41236\n}\n\nDEF EM DISEntityManager {\n  address \"127.0.0.1\"\n  port 41234\n}\n\nDEF K KeySensor { }\n\nDEF T BooleanToggle { }\n\nDEF R Script {\n  inputOnly   SFString on_key\n  inputOnly   SFBool   seen\n  inputOnly   SFTime   seen_time\n  inputOnly   SFInt32  seen_int\n  inputOnly   MFNode   seen_nodes\n  outputOnly  SFBool   t_set\n  inputOutput SFString log \"Ka seen:true@946684800.6333333 seen:true@946684800.6333333 Ka seen:false@946684801.3 seen:false@946684801.3 Ka seen:true@946684801.9666667 seen:true@946684801.9666667 Ka seen:false@946684802.6333333 seen:false@946684802.6333333 \"\n\n  url \"javascript:\nfunction on_key (k) { log = log + 'K' + k + ' '; t_set = true; }\nfunction seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }\nfunction seen_time (v, t) { log = log + 'time:' + v + ' '; }\nfunction seen_int (v, t) { log = log + 'int:' + v + ' '; }\nfunction seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE R.t_set TO T.set_boolean\nROUTE T.toggle_changed TO RX.set_bboxDisplay\nROUTE T.toggle_changed TO SG.set_enabled\nROUTE T.toggle_changed TO RX.set_visible\nROUTE RX.isActive TO R.seen\nROUTE RX.isNetworkReader TO R.seen\nROUTE RX.isNetworkWriter TO R.seen\nROUTE RX.isStandAlone TO R.seen\nROUTE RX.isRtpHeaderHeard TO R.seen\nROUTE RX.timestamp TO R.seen_time\nROUTE SG.isActive TO R.seen\nROUTE SG.isNetworkWriter TO R.seen\nROUTE SG.timestamp TO R.seen_time\nROUTE EM.addedEntities TO R.seen_nodes\nROUTE EM.removedEntities TO R.seen_nodes\nROUTE RX.enabled_changed TO R.seen\nROUTE RX.visible_changed TO R.seen\nROUTE SG.enabled_changed TO R.seen\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Networking : 4\nCOMPONENT DIS : 2\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT EventUtilities : 1\nCOMPONENT Text : 2\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 8\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nDirectionalLight {\n  intensity 0.9\n  direction -0.4 -0.6 -0.7\n}\n\nDEF RX ReceiverPdu {\n  visible FALSE\n  bboxSize 2 2 2\n  address \"127.0.0.1\"\n  networkMode \"networkReader\"\n  port 41234\n}\n\nDEF SG SignalPdu {\n  bboxDisplay TRUE\n  bboxSize 1 1 1\n  bboxCenter 2 0 0\n  enabled FALSE\n  address \"127.0.0.1\"\n  networkMode \"networkWriter\"\n  port 41236\n}\n\nDEF EM DISEntityManager {\n  address \"127.0.0.1\"\n  port 41234\n}\n\nDEF K KeySensor { }\n\nDEF T BooleanToggle { }\n\nDEF R Script {\n  inputOnly   SFString on_key\n  inputOnly   SFBool   seen\n  inputOnly   SFTime   seen_time\n  inputOnly   SFInt32  seen_int\n  inputOnly   MFNode   seen_nodes\n  outputOnly  SFBool   t_set\n  inputOutput SFString log \"Ka seen:true@946684800.6333333 seen:true@946684800.6333333 Ka seen:false@946684801.3 seen:false@946684801.3 Ka seen:true@946684801.9666667 seen:true@946684801.9666667 Ka seen:false@946684802.6333333 seen:false@946684802.6333333 \"\n\n  url \"javascript:\nfunction on_key (k) { log = log + 'K' + k + ' '; t_set = true; }\nfunction seen (v, t) { log = log + 'seen:' + v + '@' + t + ' '; }\nfunction seen_time (v, t) { log = log + 'time:' + v + ' '; }\nfunction seen_int (v, t) { log = log + 'int:' + v + ' '; }\nfunction seen_nodes (v, t) { log = log + 'nodes:' + v .length + ' '; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE R.t_set TO T.set_boolean\nROUTE T.toggle_changed TO RX.set_bboxDisplay\nROUTE T.toggle_changed TO SG.set_enabled\nROUTE T.toggle_changed TO RX.set_visible\nROUTE RX.isActive TO R.seen\nROUTE RX.isNetworkReader TO R.seen\nROUTE RX.isNetworkWriter TO R.seen\nROUTE RX.isStandAlone TO R.seen\nROUTE RX.isRtpHeaderHeard TO R.seen\nROUTE RX.timestamp TO R.seen_time\nROUTE SG.isActive TO R.seen\nROUTE SG.isNetworkWriter TO R.seen\nROUTE SG.timestamp TO R.seen_time\nROUTE EM.addedEntities TO R.seen_nodes\nROUTE EM.removedEntities TO R.seen_nodes\nROUTE RX.enabled_changed TO R.seen\nROUTE RX.visible_changed TO R.seen\nROUTE SG.enabled_changed TO R.seen\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+{"dt": 0.006944444444444444, "t0": 946684800, "frames": 216, "warmup": 8, "seed": 903295084, "node": "PS", "dumpAll": true, "events": [{"frame": 60, "node": "GRP", "field": "children", "value": {"nodes": []}}, {"frame": 120, "node": "GRP", "field": "children", "value": {"nodes": ["PS"]}}]}

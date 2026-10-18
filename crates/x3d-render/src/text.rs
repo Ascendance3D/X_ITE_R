@@ -1,7 +1,7 @@
 //! Text geometry: Components/Text/Text.js (`set_fontStyle__`, `build`) over the x3d-text port of
 //! Browser/Text/{X3DTextGeometry,PolygonText}.js, and the font selection of
 //! Components/Text/X3DFontStyleNode.js `loadData` (default families, font files named by
-//! `family`; FontLibrary is not ported).
+//! `family`, FontLibrary registrations of the FontStyle's execution context).
 
 use crate::geometry::Geometry;
 use crate::sg::Sg;
@@ -27,6 +27,11 @@ pub fn resolve_font(sg: &Sg, font_style: Option<NodeId>) -> Option<Rc<Font>> {
         None => (vec!["SERIF".to_string()], "PLAIN".to_string()),
     };
 
+    // X3DFontStyleNode.font: the font the last loadData took from a FontLibrary (see x3d-runtime `font_library.rs`).
+    if let Some(font) = font_style.and_then(|fs| sg.rt.font_style_library_font(fs)) {
+        return Some(font);
+    }
+
     family.push("SERIF".into());
 
     let base = url::Url::parse(&sg.rt.base_url(font_style.unwrap_or(0))).ok();
@@ -35,6 +40,7 @@ pub fn resolve_font(sg: &Sg, font_style: Option<NodeId>) -> Option<Rc<Font>> {
         if x3d_text::fonts::default_font_file(f, &style).is_some() {
             return x3d_text::fonts::load_default_font(f, &style);
         }
+
 
         // DEPRECATED: Try to get font by URL.
         let Some(file_url) = base.as_ref().and_then(|b| b.join(f).ok()) else {
@@ -92,7 +98,14 @@ pub fn text_geometry(sg: &Sg, n: NodeId, unsupported: &mut std::collections::BTr
     let length: Vec<f64> = sg.f32s(n, "length").iter().map(|v| *v as f64).collect();
     let text = TextParams::from_strings(&sg.strings(n, "string"), &length, sg.f64(n, "maxExtent", 0.0));
     let fs = font_style_params(sg, font_style);
-    let layout = x3d_text::layout(font.as_deref(), &text, &fs, PrimitiveQuality::Medium, TextCompression::CharSpacing);
+    // The PrimitiveQuality (PolygonText bezier steps) and TextCompression options.
+    let quality = match crate::traverse::primitive_quality() {
+        crate::traverse::Quality::Low => PrimitiveQuality::Low,
+        crate::traverse::Quality::Medium => PrimitiveQuality::Medium,
+        crate::traverse::Quality::High => PrimitiveQuality::High,
+    };
+    let compression = if crate::traverse::text_compression_scaling() { TextCompression::Scaling } else { TextCompression::CharSpacing };
+    let layout = x3d_text::layout(font.as_deref(), &text, &fs, quality, compression);
     let f32s = |v: &[f64]| v.iter().map(|x| *x as f32).collect::<Vec<f32>>();
     let has_vertices = !layout.vertices.is_empty();
 
@@ -106,5 +119,6 @@ pub fn text_geometry(sg: &Sg, n: NodeId, unsupported: &mut std::collections::BTr
         ccw: true,
         min: if has_vertices { Vector3::new(layout.min[0], layout.min[1], layout.min[2]) } else { Vector3::ZERO },
         max: if has_vertices { Vector3::new(layout.max[0], layout.max[1], layout.max[2]) } else { Vector3::ZERO },
+        ..Default::default()
     })
 }

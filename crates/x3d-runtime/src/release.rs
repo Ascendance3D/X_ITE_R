@@ -20,12 +20,74 @@
 //! processed stays until that event is delivered (the events a disposed Script's `shutdown ()` sent are
 //! processed with the next frame, like any other event, and the sweep does not move them).
 //!
-//! What this does not release: execution contexts, PROTO and EXTERNPROTO declarations and the IMPORT
-//! and EXPORT tables are append-only tables with their own ids. A disposed context is emptied (its
-//! node, route and name tables are cleared) but its slot stays; the same goes for the ids in
-//! `disposed_scenes` and `dead_ctxs`. This is a few hundred bytes per scene, reported as an open limit.
-//! The entries such a context leaves in the scene-wide tables are ignored from then on
-//! (`emptied_ctxs`): an EXPORT's local node or an IMPORT's Inline names a slot that may be reused.
+//! A disposed context is emptied once none of its nodes stays (its node, route and name tables are
+//! cleared). The entries it leaves in the scene-wide tables are ignored from then on (`emptied_ctxs`):
+//! an EXPORT's local node or an IMPORT's Inline names a node slot that may be reused.
+//!
+//! # Runtime-created nodes (REA batch 06R repair)
+//!
+//! Nodes a Script creates (`createNode`, `createVrmlFromString`, `new SFNode (…)`) are in no disposed
+//! scene: a ParticleSystem removed from a live Group's `children` was never a candidate, kept animating
+//! (`animateParticles` interest, live watcher, buffers) and its seven nodes, 54 field records and
+//! ~32 KiB were never given back. X_ITE holds interests as `WeakRef`s (`X3DObject.js:53,69,85`,
+//! `X3DBaseNode.js:187-199`, `ParticleSystem.js:260-281`), so an unreachable node is collected and stops.
+//!
+//! The runtime lists them in `dynamic_nodes` (and the context of a `createVrmlFromString` scene in
+//! `dynamic_ctxs`) and makes them *candidates* of the same sweep, with the same keep rules, when:
+//!
+//! * a node-valued field was written, a ROUTE deleted, a Script callback ran, or 30 frames passed
+//!   (JavaScript garbage raises no event) since the last look; and
+//! * no Script holds the node. The host answers [`ScriptHost::held_nodes`] after a garbage collection: live
+//!   `SFNode` wrappers (the prelude's caches are `WeakRef`s, like X_ITE's `SFNodeCache`), the nodes in
+//!   `MFNode` / `SFNode` values that live JavaScript objects hold, and the node of a live field object.
+//!   A host that cannot answer (`None`) holds every runtime-created node, which is the old behavior.
+//!
+//! A runtime-created node stays when a live field (a Group's `children`, a Script field, a PROTO field), a
+//! name, a ROUTE of a live context (both ends, as an X_ITE `Route` is held by both fields), a pending event,
+//! a Script, or a node that stays refers to it. A `createVrmlFromString` scene is one unit (an X_ITE node
+//! holds its scene): while one of its nodes stays all of its nodes do, and its routes keep their ends; it
+//! is not a root itself. When its last node goes, its context is emptied and its slot released.
+//!
+//! Not candidates (they stay as before): Script, Inline, Anchor, PROTO and EXTERNPROTO instances, bindable
+//! nodes (Viewpoint kinds, NavigationInfo, Background, Fog, ...), layers; and a `createVrmlFromString`
+//! scene that has PROTO, EXTERNPROTO, IMPORT or EXPORT or one of those nodes. The host's tables are told
+//! with [`Runtime::take_released`], and a freed id is handed out again like any released one; no Script
+//! wrapper or value can name it (they were the reason the node was held).
+//!
+//! # R0.3-E: table slots
+//!
+//! Execution contexts, PROTO and EXTERNPROTO declarations and IMPORT and EXPORT records are tables
+//! with position ids, like the node arena. After the sweep empties contexts, [`Runtime::reclaim_tables`]
+//! releases the slots of emptied contexts and of the records they own, so that the next scene
+//! (`Scene::merge`, a released run of its size) or body (`Scene::new_context`) takes them again.
+//!
+//! Who holds each id, and the rule that makes reuse safe (a stale id must never reach a new object):
+//!
+//! | id | created by | held by | released when |
+//! | --- | --- | --- | --- |
+//! | `CtxId` | `merge` (a run), `new_context` (PROTO body, instance body) | `ExecutionContext.parent`, `Outer::Proto`'s declaration, `Node.ctx`, record `ctx` / `body`, `inline_scenes`, `instance_bodies`, `pending_scenes`, `frame_waiters`, `pending_externs`, `extern_frame_waiters`, `ExternState.scene`, `extern_cache` (`Ready`), `release_ctxs`, `dead_ctxs`, `disposed_scenes`, `emptied_ctxs`, `scene_infos`, `inline_live` | emptied, and none of the holders names it |
+//! | `ProtoId` | `merge` (a run), `new_proto` (parser) | a context's `protos` (also copied into instance bodies of other scenes), `Outer::Proto`, `NodeKind::Instance`, `FieldRef.proto` of fields, `extern_loaded`, `Holder::ProtoField` (rebuilt) | owner context emptied and none of the holders names it |
+//! | `ExternId` | `merge` (a run), `new_extern_proto` (parser) | a context's `externprotos` (also in bodies), `NodeKind::Instance`, `extern_states`, `extern_loaded`, `extern_load_events`, `Task::ExternLoad` (tasks, fetches), `pending_externs`, `extern_frame_waiters`, `CacheEntry::Pending` waiters, `Holder::ExternField` (rebuilt) | owner context emptied and none of the holders names it |
+//! | `ImportedId` | `merge` (a run), `add_imported_node` | a context's `imported`, `NodeKind::Imported` of its instance node | owner context emptied and none of the holders names it |
+//! | `ExportedId` | `merge` (a run), `update_exported_node` | a context's `exported` | owner context emptied and none of the holders names it |
+//!
+//! None of these ids crosses into JavaScript (the Script host addresses nodes, and contexts through
+//! the Script node) or into the viewer (which rebuilds what it needs every frame).
+//!
+//! Two methods together keep a stale id away from a new object:
+//!
+//! * **Every holder is cleared before the slot is released.** `reclaim_tables` collects every id
+//!   that a live node, a context, a live record or a runtime table names, and releases only what is
+//!   in none of them. A context also stays while a record it owns stays (`ProtoDecl.ctx` is the parent
+//!   of new instance bodies). What stays is looked at again at the next sweep.
+//! * **Generations for the holders that outlive a load.** Each slot has a generation, bumped on
+//!   release. The scene cache stores `(ctx, generation)` and a lookup that finds another generation
+//!   evicts the entry. EXTERNPROTO request identities are runtime-wide, so a late fetch for a released
+//!   declaration can never match the request of the declaration that takes the slot.
+//!
+//! When a context slot is released it leaves `emptied_ctxs`, `dead_ctxs` and `disposed_scenes`, so these
+//! sets are bounded by the scenes that are disposed and still held. A released declaration loses its
+//! `extern_states` and `extern_loaded` entries.
 
 use crate::*;
 use std::collections::{HashMap, HashSet};
@@ -88,11 +150,22 @@ impl Runtime {
 
         self.release_queue.extend(loose);
 
-        if self.release_queue.is_empty() {
+        // Runtime-created nodes that no Script holds are candidates too (see the module header).
+        let dynamic = self.dynamic_candidates();
+
+        if self.release_queue.is_empty() && dynamic.is_empty() {
+            // Emptied contexts that something held at an earlier sweep may be free now.
+            self.reclaim_tables();
             return stats;
         }
 
-        let mut candidates: HashSet<NodeId> = std::mem::take(&mut self.release_queue).into_iter().filter(|&n| self.scene.is_live(n)).collect();
+        let queued: HashSet<NodeId> = std::mem::take(&mut self.release_queue).into_iter().filter(|&n| self.scene.is_live(n)).collect();
+        let mut candidates: HashSet<NodeId> = queued.iter().copied().chain(dynamic.iter().copied()).collect();
+
+        // Contexts of `createVrmlFromString` scenes whose nodes are all candidates: they are not roots.
+        let ctx_map = self.dynamic_ctx_map();
+        let transient: Vec<CtxId> = ctx_map.iter().filter(|(_, nodes)| !nodes.is_empty() && nodes.iter().all(|n| dynamic.contains(n))).map(|(c, _)| *c).collect();
+        let transient_set: HashSet<CtxId> = transient.iter().copied().collect();
         let dead_ctxs: HashSet<CtxId> = self.release_ctxs.iter().copied().collect();
 
         // A context holds nothing once it is disposed: while it waits for its nodes (`dead_ctxs`), and
@@ -136,7 +209,7 @@ impl Runtime {
 
         // Live contexts: root nodes, names, routes.
         for (c, ctx) in self.scene.contexts.iter().enumerate() {
-            if gone(c) {
+            if gone(c) || transient_set.contains(&c) {
                 continue;
             }
 
@@ -155,7 +228,10 @@ impl Runtime {
             }
         }
 
-        // Live PROTO and EXTERNPROTO declarations (default values), IMPORT and EXPORT.
+        // Live PROTO and EXTERNPROTO declarations (default values), IMPORT and EXPORT. Released slots
+        // name nothing.
+        let slots = (&self.scene.imported_slots, &self.scene.exported_slots);
+
         for p in self.scene.protos.iter().filter(|p| !gone(p.ctx)) {
             for f in &p.fields {
                 for n in node_refs(&f.value) {
@@ -172,12 +248,12 @@ impl Runtime {
             }
         }
 
-        for i in self.scene.imported.iter().filter(|i| !gone(i.ctx)) {
+        for (_, i) in self.scene.imported.iter().enumerate().filter(|(k, i)| !slots.0.is_free(*k) && !gone(i.ctx)) {
             note(&mut keep, i.inline);
             note(&mut keep, i.instance);
         }
 
-        for e in self.scene.exported.iter().filter(|e| !gone(e.ctx)) {
+        for (_, e) in self.scene.exported.iter().enumerate().filter(|(k, e)| !slots.1.is_free(*k) && !gone(e.ctx)) {
             note(&mut keep, e.local);
         }
 
@@ -190,22 +266,47 @@ impl Runtime {
 
         let mut work: Vec<NodeId> = keep.iter().copied().collect();
 
-        while let Some(n) = work.pop() {
-            let mut next: Vec<NodeId> = all_fields(self.scene.node(n)).flat_map(|f| node_refs(&f.value)).collect();
+        self.close_keep(&candidates, &by_ctx, &mut keep, &mut work);
 
-            if let Some(body) = self.instance_bodies.get(&n) {
-                for (c, list) in &by_ctx {
-                    if self.ctx_within(*c, *body) {
-                        next.extend(list.iter().copied());
+        // A node keeps its scene, and a route keeps both of its ends: for the scenes that
+        // `createVrmlFromString` made (their own roots and routes are not roots) until nothing changes.
+        let transient_nodes: Vec<(CtxId, Vec<NodeId>)> = transient.iter().map(|&c| (c, ctx_map[&c].clone())).collect();
+
+        loop {
+            let mut grew = false;
+
+            for (c, nodes) in &transient_nodes {
+                if nodes.iter().any(|n| keep.contains(n)) {
+                    for &n in nodes {
+                        if keep.insert(n) {
+                            work.push(n);
+                            grew = true;
+                        }
+                    }
+                }
+
+                for r in &self.scene.contexts[*c].routes {
+                    let (a, b) = (r.source_node, r.destination_node);
+                    let a_live = !candidates.contains(&a) || keep.contains(&a);
+                    let b_live = !candidates.contains(&b) || keep.contains(&b);
+
+                    if a_live && !b_live && keep.insert(b) {
+                        work.push(b);
+                        grew = true;
+                    }
+
+                    if b_live && !a_live && keep.insert(a) {
+                        work.push(a);
+                        grew = true;
                     }
                 }
             }
 
-            for m in next {
-                if candidates.contains(&m) && keep.insert(m) {
-                    work.push(m);
-                }
+            if !grew {
+                break;
             }
+
+            self.close_keep(&candidates, &by_ctx, &mut keep, &mut work);
         }
 
         // --- the release --------------------------------------------------------------------------
@@ -213,17 +314,29 @@ impl Runtime {
         let release: HashSet<NodeId> = candidates.iter().copied().filter(|n| !keep.contains(n)).collect();
 
         stats.retained = keep.len();
-        candidates.retain(|n| keep.contains(n));
+        candidates.retain(|n| keep.contains(n) && queued.contains(n));
         self.release_queue = candidates.into_iter().collect();
         self.release_queue.sort_unstable();
 
         // A disposed context is emptied once none of its nodes stays.
         let kept_ctxs: HashSet<CtxId> = self.release_queue.iter().map(|&n| self.scene.node(n).ctx).collect();
-        let empty: Vec<CtxId> = dead_ctxs.iter().copied().filter(|c| !kept_ctxs.contains(c)).collect();
+        let mut empty: Vec<CtxId> = dead_ctxs.iter().copied().filter(|c| !kept_ctxs.contains(c)).collect();
+
+        // A `createVrmlFromString` scene goes with its last node.
+        for (c, nodes) in &transient_nodes {
+            if nodes.iter().all(|n| release.contains(n)) {
+                empty.push(*c);
+                self.dynamic_ctxs.remove(c);
+            }
+        }
 
         self.release_ctxs.retain(|c| kept_ctxs.contains(c));
 
         if release.is_empty() && empty.is_empty() {
+            if self.reclaim_tables() > 0 {
+                self.rebuild_parents();
+            }
+
             return stats;
         }
 
@@ -240,6 +353,7 @@ impl Runtime {
             self.empty_context(c);
         }
 
+        self.reclaim_tables();
         self.rebuild_parents();
 
         let mut ids: Vec<NodeId> = release.into_iter().collect();
@@ -258,6 +372,11 @@ impl Runtime {
             return;
         }
 
+        // RigidBodyPhysics: bodies and constraints out of the worlds that stay, Ammo objects given back.
+        self.physics_release(dead);
+
+        self.dynamic_nodes.retain(|n| !dead.contains(n));
+        self.provider_warned.retain(|n| !dead.contains(n));
         self.frt.retain(|k, _| !dead.contains(&k.0));
 
         for f in self.frt.values_mut() {
@@ -272,6 +391,8 @@ impl Runtime {
 
         self.tainted_fields.retain(|(k, e)| !dead.contains(&k.0) && !dead.contains(&e.origin.0));
         self.tainted_nodes.retain(|n| !dead.contains(n));
+        self.decoded_images.retain(|(n, ..)| !dead.contains(n));
+        self.rendered_now.retain(|n| !dead.contains(n));
 
         let alive = |t: &Task| match t {
             Task::ScriptLoad(n) | Task::ScriptLoaded(n, _) | Task::UrlLoad(n, _) | Task::ScriptFetch(n) => !dead.contains(n),
@@ -285,8 +406,35 @@ impl Runtime {
         self.instance_update.retain(|n| !dead.contains(n));
         self.instance_bodies.retain(|n, _| !dead.contains(n));
         self.inline_scenes.retain(|n, _| !dead.contains(n));
+        self.inline_geometries.retain(|n, _| !dead.contains(n));
+        self.font_library_fonts.retain(|n, _| !dead.contains(n));
+        self.font_style_fonts.retain(|n, _| !dead.contains(n));
+        self.pending_font_styles.retain(|p| !dead.contains(&p.node));
+        self.background_textures.retain(|n, _| !dead.contains(n));
+        for textures in self.background_textures.values_mut() {
+            textures.retain(|(_, t)| !dead.contains(t));
+        }
         self.live_watchers.retain(|(n, _)| !dead.contains(n));
         self.followers.retain(|n| !dead.contains(n));
+        self.key_sensors.retain(|n| !dead.contains(n));
+        self.transform_sensors.retain(|n| !dead.contains(n));
+        self.pick_sensors.retain(|n| !dead.contains(n));
+        self.layer_object_types.retain(|n, _| !dead.contains(n));
+        self.nurbs_scales.retain(|n, _| !dead.contains(n));
+        self.viewpoint_groups.retain(|n, _| !dead.contains(n));
+        self.hanim_humanoids.retain(|n, _| !dead.contains(n));
+        self.hanim_poses.retain(|n, _| !dead.contains(n));
+        self.hanim_motions.retain(|n, _| !dead.contains(n));
+        self.sound_release(&dead);
+        self.time_states.retain(|n, _| !dead.contains(n));
+        self.nurbs_set_members.retain(|n, _| !dead.contains(n));
+        for members in self.nurbs_set_members.values_mut() {
+            members.retain(|n| !dead.contains(n));
+        }
+        for list in self.world_infos.values_mut() {
+            list.retain(|n| !dead.contains(n));
+        }
+        self.world_infos.retain(|_, list| !list.is_empty());
         self.scripts.retain(|n| !dead.contains(n));
         self.pending_scenes.retain(|p| !dead.contains(&p.node) && !dead.contains(&p.scene_node));
         self.frame_waiters.retain(|w| !dead.contains(&w.node));
@@ -339,5 +487,305 @@ impl Runtime {
         for e in self.scene.externprotos.iter_mut().filter(|e| e.ctx == c) {
             e.fields = vec![];
         }
+    }
+}
+
+impl Runtime {
+    /// May the sweep release this node when nothing refers to it? Not the nodes the host keeps tables
+    /// for beyond the runtime's own (bindable stacks, layers), nor Script, Inline and PROTO instances:
+    /// those stay as they always did.
+    pub(crate) fn dynamic_eligible(&self, n: NodeId) -> bool {
+        if !self.scene.is_live(n) || !matches!(self.scene.node(n).kind, NodeKind::Builtin(_)) {
+            return false;
+        }
+
+        let name = self.builtin_name(n).unwrap_or("");
+
+        !(name.ends_with("Viewpoint")
+            || matches!(
+                name,
+                "Script" | "Inline" | "InlineGeometry" | "NavigationInfo" | "Background" | "TextureBackground" | "Fog" | "LocalFog" | "ViewpointGroup" | "Layer" | "LayerSet" | "Viewport" | "LayoutLayer" | "ScreenGroup" | "Anchor"
+            ))
+    }
+
+    /// The runtime-created nodes of each `createVrmlFromString` scene that is still tracked.
+    fn dynamic_ctx_map(&self) -> HashMap<CtxId, Vec<NodeId>> {
+        let mut map: HashMap<CtxId, Vec<NodeId>> = self.dynamic_ctxs.iter().map(|&c| (c, vec![])).collect();
+
+        for &n in &self.dynamic_nodes {
+            if let Some(list) = map.get_mut(&self.scene.node(n).ctx) {
+                list.push(n);
+            }
+        }
+
+        map
+    }
+
+    /// The runtime-created nodes that no Script holds and that are due for a look. A Script that cannot
+    /// say what it holds ([`ScriptHost::held_nodes`] returns `None`) holds them all.
+    fn dynamic_candidates(&mut self) -> HashSet<NodeId> {
+        let live: Vec<NodeId> = self.dynamic_nodes.iter().copied().filter(|&n| self.scene.is_live(n) && !matches!(self.scene.node(n).kind, NodeKind::Internal(_))).collect();
+
+        self.dynamic_nodes = live.iter().copied().collect();
+
+        if live.is_empty() || self.processing {
+            return HashSet::new();
+        }
+
+        // Reachability changes with a node-valued field write, a ROUTE change, a Script call and with
+        // JavaScript garbage; the last raises no event, so look now and then anyway.
+        if !self.dynamic_dirty {
+            self.dynamic_idle += 1;
+
+            if self.dynamic_idle < 30 {
+                return HashSet::new();
+            }
+        }
+
+        self.dynamic_idle = 0;
+        self.dynamic_dirty = false;
+
+        let mut held: HashSet<NodeId> = HashSet::new();
+
+        if !self.scripts.is_empty() {
+            let Some(mut host) = self.script_host.take() else {
+                return HashSet::new();
+            };
+
+            let answer = host.held_nodes(self);
+
+            self.script_host = Some(host);
+
+            match answer {
+                Some(list) => held.extend(list),
+                None => return HashSet::new(),
+            }
+        }
+
+        // The Script holds the scene of a node it holds.
+        let ctx_map = self.dynamic_ctx_map();
+
+        for nodes in ctx_map.values() {
+            if nodes.iter().any(|n| held.contains(n)) {
+                held.extend(nodes.iter().copied());
+            }
+        }
+
+        live.into_iter().filter(|n| !held.contains(n)).collect()
+    }
+
+    /// Everything a node that stays refers to stays too: its children, the body of an instance.
+    fn close_keep(&self, candidates: &HashSet<NodeId>, by_ctx: &HashMap<CtxId, Vec<NodeId>>, keep: &mut HashSet<NodeId>, work: &mut Vec<NodeId>) {
+        while let Some(n) = work.pop() {
+            let mut next: Vec<NodeId> = all_fields(self.scene.node(n)).flat_map(|f| node_refs(&f.value)).collect();
+
+            if let Some(body) = self.instance_bodies.get(&n) {
+                for (c, list) in by_ctx {
+                    if self.ctx_within(*c, *body) {
+                        next.extend(list.iter().copied());
+                    }
+                }
+            }
+
+            for m in next {
+                if candidates.contains(&m) && keep.insert(m) {
+                    work.push(m);
+                }
+            }
+        }
+    }
+}
+
+/// Every table id that something live names (see the module header).
+#[derive(Default)]
+struct Held {
+    ctxs: HashSet<CtxId>,
+    protos: HashSet<ProtoId>,
+    externs: HashSet<ExternId>,
+    imported: HashSet<ImportedId>,
+    exported: HashSet<ExportedId>,
+}
+
+impl Runtime {
+    /// Contexts that the sweep emptied and whose slots are not released yet.
+    pub fn emptied_contexts(&self) -> usize {
+        self.emptied_ctxs.len()
+    }
+
+    /// The ids that a live node, a context, a live record or a runtime table names. A record is live
+    /// while its owner context is not emptied; a released slot names nothing.
+    fn held_table_ids(&self) -> Held {
+        let s = &self.scene;
+        let emptied = &self.emptied_ctxs;
+        let mut h = Held::default();
+
+        for (id, node) in s.nodes.iter().enumerate() {
+            if !s.is_live(id as NodeId) {
+                continue;
+            }
+
+            h.ctxs.insert(node.ctx);
+
+            match node.kind {
+                NodeKind::Instance(ProtoRef::Proto(p)) => {
+                    h.protos.insert(p);
+                }
+                NodeKind::Instance(ProtoRef::Extern(e)) => {
+                    h.externs.insert(e);
+                }
+                NodeKind::Imported(i) => {
+                    h.imported.insert(i);
+                }
+                _ => {}
+            }
+
+            for f in all_fields(node) {
+                h.protos.extend(f.references.iter().map(|r| r.proto));
+            }
+        }
+
+        for (c, ctx) in s.contexts.iter().enumerate() {
+            if s.ctx_slots.is_free(c) {
+                continue;
+            }
+
+            h.ctxs.extend(ctx.parent);
+
+            if let Outer::Proto(p) = ctx.outer {
+                h.protos.insert(p);
+            }
+
+            h.protos.extend(ctx.protos.values().iter().copied());
+            h.externs.extend(ctx.externprotos.values().iter().copied());
+            h.imported.extend(ctx.imported.values().iter().copied());
+            h.exported.extend(ctx.exported.values().iter().copied());
+        }
+
+        // Runtime tables.
+        h.ctxs.extend(self.inline_scenes.values().copied());
+        h.ctxs.extend(self.instance_bodies.values().copied());
+        h.ctxs.extend(self.release_ctxs.iter().copied());
+        h.ctxs.extend(self.pending_scenes.iter().map(|p| p.ctx));
+        h.ctxs.extend(self.frame_waiters.iter().map(|w| w.ctx));
+
+        for p in self.pending_externs.iter().chain(self.extern_frame_waiters.iter()) {
+            h.ctxs.insert(p.ctx);
+            h.externs.insert(p.ext);
+        }
+
+        for (_, entry) in &self.extern_cache {
+            match entry {
+                CacheEntry::Ready(c, _) => {
+                    h.ctxs.insert(*c);
+                }
+                CacheEntry::Pending(waiters) => h.externs.extend(waiters.iter().map(|w| w.0)),
+            }
+        }
+
+        h.externs.extend(self.extern_load_events.iter().copied());
+
+        for t in self.tasks.iter().chain(self.fetches.iter()) {
+            if let Task::ExternLoad(e, _) = t {
+                h.externs.insert(*e);
+            }
+        }
+
+        // Live records are held; a held declaration holds what it names.
+        for (e, decl) in s.externprotos.iter().enumerate() {
+            if !s.extern_slots.is_free(e) && !emptied.contains(&decl.ctx) {
+                h.externs.insert(e);
+            }
+        }
+
+        for &e in &h.externs {
+            h.ctxs.insert(s.externprotos[e].ctx);
+
+            if let Some((c, _)) = self.extern_states.get(&e).and_then(|st| st.scene) {
+                h.ctxs.insert(c);
+            }
+
+            if let Some(Some(p)) = self.extern_loaded.get(&e) {
+                h.protos.insert(*p);
+            }
+        }
+
+        for (p, decl) in s.protos.iter().enumerate() {
+            if !s.proto_slots.is_free(p) && !emptied.contains(&decl.ctx) {
+                h.protos.insert(p);
+            }
+        }
+
+        for &p in &h.protos {
+            h.ctxs.insert(s.protos[p].ctx);
+            h.ctxs.insert(s.protos[p].body);
+        }
+
+        for (i, rec) in s.imported.iter().enumerate() {
+            if !s.imported_slots.is_free(i) && !emptied.contains(&rec.ctx) {
+                h.imported.insert(i);
+            }
+        }
+
+        for (x, rec) in s.exported.iter().enumerate() {
+            if !s.exported_slots.is_free(x) && !emptied.contains(&rec.ctx) {
+                h.exported.insert(x);
+            }
+        }
+
+        h.ctxs.extend(h.imported.iter().map(|&i| s.imported[i].ctx));
+        h.ctxs.extend(h.exported.iter().map(|&x| s.exported[x].ctx));
+        h
+    }
+
+    /// Release the table slots that emptied contexts left and nothing names any more (R0.3-E). Returns
+    /// how many slots were released.
+    pub(crate) fn reclaim_tables(&mut self) -> usize {
+        if self.emptied_ctxs.is_empty() {
+            return 0;
+        }
+
+        let h = self.held_table_ids();
+        let s = &self.scene;
+        let owned = |c: CtxId| self.emptied_ctxs.contains(&c);
+
+        let protos: Vec<ProtoId> = (0..s.protos.len()).filter(|&p| !s.proto_slots.is_free(p) && owned(s.protos[p].ctx) && !h.protos.contains(&p)).collect();
+        let externs: Vec<ExternId> = (0..s.externprotos.len()).filter(|&e| !s.extern_slots.is_free(e) && owned(s.externprotos[e].ctx) && !h.externs.contains(&e)).collect();
+        let imported: Vec<ImportedId> = (0..s.imported.len()).filter(|&i| !s.imported_slots.is_free(i) && owned(s.imported[i].ctx) && !h.imported.contains(&i)).collect();
+        let exported: Vec<ExportedId> = (0..s.exported.len()).filter(|&x| !s.exported_slots.is_free(x) && owned(s.exported[x].ctx) && !h.exported.contains(&x)).collect();
+
+        let mut ctxs: Vec<CtxId> = self.emptied_ctxs.iter().copied().filter(|c| *c != ROOT && !h.ctxs.contains(c)).collect();
+
+        ctxs.sort_unstable();
+
+        for &e in &externs {
+            self.extern_states.remove(&e);
+            self.extern_loaded.remove(&e);
+            self.scene.release_extern(e);
+        }
+
+        for &p in &protos {
+            self.scene.release_proto(p);
+        }
+
+        for &i in &imported {
+            self.scene.release_imported(i);
+        }
+
+        for &x in &exported {
+            self.scene.release_exported(x);
+        }
+
+        for &c in &ctxs {
+            self.emptied_ctxs.remove(&c);
+            self.dead_ctxs.remove(&c);
+            self.disposed_scenes.remove(&c);
+            self.inline_live.remove(&c);
+            self.scene.release_ctx(c);
+        }
+
+        let n = protos.len() + externs.len() + imported.len() + exported.len() + ctxs.len();
+
+        self.table_slots_released += n as u64;
+        n
     }
 }

@@ -1,0 +1,17 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+# Synthetic REA oracle world: the WallFriction option (0, set by a Script): the WALK avatar slides
+# along the slanted wall slower with friction (X3DRenderObject.constrainTranslation). Authored.
+Viewpoint { position 0 1.6 10 }
+NavigationInfo { type "WALK" speed 4 }
+DirectionalLight { direction -0.3 -0.6 -1 }
+Transform { translation 0 1 5 rotation 0 1 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 } } geometry Box { size 20 4 0.3 } } }
+Transform { translation 0 -0.1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.6 0.3 } } geometry Box { size 40 0.2 40 } } }
+DEF S Script {
+  url "ecmascript:
+    function initialize () {
+      Browser .setBrowserOption ('WallFriction', 0);
+    }
+  "
+}

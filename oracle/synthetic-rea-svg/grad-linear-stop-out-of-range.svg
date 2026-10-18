@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<defs><linearGradient id="g"><stop offset="-1" stop-color="red"/><stop offset="2" stop-color="lime"/><stop offset="0" stop-color="blue"/><stop offset="1" stop-color="yellow"/></linearGradient></defs><rect x="20" y="20" width="160" height="100" fill="url(#g)"/><rect x="20" y="130" width="50" height="50" fill="green"/>
+</svg>

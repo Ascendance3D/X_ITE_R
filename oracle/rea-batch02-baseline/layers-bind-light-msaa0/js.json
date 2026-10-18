@@ -1,0 +1,213 @@
+{
+  "ok": true,
+  "poses": {
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "66": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "96": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "108": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V0",
+      "description": "layer 0",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V0 Viewpoint {\n  description \"layer 0\"\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDirectionalLight {\n  color 0.2 0.4 1\n}\n\nTransform {\n  translation -2.5 0 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Sphere {\n      radius 1.5\n    }\n  }\n}\n\nLayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    Layer {\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        DEF V1A Viewpoint {\n          description \"layer 1 a\"\n        }\n        DEF V1B Viewpoint {\n          description \"layer 1 b\"\n          position 0 2 14\n        }\n        NavigationInfo {\n          headlight FALSE\n        }\n        PointLight {\n          color 1 0.2 0.1\n          location 0 0 6\n        }\n        DEF T1 TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material { }\n          }\n          geometry Box {\n            size 3 3 3\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      pointerEvents FALSE\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        Viewpoint { }\n        DEF T2 TouchSensor { }\n        Transform {\n          translation 0 -3 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.8 0.3\n              }\n            }\n            geometry Box {\n              size 2 1 2\n            }\n          }\n        }\n        Transform {\n          scale 0.3 0.3 0.3\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.8 0.8 0.3\n              }\n            }\n            geometry Sphere { }\n          }\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString key\n  inputOnly      SFBool   b0\n  inputOnly      SFBool   b1a\n  inputOnly      SFBool   b1b\n  inputOnly      SFTime   t1\n  inputOnly      SFTime   t2\n  inputOutput    SFInt32  n0 1\n  inputOutput    SFInt32  n1a 1\n  inputOutput    SFInt32  n1b 0\n  inputOutput    SFInt32  c1 0\n  inputOutput    SFInt32  c2 0\n  inputOutput    SFString last \" 0true 1atrue\"\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   v1b USE V1B\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'b') v1b .set_bind = true;\n   if (value == 'u') v1b .set_bind = false;\n   if (value == 'p') l2 .pointerEvents = true;\n}\nfunction b0 (v) { n0 = n0 + 1; last = last + ' 0' + v; }\nfunction b1a (v) { n1a = n1a + 1; last = last + ' 1a' + v; }\nfunction b1b (v) { n1b = n1b + 1; last = last + ' 1b' + v; }\nfunction t1 () { c1 = c1 + 1; }\nfunction t2 () { c2 = c2 + 1; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.key\nROUTE V0.isBound TO S.b0\nROUTE V1A.isBound TO S.b1a\nROUTE V1B.isBound TO S.b1b\nROUTE T1.touchTime TO S.t1\nROUTE T2.touchTime TO S.t2\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V0 Viewpoint {\n  description \"layer 0\"\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDirectionalLight {\n  color 0.2 0.4 1\n}\n\nTransform {\n  translation -2.5 0 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Sphere {\n      radius 1.5\n    }\n  }\n}\n\nLayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    Layer {\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        DEF V1A Viewpoint {\n          description \"layer 1 a\"\n        }\n        DEF V1B Viewpoint {\n          description \"layer 1 b\"\n          position 0 2 14\n        }\n        NavigationInfo {\n          headlight FALSE\n        }\n        PointLight {\n          color 1 0.2 0.1\n          location 0 0 6\n        }\n        DEF T1 TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material { }\n          }\n          geometry Box {\n            size 3 3 3\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      pointerEvents FALSE\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        Viewpoint { }\n        DEF T2 TouchSensor { }\n        Transform {\n          translation 0 -3 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.8 0.3\n              }\n            }\n            geometry Box {\n              size 2 1 2\n            }\n          }\n        }\n        Transform {\n          scale 0.3 0.3 0.3\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.8 0.8 0.3\n              }\n            }\n            geometry Sphere { }\n          }\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString key\n  inputOnly      SFBool   b0\n  inputOnly      SFBool   b1a\n  inputOnly      SFBool   b1b\n  inputOnly      SFTime   t1\n  inputOnly      SFTime   t2\n  inputOutput    SFInt32  n0 1\n  inputOutput    SFInt32  n1a 1\n  inputOutput    SFInt32  n1b 0\n  inputOutput    SFInt32  c1 1\n  inputOutput    SFInt32  c2 0\n  inputOutput    SFString last \" 0true 1atrue\"\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   v1b USE V1B\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'b') v1b .set_bind = true;\n   if (value == 'u') v1b .set_bind = false;\n   if (value == 'p') l2 .pointerEvents = true;\n}\nfunction b0 (v) { n0 = n0 + 1; last = last + ' 0' + v; }\nfunction b1a (v) { n1a = n1a + 1; last = last + ' 1a' + v; }\nfunction b1b (v) { n1b = n1b + 1; last = last + ' 1b' + v; }\nfunction t1 () { c1 = c1 + 1; }\nfunction t2 () { c2 = c2 + 1; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.key\nROUTE V0.isBound TO S.b0\nROUTE V1A.isBound TO S.b1a\nROUTE V1B.isBound TO S.b1b\nROUTE T1.touchTime TO S.t1\nROUTE T2.touchTime TO S.t2\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V0 Viewpoint {\n  description \"layer 0\"\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDirectionalLight {\n  color 0.2 0.4 1\n}\n\nTransform {\n  translation -2.5 0 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Sphere {\n      radius 1.5\n    }\n  }\n}\n\nLayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    Layer {\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        DEF V1A Viewpoint {\n          description \"layer 1 a\"\n        }\n        DEF V1B Viewpoint {\n          description \"layer 1 b\"\n          position 0 2 14\n        }\n        NavigationInfo {\n          headlight FALSE\n        }\n        PointLight {\n          color 1 0.2 0.1\n          location 0 0 6\n        }\n        DEF T1 TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material { }\n          }\n          geometry Box {\n            size 3 3 3\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      pointerEvents FALSE\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        Viewpoint { }\n        DEF T2 TouchSensor { }\n        Transform {\n          translation 0 -3 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.8 0.3\n              }\n            }\n            geometry Box {\n              size 2 1 2\n            }\n          }\n        }\n        Transform {\n          scale 0.3 0.3 0.3\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.8 0.8 0.3\n              }\n            }\n            geometry Sphere { }\n          }\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString key\n  inputOnly      SFBool   b0\n  inputOnly      SFBool   b1a\n  inputOnly      SFBool   b1b\n  inputOnly      SFTime   t1\n  inputOnly      SFTime   t2\n  inputOutput    SFInt32  n0 1\n  inputOutput    SFInt32  n1a 2\n  inputOutput    SFInt32  n1b 1\n  inputOutput    SFInt32  c1 2\n  inputOutput    SFInt32  c2 0\n  inputOutput    SFString last \" 0true 1atrue 1afalse 1btrue\"\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   v1b USE V1B\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'b') v1b .set_bind = true;\n   if (value == 'u') v1b .set_bind = false;\n   if (value == 'p') l2 .pointerEvents = true;\n}\nfunction b0 (v) { n0 = n0 + 1; last = last + ' 0' + v; }\nfunction b1a (v) { n1a = n1a + 1; last = last + ' 1a' + v; }\nfunction b1b (v) { n1b = n1b + 1; last = last + ' 1b' + v; }\nfunction t1 () { c1 = c1 + 1; }\nfunction t2 () { c2 = c2 + 1; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.key\nROUTE V0.isBound TO S.b0\nROUTE V1A.isBound TO S.b1a\nROUTE V1B.isBound TO S.b1b\nROUTE T1.touchTime TO S.t1\nROUTE T2.touchTime TO S.t2\n",
+    "96": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V0 Viewpoint {\n  description \"layer 0\"\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDirectionalLight {\n  color 0.2 0.4 1\n}\n\nTransform {\n  translation -2.5 0 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Sphere {\n      radius 1.5\n    }\n  }\n}\n\nLayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    Layer {\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        DEF V1A Viewpoint {\n          description \"layer 1 a\"\n        }\n        DEF V1B Viewpoint {\n          description \"layer 1 b\"\n          position 0 2 14\n        }\n        NavigationInfo {\n          headlight FALSE\n        }\n        PointLight {\n          color 1 0.2 0.1\n          location 0 0 6\n        }\n        DEF T1 TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material { }\n          }\n          geometry Box {\n            size 3 3 3\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        Viewpoint { }\n        DEF T2 TouchSensor { }\n        Transform {\n          translation 0 -3 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.8 0.3\n              }\n            }\n            geometry Box {\n              size 2 1 2\n            }\n          }\n        }\n        Transform {\n          scale 0.3 0.3 0.3\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.8 0.8 0.3\n              }\n            }\n            geometry Sphere { }\n          }\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString key\n  inputOnly      SFBool   b0\n  inputOnly      SFBool   b1a\n  inputOnly      SFBool   b1b\n  inputOnly      SFTime   t1\n  inputOnly      SFTime   t2\n  inputOutput    SFInt32  n0 1\n  inputOutput    SFInt32  n1a 2\n  inputOutput    SFInt32  n1b 1\n  inputOutput    SFInt32  c1 2\n  inputOutput    SFInt32  c2 2\n  inputOutput    SFString last \" 0true 1atrue 1afalse 1btrue\"\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   v1b USE V1B\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'b') v1b .set_bind = true;\n   if (value == 'u') v1b .set_bind = false;\n   if (value == 'p') l2 .pointerEvents = true;\n}\nfunction b0 (v) { n0 = n0 + 1; last = last + ' 0' + v; }\nfunction b1a (v) { n1a = n1a + 1; last = last + ' 1a' + v; }\nfunction b1b (v) { n1b = n1b + 1; last = last + ' 1b' + v; }\nfunction t1 () { c1 = c1 + 1; }\nfunction t2 () { c2 = c2 + 1; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.key\nROUTE V0.isBound TO S.b0\nROUTE V1A.isBound TO S.b1a\nROUTE V1B.isBound TO S.b1b\nROUTE T1.touchTime TO S.t1\nROUTE T2.touchTime TO S.t2\n",
+    "108": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nDEF V0 Viewpoint {\n  description \"layer 0\"\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDirectionalLight {\n  color 0.2 0.4 1\n}\n\nTransform {\n  translation -2.5 0 0\n  children Shape {\n    appearance Appearance {\n      material Material { }\n    }\n    geometry Sphere {\n      radius 1.5\n    }\n  }\n}\n\nLayerSet {\n  order [\n    0,\n    1,\n    2\n  ]\n  layers [\n    Layer {\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        DEF V1A Viewpoint {\n          description \"layer 1 a\"\n        }\n        DEF V1B Viewpoint {\n          description \"layer 1 b\"\n          position 0 2 14\n        }\n        NavigationInfo {\n          headlight FALSE\n        }\n        PointLight {\n          color 1 0.2 0.1\n          location 0 0 6\n        }\n        DEF T1 TouchSensor { }\n        Shape {\n          appearance Appearance {\n            material Material { }\n          }\n          geometry Box {\n            size 3 3 3\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      viewport Viewport {\n        clipBoundary [\n          0.5,\n          1,\n          0,\n          1\n        ]\n      }\n      children [\n        Viewpoint { }\n        DEF T2 TouchSensor { }\n        Transform {\n          translation 0 -3 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.8 0.3\n              }\n            }\n            geometry Box {\n              size 2 1 2\n            }\n          }\n        }\n        Transform {\n          scale 0.3 0.3 0.3\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.8 0.8 0.3\n              }\n            }\n            geometry Sphere { }\n          }\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF S Script {\n  inputOnly      SFString key\n  inputOnly      SFBool   b0\n  inputOnly      SFBool   b1a\n  inputOnly      SFBool   b1b\n  inputOnly      SFTime   t1\n  inputOnly      SFTime   t2\n  inputOutput    SFInt32  n0 1\n  inputOutput    SFInt32  n1a 3\n  inputOutput    SFInt32  n1b 2\n  inputOutput    SFInt32  c1 2\n  inputOutput    SFInt32  c2 2\n  inputOutput    SFString last \" 0true 1atrue 1afalse 1btrue 1bfalse 1atrue\"\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   v1b USE V1B\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'b') v1b .set_bind = true;\n   if (value == 'u') v1b .set_bind = false;\n   if (value == 'p') l2 .pointerEvents = true;\n}\nfunction b0 (v) { n0 = n0 + 1; last = last + ' 0' + v; }\nfunction b1a (v) { n1a = n1a + 1; last = last + ' 1a' + v; }\nfunction b1b (v) { n1b = n1b + 1; last = last + ' 1b' + v; }\nfunction t1 () { c1 = c1 + 1; }\nfunction t2 () { c2 = c2 + 1; }\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO S.key\nROUTE V0.isBound TO S.b0\nROUTE V1A.isBound TO S.b1a\nROUTE V1B.isBound TO S.b1b\nROUTE T1.touchTime TO S.t1\nROUTE T2.touchTime TO S.t2\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Parser error at line 21: Unknown field 'isPickable' in class 'Layer'."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

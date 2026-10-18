@@ -1,0 +1,42 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { collider DEF CC CollisionCollection { bounce 0.3 minBounceSpeed 0 collidables [ DEF F_C CollidableShape { shape Shape { geometry Box { size 20 1 20 } } } DEF A_C CollidableShape { shape Shape { geometry Sphere { radius 0.5 } } } DEF B_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } ] }
+  bodies [ DEF F RigidBody { fixed TRUE geometry USE F_C } DEF A RigidBody { mass 1 position -3 4 0 geometry USE A_C } DEF B RigidBody { mass 1 position 3 4 0 linearVelocity 3 0 0 geometry USE B_C } ] }
+DEF S CollisionSensor { collider USE CC }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF SC Script {
+  inputOnly SFTime tick
+  outputOnly SFFloat bn
+  outputOnly SFFloat mb
+  outputOnly MFString ap
+  outputOnly SFBool ce
+  outputOnly SFVec2f fc
+  outputOnly MFString ap2
+  initializeOnly SFFloat s0 -1
+  url "ecmascript:
+var done = [ ];
+function tick (v)
+{
+  if (s0 < 0) s0 = v;
+  var f = Math .round ((v - s0) * 60);
+  if (f >= 20 && !done[0]) { done[0] = true; bn = 0.9; }
+  if (f >= 40 && !done[1]) { done[1] = true; mb = 100; }
+  if (f >= 60 && !done[2]) { done[2] = true; ap = new MFString (); }
+  if (f >= 80 && !done[3]) { done[3] = true; ap = new MFString ('BOUNCE'); }
+  if (f >= 80 && !done[4]) { done[4] = true; bn = 0.9; }
+  if (f >= 100 && !done[5]) { done[5] = true; ce = false; }
+  if (f >= 120 && !done[6]) { done[6] = true; ce = true; }
+  if (f >= 140 && !done[7]) { done[7] = true; fc = new SFVec2f (0.1, 0); }
+  if (f >= 140 && !done[8]) { done[8] = true; ap2 = new MFString ('BOUNCE', 'FRICTION_COEFFICIENT_2'); }
+}
+"
+}
+ROUTE TS.time TO SC.tick
+ROUTE SC.bn TO CC.set_bounce
+ROUTE SC.mb TO CC.set_minBounceSpeed
+ROUTE SC.ap TO CC.set_appliedParameters
+ROUTE SC.ce TO CC.set_enabled
+ROUTE SC.fc TO CC.set_frictionCoefficients
+ROUTE SC.ap2 TO CC.set_appliedParameters

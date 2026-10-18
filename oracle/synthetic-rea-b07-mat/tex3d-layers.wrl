@@ -1,0 +1,13 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Geometry2D:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+COMPONENT Lighting:3
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+LayerSet { order [ 0 1 2 ] layers [ Layer { children [ Viewpoint { position 0 0 6 } Transform { translation -1.2 0 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rgb-raw.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } } ] } Layer { viewport Viewport { clipBoundary [ 0.5 1 0.5 1 ] } children [ Viewpoint { position 0 0 6 } Transform { translation 1.2 0.8 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/u8-gzip.nrrd" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } } ] } LayoutLayer { layout Layout { size [ 0.4 0.4 ] sizeUnits [ "FRACTION" "FRACTION" ] align [ "LEFT" "BOTTOM" ] } children [ Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rgba-raw.nrrd" } } geometry Rectangle2D { size 0.4 0.4 } } ] } ] }

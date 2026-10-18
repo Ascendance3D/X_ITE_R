@@ -1,0 +1,11 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 16
+  particleLifetime 1
+  lifetimeVariation 0.25
+  emitter SurfaceEmitter { speed 1 variation 0.25 surface IndexedFaceSet { solid FALSE coord Coordinate { point [ 0 0 0, 2 0 0, 2 1 0, 0 1 0, 3 0 0, 3 1 0, 3 0 1 ] } coordIndex [ 0 1 2 3 -1 4 5 6 -1 ] } }
+}

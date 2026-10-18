@@ -1,0 +1,56 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+Viewpoint { position 0 0 14 }
+DEF ISENS Inline { url "vpick-inline-sensor.wrl" }
+IMPORT ISENS.IP AS IP
+IMPORT ISENS.IV AS IV
+IMPORT ISENS.M AS IM
+DEF C TimeSensor { cycleInterval 4 loop TRUE }
+DEF PI PositionInterpolator { key [ 0 1 ] keyValue [ -6 0 0, 6 0 0 ] }
+ROUTE C.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO IM.set_translation
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool on_IP_a
+  inputOutput SFBool IP_a FALSE
+  inputOutput SFInt32 IP_a_count 0
+  inputOnly MFNode on_IP_g
+  inputOutput MFNode IP_g [ ]
+  inputOutput SFInt32 IP_g_count 0
+  inputOnly MFVec3f on_IP_p
+  inputOutput MFVec3f IP_p [ ]
+  inputOutput SFInt32 IP_p_count 0
+  inputOnly SFBool on_IV_a
+  inputOutput SFBool IV_a FALSE
+  inputOutput SFInt32 IV_a_count 0
+  inputOnly MFNode on_IV_g
+  inputOutput MFNode IV_g [ ]
+  inputOutput SFInt32 IV_g_count 0
+  inputOutput SFString log ""
+  inputOnly SFString on_key
+  initializeOnly SFNode isens USE ISENS
+  url "javascript:
+function on_IP_a (value) { IP_a = value; IP_a_count = IP_a_count + 1; log = log + 'IP_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IP_g (value) { IP_g = value; IP_g_count = IP_g_count + 1; log = log + 'IP_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IP_p (value) { IP_p = value; IP_p_count = IP_p_count + 1; log = log + 'IP_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IV_a (value) { IV_a = value; IV_a_count = IV_a_count + 1; log = log + 'IV_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IV_g (value) { IV_g = value; IV_g_count = IV_g_count + 1; log = log + 'IV_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 's') isens .load = false;
+   if (k == 'r') isens .load = true;
+}
+"
+}
+ROUTE IP.isActive TO R.on_IP_a
+ROUTE IP.pickedGeometry TO R.on_IP_g
+ROUTE IP.pickedPoint TO R.on_IP_p
+ROUTE IV.isActive TO R.on_IV_a
+ROUTE IV.pickedGeometry TO R.on_IV_g
+ROUTE K.keyPress TO R.on_key

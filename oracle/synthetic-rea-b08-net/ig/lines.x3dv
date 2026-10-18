@@ -1,0 +1,6 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+Shape { geometry IndexedLineSet { coord Coordinate { point [ -1 -1 0, 1 -1 0, 0 1 0 ] } coordIndex [ 0 1 2 0 -1 ] } }

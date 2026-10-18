@@ -1,0 +1,29 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 12 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+
+PROTO P [ field SFVec3f c 0 0 0 ] { Group { children ReceiverPdu { bboxSize 0.8 0.8 0.8 bboxCenter IS c bboxDisplay TRUE } } }
+Transform { translation -3 3 0 children Switch { whichChoice 1 choice [ ReceiverPdu { bboxSize 1 1 1 bboxDisplay TRUE } SignalPdu { bboxSize 1.2 0.6 0.6 bboxDisplay TRUE } TransmitterPdu { bboxSize 0.5 0.5 0.5 bboxDisplay TRUE } ] } }
+Transform { translation 0 3 0 children LOD { range [ 100 ] level [ ReceiverPdu { bboxSize 1 0.5 1 bboxDisplay TRUE } SignalPdu { bboxSize 2 2 2 bboxDisplay TRUE } ] } }
+Transform { translation 3 3 0 children Billboard { axisOfRotation 0 0 0 children SignalPdu { bboxSize 1 1 0.2 bboxDisplay TRUE } } }
+Transform { translation -3 1 0 children Anchor { url "x.wrl" children TransmitterPdu { bboxSize 1 1 1 bboxDisplay TRUE } } }
+Transform { translation 0 1 0 children Collision { children ReceiverPdu { bboxSize 1 1 1 bboxDisplay TRUE } } }
+Transform { translation 3 1 0 children StaticGroup { children [ ReceiverPdu { bboxSize 1 1 1 bboxDisplay TRUE } Shape { geometry Sphere { radius 0.3 } } ] } }
+Transform { translation -3 -1 0 children Inline { url "dis-bbox-inline.wrl" } }
+Transform { translation 0 -1 0 children P { c 0 0.5 0 } }
+Transform { translation 3 -1 0 scale 0 1 1 children ReceiverPdu { bboxSize 1 1 1 bboxDisplay TRUE } }
+Transform { translation -3 -3 0 children ReceiverPdu { bboxSize -1 1 1 bboxDisplay TRUE } }
+Transform { translation 0 -3 0 children SignalPdu { bboxSize 0 0 0 bboxDisplay TRUE } }
+Transform { translation 3 -3 0 children TransmitterPdu { bboxSize 1 1 -2 bboxCenter 0 0.5 0 bboxDisplay TRUE } }
+Transform { translation 0 -4.3 0 rotation 1 0 0 0.5 children TransmitterPdu { bboxSize 1 0 1 bboxDisplay TRUE } }
+

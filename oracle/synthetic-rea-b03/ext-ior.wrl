@@ -1,0 +1,28 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT TextureProjection:2
+COMPONENT Layering:1
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+Transform { translation -1.575 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.2 extensions [ IORMaterialExtension { indexOfRefraction 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.2 extensions [ IORMaterialExtension { indexOfRefraction 1.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 1.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.575 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.2 extensions [ IORMaterialExtension { indexOfRefraction 2.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 2.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.2 extensions [ IORMaterialExtension { indexOfRefraction 0.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 0.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.575 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 1.2 } ClearcoatMaterialExtension { clearcoat 1 clearcoatRoughness 0.1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 3 } ClearcoatMaterialExtension { clearcoat 1 clearcoatRoughness 0.1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 5 } ClearcoatMaterialExtension { clearcoat 1 clearcoatRoughness 0.1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.4 0.8 metallic 0 roughness 0.6 extensions [ IORMaterialExtension { indexOfRefraction 1 } ClearcoatMaterialExtension { clearcoat 1 clearcoatRoughness 0.1 } ] } } geometry Sphere { radius 0.45 } } }

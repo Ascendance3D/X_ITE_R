@@ -1,0 +1,109 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Geospatial:2
+COMPONENT EnvironmentalSensor:3
+COMPONENT Scripting:1
+COMPONENT Interpolation:3
+# Synthetic REA oracle world: Geospatial math. GeoPositionInterpolator in GD, UTM and GC with and
+# without a GeoOrigin (rotateYUp TRUE and FALSE); GeoLocation and GeoTransform poses read back
+# through TransformSensors (size -1 -1 -1). Authored.
+DEF ORIGIN GeoOrigin { geoSystem [ "GD" "WE" ] geoCoords 37.4 -122.1 10 rotateYUp TRUE }
+DEF ORIGIN2 GeoOrigin { geoSystem [ "UTM" "Z10" ] geoCoords 4140000 580000 0 }
+DEF GPI1 GeoPositionInterpolator {
+  geoOrigin USE ORIGIN
+  key [ 0 0.5 1 ]
+  keyValue [ 37.4 -122.1 0, 37.41 -122.09 120, 37.5 -122.0 50 ]
+}
+DEF GPI2 GeoPositionInterpolator {
+  geoSystem [ "UTM" "Z10" "easting_first" ]
+  key [ 0 1 ]
+  keyValue [ 580000 4140000 0, 581000 4141000 300 ]
+}
+DEF GPI3 GeoPositionInterpolator {
+  geoSystem [ "GC" ]
+  key [ 0 1 2 ]
+  keyValue [ 6378137 0 0, 0 6378137 0, 0 0 6356752 ]
+}
+DEF GPI4 GeoPositionInterpolator {
+  geoSystem [ "GD" "longitude_first" "IN" ]
+  geoOrigin USE ORIGIN2
+  key [ 0 1 ]
+  keyValue [ -122.1 37.4 0, -122.2 -37.5 100 ]
+}
+DEF GPI5 GeoPositionInterpolator {
+  geoSystem [ "UTM" "Z33" "S" ]
+  key [ 0 1 ]
+  keyValue [ 6000000 400000 0, -6100000 401000 10 ]
+}
+DEF GPI6 GeoPositionInterpolator {
+  geoSystem [ "GD" "MOON" ]
+  key [ 0 1 ]
+  keyValue [ 90 0 0, 89 10 0 ]
+}
+DEF GL1 GeoLocation { geoOrigin USE ORIGIN geoCoords 37.401 -122.101 5 children DEF T1 Group { } }
+DEF GL2 GeoLocation { geoSystem [ "UTM" "Z10" ] geoOrigin USE ORIGIN2 geoCoords 4140100 580200 7 children DEF T2 Group { } }
+DEF GT1 GeoTransform {
+  geoOrigin USE ORIGIN geoCenter 37.4 -122.1 0
+  translation 3 4 5 rotation 0 1 0 0.7 scale 2 1 1
+  children DEF T3 Group { }
+}
+DEF GT2 GeoTransform {
+  geoSystem [ "GC" ] geoCenter 6378137 0 0 translation 1 2 3
+  children DEF T4 Group { }
+}
+DEF S1 TransformSensor { size -1 -1 -1 targetObject USE T1 }
+DEF S2 TransformSensor { size -1 -1 -1 targetObject USE T2 }
+DEF S3 TransformSensor { size -1 -1 -1 targetObject USE T3 }
+DEF S4 TransformSensor { size -1 -1 -1 targetObject USE T4 }
+DEF TS TimeSensor { cycleInterval 2 loop TRUE }
+DEF OUT Script {
+  inputOutput SFVec3f v1 0 0 0
+  inputOutput SFVec3d g1 0 0 0
+  inputOutput SFVec3f v2 0 0 0
+  inputOutput SFVec3d g2 0 0 0
+  inputOutput SFVec3f v3 0 0 0
+  inputOutput SFVec3d g3 0 0 0
+  inputOutput SFVec3f v4 0 0 0
+  inputOutput SFVec3d g4 0 0 0
+  inputOutput SFVec3f v5 0 0 0
+  inputOutput SFVec3d g5 0 0 0
+  inputOutput SFVec3f v6 0 0 0
+  inputOutput SFVec3d g6 0 0 0
+  inputOutput SFVec3f p1 0 0 0
+  inputOutput SFRotation r1 0 0 1 0
+  inputOutput SFVec3f p2 0 0 0
+  inputOutput SFRotation r2 0 0 1 0
+  inputOutput SFVec3f p3 0 0 0
+  inputOutput SFRotation r3 0 0 1 0
+  inputOutput SFVec3f p4 0 0 0
+  inputOutput SFRotation r4 0 0 1 0
+  url "ecmascript: function initialize () { }"
+}
+ROUTE TS.fraction_changed TO GPI1.set_fraction
+ROUTE TS.fraction_changed TO GPI2.set_fraction
+ROUTE TS.fraction_changed TO GPI4.set_fraction
+ROUTE TS.fraction_changed TO GPI5.set_fraction
+ROUTE TS.fraction_changed TO GPI6.set_fraction
+DEF SC ScalarInterpolator { key [ 0 1 ] keyValue [ 0 2 ] }
+ROUTE TS.fraction_changed TO SC.set_fraction
+ROUTE SC.value_changed TO GPI3.set_fraction
+ROUTE GPI1.value_changed TO OUT.v1
+ROUTE GPI1.geovalue_changed TO OUT.g1
+ROUTE GPI2.value_changed TO OUT.v2
+ROUTE GPI2.geovalue_changed TO OUT.g2
+ROUTE GPI3.value_changed TO OUT.v3
+ROUTE GPI3.geovalue_changed TO OUT.g3
+ROUTE GPI4.value_changed TO OUT.v4
+ROUTE GPI4.geovalue_changed TO OUT.g4
+ROUTE GPI5.value_changed TO OUT.v5
+ROUTE GPI5.geovalue_changed TO OUT.g5
+ROUTE GPI6.value_changed TO OUT.v6
+ROUTE GPI6.geovalue_changed TO OUT.g6
+ROUTE S1.position_changed TO OUT.p1
+ROUTE S1.orientation_changed TO OUT.r1
+ROUTE S2.position_changed TO OUT.p2
+ROUTE S2.orientation_changed TO OUT.r2
+ROUTE S3.position_changed TO OUT.p3
+ROUTE S3.orientation_changed TO OUT.r3
+ROUTE S4.position_changed TO OUT.p4
+ROUTE S4.orientation_changed TO OUT.r4

@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { gravity 0 0 0  bodies [ DEF A RigidBody { position -3 0 0 mass 1 linearVelocity 3 0 0 angularVelocity 0 0 3 autoDamp FALSE linearDampingFactor 0.5 angularDampingFactor 0.5 geometry DEF A_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF B RigidBody { position 0 0 0 mass 1 linearVelocity 3 0 0 angularVelocity 0 0 3 autoDamp TRUE linearDampingFactor 0.5 angularDampingFactor 0.25 geometry DEF B_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF C RigidBody { position 3 0 0 mass 1 linearVelocity 3 0 0 angularVelocity 0 0 3 autoDamp TRUE geometry DEF C_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } } ]  }

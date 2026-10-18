@@ -1,0 +1,10 @@
+{"dt": 0.03333333333333333, "t0": 946684800, "frames": 90, "warmup": 8, "seed": 8801, "node": "PS", "dumpAll": true,
+ "events": [
+  {"frame": 20, "node": "EM", "field": "speed", "value": 5},
+  {"frame": 30, "node": "EM", "field": "variation", "value": 0},
+  {"frame": 40, "node": "EM", "field": "on", "value": false},
+  {"frame": 55, "node": "EM", "field": "on", "value": true},
+  {"frame": 60, "node": "PS", "field": "particleLifetime", "value": 0.5},
+  {"frame": 70, "node": "PS", "field": "lifetimeVariation", "value": 0},
+  {"frame": 75, "node": "PS", "field": "createParticles", "value": false}
+ ]}

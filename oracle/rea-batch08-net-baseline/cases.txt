@@ -1,0 +1,64 @@
+dis-bbox-parents oracle/synthetic-rea-b08-net/dis-bbox-parents.wrl oracle/synthetic-rea-b08-net/dis-bbox-parents.json 0
+dis-bbox oracle/synthetic-rea-b08-net/dis-bbox.wrl oracle/synthetic-rea-b08-net/dis-bbox.json 4
+dis-bbox oracle/synthetic-rea-b08-net/dis-bbox.wrl oracle/synthetic-rea-b08-net/dis-bbox.json 0
+dis-legacy-32 oracle/synthetic-rea-b08-net/dis-legacy-32.wrl oracle/synthetic-rea-b08-net/dis-legacy-32.json 4
+dis-legacy-32 oracle/synthetic-rea-b08-net/dis-legacy-32.wrl oracle/synthetic-rea-b08-net/dis-legacy-32.json 0
+dis-legacy-33 oracle/synthetic-rea-b08-net/dis-legacy-33.wrl oracle/synthetic-rea-b08-net/dis-legacy-33.json 0
+dis-bbox-parents oracle/synthetic-rea-b08-net/dis-bbox-parents.wrl oracle/synthetic-rea-b08-net/dis-bbox-parents.json 4
+dis-legacy-33 oracle/synthetic-rea-b08-net/dis-legacy-33.wrl oracle/synthetic-rea-b08-net/dis-legacy-33.json 4
+dis-legacy-40 oracle/synthetic-rea-b08-net/dis-legacy-40.wrl oracle/synthetic-rea-b08-net/dis-legacy-40.json 0
+dis-legacy-40 oracle/synthetic-rea-b08-net/dis-legacy-40.wrl oracle/synthetic-rea-b08-net/dis-legacy-40.json 4
+dis-legacy-vrml oracle/synthetic-rea-b08-net/dis-legacy-vrml.wrl oracle/synthetic-rea-b08-net/dis-legacy-vrml.json 0
+dis-legacy-41 oracle/synthetic-rea-b08-net/dis-legacy-41.wrl oracle/synthetic-rea-b08-net/dis-legacy-41.json 4
+dis-legacy-41 oracle/synthetic-rea-b08-net/dis-legacy-41.wrl oracle/synthetic-rea-b08-net/dis-legacy-41.json 0
+dis-legacy-vrml oracle/synthetic-rea-b08-net/dis-legacy-vrml.wrl oracle/synthetic-rea-b08-net/dis-legacy-vrml.json 4
+dis-viewall-box oracle/synthetic-rea-b08-net/dis-viewall-box.wrl oracle/synthetic-rea-b08-net/dis-viewall-box.json 0
+dis-viewall-box oracle/synthetic-rea-b08-net/dis-viewall-box.wrl oracle/synthetic-rea-b08-net/dis-viewall-box.json 4
+dis-viewall-none oracle/synthetic-rea-b08-net/dis-viewall-none.wrl oracle/synthetic-rea-b08-net/dis-viewall-none.json 0
+dis-viewall-none oracle/synthetic-rea-b08-net/dis-viewall-none.wrl oracle/synthetic-rea-b08-net/dis-viewall-none.json 4
+dis-viewall-pdu oracle/synthetic-rea-b08-net/dis-viewall-pdu.wrl oracle/synthetic-rea-b08-net/dis-viewall-pdu.json 0
+dis-viewall-pdu oracle/synthetic-rea-b08-net/dis-viewall-pdu.wrl oracle/synthetic-rea-b08-net/dis-viewall-pdu.json 4
+fl-bad oracle/synthetic-rea-b08-net/fl-bad.wrl oracle/synthetic-rea-b08-net/fl-bad.json 0
+fl-bad oracle/synthetic-rea-b08-net/fl-bad.wrl oracle/synthetic-rea-b08-net/fl-bad.json 4
+fl-basic-a oracle/synthetic-rea-b08-net/fl-basic-a.wrl oracle/synthetic-rea-b08-net/fl-basic-a.json 0
+fl-basic-a oracle/synthetic-rea-b08-net/fl-basic-a.wrl oracle/synthetic-rea-b08-net/fl-basic-a.json 4
+fl-basic-c oracle/synthetic-rea-b08-net/fl-basic-c.wrl oracle/synthetic-rea-b08-net/fl-basic-c.json 0
+fl-basic-d oracle/synthetic-rea-b08-net/fl-basic-d.wrl oracle/synthetic-rea-b08-net/fl-basic-d.json 0
+fl-basic-c oracle/synthetic-rea-b08-net/fl-basic-c.wrl oracle/synthetic-rea-b08-net/fl-basic-c.json 4
+fl-order oracle/synthetic-rea-b08-net/fl-order.wrl oracle/synthetic-rea-b08-net/fl-order.json 0
+fl-basic-d oracle/synthetic-rea-b08-net/fl-basic-d.wrl oracle/synthetic-rea-b08-net/fl-basic-d.json 4
+fl-order oracle/synthetic-rea-b08-net/fl-order.wrl oracle/synthetic-rea-b08-net/fl-order.json 4
+fl-scopes oracle/synthetic-rea-b08-net/fl-scopes.wrl oracle/synthetic-rea-b08-net/fl-scopes.json 0
+fl-woff1 oracle/synthetic-rea-b08-net/fl-woff1.wrl oracle/synthetic-rea-b08-net/fl-woff1.json 0
+fl-scopes oracle/synthetic-rea-b08-net/fl-scopes.wrl oracle/synthetic-rea-b08-net/fl-scopes.json 4
+fl-woff1 oracle/synthetic-rea-b08-net/fl-woff1.wrl oracle/synthetic-rea-b08-net/fl-woff1.json 4
+fl-runtime oracle/synthetic-rea-b08-net/fl-runtime.wrl oracle/synthetic-rea-b08-net/fl-runtime.json 0
+fl-runtime oracle/synthetic-rea-b08-net/fl-runtime.wrl oracle/synthetic-rea-b08-net/fl-runtime.json 4
+ig-loads oracle/synthetic-rea-b08-net/ig-loads.wrl oracle/synthetic-rea-b08-net/ig-loads.json 4
+ig-loads oracle/synthetic-rea-b08-net/ig-loads.wrl oracle/synthetic-rea-b08-net/ig-loads.json 0
+ig-kinds oracle/synthetic-rea-b08-net/ig-kinds.wrl oracle/synthetic-rea-b08-net/ig-kinds.json 0
+ig-ls-fail oracle/synthetic-rea-b08-net/ig-ls-fail.wrl oracle/synthetic-rea-b08-net/ig-ls-fail.json 0
+ig-kinds oracle/synthetic-rea-b08-net/ig-kinds.wrl oracle/synthetic-rea-b08-net/ig-kinds.json 4
+ig-ls-fail oracle/synthetic-rea-b08-net/ig-ls-fail.wrl oracle/synthetic-rea-b08-net/ig-ls-fail.json 4
+ig-ls-mixed oracle/synthetic-rea-b08-net/ig-ls-mixed.wrl oracle/synthetic-rea-b08-net/ig-ls-mixed.json 0
+ig-ls-mixed oracle/synthetic-rea-b08-net/ig-ls-mixed.wrl oracle/synthetic-rea-b08-net/ig-ls-mixed.json 4
+ig-ls-nourl oracle/synthetic-rea-b08-net/ig-ls-nourl.wrl oracle/synthetic-rea-b08-net/ig-ls-nourl.json 0
+ig-ls-nourl oracle/synthetic-rea-b08-net/ig-ls-nourl.wrl oracle/synthetic-rea-b08-net/ig-ls-nourl.json 4
+ig-ls-ok oracle/synthetic-rea-b08-net/ig-ls-ok.wrl oracle/synthetic-rea-b08-net/ig-ls-ok.json 0
+ig-ls-ok oracle/synthetic-rea-b08-net/ig-ls-ok.wrl oracle/synthetic-rea-b08-net/ig-ls-ok.json 4
+ig-ls-two oracle/synthetic-rea-b08-net/ig-ls-two.wrl oracle/synthetic-rea-b08-net/ig-ls-two.json 0
+ig-ls-two oracle/synthetic-rea-b08-net/ig-ls-two.wrl oracle/synthetic-rea-b08-net/ig-ls-two.json 4
+ig-select oracle/synthetic-rea-b08-net/ig-select.wrl oracle/synthetic-rea-b08-net/ig-select.json 0
+ig-select oracle/synthetic-rea-b08-net/ig-select.wrl oracle/synthetic-rea-b08-net/ig-select.json 4
+ig-runtime oracle/synthetic-rea-b08-net/ig-runtime.wrl oracle/synthetic-rea-b08-net/ig-runtime.json 0
+ig-runtime oracle/synthetic-rea-b08-net/ig-runtime.wrl oracle/synthetic-rea-b08-net/ig-runtime.json 4
+dis-runtime oracle/synthetic-rea-b08-net/dis-runtime.wrl oracle/synthetic-rea-b08-net/dis-runtime.json 0 --udp
+dis-runtime oracle/synthetic-rea-b08-net/dis-runtime.wrl oracle/synthetic-rea-b08-net/dis-runtime.json 4 --udp
+dis-route oracle/synthetic-rea-b08-net/dis-route.wrl oracle/synthetic-rea-b08-net/dis-route.json 0 --udp
+dis-route oracle/synthetic-rea-b08-net/dis-route.wrl oracle/synthetic-rea-b08-net/dis-route.json 4 --udp
+dis-fields oracle/synthetic-rea-b08-net/dis-fields.wrl oracle/synthetic-rea-b08-net/dis-fields.json 0 --udp
+dis-fields oracle/synthetic-rea-b08-net/dis-fields.wrl oracle/synthetic-rea-b08-net/dis-fields.json 4 --udp
+fl-basic-b oracle/synthetic-rea-b08-net/fl-basic-b.wrl oracle/synthetic-rea-b08-net/fl-basic-b.json 0
+fl-basic-b oracle/synthetic-rea-b08-net/fl-basic-b.wrl oracle/synthetic-rea-b08-net/fl-basic-b.json 4
+ig-remove oracle/synthetic-rea-b08-net/ig-remove.wrl oracle/synthetic-rea-b08-net/ig-remove.json 0
+ig-remove oracle/synthetic-rea-b08-net/ig-remove.wrl oracle/synthetic-rea-b08-net/ig-remove.json 4

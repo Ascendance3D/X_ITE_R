@@ -1,0 +1,6 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+Shape { geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.5 zSpacing 0.5 height [ 0 0.3 0.1 0, 0.2 0.5 0.4 0.1, 0.1 0.4 0.6 0.2, 0 0.1 0.2 0 ] creaseAngle 0.5 solid TRUE } }

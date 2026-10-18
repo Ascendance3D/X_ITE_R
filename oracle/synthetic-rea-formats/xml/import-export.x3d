@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='3.3'>
+  <Scene>
+    <Inline DEF='I' url='"none.x3d"'/>
+    <IMPORT inlineDEF='I' importedDEF='E' AS='L'/>
+    <Transform DEF='Local' translation='1 0 0'>
+      <Shape>
+        <Box/>
+      </Shape>
+    </Transform>
+    <EXPORT localDEF='Local' AS='Exported'/>
+  </Scene>
+</X3D>

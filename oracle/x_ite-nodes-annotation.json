@@ -1,0 +1,3643 @@
+{
+ "browserName": "X_ITE",
+ "browserVersion": "16.5.0",
+ "failedComponents": [],
+ "vrml2Available": [],
+ "components": [
+  {
+   "name": "Annotation",
+   "level": 2,
+   "external": true,
+   "dependencies": []
+  }
+ ],
+ "profiles": [],
+ "nodes": [
+  {
+   "typeName": "AnnotationLayer",
+   "component": "Annotation",
+   "componentLevel": 1,
+   "containerField": "layers",
+   "from": "4.0",
+   "to": "Infinity",
+   "vrml2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "isPickable",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "layoutPolicy",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "shownGroupID",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "viewport",
+      "type": "SFNode",
+      "value": null
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "isPickable",
+      "SFBool",
+      true
+     ],
+     [
+      "layoutPolicy",
+      "MFString",
+      []
+     ],
+     [
+      "shownGroupID",
+      "MFString",
+      []
+     ],
+     [
+      "viewport",
+      "SFNode",
+      null
+     ]
+    ],
+    "units": {}
+   },
+   "x3d": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "isPickable",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "layoutPolicy",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "shownGroupID",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "viewport",
+      "type": "SFNode",
+      "value": null
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "isPickable",
+      "SFBool",
+      true
+     ],
+     [
+      "layoutPolicy",
+      "MFString",
+      []
+     ],
+     [
+      "shownGroupID",
+      "MFString",
+      []
+     ],
+     [
+      "viewport",
+      "SFNode",
+      null
+     ]
+    ],
+    "units": {}
+   },
+   "3.0": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "isPickable",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "layoutPolicy",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "shownGroupID",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "viewport",
+      "type": "SFNode",
+      "value": null
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "isPickable",
+      "SFBool",
+      true
+     ],
+     [
+      "layoutPolicy",
+      "MFString",
+      []
+     ],
+     [
+      "shownGroupID",
+      "MFString",
+      []
+     ],
+     [
+      "viewport",
+      "SFNode",
+      null
+     ]
+    ],
+    "units": {}
+   },
+   "3.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "isPickable",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "layoutPolicy",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "shownGroupID",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "viewport",
+      "type": "SFNode",
+      "value": null
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "isPickable",
+      "SFBool",
+      true
+     ],
+     [
+      "layoutPolicy",
+      "MFString",
+      []
+     ],
+     [
+      "shownGroupID",
+      "MFString",
+      []
+     ],
+     [
+      "viewport",
+      "SFNode",
+      null
+     ]
+    ],
+    "units": {}
+   },
+   "3.2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "isPickable",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "layoutPolicy",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "shownGroupID",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "viewport",
+      "type": "SFNode",
+      "value": null
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "isPickable",
+      "SFBool",
+      true
+     ],
+     [
+      "layoutPolicy",
+      "MFString",
+      []
+     ],
+     [
+      "shownGroupID",
+      "MFString",
+      []
+     ],
+     [
+      "viewport",
+      "SFNode",
+      null
+     ]
+    ],
+    "units": {}
+   },
+   "3.3": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "isPickable",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "layoutPolicy",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "shownGroupID",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "viewport",
+      "type": "SFNode",
+      "value": null
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "isPickable",
+      "SFBool",
+      true
+     ],
+     [
+      "layoutPolicy",
+      "MFString",
+      []
+     ],
+     [
+      "shownGroupID",
+      "MFString",
+      []
+     ],
+     [
+      "viewport",
+      "SFNode",
+      null
+     ]
+    ],
+    "units": {}
+   },
+   "4.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "isPickable",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "layoutPolicy",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "shownGroupID",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "viewport",
+      "type": "SFNode",
+      "value": null
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "isPickable",
+      "SFBool",
+      true
+     ],
+     [
+      "layoutPolicy",
+      "MFString",
+      []
+     ],
+     [
+      "shownGroupID",
+      "MFString",
+      []
+     ],
+     [
+      "viewport",
+      "SFNode",
+      null
+     ]
+    ],
+    "units": {}
+   },
+   "notes": {
+    "vrml2": "TypeError: Cannot read properties of undefined (reading 'isInitializable')",
+    "3.0": "TypeError: Cannot read properties of undefined (reading 'isInitializable')",
+    "3.1": "TypeError: Cannot read properties of undefined (reading 'isInitializable')",
+    "3.2": "TypeError: Cannot read properties of undefined (reading 'isInitializable')",
+    "3.3": "TypeError: Cannot read properties of undefined (reading 'isInitializable')"
+   }
+  },
+  {
+   "typeName": "AnnotationTarget",
+   "component": "Annotation",
+   "componentLevel": 1,
+   "containerField": "children",
+   "from": "4.0",
+   "to": "Infinity",
+   "vrml2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "referencePoint",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 7,
+      "name": "leadLineStyle",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "marker",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "annotations",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "referencePoint",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "leadLineStyle",
+      "SFNode",
+      null
+     ],
+     [
+      "marker",
+      "SFNode",
+      null
+     ],
+     [
+      "annotations",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {}
+   },
+   "x3d": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "referencePoint",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 7,
+      "name": "leadLineStyle",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "marker",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "annotations",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "referencePoint",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "leadLineStyle",
+      "SFNode",
+      null
+     ],
+     [
+      "marker",
+      "SFNode",
+      null
+     ],
+     [
+      "annotations",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {}
+   },
+   "3.0": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "referencePoint",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 7,
+      "name": "leadLineStyle",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "marker",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "annotations",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "referencePoint",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "leadLineStyle",
+      "SFNode",
+      null
+     ],
+     [
+      "marker",
+      "SFNode",
+      null
+     ],
+     [
+      "annotations",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {}
+   },
+   "3.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "referencePoint",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 7,
+      "name": "leadLineStyle",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "marker",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "annotations",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "referencePoint",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "leadLineStyle",
+      "SFNode",
+      null
+     ],
+     [
+      "marker",
+      "SFNode",
+      null
+     ],
+     [
+      "annotations",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {}
+   },
+   "3.2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "referencePoint",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 7,
+      "name": "leadLineStyle",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "marker",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "annotations",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "referencePoint",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "leadLineStyle",
+      "SFNode",
+      null
+     ],
+     [
+      "marker",
+      "SFNode",
+      null
+     ],
+     [
+      "annotations",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {}
+   },
+   "3.3": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "referencePoint",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 7,
+      "name": "leadLineStyle",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "marker",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "annotations",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "referencePoint",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "leadLineStyle",
+      "SFNode",
+      null
+     ],
+     [
+      "marker",
+      "SFNode",
+      null
+     ],
+     [
+      "annotations",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {}
+   },
+   "4.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "referencePoint",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 7,
+      "name": "leadLineStyle",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "marker",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "annotations",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "referencePoint",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "leadLineStyle",
+      "SFNode",
+      null
+     ],
+     [
+      "marker",
+      "SFNode",
+      null
+     ],
+     [
+      "annotations",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {}
+   }
+  },
+  {
+   "typeName": "GroupAnnotation",
+   "component": "Annotation",
+   "componentLevel": 1,
+   "containerField": "children",
+   "from": "4.0",
+   "to": "Infinity",
+   "vrml2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "visible",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "bboxDisplay",
+      "type": "SFBool",
+      "value": false
+     },
+     {
+      "accessType": 1,
+      "name": "bboxSize",
+      "type": "SFVec3f",
+      "value": [
+       -1,
+       -1,
+       -1
+      ]
+     },
+     {
+      "accessType": 1,
+      "name": "bboxCenter",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 2,
+      "name": "addChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 2,
+      "name": "removeChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "children",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "visible",
+      "SFBool",
+      true
+     ],
+     [
+      "bboxDisplay",
+      "SFBool",
+      false
+     ],
+     [
+      "bboxSize",
+      "SFVec3f",
+      [
+       -1,
+       -1,
+       -1
+      ]
+     ],
+     [
+      "bboxCenter",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "addChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "removeChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "children",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {
+     "bboxSize": "length",
+     "bboxCenter": "length"
+    }
+   },
+   "x3d": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "visible",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "bboxDisplay",
+      "type": "SFBool",
+      "value": false
+     },
+     {
+      "accessType": 1,
+      "name": "bboxSize",
+      "type": "SFVec3f",
+      "value": [
+       -1,
+       -1,
+       -1
+      ]
+     },
+     {
+      "accessType": 1,
+      "name": "bboxCenter",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 2,
+      "name": "addChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 2,
+      "name": "removeChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "children",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "visible",
+      "SFBool",
+      true
+     ],
+     [
+      "bboxDisplay",
+      "SFBool",
+      false
+     ],
+     [
+      "bboxSize",
+      "SFVec3f",
+      [
+       -1,
+       -1,
+       -1
+      ]
+     ],
+     [
+      "bboxCenter",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "addChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "removeChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "children",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {
+     "bboxSize": "length",
+     "bboxCenter": "length"
+    }
+   },
+   "3.0": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "visible",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "bboxDisplay",
+      "type": "SFBool",
+      "value": false
+     },
+     {
+      "accessType": 1,
+      "name": "bboxSize",
+      "type": "SFVec3f",
+      "value": [
+       -1,
+       -1,
+       -1
+      ]
+     },
+     {
+      "accessType": 1,
+      "name": "bboxCenter",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 2,
+      "name": "addChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 2,
+      "name": "removeChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "children",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "visible",
+      "SFBool",
+      true
+     ],
+     [
+      "bboxDisplay",
+      "SFBool",
+      false
+     ],
+     [
+      "bboxSize",
+      "SFVec3f",
+      [
+       -1,
+       -1,
+       -1
+      ]
+     ],
+     [
+      "bboxCenter",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "addChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "removeChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "children",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {
+     "bboxSize": "length",
+     "bboxCenter": "length"
+    }
+   },
+   "3.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "visible",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "bboxDisplay",
+      "type": "SFBool",
+      "value": false
+     },
+     {
+      "accessType": 1,
+      "name": "bboxSize",
+      "type": "SFVec3f",
+      "value": [
+       -1,
+       -1,
+       -1
+      ]
+     },
+     {
+      "accessType": 1,
+      "name": "bboxCenter",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 2,
+      "name": "addChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 2,
+      "name": "removeChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "children",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "visible",
+      "SFBool",
+      true
+     ],
+     [
+      "bboxDisplay",
+      "SFBool",
+      false
+     ],
+     [
+      "bboxSize",
+      "SFVec3f",
+      [
+       -1,
+       -1,
+       -1
+      ]
+     ],
+     [
+      "bboxCenter",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "addChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "removeChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "children",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {
+     "bboxSize": "length",
+     "bboxCenter": "length"
+    }
+   },
+   "3.2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "visible",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "bboxDisplay",
+      "type": "SFBool",
+      "value": false
+     },
+     {
+      "accessType": 1,
+      "name": "bboxSize",
+      "type": "SFVec3f",
+      "value": [
+       -1,
+       -1,
+       -1
+      ]
+     },
+     {
+      "accessType": 1,
+      "name": "bboxCenter",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 2,
+      "name": "addChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 2,
+      "name": "removeChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "children",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "visible",
+      "SFBool",
+      true
+     ],
+     [
+      "bboxDisplay",
+      "SFBool",
+      false
+     ],
+     [
+      "bboxSize",
+      "SFVec3f",
+      [
+       -1,
+       -1,
+       -1
+      ]
+     ],
+     [
+      "bboxCenter",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "addChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "removeChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "children",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {
+     "bboxSize": "length",
+     "bboxCenter": "length"
+    }
+   },
+   "3.3": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "visible",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "bboxDisplay",
+      "type": "SFBool",
+      "value": false
+     },
+     {
+      "accessType": 1,
+      "name": "bboxSize",
+      "type": "SFVec3f",
+      "value": [
+       -1,
+       -1,
+       -1
+      ]
+     },
+     {
+      "accessType": 1,
+      "name": "bboxCenter",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 2,
+      "name": "addChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 2,
+      "name": "removeChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "children",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "visible",
+      "SFBool",
+      true
+     ],
+     [
+      "bboxDisplay",
+      "SFBool",
+      false
+     ],
+     [
+      "bboxSize",
+      "SFVec3f",
+      [
+       -1,
+       -1,
+       -1
+      ]
+     ],
+     [
+      "bboxCenter",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "addChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "removeChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "children",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {
+     "bboxSize": "length",
+     "bboxCenter": "length"
+    }
+   },
+   "4.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "visible",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "bboxDisplay",
+      "type": "SFBool",
+      "value": false
+     },
+     {
+      "accessType": 1,
+      "name": "bboxSize",
+      "type": "SFVec3f",
+      "value": [
+       -1,
+       -1,
+       -1
+      ]
+     },
+     {
+      "accessType": 1,
+      "name": "bboxCenter",
+      "type": "SFVec3f",
+      "value": [
+       0,
+       0,
+       0
+      ]
+     },
+     {
+      "accessType": 2,
+      "name": "addChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 2,
+      "name": "removeChildren",
+      "type": "MFNode",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "children",
+      "type": "MFNode",
+      "value": 0
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "visible",
+      "SFBool",
+      true
+     ],
+     [
+      "bboxDisplay",
+      "SFBool",
+      false
+     ],
+     [
+      "bboxSize",
+      "SFVec3f",
+      [
+       -1,
+       -1,
+       -1
+      ]
+     ],
+     [
+      "bboxCenter",
+      "SFVec3f",
+      [
+       0,
+       0,
+       0
+      ]
+     ],
+     [
+      "addChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "removeChildren",
+      "MFNode",
+      0
+     ],
+     [
+      "children",
+      "MFNode",
+      0
+     ]
+    ],
+    "units": {
+     "bboxSize": "length",
+     "bboxCenter": "length"
+    }
+   }
+  },
+  {
+   "typeName": "IconAnnotation",
+   "component": "Annotation",
+   "componentLevel": 1,
+   "containerField": "children",
+   "from": "4.0",
+   "to": "Infinity",
+   "vrml2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefresh",
+      "type": "SFTime",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefreshTimeLimit",
+      "type": "SFTime",
+      "value": 3600
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ],
+     [
+      "autoRefresh",
+      "SFTime",
+      0
+     ],
+     [
+      "autoRefreshTimeLimit",
+      "SFTime",
+      3600
+     ]
+    ],
+    "units": {}
+   },
+   "x3d": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefresh",
+      "type": "SFTime",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefreshTimeLimit",
+      "type": "SFTime",
+      "value": 3600
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ],
+     [
+      "autoRefresh",
+      "SFTime",
+      0
+     ],
+     [
+      "autoRefreshTimeLimit",
+      "SFTime",
+      3600
+     ]
+    ],
+    "units": {}
+   },
+   "3.0": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefresh",
+      "type": "SFTime",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefreshTimeLimit",
+      "type": "SFTime",
+      "value": 3600
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ],
+     [
+      "autoRefresh",
+      "SFTime",
+      0
+     ],
+     [
+      "autoRefreshTimeLimit",
+      "SFTime",
+      3600
+     ]
+    ],
+    "units": {}
+   },
+   "3.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefresh",
+      "type": "SFTime",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefreshTimeLimit",
+      "type": "SFTime",
+      "value": 3600
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ],
+     [
+      "autoRefresh",
+      "SFTime",
+      0
+     ],
+     [
+      "autoRefreshTimeLimit",
+      "SFTime",
+      3600
+     ]
+    ],
+    "units": {}
+   },
+   "3.2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefresh",
+      "type": "SFTime",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefreshTimeLimit",
+      "type": "SFTime",
+      "value": 3600
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ],
+     [
+      "autoRefresh",
+      "SFTime",
+      0
+     ],
+     [
+      "autoRefreshTimeLimit",
+      "SFTime",
+      3600
+     ]
+    ],
+    "units": {}
+   },
+   "3.3": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefresh",
+      "type": "SFTime",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefreshTimeLimit",
+      "type": "SFTime",
+      "value": 3600
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ],
+     [
+      "autoRefresh",
+      "SFTime",
+      0
+     ],
+     [
+      "autoRefreshTimeLimit",
+      "SFTime",
+      3600
+     ]
+    ],
+    "units": {}
+   },
+   "4.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefresh",
+      "type": "SFTime",
+      "value": 0
+     },
+     {
+      "accessType": 7,
+      "name": "autoRefreshTimeLimit",
+      "type": "SFTime",
+      "value": 3600
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ],
+     [
+      "autoRefresh",
+      "SFTime",
+      0
+     ],
+     [
+      "autoRefreshTimeLimit",
+      "SFTime",
+      3600
+     ]
+    ],
+    "units": {}
+   }
+  },
+  {
+   "typeName": "TextAnnotation",
+   "component": "Annotation",
+   "componentLevel": 1,
+   "containerField": "children",
+   "from": "4.0",
+   "to": "Infinity",
+   "vrml2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "contentType",
+      "type": "SFString",
+      "value": "text/plain"
+     },
+     {
+      "accessType": 7,
+      "name": "text",
+      "type": "SFString",
+      "value": ""
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "contentType",
+      "SFString",
+      "text/plain"
+     ],
+     [
+      "text",
+      "SFString",
+      ""
+     ]
+    ],
+    "units": {}
+   },
+   "x3d": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "contentType",
+      "type": "SFString",
+      "value": "text/plain"
+     },
+     {
+      "accessType": 7,
+      "name": "text",
+      "type": "SFString",
+      "value": ""
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "contentType",
+      "SFString",
+      "text/plain"
+     ],
+     [
+      "text",
+      "SFString",
+      ""
+     ]
+    ],
+    "units": {}
+   },
+   "3.0": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "contentType",
+      "type": "SFString",
+      "value": "text/plain"
+     },
+     {
+      "accessType": 7,
+      "name": "text",
+      "type": "SFString",
+      "value": ""
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "contentType",
+      "SFString",
+      "text/plain"
+     ],
+     [
+      "text",
+      "SFString",
+      ""
+     ]
+    ],
+    "units": {}
+   },
+   "3.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "contentType",
+      "type": "SFString",
+      "value": "text/plain"
+     },
+     {
+      "accessType": 7,
+      "name": "text",
+      "type": "SFString",
+      "value": ""
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "contentType",
+      "SFString",
+      "text/plain"
+     ],
+     [
+      "text",
+      "SFString",
+      ""
+     ]
+    ],
+    "units": {}
+   },
+   "3.2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "contentType",
+      "type": "SFString",
+      "value": "text/plain"
+     },
+     {
+      "accessType": 7,
+      "name": "text",
+      "type": "SFString",
+      "value": ""
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "contentType",
+      "SFString",
+      "text/plain"
+     ],
+     [
+      "text",
+      "SFString",
+      ""
+     ]
+    ],
+    "units": {}
+   },
+   "3.3": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "contentType",
+      "type": "SFString",
+      "value": "text/plain"
+     },
+     {
+      "accessType": 7,
+      "name": "text",
+      "type": "SFString",
+      "value": ""
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "contentType",
+      "SFString",
+      "text/plain"
+     ],
+     [
+      "text",
+      "SFString",
+      ""
+     ]
+    ],
+    "units": {}
+   },
+   "4.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "contentType",
+      "type": "SFString",
+      "value": "text/plain"
+     },
+     {
+      "accessType": 7,
+      "name": "text",
+      "type": "SFString",
+      "value": ""
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "contentType",
+      "SFString",
+      "text/plain"
+     ],
+     [
+      "text",
+      "SFString",
+      ""
+     ]
+    ],
+    "units": {}
+   }
+  },
+  {
+   "typeName": "URLAnnotation",
+   "component": "Annotation",
+   "componentLevel": 1,
+   "containerField": "children",
+   "from": "4.0",
+   "to": "Infinity",
+   "vrml2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ]
+    ],
+    "units": {}
+   },
+   "x3d": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ]
+    ],
+    "units": {}
+   },
+   "3.0": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ]
+    ],
+    "units": {}
+   },
+   "3.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ]
+    ],
+    "units": {}
+   },
+   "3.2": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ]
+    ],
+    "units": {}
+   },
+   "3.3": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ]
+    ],
+    "units": {}
+   },
+   "4.1": {
+    "canUserDefinedFields": false,
+    "fields": [
+     {
+      "accessType": 7,
+      "name": "metadata",
+      "type": "SFNode",
+      "value": null
+     },
+     {
+      "accessType": 7,
+      "name": "enabled",
+      "type": "SFBool",
+      "value": true
+     },
+     {
+      "accessType": 7,
+      "name": "annotationGroupID",
+      "type": "SFString",
+      "value": ""
+     },
+     {
+      "accessType": 7,
+      "name": "displayPolicy",
+      "type": "SFString",
+      "value": "NEVER"
+     },
+     {
+      "accessType": 7,
+      "name": "url",
+      "type": "MFString",
+      "value": []
+     }
+    ],
+    "aliases": {},
+    "instance": [
+     [
+      "metadata",
+      "SFNode",
+      null
+     ],
+     [
+      "enabled",
+      "SFBool",
+      true
+     ],
+     [
+      "annotationGroupID",
+      "SFString",
+      ""
+     ],
+     [
+      "displayPolicy",
+      "SFString",
+      "NEVER"
+     ],
+     [
+      "url",
+      "MFString",
+      []
+     ]
+    ],
+    "units": {}
+   }
+  }
+ ],
+ "pinned": "34cdf9f97"
+}

@@ -1,0 +1,42 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Scripting:1
+COMPONENT PointingDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+SpotLight { location -2.5 2 3 direction 0.6 -0.5 -0.6 intensity 3 cutOffAngle 0.6 beamWidth 0.3 radius 15 color 1 0.7 0.5 }
+DEF OPTIONS Script {
+  url "javascript:
+function initialize ()
+{
+   Browser .setBrowserOption ('ColorSpace', 'SRGB');
+}
+"
+}
+
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.5 0.3 specularColor 0.6 0.6 0.6 shininess 0.4 }
+  texture ImageTexture { url "pbr/base.png" } } geometry Sphere { radius 0.8 } } }
+Transform { translation 0 0 0 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.9 0.9 }
+  texture ImageTexture { url "pbr/base.png" } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 1.5 0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 0.8 0.6 metallic 0.3 roughness 0.4 emissiveColor 0.3 0.1 0 } } geometry Sphere { radius 0.8 } } }
+
+
+Transform { translation -1.8 2.2 0 children Shape { appearance Appearance { material PhysicalMaterial { metallic 0 roughness 0.5
+  baseTexture ImageTexture { url "pbr/base.png" } } } geometry Sphere { radius 0.7 } } }
+Transform { translation 0 0.9 0 children Shape { appearance Appearance { material PhysicalMaterial { metallic 1 roughness 1
+  metallicRoughnessTexture ImageTexture { url "pbr/mr.png" } occlusionTexture ImageTexture { url "pbr/occlusion.png" } occlusionStrength 0.8 } } geometry Sphere { radius 0.7 } } }
+Transform { translation 1.8 0.9 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.3 0.35 metallic 0 roughness 0.6
+  emissiveColor 1 1 1 emissiveTexture ImageTexture { url "pbr/emissive.png" } } } geometry Sphere { radius 0.7 } } }
+Transform { translation -1.8 -0.9 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 0 roughness 0.35
+  normalTexture ImageTexture { url "pbr/normal.png" } normalScale 1.5 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 -0.9 0 rotation 0 1 0 0.5 children Shape { appearance Appearance { material PhysicalMaterial { metallic 0.2 roughness 0.4 }
+  texture ImageTexture { url "pbr/base.png" } textureTransform TextureTransform { scale 2 2 rotation 0.3 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 1.8 -0.9 0.5 children Shape { appearance Appearance { material PhysicalMaterial { metallic 0 roughness 0.3 transparency 0.2
+  baseTexture ImageTexture { url "pbr/base-alpha.png" } } } geometry Sphere { radius 0.7 } } }
+

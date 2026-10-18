@@ -1,0 +1,39 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 10 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+
+DEF G Group { children [
+  DEF S1 Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 } } geometry DEF I1 InlineGeometry { url "ig/sphere.x3dv" } }
+  Transform { translation 2.5 0 0 children DEF S2 Shape { appearance Appearance { material Material { diffuseColor 0.2 0.6 0.8 } } geometry DEF I2 InlineGeometry { url "ig/box.x3dv" } } }
+]}
+DEF G2 Group { }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode s1 USE S1
+  initializeOnly SFNode g USE G
+  initializeOnly SFNode g2 USE G2
+  url "javascript:
+var made = null, made_shape = null;
+function on_key (k)
+{
+   if (k == 'x') g .removeChildren = new MFNode (s1);
+   if (k == 'y') g .addChildren = new MFNode (s1);
+   if (k == 't') { made = Browser .currentScene .createNode ('InlineGeometry'); made .url = new MFString ('data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Cone%20%7B%20height%201.4%20%7D%20%7D'); made_shape = Browser .currentScene .createNode ('Shape'); made_shape .appearance = s1 .appearance; made_shape .geometry = made; g2 .addChildren = new MFNode (made_shape); }
+   if (k == 'v') g2 .children = new MFNode ();
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+

@@ -1,0 +1,16 @@
+#VRML V2.0 utf8
+# Inline ecmascript source with characters that need escaping in XML CDATA and attributes.
+DEF Src Script {
+  eventIn SFFloat set_fraction
+  eventOut SFFloat out
+  field SFString label "a & <b> it's \"q\""
+  url "javascript:
+    function set_fraction (f) { out = f < 0.5 && f > 0 ? 1 : 0; /* a & b */ }
+  "
+}
+DEF Ecma Script {
+  field SFInt32 count 0
+  url "ecmascript:
+    function initialize () { }
+  "
+}

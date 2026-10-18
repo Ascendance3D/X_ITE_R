@@ -1,0 +1,5838 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "case": "q01-initial",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "q02-url-glb",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/glb/textured.glb"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/glb/textured.glb\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/glb/textured.glb"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/glb/textured.glb\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/glb/textured.glb"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/glb/textured.glb"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/buffer/external-bin.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/buffer/external-bin.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/buffer/external-bin.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/buffer/external-bin.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/buffer/external-bin.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "q03-load-toggle",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    load FALSE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    load FALSE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    load FALSE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": false,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    load FALSE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "q04-fallback",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "warn: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf-inline/missing/gone.gltf', trying URL 2 of 3. Error: Not Found",
+      "warn: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/invalid/version-1.gltf', trying URL 3 of 3. Error: Couldn't parse X3D. No suitable file handler found for 'http://oracle/synthetic-rea-b08-gltf/invalid/version-1.gltf'."
+     ],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url [\n      \"missing/gone.gltf\",\n      \"../synthetic-rea-b08-gltf/invalid/version-1.gltf\",\n      \"../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf\"\n    ]\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url [\n      \"missing/gone.gltf\",\n      \"../synthetic-rea-b08-gltf/invalid/version-1.gltf\",\n      \"../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf\"\n    ]\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url [\n      \"missing/gone.gltf\",\n      \"../synthetic-rea-b08-gltf/invalid/version-1.gltf\",\n      \"../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf\"\n    ]\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "missing/gone.gltf",
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf",
+        "../synthetic-rea-b08-gltf/render/mat-pbr-metal.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "q05-reload",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "NOT_STARTED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "q06-remove",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group { }\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group { }\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "q07-material-variants",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/variants/basic.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/variants/basic.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/variants/basic.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/variants/basic.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Switch",
+        "Switch"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "q08-skin-animation",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/animation/skin-joint.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/animation/skin-joint.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/animation/skin-joint.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 13,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 14,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/animation/skin-joint.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "HAnimHumanoid",
+        "Group"
+       ],
+       "children": 2,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-bad-accessor",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/accessor-count-too-big.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/accessor-count-too-big.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/accessor-count-too-big.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/accessor-count-too-big.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/accessor-count-too-big.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/accessor-count-too-big.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-bad-base64",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Couldn't load data URL. TypeError: Failed to fetch"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bad-base64.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/bad-base64.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bad-base64.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/bad-base64.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bad-base64.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bad-base64.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-bad-ref-view",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bufferview-buffer-missing.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/bufferview-buffer-missing.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bufferview-buffer-missing.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/bufferview-buffer-missing.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bufferview-buffer-missing.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/bufferview-buffer-missing.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Shape"
+       ],
+       "children": 1,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-glb-trailing",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/invalid/glb-trailing-bytes.glb'. RangeError: Offset is outside the bounds of the DataView"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-trailing-bytes.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/glb-trailing-bytes.glb\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-trailing-bytes.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/glb-trailing-bytes.glb\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-trailing-bytes.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-trailing-bytes.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-glb-truncated",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/invalid/glb-truncated.glb'. Error: Couldn't parse X3D. No suitable file handler found for 'http://oracle/synthetic-rea-b08-gltf/invalid/glb-truncated.glb'."
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-truncated.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/glb-truncated.glb\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-truncated.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/glb-truncated.glb\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-truncated.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/glb-truncated.glb"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-missing-bin",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/invalid/does-not-exist.bin'. Error: Not Found"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/missing-bin.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/missing-bin.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/missing-bin.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/missing-bin.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/missing-bin.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/missing-bin.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-node-null",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/invalid/node-null.gltf'. TypeError: Cannot read properties of undefined (reading 'getType')"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/node-null.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/node-null.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/node-null.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/node-null.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/node-null.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/node-null.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-not-json",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/invalid/not-json.gltf'. Error: Couldn't parse X3D. No suitable file handler found for 'http://oracle/synthetic-rea-b08-gltf/invalid/not-json.gltf'."
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/not-json.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/not-json.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/not-json.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/not-json.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/not-json.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/not-json.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-tt-pointer",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/pointer/metallic.gltf'. TypeError: Cannot set properties of null (setting '_emissiveStrength')"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/pointer/metallic.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/pointer/metallic.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/pointer/metallic.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/pointer/metallic.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/pointer/metallic.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/pointer/metallic.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "case": "r-version-1",
+   "ok": true,
+   "steps": [
+    {
+     "k": 0,
+     "console": [
+      "log: parent tick 1"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 1,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 2,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 3,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 4,
+     "console": [
+      "error: Inline: Couldn't load URL 'http://oracle/synthetic-rea-b08-gltf/invalid/version-1.gltf'. Error: Couldn't parse X3D. No suitable file handler found for 'http://oracle/synthetic-rea-b08-gltf/invalid/version-1.gltf'."
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/version-1.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 1\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 5,
+     "console": [
+      "log: parent tick 2"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/invalid/version-1.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 6,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 7,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "FAILED",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/invalid/version-1.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ]
+    },
+    {
+     "k": 8,
+     "console": [],
+     "loadCount": 1,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "IN_PROGRESS",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": false,
+       "roots": [],
+       "children": 0,
+       "live": null
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 2\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 9,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 10,
+     "console": [
+      "log: parent tick 3"
+     ],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ],
+     "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nDEF Holder Group {\n  children DEF Inl Inline {\n    global TRUE\n    url \"../synthetic-rea-b08-gltf/render/tex-nearest.gltf\"\n  }\n}\n\nDEF ParentClock TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF ParentScript Script {\n  inputOnly      SFTime  tick\n  initializeOnly SFInt32 n 3\n\n  url \"javascript:\n    function tick (t) { n = n + 1; print ('parent tick ' + n); }\n  \"\n}\n\nROUTE ParentClock.cycleTime TO ParentScript.tick\n"
+    },
+    {
+     "k": 11,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    },
+    {
+     "k": 12,
+     "console": [],
+     "loadCount": 0,
+     "inlines": [
+      {
+       "path": "Inl",
+       "loadState": "COMPLETE",
+       "load": true,
+       "url": [
+        "../synthetic-rea-b08-gltf/render/tex-nearest.gltf"
+       ],
+       "loaded": true,
+       "roots": [
+        "Group",
+        "Group",
+        "Group"
+       ],
+       "children": 3,
+       "live": true
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

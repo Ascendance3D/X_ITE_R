@@ -1,0 +1,107 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Texturing:3
+Viewpoint { position 0 0 6.2 }
+Background { skyColor 0.2 0.25 0.3 }
+NavigationInfo { headlight FALSE }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+Transform { translation -2 1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,REPLACE" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation -1 1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,MODULATE" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 0 1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,MODULATE2X" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 1 1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,MODULATE4X" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 2 1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,ADD" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation -2 0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,ADDSIGNED" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation -1 0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,ADDSIGNED2X" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 0 0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,ADDSMOOTH" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 1 0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,SUBTRACT" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 2 0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,BLENDDIFFUSEALPHA" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation -2 -0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,BLENDTEXTUREALPHA" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation -1 -0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,BLENDFACTORALPHA" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 0 -0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,BLENDCURRENTALPHA" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 1 -0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,MODULATEALPHA_ADDCOLOR" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 2 -0.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,MODULATEINVALPHA_ADDCOLOR" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation -2 -1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,MODULATEINVCOLOR_ADDALPHA" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation -1 -1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,DOTPRODUCT3" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 0 -1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,SELECTARG1" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 1 -1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,SELECTARG2" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }
+Transform { translation 2 -1.5 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 ambientIntensity 0.4 transparency 0.2 } texture MultiTexture { color 1 1 1 alpha 0.5 mode [ "MODULATE" "MODULATE,OFF" "BLENDCURRENTALPHA,REPLACE" ] source [ "" "" "FACTOR" ] texture [ PixelTexture { image 4 4 4 0x28c800ff 0x64c81ef0 0xa0c83ce1 0xdcc85ad2 0x28a078c3 0x64a096b4 0xa0a0b4a5 0xdca0d296 0x2878f087 0x64780e78 0xa0782c69 0xdc784a5a 0x2850684b 0x6450863c 0xa050a42d 0xdc50c21e } PixelTexture { image 4 4 4 0xff5a8040 0xef73804c 0xdf8c8058 0xcfa58064 0xbfbe8070 0xafd7807c 0x9ff08088 0x8f098094 0x7f2280a0 0x6f3b80ac 0x5f5480b8 0x4f6d80c4 0x3f8680d0 0x2f9f80dc 0x1fb880e8 0x0fd180f4 } PixelTexture { image 2 2 3 0xff4020 0x20ff40 0x4020ff 0xffffff } ] } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.45 -0.45 0, 0.45 -0.45 0, 0.45 0.45 0, -0.45 0.45 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] }
+} }

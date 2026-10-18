@@ -1,0 +1,17 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Texturing:3
+# REA batch 01 synthetic: TextureProperties legacy FASTEST defaults (specification version 3.3).
+Viewpoint { position 0 0 9 }
+NavigationInfo { type "NONE" }
+Background { skyColor 0.1 0.1 0.1 }
+DEF Q IndexedFaceSet { coord Coordinate { point [ -1 -1 0, 1 -1 0, 1 1 0, -1 1 0 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] texCoordIndex [ 0 1 2 3 -1 ] }
+Transform { translation -3 2.2 0 children Shape { appearance Appearance { texture ImageTexture { url "checker8.png" } } geometry USE Q } }
+Transform { translation -0.9 2.2 0 children Shape { appearance Appearance { texture ImageTexture { url "checker8.png" textureProperties TextureProperties { } } } geometry USE Q } }
+Transform { translation 1.2 2.2 0 children Shape { appearance Appearance { texture ImageTexture { url "checker64.png" textureProperties TextureProperties { magnificationFilter "NEAREST_PIXEL" } } } geometry USE Q } }
+Transform { translation 3.3 2.2 0 children Shape { appearance Appearance { texture ImageTexture { url "checker64.png" textureProperties TextureProperties { boundaryModeS "CLAMP_TO_EDGE" boundaryModeT "MIRRORED_REPEAT" } } textureTransform TextureTransform { scale 3 3 center 0.5 0.5 } } geometry USE Q } }
+Transform { translation -1.8 -0.6 -2 rotation 1 0 0 -1.35 scale 1.6 3 1 children Shape { appearance Appearance { texture ImageTexture { url "checker64.png" textureProperties TextureProperties { generateMipMaps TRUE minificationFilter "AVG_PIXEL_AVG_MIPMAP" } } textureTransform TextureTransform { scale 6 6 } } geometry USE Q } }
+Transform { translation 1.8 -0.6 -2 rotation 1 0 0 -1.35 scale 1.6 3 1 children Shape { appearance Appearance { texture ImageTexture { url "checker64.png" textureProperties TextureProperties { generateMipMaps TRUE minificationFilter "NICEST" } } textureTransform TextureTransform { scale 6 6 } } geometry USE Q } }
+Transform { translation -3 -2.8 0 scale 0.6 0.6 1 children Shape { appearance Appearance { texture ImageTexture { url "checker64.png" textureProperties TextureProperties { generateMipMaps TRUE minificationFilter "NEAREST_PIXEL_NEAREST_MIPMAP" magnificationFilter "FASTEST" } } textureTransform TextureTransform { scale 8 8 } } geometry USE Q } }
+Transform { translation 0 -2.8 0 scale 0.6 0.6 1 children Shape { appearance Appearance { texture PixelTexture { image 4 4 3 0xFF0000 0x00FF00 0x0000FF 0xFFFFFF 0x00FF00 0x0000FF 0xFFFFFF 0xFF0000 0x0000FF 0xFFFFFF 0xFF0000 0x00FF00 0xFFFFFF 0xFF0000 0x00FF00 0x0000FF textureProperties TextureProperties { generateMipMaps TRUE magnificationFilter "AVG_PIXEL" } } } geometry USE Q } }
+Transform { translation 3 -2.8 0 scale 0.6 0.6 1 children Shape { appearance Appearance { texture ImageTexture { url "checker64.png" textureProperties TextureProperties { minificationFilter "BOGUS" magnificationFilter "BOGUS" boundaryModeS "BOGUS" } } textureTransform TextureTransform { scale 8 8 } } geometry USE Q } }

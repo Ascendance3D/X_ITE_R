@@ -1,0 +1,20 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT Layering:2
+COMPONENT Navigation:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Interpolation:1
+COMPONENT X_ITE:1
+COMPONENT GaussianSplats:1
+Viewpoint { position 0 0 7 }
+Background { skyColor 0.2 0.2 0.28 }
+GaussianSplats { 
+  positions [ 2.9 0 0, -2.9 0.5 0, 0 2.9 0, 3.8 0 0, 0 -3.4 0, 3.5 3.5 0 ]
+  orientations [ 0 0 0 1, 0 0 0 1, 0 0 0 1, 0 0 0 1, 0 0 0 1, 0 0 0 1 ]
+  scales [ 0.3 0.3 0.3, 0.3 0.3 0.3, 0.3 0.3 0.3, 0.3 0.3 0.3, 0.3 0.3 0.3, 0.3 0.3 0.3 ]
+  opacities [ 0.9, 0.9, 0.9, 0.9, 0.9, 0.9 ]
+  sphericalHarmonicsDegree0Coef0 [ 1 0.2 0, 0 1 0.2, 0.2 0 1, 1 1 0, 0 1 1, 1 0 1 ]
+}

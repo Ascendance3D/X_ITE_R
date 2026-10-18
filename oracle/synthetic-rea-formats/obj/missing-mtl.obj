@@ -1,0 +1,7 @@
+# synthetic file whose mtllib target does not exist (newly authored)
+mtllib does_not_exist.mtl
+v 0 0 0
+v 1 0 0
+v 0 1 0
+usemtl some_material
+f 1 2 3

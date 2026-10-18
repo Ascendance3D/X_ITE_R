@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='3.3'>
+  <Scene>
+    <LOD range='10 20'>
+      <Shape containerField='children'>
+        <Appearance>
+          <Material diffuseColor='0 1 0'/>
+        </Appearance>
+        <Box/>
+      </Shape>
+      <Shape containerField='level'>
+        <Sphere/>
+      </Shape>
+    </LOD>
+    <Collision>
+      <Shape containerField='proxy'>
+        <Box size='4 4 4'/>
+      </Shape>
+      <Transform translation='0 1 0'>
+        <Shape>
+          <IndexedFaceSet coordIndex='0 1 2 -1'>
+            <Coordinate point='0 0 0, 1 0 0, 0 1 0'/>
+            <TextureCoordinate containerField='texCoord' point='0 0, 1 0, 0 1'/>
+          </IndexedFaceSet>
+        </Shape>
+      </Transform>
+    </Collision>
+    <Shape>
+      <Box/>
+      <MetadataString containerField='metadata' name='tag' value='"alpha" "beta gamma"'/>
+    </Shape>
+    <Transform translation='5 0 0'>
+      <MetadataSet containerField='metadata' name='set'>
+        <MetadataDouble containerField='value' name='d' value='1.5'/>
+        <MetadataSet containerField='value' name='nested'>
+          <MetadataString containerField='value' name='s' value='inner'/>
+        </MetadataSet>
+      </MetadataSet>
+      <Shape>
+        <Box/>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>

@@ -526,11 +526,11 @@ fn print_sf(g: &mut Generator, value: &FieldValue) {
         V::SFBool(b) => g.string.push_str(if *b { "TRUE" } else { "FALSE" }),
         V::SFInt32(i) => g.string.push_str(&i.to_string()),
         V::SFFloat(f) => {
-            let s = g.float_format(*f);
+            let s = g.float_format(g.to_unit(*f));
             g.string.push_str(&s)
         }
         V::SFDouble(f) | V::SFTime(f) => {
-            let s = g.double_format(*f);
+            let s = g.double_format(g.to_unit(*f));
             g.string.push_str(&s)
         }
         V::SFString(s) => {
@@ -540,18 +540,22 @@ fn print_sf(g: &mut Generator, value: &FieldValue) {
         }
         V::SFColor(c) => g.numbers(&c.components(), false),
         V::SFColorRGBA(c) => g.numbers(&c.components(), false),
-        V::SFVec2f(v) => g.numbers(&v.to_array(), false),
-        V::SFVec3f(v) => g.numbers(&v.to_array(), false),
-        V::SFVec4f(v) => g.numbers(&v.to_array(), false),
-        V::SFVec2d(v) => g.numbers(&v.to_array(), true),
-        V::SFVec3d(v) => g.numbers(&v.to_array(), true),
-        V::SFVec4d(v) => g.numbers(&v.to_array(), true),
+        V::SFVec2f(v) => g.numbers(&v.to_array().map(|x| g.to_unit(x)), false),
+        V::SFVec3f(v) => g.numbers(&v.to_array().map(|x| g.to_unit(x)), false),
+        V::SFVec4f(v) => g.numbers(&v.to_array().map(|x| g.to_unit(x)), false),
+        V::SFVec2d(v) => g.numbers(&v.to_array().map(|x| g.to_unit(x)), true),
+        V::SFVec3d(v) => g.numbers(&v.to_array().map(|x| g.to_unit(x)), true),
+        V::SFVec4d(v) => g.numbers(&v.to_array().map(|x| g.to_unit(x)), true),
         V::SFMatrix3f(m) => g.numbers(&m.0, false),
         V::SFMatrix3d(m) => g.numbers(&m.0, true),
         V::SFMatrix4f(m) => g.numbers(&m.0, false),
         V::SFMatrix4d(m) => g.numbers(&m.0, true),
         V::SFQuaternion(q) => g.numbers(&[q.x, q.y, q.z, q.w], true),
-        V::SFRotation(r) => g.numbers(&r.raw(), true),
+        V::SFRotation(r) => {
+            let mut raw = r.raw();
+            raw[3] = g.to_unit_angle(raw[3]);
+            g.numbers(&raw, true)
+        }
         V::SFImage(image) => {
             // SFImage.toStream: hexadecimal pixels via a Uint32Array view.
             g.string.push_str(&image.width.to_string());
@@ -620,4 +624,75 @@ pub fn unescape(s: &str) -> String {
     }
 
     out
+}
+
+impl FieldValue {
+    /// The single values a multi-valued field hands to its elements' printers (X3DTypedArrayField
+    /// and X3DObjectArrayField `toXMLStream` / `toJSONStreamValue`), in order. `None` for single
+    /// values and for MFNode, whose elements are nodes printed by the scene layer.
+    pub fn elements(&self) -> Option<Vec<FieldValue>> {
+        use FieldValue as V;
+
+        let out: Vec<FieldValue> = match self {
+            V::MFBool(v) => v.iter().map(|x| V::SFBool(*x)).collect(),
+            V::MFInt32(v) => v.iter().map(|x| V::SFInt32(*x)).collect(),
+            V::MFFloat(v) => v.iter().map(|x| V::SFFloat(*x as f64)).collect(),
+            V::MFDouble(v) => v.iter().map(|x| V::SFDouble(*x)).collect(),
+            V::MFTime(v) => v.iter().map(|x| V::SFTime(*x)).collect(),
+            V::MFString(v) => v.iter().map(|x| V::SFString(x.clone())).collect(),
+            V::MFImage(v) => v.iter().map(|x| V::SFImage(x.clone())).collect(),
+            V::MFColor(v) => (0..v.len() / 3)
+                .map(|i| {
+                    let mut c = Color3::BLACK;
+                    for k in 0..3 {
+                        c.set_index(k, v[i * 3 + k] as f64);
+                    }
+                    V::SFColor(c)
+                })
+                .collect(),
+            V::MFColorRGBA(v) => (0..v.len() / 4)
+                .map(|i| {
+                    let mut c = Color4::default();
+                    for k in 0..4 {
+                        c.set_index(k, v[i * 4 + k] as f64);
+                    }
+                    V::SFColorRGBA(c)
+                })
+                .collect(),
+            V::MFRotation(v) => (0..v.len() / 4).map(|i| V::SFRotation(Rotation4::new(v[i * 4], v[i * 4 + 1], v[i * 4 + 2], v[i * 4 + 3]))).collect(),
+            V::MFQuaternion(v) => (0..v.len() / 4)
+                .map(|i| V::SFQuaternion(Quaternion::new(v[i * 4], v[i * 4 + 1], v[i * 4 + 2], v[i * 4 + 3])))
+                .collect(),
+            V::MFVec2f(v) => (0..v.len() / 2).map(|i| V::SFVec2f(Vector2::new(v[i * 2] as f64, v[i * 2 + 1] as f64))).collect(),
+            V::MFVec3f(v) => (0..v.len() / 3)
+                .map(|i| V::SFVec3f(Vector3::new(v[i * 3] as f64, v[i * 3 + 1] as f64, v[i * 3 + 2] as f64)))
+                .collect(),
+            V::MFVec4f(v) => (0..v.len() / 4)
+                .map(|i| {
+                    let e: Vec<f64> = v[i * 4..i * 4 + 4].iter().map(|x| *x as f64).collect();
+                    V::SFVec4f(Vector4::from_slice(&e))
+                })
+                .collect(),
+            V::MFVec2d(v) => (0..v.len() / 2).map(|i| V::SFVec2d(Vector2::from_slice(&v[i * 2..i * 2 + 2]))).collect(),
+            V::MFVec3d(v) => (0..v.len() / 3).map(|i| V::SFVec3d(Vector3::from_slice(&v[i * 3..i * 3 + 3]))).collect(),
+            V::MFVec4d(v) => (0..v.len() / 4).map(|i| V::SFVec4d(Vector4::from_slice(&v[i * 4..i * 4 + 4]))).collect(),
+            V::MFMatrix3f(v) => (0..v.len() / 9)
+                .map(|i| {
+                    let e: Vec<f64> = v[i * 9..i * 9 + 9].iter().map(|x| *x as f64).collect();
+                    V::SFMatrix3f(Matrix3(e.try_into().unwrap()))
+                })
+                .collect(),
+            V::MFMatrix3d(v) => (0..v.len() / 9).map(|i| V::SFMatrix3d(Matrix3(v[i * 9..i * 9 + 9].try_into().unwrap()))).collect(),
+            V::MFMatrix4f(v) => (0..v.len() / 16)
+                .map(|i| {
+                    let e: Vec<f64> = v[i * 16..i * 16 + 16].iter().map(|x| *x as f64).collect();
+                    V::SFMatrix4f(Matrix4(e.try_into().unwrap()))
+                })
+                .collect(),
+            V::MFMatrix4d(v) => (0..v.len() / 16).map(|i| V::SFMatrix4d(Matrix4(v[i * 16..i * 16 + 16].try_into().unwrap()))).collect(),
+            _ => return None,
+        };
+
+        Some(out)
+    }
 }

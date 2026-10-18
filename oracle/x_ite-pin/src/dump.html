@@ -5,6 +5,11 @@
 <script src="../node_modules/libtess/libtess.cat.js"></script>
 <script src="../node_modules/@create3000/libgif/libgif.js"></script>
 <script src="../node_modules/apng-js/lib/index.js"></script>
+<!-- Texturing3D (DICOM) libraries, as upstream x_ite.html loads them (REA batch 02). -->
+<script src="../node_modules/CharLS.js/dist/charLS-DynamicMemory-browser.js"></script>
+<script src="../node_modules/dicom-parser/dist/dicomParser.js"></script>
+<script src="../node_modules/jpeg-js/lib/decoder.js"></script>
+<script src="../node_modules/OpenJPEG.js/dist/openJPEG-DynamicMemory-browser.js"></script>
 <!-- update="false" stops the frame loop, so TimeSensors and routes never run before the dump. -->
 <x3d-canvas id="c" update="false" style="width:64px;height:64px"></x3d-canvas>
 <script type="module">

@@ -1,0 +1,43 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 6 }
+NavigationInfo { headlight FALSE }
+Transform { children Shape { appearance Appearance { shaders [ DEF SH ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+gl_FragColor = vec4 (vec3 (0.3, 0.7, 0.4) * (0.3 + 0.7 * abs (vN.z)) + vT.xyx * 0.2, 1.0);
+}
+" } ] } ] } geometry Sphere { radius 0.01 } } }
+Transform { translation -1.9500000000000002 0.8 0 children Shape { appearance Appearance { shaders [ USE SH ] } geometry Sphere { radius 0.6 } } }
+Transform { translation -0.65 0.8 0 children Shape { appearance Appearance { shaders [ USE SH ] } geometry Cone { height 1.2 bottomRadius 0.6 } } }
+Transform { translation 0.65 0.8 0 children Shape { appearance Appearance { shaders [ USE SH ] } geometry Cylinder { height 1.2 radius 0.5 } } }
+Transform { translation 1.9500000000000002 0.8 0 children Shape { appearance Appearance { shaders [ USE SH ] } geometry Box { size 1 1 1 } } }
+Transform { translation -1.9500000000000002 -0.8 0 children Shape { appearance Appearance { shaders [ USE SH ] } geometry ElevationGrid { xDimension 3 zDimension 3 xSpacing 0.4 zSpacing 0.4 height [ 0 0.3 0 0.3 0.6 0.3 0 0.3 0 ] } } }
+Transform { translation -0.65 -0.8 0 children Shape { appearance Appearance { shaders [ USE SH ] } geometry IndexedTriangleSet { coord Coordinate { point [ -0.5 -0.5 0 0.5 -0.5 0 0 0.6 0 ] } index [ 0 1 2 ] } } }
+Transform { translation 0.65 -0.8 0 children Shape { appearance Appearance { shaders [ USE SH ] } geometry Extrusion { crossSection [ 1 1 1 -1 -1 -1 -1 1 1 1 ] spine [ 0 0 0 0 1 0 ] scale [ 0.4 0.4 0.4 0.4 ] } } }

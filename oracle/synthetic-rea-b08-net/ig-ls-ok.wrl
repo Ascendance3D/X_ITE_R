@@ -1,0 +1,29 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 8 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF A0 InlineGeometry { url "ig/box.x3dv" } }
+
+DEF LS LoadSensor { children [ USE A0 ] }
+DEF LOG Script { inputOnly SFBool a  inputOnly SFBool l  inputOnly SFFloat p  inputOnly SFTime t  inputOutput SFString log ""
+  url "javascript:
+function a (v) { log = log + 'A' + v + ' '; }
+function l (v) { log = log + 'L' + v + ' '; }
+function p (v) { log = log + 'P' + v + ' '; }
+function t (v) { log = log + 'T '; }
+" }
+ROUTE LS.isActive TO LOG.a
+ROUTE LS.isLoaded TO LOG.l
+ROUTE LS.progress TO LOG.p
+ROUTE LS.loadTime TO LOG.t
+
+DEF IL Inline { url "ig/box.x3dv" }

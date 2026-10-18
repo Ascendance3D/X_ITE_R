@@ -1,0 +1,6 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+Shape { geometry Disk2D { innerRadius 0.2 outerRadius 0.7 } }

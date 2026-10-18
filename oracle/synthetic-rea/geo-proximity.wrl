@@ -1,0 +1,51 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Geospatial:2
+COMPONENT EnvironmentalSensor:3
+COMPONENT Scripting:1
+COMPONENT Interpolation:3
+# Synthetic REA oracle world: GeoProximitySensor inside a moving Transform (GD with GeoOrigin, and
+# GC without), geoCoord_changed, center, and a geoCenter change at run time. Authored.
+DEF ORIGIN GeoOrigin { geoCoords 37.4 -122.1 0 }
+DEF MOVER Transform {
+  children [
+    DEF G1 GeoProximitySensor { geoOrigin USE ORIGIN size 30 30 30 center 0 0 2 }
+    DEF G2 GeoProximitySensor { geoSystem [ "GC" ] size 12 12 12 }
+  ]
+}
+DEF PI PositionInterpolator { key [ 0 0.5 1 ] keyValue [ -40 0 0, 3 1 -2, 40 0 0 ] }
+DEF OI OrientationInterpolator { key [ 0 1 ] keyValue [ 0 1 0 0, 0 1 0 2 ] }
+DEF TS TimeSensor { cycleInterval 3 loop TRUE }
+DEF OUT Script {
+  inputOnly SFBool a1
+  inputOnly SFBool a2
+  inputOutput SFString hist ""
+  inputOutput SFVec3f p1 0 0 0
+  inputOutput SFVec3d g1 0 0 0
+  inputOutput SFRotation r1 0 0 1 0
+  inputOutput SFVec3f c1 0 0 0
+  inputOutput SFVec3f p2 0 0 0
+  inputOutput SFVec3d g2 0 0 0
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOutput SFNode s2 USE G2
+  url "ecmascript:
+    function a1 (v) { hist = hist + ' a1=' + v + '@' + step; }
+    function a2 (v) { hist = hist + ' a2=' + v + '@' + step; }
+    function cycle (v) { step = step + 1; if (step == 5) s2 .geoCenter = new SFVec3d (2, 0, 0); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.25 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE TS.fraction_changed TO OI.set_fraction
+ROUTE PI.value_changed TO MOVER.set_translation
+ROUTE OI.value_changed TO MOVER.set_rotation
+ROUTE G1.isActive TO OUT.a1
+ROUTE G2.isActive TO OUT.a2
+ROUTE G1.position_changed TO OUT.p1
+ROUTE G1.geoCoord_changed TO OUT.g1
+ROUTE G1.orientation_changed TO OUT.r1
+ROUTE G1.centerOfRotation_changed TO OUT.c1
+ROUTE G2.position_changed TO OUT.p2
+ROUTE G2.geoCoord_changed TO OUT.g2

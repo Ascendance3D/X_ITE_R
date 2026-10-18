@@ -1,0 +1,34 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "../synthetic-rea-b02/pbr/env.png" } }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+Transform { translation 0 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" } } geometry Box { size 8 6 0.1 } } }
+Transform { translation -1.5 0.8 -1.5 children Shape { appearance Appearance { material Material { diffuseColor 1 0.2 0.2 } } geometry Box { size 0.6 2.5 0.3 } } }
+Transform { translation 1.5 -0.8 -1.5 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.4 1 transparency 0.5 } } geometry Cone { bottomRadius 0.5 height 1.5 } } }
+Transform { translation -1.470 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 0 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 0.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 3 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.470 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 10 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 20 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 50 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 0.620 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion -3 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.470 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0.2 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.8 } DispersionMaterialExtension { dispersion 10 } IORMaterialExtension { indexOfRefraction 1.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0.5 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.8 } DispersionMaterialExtension { dispersion 10 } IORMaterialExtension { indexOfRefraction 1.5 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.8 } DispersionMaterialExtension { dispersion 5 } IORMaterialExtension { indexOfRefraction 2.4 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 -0.360 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 0.8 } DispersionMaterialExtension { dispersion 5 } IORMaterialExtension { indexOfRefraction 1.1 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.470 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 1 0.8 metallic 0 roughness 0.05 extensions [ TransmissionMaterialExtension { transmission 1 } VolumeMaterialExtension { thickness 1.5 } DispersionMaterialExtension { dispersion 4 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.490 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 0.5 } VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 10 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.490 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ TransmissionMaterialExtension { transmission 1 } DispersionMaterialExtension { dispersion 10 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.470 -1.340 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 1 1 1 metallic 0 roughness 0 extensions [ VolumeMaterialExtension { thickness 0.6 } DispersionMaterialExtension { dispersion 10 } ] } } geometry Sphere { radius 0.45 } } }

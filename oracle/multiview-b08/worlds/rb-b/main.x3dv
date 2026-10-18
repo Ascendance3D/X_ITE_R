@@ -1,0 +1,14 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+COMPONENT RigidBodyPhysics:2
+Viewpoint { position 0 1 9 }
+
+DEF TR Transform { children Shape { appearance Appearance { material Material { diffuseColor 0 1 0 } } geometry Box { size 1 1 1 } } }
+Transform { translation 0 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.4 } } geometry Box { size 12 1 4 } } }
+DEF RBC RigidBodyCollection { gravity 0 -9.8 0
+bodies [ DEF F RigidBody { fixed TRUE position 0 -1.5 0 geometry DEF F_C CollidableShape { shape Shape { geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -6 0.5 -2, 6 0.5 -2, 6 0.5 2, -6 0.5 2, -6 -0.5 -2, 6 -0.5 -2, 6 -0.5 2, -6 -0.5 2 ] } coordIndex [ 0 1 2 3 -1 7 6 5 4 -1 0 4 5 1 -1 1 5 6 2 -1 2 6 7 3 -1 3 7 4 0 -1 ] } } } }
+DEF R RigidBody { mass 1 position 0 0.5 0 geometry DEF R_C CollidableShape { shape Shape { geometry Box { size 1 1 1 } } } } ]
+collider DEF CC CollisionCollection { collidables [ USE F_C USE R_C ] } }
+ROUTE R.position TO TR.set_translation
+ROUTE R.orientation TO TR.set_rotation

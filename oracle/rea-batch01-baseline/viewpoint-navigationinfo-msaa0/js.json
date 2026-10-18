@@ -1,0 +1,329 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        8
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0.2999997138977051,
+        0.09999990463256836,
+        7.900000095367432
+      ],
+      "orientation": [
+        0,
+        1.000000000000208,
+        0,
+        0.03999996185301999
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP2",
+      "description": "two",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0.3999999761581421,
+        0.13333332538604736,
+        7.866666674613953
+      ],
+      "orientation": [
+        0,
+        0.9999999999998984,
+        0,
+        0.05333333015442529
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP2",
+      "description": "two",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0.49999988079071045,
+        0.16666662693023682,
+        7.833333373069763
+      ],
+      "orientation": [
+        0,
+        1.0000000000000697,
+        0,
+        0.066666650772091
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP2",
+      "description": "two",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0.5999997854232788,
+        0.19999992847442627,
+        7.800000071525574
+      ],
+      "orientation": [
+        0,
+        1.0000000000000269,
+        0,
+        0.07999997138976926
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP2",
+      "description": "two",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0.8999998569488525,
+        0.2999999523162842,
+        7.700000047683716
+      ],
+      "orientation": [
+        0,
+        0.9999999999999971,
+        0,
+        0.11999998092651482
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP2",
+      "description": "two",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        1.1199998664855997,
+        0.3733332888285332,
+        7.626666711171467
+      ],
+      "orientation": [
+        0,
+        0.9999999999999846,
+        0,
+        0.14933331553141657
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        1.0799999070167559,
+        0.3599999690055853,
+        7.640000030994415
+      ],
+      "orientation": [
+        0,
+        1.000000000000011,
+        0,
+        0.14399998760223348
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        1.039999947547912,
+        0.34666664918263734,
+        7.653333350817363
+      ],
+      "orientation": [
+        0,
+        0.999999999999995,
+        0,
+        0.13866665967305655
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0.9999999880790682,
+        0.3333333293596894,
+        7.666666670640311
+      ],
+      "orientation": [
+        0,
+        0.9999999999999812,
+        0,
+        0.13333333174387912
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0.7599999451637274,
+        0.2533333150545758,
+        7.746666684945424
+      ],
+      "orientation": [
+        0,
+        1.000000000000003,
+        0,
+        0.10133332602183069
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0.3599999213218723,
+        0.11999997377395744,
+        7.880000026226043
+      ],
+      "orientation": [
+        0,
+        0.9999999999996666,
+        0,
+        0.047999989509599286
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VP1",
+      "description": "one",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 1\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 2\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 3\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 4\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 4\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 4\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 5\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 7\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 8\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 8\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 8\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 10\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Scripting : 1\n\nDEF NAV1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF NAV2 NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF VP1 Viewpoint {\n  description \"one\"\n  position 0 0 8\n  navigationInfo USE NAV1\n}\n\nDEF VP2 Viewpoint {\n  description \"two\"\n  position 3 1 7\n  orientation 0 1 0 0.4\n  navigationInfo USE NAV2\n}\n\nDirectionalLight {\n  intensity 0.3\n  direction 0 -1 -1\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.8 0.3 0.3\n    }\n  }\n  geometry Box { }\n}\n\nDEF S Script {\n  inputOnly   SFTime  tick\n  inputOutput SFInt32 n 14\n  outputOnly  SFBool  bind2\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind2 = true;\n      if (n == 7) bind2 = false;\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind2 TO VP2.set_bind\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "viewport": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

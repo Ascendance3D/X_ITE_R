@@ -1,0 +1,50 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Grouping:3
+COMPONENT EnvironmentalSensor:3
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+COMPONENT Navigation:2
+# Synthetic REA oracle world: StaticGroup keeps only its shapes (getShapes). Sensors inside it
+# (ProximitySensor, VisibilitySensor, TouchSensor) stop after the optimized group is built; a
+# TouchSensor beside the StaticGroup still sees its shapes. Switch/Transform/Group inside. Authored.
+Group {
+  children [
+    DEF OUTER TouchSensor { }
+    StaticGroup {
+      children [
+        DEF INNER TouchSensor { }
+        DEF PROX ProximitySensor { size 100 100 100 }
+        DEF VIS VisibilitySensor { size 2 2 2 }
+        Transform { translation 0 0 0 children Shape { geometry Box { size 4 4 0.5 } } }
+        Switch { whichChoice 1 choice [ Shape { geometry Sphere { } } Transform { translation 3 0 0 children Shape { geometry Box { } } } ] }
+      ]
+    }
+  ]
+}
+DEF OUT Script {
+  inputOnly SFBool po
+  inputOnly SFBool pi
+  inputOnly SFBool ao
+  inputOnly SFBool ai
+  inputOnly SFBool pa
+  inputOnly SFBool va
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    function add (n, v) { hist = hist + ' ' + n + '=' + v; }
+    function po (v) { add ('overOuter', v); }
+    function pi (v) { add ('overInner', v); }
+    function ao (v) { add ('activeOuter', v); }
+    function ai (v) { add ('activeInner', v); }
+    function pa (v) { add ('prox', v); }
+    function va (v) { add ('vis', v); }
+  "
+}
+ROUTE OUTER.isOver TO OUT.po
+ROUTE INNER.isOver TO OUT.pi
+ROUTE OUTER.isActive TO OUT.ao
+ROUTE INNER.isActive TO OUT.ai
+ROUTE PROX.isActive TO OUT.pa
+ROUTE VIS.isActive TO OUT.va

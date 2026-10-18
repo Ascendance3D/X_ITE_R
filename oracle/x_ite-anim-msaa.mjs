@@ -100,6 +100,18 @@ await context .route (url => !url .href .startsWith (base), route => route .abor
 
 const page = await context .newPage ();
 
+// Script key "settle": true makes loads deterministic, as in x_ite-anim.mjs (same code): after the
+// load and after every event and frame step the harness waits until no request is in flight and
+// the page's continuations have run.
+let inFlight = 0;
+
+if (script .settle)
+{
+   page .on ("request", () => ++ inFlight);
+   page .on ("requestfinished", () => -- inFlight);
+   page .on ("requestfailed", () => -- inFlight);
+}
+
 try
 {
    await page .goto (`${base}/x_ite-pin/src/anim-msaa.html?w=${W}&h=${H}&aa=${AA}${MS ? "&ms=" + MS : ""}`);
@@ -119,6 +131,32 @@ try
    await page .evaluate (d => window .setDt (d), dt);
    result .geometry = await page .evaluate (() => window .geometry ());
    await page .evaluate (() => window .focusCanvas ());
+
+   const yieldTask = () => page .evaluate (() => new Promise (resolve =>
+   {
+      const channel = new MessageChannel ();
+      channel .port1 .onmessage = () => resolve ();
+      channel .port2 .postMessage (0);
+   }));
+
+   const settle = async () =>
+   {
+      if (!script .settle)
+         return;
+
+      for (let quiet = 0; quiet < 3;)
+      {
+         while (inFlight > 0)
+            await new Promise (r => setTimeout (r, 2));
+
+         await yieldTask ();
+         await yieldTask ();
+
+         quiet = inFlight > 0 ? 0 : quiet + 1;
+      }
+   };
+
+   await settle ();
 
    const mouseButton = b => ({ 0: "left", 1: "middle", 2: "right" }) [b] ?? "left";
 
@@ -149,8 +187,10 @@ try
          }
       }
 
+      await settle ();
       await page .evaluate (ms => window .setDate (ms), (t0 + k * dt) * 1000);
       await page .evaluate (t => window .step (t), t0 + k * dt);
+      await settle ();
 
       if (capture .has (k) || dump .has (k) || k === frames)
          result .poses [k] = await page .evaluate (() =>

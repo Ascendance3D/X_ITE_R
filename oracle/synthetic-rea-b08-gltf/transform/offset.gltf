@@ -1,0 +1,102 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "materials": [
+  {
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 0,
+     "extensions": {
+      "KHR_texture_transform": {
+       "offset": [
+        0.25,
+        0.5
+       ]
+      }
+     }
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "TEXCOORD_0": 0,
+      "POSITION": 1
+     },
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "images": [
+  {
+   "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVR42mN4ZqPxHxlrBDxDwbSWZxh1wIA7gN4WosuPOmDgHTCaC0YdMJoLRh0wmgtGHTCaC0YdMJoLRh0wmgtGvAMA4ntMiME2v5IAAAAASUVORK5CYII="
+  },
+  {
+   "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABIUlEQVR42hXMkaJlIQAAwIMXwzAMwzAMwzAMw/D9+e4Eo/N939+/H4FIIlOoNDqDyWJzuHzfT0AgksgUKo3OYLLYHO7vBUFAIJLIFCqNzmCy2BxueEEUEIgkMoVKozOYLDaHG1+QBAQiiUyh0ugMJovN4aYXZAGBSCJTqDQ6g8lic7j5BUVAIJLIFCqNzmCy2BxueUEVEIgkMoVKozOYLDaHW1/QBAQiiUyh0ugMJovN4bYXdAGBSCJTqDQ6g8lic7j9BUNAIJLIFCqNzmCy2BzueMEUEIgkMoVKozOYLDaHO1+wBAQiiUyh0ugMJovN4a4XbAGBSCJTqDQ6g8lic7j7BUdAIJLIFCqNzmCy2BzuecEVEIgkMoVKozOYLDaHy3/covcQ/k0xDwAAAABJRU5ErkJggg=="
+  }
+ ],
+ "textures": [
+  {
+   "source": 0
+  },
+  {
+   "source": 1
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_texture_transform"
+ ],
+ "extensionsRequired": [
+  "KHR_texture_transform"
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 32
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 32,
+   "byteLength": 48
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 80,
+   "uri": "data:application/octet-stream;base64,AAAAAAAAgD8AAIA/AACAPwAAgD8AAAAAAAAAAAAAAAAAAIC/AACAvwAAAAAAAIA/AACAvwAAAAAAAIA/AACAPwAAAAAAAIC/AACAPwAAAAA="
+  }
+ ]
+}

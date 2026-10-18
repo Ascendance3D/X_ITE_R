@@ -1,0 +1,25 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+Viewpoint { position 0 0 8 }
+DEF I Inline { url "reload-inline-content.wrl" }
+IMPORT I.J AS J
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFRotation on_rotation
+  inputOutput SFInt32 rotations 0
+  initializeOnly SFNode inline USE I
+  url "javascript:
+function on_rotation () { rotations = rotations + 1; }
+function on_key (k)
+{
+   if (k == 's') inline .load = false;
+   if (k == 'r') inline .load = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE J.rotation_changed TO R.on_rotation

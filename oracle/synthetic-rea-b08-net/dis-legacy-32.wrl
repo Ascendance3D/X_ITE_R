@@ -1,0 +1,22 @@
+#X3D V3.2 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 8 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+
+DEF RX ReceiverPdu { }
+DEF SG SignalPdu { }
+DEF TX TransmitterPdu { }
+DEF EM DISEntityManager { mapping [ DEF TM DISEntityTypeMapping { description "via mapping" } ] }
+DEF EM2 DISEntityManager { }
+DEF RX2 ReceiverPdu { applicationID 0 transmitterApplicationID 0 }
+Shape { appearance Appearance { material Material { diffuseColor 0.2 0.5 0.7 } } geometry Sphere { radius 0.6 } }
+

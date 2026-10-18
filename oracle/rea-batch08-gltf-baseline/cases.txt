@@ -1,0 +1,6 @@
+step-driver oracle/synthetic-rea-b08-gltf/anim/step-driver.wrl oracle/synthetic-rea-b08-gltf/anim/step-driver.json 0
+linear-driver oracle/synthetic-rea-b08-gltf/anim/linear-driver.wrl oracle/synthetic-rea-b08-gltf/anim/linear-driver.json 0
+cubic-driver oracle/synthetic-rea-b08-gltf/anim/cubic-driver.wrl oracle/synthetic-rea-b08-gltf/anim/cubic-driver.json 0
+step-driver oracle/synthetic-rea-b08-gltf/anim/step-driver.wrl oracle/synthetic-rea-b08-gltf/anim/step-driver-m4.json 4
+linear-driver oracle/synthetic-rea-b08-gltf/anim/linear-driver.wrl oracle/synthetic-rea-b08-gltf/anim/linear-driver-m4.json 4
+cubic-driver oracle/synthetic-rea-b08-gltf/anim/cubic-driver.wrl oracle/synthetic-rea-b08-gltf/anim/cubic-driver-m4.json 4

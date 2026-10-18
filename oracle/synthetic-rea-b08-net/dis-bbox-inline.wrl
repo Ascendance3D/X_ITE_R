@@ -1,0 +1,4 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT DIS:2
+SignalPdu { bboxSize 1 1 1 bboxDisplay TRUE }

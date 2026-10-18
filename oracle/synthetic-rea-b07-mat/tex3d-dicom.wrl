@@ -1,0 +1,28 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing3D:2
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Geometry2D:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Networking:4
+COMPONENT Lighting:3
+Viewpoint { position 0 0 15 }
+NavigationInfo { headlight TRUE }
+Transform { translation -4.5 3.6 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono2-explicit.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 3.6 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono2-implicit.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 3.6 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono2-big-endian.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 4.5 3.6 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono1.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -4.5 1.2000000000000002 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono2-16bit.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -1.5 1.2000000000000002 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono2-16bit-signed.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 1.5 1.2000000000000002 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono2-16bit-big-endian.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 4.5 1.2000000000000002 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/mono2-single-frame.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -4.5 -1.1999999999999997 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rgb-interleaved.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 -1.1999999999999997 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rgb-planar.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 -1.1999999999999997 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rle-8bit.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation 4.5 -1.1999999999999997 0  children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rle-8bit-bot.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.5 0.5 0.5 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -4.5 -3.599999999999999 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rle-rgb.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation -1.5 -3.599999999999999 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/rle-16bit.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 1.5 -3.599999999999999 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bits-12-unsigned.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }
+Transform { translation 4.5 -3.599999999999999 0 rotation 1 1 0 0.6 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture ImageTexture3D { url "vol/bits-32-float.dcm" } textureTransform TextureTransform3D { translation 0.5 0.5 0.5 scale 0.7 0.7 0.7 } } geometry Box { size 1.4 1.4 1.4 } } }

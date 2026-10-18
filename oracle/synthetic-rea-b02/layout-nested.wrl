@@ -1,0 +1,25 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+Viewpoint { position 0 0 8 description "zero" }
+Background { skyColor [ 0.15 0.2 0.35, 0.5 0.55 0.6 ] skyAngle 1.5 groundColor [ 0.25 0.2 0.15, 0.4 0.35 0.3 ] groundAngle 1.5 }
+Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.2 } } geometry Box { size 2 2 2 } } }
+Transform { translation 1.5 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.3 } } geometry Sphere { radius 1.2 } } }
+Transform { translation 0 -2 -1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.8 0.2 } } geometry Cone { } } }
+LayerSet { activeLayer 0 order [ 0 1 2 ] layers [
+LayoutLayer { layout Layout { align [ "LEFT" "BOTTOM" ] offsetUnits [ "WORLD" "WORLD" ] offset [ 0 0 ] sizeUnits [ "FRACTION" "FRACTION" ] size [ 0.5 0.5 ] scaleMode [ "FRACTION" "FRACTION" ] } children [
+Transform { translation 0 0 -0.5 children Shape { appearance Appearance { material Material { emissiveColor 0.2 0.2 0.6 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+LayoutGroup { layout Layout { align [ "RIGHT" "TOP" ] offsetUnits [ "WORLD" "WORLD" ] offset [ 0 0 ] sizeUnits [ "FRACTION" "FRACTION" ] size [ 0.5 0.5 ] scaleMode [ "FRACTION" "FRACTION" ] } children [
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { emissiveColor 0.9 0.6 0.2 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+LayoutGroup { layout Layout { align [ "CENTER" "CENTER" ] offsetUnits [ "PIXEL" "PIXEL" ] offset [ 5 5 ] sizeUnits [ "PIXEL" "PIXEL" ] size [ 30 20 ] scaleMode [ "PIXEL" "PIXEL" ] } children [
+Transform { translation 0 0 0.2 children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -15.0 -10.0 0, 15.0 -10.0 0, 15.0 10.0 0, -15.0 10.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+] }
+] }
+] }
+LayoutLayer { layout Layout { align [ "CENTER" "TOP" ] offsetUnits [ "WORLD" "WORLD" ] offset [ 0 0 ] sizeUnits [ "FRACTION" "PIXEL" ] size [ 0.8 40 ] scaleMode [ "FRACTION" "NONE" ] } viewport Viewport { clipBoundary [ 0.5 1 0 1 ] } children [
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { emissiveColor 0.6 0.1 0.6 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -0.5 -0.15 0, 0.5 -0.15 0, 0.5 0.15 0, -0.5 0.15 0 ] } coordIndex [ 0 1 2 3 -1 ] } } }
+] }
+] }

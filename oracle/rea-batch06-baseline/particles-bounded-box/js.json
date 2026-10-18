@@ -1,0 +1,1984 @@
+{
+ "ok": true,
+ "dt": 0.03333333333333333,
+ "t0": 946684800,
+ "frames": 120,
+ "warmup": 8,
+ "seed": 1380201634,
+ "stride": 28,
+ "node": "PS",
+ "steps": [
+  {
+   "frame": 1,
+   "time": 946684800.0333333,
+   "randomSeed": 2596000297.3955717,
+   "numParticles": 0,
+   "deltaTime": 0.0022222222222222222,
+   "creationTime": 946684800,
+   "createParticles": true
+  },
+  {
+   "frame": 2,
+   "time": 946684800.0666667,
+   "randomSeed": 3179102673.2598076,
+   "numParticles": 0,
+   "deltaTime": 0.004296296296296296,
+   "creationTime": 946684800,
+   "createParticles": true
+  },
+  {
+   "frame": 3,
+   "time": 946684800.1,
+   "randomSeed": 1458370603.6604466,
+   "numParticles": 0,
+   "deltaTime": 0.006232098765432098,
+   "creationTime": 946684800,
+   "createParticles": true
+  },
+  {
+   "frame": 4,
+   "time": 946684800.1333333,
+   "randomSeed": 2842427942.338196,
+   "numParticles": 0,
+   "deltaTime": 0.008038847736625514,
+   "creationTime": 946684800,
+   "createParticles": true
+  },
+  {
+   "frame": 5,
+   "time": 946684800.1666666,
+   "randomSeed": 3658100394.148282,
+   "numParticles": 0,
+   "deltaTime": 0.009725146776406035,
+   "creationTime": 946684800,
+   "createParticles": true
+  },
+  {
+   "frame": 6,
+   "time": 946684800.2,
+   "randomSeed": 134868059.96859857,
+   "numParticles": 1,
+   "deltaTime": 0.011299025880201187,
+   "creationTime": 946684800.2,
+   "createParticles": true
+  },
+  {
+   "frame": 7,
+   "time": 946684800.2333333,
+   "randomSeed": 761281645.8227503,
+   "numParticles": 1,
+   "deltaTime": 0.012767979710409997,
+   "creationTime": 946684800.2,
+   "createParticles": true
+  },
+  {
+   "frame": 8,
+   "time": 946684800.2666667,
+   "randomSeed": 3913519994.088813,
+   "numParticles": 1,
+   "deltaTime": 0.014139003285271552,
+   "creationTime": 946684800.2,
+   "createParticles": true
+  },
+  {
+   "frame": 9,
+   "time": 946684800.3,
+   "randomSeed": 960970328.7762567,
+   "numParticles": 1,
+   "deltaTime": 0.01541862528847567,
+   "creationTime": 946684800.2,
+   "createParticles": true
+  },
+  {
+   "frame": 10,
+   "time": 946684800.3333334,
+   "randomSeed": 2598160919.3950686,
+   "numParticles": 1,
+   "deltaTime": 0.016612939158132847,
+   "creationTime": 946684800.2,
+   "createParticles": true
+  },
+  {
+   "frame": 11,
+   "time": 946684800.3666667,
+   "randomSeed": 2804127108.347113,
+   "numParticles": 1,
+   "deltaTime": 0.017727632103146214,
+   "creationTime": 946684800.2,
+   "createParticles": true
+  },
+  {
+   "frame": 12,
+   "time": 946684800.4,
+   "randomSeed": 232366588.94589794,
+   "numParticles": 2,
+   "deltaTime": 0.018768012185158688,
+   "creationTime": 946684800.4,
+   "createParticles": true
+  },
+  {
+   "frame": 13,
+   "time": 946684800.4333333,
+   "randomSeed": 732754574.8293923,
+   "numParticles": 2,
+   "deltaTime": 0.019739033595036995,
+   "creationTime": 946684800.4,
+   "createParticles": true
+  },
+  {
+   "frame": 14,
+   "time": 946684800.4666667,
+   "randomSeed": 1184127671.7242987,
+   "numParticles": 2,
+   "deltaTime": 0.020645320244256752,
+   "creationTime": 946684800.4,
+   "createParticles": true
+  },
+  {
+   "frame": 15,
+   "time": 946684800.5,
+   "randomSeed": 742611946.8270972,
+   "numParticles": 2,
+   "deltaTime": 0.021491187783528525,
+   "creationTime": 946684800.4,
+   "createParticles": true
+  },
+  {
+   "frame": 16,
+   "time": 946684800.5333333,
+   "randomSeed": 1719153145.5997286,
+   "numParticles": 2,
+   "deltaTime": 0.022280664153515515,
+   "creationTime": 946684800.4,
+   "createParticles": true
+  },
+  {
+   "frame": 17,
+   "time": 946684800.5666667,
+   "randomSeed": 4125711372.0394077,
+   "numParticles": 2,
+   "deltaTime": 0.023017508765503368,
+   "creationTime": 946684800.4,
+   "createParticles": true
+  },
+  {
+   "frame": 18,
+   "time": 946684800.6,
+   "randomSeed": 3550345056.173371,
+   "numParticles": 3,
+   "deltaTime": 0.023705230403358698,
+   "creationTime": 946684800.6,
+   "createParticles": true
+  },
+  {
+   "frame": 19,
+   "time": 946684800.6333333,
+   "randomSeed": 712457349.8341181,
+   "numParticles": 3,
+   "deltaTime": 0.024347103932023672,
+   "creationTime": 946684800.6,
+   "createParticles": true
+  },
+  {
+   "frame": 20,
+   "time": 946684800.6666666,
+   "randomSeed": 1533603719.64293,
+   "numParticles": 3,
+   "deltaTime": 0.024946185892110985,
+   "creationTime": 946684800.6,
+   "createParticles": true
+  },
+  {
+   "frame": 21,
+   "time": 946684800.7,
+   "randomSeed": 2614379104.3912926,
+   "numParticles": 3,
+   "deltaTime": 0.02550532905485914,
+   "creationTime": 946684800.6,
+   "createParticles": true
+  },
+  {
+   "frame": 22,
+   "time": 946684800.7333333,
+   "randomSeed": 3022111474.29636,
+   "numParticles": 3,
+   "deltaTime": 0.02602719600675742,
+   "creationTime": 946684800.6,
+   "createParticles": true
+  },
+  {
+   "frame": 23,
+   "time": 946684800.7666667,
+   "randomSeed": 685049858.8404994,
+   "numParticles": 3,
+   "deltaTime": 0.026514271828529147,
+   "creationTime": 946684800.6,
+   "createParticles": true
+  },
+  {
+   "frame": 24,
+   "time": 946684800.8,
+   "randomSeed": 3796513160.1160555,
+   "numParticles": 4,
+   "deltaTime": 0.026968875928849428,
+   "creationTime": 946684800.8,
+   "createParticles": true
+  },
+  {
+   "frame": 25,
+   "time": 946684800.8333334,
+   "randomSeed": 3497414315.1856947,
+   "numParticles": 4,
+   "deltaTime": 0.027393173089148355,
+   "creationTime": 946684800.8,
+   "createParticles": true
+  },
+  {
+   "frame": 26,
+   "time": 946684800.8666667,
+   "randomSeed": 1998851808.534606,
+   "numParticles": 4,
+   "deltaTime": 0.02778918377209402,
+   "creationTime": 946684800.8,
+   "createParticles": true
+  },
+  {
+   "frame": 27,
+   "time": 946684800.9,
+   "randomSeed": 507876244.8817508,
+   "numParticles": 4,
+   "deltaTime": 0.028158793742843306,
+   "creationTime": 946684800.8,
+   "createParticles": true
+  },
+  {
+   "frame": 28,
+   "time": 946684800.9333333,
+   "randomSeed": 2376120329.4467664,
+   "numParticles": 4,
+   "deltaTime": 0.028503763048875974,
+   "creationTime": 946684800.8,
+   "createParticles": true
+  },
+  {
+   "frame": 29,
+   "time": 946684800.9666667,
+   "randomSeed": 348354806.9188923,
+   "numParticles": 4,
+   "deltaTime": 0.02882573440117313,
+   "creationTime": 946684800.8,
+   "createParticles": true
+  },
+  {
+   "frame": 30,
+   "time": 946684801,
+   "randomSeed": 298607248.93047506,
+   "numParticles": 5,
+   "deltaTime": 0.029126240996650475,
+   "creationTime": 946684801,
+   "createParticles": true
+  },
+  {
+   "frame": 31,
+   "time": 946684801.0333333,
+   "randomSeed": 497099741.88425994,
+   "numParticles": 5,
+   "deltaTime": 0.029406713819095997,
+   "creationTime": 946684801,
+   "createParticles": true
+  },
+  {
+   "frame": 32,
+   "time": 946684801.0666667,
+   "randomSeed": 2580906432.399086,
+   "numParticles": 5,
+   "deltaTime": 0.029668488453378487,
+   "creationTime": 946684801,
+   "createParticles": true
+  },
+  {
+   "frame": 33,
+   "time": 946684801.1,
+   "randomSeed": 2993404117.303044,
+   "numParticles": 5,
+   "deltaTime": 0.029912811445375477,
+   "creationTime": 946684801,
+   "createParticles": true
+  },
+  {
+   "frame": 34,
+   "time": 946684801.1333333,
+   "randomSeed": 2513410673.414801,
+   "numParticles": 5,
+   "deltaTime": 0.030140846237906003,
+   "creationTime": 946684801,
+   "createParticles": true
+  },
+  {
+   "frame": 35,
+   "time": 946684801.1666666,
+   "randomSeed": 1377723628.6792238,
+   "numParticles": 5,
+   "deltaTime": 0.03035367871093449,
+   "creationTime": 946684801,
+   "createParticles": true
+  },
+  {
+   "frame": 36,
+   "time": 946684801.2,
+   "randomSeed": 1585172741.6309233,
+   "numParticles": 6,
+   "deltaTime": 0.030552322352427743,
+   "creationTime": 946684801.2,
+   "createParticles": true
+  },
+  {
+   "frame": 37,
+   "time": 946684801.2333333,
+   "randomSeed": 1278405197.702348,
+   "numParticles": 6,
+   "deltaTime": 0.030737723084488116,
+   "creationTime": 946684801.2,
+   "createParticles": true
+  },
+  {
+   "frame": 38,
+   "time": 946684801.2666667,
+   "randomSeed": 2459117248.427442,
+   "numParticles": 6,
+   "deltaTime": 0.030910763767744466,
+   "creationTime": 946684801.2,
+   "createParticles": true
+  },
+  {
+   "frame": 39,
+   "time": 946684801.3,
+   "randomSeed": 2301440844.4641542,
+   "numParticles": 6,
+   "deltaTime": 0.031072268405450392,
+   "creationTime": 946684801.2,
+   "createParticles": true
+  },
+  {
+   "frame": 40,
+   "time": 946684801.3333334,
+   "randomSeed": 2127724817.5046005,
+   "numParticles": 6,
+   "deltaTime": 0.031223006067309256,
+   "creationTime": 946684801.2,
+   "createParticles": true
+  },
+  {
+   "frame": 41,
+   "time": 946684801.3666667,
+   "randomSeed": 1018360277.7628945,
+   "numParticles": 6,
+   "deltaTime": 0.03136369455171086,
+   "creationTime": 946684801.2,
+   "createParticles": true
+  },
+  {
+   "frame": 42,
+   "time": 946684801.4,
+   "randomSeed": 3477682410.190289,
+   "numParticles": 7,
+   "deltaTime": 0.031495003803819026,
+   "creationTime": 946684801.4,
+   "createParticles": true
+  },
+  {
+   "frame": 43,
+   "time": 946684801.4333333,
+   "randomSeed": 4124058441.039793,
+   "numParticles": 7,
+   "deltaTime": 0.03161755910578665,
+   "creationTime": 946684801.4,
+   "createParticles": true
+  },
+  {
+   "frame": 44,
+   "time": 946684801.4666667,
+   "randomSeed": 2684627059.3749366,
+   "numParticles": 7,
+   "deltaTime": 0.03173194405428976,
+   "creationTime": 946684801.4,
+   "createParticles": true
+  },
+  {
+   "frame": 45,
+   "time": 946684801.5,
+   "randomSeed": 2618220856.390398,
+   "numParticles": 7,
+   "deltaTime": 0.03183870333955933,
+   "creationTime": 946684801.4,
+   "createParticles": true
+  },
+  {
+   "frame": 46,
+   "time": 946684801.5333333,
+   "randomSeed": 783311089.8176212,
+   "numParticles": 7,
+   "deltaTime": 0.03193834533914426,
+   "creationTime": 946684801.4,
+   "createParticles": true
+  },
+  {
+   "frame": 47,
+   "time": 946684801.5666667,
+   "randomSeed": 3172968903.2612357,
+   "numParticles": 7,
+   "deltaTime": 0.03203134453875687,
+   "creationTime": 946684801.4,
+   "createParticles": true
+  },
+  {
+   "frame": 48,
+   "time": 946684801.6,
+   "randomSeed": 488457049.88627225,
+   "numParticles": 8,
+   "deltaTime": 0.032118143791728636,
+   "creationTime": 946684801.6,
+   "createParticles": true
+  },
+  {
+   "frame": 49,
+   "time": 946684801.6333333,
+   "randomSeed": 361980112.9157199,
+   "numParticles": 8,
+   "deltaTime": 0.032199156427835614,
+   "creationTime": 946684801.6,
+   "createParticles": true
+  },
+  {
+   "frame": 50,
+   "time": 946684801.6666666,
+   "randomSeed": 3707766060.1367183,
+   "numParticles": 8,
+   "deltaTime": 0.03227476822153546,
+   "creationTime": 946684801.6,
+   "createParticles": true
+  },
+  {
+   "frame": 51,
+   "time": 946684801.7,
+   "randomSeed": 2307944790.46264,
+   "numParticles": 8,
+   "deltaTime": 0.03234533922898865,
+   "creationTime": 946684801.6,
+   "createParticles": true
+  },
+  {
+   "frame": 52,
+   "time": 946684801.7333333,
+   "randomSeed": 2307321489.462785,
+   "numParticles": 8,
+   "deltaTime": 0.03241120550261163,
+   "creationTime": 946684801.6,
+   "createParticles": true
+  },
+  {
+   "frame": 53,
+   "time": 946684801.7666667,
+   "randomSeed": 510238425.88120085,
+   "numParticles": 8,
+   "deltaTime": 0.03247268069132641,
+   "creationTime": 946684801.6,
+   "createParticles": true
+  },
+  {
+   "frame": 54,
+   "time": 946684801.8,
+   "randomSeed": 1890502836.559833,
+   "numParticles": 9,
+   "deltaTime": 0.03253005753412687,
+   "creationTime": 946684801.8,
+   "createParticles": true
+  },
+  {
+   "frame": 55,
+   "time": 946684801.8333334,
+   "randomSeed": 2358334124.4509077,
+   "numParticles": 9,
+   "deltaTime": 0.03258360925407397,
+   "creationTime": 946684801.8,
+   "createParticles": true
+  },
+  {
+   "frame": 56,
+   "time": 946684801.8666667,
+   "randomSeed": 665794470.8449826,
+   "numParticles": 9,
+   "deltaTime": 0.03263359085935793,
+   "creationTime": 946684801.8,
+   "createParticles": true
+  },
+  {
+   "frame": 57,
+   "time": 946684801.9,
+   "randomSeed": 285973123.93341666,
+   "numParticles": 9,
+   "deltaTime": 0.03268024035762295,
+   "creationTime": 946684801.8,
+   "createParticles": true
+  },
+  {
+   "frame": 58,
+   "time": 946684801.9333333,
+   "randomSeed": 254604039.94072038,
+   "numParticles": 9,
+   "deltaTime": 0.032723779889336974,
+   "creationTime": 946684801.8,
+   "createParticles": true
+  },
+  {
+   "frame": 59,
+   "time": 946684801.9666667,
+   "randomSeed": 1750330180.5924695,
+   "numParticles": 9,
+   "deltaTime": 0.0327644167856034,
+   "creationTime": 946684801.8,
+   "createParticles": true
+  },
+  {
+   "frame": 60,
+   "time": 946684802,
+   "randomSeed": 2768984052.3552957,
+   "numParticles": 10,
+   "deltaTime": 0.03280234455545206,
+   "creationTime": 946684802,
+   "createParticles": true
+  },
+  {
+   "frame": 61,
+   "time": 946684802.0333333,
+   "randomSeed": 3617822096.15766,
+   "numParticles": 10,
+   "deltaTime": 0.03283774380731082,
+   "creationTime": 946684802,
+   "createParticles": true
+  },
+  {
+   "frame": 62,
+   "time": 946684802.0666667,
+   "randomSeed": 427733136.9004106,
+   "numParticles": 10,
+   "deltaTime": 0.032870783109045655,
+   "creationTime": 946684802,
+   "createParticles": true
+  },
+  {
+   "frame": 63,
+   "time": 946684802.1,
+   "randomSeed": 3285389607.2350607,
+   "numParticles": 10,
+   "deltaTime": 0.03290161979066483,
+   "creationTime": 946684802,
+   "createParticles": true
+  },
+  {
+   "frame": 64,
+   "time": 946684802.1333333,
+   "randomSeed": 25761182.994002007,
+   "numParticles": 10,
+   "deltaTime": 0.0329304006935094,
+   "creationTime": 946684802,
+   "createParticles": true
+  },
+  {
+   "frame": 65,
+   "time": 946684802.1666666,
+   "randomSeed": 1941717633.5479085,
+   "numParticles": 10,
+   "deltaTime": 0.03295726286949766,
+   "creationTime": 946684802,
+   "createParticles": true
+  },
+  {
+   "frame": 66,
+   "time": 946684802.2,
+   "randomSeed": 1707501891.6024413,
+   "numParticles": 11,
+   "deltaTime": 0.03298233423375337,
+   "creationTime": 946684802.2,
+   "createParticles": true
+  },
+  {
+   "frame": 67,
+   "time": 946684802.2333333,
+   "randomSeed": 65559220.9847358,
+   "numParticles": 11,
+   "deltaTime": 0.03300573417372537,
+   "creationTime": 946684802.2,
+   "createParticles": true
+  },
+  {
+   "frame": 68,
+   "time": 946684802.2666667,
+   "randomSeed": 3914560049.0885706,
+   "numParticles": 11,
+   "deltaTime": 0.03302757411769923,
+   "creationTime": 946684802.2,
+   "createParticles": true
+  },
+  {
+   "frame": 69,
+   "time": 946684802.3,
+   "randomSeed": 1129522330.7370126,
+   "numParticles": 11,
+   "deltaTime": 0.03304795806540817,
+   "creationTime": 946684802.2,
+   "createParticles": true
+  },
+  {
+   "frame": 70,
+   "time": 946684802.3333334,
+   "randomSeed": 3305755607.230319,
+   "numParticles": 11,
+   "deltaTime": 0.033066983083269844,
+   "creationTime": 946684802.2,
+   "createParticles": true
+  },
+  {
+   "frame": 71,
+   "time": 946684802.3666667,
+   "randomSeed": 1294881156.698512,
+   "numParticles": 11,
+   "deltaTime": 0.03308473976660741,
+   "creationTime": 946684802.2,
+   "createParticles": true
+  },
+  {
+   "frame": 72,
+   "time": 946684802.4,
+   "randomSeed": 4111684017.042674,
+   "numParticles": 12,
+   "deltaTime": 0.0331013126710558,
+   "creationTime": 946684802.4,
+   "createParticles": true
+  },
+  {
+   "frame": 73,
+   "time": 946684802.4333333,
+   "randomSeed": 255215369.94057804,
+   "numParticles": 12,
+   "deltaTime": 0.033116780715207635,
+   "creationTime": 946684802.4,
+   "createParticles": true
+  },
+  {
+   "frame": 74,
+   "time": 946684802.4666667,
+   "randomSeed": 620807000.8554571,
+   "numParticles": 12,
+   "deltaTime": 0.033131217556416015,
+   "creationTime": 946684802.4,
+   "createParticles": true
+  },
+  {
+   "frame": 75,
+   "time": 946684802.5,
+   "randomSeed": 234914084.9453048,
+   "numParticles": 12,
+   "deltaTime": 0.03314469194154383,
+   "creationTime": 946684802.4,
+   "createParticles": true
+  },
+  {
+   "frame": 76,
+   "time": 946684802.5333333,
+   "randomSeed": 2291332874.4665074,
+   "numParticles": 12,
+   "deltaTime": 0.0331572680343298,
+   "creationTime": 946684802.4,
+   "createParticles": true
+  },
+  {
+   "frame": 77,
+   "time": 946684802.5666667,
+   "randomSeed": 886161928.7936743,
+   "numParticles": 12,
+   "deltaTime": 0.03316900572093003,
+   "creationTime": 946684802.4,
+   "createParticles": true
+  },
+  {
+   "frame": 78,
+   "time": 946684802.6,
+   "randomSeed": 2744833786.3609185,
+   "numParticles": 13,
+   "deltaTime": 0.03317996089509025,
+   "creationTime": 946684802.6,
+   "createParticles": true
+  },
+  {
+   "frame": 79,
+   "time": 946684802.6333333,
+   "randomSeed": 1444577585.6636581,
+   "numParticles": 13,
+   "deltaTime": 0.03319018572430646,
+   "creationTime": 946684802.6,
+   "createParticles": true
+  },
+  {
+   "frame": 80,
+   "time": 946684802.6666666,
+   "randomSeed": 1454548661.6613364,
+   "numParticles": 13,
+   "deltaTime": 0.03319972889824158,
+   "creationTime": 946684802.6,
+   "createParticles": true
+  },
+  {
+   "frame": 81,
+   "time": 946684802.7,
+   "randomSeed": 2272321135.470934,
+   "numParticles": 13,
+   "deltaTime": 0.03320863586058103,
+   "creationTime": 946684802.6,
+   "createParticles": true
+  },
+  {
+   "frame": 82,
+   "time": 946684802.7333333,
+   "randomSeed": 1911788460.554877,
+   "numParticles": 13,
+   "deltaTime": 0.03321694902543118,
+   "creationTime": 946684802.6,
+   "createParticles": true
+  },
+  {
+   "frame": 83,
+   "time": 946684802.7666667,
+   "randomSeed": 3570441006.168692,
+   "numParticles": 13,
+   "deltaTime": 0.03322470797929132,
+   "creationTime": 946684802.6,
+   "createParticles": true
+  },
+  {
+   "frame": 84,
+   "time": 946684802.8,
+   "randomSeed": 1159709313.729984,
+   "numParticles": 14,
+   "deltaTime": 0.033231949669560785,
+   "creationTime": 946684802.8,
+   "createParticles": true
+  },
+  {
+   "frame": 85,
+   "time": 946684802.8333334,
+   "randomSeed": 614377190.8569542,
+   "numParticles": 14,
+   "deltaTime": 0.033238708580478955,
+   "creationTime": 946684802.8,
+   "createParticles": true
+  },
+  {
+   "frame": 86,
+   "time": 946684802.8666667,
+   "randomSeed": 3352465867.2194433,
+   "numParticles": 14,
+   "deltaTime": 0.033245016897335916,
+   "creationTime": 946684802.8,
+   "createParticles": true
+  },
+  {
+   "frame": 87,
+   "time": 946684802.9,
+   "randomSeed": 105935683.97533493,
+   "numParticles": 14,
+   "deltaTime": 0.03325090465973574,
+   "creationTime": 946684802.8,
+   "createParticles": true
+  },
+  {
+   "frame": 88,
+   "time": 946684802.9333333,
+   "randomSeed": 2305632334.463178,
+   "numParticles": 14,
+   "deltaTime": 0.03325639990464225,
+   "creationTime": 946684802.8,
+   "createParticles": true
+  },
+  {
+   "frame": 89,
+   "time": 946684802.9666667,
+   "randomSeed": 2840619763.338617,
+   "numParticles": 14,
+   "deltaTime": 0.03326152879988832,
+   "creationTime": 946684802.8,
+   "createParticles": true
+  },
+  {
+   "frame": 90,
+   "time": 946684803,
+   "randomSeed": 2846653547.3372116,
+   "numParticles": 15,
+   "deltaTime": 0.03326631576878466,
+   "creationTime": 946684803,
+   "createParticles": true
+  },
+  {
+   "frame": 91,
+   "time": 946684803.0333333,
+   "randomSeed": 1293753130.6987746,
+   "numParticles": 15,
+   "deltaTime": 0.03327078360642124,
+   "creationTime": 946684803,
+   "createParticles": true
+  },
+  {
+   "frame": 92,
+   "time": 946684803.0666667,
+   "randomSeed": 715619261.8333819,
+   "numParticles": 15,
+   "deltaTime": 0.033274953588215375,
+   "creationTime": 946684803,
+   "createParticles": true
+  },
+  {
+   "frame": 93,
+   "time": 946684803.1,
+   "randomSeed": 523877847.8780252,
+   "numParticles": 15,
+   "deltaTime": 0.033278845571223244,
+   "creationTime": 946684803,
+   "createParticles": true
+  },
+  {
+   "frame": 94,
+   "time": 946684803.1333333,
+   "randomSeed": 277105645.9354813,
+   "numParticles": 15,
+   "deltaTime": 0.03328247808869725,
+   "creationTime": 946684803,
+   "createParticles": true
+  },
+  {
+   "frame": 95,
+   "time": 946684803.1666666,
+   "randomSeed": 332288781.922633,
+   "numParticles": 15,
+   "deltaTime": 0.03328586843833965,
+   "creationTime": 946684803,
+   "createParticles": true
+  },
+  {
+   "frame": 96,
+   "time": 946684803.2,
+   "randomSeed": 1322523124.6920762,
+   "numParticles": 16,
+   "deltaTime": 0.033289032764672565,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 97,
+   "time": 946684803.2333333,
+   "randomSeed": 4198458326.0224705,
+   "numParticles": 16,
+   "deltaTime": 0.033291986135916614,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 98,
+   "time": 946684803.2666667,
+   "randomSeed": 1641383896.6178355,
+   "numParticles": 16,
+   "deltaTime": 0.033294742615744395,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 99,
+   "time": 946684803.3,
+   "randomSeed": 3970288142.0755954,
+   "numParticles": 16,
+   "deltaTime": 0.03329731533025033,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 100,
+   "time": 946684803.3333334,
+   "randomSeed": 2168594735.495085,
+   "numParticles": 16,
+   "deltaTime": 0.03329971653045586,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 101,
+   "time": 946684803.3666667,
+   "randomSeed": 2277540317.469719,
+   "numParticles": 16,
+   "deltaTime": 0.03330195765064769,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 102,
+   "time": 946684803.4,
+   "randomSeed": 183910263.95718005,
+   "numParticles": 16,
+   "deltaTime": 0.03330404936282673,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 103,
+   "time": 946684803.4333333,
+   "randomSeed": 2152925009.498733,
+   "numParticles": 16,
+   "deltaTime": 0.03330600162752717,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 104,
+   "time": 946684803.4666667,
+   "randomSeed": 3146710080.2673492,
+   "numParticles": 16,
+   "deltaTime": 0.033307823741247584,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 105,
+   "time": 946684803.5,
+   "randomSeed": 1072150311.7503705,
+   "numParticles": 16,
+   "deltaTime": 0.03330952438071997,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 106,
+   "time": 946684803.5333333,
+   "randomSeed": 3043795528.2913113,
+   "numParticles": 16,
+   "deltaTime": 0.03331111164422753,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 107,
+   "time": 946684803.5666667,
+   "randomSeed": 3530318374.178034,
+   "numParticles": 16,
+   "deltaTime": 0.033312593090167916,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 108,
+   "time": 946684803.6,
+   "randomSeed": 2437671250.4324355,
+   "numParticles": 16,
+   "deltaTime": 0.03331397577304561,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 109,
+   "time": 946684803.6333333,
+   "randomSeed": 2936193892.3163643,
+   "numParticles": 16,
+   "deltaTime": 0.03331526627706479,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 110,
+   "time": 946684803.6666666,
+   "randomSeed": 477176472.8888987,
+   "numParticles": 16,
+   "deltaTime": 0.033316470747482695,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 111,
+   "time": 946684803.7,
+   "randomSeed": 1619141700.6230142,
+   "numParticles": 16,
+   "deltaTime": 0.03331759491987273,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 112,
+   "time": 946684803.7333333,
+   "randomSeed": 1377358345.6793087,
+   "numParticles": 16,
+   "deltaTime": 0.03331864414743677,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 113,
+   "time": 946684803.7666667,
+   "randomSeed": 294336330.9314695,
+   "numParticles": 16,
+   "deltaTime": 0.033319623426496546,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 114,
+   "time": 946684803.8,
+   "randomSeed": 2643474034.384518,
+   "numParticles": 16,
+   "deltaTime": 0.033320537420285665,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 115,
+   "time": 946684803.8333334,
+   "randomSeed": 3543227557.175028,
+   "numParticles": 16,
+   "deltaTime": 0.033321390481155504,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 116,
+   "time": 946684803.8666667,
+   "randomSeed": 1995817576.5353124,
+   "numParticles": 16,
+   "deltaTime": 0.03332218667130069,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 117,
+   "time": 946684803.9,
+   "randomSeed": 2499431159.418056,
+   "numParticles": 16,
+   "deltaTime": 0.03332292978210287,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 118,
+   "time": 946684803.9333333,
+   "randomSeed": 929184287.7836574,
+   "numParticles": 16,
+   "deltaTime": 0.033323623352184896,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 119,
+   "time": 946684803.9666667,
+   "randomSeed": 2306193579.4630475,
+   "numParticles": 16,
+   "deltaTime": 0.033324270684261456,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  },
+  {
+   "frame": 120,
+   "time": 946684804,
+   "randomSeed": 2778380065.353108,
+   "numParticles": 16,
+   "deltaTime": 0.033324874860866244,
+   "creationTime": 946684803.2,
+   "createParticles": true
+  }
+ ],
+ "dumps": {
+  "1": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "2": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "3": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "4": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "5": {
+   "numParticles": 0,
+   "total": 0,
+   "offset": 0
+  },
+  "6": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 0
+  },
+  "7": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 28
+  },
+  "8": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 56
+  },
+  "9": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 84
+  },
+  "10": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 112
+  },
+  "11": {
+   "numParticles": 1,
+   "total": 1,
+   "offset": 140
+  },
+  "12": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 168
+  },
+  "13": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 224
+  },
+  "14": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 280
+  },
+  "15": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 336
+  },
+  "16": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 392
+  },
+  "17": {
+   "numParticles": 2,
+   "total": 2,
+   "offset": 448
+  },
+  "18": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 504
+  },
+  "19": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 588
+  },
+  "20": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 672
+  },
+  "21": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 756
+  },
+  "22": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 840
+  },
+  "23": {
+   "numParticles": 3,
+   "total": 3,
+   "offset": 924
+  },
+  "24": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 1008
+  },
+  "25": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 1120
+  },
+  "26": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 1232
+  },
+  "27": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 1344
+  },
+  "28": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 1456
+  },
+  "29": {
+   "numParticles": 4,
+   "total": 4,
+   "offset": 1568
+  },
+  "30": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 1680
+  },
+  "31": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 1820
+  },
+  "32": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 1960
+  },
+  "33": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 2100
+  },
+  "34": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 2240
+  },
+  "35": {
+   "numParticles": 5,
+   "total": 5,
+   "offset": 2380
+  },
+  "36": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 2520
+  },
+  "37": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 2688
+  },
+  "38": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 2856
+  },
+  "39": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 3024
+  },
+  "40": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 3192
+  },
+  "41": {
+   "numParticles": 6,
+   "total": 6,
+   "offset": 3360
+  },
+  "42": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 3528
+  },
+  "43": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 3724
+  },
+  "44": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 3920
+  },
+  "45": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 4116
+  },
+  "46": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 4312
+  },
+  "47": {
+   "numParticles": 7,
+   "total": 7,
+   "offset": 4508
+  },
+  "48": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 4704
+  },
+  "49": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 4928
+  },
+  "50": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 5152
+  },
+  "51": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 5376
+  },
+  "52": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 5600
+  },
+  "53": {
+   "numParticles": 8,
+   "total": 8,
+   "offset": 5824
+  },
+  "54": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 6048
+  },
+  "55": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 6300
+  },
+  "56": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 6552
+  },
+  "57": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 6804
+  },
+  "58": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 7056
+  },
+  "59": {
+   "numParticles": 9,
+   "total": 9,
+   "offset": 7308
+  },
+  "60": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 7560
+  },
+  "61": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 7840
+  },
+  "62": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 8120
+  },
+  "63": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 8400
+  },
+  "64": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 8680
+  },
+  "65": {
+   "numParticles": 10,
+   "total": 10,
+   "offset": 8960
+  },
+  "66": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 9240
+  },
+  "67": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 9548
+  },
+  "68": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 9856
+  },
+  "69": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 10164
+  },
+  "70": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 10472
+  },
+  "71": {
+   "numParticles": 11,
+   "total": 11,
+   "offset": 10780
+  },
+  "72": {
+   "numParticles": 12,
+   "total": 12,
+   "offset": 11088
+  },
+  "73": {
+   "numParticles": 12,
+   "total": 12,
+   "offset": 11424
+  },
+  "74": {
+   "numParticles": 12,
+   "total": 12,
+   "offset": 11760
+  },
+  "75": {
+   "numParticles": 12,
+   "total": 12,
+   "offset": 12096
+  },
+  "76": {
+   "numParticles": 12,
+   "total": 12,
+   "offset": 12432
+  },
+  "77": {
+   "numParticles": 12,
+   "total": 12,
+   "offset": 12768
+  },
+  "78": {
+   "numParticles": 13,
+   "total": 13,
+   "offset": 13104
+  },
+  "79": {
+   "numParticles": 13,
+   "total": 13,
+   "offset": 13468
+  },
+  "80": {
+   "numParticles": 13,
+   "total": 13,
+   "offset": 13832
+  },
+  "81": {
+   "numParticles": 13,
+   "total": 13,
+   "offset": 14196
+  },
+  "82": {
+   "numParticles": 13,
+   "total": 13,
+   "offset": 14560
+  },
+  "83": {
+   "numParticles": 13,
+   "total": 13,
+   "offset": 14924
+  },
+  "84": {
+   "numParticles": 14,
+   "total": 14,
+   "offset": 15288
+  },
+  "85": {
+   "numParticles": 14,
+   "total": 14,
+   "offset": 15680
+  },
+  "86": {
+   "numParticles": 14,
+   "total": 14,
+   "offset": 16072
+  },
+  "87": {
+   "numParticles": 14,
+   "total": 14,
+   "offset": 16464
+  },
+  "88": {
+   "numParticles": 14,
+   "total": 14,
+   "offset": 16856
+  },
+  "89": {
+   "numParticles": 14,
+   "total": 14,
+   "offset": 17248
+  },
+  "90": {
+   "numParticles": 15,
+   "total": 15,
+   "offset": 17640
+  },
+  "91": {
+   "numParticles": 15,
+   "total": 15,
+   "offset": 18060
+  },
+  "92": {
+   "numParticles": 15,
+   "total": 15,
+   "offset": 18480
+  },
+  "93": {
+   "numParticles": 15,
+   "total": 15,
+   "offset": 18900
+  },
+  "94": {
+   "numParticles": 15,
+   "total": 15,
+   "offset": 19320
+  },
+  "95": {
+   "numParticles": 15,
+   "total": 15,
+   "offset": 19740
+  },
+  "96": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 20160
+  },
+  "97": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 20608
+  },
+  "98": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 21056
+  },
+  "99": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 21504
+  },
+  "100": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 21952
+  },
+  "101": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 22400
+  },
+  "102": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 22848
+  },
+  "103": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 23296
+  },
+  "104": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 23744
+  },
+  "105": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 24192
+  },
+  "106": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 24640
+  },
+  "107": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 25088
+  },
+  "108": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 25536
+  },
+  "109": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 25984
+  },
+  "110": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 26432
+  },
+  "111": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 26880
+  },
+  "112": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 27328
+  },
+  "113": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 27776
+  },
+  "114": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 28224
+  },
+  "115": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 28672
+  },
+  "116": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 29120
+  },
+  "117": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 29568
+  },
+  "118": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 30016
+  },
+  "119": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 30464
+  },
+  "120": {
+   "numParticles": 16,
+   "total": 16,
+   "offset": 30912
+  }
+ },
+ "log": [],
+ "init": {
+  "deltaTimeBeforeReset": 0.014139003285271552,
+  "numParticlesAfterLoad": 0,
+  "creationTimeAfterLoad": 946684800,
+  "explosive": false
+ },
+ "info": {
+  "geometryType": 0,
+  "maxParticles": 16,
+  "particleLifetime": 3,
+  "lifetimeVariation": 0.25,
+  "emitter": "PointEmitter",
+  "numForces": 0,
+  "boundedHierarchyRoot": 117,
+  "stride": 28
+ },
+ "geometry": {
+  "bounded": {
+   "vertices": [
+    2,
+    2,
+    2,
+    1,
+    -2,
+    2,
+    2,
+    1,
+    -2,
+    -2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    -2,
+    -2,
+    2,
+    1,
+    2,
+    -2,
+    2,
+    1,
+    -2,
+    2,
+    -2,
+    1,
+    2,
+    2,
+    -2,
+    1,
+    2,
+    -2,
+    -2,
+    1,
+    -2,
+    2,
+    -2,
+    1,
+    2,
+    -2,
+    -2,
+    1,
+    -2,
+    -2,
+    -2,
+    1,
+    -2,
+    2,
+    2,
+    1,
+    -2,
+    2,
+    -2,
+    1,
+    -2,
+    -2,
+    -2,
+    1,
+    -2,
+    2,
+    2,
+    1,
+    -2,
+    -2,
+    -2,
+    1,
+    -2,
+    -2,
+    2,
+    1,
+    2,
+    2,
+    -2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    -2,
+    2,
+    1,
+    2,
+    2,
+    -2,
+    1,
+    2,
+    -2,
+    2,
+    1,
+    2,
+    -2,
+    -2,
+    1,
+    2,
+    2,
+    -2,
+    1,
+    -2,
+    2,
+    -2,
+    1,
+    -2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    -2,
+    1,
+    -2,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    -2,
+    2,
+    1,
+    -2,
+    -2,
+    2,
+    1,
+    -2,
+    -2,
+    -2,
+    1,
+    2,
+    -2,
+    2,
+    1,
+    -2,
+    -2,
+    -2,
+    1,
+    2,
+    -2,
+    -2,
+    1
+   ],
+   "normals": [
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0,
+    0,
+    -0.9,
+    0
+   ],
+   "hierarchyIndex": 72,
+   "hierarchyRoot": 117
+  },
+  "numForces": 0
+ },
+ "animateCalls": 120,
+ "determinism": {
+  "runs": 2,
+  "same_Math_random_seed": 1380201634,
+  "bit_identical_f32": true,
+  "identical_steps_and_dump_index": true,
+  "f32_bytes": 125440
+ },
+ "world": "oracle/synthetic-rea-b06/particles-bounded-box.x3dv",
+ "fileF32": "js.f32"
+}

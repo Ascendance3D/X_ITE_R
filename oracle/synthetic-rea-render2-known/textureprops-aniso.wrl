@@ -1,0 +1,9 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Texturing:3
+# REA batch 01 known difference: TextureProperties anisotropicDegree 8 (GL driver vs WebGPU/Vulkan driver sampling).
+Viewpoint { position 0 0 9 }
+NavigationInfo { type "NONE" }
+Background { skyColor 0.1 0.1 0.1 }
+DEF Q IndexedFaceSet { coord Coordinate { point [ -1 -1 0, 1 -1 0, 1 1 0, -1 1 0 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ] texCoordIndex [ 0 1 2 3 -1 ] }
+Transform { translation 1.8 -0.6 -2 rotation 1 0 0 -1.35 scale 1.6 3 1 children Shape { appearance Appearance { texture ImageTexture { url "checker64.png" textureProperties TextureProperties { generateMipMaps TRUE minificationFilter "NICEST" anisotropicDegree 8 } } textureTransform TextureTransform { scale 6 6 } } geometry USE Q } }

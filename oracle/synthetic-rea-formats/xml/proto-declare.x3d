@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='3.3'>
+  <Scene>
+    <ProtoDeclare name='Widget'>
+      <ProtoInterface>
+        <field name='tint' type='SFColor' accessType='inputOutput' value='1 0 0'/>
+        <field name='child' type='SFNode' accessType='inputOutput'>
+          <Shape>
+            <Box/>
+          </Shape>
+        </field>
+        <field name='kids' type='MFNode' accessType='inputOutput'>
+          <Transform/>
+        </field>
+        <field name='size' type='SFFloat' accessType='initializeOnly' value='2'/>
+      </ProtoInterface>
+      <ProtoBody>
+        <Group>
+          <IS>
+            <connect nodeField='children' protoField='kids'/>
+          </IS>
+          <Shape>
+            <Appearance>
+              <Material>
+                <IS>
+                  <connect nodeField='diffuseColor' protoField='tint'/>
+                </IS>
+              </Material>
+            </Appearance>
+            <Sphere>
+              <IS>
+                <connect nodeField='radius' protoField='size'/>
+              </IS>
+            </Sphere>
+          </Shape>
+          <Collision>
+            <IS>
+              <connect nodeField='proxy' protoField='child'/>
+            </IS>
+          </Collision>
+        </Group>
+      </ProtoBody>
+    </ProtoDeclare>
+    <ProtoInstance name='Widget' DEF='W1'>
+      <fieldValue name='tint' value='0 1 0'/>
+    </ProtoInstance>
+    <ProtoInstance name='Widget'>
+      <fieldValue name='child'>
+        <Box size='1 1 1'/>
+      </fieldValue>
+    </ProtoInstance>
+    <ProtoInstance name='Widget'>
+      <fieldValue name='kids'>
+        <Sphere/>
+        <Cone/>
+      </fieldValue>
+    </ProtoInstance>
+    <Transform translation='2 0 0'>
+      <ProtoInstance name='Widget' containerField='children'>
+        <fieldValue name='size' value='0.5'/>
+      </ProtoInstance>
+    </Transform>
+  </Scene>
+</X3D>

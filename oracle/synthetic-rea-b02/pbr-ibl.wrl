@@ -1,0 +1,24 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Scripting:1
+COMPONENT PointingDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "pbr/env.png" } }
+NavigationInfo { headlight FALSE }
+Transform { translation -1.650 1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0 roughness 0.05 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.550 1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0 roughness 0.3 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.550 1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0 roughness 0.6 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.650 1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0 roughness 1 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.650 0.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0.5 roughness 0.05 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.550 0.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0.5 roughness 0.3 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.550 0.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0.5 roughness 0.6 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.650 0.000 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 0.5 roughness 1 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.650 -1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.05 } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.550 -1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.3 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.550 -1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 0.6 } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.650 -1.100 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.6 0.3 metallic 1 roughness 1 } } geometry Sphere { radius 0.45 } } }

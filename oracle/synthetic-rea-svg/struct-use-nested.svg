@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<rect id="a" width="10" height="10" fill="red"/><g id="b"><use href="#a" x="20"/></g><use href="#b" y="30"/><use href="#b" y="60" transform="scale(2)"/>
+</svg>

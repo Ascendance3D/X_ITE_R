@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<defs><rect id="box" width="30" height="30" fill="red" stroke="black"/></defs><use href="#box"/><use href="#box" x="50" y="20"/><use xlink:href="#box" x="100" y="40" fill="blue"/>
+</svg>

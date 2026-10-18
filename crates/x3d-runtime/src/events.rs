@@ -132,15 +132,21 @@ impl Runtime {
         self.processing = true;
 
         loop {
-            // Process field events.
+            // Process field events. The tainted BrowserOptions fields run their interests here too.
             loop {
+                self.browser_options.process_events();
+
+                if self.browser_options.take_sound_intensity_changed() {
+                    self.sound_set_intensity();
+                }
+
                 let tainted = std::mem::take(&mut self.tainted_fields);
 
                 for (k, event) in tainted {
                     self.process_event(k, event);
                 }
 
-                if self.tainted_fields.is_empty() {
+                if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events() {
                     break;
                 }
             }
@@ -167,13 +173,13 @@ impl Runtime {
     }
 
     pub fn has_pending_events(&self) -> bool {
-        !self.tainted_fields.is_empty() || !self.tainted_nodes.is_empty()
+        !self.tainted_fields.is_empty() || !self.tainted_nodes.is_empty() || self.browser_options.has_pending_events()
     }
 
     /// X3DBrowserContext [_traverse] without rendering: the event phases of one frame. The scene
     /// loaded by createX3DFromURL is not the browser's world, so no traversal touches it.
     pub fn frame(&mut self) {
-        for name in ["prepareEvents", "timePrepareEvents", "timeEvents", "cameraEvents", "sensorEvents", "displayEvents", "finishEvents"] {
+        for name in ["prepareEvents", "timePrepareEvents", "timeEvents", "cameraEvents", "sensorEvents", "displayEvents", "displayFinishEvents", "finishEvents"] {
             self.process_phase(name);
         }
     }
@@ -182,7 +188,7 @@ impl Runtime {
 impl Runtime {
     /// One named browser event phase of X3DBrowserContext [_traverse]: add the browser's tainted
     /// field and process events. Phases: prepareEvents, timePrepareEvents, timeEvents,
-    /// cameraEvents, sensorEvents, displayEvents, finishEvents.
+    /// cameraEvents, sensorEvents, displayEvents, displayFinishEvents, finishEvents.
     pub fn process_phase(&mut self, name: &str) {
         // The `loadData` events of EXTERNPROTO declarations (X3DUrlObject: `_loadData = time`) are
         // processed with the first events of the frame.
@@ -195,6 +201,10 @@ impl Runtime {
         let k = self.private_field(self.browser_node, name).expect("browser event field");
         self.add_tainted_field(k);
         self.process_events();
+
+        if name == "prepareEvents" {
+            self.apply_decoded_images();
+        }
 
         // The `nextFrame ()` promises resolve on finishEvents; their continuations (Inline.setInternalScene)
         // and the fetches they start run right after the frame, before the next one.

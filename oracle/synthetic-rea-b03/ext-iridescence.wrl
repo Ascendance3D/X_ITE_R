@@ -1,0 +1,28 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT TextureProjection:2
+COMPONENT Layering:1
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 6 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+Transform { translation -1.575 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceIndexOfRefraction 1.3 iridescenceThicknessMinimum 100 iridescenceThicknessMaximum 400 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceIndexOfRefraction 1.8 iridescenceThicknessMinimum 100 iridescenceThicknessMaximum 400 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceIndexOfRefraction 1.3 iridescenceThicknessMinimum 100 iridescenceThicknessMaximum 800 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 1.600 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 0.5 iridescenceIndexOfRefraction 1.3 iridescenceThicknessMinimum 100 iridescenceThicknessMaximum 400 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.575 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceIndexOfRefraction 1.3 iridescenceThicknessMinimum 100 iridescenceThicknessMaximum 0 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceIndexOfRefraction 0.5 iridescenceThicknessMinimum 100 iridescenceThicknessMaximum 250 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceIndexOfRefraction 2.2 iridescenceThicknessMinimum 0 iridescenceThicknessMaximum 1200 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 0.550 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0.2 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 2 iridescenceIndexOfRefraction 1.3 iridescenceThicknessMinimum -5 iridescenceThicknessMaximum 400 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -1.575 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceTexture ImageTexture { url "../synthetic-rea-b02/pbr/occlusion.png" } } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation -0.525 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.1 0.1 0.1 metallic 0 roughness 0.2 extensions [ IridescenceMaterialExtension { iridescence 1 iridescenceThicknessMinimum 200 iridescenceThicknessMaximum 900 iridescenceThicknessTexture ImageTexture { url "../synthetic-rea-b02/pbr/mr.png" } } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 0.525 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 1 roughness 0.3 extensions [ IridescenceMaterialExtension { iridescence 1 } SpecularMaterialExtension { specularColor 1 0.5 0.2 } ] } } geometry Sphere { radius 0.45 } } }
+Transform { translation 1.575 -0.500 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.3 0.3 0.3 metallic 0.5 roughness 0.1 extensions [ IridescenceMaterialExtension { iridescence 0.8 iridescenceThicknessMaximum 500 } IORMaterialExtension { indexOfRefraction 1.8 } ] } } geometry Sphere { radius 0.45 } } }

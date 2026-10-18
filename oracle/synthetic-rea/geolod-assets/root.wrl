@@ -1,0 +1,4 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+# GeoLOD tile "root" for geolod.wrl. Authored.
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Box { size 200 4 200 } } }

@@ -1,0 +1,71 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.39",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "is-gradients-multi.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f0616d51302cd3416efbbad933bc49af7823cba91aff0c5b6a83f7477186ec35",
+   "pngSha256": "76038e8598770b820cf8729ce6124262bd284887cf6f36183f323ab76a25e620",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "is-gradients-styles.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "f3f456c4f84e5341be909530525a2021d4b3b724d0e5025f468856cd2c01fd95",
+   "pngSha256": "185f8c3eed54296abd89c965e996e6388c8e5e90bb719e9ec545742da57d9ec4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "is-gradients.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "92801c549b00b6359187e146876ae336bf9b66ca07cc66f23b7998ccf1c89d66",
+   "pngSha256": "1611e2c4cea825d4756434c5fee52cdd8e246873999c94f04f400f9771053328",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

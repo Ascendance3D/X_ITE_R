@@ -1,0 +1,16 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 7 }
+Background { skyColor 0.15 0.15 0.18 }
+EnvironmentLight { intensity 1 specularTexture ImageCubeMapTexture { url "../synthetic-rea-b02/pbr/env.png" } }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.8 color 1 0.95 0.9 }
+PointLight { location 2.5 2 3 intensity 2 color 0.6 0.8 1 radius 20 attenuation 0 0 1 }
+InstancedShape { translations [ -2 1.5 0, 0 1.5 0, 2 1.5 0, -2 0 0, 0 0 0, 2 0 0, -2 -1.5 0, 0 -1.5 0, 2 -1.5 0 ] scales [ 1 1 1, 0.8 0.8 0.8, 1.2 1.2 1.2 ]  appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.3 0.2 metallic 1 roughness 0.3 extensions [ ClearcoatMaterialExtension { clearcoat 1 } ] }  } geometry Sphere { radius 0.4 } }

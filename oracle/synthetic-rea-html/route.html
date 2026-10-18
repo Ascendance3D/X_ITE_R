@@ -1,0 +1,3 @@
+<x3d profile="Full" version="4.0" >
+<Scene><TIMESENSOR DEF='T' LOOP='true'></TIMESENSOR><POSITIONINTERPOLATOR DEF='P' KEY='0 1' KEYVALUE='0 0 0, 1 1 1'></POSITIONINTERPOLATOR><TRANSFORM DEF='X'></TRANSFORM><ROUTE FROMNODE='T' FROMFIELD='fraction_changed' TONODE='P' TOFIELD='set_fraction'></ROUTE><ROUTE fromNode='P' fromField='value_changed' toNode='X' toField='set_translation'></ROUTE></Scene>
+</x3d>

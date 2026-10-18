@@ -1,0 +1,7 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+Viewpoint { }
+WorldInfo { title "no geometry" }

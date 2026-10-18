@@ -1,0 +1,329 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        -2.3283064365386963e-10,
+        199.99611887615174,
+        222.37201574072606
+      ],
+      "orientation": [
+        1.0000000000000002,
+        0,
+        0,
+        1.2000349065850449
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV1",
+      "description": "one",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        -2.3283064365386963e-10,
+        199.99611887615174,
+        222.37201574072606
+      ],
+      "orientation": [
+        1.0000000000000002,
+        0,
+        0,
+        1.2000349065850449
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV1",
+      "description": "one",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        -15.040645190987561,
+        204.9963265513852,
+        200.13463512388626
+      ],
+      "orientation": [
+        0.9926663878196486,
+        -0.12088607235230796,
+        0.0000020794917108844493,
+        1.1018757250763584
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        -20.054213739136685,
+        206.66306790682984,
+        192.72215077913825
+      ],
+      "orientation": [
+        0.9862897384458421,
+        -0.16502288274167962,
+        0.0000028387365897136143,
+        1.0723553721843282
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        -25.06776435741449,
+        208.3298033015585,
+        185.3096929434305
+      ],
+      "orientation": [
+        0.9774900848958856,
+        -0.21098135916962604,
+        0.0000036293179105533803,
+        1.0446693910642155
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        -30.081314975692294,
+        209.9965386962872,
+        177.89723510772274
+      ],
+      "orientation": [
+        0.9659781449016249,
+        -0.25862371034501724,
+        0.0000044488653772837255,
+        1.0189684466212958
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        -45.12198476039703,
+        214.99675084118917,
+        155.65983509155922
+      ],
+      "orientation": [
+        0.9124145541421684,
+        -0.4092672492882657,
+        0.000007040247365416112,
+        0.9553285576430073
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        -65.17620516337956,
+        221.66369838081982,
+        126.00997723968794
+      ],
+      "orientation": [
+        0.7898862510369555,
+        -0.6132533818182307,
+        0.000010549232837853006,
+        0.9073479254467048
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        -70.18975578165737,
+        223.3304337755485,
+        118.59751940398019
+      ],
+      "orientation": [
+        0.7501010897166739,
+        -0.6613231850437754,
+        0.000011376133368311806,
+        0.9027181801738224
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        -75.20332432980649,
+        224.99717513099313,
+        111.18503505923218
+      ],
+      "orientation": [
+        0.707113300859088,
+        -0.7071002613492742,
+        0.000012163594230137363,
+        0.9011693465679619
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        -80.2168749480843,
+        226.6639105257218,
+        103.77257722352442
+      ],
+      "orientation": [
+        0.661337145962751,
+        -0.7500887808808728,
+        0.000012903086119335065,
+        0.9027173587318023
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        -95.25754473278903,
+        231.66412267062378,
+        81.5351772073609
+      ],
+      "orientation": [
+        0.5124789433859486,
+        -0.8586997917595107,
+        0.00001477142125854159,
+        0.925630449526262
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        -150.40665532345884,
+        249.99822989478707,
+        -0.0019385125451663043
+      ],
+      "orientation": [
+        0.000011768575112255561,
+        -0.9999999997827943,
+        0.000017202078534326234,
+        1.2000257771565939
+      ],
+      "centerOfRotation": [
+        5391195.773160149,
+        -8664623.335268434,
+        -2538083.064315182
+      ],
+      "viewpoint": "GV2",
+      "description": "two",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo { }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 1\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo { }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 2\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo { }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 3\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo { }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 4\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo { }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 4\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo { }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 4\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo { }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 5\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"LOOKAT\",\n      \"ANY\"\n    ]\n  }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 7\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"LOOKAT\",\n      \"ANY\"\n    ]\n  }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 7\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"LOOKAT\",\n      \"ANY\"\n    ]\n  }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 7\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"LOOKAT\",\n      \"ANY\"\n    ]\n  }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 8\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"LOOKAT\",\n      \"ANY\"\n    ]\n  }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 9\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Scripting : 1\nCOMPONENT Navigation : 2\n\nDEF ORIGIN GeoOrigin {\n  geoCoords 47.6 -122.3 0\n  rotateYUp TRUE\n}\n\nNavigationInfo {\n  type \"WALK\"\n}\n\nDEF GV1 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"one\"\n  position 47.598 -122.3 200\n  orientation 1 0 0 1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"FLY\",\n      \"ANY\"\n    ]\n    headlight FALSE\n  }\n}\n\nDEF GV2 GeoViewpoint {\n  geoOrigin USE ORIGIN\n  description \"two\"\n  position 47.6 -122.302 250\n  orientation 0 1 0 -1.2\n  navigationInfo NavigationInfo {\n    type [\n      \"LOOKAT\",\n      \"ANY\"\n    ]\n  }\n}\n\nGeoLocation {\n  geoOrigin USE ORIGIN\n  geoCoords 47.6 -122.3 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.5 0.2\n        }\n      }\n      geometry Box {\n        size 60 60 60\n      }\n    }\n    Transform {\n      translation 0 0 80\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.6 0.8\n          }\n        }\n        geometry Sphere {\n          radius 25\n        }\n      }\n    }\n  ]\n}\n\nDEF S Script {\n  inputOnly   SFTime   tick\n  inputOutput SFInt32  n 14\n  outputOnly  SFBool   bind\n  outputOnly  MFString nav\n\n  url \"ecmascript:\n    function tick (v) {\n      n = n + 1;\n      if (n == 3) bind = true;\n      if (n == 6) nav = new MFString ('LOOKAT', 'ANY');\n    }\n  \"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.1\n  loop TRUE\n}\n\nROUTE T.cycleTime TO S.tick\nROUTE S.bind TO GV2.set_bind\nROUTE S.nav TO GV2.set_navType\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "viewport": [
+      0,
+      0,
+      384,
+      384
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

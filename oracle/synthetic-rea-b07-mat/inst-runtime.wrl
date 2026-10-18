@@ -1,0 +1,62 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT CubeMapTexturing:3
+COMPONENT Texturing:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 7 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+PointLight { location 2.5 2 3 intensity 1.5 radius 20 attenuation 0 0 1 }
+DEF G1 Group { children [
+  DEF I1 InstancedShape {
+    translations [ -2 1 0, 0 1 0, 2 1 0 ]
+    appearance DEF AP Appearance { material DEF MA Material { diffuseColor 0.9 0.5 0.2 } }
+    geometry DEF BX Box { size 0.6 0.6 0.6 }
+  }
+] }
+DEF I2 InstancedShape { translations [ -2 -1 0 ] appearance Appearance { material Material { diffuseColor 0.3 0.8 0.4 } } }
+DEF I3 InstancedShape { appearance Appearance { material Material { diffuseColor 0.4 0.4 1 } } geometry Sphere { radius 0.4 } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode i1 USE I1
+  initializeOnly SFNode i2 USE I2
+  initializeOnly SFNode i3 USE I3
+  initializeOnly SFNode g1 USE G1
+  initializeOnly SFNode bx USE BX
+  initializeOnly SFNode ma USE MA
+  url "javascript:
+var made = null;
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') i1 .translations = new MFVec3f (new SFVec3f (-2, 1, 0), new SFVec3f (0, 1, 0), new SFVec3f (2, 1, 0), new SFVec3f (0, 2, 0));
+   if (k == 'b') i1 .rotations = new MFRotation (new SFRotation (0, 0, 1, 0.5), new SFRotation (0, 0, 1, 1));
+   if (k == 'c') i1 .scales = new MFVec3f (new SFVec3f (1, 1, 1), new SFVec3f (1.5, 0.5, 1));
+   if (k == 'd') i1 .scaleOrientations = new MFRotation (new SFRotation (0, 0, 1, 0.8));
+   if (k == 'e') i1 .centers = new MFVec3f (new SFVec3f (0.4, 0, 0));
+   if (k == 'f') i2 .geometry = Browser .currentScene .createNode ('Cone');
+   if (k == 'g') i3 .translations = new MFVec3f (new SFVec3f (0, -1, 0), new SFVec3f (2, -1, 0));
+   if (k == 'h') i1 .translations = new MFVec3f ();
+   if (k == 'i') i1 .translations = new MFVec3f (new SFVec3f (-1, 0, 0));
+   if (k == 'j') ma .diffuseColor = new SFColor (0.2, 0.9, 0.9);
+   if (k == 'k') bx .size = new SFVec3f (1, 0.3, 0.3);
+   if (k == 'l') i1 .appearance = null;
+   if (k == 'm') g1 .removeChildren = new MFNode (i1);
+   if (k == 'n') g1 .addChildren = new MFNode (i1);
+   if (k == 'o') { made = Browser .currentScene .createNode ('InstancedShape'); made .translations = new MFVec3f (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0)); made .geometry = Browser .currentScene .createNode ('Sphere'); g1 .addChildren = new MFNode (made); }
+   if (k == 'p') made .scales = new MFVec3f (new SFVec3f (0.5, 0.5, 0.5), new SFVec3f (1.5, 1.5, 1.5));
+   if (k == 'q') g1 .removeChildren = new MFNode (made);
+   if (k == 'r') i1 .visible = false;
+   if (k == 's') i1 .visible = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

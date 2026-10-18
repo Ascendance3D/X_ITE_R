@@ -10,7 +10,6 @@ use crate::chaser::Chaser;
 use crate::geom::ViewVolume;
 use crate::layer::{NavInfo, Vp, VpBase};
 use x3d_fields::math::{Matrix4, Rotation4, Vector2, Vector3, Vector4};
-use x3d_render::traverse::straighten;
 
 mod lookat;
 mod plane;
@@ -416,7 +415,7 @@ impl Examine {
         let user = if cx.env.straighten {
             let mut u = *roll;
             u.mult_right(&self.start_orientation).mult_right(rotation);
-            straighten(&u, &Vector3::Y_AXIS)
+            cx.base.straighten_horizon(cx.vp, &u)
         } else {
             let mut u = *rotation;
             u.mult_right(&cx.base.orientation).mult_right(before);
@@ -657,7 +656,7 @@ impl Examine {
         let v = cx.env.viewport;
 
         if cx.env.straighten {
-            let up = Vector3::Y_AXIS;
+            let up = cx.base.up_vector(cx.vp, true);
             let tx = x - self.from_pointer.x;
             let ty = y - self.from_pointer.y;
             let ppr_x = v[2] * 2.0;
@@ -725,7 +724,7 @@ impl Examine {
         self.disconnect(cx.env.date_now);
 
         if cx.env.straighten {
-            let up = Vector3::Y_AXIS;
+            let up = cx.base.up_vector(cx.vp, true);
             let user_position = cx.vp.user_position(cx.base);
             let user_center = cx.vp.user_center_of_rotation(cx.base);
             let direction = sub(&user_position, &user_center);
@@ -744,7 +743,7 @@ impl Examine {
             let interval = std::f64::consts::PI / (angle * SPIN_FACTOR * 25.0);
             self.spin_ts = Some((cx.env.date_now, interval));
 
-            let look = cx.vp.look_at_rotation(&user_position, &user_center);
+            let look = cx.vp.look_at_rotation(cx.base, &user_position, &user_center);
             self.direction = direction;
             let mut oo = cx.vp.user_orientation(cx.base);
             oo.mult_right(&inv(&look));
@@ -762,7 +761,7 @@ impl Examine {
             let rotation = Rotation4::new(self.axis.x, self.axis.y, self.axis.z, 2.0 * std::f64::consts::PI * fraction);
             let mut user_position = rot_vec(&rotation, &self.direction);
             user_position.add(&user_center);
-            let look = cx.vp.look_at_rotation(&user_position, &user_center);
+            let look = cx.vp.look_at_rotation(cx.base, &user_position, &user_center);
             cx.vp.position_offset = sub(&user_position, &cx.base.position);
             let mut oo = inv(&cx.base.orientation);
             oo.mult_right(&self.orientation_offset).mult_right(&look);
@@ -966,7 +965,7 @@ impl Fly {
         let uo = cx.vp.user_orientation(cx.base);
 
         if self.walk {
-            let up = Vector3::Y_AXIS;
+            let up = cx.base.up_vector(cx.vp, false);
             let local_y = rot_vec(&uo, &Vector3::Y_AXIS);
             let rotation = set_vectors(&local_y, &up);
             let orientation = mr(&uo, &rotation);
@@ -1121,8 +1120,6 @@ impl Fly {
     fn fly(&mut self, cx: &mut Cx) {
         let now = cx.env.date_now;
         let dt = now - self.start_time;
-        let up = Vector3::Y_AXIS;
-        let _ = up;
 
         let axis_back = Vector3::new(0.0, 0.0, 1.0);
         let mut rubber = if self.direction.z > 0.0 { set_vectors(&self.direction, &axis_back) } else { set_vectors(&Vector3::new(0.0, 0.0, -1.0), &self.direction) };
@@ -1130,7 +1127,7 @@ impl Fly {
 
         let mut speed_factor = 1.0 - rubber.angle() / (std::f64::consts::PI / 2.0);
         speed_factor *= cx.nav.speed;
-        speed_factor *= 1.0; // viewpoint .getSpeedFactor ()
+        speed_factor *= cx.base.speed_factor(cx.vp);
         speed_factor *= if cx.env.shift { SHIFT_SPEED_FACTOR } else { SPEED_FACTOR };
         speed_factor *= dt;
 
@@ -1148,7 +1145,7 @@ impl Fly {
         user_orientation.mult_right(&cx.vp.user_orientation(cx.base));
 
         if self.straighten_horizon(cx) {
-            user_orientation = straighten(&user_orientation, &Vector3::Y_AXIS);
+            user_orientation = cx.base.straighten_horizon(cx.vp, &user_orientation);
         }
 
         let mut oo = inv(&cx.base.orientation);
@@ -1162,12 +1159,13 @@ impl Fly {
     fn pan(&mut self, cx: &mut Cx) {
         let now = cx.env.date_now;
         let dt = now - self.start_time;
-        let up = Vector3::Y_AXIS;
+        let up = cx.base.up_vector(cx.vp, false);
 
         let direction = self.constrain_pan_direction(self.direction);
 
         let mut speed_factor = 1.0;
         speed_factor *= cx.nav.speed;
+        speed_factor *= cx.base.speed_factor(cx.vp);
         speed_factor *= if cx.env.shift { PAN_SHIFT_SPEED_FACTOR } else { PAN_SPEED_FACTOR };
         speed_factor *= dt;
 
@@ -1205,14 +1203,14 @@ impl Fly {
     }
 
     fn add_rotation(&mut self, from: &Vector3, to: &Vector3, cx: &mut Cx) {
-        let up = Vector3::Y_AXIS;
+        let up = cx.base.up_vector(cx.vp, false);
 
         if self.chaser.is_active && self.chaser.connected {
             let mut uo = set_vectors(to, from);
             uo.mult_right(&cx.base.orientation).mult_right(&self.chaser.set_destination_value);
 
             if self.straighten_horizon(cx) {
-                uo = straighten(&uo, &up);
+                uo = cx.base.straighten_horizon(cx.vp, &uo);
             }
 
             if up.dot(&rot_vec(&uo, &Vector3::new(0.0, 0.0, 1.0))).abs() > CRITICAL_ANGLE_FLY {
@@ -1228,7 +1226,7 @@ impl Fly {
             uo.mult_right(&cx.vp.user_orientation(cx.base));
 
             if self.straighten_horizon(cx) {
-                uo = straighten(&uo, &up);
+                uo = cx.base.straighten_horizon(cx.vp, &uo);
             }
 
             if up.dot(&rot_vec(&uo, &Vector3::new(0.0, 0.0, 1.0))).abs() > CRITICAL_ANGLE_FLY {

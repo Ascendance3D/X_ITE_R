@@ -1,0 +1,59 @@
+//! REA batch 08 (glTF lane) static renders against pinned X_ITE: every glTF of
+//! oracle/synthetic-rea-b08-gltf/render with a baseline in oracle/render-rea-b08-gltf-baseline
+//! (oracle/x_ite-shot-gltf.mjs) and oracle/render-msaa4-rea-b08-gltf-baseline
+//! (oracle/x_ite-shot-msaa-gltf.mjs, Multisampling 4).
+//!
+//! The bound is the one of `x3d-shot compare`: at most 0.5% of the pixels more than 8 off.
+//! `REA_ONLY=<substring>` restricts the worlds.
+
+use std::path::PathBuf;
+use x3d_render::gpu::Gpu;
+
+#[test]
+fn rea_b08_gltf_renders_match_x_ite() {
+    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle").canonicalize().unwrap();
+    let only = std::env::var("REA_ONLY").unwrap_or_default();
+    let mut failures = vec![];
+    let mut checked = 0;
+
+    for (samples, baseline) in [(0u32, "render-rea-b08-gltf-baseline"), (4, "render-msaa4-rea-b08-gltf-baseline")] {
+        g.renderer.set_sample_count(samples);
+        g.renderer.set_gl_sample_orientation(samples > 1);
+
+        if samples > 1 && g.renderer.sample_count() != samples {
+            eprintln!("{samples}x not supported here");
+            continue;
+        }
+
+        let mut names: Vec<String> = std::fs::read_dir(root.join(baseline).join("render"))
+            .unwrap()
+            .filter_map(|e| e.ok()?.file_name().into_string().ok()?.strip_suffix(".png").map(str::to_string))
+            .filter(|n| n.contains(&only))
+            .collect();
+        names.sort();
+
+        for name in names {
+            let (w, h, want) = x3d_render::compare::load_png(&root.join(format!("{baseline}/render/{name}.png"))).unwrap();
+            let shot = x3d_render::render_file(&mut g, &root, &root.join(format!("synthetic-rea-b08-gltf/render/{name}")), w, h).unwrap();
+            let rgba: Vec<u8> = shot.rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
+            let s = x3d_render::compare::compare(w, h, &want, &rgba, 8);
+
+            if std::env::var("REA_LOG").is_ok() { eprintln!("log {name}: {:?} unsupported {:?}", shot.log, shot.unsupported); }
+            eprintln!("MSAA {samples} {name}: over {} ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta);
+
+            if s.pixels_over * 1000 > (w * h) as usize * 5 {
+                failures.push(format!("{name} MSAA {samples}: {} pixels over 8 ({:.3}%), max {}", s.pixels_over, s.pct_over, s.max_delta));
+
+                if let Ok(dir) = std::env::var("REA_OUT") {
+                    let _ = x3d_render::write_png(&PathBuf::from(&dir).join(format!("{name}-msaa{samples}.png")), w, h, &rgba);
+                }
+            }
+
+            checked += 1;
+        }
+    }
+
+    eprintln!("{checked} shots checked");
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}

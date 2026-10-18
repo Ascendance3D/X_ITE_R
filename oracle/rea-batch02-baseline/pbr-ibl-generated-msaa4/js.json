@@ -1,0 +1,161 @@
+{
+  "ok": true,
+  "poses": {
+    "20": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "68": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "72": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Scripting : 1\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nNavigationInfo {\n  type \"NONE\"\n  headlight FALSE\n}\n\nDirectionalLight {\n  intensity 0.7\n  direction 0 -1 -0.3\n}\n\nDEF ENV EnvironmentLight {\n  origin 0 0 0.5\n  specularTexture DEF GEN GeneratedCubeMapTexture {\n    update \"ALWAYS\"\n    size 32\n  }\n}\n\nDEF MOVER Transform {\n  translation 3 0 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0.2 0.1\n        emissiveColor 0.5 0.1 0\n      }\n    }\n    geometry Box {\n      size 1 3 3\n    }\n  }\n}\n\nTransform {\n  translation -3 0 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.1 0.8 0.2\n        emissiveColor 0 0.4 0.1\n      }\n    }\n    geometry Box {\n      size 1 3 3\n    }\n  }\n}\n\nTransform {\n  translation 0 3 0\n  children Shape {\n    appearance Appearance {\n      material UnlitMaterial {\n        emissiveColor 0.6 0.7 1\n      }\n    }\n    geometry Box {\n      size 6 0.5 6\n    }\n  }\n}\n\nTransform {\n  translation -1.1 0 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.9 0.6 0.3\n        roughness 0.1\n      }\n    }\n    geometry Sphere {\n      radius 0.45\n    }\n  }\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.9 0.6 0.3\n        roughness 0.5\n      }\n    }\n    geometry Sphere {\n      radius 0.45\n    }\n  }\n}\n\nTransform {\n  translation 1.1 0 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.9 0.6 0.3\n      }\n    }\n    geometry Sphere {\n      radius 0.45\n    }\n  }\n}\n\nDEF TS TouchSensor { }\n\nDEF S Script {\n  inputOnly      SFTime  touch\n  initializeOnly SFNode  mover USE MOVER\n  initializeOnly SFNode  gen USE GEN\n  initializeOnly SFNode  env USE ENV\n  inputOutput    SFInt32 step 0\n\n  url \"javascript:\nfunction touch (value)\n{\n   step = step + 1;\n\n   if (step == 1) { mover .translation = new SFVec3f (0, -3, 0); }\n   if (step == 2) { gen .update = 'NONE'; mover .translation = new SFVec3f (3, 0, 0); }\n   if (step == 3) { gen .update = 'NEXT_FRAME_ONLY'; env .origin = new SFVec3f (0, 2, 0); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.touchTime TO S.touch\n",
+    "72": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Shape : 4\nCOMPONENT Lighting : 3\nCOMPONENT CubeMapTexturing : 3\nCOMPONENT Scripting : 1\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT X_ITE : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nBackground {\n  skyColor 0.15 0.15 0.18\n}\n\nNavigationInfo {\n  type \"NONE\"\n  headlight FALSE\n}\n\nDirectionalLight {\n  intensity 0.7\n  direction 0 -1 -0.3\n}\n\nDEF ENV EnvironmentLight {\n  origin 0 2 0\n  specularTexture DEF GEN GeneratedCubeMapTexture {\n    size 32\n  }\n}\n\nDEF MOVER Transform {\n  translation 3 0 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 1 0.2 0.1\n        emissiveColor 0.5 0.1 0\n      }\n    }\n    geometry Box {\n      size 1 3 3\n    }\n  }\n}\n\nTransform {\n  translation -3 0 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.1 0.8 0.2\n        emissiveColor 0 0.4 0.1\n      }\n    }\n    geometry Box {\n      size 1 3 3\n    }\n  }\n}\n\nTransform {\n  translation 0 3 0\n  children Shape {\n    appearance Appearance {\n      material UnlitMaterial {\n        emissiveColor 0.6 0.7 1\n      }\n    }\n    geometry Box {\n      size 6 0.5 6\n    }\n  }\n}\n\nTransform {\n  translation -1.1 0 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.9 0.6 0.3\n        roughness 0.1\n      }\n    }\n    geometry Sphere {\n      radius 0.45\n    }\n  }\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.9 0.6 0.3\n        roughness 0.5\n      }\n    }\n    geometry Sphere {\n      radius 0.45\n    }\n  }\n}\n\nTransform {\n  translation 1.1 0 0\n  children Shape {\n    appearance Appearance {\n      material PhysicalMaterial {\n        baseColor 0.9 0.6 0.3\n      }\n    }\n    geometry Sphere {\n      radius 0.45\n    }\n  }\n}\n\nDEF TS TouchSensor { }\n\nDEF S Script {\n  inputOnly      SFTime  touch\n  initializeOnly SFNode  mover USE MOVER\n  initializeOnly SFNode  gen USE GEN\n  initializeOnly SFNode  env USE ENV\n  inputOutput    SFInt32 step 3\n\n  url \"javascript:\nfunction touch (value)\n{\n   step = step + 1;\n\n   if (step == 1) { mover .translation = new SFVec3f (0, -3, 0); }\n   if (step == 2) { gen .update = 'NONE'; mover .translation = new SFVec3f (3, 0, 0); }\n   if (step == 3) { gen .update = 'NEXT_FRAME_ONLY'; env .origin = new SFVec3f (0, 2, 0); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE TS.touchTime TO S.touch\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 7,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

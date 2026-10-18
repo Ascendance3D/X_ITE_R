@@ -1,0 +1,96 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT EnvironmentalSensor:3
+# Synthetic REA oracle world: TransformSensor. A target Transform moves through and out of a box;
+# a sensor inside a rotated, scaled Transform; size -1 -1 -1 (always); a Shape target; enabled
+# toggled; targetObject set at run time; a USEd sensor (two model matrices). Authored.
+DEF MOVER Transform {
+  children DEF TGT Transform { children Shape { geometry Box { size 0.2 0.2 0.2 } } }
+}
+DEF SPIN Transform { children DEF SHP Shape { geometry Sphere { radius 0.1 } } }
+DEF S1 TransformSensor { size 4 4 4 targetObject USE TGT }
+Transform {
+  translation 1 0.5 0 rotation 0 0 1 0.6 scale 2 2 2
+  children DEF S2 TransformSensor { size 2 2 2 center 0.5 0 0 targetObject USE TGT }
+}
+DEF S3 TransformSensor { size -1 -1 -1 targetObject USE SHP }
+DEF S4 TransformSensor { size 10 10 10 }
+Transform { translation 3 0 0 children DEF S5 TransformSensor { size 3 3 3 targetObject USE TGT } }
+Transform { translation -3 0 0 children USE S5 }
+DEF PI PositionInterpolator { key [ 0 0.5 1 ] keyValue [ -6 0.3 0.1, 6 -0.2 0.4, -6 0.3 0.1 ] }
+DEF OI OrientationInterpolator { key [ 0 1 ] keyValue [ 0 1 0 0, 0 1 0 3.1 ] }
+DEF TS TimeSensor { cycleInterval 3 loop TRUE }
+DEF OUT Script {
+  inputOnly SFBool a1
+  inputOnly SFVec3f p1
+  inputOnly SFRotation r1
+  inputOnly SFTime en1
+  inputOnly SFTime ex1
+  inputOnly SFBool a2
+  inputOnly SFVec3f p2
+  inputOnly SFRotation r2
+  inputOnly SFBool a3
+  inputOnly SFRotation r3
+  inputOnly SFBool a4
+  inputOnly SFVec3f p4
+  inputOnly SFBool a5
+  inputOnly SFVec3f p5
+  inputOutput SFString hist ""
+  inputOutput SFVec3f lp1 0 0 0
+  inputOutput SFRotation lr1 0 0 1 0
+  inputOutput SFVec3f lp2 0 0 0
+  inputOutput SFRotation lr2 0 0 1 0
+  inputOutput SFRotation lr3 0 0 1 0
+  inputOutput SFVec3f lp4 0 0 0
+  inputOutput SFVec3f lp5 0 0 0
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOutput SFNode s1 USE S1
+  inputOutput SFNode s4 USE S4
+  inputOutput SFNode mover USE MOVER
+  url "ecmascript:
+    function add (n, v) { hist = hist + ' ' + n + '=' + v + '@' + step; }
+    function a1 (v) { add ('a1', v); }
+    function en1 (v, t) { add ('en1', v == t); }
+    function ex1 (v, t) { add ('ex1', v == t); }
+    function a2 (v) { add ('a2', v); }
+    function a3 (v) { add ('a3', v); }
+    function a4 (v) { add ('a4', v); }
+    function a5 (v) { add ('a5', v); }
+    function p1 (v) { lp1 = v; }
+    function r1 (v) { lr1 = v; }
+    function p2 (v) { lp2 = v; }
+    function r2 (v) { lr2 = v; }
+    function r3 (v) { lr3 = v; }
+    function p4 (v) { lp4 = v; }
+    function p5 (v) { lp5 = v; }
+    function cycle (v)
+    {
+      step = step + 1;
+      if (step == 4) s1 .enabled = false;
+      if (step == 6) s1 .enabled = true;
+      if (step == 7) s4 .targetObject = mover;
+      if (step == 9) s4 .size = new SFVec3f (0, 0, 0);
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.25 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle
+ROUTE TS.fraction_changed TO PI.set_fraction
+ROUTE TS.fraction_changed TO OI.set_fraction
+ROUTE PI.value_changed TO MOVER.set_translation
+ROUTE OI.value_changed TO SPIN.set_rotation
+ROUTE S1.isActive TO OUT.a1
+ROUTE S1.position_changed TO OUT.p1
+ROUTE S1.orientation_changed TO OUT.r1
+ROUTE S1.enterTime TO OUT.en1
+ROUTE S1.exitTime TO OUT.ex1
+ROUTE S2.isActive TO OUT.a2
+ROUTE S2.position_changed TO OUT.p2
+ROUTE S2.orientation_changed TO OUT.r2
+ROUTE S3.isActive TO OUT.a3
+ROUTE S3.orientation_changed TO OUT.r3
+ROUTE S4.isActive TO OUT.a4
+ROUTE S4.position_changed TO OUT.p4
+ROUTE S5.isActive TO OUT.a5
+ROUTE S5.position_changed TO OUT.p5

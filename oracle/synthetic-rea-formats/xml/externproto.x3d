@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='3.3'>
+  <Scene>
+    <ExternProtoDeclare name='Ext' url='"missing.x3d#Ext" "http://example.invalid/x.x3d#Ext"'>
+      <field name='amount' type='SFFloat' accessType='inputOutput'/>
+      <field name='colors' type='MFColor' accessType='inputOutput'/>
+      <field name='target' type='SFNode' accessType='inputOutput'/>
+    </ExternProtoDeclare>
+    <ProtoInstance name='Ext' DEF='E1'>
+      <fieldValue name='amount' value='0.5'/>
+    </ProtoInstance>
+  </Scene>
+</X3D>

@@ -1,0 +1,109 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+PROTO Holder [ inputOutput SFVec3f at 0 0 0 inputOutput MFNode kids [ ] ] { Transform { translation IS at children IS kids } }
+Viewpoint { position 0 0 20 }
+DEF GA PickableGroup { objectType [ "A" ] children DEF VA Transform { translation -5 0 0 rotation 0 0 1 0.7 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 transparency 0.3 } } geometry Box { size 1.5 1.5 1.5 } } } }
+DEF GB PickableGroup { objectType [ "B" ] children DEF VB Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 transparency 0.3 } } geometry Sphere { radius 0.9 } } } }
+DEF GAB PickableGroup { objectType [ "A" "B" ] children DEF VAB Transform { translation 1 0 0 scale 1 1.5 1 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 transparency 0.3 } } geometry DEF TGEO IndexedFaceSet { coord Coordinate { point [ 1.2 0 0, -1.2 0 0, 0 1.2 0, 0 -1.2 0, 0 0 1.2, 0 0 -1.2 ] }
+  coordIndex [ 0 2 4 -1 2 1 4 -1 1 3 4 -1 3 0 4 -1 2 0 5 -1 1 2 5 -1 3 1 5 -1 0 3 5 -1 ] } } } }
+DEF VC Transform { translation 4 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 transparency 0.3 } } geometry Cone { bottomRadius 1 height 2 bottom FALSE solid FALSE } } }
+DEF HP Holder { at 7 0 0 kids [ Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.8 transparency 0.3 } } geometry Cylinder { radius 0.8 height 1.5 } } ] }
+DEF MOVER Transform { translation -9 0 0 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF VOL IndexedFaceSet { coord Coordinate { point [ 0 0.9 0, -0.6 -0.5 0.5, 0.6 -0.5 0.5, 0 -0.5 -0.7 ] } coordIndex [ 0 1 2 -1 0 2 3 -1 0 3 1 -1 1 3 2 -1 ] } }
+  DEF VALL VolumePickSensor { intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE VOL pickTarget [ USE GA USE GB USE GAB USE VC USE HP ] }
+  DEF VSA VolumePickSensor { objectType "A" intersectionType "GEOMETRY" sortOrder "ALL_SORTED" pickingGeometry USE VOL pickTarget [ USE GA USE GB USE GAB USE VC USE HP ] }
+  DEF VSAB VolumePickSensor { objectType [ "A" "B" ] matchCriterion "MATCH_EVERY" intersectionType "GEOMETRY" sortOrder "ALL" pickingGeometry USE VOL pickTarget [ USE GA USE GB USE GAB ] }
+  DEF VBND VolumePickSensor { sortOrder "ALL" pickingGeometry USE VOL pickTarget [ USE GA USE GB USE GAB USE VC USE HP ] }
+] }
+DEF MS Transform { translation -9 -3 0 scale 1.4 0.6 1 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 0 } } geometry DEF SPH Sphere { radius 0.8 } }
+  DEF VSPH VolumePickSensor { intersectionType "GEOMETRY" sortOrder "CLOSEST" pickingGeometry USE SPH pickTarget [ USE VA USE VB USE VAB USE VC USE HP ] }
+] }
+DEF CLOCK TimeSensor { cycleInterval 5 loop TRUE }
+DEF PATH PositionInterpolator { key [ 0 1 ] keyValue [ -9 0.1 0, 10 -0.1 0.2 ] }
+DEF PATH2 PositionInterpolator { key [ 0 1 ] keyValue [ -9 -2 0, 10 1.5 0 ] }
+ROUTE CLOCK.fraction_changed TO PATH.set_fraction
+ROUTE PATH.value_changed TO MOVER.set_translation
+ROUTE CLOCK.fraction_changed TO PATH2.set_fraction
+ROUTE PATH2.value_changed TO MS.set_translation
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool on_VALL_a
+  inputOutput SFBool VALL_a FALSE
+  inputOutput SFInt32 VALL_a_count 0
+  inputOnly MFNode on_VALL_g
+  inputOutput MFNode VALL_g [ ]
+  inputOutput SFInt32 VALL_g_count 0
+  inputOnly SFBool on_VSA_a
+  inputOutput SFBool VSA_a FALSE
+  inputOutput SFInt32 VSA_a_count 0
+  inputOnly MFNode on_VSA_g
+  inputOutput MFNode VSA_g [ ]
+  inputOutput SFInt32 VSA_g_count 0
+  inputOnly SFBool on_VSAB_a
+  inputOutput SFBool VSAB_a FALSE
+  inputOutput SFInt32 VSAB_a_count 0
+  inputOnly MFNode on_VSAB_g
+  inputOutput MFNode VSAB_g [ ]
+  inputOutput SFInt32 VSAB_g_count 0
+  inputOnly SFBool on_VBND_a
+  inputOutput SFBool VBND_a FALSE
+  inputOutput SFInt32 VBND_a_count 0
+  inputOnly MFNode on_VBND_g
+  inputOutput MFNode VBND_g [ ]
+  inputOutput SFInt32 VBND_g_count 0
+  inputOnly SFBool on_VSPH_a
+  inputOutput SFBool VSPH_a FALSE
+  inputOutput SFInt32 VSPH_a_count 0
+  inputOnly MFNode on_VSPH_g
+  inputOutput MFNode VSPH_g [ ]
+  inputOutput SFInt32 VSPH_g_count 0
+  inputOutput SFString log ""
+  inputOnly SFString on_key
+  initializeOnly SFNode vall USE VALL
+  initializeOnly SFNode vsa USE VSA
+  initializeOnly SFNode vsph USE VSPH
+  initializeOnly SFNode ga USE GA
+  initializeOnly SFNode vc USE VC
+  initializeOnly SFNode tgeo USE TGEO
+  url "javascript:
+function on_VALL_a (value) { VALL_a = value; VALL_a_count = VALL_a_count + 1; log = log + 'VALL_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VALL_g (value) { VALL_g = value; VALL_g_count = VALL_g_count + 1; log = log + 'VALL_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VSA_a (value) { VSA_a = value; VSA_a_count = VSA_a_count + 1; log = log + 'VSA_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VSA_g (value) { VSA_g = value; VSA_g_count = VSA_g_count + 1; log = log + 'VSA_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VSAB_a (value) { VSAB_a = value; VSAB_a_count = VSAB_a_count + 1; log = log + 'VSAB_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VSAB_g (value) { VSAB_g = value; VSAB_g_count = VSAB_g_count + 1; log = log + 'VSAB_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VBND_a (value) { VBND_a = value; VBND_a_count = VBND_a_count + 1; log = log + 'VBND_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VBND_g (value) { VBND_g = value; VBND_g_count = VBND_g_count + 1; log = log + 'VBND_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VSPH_a (value) { VSPH_a = value; VSPH_a_count = VSPH_a_count + 1; log = log + 'VSPH_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_VSPH_g (value) { VSPH_g = value; VSPH_g_count = VSPH_g_count + 1; log = log + 'VSPH_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'b') vall .pickingGeometry = Browser .currentScene .createNode ('Box');
+   if (k == 'l') { var l = Browser .currentScene .createNode ('LineSet'); vall .pickingGeometry = l; }
+   if (k == 'r') vall .pickingGeometry = vsa .pickingGeometry;
+   if (k == 'e') vsph .enabled = false;
+   if (k == 'f') vsph .enabled = true;
+   if (k == 't') vall .pickTarget = new MFNode (vc);
+   if (k == 'g') ga .objectType = new MFString ('B');
+   if (k == 'c') tgeo .coord .point [0] = new SFVec3f (2.2, 0, 0);
+}
+"
+}
+ROUTE VALL.isActive TO R.on_VALL_a
+ROUTE VALL.pickedGeometry TO R.on_VALL_g
+ROUTE VSA.isActive TO R.on_VSA_a
+ROUTE VSA.pickedGeometry TO R.on_VSA_g
+ROUTE VSAB.isActive TO R.on_VSAB_a
+ROUTE VSAB.pickedGeometry TO R.on_VSAB_g
+ROUTE VBND.isActive TO R.on_VBND_a
+ROUTE VBND.pickedGeometry TO R.on_VBND_g
+ROUTE VSPH.isActive TO R.on_VSPH_a
+ROUTE VSPH.pickedGeometry TO R.on_VSPH_g
+ROUTE K.keyPress TO R.on_key

@@ -1,0 +1,145 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        3979573.5744222803,
+        -8334.811590745214,
+        4969536.369526307
+      ],
+      "orientation": [
+        0.7038162888671222,
+        0.702343760968075,
+        -0.10656393833999829,
+        3.3543610462228743
+      ],
+      "centerOfRotation": [
+        6378137,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "fly",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        3979572.705634677,
+        -8332.924183284546,
+        4969533.233294462
+      ],
+      "orientation": [
+        0.7421731903118822,
+        0.6575203010024789,
+        -0.1297921775450747,
+        3.305619872221415
+      ],
+      "centerOfRotation": [
+        6378137,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "fly",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        3979570.916998749,
+        -8327.579420090837,
+        4969519.428221779
+      ],
+      "orientation": [
+        0.8632101950407242,
+        0.45630610986757225,
+        -0.21599280838786797,
+        3.1064755262031323
+      ],
+      "centerOfRotation": [
+        6378137,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "fly",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        3979570.510824356,
+        -8326.630421674046,
+        4969505.403122631
+      ],
+      "orientation": [
+        0.9279256937882674,
+        0.23938098283514078,
+        -0.28574578188390554,
+        2.919825365507982
+      ],
+      "centerOfRotation": [
+        6378137,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "fly",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        3979570.510824356,
+        -8326.630421674046,
+        4969505.403122631
+      ],
+      "orientation": [
+        0.9279256937882674,
+        0.23938098283514078,
+        -0.28574578188390554,
+        2.919825365507982
+      ],
+      "centerOfRotation": [
+        6378137,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "fly",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\n\nNavigationInfo {\n  type [\n    \"FLY\",\n    \"ANY\"\n  ]\n}\n\nGeoViewpoint {\n  description \"fly\"\n  position 51.5 -0.12 1500\n  orientation 1 0 0 1.2\n  speedFactor 0.5\n}\n\nBackground {\n  skyColor 0.3 0.4 0.7\n}\n\nGeoLocation {\n  geoCoords 51.51 -0.12 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.6 0.2\n        }\n      }\n      geometry Box {\n        size 300 300 300\n      }\n    }\n    Transform {\n      translation 600 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.4\n          }\n        }\n        geometry Sphere {\n          radius 150\n        }\n      }\n    }\n  ]\n}\n\nGeoLocation {\n  geoCoords 51.53 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.9\n      }\n    }\n    geometry Cylinder {\n      height 800\n      radius 200\n    }\n  }\n}\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\n\nNavigationInfo {\n  type [\n    \"FLY\",\n    \"ANY\"\n  ]\n}\n\nGeoViewpoint {\n  description \"fly\"\n  position 51.5 -0.12 1500\n  orientation 1 0 0 1.2\n  speedFactor 0.5\n}\n\nBackground {\n  skyColor 0.3 0.4 0.7\n}\n\nGeoLocation {\n  geoCoords 51.51 -0.12 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.6 0.2\n        }\n      }\n      geometry Box {\n        size 300 300 300\n      }\n    }\n    Transform {\n      translation 600 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.4\n          }\n        }\n        geometry Sphere {\n          radius 150\n        }\n      }\n    }\n  ]\n}\n\nGeoLocation {\n  geoCoords 51.53 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.9\n      }\n    }\n    geometry Cylinder {\n      height 800\n      radius 200\n    }\n  }\n}\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\n\nNavigationInfo {\n  type [\n    \"FLY\",\n    \"ANY\"\n  ]\n}\n\nGeoViewpoint {\n  description \"fly\"\n  position 51.5 -0.12 1500\n  orientation 1 0 0 1.2\n  speedFactor 0.5\n}\n\nBackground {\n  skyColor 0.3 0.4 0.7\n}\n\nGeoLocation {\n  geoCoords 51.51 -0.12 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.6 0.2\n        }\n      }\n      geometry Box {\n        size 300 300 300\n      }\n    }\n    Transform {\n      translation 600 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.4\n          }\n        }\n        geometry Sphere {\n          radius 150\n        }\n      }\n    }\n  ]\n}\n\nGeoLocation {\n  geoCoords 51.53 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.9\n      }\n    }\n    geometry Cylinder {\n      height 800\n      radius 200\n    }\n  }\n}\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\n\nNavigationInfo {\n  type [\n    \"FLY\",\n    \"ANY\"\n  ]\n}\n\nGeoViewpoint {\n  description \"fly\"\n  position 51.5 -0.12 1500\n  orientation 1 0 0 1.2\n  speedFactor 0.5\n}\n\nBackground {\n  skyColor 0.3 0.4 0.7\n}\n\nGeoLocation {\n  geoCoords 51.51 -0.12 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.6 0.2\n        }\n      }\n      geometry Box {\n        size 300 300 300\n      }\n    }\n    Transform {\n      translation 600 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.4\n          }\n        }\n        geometry Sphere {\n          radius 150\n        }\n      }\n    }\n  ]\n}\n\nGeoLocation {\n  geoCoords 51.53 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.9\n      }\n    }\n    geometry Cylinder {\n      height 800\n      radius 200\n    }\n  }\n}\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\n\nNavigationInfo {\n  type [\n    \"FLY\",\n    \"ANY\"\n  ]\n}\n\nGeoViewpoint {\n  description \"fly\"\n  position 51.5 -0.12 1500\n  orientation 1 0 0 1.2\n  speedFactor 0.5\n}\n\nBackground {\n  skyColor 0.3 0.4 0.7\n}\n\nGeoLocation {\n  geoCoords 51.51 -0.12 0\n  children [\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.6 0.2\n        }\n      }\n      geometry Box {\n        size 300 300 300\n      }\n    }\n    Transform {\n      translation 600 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.4\n          }\n        }\n        geometry Sphere {\n          radius 150\n        }\n      }\n    }\n  ]\n}\n\nGeoLocation {\n  geoCoords 51.53 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.9\n      }\n    }\n    geometry Cylinder {\n      height 800\n      radius 200\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

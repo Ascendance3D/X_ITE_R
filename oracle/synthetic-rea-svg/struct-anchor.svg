@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<a href="http://example.org/page" title="T" target="_blank"><rect width="30" height="30" fill="red"/></a><a xlink:href="other.svg" xlink:title="XT"><circle cx="60" cy="15" r="15"/></a><a><rect y="50" width="10" height="10"/></a>
+</svg>

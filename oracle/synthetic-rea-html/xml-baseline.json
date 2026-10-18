@@ -1,0 +1,180 @@
+{
+ "pinned": "34cdf9f97",
+ "results": [
+  {
+   "file": "camel-attribute-names.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <Switch\n        whichChoice='1'/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"Switch\":\n          {\n            \"@whichChoice\": 1\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nSwitch {\n  whichChoice 1\n}\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": [
+    "warn: XML Parser: Container field for node Box not found. Unknown field 'geometry' in node class Switch.",
+    "warn: XML Parser: Container field for node Sphere not found. Unknown field 'geometry' in node class Switch."
+   ]
+  },
+  {
+   "file": "camel-element-names.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <Transform\n        translation='1 2 3'>\n      <Shape>\n        <Box/>\n      </Shape>\n    </Transform>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"Transform\":\n          {\n            \"@translation\": [ 1, 2, 3 ],\n            \"-children\": [\n              { \"Shape\":\n                {\n                  \"-geometry\": { \"Box\":\n                    {\n                    }\n                  }\n                }\n              }\n            ]\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nTransform {\n  translation 1 2 3\n  children Shape {\n    geometry Box { }\n  }\n}\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": []
+  },
+  {
+   "file": "inputoutput-lowercase.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <Material/>\n    <DirectionalLight\n        on='false'\n        intensity='0.5'/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"Material\":\n          {\n          }\n        },\n        { \"DirectionalLight\":\n          {\n            \"@on\": false,\n            \"@intensity\": 0.5\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nMaterial { }\n\nDirectionalLight {\n  on FALSE\n  intensity 0.5\n}\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": []
+  },
+  {
+   "file": "lower-attribute-names.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <Switch/>\n    <Group/>\n    <TimeSensor\n        loop='true'/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"Switch\":\n          {\n          }\n        },\n        { \"Group\":\n          {\n          }\n        },\n        { \"TimeSensor\":\n          {\n            \"@loop\": true\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nSwitch { }\n\nGroup { }\n\nTimeSensor {\n  loop TRUE\n}\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": [
+    "warn: XML Parser: Container field for node Box not found. Unknown field 'geometry' in node class Switch.",
+    "warn: XML Parser: Container field for node Sphere not found. Unknown field 'geometry' in node class Switch."
+   ]
+  },
+  {
+   "file": "lower-element-names.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene/>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": [
+    "error: Error: Unknown node type 'transform'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+   ]
+  },
+  {
+   "file": "lower-head.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <head>\n    <component name='Shape' level='3'/>\n    <meta name='a' content='b'/>\n  </head>\n  <Scene>\n    <Box/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"head\": {\n      \"meta\": [\n        {\n          \"@name\": \"a\",\n          \"@content\": \"b\"\n        }\n      ],\n      \"component\": [\n        {\n          \"@name\": \"Shape\",\n          \"@level\": 3\n        }\n      ]\n    },\n    \"Scene\": {\n      \"-children\": [\n        { \"Box\":\n          {\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Shape : 3\n\nMETA \"a\" \"b\"\n\nBox { }\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": []
+  },
+  {
+   "file": "upper-attribute-names.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <Switch/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"Switch\":\n          {\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nSwitch { }\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": [
+    "warn: XML Parser: Container field for node Box not found. Unknown field 'geometry' in node class Switch.",
+    "warn: XML Parser: Container field for node Sphere not found. Unknown field 'geometry' in node class Switch."
+   ]
+  },
+  {
+   "file": "upper-element-names.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene/>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": [
+    "error: Error: Unknown node type 'TRANSFORM'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+   ]
+  },
+  {
+   "file": "upper-head.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <head>\n    <component name='Shape' level='3'/>\n    <meta name='a' content='b'/>\n  </head>\n  <Scene>\n    <Box/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"head\": {\n      \"meta\": [\n        {\n          \"@name\": \"a\",\n          \"@content\": \"b\"\n        }\n      ],\n      \"component\": [\n        {\n          \"@name\": \"Shape\",\n          \"@level\": 3\n        }\n      ]\n    },\n    \"Scene\": {\n      \"-children\": [\n        { \"Box\":\n          {\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Shape : 3\n\nMETA \"a\" \"b\"\n\nBox { }\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": []
+  },
+  {
+   "file": "upper-proto-instance.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <ProtoDeclare name='P'>\n      <ProtoInterface>\n        <field accessType='inputOutput' type='SFFloat' name='f' value='1'/>\n      </ProtoInterface>\n      <ProtoBody>\n        <Box/>\n      </ProtoBody>\n    </ProtoDeclare>\n    <ProtoInstance name='P'>\n      <fieldValue name='f' value='2'/>\n    </ProtoInstance>\n    <ProtoInstance name='P'/>\n    <ProtoInstance name='P'>\n      <fieldValue name='f' value='4'/>\n    </ProtoInstance>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"ProtoDeclare\":\n          {\n            \"@name\": \"P\",\n            \"ProtoInterface\": {\n              \"field\": [\n                {\n                  \"@accessType\": \"inputOutput\",\n                  \"@type\": \"SFFloat\",\n                  \"@name\": \"f\",\n                  \"@value\": 1\n                }\n              ]\n            },\n            \"ProtoBody\": {\n              \"-children\": [\n                { \"Box\":\n                  {\n                  }\n                }\n              ]\n            }\n          }\n        },\n        { \"ProtoInstance\":\n          {\n            \"@name\": \"P\",\n            \"fieldValue\": [\n              {\n                \"@name\": \"f\",\n                \"@value\": 2\n              }\n            ]\n          }\n        },\n        { \"ProtoInstance\":\n          {\n            \"@name\": \"P\"\n          }\n        },\n        { \"ProtoInstance\":\n          {\n            \"@name\": \"P\",\n            \"fieldValue\": [\n              {\n                \"@name\": \"f\",\n                \"@value\": 4\n              }\n            ]\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nPROTO P [\n  inputOutput SFFloat f 1\n]\n{\n  Box { }\n}\n\nP {\n  f 2\n}\n\nP { }\n\nP {\n  f 4\n}\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": [
+    "error: Error: Unknown node type 'p'. You probably have insufficient component/profile statements and/or an inappropriate specification version."
+   ]
+  },
+  {
+   "file": "upper-route.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <TimeSensor DEF='T'/>\n    <Transform DEF='X'/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"TimeSensor\":\n          {\n            \"@DEF\": \"T\"\n          }\n        },\n        { \"Transform\":\n          {\n            \"@DEF\": \"X\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF T TimeSensor { }\n\nDEF X Transform { }\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": [
+    "error: Error: Bad ROUTE specification: source field type must match destination field type of fields named \"fraction_changed\" and \"rotation\".",
+    "error: Error: Unknown node type 'route'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+    "warn: XML Parser: Bad ROUTE specification: source field type must match destination field type of fields named \"fraction_changed\" and \"rotation\"."
+   ]
+  },
+  {
+   "file": "upper-use-def.x3d",
+   "ok": true,
+   "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE X3D PUBLIC \"ISO//Web3D//DTD X3D 4.1//EN\" \"https://www.web3d.org/specifications/x3d-4.1.dtd\">\n<X3D profile='Full' version='4.1' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='https://www.web3d.org/specifications/x3d-4.1.xsd'>\n  <Scene>\n    <Shape DEF='S'>\n      <Box/>\n    </Shape>\n    <Shape USE='S'/>\n    <Shape/>\n  </Scene>\n</X3D>\n",
+   "xmlError": null,
+   "json": "{ \"X3D\":\n  {\n    \"encoding\": \"UTF-8\",\n    \"@profile\": \"Full\",\n    \"@version\": \"4.1\",\n    \"@xsd:noNamespaceSchemaLocation\": \"https://www.web3d.org/specifications/x3d-4.1.xsd\",\n    \"JSON schema\": \"https://www.web3d.org/specifications/x3d-4.1-JSONSchema.json\",\n    \"Scene\": {\n      \"-children\": [\n        { \"Shape\":\n          {\n            \"@DEF\": \"S\",\n            \"-geometry\": { \"Box\":\n              {\n              }\n            }\n          }\n        },\n        { \"Shape\":\n          {\n            \"@USE\": \"S\"\n          }\n        },\n        { \"Shape\":\n          {\n          }\n        }\n      ]\n    }\n  }\n}\n",
+   "jsonError": null,
+   "vrml": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF S Shape {\n  geometry Box { }\n}\n\nUSE S\n\nShape { }\n",
+   "vrmlError": null,
+   "encoding": "XML",
+   "profile": "Full",
+   "log": []
+  }
+ ]
+}

@@ -1,0 +1,93 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+COMPONENT Navigation:2
+UNIT length centimetre 0.01
+META "title" "SAI scene probe"
+META "author" "synthetic"
+# Synthetic REA oracle world: the X3DScene / X3DExecutionContext script API (read and write).
+# Every probe is wrapped so a missing member records ERR instead of stopping the script. Authored.
+EXTERNPROTO EP [ inputOutput SFFloat v ] [ "missing-ep.wrl#EP" ]
+PROTO PA [ inputOutput SFVec3f p 1 2 3 initializeOnly SFString s "x" ] { Group { } }
+PROTO PB [ ] { Group { } }
+DEF T1 Transform { }
+DEF T2 Transform { translation 100 0 0 }
+DEF TS TimeSensor { }
+ROUTE TS.fraction_changed TO T1.set_scale
+DEF OUT Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    function p (name, f) {
+      var v;
+      try { v = f (); } catch (e) { v = 'ERR'; }
+      hist = hist + ' ' + name + '=' + v;
+    }
+    function initialize () {
+      var s = Browser .currentScene;
+      p ('isScene', function () { return s .isScene; });
+      p ('spec', function () { return s .specificationVersion; });
+      p ('getSpec', function () { return s .getSpecificationVersion (); });
+      p ('enc', function () { return s .encoding; });
+      p ('profile', function () { return s .profile .name; });
+      p ('getProfile', function () { return s .getProfile () .name; });
+      p ('ncomp', function () { return s .components .length; });
+      p ('comp', function () { var r = ''; for (var i = 0; i < s .components .length; ++ i) r += s .components [i] .name + ':' + s .components [i] .level + ';'; return r; });
+      p ('hasNav', function () { return s .hasComponent ('Navigation'); });
+      p ('hasGeo', function () { return s .hasComponent ('Geospatial'); });
+      p ('units', function () { var r = ''; for (var i = 0; i < s .units .length; ++ i) r += s .units [i] .category + ':' + s .units [i] .name + ':' + s .units [i] .conversionFactor + ';'; return r; });
+      p ('unitLen', function () { return s .getUnit ('length') .name; });
+      p ('meta', function () { return s .getMetaData ('title'); });
+      p ('metaMissing', function () { return s .getMetaData ('nope'); });
+      p ('nroot', function () { return s .rootNodes .length; });
+      p ('named', function () { return s .getNamedNode ('T2') .getNodeName (); });
+      p ('namedType', function () { return s .getNamedNode ('T2') .getNodeTypeName (); });
+      p ('namedMissing', function () { s .getNamedNode ('NOPE'); return 'no throw'; });
+      p ('nprotos', function () { return s .protos .length; });
+      p ('protos', function () { var r = ''; for (var i = 0; i < s .protos .length; ++ i) r += s .protos [i] .name + ':' + s .protos [i] .isExternProto + ';'; return r; });
+      p ('protoFields', function () { var r = ''; var f = s .protos [0] .fields; for (var i = 0; i < f .length; ++ i) r += f [i] .name + ':' + f [i] .accessType + ':' + f [i] .dataType + ';'; return r; });
+      p ('nextern', function () { return s .externprotos .length; });
+      p ('extern', function () { return s .externprotos [0] .name + ':' + s .externprotos [0] .isExternProto + ':' + s .externprotos [0] .urls; });
+      p ('nroutes', function () { return s .routes .length; });
+      p ('route', function () { var r = s .routes [0]; return r .sourceNode .getNodeName () + '.' + r .sourceField + '>' + r .destinationNode .getNodeName () + '.' + r .destinationField; });
+      p ('worldInfos', function () { return s .getWorldInfos () .length; });
+      p ('namedNodes', function () { var r = ''; for (var i = 0; i < s .namedNodes .length; ++ i) r += s .namedNodes [i] .getNodeName () + ';'; return r; });
+      p ('exportedNodes', function () { return s .exportedNodes .length; });
+      p ('importedNodes', function () { return s .importedNodes .length; });
+      p ('fieldDefs', function () { var f = s .getNamedNode ('T2') .getFieldDefinitions (); return f .length + ':' + f [1] .name + ':' + f [1] .accessType + ':' + f [1] .dataType; });
+      p ('consts', function () { return X3DConstants .SFBool + ':' + X3DConstants .MFVec4f + ':' + X3DConstants .COMPLETE_STATE + ':' + X3DConstants .VrmlMatrix; });
+      p ('getComp', function () { var c = Browser .getComponent ('Navigation', 9); return c .name + ':' + c .level; });
+      p ('getCompBad', function () { Browser .getComponent ('Nope', 1); return 'no throw'; });
+      p ('hasNavLevel', function () { return s .hasComponent ('Navigation', 3) + ':' + s .hasComponent ('Navigation', 2) + ':' + s .hasComponent ('Core', 2); });
+      p ('typeName', function () { return s .getTypeName (); });
+      p ('vrmlLen', function () { return s .toVRMLString () .split ('\\n') .length > 5; });
+    }
+    function cycle (v) {
+      step = step + 1;
+      var s = Browser .currentScene;
+      if (step == 2) {
+        p ('setMeta', function () { s .setMetaData ('title', 'changed'); return s .getMetaData ('title'); });
+        p ('addMeta', function () { s .addMetaData ('extra', 'one'); return s .getMetaData ('extra'); });
+        p ('removeMeta', function () { s .removeMetaData ('author'); return s .getMetaData ('author'); });
+      }
+      if (step == 3) {
+        p ('addRoot', function () { var n = s .createNode ('Group'); s .addRootNode (n); return s .rootNodes .length; });
+        p ('removeRoot', function () { s .removeRootNode (s .getNamedNode ('T1')); return s .rootNodes .length; });
+        p ('addNamed', function () { var n = s .createNode ('Transform'); s .addNamedNode ('NEWT', n); return s .getNamedNode ('NEWT') .getNodeName (); });
+        p ('removeNamed', function () { s .removeNamedNode ('T2'); s .getNamedNode ('T2'); return 'still'; });
+        p ('addExport', function () { s .addExportedNode ('EXT', s .getNamedNode ('NEWT')); return s .getExportedNode ('EXT') .getNodeName (); });
+        p ('exportedNodes2', function () { return s .exportedNodes [0] .exportedName + ':' + s .exportedNodes [0] .localNode .getNodeName (); });
+        p ('addNamedEmpty', function () { s .addNamedNode ('', s .createNode ('Group')); return 'ok'; });
+        p ('addNamedDup', function () { s .addNamedNode ('NEWT', s .createNode ('Group')); return 'ok'; });
+        p ('updateNamed', function () { s .updateNamedNode ('NEWT', s .createNode ('Group')); return s .getNamedNode ('NEWT') .getNodeTypeName (); });
+        p ('addExportDup', function () { s .addExportedNode ('EXT', s .getNamedNode ('NEWT')); return 'ok'; });
+        p ('compDup', function () { s .addComponent (Browser .getComponent ('Geospatial', 1)); return 'ok'; });
+        p ('addComp', function () { s .addComponent (Browser .getComponent ('Geospatial', 1)); return s .hasComponent ('Geospatial'); });
+        p ('routeAdd', function () { s .addRoute (s .getNamedNode ('TS'), 'isActive', s .getNamedNode ('OUT'), 'set_hist'); return s .routes .length; });
+      }
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.25 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

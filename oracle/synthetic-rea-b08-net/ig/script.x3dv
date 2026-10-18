@@ -1,0 +1,8 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+COMPONENT Scripting:1
+DEF S Script { url "javascript:function initialize () { Browser .print ('ig-script-init'); }" }
+Shape { geometry Sphere { radius 0.5 } }

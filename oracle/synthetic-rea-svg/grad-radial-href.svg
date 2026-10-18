@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<defs><radialGradient id="base" r="0.3"><stop offset="0" stop-color="red"/><stop offset="1" stop-color="blue"/></radialGradient><radialGradient id="g" href="#base" cx="0.2"/></defs><rect x="20" y="20" width="160" height="100" fill="url(#g)"/>
+</svg>

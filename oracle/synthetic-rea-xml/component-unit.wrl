@@ -1,0 +1,6 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Core:2
+COMPONENT Geometry3D:2
+UNIT length metre 1
+DEF G Shape { geometry Box { size 1 2 3 } }

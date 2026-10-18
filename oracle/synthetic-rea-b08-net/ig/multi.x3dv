@@ -1,0 +1,9 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+Shape { geometry Box { size 1 1 1 } }
+Shape { geometry DEF G2 Cylinder { height 1.6 radius 0.4 } }
+DEF G3 Shape { geometry DEF G3G Cone { height 1.6 bottomRadius 0.5 } }
+DEF NOGEO WorldInfo { }

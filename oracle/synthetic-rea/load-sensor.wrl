@@ -1,0 +1,133 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Networking:3
+# Synthetic REA oracle world: LoadSensor over Inline, ImageTexture and Script url objects that
+# start with load FALSE and load one per TimeSensor cycle (so the order does not depend on the network),
+# a url that fails and a url that loads at run time, enabled toggling, an empty sensor, and a
+# timeOut shorter than a load (abort, then the late load still reports isLoaded). Authored.
+# (A url that fails at start-up is in load-sensor-fail.wrl: its timing against the first frames
+# depends on the oracle's network, so it is kept away from the other sensors.)
+Viewpoint { position 0 0 10 }
+DEF IN1 Inline { load FALSE url "load-sensor-assets/load-sensor-child.wrl" }
+DEF IN2 Inline { load FALSE url "load-sensor-assets/load-sensor-child2.wrl" }
+DEF IN3 Inline { load FALSE url "load-sensor-assets/load-sensor-child2.wrl" }
+Shape {
+  appearance Appearance { texture DEF TX ImageTexture { load FALSE url "load-sensor-assets/load-sensor-red.png" } }
+  geometry Box { }
+}
+DEF SC Script {
+  load FALSE
+  url "ecmascript: function initialize () { }"
+}
+DEF LS1 LoadSensor { children [ USE IN1 USE TX ] }
+DEF LS2 LoadSensor { children [ USE IN2 USE IN3 ] }
+DEF LS3 LoadSensor { timeOut 5 children [ USE IN1 USE SC ] }
+DEF LS4 LoadSensor { }
+DEF LS5 LoadSensor { enabled FALSE children [ USE IN1 ] }
+DEF IN4 Inline { load FALSE url "load-sensor-assets/load-sensor-child2.wrl" }
+DEF LS6 LoadSensor { timeOut 0.01 children [ USE IN4 ] }
+DEF TS TimeSensor { cycleInterval 0.25 loop TRUE }
+DEF OUT Script {
+  inputOutput SFBool a1 FALSE
+  inputOutput SFBool l1 FALSE
+  inputOutput SFFloat p1 0
+  inputOnly SFTime t1
+  inputOutput SFString t1s ""
+  inputOutput SFBool a2 FALSE
+  inputOutput SFBool l2 FALSE
+  inputOutput SFFloat p2 0
+  inputOnly SFTime t2
+  inputOutput SFString t2s ""
+  inputOutput SFBool a3 FALSE
+  inputOutput SFBool l3 FALSE
+  inputOutput SFFloat p3 0
+  inputOnly SFTime t3
+  inputOutput SFString t3s ""
+  inputOutput SFBool a4 FALSE
+  inputOutput SFBool l4 FALSE
+  inputOutput SFFloat p4 0
+  inputOutput SFBool a5 FALSE
+  inputOutput SFBool l5 FALSE
+  inputOnly SFTime t5
+  inputOutput SFString t5s ""
+  inputOutput SFInt32 events 0
+  inputOutput SFInt32 step 0
+  inputOutput SFString hist ""
+  inputOnly SFTime cycle
+  inputOnly SFBool anyA1
+  inputOnly SFBool anyA2
+  inputOnly SFBool anyA3
+  inputOnly SFFloat anyP2
+  inputOutput SFNode ls3 USE LS3
+  inputOutput SFNode ls5 USE LS5
+  inputOutput SFNode in1 USE IN1
+  inputOutput SFNode in2 USE IN2
+  inputOutput SFNode in3 USE IN3
+  inputOutput SFNode tx USE TX
+  inputOutput SFNode in4 USE IN4
+  inputOutput SFBool a6 FALSE
+  inputOutput SFBool l6 FALSE
+  inputOutput SFFloat p6 0
+  inputOnly SFBool anyA6
+  inputOnly SFTime t6
+  inputOutput SFString t6s ""
+  inputOutput SFNode sc USE SC
+  url "ecmascript:
+    function log (name, value) { events = events + 1; hist = hist + ' ' + name + '=' + value + '@' + step; }
+    function anyA1 (value) { log ('a1', value); }
+    function anyA2 (value) { log ('a2', value); }
+    function anyA3 (value) { log ('a3', value); }
+    function anyP2 (value) { log ('p2', value); }
+    function anyA6 (value) { log ('a6', value); }
+    function t6 (value, time) { t6s = t6s + ' ' + stamp (value, time) + '@' + step; }
+    // loadTime must be the time of the event cascade that reports it; its frame varies with X_ITE's network timing.
+    function stamp (value, time) { return value == time ? 'now' : 'other ' + (value - time); }
+    function t1 (value, time) { t1s = t1s + ' ' + stamp (value, time) + '@' + step; }
+    function t2 (value, time) { t2s = t2s + ' ' + stamp (value, time) + '@' + step; }
+    function t3 (value, time) { t3s = t3s + ' ' + stamp (value, time) + '@' + step; }
+    function t5 (value, time) { t5s = t5s + ' ' + stamp (value, time) + '@' + step; }
+    function cycle (value)
+    {
+      step = step + 1;
+      if (step == 1) in1 .load = true;
+      if (step == 2) tx .load = true;
+      if (step == 3) sc .load = true;
+      if (step == 4) ls3 .enabled = false;
+      if (step == 5) ls3 .enabled = true;
+      if (step == 6) ls5 .enabled = true;
+      if (step == 7) in2 .load = true;
+      if (step == 8) { in3 .url = new MFString ('load-sensor-missing-file.wrl'); in3 .load = true; }
+      if (step == 9) in3 .url = new MFString ('load-sensor-assets/load-sensor-child.wrl');
+      if (step == 10) ls3 .timeOut = 2;
+      if (step == 11) in4 .load = true;
+    }
+  "
+}
+ROUTE TS.cycleTime TO OUT.cycle
+ROUTE LS1.isActive TO OUT.a1
+ROUTE LS1.isLoaded TO OUT.l1
+ROUTE LS1.progress TO OUT.p1
+ROUTE LS1.loadTime TO OUT.t1
+ROUTE LS2.isActive TO OUT.a2
+ROUTE LS2.isLoaded TO OUT.l2
+ROUTE LS2.progress TO OUT.p2
+ROUTE LS2.loadTime TO OUT.t2
+ROUTE LS3.isActive TO OUT.a3
+ROUTE LS3.isLoaded TO OUT.l3
+ROUTE LS3.progress TO OUT.p3
+ROUTE LS3.loadTime TO OUT.t3
+ROUTE LS4.isActive TO OUT.a4
+ROUTE LS4.isLoaded TO OUT.l4
+ROUTE LS4.progress TO OUT.p4
+ROUTE LS5.isActive TO OUT.a5
+ROUTE LS5.isLoaded TO OUT.l5
+ROUTE LS5.loadTime TO OUT.t5
+ROUTE LS1.isActive TO OUT.anyA1
+ROUTE LS2.isActive TO OUT.anyA2
+ROUTE LS3.isActive TO OUT.anyA3
+ROUTE LS2.progress TO OUT.anyP2
+ROUTE LS6.isActive TO OUT.a6
+ROUTE LS6.isLoaded TO OUT.l6
+ROUTE LS6.progress TO OUT.p6
+ROUTE LS6.isActive TO OUT.anyA6
+ROUTE LS6.loadTime TO OUT.t6

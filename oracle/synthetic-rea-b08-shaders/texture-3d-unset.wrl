@@ -1,0 +1,19 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight FALSE }
+Shape { appearance Appearance { material Material { diffuseColor 1 0 0 }   shaders [ ComposedShader { language "GLSL"  field SFNode vol NULL parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,%23version 300 es
+in vec4 x3d_Vertex;
+in vec4 x3d_TexCoord0;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+out vec2 vT;
+void main() { vT = x3d_TexCoord0.st; gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,%23version 300 es
+precision mediump float;
+precision mediump sampler3D;
+in vec2 vT;
+uniform sampler3D vol;
+out vec4 fragColor;
+void main() { fragColor = texture (vol, vec3 (vT, 0.5)) * 0.5 + vec4 (0.0, 0.0, 0.25, 0.0); }
+" } ] } ] } geometry Box { size 2 2 2 } }

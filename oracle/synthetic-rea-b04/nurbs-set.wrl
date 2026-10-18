@@ -1,0 +1,10 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT NURBS:4
+COMPONENT Texturing:3
+Viewpoint { position 0 18 20 orientation 1 0 0 -0.75 }
+DirectionalLight { direction -0.4 -1 -0.6 }
+DEF A Transform { translation -4 0 0 rotation 1 0 0 3.14159 children Shape { appearance Appearance { material Material { } } geometry DEF G1 NurbsPatchSurface { uDimension 5 vDimension 4  controlPoint Coordinate { point [ -2.0 0.0 -1.5, -1.0 0.385423 -1.5, 0.0 0.206201 -1.5, 1.0 -0.275106 -1.5, 2.0 -0.353382 -1.5, -2.0 0.0 -0.5, -1.0 0.239583 -0.5, 0.0 0.128176 -0.5, 1.0 -0.171009 -0.5, 2.0 -0.219666 -0.5, -2.0 -0.0 0.5, -1.0 -0.087569 0.5, 0.0 -0.046849 0.5, 1.0 0.062505 0.5, 2.0 0.080289 0.5, -2.0 -0.0 1.5, -1.0 -0.34845 1.5, 0.0 -0.18642 1.5, 1.0 0.248716 1.5, 2.0 0.319483 1.5 ] } } } }
+DEF B Transform { translation 4 0 0 rotation 1 0 0 3.14159 children Shape { appearance Appearance { material Material { } } geometry DEF G2 NurbsTrimmedSurface { uDimension 5 vDimension 4  trimmingContour [ Contour2D { children [ NurbsCurve2D { order 3 tessellation 16 closed TRUE controlPoint [0.5 0.1, 0.9 0.1, 0.9 0.5, 0.9 0.9, 0.5 0.9, 0.1 0.9, 0.1 0.5, 0.1 0.1, 0.5 0.1] } ] } ] controlPoint Coordinate { point [ -2.0 0.0 -1.5, -1.0 0.385423 -1.5, 0.0 0.206201 -1.5, 1.0 -0.275106 -1.5, 2.0 -0.353382 -1.5, -2.0 0.0 -0.5, -1.0 0.239583 -0.5, 0.0 0.128176 -0.5, 1.0 -0.171009 -0.5, 2.0 -0.219666 -0.5, -2.0 -0.0 0.5, -1.0 -0.087569 0.5, 0.0 -0.046849 0.5, 1.0 0.062505 0.5, 2.0 0.080289 0.5, -2.0 -0.0 1.5, -1.0 -0.34845 1.5, 0.0 -0.18642 1.5, 1.0 0.248716 1.5, 2.0 0.319483 1.5 ] } } } }
+NurbsSet { tessellationScale 0.4 geometry [ USE G1 USE G2 ] }
+NurbsSet { geometry [ NurbsPatchSurface { uDimension 5 vDimension 4 uOrder 4 vOrder 4 uTessellation 8 vTessellation 5 controlPoint Coordinate { point [ -2.0 0.0 -1.5, -1.0 0.385423 -1.5, 0.0 0.206201 -1.5, 1.0 -0.275106 -1.5, 2.0 -0.353382 -1.5, -2.0 0.0 -0.5, -1.0 0.239583 -0.5, 0.0 0.128176 -0.5, 1.0 -0.171009 -0.5, 2.0 -0.219666 -0.5, -2.0 -0.0 0.5, -1.0 -0.087569 0.5, 0.0 -0.046849 0.5, 1.0 0.062505 0.5, 2.0 0.080289 0.5, -2.0 -0.0 1.5, -1.0 -0.34845 1.5, 0.0 -0.18642 1.5, 1.0 0.248716 1.5, 2.0 0.319483 1.5 ] } } ] }

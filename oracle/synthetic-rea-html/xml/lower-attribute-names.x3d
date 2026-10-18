@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Full" version="4.0">
+<Scene>
+<Switch whichchoice='1'><Box size='2 2 2'/><Sphere/></Switch><Group bboxsize='1 1 1'/><TimeSensor cycleinterval='3' loop='true'/>
+</Scene>
+</X3D>

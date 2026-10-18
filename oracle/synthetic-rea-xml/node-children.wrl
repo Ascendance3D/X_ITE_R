@@ -1,0 +1,8 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+# DEF/USE sharing, an empty MFNode, a multi-child MFNode, and a NULL SFNode.
+DEF Shared Shape { geometry Box { size 1 1 1 } appearance Appearance { material Material { emissiveColor 0.1 0.2 0.3 } } }
+DEF Empty Group { children [] }
+DEF One Group { children [ USE Shared ] }
+DEF Many Switch { whichChoice -1 choice [ USE Shared, Shape { geometry Sphere { } }, Group { } ] }
+DEF Nul Shape { appearance NULL geometry Box { } }

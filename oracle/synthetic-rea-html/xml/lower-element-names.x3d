@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Full" version="4.0">
+<Scene>
+<transform translation='1 2 3'><shape><box size='2 2 2'/></shape></transform>
+</Scene>
+</X3D>

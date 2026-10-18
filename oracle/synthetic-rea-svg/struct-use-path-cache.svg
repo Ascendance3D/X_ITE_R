@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" viewBox="0 0 200 200">
+<path id="pp" d="M 10 10 L 60 10 L 35 50 Z" fill="red" stroke="black"/><use href="#pp" x="70"/><use href="#pp" y="60"/>
+</svg>

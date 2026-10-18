@@ -1,0 +1,318 @@
+{
+  "ok": true,
+  "poses": {
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "68": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "78": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "102": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "118": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "130": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.2 0.22 0.25\n}\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.5 0.5 0.5\n    }\n  }\n  geometry Box {\n    size 30 30 0.1\n  }\n}\n\nViewport {\n  clipBoundary [\n    0,\n    0.4,\n    0.6,\n    1\n  ]\n  children [\n    DEF TSV TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material DEF MV Material {\n          diffuseColor 0.9 0.6 0.1\n        }\n      }\n      geometry Sphere {\n        radius 3\n      }\n    }\n  ]\n}\n\nDEF LS LayerSet {\n  order [\n    0,\n    1\n  ]\n  layers DEF L1 Layer {\n    viewport Viewport {\n      clipBoundary [\n        0.5,\n        1,\n        0,\n        0.5\n      ]\n    }\n    children [\n      Viewpoint {\n        position 0 0 6\n      }\n      DEF PS PlaneSensor {\n        minPosition -3 -3\n        maxPosition 3 3\n      }\n      DEF T Transform {\n        children Shape {\n          appearance Appearance {\n            material DEF M1 Material {\n              diffuseColor 0.2 0.5 1\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  tv\n  inputOnly      SFBool  over0\n  inputOutput    SFInt32 c0 0\n  inputOutput    SFInt32 cv 0\n  inputOutput    SFInt32 o0 0\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  mv USE MV\n\n  url \"javascript:\nfunction t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.2 * c0, 0.5); }\nfunction tv (value) { cv = cv + 1; mv .diffuseColor = new SFColor (0.9, 0.6, 0.1 + 0.3 * cv); }\nfunction over0 (value) { if (value) o0 = o0 + 1; }\n\"\n  directOutput TRUE\n}\n\nDEF K KeySensor { }\n\nDEF S2 Script {\n  inputOnly      SFString key\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   ls USE LS\n  initializeOnly SFNode   t USE T\n  initializeOnly SFNode   ps USE PS\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'r') { t .translation = new SFVec3f (0, 0, 0); ps .offset = new SFVec3f (0, 0, 0); }\n   if (value == 'h') l1 .visible = false;\n   if (value == 'v') l1 .visible = true;\n   if (value == 'o') ls .order = new MFInt32 (0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE PS.translation_changed TO T.set_translation\nROUTE TS0.touchTime TO S.t0\nROUTE TSV.touchTime TO S.tv\nROUTE TS0.isOver TO S.over0\nROUTE K.keyPress TO S2.key\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.2 0.22 0.25\n}\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.5 1 0.5\n    }\n  }\n  geometry Box {\n    size 30 30 0.1\n  }\n}\n\nViewport {\n  clipBoundary [\n    0,\n    0.4,\n    0.6,\n    1\n  ]\n  children [\n    DEF TSV TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material DEF MV Material {\n          diffuseColor 0.9 0.6 0.4\n        }\n      }\n      geometry Sphere {\n        radius 3\n      }\n    }\n  ]\n}\n\nDEF LS LayerSet {\n  order [\n    0,\n    1\n  ]\n  layers DEF L1 Layer {\n    viewport Viewport {\n      clipBoundary [\n        0.5,\n        1,\n        0,\n        0.5\n      ]\n    }\n    children [\n      Viewpoint {\n        position 0 0 6\n      }\n      DEF PS PlaneSensor {\n        offset -3 3 0\n        minPosition -3 -3\n        maxPosition 3 3\n      }\n      DEF T Transform {\n        translation -3 3 0\n        children Shape {\n          appearance Appearance {\n            material DEF M1 Material {\n              diffuseColor 0.2 0.5 1\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  tv\n  inputOnly      SFBool  over0\n  inputOutput    SFInt32 c0 4\n  inputOutput    SFInt32 cv 1\n  inputOutput    SFInt32 o0 2\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  mv USE MV\n\n  url \"javascript:\nfunction t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.2 * c0, 0.5); }\nfunction tv (value) { cv = cv + 1; mv .diffuseColor = new SFColor (0.9, 0.6, 0.1 + 0.3 * cv); }\nfunction over0 (value) { if (value) o0 = o0 + 1; }\n\"\n  directOutput TRUE\n}\n\nDEF K KeySensor { }\n\nDEF S2 Script {\n  inputOnly      SFString key\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   ls USE LS\n  initializeOnly SFNode   t USE T\n  initializeOnly SFNode   ps USE PS\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'r') { t .translation = new SFVec3f (0, 0, 0); ps .offset = new SFVec3f (0, 0, 0); }\n   if (value == 'h') l1 .visible = false;\n   if (value == 'v') l1 .visible = true;\n   if (value == 'o') ls .order = new MFInt32 (0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE PS.translation_changed TO T.set_translation\nROUTE TS0.touchTime TO S.t0\nROUTE TSV.touchTime TO S.tv\nROUTE TS0.isOver TO S.over0\nROUTE K.keyPress TO S2.key\n",
+    "102": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.2 0.22 0.25\n}\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.5 1 0.5\n    }\n  }\n  geometry Box {\n    size 30 30 0.1\n  }\n}\n\nViewport {\n  clipBoundary [\n    0,\n    0.4,\n    0.6,\n    1\n  ]\n  children [\n    DEF TSV TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material DEF MV Material {\n          diffuseColor 0.9 0.6 0.4\n        }\n      }\n      geometry Sphere {\n        radius 3\n      }\n    }\n  ]\n}\n\nDEF LS LayerSet {\n  order [\n    0,\n    1\n  ]\n  layers DEF L1 Layer {\n    visible FALSE\n    viewport Viewport {\n      clipBoundary [\n        0.5,\n        1,\n        0,\n        0.5\n      ]\n    }\n    children [\n      Viewpoint {\n        position 0 0 6\n      }\n      DEF PS PlaneSensor {\n        offset 0.2418942 0.148858 0\n        minPosition -3 -3\n        maxPosition 3 3\n      }\n      DEF T Transform {\n        translation 0.2418942 0.148858 0\n        children Shape {\n          appearance Appearance {\n            material DEF M1 Material {\n              diffuseColor 0.2 0.5 1\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  tv\n  inputOnly      SFBool  over0\n  inputOutput    SFInt32 c0 4\n  inputOutput    SFInt32 cv 1\n  inputOutput    SFInt32 o0 3\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  mv USE MV\n\n  url \"javascript:\nfunction t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.2 * c0, 0.5); }\nfunction tv (value) { cv = cv + 1; mv .diffuseColor = new SFColor (0.9, 0.6, 0.1 + 0.3 * cv); }\nfunction over0 (value) { if (value) o0 = o0 + 1; }\n\"\n  directOutput TRUE\n}\n\nDEF K KeySensor { }\n\nDEF S2 Script {\n  inputOnly      SFString key\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   ls USE LS\n  initializeOnly SFNode   t USE T\n  initializeOnly SFNode   ps USE PS\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'r') { t .translation = new SFVec3f (0, 0, 0); ps .offset = new SFVec3f (0, 0, 0); }\n   if (value == 'h') l1 .visible = false;\n   if (value == 'v') l1 .visible = true;\n   if (value == 'o') ls .order = new MFInt32 (0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE PS.translation_changed TO T.set_translation\nROUTE TS0.touchTime TO S.t0\nROUTE TSV.touchTime TO S.tv\nROUTE TS0.isOver TO S.over0\nROUTE K.keyPress TO S2.key\n",
+    "118": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.2 0.22 0.25\n}\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.5 1 0.5\n    }\n  }\n  geometry Box {\n    size 30 30 0.1\n  }\n}\n\nViewport {\n  clipBoundary [\n    0,\n    0.4,\n    0.6,\n    1\n  ]\n  children [\n    DEF TSV TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material DEF MV Material {\n          diffuseColor 0.9 0.6 0.4\n        }\n      }\n      geometry Sphere {\n        radius 3\n      }\n    }\n  ]\n}\n\nDEF LS LayerSet {\n  layers DEF L1 Layer {\n    viewport Viewport {\n      clipBoundary [\n        0.5,\n        1,\n        0,\n        0.5\n      ]\n    }\n    children [\n      Viewpoint {\n        position 0 0 6\n      }\n      DEF PS PlaneSensor {\n        offset -0.2418942 -0.2046797 0\n        minPosition -3 -3\n        maxPosition 3 3\n      }\n      DEF T Transform {\n        translation -0.2418942 -0.2046797 0\n        children Shape {\n          appearance Appearance {\n            material DEF M1 Material {\n              diffuseColor 0.2 0.5 1\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  tv\n  inputOnly      SFBool  over0\n  inputOutput    SFInt32 c0 4\n  inputOutput    SFInt32 cv 1\n  inputOutput    SFInt32 o0 4\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  mv USE MV\n\n  url \"javascript:\nfunction t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.2 * c0, 0.5); }\nfunction tv (value) { cv = cv + 1; mv .diffuseColor = new SFColor (0.9, 0.6, 0.1 + 0.3 * cv); }\nfunction over0 (value) { if (value) o0 = o0 + 1; }\n\"\n  directOutput TRUE\n}\n\nDEF K KeySensor { }\n\nDEF S2 Script {\n  inputOnly      SFString key\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   ls USE LS\n  initializeOnly SFNode   t USE T\n  initializeOnly SFNode   ps USE PS\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'r') { t .translation = new SFVec3f (0, 0, 0); ps .offset = new SFVec3f (0, 0, 0); }\n   if (value == 'h') l1 .visible = false;\n   if (value == 'v') l1 .visible = true;\n   if (value == 'o') ls .order = new MFInt32 (0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE PS.translation_changed TO T.set_translation\nROUTE TS0.touchTime TO S.t0\nROUTE TSV.touchTime TO S.tv\nROUTE TS0.isOver TO S.over0\nROUTE K.keyPress TO S2.key\n",
+    "130": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Layering : 1\nCOMPONENT Layout : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT KeyDeviceSensor : 1\n\nViewpoint { }\n\nBackground {\n  skyColor 0.2 0.22 0.25\n}\n\nDEF TS0 TouchSensor { }\n\nShape {\n  appearance Appearance {\n    material DEF M0 Material {\n      diffuseColor 0.5 1 0.5\n    }\n  }\n  geometry Box {\n    size 30 30 0.1\n  }\n}\n\nViewport {\n  clipBoundary [\n    0,\n    0.4,\n    0.6,\n    1\n  ]\n  children [\n    DEF TSV TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material DEF MV Material {\n          diffuseColor 0.9 0.6 0.4\n        }\n      }\n      geometry Sphere {\n        radius 3\n      }\n    }\n  ]\n}\n\nDEF LS LayerSet {\n  layers DEF L1 Layer {\n    viewport Viewport {\n      clipBoundary [\n        0.5,\n        1,\n        0,\n        0.5\n      ]\n    }\n    children [\n      Viewpoint {\n        position 0 0 6\n      }\n      DEF PS PlaneSensor {\n        offset -0.2418942 -0.2046797 0\n        minPosition -3 -3\n        maxPosition 3 3\n      }\n      DEF T Transform {\n        translation -0.2418942 -0.2046797 0\n        children Shape {\n          appearance Appearance {\n            material DEF M1 Material {\n              diffuseColor 0.2 0.5 1\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF S Script {\n  inputOnly      SFTime  t0\n  inputOnly      SFTime  tv\n  inputOnly      SFBool  over0\n  inputOutput    SFInt32 c0 5\n  inputOutput    SFInt32 cv 1\n  inputOutput    SFInt32 o0 4\n  initializeOnly SFNode  m0 USE M0\n  initializeOnly SFNode  mv USE MV\n\n  url \"javascript:\nfunction t0 (value) { c0 = c0 + 1; m0 .diffuseColor = new SFColor (0.5, 0.5 + 0.2 * c0, 0.5); }\nfunction tv (value) { cv = cv + 1; mv .diffuseColor = new SFColor (0.9, 0.6, 0.1 + 0.3 * cv); }\nfunction over0 (value) { if (value) o0 = o0 + 1; }\n\"\n  directOutput TRUE\n}\n\nDEF K KeySensor { }\n\nDEF S2 Script {\n  inputOnly      SFString key\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   ls USE LS\n  initializeOnly SFNode   t USE T\n  initializeOnly SFNode   ps USE PS\n\n  url \"javascript:\nfunction key (value)\n{\n   if (value == 'r') { t .translation = new SFVec3f (0, 0, 0); ps .offset = new SFVec3f (0, 0, 0); }\n   if (value == 'h') l1 .visible = false;\n   if (value == 'v') l1 .visible = true;\n   if (value == 'o') ls .order = new MFInt32 (0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE PS.translation_changed TO T.set_translation\nROUTE TS0.touchTime TO S.t0\nROUTE TSV.touchTime TO S.tv\nROUTE TS0.isOver TO S.over0\nROUTE K.keyPress TO S2.key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

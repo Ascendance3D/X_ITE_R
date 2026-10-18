@@ -1,0 +1,143 @@
+{
+ "ok": true,
+ "poses": {
+  "40": {
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Sound : 2\n\nAudioDestination {\n  children DEF O OscillatorSource {\n    frequency 220\n    periodicWave PeriodicWave {\n      type \"SAWTOOTH\"\n    }\n    startTime 946684800.048\n  }\n}\n\nDEF P Script {\n  inputOnly SFBool  a\n  inputOnly SFTime  e\n  inputOnly SFInt32 m\n\n  url \"ecmascript:\nfunction a (v, t) { print ('active ' + v + ' ' + t); }\nfunction e (v, t) { print ('elapsed ' + v.toFixed (6)); }\nfunction m (v, t) { print ('max ' + v); }\n\"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime  set_time\n  outputOnly     SFTime  start\n  initializeOnly SFInt32 n 49\n\n  url \"ecmascript:\nfunction set_time (value) { if (++ n === 12) start = value; }\n\"\n}\n\nROUTE O.isActive TO P.a\nROUTE O.elapsedTime TO P.e\nROUTE T.time TO S.set_time\nROUTE S.start TO O.set_startTime\n"
+ },
+ "prints": [],
+ "log": [],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "audioSuspend": [
+  768,
+  1536,
+  2304,
+  3072,
+  3840,
+  4608,
+  5376,
+  6144,
+  6912,
+  7680,
+  8448,
+  9216,
+  9984,
+  10752,
+  11520,
+  12288,
+  13056,
+  13824,
+  14592,
+  15360,
+  16128,
+  16896,
+  17664,
+  18432,
+  19200,
+  19968,
+  20736,
+  21504,
+  22272,
+  23040,
+  23808,
+  24576,
+  25344,
+  26112,
+  26880,
+  27648,
+  28416,
+  29184,
+  29952,
+  30720
+ ],
+ "console": [
+  "log: active true 946684800.048",
+  "log: elapsed 0.000000",
+  "log: elapsed 0.000000",
+  "log: elapsed 0.016000",
+  "log: elapsed 0.032000",
+  "log: elapsed 0.048000",
+  "log: elapsed 0.064000",
+  "log: elapsed 0.080000",
+  "log: elapsed 0.096000",
+  "log: elapsed 0.112000",
+  "log: elapsed 0.128000",
+  "log: elapsed 0.144000",
+  "log: elapsed 0.160000",
+  "log: elapsed 0.176000",
+  "log: elapsed 0.192000",
+  "log: elapsed 0.208000",
+  "log: elapsed 0.224000",
+  "log: elapsed 0.240000",
+  "log: elapsed 0.256000",
+  "log: elapsed 0.272000",
+  "log: elapsed 0.288000",
+  "log: elapsed 0.304000",
+  "log: elapsed 0.320000",
+  "log: elapsed 0.336000",
+  "log: elapsed 0.352000",
+  "log: elapsed 0.368000",
+  "log: elapsed 0.384000",
+  "log: elapsed 0.400000",
+  "log: elapsed 0.416000",
+  "log: elapsed 0.432000",
+  "log: elapsed 0.448000",
+  "log: elapsed 0.464000",
+  "log: elapsed 0.480000",
+  "log: elapsed 0.496000",
+  "log: elapsed 0.512000",
+  "log: elapsed 0.528000",
+  "log: elapsed 0.544000",
+  "log: elapsed 0.560000",
+  "log: elapsed 0.576000",
+  "log: elapsed 0.592000"
+ ],
+ "audio": {
+  "sampleRate": 48000,
+  "length": 31232,
+  "channels": 2,
+  "file": "js.audio.f32"
+ }
+}

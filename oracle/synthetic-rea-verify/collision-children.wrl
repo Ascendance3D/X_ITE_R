@@ -1,0 +1,62 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA-verify oracle world: Collision (enabled toggled, collideTime/isActive routed), Group addChildren/removeChildren and Transform addChildren/removeChildren from a Script. Authored; no archive content.
+Viewpoint { position 0 0 10 }
+DEF T TimeSensor { cycleInterval 2 loop TRUE startTime 946684800 }
+DEF DRV Script {
+  inputOnly SFFloat set_f
+  outputOnly MFNode addOut
+  outputOnly MFNode remOut
+  outputOnly MFNode addTr
+  outputOnly MFNode remTr
+  outputOnly SFBool colOn
+  inputOutput SFInt32 step -1
+  inputOutput MFNode kids [ DEF KA Transform { translation 2 0 0 children [ Shape { geometry Sphere { } } ] } ]
+  inputOutput MFNode kids2 [ DEF KB Transform { translation -2 0 0 children [ Shape { geometry Cone { } } ] } ]
+  url "ecmascript:
+function set_f (f, ts) {
+  var s = Math.floor (f * 4);
+  if (s == step) return;
+  step = s;
+  if (s == 1) addOut = kids;
+  if (s == 2) remOut = kids;
+  if (s == 3) { addTr = kids2; colOn = FALSE; }
+  if (s == 0) { remTr = kids2; colOn = TRUE; }
+}
+"
+}
+DEF G Group {
+  children [ Shape { geometry Box { size 0.5 0.5 0.5 } } ]
+}
+DEF TR Transform {
+  translation 0 1 0
+  children [ Shape { geometry Box { size 0.3 0.3 0.3 } } ]
+}
+DEF CO Collision {
+  enabled TRUE
+  children [
+    Transform {
+      translation 0 -3 10
+      children [ Shape { geometry Box { size 6 0.2 6 } } ]
+    }
+  ]
+}
+DEF OBS Script {
+  inputOutput SFTime ct 0
+  inputOutput SFBool ca FALSE
+  inputOutput MFNode gch [ ]
+  inputOutput MFNode tch [ ]
+  url "ecmascript:
+function noop () { }
+"
+}
+ROUTE T.fraction_changed TO DRV.set_f
+ROUTE DRV.addOut TO G.addChildren
+ROUTE DRV.remOut TO G.removeChildren
+ROUTE DRV.addTr TO TR.addChildren
+ROUTE DRV.remTr TO TR.removeChildren
+ROUTE DRV.colOn TO CO.set_enabled
+ROUTE CO.collideTime TO OBS.ct
+ROUTE CO.isActive TO OBS.ca
+ROUTE G.children_changed TO OBS.gch
+ROUTE TR.children_changed TO OBS.tch

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Interchange' version='3.3'>
+  <Scene>
+    <!-- USE before the DEF below: forward reference -->
+    <Transform translation='0 0 0'>
+      <Shape USE='Box1'/>
+    </Transform>
+    <Shape DEF='Box1'>
+      <Appearance DEF='App1'>
+        <Material DEF='Mat1' diffuseColor='1 0 0'/>
+      </Appearance>
+      <Box/>
+    </Shape>
+    <Transform translation='3 0 0'>
+      <Shape>
+        <Appearance USE='App1'/>
+        <Box/>
+      </Shape>
+    </Transform>
+    <Shape>
+      <Appearance>
+        <Material USE='Mat1'/>
+      </Appearance>
+      <Sphere/>
+    </Shape>
+    <!-- USE of a name that is never defined -->
+    <Group>
+      <Shape USE='NoSuchName'/>
+    </Group>
+  </Scene>
+</X3D>

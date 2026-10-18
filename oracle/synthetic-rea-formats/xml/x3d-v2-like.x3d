@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile='Immersive' version='3.0'>
+  <Scene>
+    <!-- Defaults are omitted on purpose: the parser must apply the defaults of the declared version -->
+    <WorldInfo title='v2 like' info='"line one&#xA;line two" "second"'/>
+    <DirectionalLight direction='0 0 -1'/>
+    <SpotLight location='0 3 0'/>
+    <PointLight location='1 1 1'/>
+    <Shape>
+      <Box/>
+    </Shape>
+  </Scene>
+</X3D>

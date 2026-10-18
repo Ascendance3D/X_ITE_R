@@ -12,7 +12,6 @@
 use crate::layer::{FromState, Layer, Transition, Vp, VpBase};
 use x3d_fields::NodeId;
 use x3d_fields::math::{Matrix4, Rotation4, Vector3};
-use x3d_render::traverse::straighten;
 use x3d_runtime::Runtime;
 
 /// Box3: a Matrix4 whose axes are the half extents and whose origin is the center.
@@ -195,7 +194,7 @@ impl Layer {
         if straighten_horizon {
             let mut o = base.orientation;
             o.mult_right(&rotation);
-            let s = straighten(&o, &Vector3::Y_AXIS);
+            let s = base.straighten_horizon(vp, &o);
             let mut inv = base.orientation;
             inv.inverse();
             inv.mult_right(&s);

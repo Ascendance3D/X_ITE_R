@@ -1,0 +1,256 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "119": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  url \"checker.png\"\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  url \"checker.png\"\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  url \"other.png\"\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 Ka U\\\"other.png\\\" \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  url \"other.png\"\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 Ka U\\\"other.png\\\" Kb R1 \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 Ka U\\\"other.png\\\" Kb R1 Kc U[ ] \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 Ka U\\\"other.png\\\" Kb R1 Kc U[ ] \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 Ka U\\\"other.png\\\" Kb R1 Kc U[ ] \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "119": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 Ka U\\\"other.png\\\" Kb R1 Kc U[ ] \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 1\nCOMPONENT Networking : 3\nCOMPONENT KeyDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint {\n  position 0 0 6\n}\n\nDEF IA GeoMetadata {\n  autoRefresh 1\n  autoRefreshTimeLimit 2\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 0.3 0.6 0.9\n    }\n  }\n  geometry Sphere {\n    radius 0.5\n  }\n}\n\nDEF LS LoadSensor {\n  children USE IA\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOnly      MFString on_url\n  inputOnly      SFTime   on_refresh\n  inputOnly      SFBool   on_loaded\n  inputOnly      SFBool   on_active\n  inputOnly      SFFloat  on_progress\n  inputOutput    SFString log \"I \\\"checker.png\\\" 0 3600 Atrue P0 Ka U\\\"other.png\\\" Kb R1 Kc U[ ] \"\n  initializeOnly SFNode   ia USE IA\n\n  url \"javascript:\nfunction initialize () { log = 'I ' + ia .url + ' ' + ia .autoRefresh + ' ' + ia .autoRefreshTimeLimit + ' '; }\nfunction on_url (v) { log = log + 'U' + v + ' '; }\nfunction on_refresh (v) { log = log + 'R' + v + ' '; }\nfunction on_loaded (v) { log = log + 'L' + v + ' '; }\nfunction on_active (v) { log = log + 'A' + v + ' '; }\nfunction on_progress (v) { log = log + 'P' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') ia .url = new MFString ('other.png');\n   if (k == 'b') { ia .autoRefresh = 1; ia .autoRefreshTimeLimit = 2; }\n   if (k == 'c') ia .url = new MFString ();\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE IA.url_changed TO R.on_url\nROUTE IA.autoRefresh_changed TO R.on_refresh\nROUTE LS.isLoaded TO R.on_loaded\nROUTE LS.isActive TO R.on_active\nROUTE LS.progress TO R.on_progress\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

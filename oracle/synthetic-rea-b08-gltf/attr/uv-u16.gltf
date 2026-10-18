@@ -1,0 +1,112 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "materials": [
+  {
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 0
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 1,
+      "TEXCOORD_0": 0
+     },
+     "indices": 2,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "scene": 0,
+ "images": [
+  {
+   "bufferView": 3,
+   "mimeType": "image/png"
+  }
+ ],
+ "textures": [
+  {
+   "source": 0
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 16
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 16,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 64,
+   "byteLength": 12
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 76,
+   "byteLength": 125
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5123,
+   "count": 4,
+   "type": "VEC2",
+   "normalized": true
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -1,
+    -1,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 201,
+   "uri": "data:application/octet-stream;base64,AAD//////////wAAAAAAAAAAgL8AAIC/AAAAAAAAgD8AAIC/AAAAAAAAgD8AAIA/AAAAAAAAgL8AAIA/AAAAAAAAAQACAAAAAgADAIlQTkcNChoKAAAADUlIRFIAAAAgAAAAIAgGAAAAc3p69AAAAERJREFUeNpjeGaj8R8ZawQ8Q8G0lmcYdcCAO4DeFqLLjzpg4B0wmgtGHTCaC0YdMJoLRh0wmgtGHTCaC0YdMJoLRrwDAOJ7TIjBNr+SAAAAAElFTkSuQmCC"
+  }
+ ]
+}

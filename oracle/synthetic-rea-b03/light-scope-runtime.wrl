@@ -1,0 +1,31 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Lighting:3
+COMPONENT Layering:1
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+NavigationInfo { headlight FALSE }
+Viewpoint { position 0 0 16 }
+Group { children [ DEF L1 DirectionalLight { direction 1 0 -1 color 1 0.2 0.2 } Transform { translation -3 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+Transform { translation 3 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }
+Group { children [ DEF L2 PointLight { location 0 -2 3 color 0.2 1 0.2 } Transform { translation -3 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } } ] }
+Transform { translation 3 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.9 } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode l1 USE L1
+  initializeOnly SFNode l2 USE L2
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'g') l1 .global = true;
+   if (k == 'h') l1 .global = false;
+   if (k == 'p') l2 .global = false;
+   if (k == 'o') l1 .on = false;
+   if (k == 'n') l1 .on = true;
+   if (k == 'i') l2 .intensity = 0.3;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

@@ -1,0 +1,27 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT"
+  maxParticles 12
+  particleLifetime 1
+  lifetimeVariation 0.25
+  emitter DEF EM PointEmitter { position 0 1 0 direction 0 1 0 speed 1 variation 0.25 mass 1 surfaceArea 4 }
+  physics [ DEF W1 WindPhysicsModel { direction 0 0 0 speed 1 gustiness 0.1 turbulence 0.1 } ]
+}
+
+DEF TS TimeSensor { cycleInterval 1 loop TRUE }
+DEF SI ScalarInterpolator { key [ 0 0.5 1 ] keyValue [ 1.0 1.5 1.0 ] }
+DEF GI ScalarInterpolator { key [ 0 1 ] keyValue [ 0 0.6 ] }
+DEF TI ScalarInterpolator { key [ 0 0.5 1 ] keyValue [ 0 0.8 0 ] }
+DEF BT BooleanToggle { }
+ROUTE TS.fraction_changed TO SI.set_fraction
+ROUTE SI.value_changed TO W1.speed
+ROUTE TS.fraction_changed TO GI.set_fraction
+ROUTE GI.value_changed TO W1.gustiness
+ROUTE TS.fraction_changed TO TI.set_fraction
+ROUTE TI.value_changed TO W1.turbulence
+ROUTE TS.cycleTime TO BT.set_boolean
+ROUTE BT.toggle_changed TO W1.enabled
+

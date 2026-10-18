@@ -1,0 +1,84 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Scripting:1
+# Synthetic REA oracle world: Browser.getBrowserOption / setBrowserOption, getBrowserProperty and
+# getRenderingProperty (BrowserOptions, BrowserProperties, RenderingProperties). Each probe is
+# wrapped so an unknown name records ERR instead of stopping the script. Authored.
+DEF OUT Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    var options = ['SplashScreen', 'Dashboard', 'Rubberband', 'EnableInlineViewpoints', 'Antialiased', 'TextureQuality',
+      'PrimitiveQuality', 'QualityWhenMoving', 'Shading', 'MotionBlur', 'AlwaysUpdateGeometries', 'AutoUpdate', 'Cache',
+      'ColorSpace', 'ContentScale', 'ContextMenu', 'Debug', 'Exposure', 'DisplayColorSpace', 'Gravity', 'LoadUrlObjects',
+      'LogarithmicDepthBuffer', 'MaximumFrameRate', 'MetadataReference', 'Multisampling', 'Mute', 'Notifications',
+      'OrderIndependentTransparency', 'SoundIntensity', 'StraightenHorizon', 'TextCompression', 'Timings', 'ToneMapping',
+      'WallFriction', 'XRSessionMode', 'AntiAliased', 'gravity', 'Nope'];
+    var rendering = ['Shading', 'MaxTextureSize', 'TextureUnits', 'MaxLights', 'Antialiased', 'ColorDepth', 'TextureMemory',
+      'ContentScale', 'LogarithmicDepthBuffer', 'MaxAnisotropicDegree', 'MaxSamples', 'Multisampling', 'PixelsPerPoint',
+      'SoundDestinations', 'XRSession', 'AntiAliased', 'shading', 'Nope'];
+    var properties = ['ABSTRACT_NODES', 'CONCRETE_NODES', 'EXTERNAL_INTERACTIONS', 'PROTOTYPE_CREATE', 'DOM_IMPORT',
+      'XML_ENCODING', 'CLASSIC_VRML_ENCODING', 'BINARY_ENCODING', 'abstract_nodes', 'Nope'];
+    function show (v) { return typeof v + ':' + v; }
+    function p (name, f) {
+      var v;
+      try { v = f (); } catch (e) { v = 'ERR'; }
+      hist = hist + ' ' + name + '=' + v;
+    }
+    function o (name) { p ('o.' + name, function () { return show (Browser .getBrowserOption (name)); }); }
+    function r (name) { p ('r.' + name, function () { return show (Browser .getRenderingProperty (name)); }); }
+    function b (name) { p ('b.' + name, function () { return show (Browser .getBrowserProperty (name)); }); }
+    function set (name, value) { p ('set.' + name, function () { Browser .setBrowserOption (name, value); return show (Browser .getBrowserOption (name)); }); }
+    function initialize () {
+      options .forEach (o);
+      rendering .forEach (r);
+      properties .forEach (b);
+    }
+    function cycle (v) {
+      step = step + 1;
+      if (step == 2) {
+        set ('Shading', 'PHONG');
+        r ('Shading');
+        set ('Gravity', '3.5');
+        set ('Multisampling', 20.7);
+        set ('ContentScale', 2);
+        set ('LogarithmicDepthBuffer', 'yes');
+        set ('StraightenHorizon', 0);
+        set ('TextCompression', 5);
+        set ('Exposure', '');
+        set ('MotionBlur', 'x');
+        set ('AntiAliased', true);
+        set ('Nope', 1);
+      }
+      if (step == 3) {
+        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale', 'LogarithmicDepthBuffer'] .forEach (r);
+        set ('Shading', 'POINTSET');
+        set ('Multisampling', -3);
+        set ('ContentScale', 0);
+      }
+      if (step == 4) {
+        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);
+        set ('Shading', 'wireframe');
+        set ('Antialiased', false);
+        set ('Multisampling', 2);
+        set ('ContentScale', -1);
+      }
+      if (step == 5) {
+        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);
+        set ('Shading', 'FLAT');
+        set ('Antialiased', true);
+        set ('ContentScale', -2.5);
+      }
+      if (step == 6) {
+        ['Shading', 'Multisampling', 'Antialiased', 'ContentScale'] .forEach (r);
+        set ('Shading', 'WIREFRAME');
+      }
+      if (step == 7) {
+        r ('Shading');
+      }
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.25 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

@@ -1,6 +1,8 @@
 #[test]
 fn table_is_complete() {
-    assert_eq!(x3d::nodes().count(), 263);
+    // 263 + the 21 Texturing3D / VolumeRendering node types of X_ITE's external components
+    // + the 6 Annotation node types X_ITE 16.5.0 ships but does not register (REA batch 04).
+    assert_eq!(x3d::nodes().count(), 290);
     assert!(x3d::components().any(|(c, _)| c == "Geometry3D"));
     assert!(x3d::profiles().any(|(p, _)| p == "Full"));
 }

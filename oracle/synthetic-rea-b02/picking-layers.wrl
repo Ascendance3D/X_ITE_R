@@ -1,0 +1,128 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+COMPONENT Picking:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Geometry2D:1
+COMPONENT Layering:1
+Viewpoint { position 0 0 14 }
+DEF T0 Transform { translation 0 3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 transparency 0.3 } } geometry Box { size 2 2 2 } } }
+DEF INL Inline { url "picking-inline-target.wrl" }
+DEF ISENS Inline { url "picking-inline-sensor.wrl" }
+IMPORT ISENS.IN AS IN
+IMPORT ISENS.M AS IM
+DEF M0 Transform { translation -7 0 0 children [
+  Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF L0 IndexedLineSet { coord Coordinate { point [ -1 0 0, 1 0 0, 0 -1 0.2, 0 1 0.2 ] } coordIndex [ 0 1 -1 2 3 -1 ] } }
+  DEF S0 LinePickSensor { sortOrder "ALL_SORTED" pickingGeometry USE L0 pickTarget [ USE T0 USE INL ] }
+] }
+DEF LS LayerSet { order [ 0 1 2 ] layers [
+  DEF L1 Layer { children [
+    Viewpoint { position 0 0 14 }
+    DEF T1 Transform { translation 0 -5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 transparency 0.3 } } geometry Box { size 2 2 2 } } }
+    DEF M1 Transform { translation -7 -5 0 children [
+      Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF L1G IndexedLineSet { coord Coordinate { point [ -1 0 0, 1 0 0, 0 -1 0.2, 0 1 0.2 ] } coordIndex [ 0 1 -1 2 3 -1 ] } }
+      DEF S1 LinePickSensor { pickingGeometry USE L1G pickTarget USE T1 }
+    ] }
+  ] }
+  DEF L2 Layer { pickable FALSE objectType [ "NONE" ] children [
+    Viewpoint { position 0 0 14 }
+    DEF T2 Transform { translation 0 5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.3 0.9 transparency 0.3 } } geometry Box { size 2 2 2 } } }
+    DEF M2 Transform { translation -7 5 0 children [
+      Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry DEF L2G IndexedLineSet { coord Coordinate { point [ -1 0 0, 1 0 0, 0 -1 0.2, 0 1 0.2 ] } coordIndex [ 0 1 -1 2 3 -1 ] } }
+      DEF S2 LinePickSensor { pickingGeometry USE L2G pickTarget USE T2 }
+    ] }
+  ] }
+] }
+DEF C TimeSensor { cycleInterval 4 loop TRUE }
+DEF P PositionInterpolator { key [ 0 1 ] keyValue [ -7 0 0, 7 0 0 ] }
+ROUTE C.fraction_changed TO P.set_fraction
+ROUTE P.value_changed TO M0.set_translation
+DEF P1 PositionInterpolator { key [ 0 1 ] keyValue [ -7 -5 0, 7 -5 0 ] }
+ROUTE C.fraction_changed TO P1.set_fraction
+ROUTE P1.value_changed TO M1.set_translation
+DEF P2 PositionInterpolator { key [ 0 1 ] keyValue [ -7 5 0, 7 5 0 ] }
+ROUTE C.fraction_changed TO P2.set_fraction
+ROUTE P2.value_changed TO M2.set_translation
+DEF PI PositionInterpolator { key [ 0 1 ] keyValue [ -6 -2 0, 6 -2 0 ] }
+ROUTE C.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO IM.set_translation
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFBool on_S0_a
+  inputOutput SFBool S0_a FALSE
+  inputOutput SFInt32 S0_a_count 0
+  inputOnly MFNode on_S0_g
+  inputOutput MFNode S0_g [ ]
+  inputOutput SFInt32 S0_g_count 0
+  inputOnly SFBool on_S1_a
+  inputOutput SFBool S1_a FALSE
+  inputOutput SFInt32 S1_a_count 0
+  inputOnly MFNode on_S1_g
+  inputOutput MFNode S1_g [ ]
+  inputOutput SFInt32 S1_g_count 0
+  inputOnly SFBool on_S2_a
+  inputOutput SFBool S2_a FALSE
+  inputOutput SFInt32 S2_a_count 0
+  inputOnly MFNode on_S2_g
+  inputOutput MFNode S2_g [ ]
+  inputOutput SFInt32 S2_g_count 0
+  inputOnly SFBool on_IN_a
+  inputOutput SFBool IN_a FALSE
+  inputOutput SFInt32 IN_a_count 0
+  inputOnly MFNode on_IN_g
+  inputOutput MFNode IN_g [ ]
+  inputOutput SFInt32 IN_g_count 0
+  inputOnly MFVec3f on_IN_p
+  inputOutput MFVec3f IN_p [ ]
+  inputOutput SFInt32 IN_p_count 0
+  inputOnly MFVec3f on_IN_n
+  inputOutput MFVec3f IN_n [ ]
+  inputOutput SFInt32 IN_n_count 0
+  inputOnly MFVec3f on_IN_t
+  inputOutput MFVec3f IN_t [ ]
+  inputOutput SFInt32 IN_t_count 0
+  inputOutput SFString log ""
+  inputOnly SFString on_key
+  initializeOnly SFNode l2 USE L2
+  initializeOnly SFNode l1 USE L1
+  initializeOnly SFNode inl USE INL
+  initializeOnly SFNode isens USE ISENS
+  url "javascript:
+function on_S0_a (value) { S0_a = value; S0_a_count = S0_a_count + 1; log = log + 'S0_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_S0_g (value) { S0_g = value; S0_g_count = S0_g_count + 1; log = log + 'S0_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_S1_a (value) { S1_a = value; S1_a_count = S1_a_count + 1; log = log + 'S1_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_S1_g (value) { S1_g = value; S1_g_count = S1_g_count + 1; log = log + 'S1_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_S2_a (value) { S2_a = value; S2_a_count = S2_a_count + 1; log = log + 'S2_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_S2_g (value) { S2_g = value; S2_g_count = S2_g_count + 1; log = log + 'S2_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IN_a (value) { IN_a = value; IN_a_count = IN_a_count + 1; log = log + 'IN_a' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IN_g (value) { IN_g = value; IN_g_count = IN_g_count + 1; log = log + 'IN_g' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IN_p (value) { IN_p = value; IN_p_count = IN_p_count + 1; log = log + 'IN_p' + (value .length === undefined ? (value ? 1 : 0) : value .length) + ' '; }
+function on_IN_n (value) { IN_n = value; IN_n_count = IN_n_count + 1; }
+function on_IN_t (value) { IN_t = value; IN_t_count = IN_t_count + 1; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'l') l2 .pickable = true;
+   if (k == 'n') l1 .objectType = new MFString ('NONE');
+   if (k == 'a') l1 .objectType = new MFString ('A');
+   if (k == 'b') l1 .objectType = new MFString ('ALL');
+   if (k == 'u') inl .load = false;
+   if (k == 'v') inl .load = true;
+   if (k == 's') isens .load = false;
+   if (k == 'r') isens .load = true;
+}
+"
+}
+ROUTE S0.isActive TO R.on_S0_a
+ROUTE S0.pickedGeometry TO R.on_S0_g
+ROUTE S1.isActive TO R.on_S1_a
+ROUTE S1.pickedGeometry TO R.on_S1_g
+ROUTE S2.isActive TO R.on_S2_a
+ROUTE S2.pickedGeometry TO R.on_S2_g
+ROUTE IN.isActive TO R.on_IN_a
+ROUTE IN.pickedGeometry TO R.on_IN_g
+ROUTE IN.pickedPoint TO R.on_IN_p
+ROUTE IN.pickedNormal TO R.on_IN_n
+ROUTE IN.pickedTextureCoordinate TO R.on_IN_t
+ROUTE K.keyPress TO R.on_key

@@ -1,0 +1,45 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+# Synthetic REA-verify oracle world: ProximitySensor and VisibilitySensor driven by PositionInterpolators so the viewer enters and leaves each box. Authored; no archive content.
+Viewpoint { position 0 0 20 }
+DEF T TimeSensor { cycleInterval 2 loop TRUE startTime 946684800 }
+DEF PI PositionInterpolator { key [ 0 0.5 1 ] keyValue [ 0 0 0, 0 0 30, 0 0 0 ] }
+DEF PI2 PositionInterpolator { key [ 0 0.5 1 ] keyValue [ -20 0 0, 20 0 0, -20 0 0 ] }
+DEF MOVE Transform {
+  children [
+    DEF PS ProximitySensor { size 6 6 6 }
+    Shape { geometry Box { size 1 1 1 } }
+  ]
+}
+DEF VMOVE Transform {
+  translation -20 -4 0
+  children [
+    DEF VS VisibilitySensor { size 4 4 4 }
+    Shape { geometry Box { size 2 2 2 } }
+  ]
+}
+DEF OBS Script {
+  inputOutput SFTime pEnter 0
+  inputOutput SFTime pExit 0
+  inputOutput SFBool pActive FALSE
+  inputOutput SFVec3f pPos 0 0 0
+  inputOutput SFRotation pRot 0 0 1 0
+  inputOutput SFTime vEnter 0
+  inputOutput SFTime vExit 0
+  inputOutput SFBool vActive FALSE
+  url "ecmascript:
+function noop () { }
+"
+}
+ROUTE T.fraction_changed TO PI.set_fraction
+ROUTE T.fraction_changed TO PI2.set_fraction
+ROUTE PI.value_changed TO MOVE.set_translation
+ROUTE PI2.value_changed TO VMOVE.set_translation
+ROUTE PS.enterTime TO OBS.pEnter
+ROUTE PS.exitTime TO OBS.pExit
+ROUTE PS.isActive TO OBS.pActive
+ROUTE PS.position_changed TO OBS.pPos
+ROUTE PS.orientation_changed TO OBS.pRot
+ROUTE VS.enterTime TO OBS.vEnter
+ROUTE VS.exitTime TO OBS.vExit
+ROUTE VS.isActive TO OBS.vActive

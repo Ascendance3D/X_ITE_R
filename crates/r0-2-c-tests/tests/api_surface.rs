@@ -237,8 +237,11 @@ fn root_x3d_node_and_field() {
 
 #[test]
 fn root_x3d_nodes_components_profiles() {
-    assert_eq!(x3d::nodes().count(), 263);
-    assert_eq!(x3d::components().count(), 39);
+    // 284 since the table includes Texturing3D and VolumeRendering (21 node types X_ITE loads as external components).
+    // 290 and 40 since REA batch 04 (owner decision 2026-10-17): the Annotation component (6 node
+    // types) that X_ITE 16.5.0 ships but does not register (crates/x3d-scene/data/x_ite-nodes-annotation.json).
+    assert_eq!(x3d::nodes().count(), 290);
+    assert_eq!(x3d::components().count(), 40);
     assert_eq!(x3d::profiles().count(), 8);
     assert!(x3d::profiles().any(|(name, _)| name == "Interchange"));
 }

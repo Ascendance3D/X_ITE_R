@@ -1,0 +1,16 @@
+{
+ "control": true,
+ "sent": {
+  "41234": 47,
+  "41235": 47
+ },
+ "refused": {
+  "41234": 23,
+  "41235": 23
+ },
+ "windowsWithoutRefusal": {
+  "41234": [],
+  "41235": []
+ },
+ "listenerReceived": 0
+}

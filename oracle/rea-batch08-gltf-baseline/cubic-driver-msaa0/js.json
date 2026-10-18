@@ -1,0 +1,303 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "149": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "150": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "70": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "149": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nDEF Gltf Inline {\n  global TRUE\n  url \"../animation/translation-cubicspline.gltf\"\n}\n\nTransform {\n  translation 0 0 -3\n  children [\n    DEF Touch TouchSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          transparency 0.9\n        }\n      }\n      geometry Box {\n        size 100 100 0.1\n      }\n    }\n  ]\n}\n\nDEF Loop Script {\n  inputOnly  SFTime touched\n  outputOnly SFBool loop_\n\n  url \"ecmascript:\nfunction touched (v) { loop_ = false; }\n\"\n}\n\nIMPORT Gltf.Timer1\n\nROUTE Touch.touchTime TO Loop.touched\nROUTE Loop.loop_ TO Timer1.set_loop\nROUTE Touch.touchTime TO Timer1.set_startTime\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "inlines": {
+    "3": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Move Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Move\"\n      }\n      DEF TranslationInterpolator PositionInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 0,\n          0.04350322 0.01361269 0,\n          0.1030793 0.05182664 0,\n          0.175776 0.1107056 0,\n          0.2586412 0.1863135 0,\n          0.3487228 0.274714 0,\n          0.4430686 0.371971 0,\n          0.5387264 0.4741482 0,\n          0.6327443 0.5773094 0,\n          0.7221698 0.6775185 0,\n          0.804051 0.7708393 0,\n          0.8754357 0.8533355 0,\n          0.9333716 0.921071 0,\n          0.9749067 0.9701095 0,\n          0.9970888 0.9965148 0,\n          1.003485 0.9965148 0,\n          1.029891 0.9701095 0,\n          1.078929 0.921071 0,\n          1.146665 0.8533355 0,\n          1.229161 0.7708393 0,\n          1.322481 0.6775185 0,\n          1.422691 0.5773094 0,\n          1.525852 0.4741482 0,\n          1.628029 0.371971 0,\n          1.725286 0.274714 0,\n          1.813686 0.1863135 0,\n          1.889294 0.1107056 0,\n          1.948173 0.05182664 0,\n          1.986387 0.01361269 0,\n          2 0 0\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO TranslationInterpolator.set_fraction\nROUTE TranslationInterpolator.value_changed TO Morph.set_translation\n\nEXPORT Move\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "10": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  translation 0.4241995 0.3525197 0\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Move Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Move\"\n        startTime 946684800.133333\n      }\n      DEF TranslationInterpolator PositionInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 0,\n          0.04350322 0.01361269 0,\n          0.1030793 0.05182664 0,\n          0.175776 0.1107056 0,\n          0.2586412 0.1863135 0,\n          0.3487228 0.274714 0,\n          0.4430686 0.371971 0,\n          0.5387264 0.4741482 0,\n          0.6327443 0.5773094 0,\n          0.7221698 0.6775185 0,\n          0.804051 0.7708393 0,\n          0.8754357 0.8533355 0,\n          0.9333716 0.921071 0,\n          0.9749067 0.9701095 0,\n          0.9970888 0.9965148 0,\n          1.003485 0.9965148 0,\n          1.029891 0.9701095 0,\n          1.078929 0.921071 0,\n          1.146665 0.8533355 0,\n          1.229161 0.7708393 0,\n          1.322481 0.6775185 0,\n          1.422691 0.5773094 0,\n          1.525852 0.4741482 0,\n          1.628029 0.371971 0,\n          1.725286 0.274714 0,\n          1.813686 0.1863135 0,\n          1.889294 0.1107056 0,\n          1.948173 0.05182664 0,\n          1.986387 0.01361269 0,\n          2 0 0\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO TranslationInterpolator.set_fraction\nROUTE TranslationInterpolator.value_changed TO Morph.set_translation\n\nEXPORT Move\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "40": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  translation 2 0 0\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Move Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Move\"\n        startTime 946684800.133333\n      }\n      DEF TranslationInterpolator PositionInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 0,\n          0.04350322 0.01361269 0,\n          0.1030793 0.05182664 0,\n          0.175776 0.1107056 0,\n          0.2586412 0.1863135 0,\n          0.3487228 0.274714 0,\n          0.4430686 0.371971 0,\n          0.5387264 0.4741482 0,\n          0.6327443 0.5773094 0,\n          0.7221698 0.6775185 0,\n          0.804051 0.7708393 0,\n          0.8754357 0.8533355 0,\n          0.9333716 0.921071 0,\n          0.9749067 0.9701095 0,\n          0.9970888 0.9965148 0,\n          1.003485 0.9965148 0,\n          1.029891 0.9701095 0,\n          1.078929 0.921071 0,\n          1.146665 0.8533355 0,\n          1.229161 0.7708393 0,\n          1.322481 0.6775185 0,\n          1.422691 0.5773094 0,\n          1.525852 0.4741482 0,\n          1.628029 0.371971 0,\n          1.725286 0.274714 0,\n          1.813686 0.1863135 0,\n          1.889294 0.1107056 0,\n          1.948173 0.05182664 0,\n          1.986387 0.01361269 0,\n          2 0 0\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO TranslationInterpolator.set_fraction\nROUTE TranslationInterpolator.value_changed TO Morph.set_translation\n\nEXPORT Move\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "70": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  translation 2 0 0\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Move Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Move\"\n        startTime 946684800.133333\n      }\n      DEF TranslationInterpolator PositionInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 0,\n          0.04350322 0.01361269 0,\n          0.1030793 0.05182664 0,\n          0.175776 0.1107056 0,\n          0.2586412 0.1863135 0,\n          0.3487228 0.274714 0,\n          0.4430686 0.371971 0,\n          0.5387264 0.4741482 0,\n          0.6327443 0.5773094 0,\n          0.7221698 0.6775185 0,\n          0.804051 0.7708393 0,\n          0.8754357 0.8533355 0,\n          0.9333716 0.921071 0,\n          0.9749067 0.9701095 0,\n          0.9970888 0.9965148 0,\n          1.003485 0.9965148 0,\n          1.029891 0.9701095 0,\n          1.078929 0.921071 0,\n          1.146665 0.8533355 0,\n          1.229161 0.7708393 0,\n          1.322481 0.6775185 0,\n          1.422691 0.5773094 0,\n          1.525852 0.4741482 0,\n          1.628029 0.371971 0,\n          1.725286 0.274714 0,\n          1.813686 0.1863135 0,\n          1.889294 0.1107056 0,\n          1.948173 0.05182664 0,\n          1.986387 0.01361269 0,\n          2 0 0\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO TranslationInterpolator.set_fraction\nROUTE TranslationInterpolator.value_changed TO Morph.set_translation\n\nEXPORT Move\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "100": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  translation 2 0 0\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Move Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Move\"\n        startTime 946684800.133333\n      }\n      DEF TranslationInterpolator PositionInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 0,\n          0.04350322 0.01361269 0,\n          0.1030793 0.05182664 0,\n          0.175776 0.1107056 0,\n          0.2586412 0.1863135 0,\n          0.3487228 0.274714 0,\n          0.4430686 0.371971 0,\n          0.5387264 0.4741482 0,\n          0.6327443 0.5773094 0,\n          0.7221698 0.6775185 0,\n          0.804051 0.7708393 0,\n          0.8754357 0.8533355 0,\n          0.9333716 0.921071 0,\n          0.9749067 0.9701095 0,\n          0.9970888 0.9965148 0,\n          1.003485 0.9965148 0,\n          1.029891 0.9701095 0,\n          1.078929 0.921071 0,\n          1.146665 0.8533355 0,\n          1.229161 0.7708393 0,\n          1.322481 0.6775185 0,\n          1.422691 0.5773094 0,\n          1.525852 0.4741482 0,\n          1.628029 0.371971 0,\n          1.725286 0.274714 0,\n          1.813686 0.1863135 0,\n          1.889294 0.1107056 0,\n          1.948173 0.05182664 0,\n          1.986387 0.01361269 0,\n          2 0 0\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO TranslationInterpolator.set_fraction\nROUTE TranslationInterpolator.value_changed TO Morph.set_translation\n\nEXPORT Move\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "149": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  translation 2 0 0\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Move Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Move\"\n        startTime 946684800.133333\n      }\n      DEF TranslationInterpolator PositionInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 0,\n          0.04350322 0.01361269 0,\n          0.1030793 0.05182664 0,\n          0.175776 0.1107056 0,\n          0.2586412 0.1863135 0,\n          0.3487228 0.274714 0,\n          0.4430686 0.371971 0,\n          0.5387264 0.4741482 0,\n          0.6327443 0.5773094 0,\n          0.7221698 0.6775185 0,\n          0.804051 0.7708393 0,\n          0.8754357 0.8533355 0,\n          0.9333716 0.921071 0,\n          0.9749067 0.9701095 0,\n          0.9970888 0.9965148 0,\n          1.003485 0.9965148 0,\n          1.029891 0.9701095 0,\n          1.078929 0.921071 0,\n          1.146665 0.8533355 0,\n          1.229161 0.7708393 0,\n          1.322481 0.6775185 0,\n          1.422691 0.5773094 0,\n          1.525852 0.4741482 0,\n          1.628029 0.371971 0,\n          1.725286 0.274714 0,\n          1.813686 0.1863135 0,\n          1.889294 0.1107056 0,\n          1.948173 0.05182664 0,\n          1.986387 0.01361269 0,\n          2 0 0\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO TranslationInterpolator.set_fraction\nROUTE TranslationInterpolator.value_changed TO Morph.set_translation\n\nEXPORT Move\nEXPORT Timer1\nEXPORT Animations\n"
+    },
+    "150": {
+      "Gltf": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nMETA \"generator\" \"rea-b08\"\n\nDEF Morph Transform {\n  translation 2 0 0\n  children Shape {\n    appearance Appearance {\n      alphaMode \"OPAQUE\"\n      material PhysicalMaterial {\n        metallic 0\n      }\n    }\n    geometry IndexedTriangleSet {\n      index [\n        0,\n        1,\n        2,\n        0,\n        2,\n        3\n      ]\n      normal Normal {\n        vector [\n          0 0 1,\n          0 0 1,\n          0 0 1,\n          0 0 1\n        ]\n      }\n      coord Coordinate {\n        point [\n          -1 -1 0,\n          1 -1 0,\n          1 1 0,\n          -1 1 0\n        ]\n      }\n    }\n  }\n}\n\nDEF Animations Group {\n  visible FALSE\n  children DEF Move Group {\n    children [\n      DEF Timer1 TimeSensor {\n        description \"Move\"\n        startTime 946684800.133333\n      }\n      DEF TranslationInterpolator PositionInterpolator {\n        key [\n          0,\n          0.03448276,\n          0.06896552,\n          0.1034483,\n          0.137931,\n          0.1724138,\n          0.2068966,\n          0.2413793,\n          0.2758621,\n          0.3103448,\n          0.3448276,\n          0.3793103,\n          0.4137931,\n          0.4482759,\n          0.4827586,\n          0.5172414,\n          0.5517241,\n          0.5862069,\n          0.6206896,\n          0.6551724,\n          0.6896552,\n          0.7241379,\n          0.7586207,\n          0.7931035,\n          0.8275862,\n          0.862069,\n          0.8965517,\n          0.9310345,\n          0.9655172,\n          1\n        ]\n        keyValue [\n          0 0 0,\n          0.04350322 0.01361269 0,\n          0.1030793 0.05182664 0,\n          0.175776 0.1107056 0,\n          0.2586412 0.1863135 0,\n          0.3487228 0.274714 0,\n          0.4430686 0.371971 0,\n          0.5387264 0.4741482 0,\n          0.6327443 0.5773094 0,\n          0.7221698 0.6775185 0,\n          0.804051 0.7708393 0,\n          0.8754357 0.8533355 0,\n          0.9333716 0.921071 0,\n          0.9749067 0.9701095 0,\n          0.9970888 0.9965148 0,\n          1.003485 0.9965148 0,\n          1.029891 0.9701095 0,\n          1.078929 0.921071 0,\n          1.146665 0.8533355 0,\n          1.229161 0.7708393 0,\n          1.322481 0.6775185 0,\n          1.422691 0.5773094 0,\n          1.525852 0.4741482 0,\n          1.628029 0.371971 0,\n          1.725286 0.274714 0,\n          1.813686 0.1863135 0,\n          1.889294 0.1107056 0,\n          1.948173 0.05182664 0,\n          1.986387 0.01361269 0,\n          2 0 0\n        ]\n      }\n    ]\n  }\n}\n\nROUTE Timer1.fraction_changed TO TranslationInterpolator.set_fraction\nROUTE TranslationInterpolator.value_changed TO Morph.set_translation\n\nEXPORT Move\nEXPORT Timer1\nEXPORT Animations\n"
+    }
+  },
+  "console": []
+}

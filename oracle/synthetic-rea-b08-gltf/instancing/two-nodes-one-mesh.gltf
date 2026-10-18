@@ -1,0 +1,119 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "meshes": [
+  {
+   "name": "Instanced",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "extensions": {
+    "EXT_mesh_gpu_instancing": {
+     "attributes": {
+      "TRANSLATION": 2
+     }
+    }
+   }
+  },
+  {
+   "mesh": 0,
+   "translation": [
+    0,
+    5,
+    0
+   ],
+   "extensions": {
+    "EXT_mesh_gpu_instancing": {
+     "attributes": {
+      "TRANSLATION": 2
+     }
+    }
+   }
+  },
+  {
+   "mesh": 0,
+   "translation": [
+    0,
+    9,
+    0
+   ]
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0,
+    1,
+    2
+   ]
+  }
+ ],
+ "extensionsUsed": [
+  "EXT_mesh_gpu_instancing"
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 12
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 60,
+   "byteLength": 24
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "min": [
+    -1,
+    -1,
+    0
+   ],
+   "max": [
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 2,
+   "type": "VEC3"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 84,
+   "uri": "data:application/octet-stream;base64,AACAvwAAgL8AAAAAAACAPwAAgL8AAAAAAACAPwAAgD8AAAAAAACAvwAAgD8AAAAAAAABAAIAAAACAAMAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAA"
+  }
+ ]
+}

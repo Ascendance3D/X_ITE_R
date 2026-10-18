@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<X3D profile="Full" version="4.0">
+<Scene>
+<TimeSensor DEF='T'/><Transform DEF='X'/><ROUTE fromNode='T' fromField='fraction_changed' toNode='X' toField='set_rotation'/><route fromNode='T' fromField='time' toNode='X' toField='set_scale'/>
+</Scene>
+</X3D>

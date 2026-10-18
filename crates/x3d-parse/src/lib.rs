@@ -7,10 +7,24 @@
 
 pub mod color;
 pub mod compare;
+mod dom;
+mod formats;
+mod gltf2;
+mod html;
+mod html_support;
+mod json;
 pub mod lexer;
+pub mod optimizer;
 pub mod parser;
+pub mod woff1;
+mod svg;
+mod svg_canvas;
+mod xml;
 
+pub use gltf2::{default_fetch as gltf_default_fetch, with_fetcher as with_gltf_fetcher};
+pub use html::parse_html_x3d;
 pub use parser::{ParseError, Parser};
+pub use svg::{Quality as SvgQuality, set_quality as set_svg_quality};
 
 use std::io::Read;
 use x3d_scene::Scene;
@@ -119,14 +133,101 @@ impl std::fmt::Display for LoadError {
     }
 }
 
+/// GoldenGate.parseIntoScene: the first parser whose input converts and that accepts it, in
+/// X_ITE's order (XML, VRML, JSON, glTF, GLB, OBJ, STL ASCII, STL binary, PLY ASCII, PLY binary,
+/// SVG). glTF and GLB are not ported; input only they would accept finds no handler.
 pub fn parse_bytes(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
-    let text = decode_text(&gunzip(data));
+    let mut scene = golden_gate(data, world_url)?;
 
-    if !is_valid_vrml(&text) {
-        return Err(LoadError::NoHandler);
+    scene.clone_counts = Some(scene.parse_clone_counts());
+    Ok(scene)
+}
+
+fn golden_gate(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
+    let data = gunzip(data);
+    let text = decode_text(&data);
+
+    let mut svg_root = None;
+
+    // createInput ("STRING"): undefined when bytes decode to nothing.
+    let string = (data.is_empty() || !text.is_empty()).then_some(text.as_str());
+
+    // XML: "" for blank input, markup only, $.parseXML must succeed, root must be <X3D>.
+    if let Some(s) = string {
+        let trimmed = s.trim_start_matches(|c: char| c.is_whitespace() || c == '\u{feff}');
+
+        if trimmed.is_empty() {
+            return Ok(xml::empty_scene(world_url));
+        }
+
+        if trimmed.starts_with('<') {
+            if let Ok(root) = dom::parse_document(s) {
+                if root.name == "X3D" {
+                    return xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse);
+                }
+
+                // The same parsed document is SVGParser's input.
+                svg_root = Some(root);
+            }
+        }
+
+        if is_valid_vrml(s) {
+            return Parser::new(s, world_url).parse().map_err(LoadError::Parse);
+        }
+
+        if let Ok(value) = json::json_parse(s) {
+            if json::is_valid(&value) {
+                let root = json::to_x3d_element(&value).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
+                let mut scene = xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
+
+                scene.encoding = "JSON".into();
+                return Ok(scene);
+            }
+
+            // GLTF2Parser (same JSON.parse result).
+            if gltf2::is_valid_gltf(&value) {
+                return gltf2::parse_gltf(&value, world_url).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
+            }
+        }
     }
 
-    Parser::new(&text, world_url).parse().map_err(LoadError::Parse)
+    // GLB2Parser
+    if gltf2::is_valid_glb(&data) {
+        return gltf2::parse_glb(&data, world_url).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }));
+    }
+
+    if let Some(s) = string {
+        if formats::is_obj(s) {
+            return formats::parse_obj(s, world_url);
+        }
+
+        if formats::is_stl_ascii(s) {
+            return formats::parse_stl_ascii(s, world_url);
+        }
+    }
+
+    if formats::is_stl_binary(&data) {
+        return formats::parse_stl_binary(&data, world_url);
+    }
+
+    if let Some(s) = string {
+        if formats::is_ply_ascii(s) {
+            return formats::parse_ply_ascii(s, world_url);
+        }
+    }
+
+    if formats::is_ply_binary(&data) {
+        return formats::parse_ply_binary(&data, world_url);
+    }
+
+    // SVGParser: the document element must be <svg>.
+    if let Some(root) = &svg_root {
+        if svg::is_valid(root) {
+            return svg::parse_svg(root, world_url);
+        }
+    }
+
+    Err(LoadError::NoHandler)
 }
 
 pub fn load_file(path: &std::path::Path) -> Result<Scene, LoadError> {

@@ -1,0 +1,81 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "rea-b08"
+ },
+ "meshes": [
+  {
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0
+  }
+ ],
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 48
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 48,
+   "byteLength": 4
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 52,
+   "byteLength": 24
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 76,
+   "byteLength": 12
+  }
+ ],
+ "accessors": [
+  {
+   "componentType": 5126,
+   "count": 4,
+   "type": "VEC3",
+   "sparse": {
+    "count": 2,
+    "indices": {
+     "bufferView": 1,
+     "componentType": 5123
+    },
+    "values": {
+     "bufferView": 2
+    }
+   }
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 6,
+   "type": "SCALAR"
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 88,
+   "uri": "data:application/octet-stream;base64,AACAvwAAgL8AAAAAAACAPwAAgL8AAAAAAACAPwAAgD8AAAAAAACAvwAAgD8AAAAAAQADAAAAAEAAAADAAAAAAAAAAMAAAABAAAAAAAAAAQACAAAAAgADAA=="
+  }
+ ]
+}

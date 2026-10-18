@@ -1,0 +1,8 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Geometry3D:2
+COMPONENT Geometry2D:2
+COMPONENT Text:1
+WorldInfo { title "first" }
+Transform { translation 1 0 0 children [ Group { children [ Viewpoint { } Switch { whichChoice 0 children [ Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } } geometry Cone { height 1.2 bottomRadius 0.5 } } ] } ] } ] }
+Shape { geometry Sphere { radius 2 } }

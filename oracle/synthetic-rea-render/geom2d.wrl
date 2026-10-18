@@ -1,0 +1,18 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT Geometry2D:2
+COMPONENT CADGeometry:2
+COMPONENT Rendering:5
+# Synthetic REA render world (full-port lane). Authored; no archive content.
+Viewpoint { position 0 0 12 }
+Transform { translation -4 3 0 children Shape { appearance Appearance { material Material { emissiveColor 1 1 0 } } geometry Arc2D { radius 1 startAngle 0.3 endAngle 2.8 } } }
+Transform { translation -1.3 3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 } } geometry ArcClose2D { radius 1 startAngle 0.2 endAngle 4 solid FALSE } } }
+Transform { translation 1.3 3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 } } geometry ArcClose2D { closureType "CHORD" radius 1 startAngle 0.2 endAngle 4 solid FALSE } } }
+Transform { translation 4 3 0 children Shape { appearance Appearance { material Material { emissiveColor 0 1 1 } } geometry Circle2D { radius 1 } } }
+Transform { translation -4 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 } } geometry Disk2D { outerRadius 1 solid FALSE } } }
+Transform { translation -1.3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 } } geometry Disk2D { innerRadius 0.5 outerRadius 1.2 solid FALSE } } }
+Transform { translation 1.3 0 0 children Shape { appearance Appearance { material Material { emissiveColor 1 0 1 } } geometry Disk2D { innerRadius 1 outerRadius 1 } } }
+Transform { translation 4 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 } } geometry Rectangle2D { size 1.5 1 solid FALSE } } }
+Transform { translation -4 -3 0 children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry Polyline2D { lineSegments [0 0, 1 1, 2 0, 3 1] } } }
+Transform { translation -0.5 -3 0 children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 } } geometry Polypoint2D { point [0 0, 0.5 0.5, 1 0, 1.5 0.5] } } }
+Transform { translation 2 -3.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.4 0.2 } } geometry TriangleSet2D { vertices [0 0, 1 0, 1 1, 0 0, 1 1, 0 1.5] solid FALSE } } }

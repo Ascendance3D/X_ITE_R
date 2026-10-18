@@ -1,0 +1,20 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT Shape:5
+COMPONENT Rendering:5
+COMPONENT Texturing:3
+COMPONENT X_ITE:1
+# REA batch 01 synthetic: DepthMode depthTest, depthFunction, depthMask, polygonOffset, depthRange.
+Viewpoint { position 0 0 10 }
+NavigationInfo { type "NONE" }
+Background { skyColor 0.2 0.2 0.25 }
+DirectionalLight { direction -0.3 -0.5 -1 }
+DEF WALL Transform { translation 0 0 -1 children Shape { appearance Appearance { material Material { diffuseColor 0.35 0.35 0.4 } } geometry Box { size 14 9 0.2 } } }
+Transform { translation -4 2 -3 children Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } depthMode DepthMode { depthTest FALSE } } geometry Sphere { radius 0.9 } } }
+Transform { translation -1.5 2 -3 children Shape { appearance Appearance { material Material { diffuseColor 0 1 0 } depthMode DepthMode { depthFunction "GREATER" } } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.5 2 -3 children Shape { appearance Appearance { material Material { diffuseColor 0 0 1 } depthMode DepthMode { depthFunction "ALWAYS" depthMask FALSE } } geometry Sphere { radius 0.9 } } }
+Transform { translation 4 2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 0 } depthMode DepthMode { depthFunction "NEVER" } } geometry Sphere { radius 0.9 } } }
+Transform { translation -3 -2 -0.9 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 1 0 1 } depthMode DepthMode { polygonOffset -1 -1 } } geometry Box { size 2 1.5 0 } } }
+Transform { translation 0 -2 -0.9 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0 1 1 } } geometry Box { size 2 1.5 0 } } }
+Transform { translation 3 -2 2 children Shape { appearance Appearance { material Material { diffuseColor 1 0.5 0 } depthMode DepthMode { depthRange 0.9 1 } } geometry Sphere { radius 1.1 } } }
+Transform { translation 3 -2 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.5 0 1 } depthMode DepthMode { depthRange 0 0.1 depthFunction "BOGUS" } } geometry Sphere { radius 0.8 } } }

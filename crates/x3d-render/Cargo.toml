@@ -20,5 +20,9 @@ bytemuck = { version = "1", features = ["derive"] }
 image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "bmp"] }
 serde_json = "1"
 sha2 = "0.10"
+# The tangent generator X_ITE ships as assets/lib/mikktspace_bg.wasm (built from mikktspace 0.3.0).
+mikktspace = "=0.3.0"
+# Batch 08 shaders lane: GLSL (rewritten to #version 450) -> naga -> WGSL for ComposedShader.
+naga = { version = "=30.0.1", default-features = false, features = ["glsl-in", "wgsl-in", "wgsl-out"] }
 
 [dev-dependencies]

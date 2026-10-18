@@ -46,7 +46,7 @@ await context .route (url => !url .href .startsWith (base), route => route .abor
 
 const page = await context .newPage ();
 
-await page .goto (`${base}/x_ite-pin/src/dump.html`);
+await page .goto (`${base}/x_ite-pin/src/nodes.html`);
 await page .waitForFunction (() => window .ready, null, { timeout: 30000 });
 
 const result = await page .evaluate (async () =>
@@ -122,6 +122,20 @@ const result = await page .evaluate (async () =>
 
    const x3d = await browser .createX3DFromString ("#X3D V4.0 utf8\nPROFILE Core\n");
 
+   // X3D 3.x scenes: constructors change defaults and aliases for `getSpecificationVersion () <= 3.x`.
+   const legacyVersions = ["3.0", "3.1", "3.2", "3.3"];
+   const legacyScenes   = [ ];
+
+   for (const v of legacyVersions)
+      legacyScenes .push ([v, await browser .createX3DFromString (`#X3D V${v} utf8\nPROFILE Core\n`)]);
+
+   // X3D 4.1: constructors that test `getSpecificationVersion () <= 4.0` (OrthoViewpoint,
+   // TextureProjector, TextureProjectorParallel) start differently than in the 4.0 scene above.
+   const newerVersions = ["4.1"];
+
+   for (const v of newerVersions)
+      legacyScenes .push ([v, await browser .createX3DFromString (`#X3D V${v} utf8\nPROFILE Core\n`)]);
+
    const nodes = [ ];
 
    for (const ConcreteNode of browser .getConcreteNodes ())
@@ -135,7 +149,7 @@ const result = await page .evaluate (async () =>
          to: ConcreteNode .specificationRange .to,
       };
 
-      for (const [key, scene] of [["vrml2", vrml2], ["x3d", x3d]])
+      for (const [key, scene] of [["vrml2", vrml2], ["x3d", x3d], ... legacyScenes])
       {
          try
          {

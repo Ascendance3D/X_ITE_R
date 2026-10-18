@@ -1,0 +1,25 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 10 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+PointLight { location 0 0 10 intensity 0.6 }
+
+Transform { translation -3 2 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L0 InlineGeometry { url [ "ig/missing.x3dv" "ig/box.x3dv" ] } } }
+Transform { translation -1.5 2 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L1 InlineGeometry { url [ "ig/none.x3dv" "ig/cone.x3dv" ] } } }
+Transform { translation 0 2 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L2 InlineGeometry { url [ "ig/broken.x3dv" "ig/sphere.x3dv" ] } } }
+Transform { translation 1.5 2 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L3 InlineGeometry { load FALSE url "ig/box.x3dv" } } }
+Transform { translation 3 2 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L4 InlineGeometry { } } }
+Transform { translation -3 0 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L5 InlineGeometry { url "data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Sphere%20%7B%20radius%200.8%20%7D%20%7D" } } }
+Transform { translation -1.5 0 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L6 InlineGeometry { url "data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Cone%20%7B%20%7D%20%7D%0AShape%20%7B%20geometry%20Box%20%7B%20%7D%20%7D" } } }
+Transform { translation 0 0 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L7 InlineGeometry { url [ "" "ig/box.x3dv" ] } } }
+Transform { translation 1.5 0 0 scale 0.5 0.5 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF L8 InlineGeometry { url [ "ig/text.txt" "ig/missing2.x3dv" ] } } }
+

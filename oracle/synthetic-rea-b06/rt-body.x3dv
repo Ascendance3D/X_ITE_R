@@ -1,0 +1,64 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection {   bodies [ DEF F RigidBody { position 0 0 0 fixed TRUE geometry DEF F_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } }
+DEF A RigidBody { position -6 5 0 mass 1 geometry DEF A_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF B RigidBody { position -3 5 0 mass 1 geometry DEF B_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF C RigidBody { position 0 5 0 mass 1 fixed FALSE geometry DEF C_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF D RigidBody { position 3 5 0 mass 1 enabled TRUE geometry DEF D_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF E RigidBody { position 6 5 0 mass 1 geometry DEF E_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } }
+DEF G RigidBody { position 9 5 0 mass 1 autoDamp FALSE linearDampingFactor 0.5 geometry DEF G_C CollidableShape {  shape Shape { geometry Box { size 1 1 1 } } } } ]  }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF SC Script {
+  inputOnly SFTime tick
+  outputOnly SFVec3f lv
+  outputOnly SFVec3f av
+  outputOnly MFVec3f fo
+  outputOnly SFFloat ms
+  outputOnly SFBool fx
+  outputOnly SFBool en
+  outputOnly SFBool en2
+  outputOnly SFVec3f pos
+  outputOnly SFRotation ori
+  outputOnly MFVec3f tq
+  outputOnly SFBool ug
+  outputOnly SFBool ad
+  outputOnly SFFloat ld
+  initializeOnly SFFloat s0 -1
+  url "ecmascript:
+var done = [ ];
+function tick (v)
+{
+  if (s0 < 0) s0 = v;
+  var f = Math .round ((v - s0) * 60);
+  if (f >= 20 && !done[0]) { done[0] = true; lv = new SFVec3f (3, 4, 0); }
+  if (f >= 30 && !done[1]) { done[1] = true; av = new SFVec3f (0, 0, 5); }
+  if (f >= 40 && !done[2]) { done[2] = true; fo = new MFVec3f (new SFVec3f (0, 40, 0)); }
+  if (f >= 60 && !done[3]) { done[3] = true; ms = 10; }
+  if (f >= 70 && !done[4]) { done[4] = true; fx = true; }
+  if (f >= 90 && !done[5]) { done[5] = true; en = false; }
+  if (f >= 100 && !done[6]) { done[6] = true; en2 = true; }
+  if (f >= 110 && !done[7]) { done[7] = true; pos = new SFVec3f (10, 9, 0); }
+  if (f >= 130 && !done[8]) { done[8] = true; ori = new SFRotation (0, 0, 1, 1); }
+  if (f >= 140 && !done[9]) { done[9] = true; tq = new MFVec3f (new SFVec3f (0, 0, 3)); }
+  if (f >= 150 && !done[10]) { done[10] = true; ug = false; }
+  if (f >= 160 && !done[11]) { done[11] = true; ad = true; }
+  if (f >= 170 && !done[12]) { done[12] = true; ld = 2; }
+}
+"
+}
+ROUTE TS.time TO SC.tick
+ROUTE SC.lv TO A.set_linearVelocity
+ROUTE SC.av TO B.set_angularVelocity
+ROUTE SC.fo TO B.set_forces
+ROUTE SC.ms TO C.set_mass
+ROUTE SC.fx TO C.set_fixed
+ROUTE SC.en TO D.set_enabled
+ROUTE SC.en2 TO D.set_enabled
+ROUTE SC.pos TO E.set_position
+ROUTE SC.ori TO E.set_orientation
+ROUTE SC.tq TO E.set_torques
+ROUTE SC.ug TO G.set_useGlobalGravity
+ROUTE SC.ad TO G.set_autoDamp
+ROUTE SC.ld TO G.set_linearDampingFactor

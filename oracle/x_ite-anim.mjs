@@ -133,6 +133,153 @@ if (script .console)
    });
 }
 
+// REA batch 05 (additive): script key "audio": { "sampleRate": 48000, "channels": 2, "tail": 4 }
+// renders the browser's audio offline, in step with the frames. The page's `AudioContext` is
+// replaced, before any page script runs, by a function that returns one OfflineAudioContext (X_ITE's
+// X3DSoundContext.getAudioContext makes one context per browser with `new AudioContext ()`). A
+// browser OfflineAudioContext cannot make a MediaStreamAudioDestinationNode, so that constructor is
+// replaced by a stereo GainNode (channelCount 2, "explicit", "speakers": the defaults of the
+// MediaStreamAudioDestinationNode) connected to the context's destination: AudioDestination's
+// output is captured at the input of the node that would feed its <audio> element. Nothing in
+// X_ITE is changed. Frame k: the page waits until rendering is suspended at render quantum q (k),
+// applies the frame-k events, steps the browser, and resumes. x3d-drive does the same.
+const audio = script .audio ? { sampleRate: script .audio .sampleRate ?? 48000, channels: script .audio .channels ?? 2, tail: script .audio .tail ?? 4 } : null;
+
+// Render quantum of frame k (k = 1 … frames). The suspend time handed to the browser is half a
+// frame past the quantum start: Chrome truncates `when * sampleRate` to a frame and rounds it down
+// to a quantum.
+const audioQuantum = k => Math .ceil (Math .round (k * dt * audio .sampleRate) / 128);
+
+if (audio)
+{
+   await page .addInitScript (a =>
+   {
+      let context = null;
+
+      // The page's resume () resolves and does nothing, like resume () of a running AudioContext:
+      // X3DSoundContext calls it again on every startAudioElement while the first call has not
+      // resolved, and on an OfflineAudioContext that would restart rendering in the middle of a
+      // frame. Only __audioResume resumes rendering.
+      let resume = null;
+
+      const make = () => context ??= (() =>
+      {
+         const ctx = new OfflineAudioContext ({ numberOfChannels: a .channels, length: a .length, sampleRate: a .sampleRate });
+
+         resume = ctx .resume .bind (ctx);
+         ctx .resume = () => Promise .resolve ();
+         return ctx;
+      })();
+
+      window .AudioContext = function () { return make (); };
+
+      window .MediaStreamAudioDestinationNode = function (ctx)
+      {
+         const node = new GainNode (ctx, { channelCount: 2, channelCountMode: "explicit", channelInterpretation: "speakers" });
+
+         node .connect (ctx .destination);
+         node .stream = null;
+         return node;
+      };
+
+      // decodeAudioData finishes on a decoder thread, at no fixed frame. During the frames the gate
+      // holds each result until the start of the next frame (__audioFlushDecodes, before that
+      // frame's events), so a decode started before frame k resolves at the start of frame k.
+      // x3d-drive does the same.
+      // Decodes started while the world loads (before __audioArm) are not held: the load waits
+      // for them.
+      const pendingDecodes = [ ];
+      const decodeAudioData = OfflineAudioContext .prototype .decodeAudioData;
+      let gated = false;
+
+      OfflineAudioContext .prototype .decodeAudioData = function (data, success, failure)
+      {
+         if (!gated)
+            return decodeAudioData .call (this, data, success, failure);
+
+         const result = decodeAudioData .call (this, data) .then (value => ({ value }), error => ({ error }));
+
+         return new Promise (release => pendingDecodes .push ({ result, release })) .then (r =>
+         {
+            if ("error" in r)
+            {
+               failure ?.(r .error);
+               throw r .error;
+            }
+
+            success ?.(r .value);
+            return r .value;
+         });
+      };
+
+      window .__audioFlushDecodes = async () =>
+      {
+         for (const d of pendingDecodes .splice (0))
+            d .release (await d .result);
+
+         await new Promise (resolve =>
+         {
+            const channel = new MessageChannel ();
+            channel .port1 .onmessage = () => resolve ();
+            channel .port2 .postMessage (0);
+         });
+      };
+
+      const suspended = new Map ();
+      let rendered = null;
+
+      window .__audioArm = times =>
+      {
+         const ctx = make ();
+
+         gated = true;
+
+         times .forEach ((t, i) => ctx .suspend (t) .then (() =>
+         {
+            const s = suspended .get (i + 1);
+
+            if (s)
+               s .resolve (ctx .currentTime);
+            else
+               suspended .set (i + 1, { done: ctx .currentTime });
+         }));
+
+         rendered = ctx .startRendering ();
+      };
+
+      window .__audioWait = k => new Promise (resolve =>
+      {
+         const s = suspended .get (k);
+
+         if (s ?.done !== undefined)
+            resolve (s .done);
+         else
+            suspended .set (k, { resolve });
+      });
+
+      window .__audioResume = () => { make (); resume (); };
+
+      window .__audioDone = async () =>
+      {
+         const buffer = await rendered, out = [ ];
+
+         for (let c = 0; c < buffer .numberOfChannels; ++ c)
+         {
+            const bytes = new Uint8Array (buffer .getChannelData (c) .buffer);
+            let bin = "";
+
+            for (let i = 0; i < bytes .length; i += 0x8000)
+               bin += String .fromCharCode .apply (null, bytes .subarray (i, i + 0x8000));
+
+            out .push (btoa (bin));
+         }
+
+         return { sampleRate: buffer .sampleRate, length: buffer .length, channels: out };
+      };
+   },
+   { ... audio, length: (audioQuantum (frames) + audio .tail) * 128 });
+}
+
 try
 {
    await page .goto (`${base}/x_ite-pin/src/anim.html`);
@@ -144,6 +291,114 @@ try
    // wall-clock rate of the page's early frames (non-deterministic). Off by default.
    if (script .pinFrameRate)
       await page .evaluate (rate => Object .defineProperty (document .getElementById ("c") .browser, "currentFrameRate", { get: () => rate, configurable: true }), 1 / Math .max (dt, 1e-9));
+
+   // Script key "physics" (REA batch 06): { "nodes": { "PATH": [ "field", ... ] } }. Before the world loads the
+   // RigidBodyPhysics component is loaded and RigidBodyCollection .getTimeStep is wrapped to log every
+   // time step the physics used ({ c, frame, dt }; frame 0 = load and warm-up). After the warm-up and
+   // after every frame the listed fields of the listed nodes are read (full double precision). PATH is a DEF
+   // name, or "Inline/Name" for a DEF inside a DEF-named Inline. Pseudo fields: "@bodyActive" (the
+   // btRigidBody isActive()), and for CollisionSensor "contacts" / "intersections" are expanded
+   // (contacts to { position, contactNormal, depth, geometry1, geometry2, body1, body2 }). Nothing in X_ITE
+   // is changed; the wrapper only records. Off unless the key is present.
+   if (script .physics)
+   {
+      await page .evaluate (async () =>
+      {
+         const browser = document .getElementById ("c") .browser;
+
+         await browser .loadComponents (browser .getComponent ("RigidBodyPhysics"));
+
+         // The probe node only gives access to the prototype; it is live in the default scene, so its own
+         // time steps are not logged.
+         const probe = browser .currentScene .createNode ("RigidBodyCollection") .getValue ();
+         const proto = Object .getPrototypeOf (probe);
+         const orig  = proto .getTimeStep;
+
+         window .__phFrame = 0;
+         window .__phDt    = [ ];
+
+         proto .getTimeStep = function ()
+         {
+            const dt = orig .call (this);
+
+            if (this !== probe)
+               window .__phDt .push ({ frame: window .__phFrame, dt });
+            return dt;
+         };
+
+         const plain = v =>
+         {
+            if (v === null || v === undefined)
+               return null;
+
+            if (typeof v !== "object")
+               return v;
+
+            if (typeof v .getNodeTypeName === "function")
+               return v .getNodeName () || `<${v .getNodeTypeName ()}>`;
+
+            if ("angle" in v && "x" in v)
+               return [ v .x, v .y, v .z, v .angle ];
+
+            if ("x" in v)
+               return "z" in v ? [ v .x, v .y, v .z ] : [ v .x, v .y ];
+
+            if (typeof v .length === "number")
+               return Array .from (v, plain);
+
+            return String (v);
+         };
+
+         const resolve = path =>
+         {
+            let scene = browser .currentScene, node = null;
+
+            for (const part of path .split ("/"))
+            {
+               try { node = scene ?.getNamedNode (part) ?? null; } catch { node = null; }
+
+               if (!node)
+                  return null;
+
+               scene = node .getNodeTypeName () === "Inline" ? node .getValue () .getInternalScene () : null;
+            }
+
+            return node;
+         };
+
+         window .__physSnap = nodes =>
+         {
+            const out = { };
+
+            for (const [ path, fields ] of Object .entries (nodes))
+            {
+               const node = resolve (path);
+
+               if (!node)
+               {
+                  out [path] = null;
+                  continue;
+               }
+
+               const o = { type: node .getNodeTypeName () };
+
+               for (const f of fields)
+               {
+                  if (f === "@bodyActive")
+                     o [f] = node .getValue () .getRigidBody () .isActive ();
+                  else if (f === "contacts" && o .type === "CollisionSensor")
+                     o [f] = Array .from (node .contacts, c => Object .fromEntries ([ "position", "contactNormal", "depth", "geometry1", "geometry2", "body1", "body2" ] .map (n => [ n, plain (c [n]) ])));
+                  else
+                     o [f] = plain (node [f]);
+               }
+
+               out [path] = o;
+            }
+
+            return out;
+         };
+      });
+   }
 
    const abs = resolve (fileArg);
    const url = `${base}/${relative (ROOT, abs) .split ("/") .map (encodeURIComponent) .join ("/")}`;
@@ -185,11 +440,28 @@ try
 
    await settle ();
 
+   if (script .physics)
+      result .physics = { dt: [ ], frames: { 0: await page .evaluate (n => window .__physSnap (n), script .physics .nodes) } };
+
    const mouseButton = b => ({ 0: "left", 1: "middle", 2: "right" }) [b] ?? "left";
+
+   if (audio)
+   {
+      const times = Array .from ({ length: frames }, (_, i) => (audioQuantum (i + 1) * 128 + 0.5) / audio .sampleRate);
+
+      await page .evaluate (t => window .__audioArm (t), times);
+      result .audioSuspend = [ ];
+   }
 
    for (let k = 1; k <= frames; ++ k)
    {
       const prev = t0 + (k - 1) * dt;
+
+      if (audio)
+      {
+         result .audioSuspend .push (Math .round (await page .evaluate (k => window .__audioWait (k), k) * audio .sampleRate));
+         await page .evaluate (() => window .__audioFlushDecodes ());
+      }
 
       for (const e of events .filter (e => e .frame === k))
       {
@@ -204,6 +476,8 @@ try
             case "dblclick":  await page .mouse .dblclick (e .x, H - e .y); break; // move, down/up (clickCount 1), down/up (clickCount 2): the browser fires "dblclick"
             case "viewer":    await page .evaluate (n => window .setViewer (n), e .name); break;
             case "key":       await page .keyboard .press (e .key); break;
+            case "keydown":   await page .keyboard .down (e .key); break;
+            case "keyup":     await page .keyboard .up (e .key); break;
             case "mods":
             {
                for (const [ prop, key ] of [ [ "shift", "Shift" ], [ "ctrl", "Control" ], [ "alt", "Alt" ] ])
@@ -216,8 +490,18 @@ try
 
       await settle ();
       await page .evaluate (ms => window .setDate (ms), (t0 + k * dt) * 1000);
+
+      if (script .physics)
+         await page .evaluate (k => { window .__phFrame = k; }, k);
+
       await page .evaluate (t => window .step (t), t0 + k * dt);
       await settle ();
+
+      if (script .physics)
+         result .physics .frames [k] = await page .evaluate (n => window .__physSnap (n), script .physics .nodes);
+
+      if (audio)
+         await page .evaluate (() => window .__audioResume ());
 
       if (capture .has (k) || dump .has (k) || k === frames)
          result .poses [k] = await page .evaluate (() =>
@@ -287,10 +571,24 @@ try
       }
    }
 
+   if (script .physics)
+      result .physics .dt = await page .evaluate (() => window .__phDt);
+
    result .log = (await page .evaluate (() => window .getLog ())) .map (l => l .replaceAll (base, "http://oracle"));
 
    if (script .console)
       result .console = consoleLines .slice ();
+
+   // The rendered buffer: planar float32, written next to --out as <out>.audio.f32.
+   if (audio)
+   {
+      const r = await page .evaluate (() => window .__audioDone ());
+      const data = Buffer .concat (r .channels .map (c => Buffer .from (c, "base64")));
+
+      result .audio = { sampleRate: r .sampleRate, length: r .length, channels: r .channels .length, file: `${opt ("--out", "audio")}.audio.f32` };
+      await writeFile (result .audio .file, data);
+   }
+
    result .ok  = true;
 }
 catch (e)

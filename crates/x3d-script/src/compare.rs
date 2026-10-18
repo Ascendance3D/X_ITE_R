@@ -12,8 +12,21 @@ pub struct RunResult {
     pub log: Vec<String>,
 }
 
+/// The serialization the dump returns: scene.toVRMLString (), toXMLString () or toJSONString ().
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DumpFormat {
+    Vrml,
+    Xml,
+    Json,
+}
+
 /// Load one world like dump.html's `window .dump (url)`.
 pub fn run_world(oracle_root: &Path, file: &Path, scripts: bool) -> RunResult {
+    run_world_as(oracle_root, file, scripts, DumpFormat::Vrml)
+}
+
+/// [`run_world`], serialized as `format`.
+pub fn run_world_as(oracle_root: &Path, file: &Path, scripts: bool, format: DumpFormat) -> RunResult {
     // The dump oracle runs in headless Chromium.
     x3d_fields::jsmath::set_flavor(x3d_fields::jsmath::MathFlavor::Chrome);
 
@@ -56,7 +69,11 @@ pub fn run_world(oracle_root: &Path, file: &Path, scripts: bool) -> RunResult {
 
     rt.load_world();
 
-    let vrml = rt.scene.to_vrml_string();
+    let vrml = match format {
+        DumpFormat::Vrml => rt.scene.to_vrml_string(),
+        DumpFormat::Xml => rt.scene.to_xml_string(),
+        DumpFormat::Json => rt.scene.to_json_string(),
+    };
     let mut log = rt.log;
     log.sort();
 

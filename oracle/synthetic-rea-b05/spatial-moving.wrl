@@ -1,0 +1,17 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+DEF M Transform { translation 4 0 0 children SpatialSound { distanceModel "EXPONENTIAL" rolloffFactor 0.7 children DEF O OscillatorSource { frequency 220 periodicWave PeriodicWave { type "SAWTOOTH" } } } } DEF PI PositionInterpolator { key [ 0 1 ] keyValue [ 4 0 0, -4 0 -1 ] }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  inputOnly SFTime set_time
+  outputOnly SFTime start
+  initializeOnly SFInt32 n 0
+  url "ecmascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
+ROUTE T.fraction_changed TO PI.set_fraction
+ROUTE PI.value_changed TO M.set_translation

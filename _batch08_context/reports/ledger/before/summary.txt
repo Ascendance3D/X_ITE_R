@@ -1,0 +1,44 @@
+items 346  COMPLETE 214  PARTIAL 52  DIFFERENT 25  NOT_TESTED 33  MISSING 22
+coverage (COMPLETE / all) = 214/346 = 61.8%
+open items = 132
+
+node:Annotation                    DIFF 6
+node:CADGeometry                   COMP 6
+node:Core                          COMP 6  PART 1
+node:CubeMapTexturing              COMP 3
+node:DIS                           NOT_ 1  MISS 5
+node:EnvironmentalEffects          PART 3  NOT_ 2
+node:EnvironmentalSensor           COMP 3
+node:EventUtilities                COMP 7
+node:Followers                     COMP 14
+node:GaussianSplats                MISS 1
+node:Geometry2D                    COMP 8
+node:Geometry3D                    COMP 7
+node:Geospatial                    COMP 10  PART 1
+node:Grouping                      COMP 4
+node:HAnim                         COMP 4  NOT_ 3
+node:Interpolation                 COMP 11  DIFF 2
+node:KeyDeviceSensor               COMP 2
+node:Layering                      COMP 3
+node:Layout                        COMP 2  NOT_ 3
+node:Lighting                      COMP 1  NOT_ 3
+node:NURBS                         COMP 2  DIFF 11
+node:Navigation                    COMP 3  PART 3  NOT_ 1
+node:Networking                    COMP 1  PART 2  MISS 1
+node:ParticleSystems               COMP 9  PART 1
+node:Picking                       COMP 5
+node:PointingDeviceSensor          DIFF 4
+node:Rendering                     COMP 8  PART 1  NOT_ 7
+node:RigidBodyPhysics              COMP 14
+node:Scripting                     PART 1
+node:Shaders                       PART 3  MISS 5
+node:Shape                         COMP 7  NOT_ 3
+node:Sound                         COMP 15  PART 3  DIFF 1  NOT_ 2
+node:Text                          NOT_ 2  MISS 1
+node:TextureProjection             COMP 2
+node:Texturing                     COMP 4  PART 3  NOT_ 4
+node:Texturing3D                   COMP 6  NOT_ 2
+node:Time                          COMP 1
+node:VolumeRendering               COMP 11  PART 2
+node:X_ITE                         COMP 15  PART 1  MISS 1
+subsystem:subsystems               COMP 20  PART 27  DIFF 1  MISS 8

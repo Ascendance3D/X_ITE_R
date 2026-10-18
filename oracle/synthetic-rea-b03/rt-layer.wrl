@@ -1,0 +1,20 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Texturing:4
+COMPONENT TextureProjection:2
+COMPONENT CubeMapTexturing:3
+COMPONENT Layering:1
+COMPONENT Layout:2
+COMPONENT Lighting:3
+COMPONENT EnvironmentalEffects:4
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT Picking:3
+Viewpoint { position 0 0 14 }
+Background { skyColor [ 0.1 0.1 0.2 ] }
+Transform { translation -3 2 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.2 } } geometry Sphere { radius 1 } } }
+Transform { translation 0 2.5 -3 rotation 1 1 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.3 } } geometry Box { size 1.6 1.6 1.6 } } }
+Transform { translation 3 2 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.4 0.9 } } geometry Cone { bottomRadius 1 height 2 } } }
+Transform { translation -3.2 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture RenderedTexture { width 128 height 128 }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -1.3 -1.3 0, 1.3 -1.3 0, 1.3 1.3 0, -1.3 1.3 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 1.2 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture RenderedTexture { width 200 height 100 repeatS FALSE }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -2.0 -1.0 0, 2.0 -1.0 0, 2.0 1.0 0, -2.0 1.0 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 4.6 1 0 children Shape { appearance Appearance { material Material { diffuseColor 1 1 1 } texture RenderedTexture { width 8 height 8 }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.8 -0.8 0, 0.8 -0.8 0, 0.8 0.8 0, -0.8 0.8 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }

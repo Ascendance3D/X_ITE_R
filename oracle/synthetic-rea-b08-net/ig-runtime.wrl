@@ -1,0 +1,72 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT Shape:4
+COMPONENT Networking:4
+COMPONENT DIS:2
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT EventUtilities:1
+COMPONENT Text:2
+COMPONENT X_ITE:1
+Viewpoint { position 0 0 10 }
+Background { skyColor 0.15 0.15 0.18 }
+DirectionalLight { direction -0.4 -0.6 -0.7 intensity 0.9 }
+
+PointLight { location 0 0 10 intensity 0.6 }
+DEF G Group { children [
+  Transform { translation -2.5 1.5 0 children DEF S1 Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I1 InlineGeometry { url "ig/box.x3dv" } } }
+  Transform { translation 0 1.5 0 children DEF S2 Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I2 InlineGeometry { url "ig/ifs.x3dv" } } }
+  Transform { translation 2.5 1.5 0 rotation 0 1 0 3.14159265 children DEF S3 Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I3 InlineGeometry { url "ig/rect.x3dv" } } }
+  Transform { translation 2.5 -0.2 0 children DEF S4 Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I4 InlineGeometry { url "ig/grid.x3dv" } } }
+]}
+DEF G2 Group { }
+Transform { translation -2.5 -1.5 0 children DEF S5 Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.2 specularColor 0.6 0.6 0.6 shininess 0.4 } } geometry DEF I5 InlineGeometry { url "ig/extrusion.x3dv" smooth FALSE } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode i1 USE I1
+  initializeOnly SFNode i2 USE I2
+  initializeOnly SFNode i3 USE I3
+  initializeOnly SFNode i4 USE I4
+  initializeOnly SFNode i5 USE I5
+  initializeOnly SFNode s1 USE S1
+  initializeOnly SFNode s5 USE S5
+  initializeOnly SFNode g USE G
+  initializeOnly SFNode g2 USE G2
+  url "javascript:
+var made = null, made_shape = null;
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') i1 .url = new MFString ('ig/sphere.x3dv');
+   if (k == 'b') i1 .url = new MFString ('ig/missing.x3dv');
+   if (k == 'c') i1 .url = new MFString ('ig/cone.x3dv#MISSING', 'ig/multi.x3dv#G2');
+   if (k == 'd') i1 .load = false;
+   if (k == 'e') i1 .load = true;
+   if (k == 'f') i3 .solid = true;
+   if (k == 'g') i3 .solid = false;
+   if (k == 'h') i2 .smooth = false;
+   if (k == 'i') i2 .smooth = true;
+   if (k == 'j') { i4 .smooth = false; i5 .smooth = true; }
+   if (k == 'k') { i4 .smooth = true; i5 .solid = true; }
+   if (k == 'l') i2 .url = new MFString ();
+   if (k == 'm') i2 .url = new MFString ('ig/ifs-normal.x3dv');
+   if (k == 'n') i4 .url = new MFString ('data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Sphere%20%7B%20radius%200.8%20%7D%20%7D');
+   if (k == 'o') s1 .geometry = i4;
+   if (k == 'p') s1 .geometry = null;
+   if (k == 'q') s1 .geometry = i1;
+   if (k == 'r') g .removeChildren = new MFNode (s1);
+   if (k == 's') g .addChildren = new MFNode (s1);
+   if (k == 't') { made = Browser .currentScene .createNode ('InlineGeometry'); made .url = new MFString ('data:model/x3d+vrml,%23VRML%20V2.0%20utf8%0AShape%20%7B%20geometry%20Cone%20%7B%20height%201.4%20%7D%20%7D'); made .solid = true; made_shape = Browser .currentScene .createNode ('Shape'); made_shape .appearance = s1 .appearance; made_shape .geometry = made; var t = Browser .currentScene .createNode ('Transform'); t .translation = new SFVec3f (0, -1.5, 0); t .children = new MFNode (made_shape); g2 .addChildren = new MFNode (t); }
+   if (k == 'u') { made .url = new MFString ('ig/cylinder.x3dv'); made .smooth = false; }
+   if (k == 'v') g2 .children = new MFNode ();
+   if (k == 'w') i5 .autoRefresh = 0.5;
+   if (k == 'x') { i5 .autoRefresh = 0; i5 .url = new MFString ('ig/ifs.x3dv'); i5 .url = new MFString ('ig/sphere.x3dv'); }
+   if (k == 'y') { i5 .loadNow (); }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+

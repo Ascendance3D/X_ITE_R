@@ -31,6 +31,8 @@ pub struct Hit {
     /// The hit shape's geometry bounding box in its local space (`hit .shapeNode .getBBox ()`).
     pub bbox: Option<(Vector3, Vector3)>,
     pub anchors: Vec<NodeRef>,
+    /// hit .layerNode: the layer the pick ran in.
+    pub layer: x3d_render::layer::LayerKey,
 }
 
 impl Default for Hit {
@@ -47,6 +49,7 @@ impl Default for Hit {
             tex_coord: Vector4::ZERO,
             shape: None,
             bbox: None,
+            layer: None,
             anchors: vec![],
         }
     }
@@ -86,7 +89,9 @@ struct TriHit {
 }
 
 /// Möller-Trumbore in object space; both faces.
-fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3) -> Option<TriHit> {
+/// The nearest triangle hit along the ray whose point `keep` accepts (the pointing shader
+/// discards clipped fragments, so a clipped hit lets the ray reach the triangles behind it).
+fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3, keep: &dyn Fn(f64) -> bool) -> Option<TriHit> {
     if g.geometry_type < 2 {
         return None;
     }
@@ -131,7 +136,7 @@ fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3) -> Option<TriHit
 
         let t = e2.dot(&q) * inv;
 
-        if best.as_ref().is_none_or(|b| t < b.t) {
+        if best.as_ref().is_none_or(|b| t < b.t) && keep(t) {
             best = Some(TriHit { t, u, v, tri });
         }
     }
@@ -140,7 +145,10 @@ fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3) -> Option<TriHit
 }
 
 /// Pick: the nearest shape under the pointer ray (X3DPointingDeviceSensorContext.touch).
-pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>, cam: &PickCamera, x: f64, y: f64) -> Hit {
+/// A shape inside Viewport nodes is drawn into the pointing buffer with its own viewport: it is
+/// skipped when the pointer is outside that rectangle (Viewport.traverse, unless `pointing`, a
+/// layer holds the pointer), and its ray goes through that viewport.
+pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>, cam: &PickCamera, x: f64, y: f64, pointing: bool) -> Hit {
     let ray = hit_ray(cam, x, y);
     // The hit point, normal and texCoord come from the pointing buffer: a 1x1 float buffer drawn
     // with the viewport shifted so that it covers the pixel under the pointer
@@ -151,8 +159,27 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
 
     let mut best: Option<(f64, usize, TriHit, Rc<Geometry>)> = None;
 
+    let shape_ray = |s: &ShapeInst| {
+        if s.viewport == [cam.viewport.x, cam.viewport.y, cam.viewport.z, cam.viewport.w] {
+            sray.copy()
+        } else {
+            let v = s.viewport;
+            hit_ray(&PickCamera { viewport: Vector4::new(v[0], v[1], v[2], v[3]), ..cam.clone() }, x.floor() + 0.5, y.floor() + 0.5)
+        }
+    };
+
     for (i, s) in shapes.iter().enumerate() {
+        if !pointing && !x3d_render::layer::pointer_in_rectangle(&s.viewport, x, y) {
+            continue;
+        }
+
         let Some(g) = geometry(s) else { continue };
+        // The pointing shader skins the shapes of an HAnimHumanoid or HAnimSegment.
+        let g = match &s.skin {
+            Some(skin) => Rc::new(x3d_render::hanim::skin(&g, &skin.0, &skin.1)),
+            None => g,
+        };
+        let sray = shape_ray(s);
         let mut inv = s.model_view;
         inv.inverse();
         let mut o = sray.point;
@@ -165,7 +192,16 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             continue;
         }
 
-        let Some(th) = ray_triangles(&g, &o, &d) else { continue };
+        // ClipPlanes2.glsl clip () in the pointing shader: view-space hit points.
+        let clipped = |t: f64| {
+            let mut p = d;
+            p.multiply(t);
+            p.add(&o);
+            s.model_view.mult_vec_matrix3(&mut p);
+            x3d_render::traverse::is_clipped(&s.clip_planes, &p)
+        };
+
+        let Some(th) = ray_triangles(&g, &o, &d, &|t| !clipped(t)) else { continue };
 
         // View space hit point and its distance along the view ray.
         let mut p = o;
@@ -179,9 +215,8 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             continue;
         }
 
-        let mut along = p;
-        along.subtract(&sray.point);
-        let dist = along.dot(&sray.direction);
+        // The depth test of the pointing buffer: view space depth (the same projection for all).
+        let dist = -p.z;
 
         if best.as_ref().is_none_or(|b| dist < b.0) {
             best = Some((dist, i, th, g));
@@ -190,6 +225,7 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
 
     if let Some((_, i, th, g)) = best {
         let s = &shapes[i];
+        let sray = shape_ray(s);
         let mut inv = s.model_view;
         inv.inverse();
         let mut o = sray.point;
@@ -518,14 +554,15 @@ impl Pointer {
 
         self.over = keep;
 
-        // isOver TRUE for the sensors under the pointer.
+        // isOver TRUE for the sensors under the pointer: `overSensors .set (node, sensor);
+        // sensor .set_over__ (true, hit)` for every one, also those already over (a TouchSensor
+        // sends its hit outputs again for the new hit).
         for s in &hit.sensors {
-            if self.over.iter().any(|(k, _)| *k == s.node) {
-                // Already over: X_ITE sets it again, which is a no-op for an unchanged value.
-                continue;
+            match self.over.iter_mut().find(|(k, _)| *k == s.node) {
+                Some(entry) => entry.1 = s.clone(),
+                None => self.over.push((s.node.clone(), s.clone())),
             }
 
-            self.over.push((s.node.clone(), s.clone()));
             self.set_over(root, s, true, &hit, now);
         }
 
@@ -573,7 +610,7 @@ impl Pointer {
             }
         }
 
-        if ty == Some("TouchSensor") && over && rt.get_bool(n, "isOver") {
+        if matches!(ty, Some("TouchSensor" | "GeoTouchSensor")) && over && rt.get_bool(n, "isOver") {
             let mut inv = s.model_view;
             inv.inverse();
             let w = hit.tex_coord.w;
@@ -586,6 +623,16 @@ impl Pointer {
             set(rt, n, "hitTexCoord_changed", FieldValue::SFVec2f(tc));
             set(rt, n, "hitNormal_changed", FieldValue::SFVec3f(normal));
             set(rt, n, "hitPoint_changed", FieldValue::SFVec3f(point));
+        }
+
+        // GeoTouchSensor.set_over__: `if (this ._isOver .getValue ()) hitGeoCoord_changed = getGeoCoord (hitPoint_changed)`.
+        if ty == Some("GeoTouchSensor") && rt.get_bool(n, "isOver") {
+            let hit_point = match rt.pre_value(n, "hitPoint_changed") {
+                Some(FieldValue::SFVec3f(v)) => *v,
+                _ => Vector3::ZERO,
+            };
+            let geo = rt.geo_object(n).get_geo_coord(&hit_point);
+            set(rt, n, "hitGeoCoord_changed", FieldValue::SFVec3d(geo));
         }
     }
 
@@ -633,7 +680,7 @@ impl Pointer {
         set(rt, n, "isActive", FieldValue::SFBool(active));
 
         match ty {
-            Some("TouchSensor") => {
+            Some("TouchSensor" | "GeoTouchSensor") => {
                 if rt.get_bool(n, "enabled") && rt.get_bool(n, "isOver") && !active {
                     set(rt, n, "touchTime", FieldValue::SFTime(now));
                 }

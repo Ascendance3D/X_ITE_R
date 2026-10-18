@@ -27,6 +27,7 @@ use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use x3d_fields::NodeId;
 pub use x3d_render::gpu::DepthMode;
 use x3d_render::gpu::Renderer;
+use x3d_render::traverse::{BrowserGlobals, browser_globals, set_browser_globals};
 
 /// X_ITE's default `Multisampling` rendering property (RenderingProperties.js).
 pub const DEFAULT_MULTISAMPLING: u32 = 4;
@@ -84,6 +85,9 @@ pub struct EmbeddedViewer {
     size: (u32, u32),
     /// Browser.print output of unloaded worlds that the host has not taken yet.
     closed_prints: Vec<String>,
+    /// The thread-wide browser options (qualities, logarithmic depth) of this viewer's world: saved when a
+    /// call returns and restored when the next one starts, so viewers on one thread do not see each other's.
+    globals: BrowserGlobals,
 }
 
 /// The host drops the viewer: its world is unloaded like by [`EmbeddedViewer::unload`].
@@ -100,7 +104,17 @@ impl EmbeddedViewer {
         // BrowserOptions / RenderingProperties: Multisampling defaults to 4 (clamped to the
         // device maximum, which is 4 here until `configure_samples` has seen the adapter).
         renderer.set_sample_count(DEFAULT_MULTISAMPLING);
-        EmbeddedViewer { core: None, renderer, source: None, size: (size.0.max(1), size.1.max(1)), closed_prints: vec![] }
+        EmbeddedViewer { core: None, renderer, source: None, size: (size.0.max(1), size.1.max(1)), closed_prints: vec![], globals: BrowserGlobals::default() }
+    }
+
+    /// Start of a call that runs or builds the world: this viewer's thread-wide options.
+    fn enter(&self) {
+        set_browser_globals(self.globals);
+    }
+
+    /// End of such a call: keep what the world set.
+    fn leave(&mut self) {
+        self.globals = browser_globals();
     }
 
     /// Tell the viewer which multisample counts the adapter supports for the host's target
@@ -137,7 +151,9 @@ impl EmbeddedViewer {
     /// reversed-Z 32-bit float depth buffer that removes most z-fighting of near-coplanar
     /// surfaces. Set it before `load` so a "view all" far plane is computed for the mode.
     pub fn set_depth_mode(&mut self, mode: DepthMode) {
+        self.enter();
         self.renderer.set_depth_mode(mode);
+        self.leave();
     }
 
     pub fn depth_mode(&self) -> DepthMode {
@@ -151,7 +167,9 @@ impl EmbeddedViewer {
             DepthMode::Reversed => DepthMode::Logarithmic,
             DepthMode::Logarithmic => DepthMode::Standard,
         };
+        self.enter();
         self.renderer.set_depth_mode(next);
+        self.leave();
         next
     }
 
@@ -169,8 +187,11 @@ impl EmbeddedViewer {
         self.close_world();
         self.source = Some((path.to_path_buf(), options.clone()));
 
-        let v = Viewer3d::load(path, options.root.as_deref(), options.start_time.unwrap_or_else(realtime_now), self.size.0, self.size.1)?;
-        self.core = Some(v);
+        // A host page has no `<x3d-canvas>` attributes: the BrowserOptions keep X_ITE's defaults.
+        self.enter();
+        let v = Viewer3d::load_attributes(path, options.root.as_deref(), options.start_time.unwrap_or_else(realtime_now), self.size.0, self.size.1, None, false, &[]);
+        self.leave();
+        self.core = Some(v?);
         Ok(())
     }
 
@@ -180,7 +201,9 @@ impl EmbeddedViewer {
     /// Scripts print in `shutdown ()` is kept for [`EmbeddedViewer::take_prints`].
     fn close_world(&mut self) {
         if let Some(mut c) = self.core.take() {
+            self.enter();
             c.rt.unload_world();
+            self.leave();
             self.closed_prints.append(&mut c.rt.prints);
         }
     }
@@ -231,7 +254,9 @@ impl EmbeddedViewer {
     /// Forward an input event (pointer, wheel, key, modifiers).
     pub fn input(&mut self, event: UiEvent) {
         if let Some(c) = self.core.as_mut() {
+            set_browser_globals(self.globals);
             c.input(event);
+            self.globals = browser_globals();
         }
     }
 
@@ -337,8 +362,15 @@ impl EmbeddedViewer {
     /// Step the world to `now` (seconds, see [`realtime_now`]).
     pub fn step(&mut self, now: f64) {
         if let Some(c) = self.core.as_mut() {
+            // The MaximumFrameRate option (advanceTime): a frame that comes too soon is not stepped.
+            if !c.frame_due(now) {
+                return;
+            }
+
             c.date_now = now;
+            set_browser_globals(self.globals);
             c.step(now);
+            self.globals = browser_globals();
         }
     }
 
@@ -359,7 +391,12 @@ impl EmbeddedViewer {
             return Ok(info);
         };
 
+        // A Script's setBrowserOption changed Multisampling, LogarithmicDepthBuffer or Shading.
+        set_browser_globals(self.globals);
+        core.take_rendering_changes().apply(&mut self.renderer);
+
         let frame = core.build_frame();
+        self.globals = browser_globals();
         let t2 = Instant::now();
         info.build_ms = (t2 - t1).as_secs_f64() * 1e3;
         self.renderer.render(&frame, target, format, width, height)?;
@@ -375,7 +412,9 @@ impl EmbeddedViewer {
     /// top row first: screenshots. Not for the interactive path.
     pub fn screenshot_rgba(&mut self, width: u32, height: u32) -> Option<Vec<u8>> {
         let core = self.core.as_mut()?;
+        set_browser_globals(self.globals);
         let frame = core.build_frame();
+        self.globals = browser_globals();
         Some(self.renderer.render_to_rgba(&frame, width, height))
     }
 }
@@ -390,5 +429,15 @@ fn empty_frame() -> x3d_render::traverse::Frame {
         fog: None,
         unsupported: Default::default(),
         viewpoint: None,
+        cube_passes: vec![],
+        rendered_passes: vec![],
+        environment: None,
+        tone_mapping: 0,
+        color_space: 2,
+        exposure: 1.0,
+        viewport: None,
+        layers: vec![],
+        shadow_maps: vec![],
+        projectors: vec![],
     }
 }

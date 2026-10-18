@@ -1,0 +1,18 @@
+#X3D V4.1 utf8
+PROFILE Interchange
+COMPONENT TextureProjection:2
+COMPONENT Layering:1
+COMPONENT Shape:4
+COMPONENT Lighting:3
+COMPONENT Scripting:1
+COMPONENT KeyDeviceSensor:1
+COMPONENT CubeMapTexturing:3
+Viewpoint { position 0.013 6.07 16.11 orientation 1 0 0 -0.3517 }
+TextureProjector { location 0 6 4 direction 0 -1 -0.5 upVector 0 1 0 fieldOfView 1.3 texture ImageTexture { url "proj-checker.png" } }
+Transform { translation 0 -1 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.9 0.9 0.9 roughness 0.7 }  } geometry Box { size 16 0.2 12 } } }
+Transform { translation -4 1 0 children Shape { appearance Appearance { material UnlitMaterial { emissiveColor 0.9 0.9 0.9 }  } geometry Sphere { radius 1 } } }
+Transform { translation -1 0.5 1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } texture PixelTexture { image 2 2 3 0xffffff 0x808080 0x808080 0xffffff } } geometry Box { size 1.5 1.5 1.5 } } }
+Transform { translation 2 0.5 -1 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.6 0.7 0.9 metallic 0.3 }  } geometry Cone { bottomRadius 1 height 2 } } }
+Transform { translation 4.5 0.5 1 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } texture MultiTexture { texture [ PixelTexture { image 1 1 3 0xff8080 } PixelTexture { image 1 1 3 0x8080ff } ] mode [ "MODULATE" "ADD" ] } } geometry Cylinder { radius 0.6 height 2 } } }
+Transform { translation 0 3 -3 children Shape { geometry PointSet { coord Coordinate { point [ -2 0 0, -1 0 0, 0 0 0, 1 0 0, 2 0 0 ] } } } }
+Transform { translation 0 2.5 -3 children Shape { geometry IndexedLineSet { coord Coordinate { point [ -3 0 0, 3 0 0 ] } coordIndex [ 0 1 ] } } }

@@ -1,0 +1,27 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT RigidBodyPhysics:2
+
+DEF RBC RigidBodyCollection { bodies [ DEF F RigidBody { position 0 0 0 fixed TRUE geometry DEF F_C CollidableShape {  shape Shape { geometry Box { size 20 1 20 } } } }
+DEF A RigidBody { position 0 2 0 mass 1 geometry DEF A_C CollidableShape {  shape Shape { geometry Sphere { radius 0.5 } } } }
+DEF B RigidBody { position 3 2 0 mass 1 geometry DEF B_C CollidableShape {  shape Shape { geometry Sphere { radius 0.5 } } } } ] }
+DEF CC CollisionCollection { bounce 0.8 minBounceSpeed 0 collidables [ USE F_C USE A_C USE B_C ] }
+DEF S CollisionSensor { collider USE CC }
+DEF TS TimeSensor { loop TRUE cycleInterval 1 }
+DEF SC Script {
+  inputOnly SFTime tick
+  outputOnly SFBool en
+  initializeOnly SFFloat s0 -1
+  url "ecmascript:
+var done = [ ];
+function tick (v)
+{
+  if (s0 < 0) s0 = v;
+  var f = Math .round ((v - s0) * 60);
+  if (f >= 40 && !done[0]) { done[0] = true; en = false; }
+  if (f >= 80 && !done[1]) { done[1] = true; en = true; }
+}
+"
+}
+ROUTE TS.time TO SC.tick
+ROUTE SC.en TO S.set_enabled

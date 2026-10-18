@@ -1,0 +1,768 @@
+{
+ "Ammo._malloc": {
+  "argc": {
+   "1": 8
+  },
+  "calls": 8,
+  "files": 6
+ },
+ "Ammo.destroy": {
+  "argc": {
+   "1": 79
+  },
+  "calls": 79,
+  "files": 35
+ },
+ "btBvhTriangleMeshShape.__destroy__ [btBvhTriangleMeshShape]": {
+  "argc": {
+   "0": 2
+  },
+  "calls": 2,
+  "files": 2
+ },
+ "btCollisionDispatcher.getManifoldByIndexInternal [btCollisionDispatcher]": {
+  "argc": {
+   "1": 5984
+  },
+  "calls": 5984,
+  "files": 5
+ },
+ "btCollisionDispatcher.getNumManifolds [btCollisionDispatcher]": {
+  "argc": {
+   "0": 84034
+  },
+  "calls": 84034,
+  "files": 5
+ },
+ "btCollisionShape.setMargin [btCollisionShape]": {
+  "argc": {
+   "1": 151
+  },
+  "calls": 151,
+  "files": 47
+ },
+ "btCollisionWorld.addCollisionObject [btCollisionWorld]": {
+  "argc": {
+   "1": 56
+  },
+  "calls": 56,
+  "files": 5
+ },
+ "btCollisionWorld.performDiscreteCollisionDetection [btCollisionWorld]": {
+  "argc": {
+   "0": 84034
+  },
+  "calls": 84034,
+  "files": 5
+ },
+ "btCompoundShape.addChildShape [btCompoundShape]": {
+  "argc": {
+   "2": 88828
+  },
+  "calls": 88828,
+  "files": 52
+ },
+ "btCompoundShape.calculateLocalInertia [btCompoundShape]": {
+  "argc": {
+   "2": 353
+  },
+  "calls": 353,
+  "files": 47
+ },
+ "btCompoundShape.getLocalScaling [btCompoundShape]": {
+  "argc": {
+   "0": 243
+  },
+  "calls": 243,
+  "files": 52
+ },
+ "btCompoundShape.getNumChildShapes [btCompoundShape]": {
+  "argc": {
+   "0": 253322
+  },
+  "calls": 253322,
+  "files": 52
+ },
+ "btCompoundShape.recalculateLocalAabb [btCompoundShape]": {
+  "argc": {
+   "0": 29608
+  },
+  "calls": 29608,
+  "files": 47
+ },
+ "btCompoundShape.removeChildShapeByIndex [btCompoundShape]": {
+  "argc": {
+   "1": 88383
+  },
+  "calls": 88383,
+  "files": 52
+ },
+ "btCompoundShape.setLocalScaling [btCompoundShape]": {
+  "argc": {
+   "1": 88647
+  },
+  "calls": 88647,
+  "files": 52
+ },
+ "btCompoundShape.updateChildTransform [btCompoundShape]": {
+  "argc": {
+   "3": 59292
+  },
+  "calls": 59292,
+  "files": 52
+ },
+ "btConeShape.__destroy__ [btConeShape]": {
+  "argc": {
+   "0": 2
+  },
+  "calls": 2,
+  "files": 2
+ },
+ "btConvexHullShape.__destroy__ [btConvexHullShape]": {
+  "argc": {
+   "0": 1
+  },
+  "calls": 1,
+  "files": 1
+ },
+ "btConvexHullShape.addPoint [btConvexHullShape]": {
+  "argc": {
+   "2": 132
+  },
+  "calls": 132,
+  "files": 4
+ },
+ "btConvexHullShape.recalcLocalAabb [btConvexHullShape]": {
+  "argc": {
+   "0": 8
+  },
+  "calls": 8,
+  "files": 4
+ },
+ "btCylinderShape.__destroy__ [btCylinderShape]": {
+  "argc": {
+   "0": 4
+  },
+  "calls": 4,
+  "files": 4
+ },
+ "btDefaultMotionState.getWorldTransform [btDefaultMotionState]": {
+  "argc": {
+   "1": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btDefaultMotionState.setWorldTransform [btDefaultMotionState]": {
+  "argc": {
+   "1": 29608
+  },
+  "calls": 29608,
+  "files": 47
+ },
+ "btDiscreteDynamicsWorld.addConstraint [btDiscreteDynamicsWorld]": {
+  "argc": {
+   "2": 40
+  },
+  "calls": 40,
+  "files": 10
+ },
+ "btDiscreteDynamicsWorld.addRigidBody [btDiscreteDynamicsWorld]": {
+  "argc": {
+   "1": 160
+  },
+  "calls": 160,
+  "files": 46
+ },
+ "btDiscreteDynamicsWorld.getDispatcher [btDiscreteDynamicsWorld]": {
+  "argc": {
+   "0": 3748
+  },
+  "calls": 3748,
+  "files": 18
+ },
+ "btDiscreteDynamicsWorld.removeConstraint [btDiscreteDynamicsWorld]": {
+  "argc": {
+   "1": 27
+  },
+  "calls": 27,
+  "files": 10
+ },
+ "btDiscreteDynamicsWorld.removeRigidBody [btDiscreteDynamicsWorld]": {
+  "argc": {
+   "1": 13
+  },
+  "calls": 13,
+  "files": 1
+ },
+ "btDiscreteDynamicsWorld.setGravity [btDiscreteDynamicsWorld]": {
+  "argc": {
+   "1": 110
+  },
+  "calls": 110,
+  "files": 47
+ },
+ "btDiscreteDynamicsWorld.stepSimulation [btDiscreteDynamicsWorld]": {
+  "argc": {
+   "2": 640,
+   "3": 11964
+  },
+  "calls": 12604,
+  "files": 47
+ },
+ "btDispatcher.getManifoldByIndexInternal [btDispatcher]": {
+  "argc": {
+   "1": 3752
+  },
+  "calls": 3752,
+  "files": 18
+ },
+ "btDispatcher.getNumManifolds [btDispatcher]": {
+  "argc": {
+   "0": 3748
+  },
+  "calls": 3748,
+  "files": 18
+ },
+ "btHeightfieldTerrainShape.setLocalScaling [btHeightfieldTerrainShape]": {
+  "argc": {
+   "1": 4
+  },
+  "calls": 4,
+  "files": 4
+ },
+ "btHingeConstraint.__destroy__ [btHingeConstraint]": {
+  "argc": {
+   "0": 11
+  },
+  "calls": 11,
+  "files": 5
+ },
+ "btManifoldPoint.getDistance [btManifoldPoint]": {
+  "argc": {
+   "0": 19537
+  },
+  "calls": 19537,
+  "files": 23
+ },
+ "btManifoldPoint.getPositionWorldOnA [btManifoldPoint]": {
+  "argc": {
+   "0": 6886
+  },
+  "calls": 6886,
+  "files": 18
+ },
+ "btManifoldPoint.get_m_normalWorldOnB [btManifoldPoint]": {
+  "argc": {
+   "0": 6886
+  },
+  "calls": 6886,
+  "files": 18
+ },
+ "btMatrix3x3.setValue [btMatrix3x3]": {
+  "argc": {
+   "9": 168795
+  },
+  "calls": 168795,
+  "files": 52
+ },
+ "btPersistentManifold.getBody0 [btPersistentManifold]": {
+  "argc": {
+   "0": 7070
+  },
+  "calls": 7070,
+  "files": 18
+ },
+ "btPersistentManifold.getBody1 [btPersistentManifold]": {
+  "argc": {
+   "0": 7070
+  },
+  "calls": 7070,
+  "files": 18
+ },
+ "btPersistentManifold.getContactPoint [btPersistentManifold]": {
+  "argc": {
+   "1": 12651
+  },
+  "calls": 12651,
+  "files": 23
+ },
+ "btPersistentManifold.getNumContacts [btPersistentManifold]": {
+  "argc": {
+   "0": 9736
+  },
+  "calls": 9736,
+  "files": 23
+ },
+ "btPoint2PointConstraint.__destroy__ [btPoint2PointConstraint]": {
+  "argc": {
+   "0": 12
+  },
+  "calls": 12,
+  "files": 4
+ },
+ "btPoint2PointConstraint.setPivotA [btPoint2PointConstraint]": {
+  "argc": {
+   "1": 19
+  },
+  "calls": 19,
+  "files": 4
+ },
+ "btPoint2PointConstraint.setPivotB [btPoint2PointConstraint]": {
+  "argc": {
+   "1": 19
+  },
+  "calls": 19,
+  "files": 4
+ },
+ "btQuaternion.w [btQuaternion]": {
+  "argc": {
+   "0": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btQuaternion.x [btQuaternion]": {
+  "argc": {
+   "0": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btQuaternion.y [btQuaternion]": {
+  "argc": {
+   "0": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btQuaternion.z [btQuaternion]": {
+  "argc": {
+   "0": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btRigidBody.activate [btRigidBody]": {
+  "argc": {
+   "0": 59170
+  },
+  "calls": 59170,
+  "files": 47
+ },
+ "btRigidBody.applyForce [btRigidBody]": {
+  "argc": {
+   "2": 18285
+  },
+  "calls": 18285,
+  "files": 46
+ },
+ "btRigidBody.applyTorque [btRigidBody]": {
+  "argc": {
+   "1": 18285
+  },
+  "calls": 18285,
+  "files": 46
+ },
+ "btRigidBody.getAngularVelocity [btRigidBody]": {
+  "argc": {
+   "0": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btRigidBody.getCollisionShape [btRigidBody]": {
+  "argc": {
+   "0": 151
+  },
+  "calls": 151,
+  "files": 47
+ },
+ "btRigidBody.getLinearVelocity [btRigidBody]": {
+  "argc": {
+   "0": 37856
+  },
+  "calls": 37856,
+  "files": 46
+ },
+ "btRigidBody.isActive [btRigidBody]": {
+  "argc": {
+   "0": 21898
+  },
+  "calls": 21898,
+  "files": 47
+ },
+ "btRigidBody.setAngularFactor [btRigidBody]": {
+  "argc": {
+   "1": 351
+  },
+  "calls": 351,
+  "files": 47
+ },
+ "btRigidBody.setAngularVelocity [btRigidBody]": {
+  "argc": {
+   "1": 29408
+  },
+  "calls": 29408,
+  "files": 47
+ },
+ "btRigidBody.setCenterOfMassTransform [btRigidBody]": {
+  "argc": {
+   "1": 351
+  },
+  "calls": 351,
+  "files": 47
+ },
+ "btRigidBody.setDamping [btRigidBody]": {
+  "argc": {
+   "2": 353
+  },
+  "calls": 353,
+  "files": 47
+ },
+ "btRigidBody.setFriction [btRigidBody]": {
+  "argc": {
+   "1": 256
+  },
+  "calls": 256,
+  "files": 47
+ },
+ "btRigidBody.setGravity [btRigidBody]": {
+  "argc": {
+   "1": 18285
+  },
+  "calls": 18285,
+  "files": 46
+ },
+ "btRigidBody.setLinearVelocity [btRigidBody]": {
+  "argc": {
+   "1": 29409
+  },
+  "calls": 29409,
+  "files": 47
+ },
+ "btRigidBody.setMassProps [btRigidBody]": {
+  "argc": {
+   "2": 353
+  },
+  "calls": 353,
+  "files": 47
+ },
+ "btRigidBody.setMotionState [btRigidBody]": {
+  "argc": {
+   "1": 29608
+  },
+  "calls": 29608,
+  "files": 47
+ },
+ "btRigidBody.setRestitution [btRigidBody]": {
+  "argc": {
+   "1": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btRigidBody.setRollingFriction [btRigidBody]": {
+  "argc": {
+   "1": 256
+  },
+  "calls": 256,
+  "files": 47
+ },
+ "btRigidBody.setSleepingThresholds [btRigidBody]": {
+  "argc": {
+   "2": 351
+  },
+  "calls": 351,
+  "files": 47
+ },
+ "btSliderConstraint.__destroy__ [btSliderConstraint]": {
+  "argc": {
+   "0": 4
+  },
+  "calls": 4,
+  "files": 2
+ },
+ "btSliderConstraint.setLowerAngLimit [btSliderConstraint]": {
+  "argc": {
+   "1": 6
+  },
+  "calls": 6,
+  "files": 2
+ },
+ "btSliderConstraint.setLowerLinLimit [btSliderConstraint]": {
+  "argc": {
+   "1": 6
+  },
+  "calls": 6,
+  "files": 2
+ },
+ "btSliderConstraint.setUpperAngLimit [btSliderConstraint]": {
+  "argc": {
+   "1": 6
+  },
+  "calls": 6,
+  "files": 2
+ },
+ "btSliderConstraint.setUpperLinLimit [btSliderConstraint]": {
+  "argc": {
+   "1": 6
+  },
+  "calls": 6,
+  "files": 2
+ },
+ "btSphereShape.__destroy__ [btSphereShape]": {
+  "argc": {
+   "0": 41
+  },
+  "calls": 41,
+  "files": 24
+ },
+ "btTransform.getBasis [btTransform]": {
+  "argc": {
+   "0": 168795
+  },
+  "calls": 168795,
+  "files": 52
+ },
+ "btTransform.getOrigin [btTransform]": {
+  "argc": {
+   "0": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btTransform.getRotation [btTransform]": {
+  "argc": {
+   "0": 29056
+  },
+  "calls": 29056,
+  "files": 46
+ },
+ "btTransform.setOrigin [btTransform]": {
+  "argc": {
+   "1": 169217
+  },
+  "calls": 169217,
+  "files": 52
+ },
+ "btTriangleMesh.__destroy__ [btTriangleMesh]": {
+  "argc": {
+   "0": 2
+  },
+  "calls": 2,
+  "files": 2
+ },
+ "btTriangleMesh.addTriangle [btTriangleMesh]": {
+  "argc": {
+   "3": 302
+  },
+  "calls": 302,
+  "files": 7
+ },
+ "btVector3.length [btVector3]": {
+  "argc": {
+   "0": 8800
+  },
+  "calls": 8800,
+  "files": 16
+ },
+ "btVector3.setValue [btVector3]": {
+  "argc": {
+   "3": 364817
+  },
+  "calls": 364817,
+  "files": 52
+ },
+ "btVector3.x [btVector3]": {
+  "argc": {
+   "0": 101183
+  },
+  "calls": 101183,
+  "files": 52
+ },
+ "btVector3.y [btVector3]": {
+  "argc": {
+   "0": 101183
+  },
+  "calls": 101183,
+  "files": 52
+ },
+ "btVector3.z [btVector3]": {
+  "argc": {
+   "0": 101183
+  },
+  "calls": 101183,
+  "files": 52
+ },
+ "new btBoxShape": {
+  "argc": {
+   "1": 105
+  },
+  "calls": 105,
+  "files": 45
+ },
+ "new btBvhTriangleMeshShape": {
+  "argc": {
+   "2": 9
+  },
+  "calls": 9,
+  "files": 7
+ },
+ "new btCollisionDispatcher": {
+  "argc": {
+   "1": 137
+  },
+  "calls": 137,
+  "files": 52
+ },
+ "new btCollisionWorld": {
+  "argc": {
+   "3": 28
+  },
+  "calls": 28,
+  "files": 5
+ },
+ "new btCompoundShape": {
+  "argc": {
+   "0": 472
+  },
+  "calls": 472,
+  "files": 52
+ },
+ "new btConeShape": {
+  "argc": {
+   "2": 9
+  },
+  "calls": 9,
+  "files": 5
+ },
+ "new btConvexHullShape": {
+  "argc": {
+   "0": 8
+  },
+  "calls": 8,
+  "files": 4
+ },
+ "new btCylinderShape": {
+  "argc": {
+   "1": 12
+  },
+  "calls": 12,
+  "files": 7
+ },
+ "new btDbvtBroadphase": {
+  "argc": {
+   "0": 137
+  },
+  "calls": 137,
+  "files": 52
+ },
+ "new btDefaultCollisionConfiguration": {
+  "argc": {
+   "0": 137
+  },
+  "calls": 137,
+  "files": 52
+ },
+ "new btDefaultMotionState": {
+  "argc": {
+   "0": 204
+  },
+  "calls": 204,
+  "files": 52
+ },
+ "new btDiscreteDynamicsWorld": {
+  "argc": {
+   "4": 109
+  },
+  "calls": 109,
+  "files": 47
+ },
+ "new btHeightfieldTerrainShape": {
+  "argc": {
+   "9": 4
+  },
+  "calls": 4,
+  "files": 4
+ },
+ "new btHingeConstraint": {
+  "argc": {
+   "7": 16
+  },
+  "calls": 16,
+  "files": 5
+ },
+ "new btPoint2PointConstraint": {
+  "argc": {
+   "4": 18
+  },
+  "calls": 18,
+  "files": 4
+ },
+ "new btQuaternion": {
+  "argc": {
+   "4": 52
+  },
+  "calls": 52,
+  "files": 52
+ },
+ "new btRigidBody": {
+  "argc": {
+   "1": 204
+  },
+  "calls": 204,
+  "files": 52
+ },
+ "new btRigidBodyConstructionInfo": {
+  "argc": {
+   "3": 204
+  },
+  "calls": 204,
+  "files": 52
+ },
+ "new btSequentialImpulseConstraintSolver": {
+  "argc": {
+   "0": 109
+  },
+  "calls": 109,
+  "files": 47
+ },
+ "new btSliderConstraint": {
+  "argc": {
+   "5": 6
+  },
+  "calls": 6,
+  "files": 2
+ },
+ "new btSphereShape": {
+  "argc": {
+   "1": 163
+  },
+  "calls": 163,
+  "files": 29
+ },
+ "new btTransform": {
+  "argc": {
+   "0": 520,
+   "2": 52
+  },
+  "calls": 572,
+  "files": 52
+ },
+ "new btTriangleMesh": {
+  "argc": {
+   "0": 9
+  },
+  "calls": 9,
+  "files": 7
+ },
+ "new btVector3": {
+  "argc": {
+   "0": 400,
+   "3": 1159
+  },
+  "calls": 1559,
+  "files": 52
+ }
+}
