@@ -1,0 +1,16 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT" maxParticles 24 particleLifetime 1 lifetimeVariation 0.25
+  emitter DEF VE VolumeEmitter { direction 0 1 0 speed 1 variation 0.25 coordIndex [ 0 3 2 1 -1 4 5 6 7 -1 0 1 5 4 -1 2 3 7 6 -1 1 2 6 5 -1 0 4 7 3 -1 ] coord DEF VCO Coordinate { point [ 2.5 -0.5 -0.5, 3.5 -0.5 -0.5, 3.5 0.5 -0.5, 2.5 0.5 -0.5, 2.5 -0.5 0.5, 3.5 -0.5 0.5, 3.5 0.5 0.5, 2.5 0.5 0.5 ] } }
+}
+
+Switch { whichChoice -1 children [
+  Shape { geometry DEF G2 IndexedFaceSet { solid FALSE coord Coordinate { point [ -1.5 0 0, 1.5 0 0, 0 2 0, 0 -2 0 ] } coordIndex [ 0 1 2 -1 1 0 3 -1 ] } }
+  Shape { geometry DEF G3 Box { size 2 2 2 } }
+  Shape { geometry DEF G4 Sphere { radius 1 } }
+  Shape { geometry DEF GP PointSet { coord Coordinate { point [ 0 0 0, 1 1 1 ] } } }
+  Shape { geometry IndexedFaceSet { coord DEF VCO2 Coordinate { point [ 2.5 -0.5 -0.5, 3.5 -0.5 -0.5, 3.5 0.5 -0.5, 2.5 0.5 -0.5, 2.5 -0.5 0.5, 3.5 -0.5 0.5, 3.5 0.5 0.5, 2.5 0.5 0.5 ] } coordIndex [ 0 3 2 1 -1 4 5 6 7 -1 0 1 5 4 -1 2 3 7 6 -1 1 2 6 5 -1 0 4 7 3 -1 ] } }
+] }
