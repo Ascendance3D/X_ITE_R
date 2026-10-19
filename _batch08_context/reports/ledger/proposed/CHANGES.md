@@ -74,9 +74,9 @@ MISSING after: sub:browser.keyboard-ui, sub:browser.webxr
 
 - `status`: "MISSING" -> "PARTIAL"
 - `rust`: [] -> ["crates/x3d-render/src/glsl_compat.rs", "crates/x3d-render/src/shader_gpu.rs", "crates/x3d-render/src/traverse_shaders.rs", "crates/x3d-runtime/src/nodes/shaders.rs"]
-- `tests`: [] -> ["render_rea_b08_shaders (84 worlds x MSAA 0/4 vs X_ITE)", "glsl_compat_b08 (11)", "rea_b08_shaders_reload (3)", "rea_b08_release_tables", "rea_batch08_shaders (stepped, baseline not yet made)"]
-- `missing`: "see behavior" -> "stepped run-time cases vs X_ITE not run (oracle/rea-batch08-shaders-baseline missing): field changes, part replacement, activate; #include <...> of ShaderRegistry not supported; transformFeedbackVaryings not ported; XML (.x3d) worlds have no render baseline"
-- `notes`: "" -> "REA batch 08 (proposal 2026-10-18, pending local GPU gates): GLSL ES 1.00/3.00 rewritten to GLSL 450, naga to WGSL; X_ITE built-in uniform surface; user fields as uniforms; per-draw pipelines released after 120 frames."
+- `tests`: [] -> ["render_rea_b08_shaders (84 worlds x MSAA 0/4 vs X_ITE)", "glsl_compat_b08 (11)", "rea_b08_shaders_reload (3)", "rea_b08_release_tables", "rea_batch08_shaders (stepped, baseline not yet made)", "rea_b08_shaders case textures-runtime, textures-shared (MSAA 0/4)", "shader_include (x3d-runtime unit, x3d-render link)", "include-* worlds MSAA 0/4"]
+- `missing`: "see behavior" -> "transformFeedbackVaryings not ported; 11 of 26 ShaderRegistry includes need macro/uniform context and do not link standalone (not exercised against X_ITE); MSAA runtime cases pass"
+- `notes`: "" -> "REA batch 08 (proposal 2026-10-18, pending local GPU gates): GLSL ES 1.00/3.00 rewritten to GLSL 450, naga to WGSL; X_ITE built-in uniform surface; user fields as uniforms; per-draw pipelines released after 120 frames. Remediation: GL texture-unit residency ported (Set order, weak bindings per unit/dim, shared programs, relink, removal, null sampler, replacement); stepped textures-runtime 9/9 and textures-shared 9/9 at MSAA 0 and 4 (18/18 each); #include <Name> implemented from X_ITE's ShaderRegistry (26 files, #line numbering) with literal tests; include-unknown/utils/tonemapping worlds pass MSAA 0/4."
 
 ## node:PackagedShader
 
@@ -99,8 +99,8 @@ MISSING after: sub:browser.keyboard-ui, sub:browser.webxr
 - `status`: "MISSING" -> "PARTIAL"
 - `rust`: ["crates/x3d-parse/src/xml.rs", "crates/x3d-runtime/src/nodes/load_sensor.rs", "crates/x3d-scene/src/xml.rs"] -> ["crates/x3d-parse/src/xml.rs", "crates/x3d-render/src/glsl_compat.rs", "crates/x3d-runtime/src/nodes/load_sensor.rs", "crates/x3d-runtime/src/nodes/shaders.rs", "crates/x3d-scene/src/xml.rs"]
 - `tests`: [] -> ["render_rea_b08_shaders (bad-*, file-*, data-base64)", "glsl_compat_b08", "rea_b08_shaders_reload"]
-- `missing`: "not implemented; only named in the X3DUrlObject type list of nodes/load_sensor.rs (X3DCast)" -> "stepped url/type change cases vs X_ITE not run; compile error console text not compared with X_ITE (driver/ANGLE log text); #include <...> not supported"
-- `notes`: "in node table since the 2026-10-16 regeneration" -> "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): url fallback, data: URLs, compile errors with X_ITE's message format, custom options."
+- `missing`: "not implemented; only named in the X3DUrlObject type list of nodes/load_sensor.rs (X3DCast)" -> "stepped url/type change cases vs X_ITE not run; compile error console text not compared with X_ITE; include of the 11 context-dependent registry files only unit-tested"
+- `notes`: "in node table since the 2026-10-16 regeneration" -> "in node table since the 2026-10-16 regeneration | REA batch 08 (proposal 2026-10-18, pending local GPU gates): url fallback, data: URLs, compile errors with X_ITE's message format, custom options. Remediation: #include <Name> expansion implemented and tested against X_ITE output."
 
 ## node:ShaderProgram
 
@@ -164,13 +164,13 @@ MISSING after: sub:browser.keyboard-ui, sub:browser.webxr
 - `rust`: ["crates/x3d-viewer/src/embed.rs"] -> ["crates/x3d-render/src/traverse.rs", "crates/x3d-script/src/engine.rs", "crates/x3d-viewer/src/embed.rs"]
 - `tests`: [] -> ["multi_viewer_b08 (17)"]
 - `missing`: "several EmbeddedViewer instances on one thread" -> "owner decision 2026-10-18: 0.65% limit rejected; x_ite_two_canvases_rigid_bodies_msaa4 f40 is 0.579% (single-viewer edge difference); viewers on different threads, particle pictures, sound, second device not tested; process-global geometry provider"
-- `notes`: "" -> "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Script host state and browser options per viewer (two bugs fixed)."
+- `notes`: "" -> "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Script host state and browser options per viewer (two bugs fixed). Remediation: x_ite_two_canvases_rigid_bodies_msaa4 f40 0.579% traced to the physics substep boundary above (not multi-viewer: pair equals alone in both engines); limit not relaxed; test still fails."
 
 ## sub:physics.engine
 
 - `status`: "MISSING" -> "PARTIAL"
 - `rust`: [] -> ["crates/x3d-runtime/src/bullet.rs", "crates/x3d-runtime/src/physics/bt/", "crates/x3d-runtime/src/pick_shapes.rs"]
-- `tests`: [] -> ["crates/x3d-runtime/tests/bullet_b08_engine.rs (37, tolerance 0)", "bullet_dyn_scenes (66)", "physics_b08_lifecycle (5)", "physics_b06_baseline/lifecycle", "rea_b03_pick_vectors (4000)", "oracle/tools/rea_b06.py check (47)", "coverage.tsv (109 reached symbols tested)"]
-- `missing`: "" -> "picking: 3 of 20000 fresh pick cases (4697 cylinder-mesh, 5480 cylinder-cylinder, 11878 cylinder-heightfield) report a contact where Ammo reports none; a PickSensor event would differ"
-- `notes`: "" -> "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Ammo coverage table complete for dynamics; broadphase proxy-slot leak fixed; GJK ray rounding fixed. ALT: COMPLETE if the owner accepts the 3/20000 pick residue as a known limit."
+- `tests`: [] -> ["crates/x3d-runtime/tests/bullet_b08_engine.rs (37, tolerance 0)", "bullet_dyn_scenes (66)", "physics_b08_lifecycle (5)", "physics_b06_baseline/lifecycle", "rea_b03_pick_vectors (4000)", "oracle/tools/rea_b06.py check (47)", "coverage.tsv (109 reached symbols tested)", "rea_b03_pick_vectors nested_compound_tree_culls_like_ammo (3)", "physics_rem_fall (frames 1-7; full run ignored, open)"]
+- `missing`: "" -> "rb-a (box falling from rest, 8 substeps/frame) takes one substep fewer than pinned X_ITE at frame 8 when sum/fixedTimeStep lands one ulp below an integer; rounding the quotient to float32 fixes it but regresses the rate/stack corpus, so it is not applied (x_ite_two_canvases_rigid_bodies_msaa4 f40 0.579% stays open)"
+- `notes`: "" -> "REA batch 08 (proposal 2026-10-18, pending local GPU gates): Ammo coverage table complete for dynamics; broadphase proxy-slot leak fixed; GJK ray rounding fixed. Remediation: picking fixed (nested compound dbvt cull, pick_shapes.rs): 20000 fresh cases at seeds 20261018, 1, 2, 3 show 0 differences; frame-rate matrix r24-r144 rates and stacks all pass. ALT: COMPLETE if the owner accepts the 3/20000 pick residue as a known limit."
 
