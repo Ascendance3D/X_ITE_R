@@ -179,7 +179,7 @@ impl Builder<'_> {
         // Appearance.getAlphaCutoff () (x3d_AlphaCutoff).
         program.set(&mut user, "x3d_AlphaCutoff", &[sg.f64(a, "alphaCutoff", 0.5) as f32]);
 
-        Some(Rc::new(CustomDraw { program, user, user_textures }))
+        Some(Rc::new(CustomDraw { program, user, user_textures, clip_planes: sg.rt.composed_clip_planes(shader).unwrap_or_default() }))
     }
 
     /// X3DCast (X3DTextureNode, field): the texture a field names; one that has not loaded binds the

@@ -1,0 +1,305 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "72": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "159": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "160": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 1 0.95 0.9\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nDEF FG Fog {\n  color 0.2 0.3 0.8\n}\n\nDEF CP ClipPlane {\n  plane 1 0 0 5\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.8 0.4 0.2\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction -0.4 -0.6 -0.7\n}\n\nDEF FG Fog {\n  color 0.2 0.3 0.8\n}\n\nDEF CP ClipPlane {\n  plane 1 0 0 5\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.8 0.4 0.2\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.2 0.3 0.8\n}\n\nDEF CP ClipPlane {\n  plane 1 0 0 5\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.8 0.4 0.2\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.2 0.3 0.8\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  plane 1 0 0 5\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.8 0.4 0.2\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.2 0.3 0.8\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  plane 1 0 0 0.2\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.8 0.4 0.2\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.2 0.3 0.8\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  plane 1 0 0 0.2\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.2 0.2 0.9\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.2 0.3 0.8\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  enabled FALSE\n  plane 1 0 0 0.2\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.2 0.2 0.9\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "72": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.8 0.1 0.1\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  enabled FALSE\n  plane 1 0 0 0.2\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.2 0.2 0.9\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.8 0.1 0.1\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  enabled FALSE\n  plane 1 0 0 0.2\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.2 0.2 0.9\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n        transparency 0.5\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "159": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.8 0.1 0.1\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  enabled FALSE\n  plane 1 0 0 0.2\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.2 0.2 0.9\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n        transparency 0.5\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "160": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF DL DirectionalLight {\n  color 0.2 1 0.2\n  intensity 0.8\n  direction 0.5 -0.2 -0.8\n}\n\nDEF FG Fog {\n  color 0.8 0.1 0.1\n  visibilityRange 6\n}\n\nDEF CP ClipPlane {\n  enabled FALSE\n  plane 1 0 0 0.2\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material DEF MT Material {\n        ambientIntensity 0.3\n        diffuseColor 0.2 0.2 0.9\n        specularColor 0.7 0.7 0.7\n        shininess 0.4\n        transparency 0.5\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nstruct Dummy { float x; };\nuniform x3d_LightSourceParameters x3d_LightSource [x3d_MaxLights];\nuniform x3d_MaterialParameters x3d_Material;\nuniform x3d_FogParameters x3d_Fog;\nuniform vec4 x3d_ClipPlane [x3d_MaxClipPlanes];\nvoid main()\n{\nvec3 N = normalize (vN);\n   vec3 V = normalize (-vP);\n   vec3 c = x3d_Material.emissiveColor;\n   for (int i = 0; i < x3d_MaxLights; ++ i)\n   {\n      if (x3d_LightSource [i] .type == x3d_NoneLight)\n         break;\n      vec3 L;\n      float att = 1.0;\n      if (x3d_LightSource [i] .type == x3d_DirectionalLight)\n         L = normalize (-x3d_LightSource [i] .direction);\n      else\n      {\n         vec3 d = x3d_LightSource [i] .location - vP;\n         L = normalize (d);\n         att = 1.0 / max (dot (x3d_LightSource [i] .attenuation, vec3 (1.0, length (d), length (d) * length (d))), 1.0);\n         if (x3d_LightSource [i] .type == x3d_SpotLight)\n         {\n            float a = acos (clamp (dot (-L, x3d_LightSource [i] .direction), -1.0, 1.0));\n            if (a >= x3d_LightSource [i] .cutOffAngle) att = 0.0;\n         }\n      }\n      float diff = max (dot (N, L), 0.0);\n      vec3 H = normalize (L + V);\n      float spec = pow (max (dot (N, H), 0.0), x3d_Material.shininess * 128.0);\n      c += att * x3d_LightSource [i] .intensity * x3d_LightSource [i] .color * (x3d_Material.diffuseColor * diff + x3d_Material.specularColor * spec);\n      c += x3d_Material.ambientIntensity * x3d_LightSource [i] .ambientIntensity * x3d_Material.diffuseColor;\n   }\n   float d = length (vP);\n   if (x3d_Fog.visibilityRange > 0.0) c = mix (x3d_Fog.color, c, clamp ((x3d_Fog.visibilityRange - d) / x3d_Fog.visibilityRange, 0.0, 1.0));\n   for (int i = 0; i < x3d_MaxClipPlanes; ++ i) { if (x3d_ClipPlane [i] == vec4 (0.0)) break; if (dot (vP, x3d_ClipPlane [i] .xyz) < x3d_ClipPlane [i] .w) discard; }\n   gl_FragColor = vec4 (c, 1.0 - x3d_Material.transparency);\n}\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.3\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   dl USE DL\n  initializeOnly SFNode   fg USE FG\n  initializeOnly SFNode   cp USE CP\n  initializeOnly SFNode   mt USE MT\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') dl .color = new SFColor (0.2, 1, 0.2);\n   if (k == 'b') dl .direction = new SFVec3f (0.5, -0.2, -0.8);\n   if (k == 'c') fg .visibilityRange = 6;\n   if (k == 'd') cp .plane = new SFVec4f (1, 0, 0, 0.2);\n   if (k == 'e') mt .diffuseColor = new SFColor (0.2, 0.2, 0.9);\n   if (k == 'f') cp .enabled = false;\n   if (k == 'g') fg .color = new SFColor (0.8, 0.1, 0.1);\n   if (k == 'h') mt .transparency = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

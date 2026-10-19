@@ -14,7 +14,9 @@
 use super::State;
 use crate::loader::{FileLoader, Loaded};
 use crate::*;
+use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 /// A compiled part's source and how it was compiled.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -46,6 +48,10 @@ pub struct ComposedState {
     pub valid: bool,
     /// The sources the last successful link used: vertex parts, then fragment parts.
     pub linked: Option<(Vec<ShaderSource>, Vec<ShaderSource>)>,
+    /// The `x3d_ClipPlane` uniforms of the linked program. A GL program keeps a uniform until it is
+    /// written again and X_ITE writes only the enabled planes, so a plane that was switched off
+    /// keeps clipping a custom shader. A new link starts from zero.
+    pub clip_planes: Rc<RefCell<[[f32; 4]; 6]>>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -67,6 +73,13 @@ pub struct ShaderHost {
     /// ShaderPart compiles and ComposedShader links done (for tests and the lifecycle report).
     pub compiles: usize,
     pub links: usize,
+}
+
+impl ShaderHost {
+    /// The private LoadSensor of a ComposedShader (`this .loadSensor .setPrivate (true)`).
+    pub fn is_private_load_sensor(&self, node: NodeId) -> bool {
+        self.composed.values().any(|c| c.load_sensor == Some(node))
+    }
 }
 
 /// Interest callbacks of the Shaders nodes (`Cb::Shader`).
@@ -215,7 +228,7 @@ impl Runtime {
         let sensor = self.scene.instantiate_builtin(ctx, index);
         self.nrt_mut(sensor);
         self.construct_node(sensor);
-        self.shaders.composed.insert(node, ComposedState { load_sensor: Some(sensor), valid: false, linked: None });
+        self.shaders.composed.insert(node, ComposedState { load_sensor: Some(sensor), valid: false, linked: None, clip_planes: Default::default() });
     }
 
     /// ComposedShader.initialize.
@@ -317,6 +330,7 @@ impl Runtime {
             Ok(warnings) => {
                 if let Some(c) = self.shaders.composed.get_mut(&node) {
                     c.linked = Some((vertex, fragment));
+                    c.clip_planes = Default::default();
                 }
 
                 self.shader_set_valid(node, true);
@@ -455,6 +469,11 @@ impl Runtime {
     }
 
     /// The vertex and fragment sources the last link of a ComposedShader used.
+    /// The program-resident `x3d_ClipPlane` values of a linked ComposedShader.
+    pub fn composed_clip_planes(&self, node: NodeId) -> Option<Rc<RefCell<[[f32; 4]; 6]>>> {
+        self.shaders.composed.get(&node).map(|c| c.clip_planes.clone())
+    }
+
     pub fn composed_shader_sources(&self, node: NodeId) -> Option<&(Vec<ShaderSource>, Vec<ShaderSource>)> {
         self.shaders.composed.get(&node).and_then(|c| c.linked.as_ref())
     }

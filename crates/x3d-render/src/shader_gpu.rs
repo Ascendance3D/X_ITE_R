@@ -55,6 +55,8 @@ pub struct CustomDraw {
     pub program: Rc<Program>,
     pub user: Vec<[f32; 4]>,
     pub user_textures: Vec<Option<Rc<TextureImage>>>,
+    /// The program's resident `x3d_ClipPlane` uniforms (see `ComposedState::clip_planes`).
+    pub clip_planes: Rc<std::cell::RefCell<[[f32; 4]; 6]>>,
 }
 
 /// The pipeline state of one draw (the parts of `gpu::PipelineKey` a custom draw uses).
@@ -226,8 +228,17 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     }
 
     // Clip planes.
-    for (i, c) in item.clip_planes.iter().take(6).enumerate() {
-        p.set(&mut buf, &format!("x3d_ClipPlane[{i}]"), &c.map(|v| v as f32));
+    // X_ITE writes the enabled planes only; the uniforms of the others keep their last value.
+    {
+        let mut resident = input.draw.clip_planes.borrow_mut();
+
+        for (i, c) in item.clip_planes.iter().take(6).enumerate() {
+            resident[i] = c.map(|v| v as f32);
+        }
+
+        for (i, c) in resident.iter().enumerate() {
+            p.set(&mut buf, &format!("x3d_ClipPlane[{i}]"), c);
+        }
     }
 
     // Material (front, or the back material of a back pass).

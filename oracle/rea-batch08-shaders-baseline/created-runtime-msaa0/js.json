@@ -1,0 +1,259 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "119": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance { }\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance { }\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance {\n  shaders ComposedShader {\n    language \"GLSL\"\n    parts [\n      ShaderPart {\n        url \"data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }\"\n      }\n      ShaderPart {\n        type \"FRAGMENT\"\n        url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }\"\n      }\n    ]\n  }\n}\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance {\n  shaders ComposedShader {\n    language \"GLSL\"\n    parts [\n      ShaderPart {\n        url \"data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }\"\n      }\n      ShaderPart {\n        type \"FRAGMENT\"\n        url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }\"\n      }\n    ]\n  }\n}\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance { }\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance {\n  shaders ComposedShader {\n    language \"GLSL\"\n    parts [\n      ShaderPart {\n        url \"data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }\"\n      }\n      ShaderPart {\n        type \"FRAGMENT\"\n        url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }\"\n      }\n    ]\n  }\n}\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance { }\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "119": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance { }\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF GR Group { }\n\nDEF AP0 Appearance { }\n\nTransform {\n  children Shape {\n    appearance USE AP0\n    geometry Sphere { }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   ap USE AP0\n  initializeOnly SFNode   gr USE GR\n\n  url \"javascript:\nvar cs = null, vp = null, fp = null;\nfunction on_key (k)\n{\n   if (k == 'a')\n   {\n      vp = Browser .currentScene .createNode ('ShaderPart');\n      vp .type = 'VERTEX';\n      vp .url = new MFString ('data:x-shader/x-vertex,attribute vec4 x3d_Vertex; uniform mat4 x3d_ProjectionMatrix; uniform mat4 x3d_ModelViewMatrix; void main() { gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }');\n      fp = Browser .currentScene .createNode ('ShaderPart');\n      fp .type = 'FRAGMENT';\n      fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.9, 0.5, 0.1, 1.0); }');\n      cs = Browser .currentScene .createNode ('ComposedShader');\n      cs .language = 'GLSL';\n      cs .parts = new MFNode (vp, fp);\n   }\n   if (k == 'b') ap .shaders = new MFNode (cs);\n   if (k == 'c') fp .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.1, 0.5, 0.9, 1.0); }');\n   if (k == 'd') ap .shaders = new MFNode ();\n   if (k == 'e') ap .shaders = new MFNode (cs);\n   if (k == 'f') { cs = null; vp = null; fp = null; ap .shaders = new MFNode (); }\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
