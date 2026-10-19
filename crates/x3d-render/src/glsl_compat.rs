@@ -1320,6 +1320,12 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
         let user_line = || line_of(t.start);
 
         match word {
+            // GLSL ES 1.00 / 3.00 `const in` parameter (read-only); naga takes `in` and `const` alone.
+            "const" if toks.get(i + 1).is_some_and(|x| x.kind == Kind::Ident && text_of(masked, x) == "in") => {
+                edits.push((t.start, toks[i + 1].end, "in".into()));
+                i += 2;
+                continue;
+            }
             "gl_FragColor" if a.stage == Stage::Fragment => {
                 edits.push((t.start, t.end, "_x3d_FragColor".into()));
                 used_frag_output = true;

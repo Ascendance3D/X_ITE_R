@@ -187,7 +187,8 @@ impl Runtime {
             };
             // `fileURL` is not set for a data URL (FileLoader.loadDocument).
             let file_url = if url.scheme() == "data" { rt.base_url(node) } else { url.to_string() };
-            let source = decode_text(&data);
+            // ShaderCompiler.process, then ShaderSource.getSource.
+            let source = super::shader_include::process(&decode_text(&data));
             let fragment = shader_type == "FRAGMENT";
             let options: Vec<String> = vec![];
 
