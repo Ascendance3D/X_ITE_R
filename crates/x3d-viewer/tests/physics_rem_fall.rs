@@ -1,10 +1,8 @@
 //! A box falling from rest (`oracle/synthetic-rea-rem/rb-a.x3dv`, one canvas) against the saved pinned X_ITE
 //! run (`rb-a-xite.json`, 45 frames of `toVRMLString`): position and linear velocity of every frame within
-//! 2e-6. OPEN (P6): frame 8 is one substep off, so the full 45 frames are `#[ignore]`d and frames 1..=7 are
-//! the active gate. Rounding the quotient to float32 (or any of the float32 residue models tried) repairs
-//! rb-a but breaks the rate/stack corpus (rates r24..r144, stacks), so none is applied. The moving average of the frame time ramps `getTimeStep ()` up over 15 frames, so the substep count
-//! of `stepSimulation (dt, iterations + 2, dt / iterations)` changes frame by frame; frame 8 needs the float32
-//! quotient (`sum / fixedTimeStep` rounded before it becomes an int) to take the substep X_ITE takes.
+//! 2e-6. P6 closed: `rb-a.json` pins `currentFrameRate` to 1 / dt (`pinFrameRate`) like the oracle page, so
+//! X_ITE's physics step sees the same frame rate; unpinned, a clock-measured rate put frame 8 one substep off.
+
 
 use serde_json::Value;
 use std::path::PathBuf;
@@ -23,12 +21,6 @@ fn body(text: &str) -> (f64, f64) {
 }
 
 #[test]
-fn a_falling_box_follows_x_ite_for_seven_frames() {
-    fall(7);
-}
-
-#[test]
-#[ignore = "P6 open: frame 8 takes one substep fewer than pinned X_ITE (float32 quotient at a ulp boundary)"]
 fn a_falling_box_follows_x_ite_every_frame() {
     fall(45);
 }
