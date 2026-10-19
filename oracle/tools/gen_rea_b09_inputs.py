@@ -300,3 +300,17 @@ write("phong-textures-mapping.wrl", HEAD + "Viewpoint { position 0 0 6 }\nNaviga
 # UnlitMaterial emissive texture and FogCoordinate / LocalFog together
 write("unlit-emissive-texture.wrl", HEAD + "Viewpoint { position 0 0 6 }\nNavigationInfo { headlight FALSE }\nBackground { skyColor 0.2 0.2 0.25 }\n" +
       quad(-1.5, 0, f"Appearance {{ material UnlitMaterial {{ emissiveTexture {T1} }} }}", 0.9) + quad(1.5, 0, f"Appearance {{ material UnlitMaterial {{ emissiveColor 0.5 1 0.5 emissiveTexture {T2} transparency 0.3 }} }}", 0.9))
+
+# ---- GaussianSplats: bboxDisplay, explicit bbox, group bbox, LocalFog, castShadow flag, pointerEvents flag ----
+GS_HEAD = HEAD.replace("PROFILE Full\n", "PROFILE Full\n").replace("V4.0", "V4.1")
+GS_DATA = """  positions [ -1 0 0, 0 0.5 0.5, 1 0 -0.5, 0.5 -0.8 0.2, -0.6 0.9 -0.4 ]
+  orientations [ 0 0 0 1, 0 0 0.3826834 0.9238795, 0 0 0 1, 0.2 0.1 0 0.97, 0 0 0 1 ]
+  scales [ 0.3 0.1 0.1, 0.4 0.15 0.1, 0.2 0.2 0.2, 0.15 0.3 0.1, 0.25 0.1 0.2 ]
+  opacities [ 0.9 0.8 0.7 0.85 0.75 ]
+  sphericalHarmonicsDegree0Coef0 [ 1 0 0, 0 1 0, 0 0 1, 1 1 0, 0 1 1 ]"""
+gs_view = "Viewpoint { position 0 0 7 }\nNavigationInfo { headlight FALSE }\nBackground { skyColor 0.2 0.2 0.28 }\n"
+write("gs-bboxdisplay.wrl", GS_HEAD + gs_view + "GaussianSplats { bboxDisplay TRUE\n" + GS_DATA + " }\n")
+write("gs-bboxdisplay-explicit.wrl", GS_HEAD + gs_view + "GaussianSplats { bboxDisplay TRUE bboxSize 3 2 1 bboxCenter 0.5 0 0\n" + GS_DATA + " }\n")
+write("gs-localfog.wrl", GS_HEAD + gs_view + "Fog { color 0.2 0.3 0.8 visibilityRange 20 }\nGroup { children [ LocalFog { color 1 0.4 0.1 visibilityRange 8 }\n  Transform { translation 0 0 -3 children GaussianSplats {\n" + GS_DATA + " } } ] }\n" +
+      "Transform { translation 0 0 3 children GaussianSplats {\n" + GS_DATA + " } }\n")
+write("gs-flags.wrl", GS_HEAD + gs_view + "GaussianSplats { castShadow FALSE pointerEvents TRUE visible TRUE\n" + GS_DATA + " }\n")

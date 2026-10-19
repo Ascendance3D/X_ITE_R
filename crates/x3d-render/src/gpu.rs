@@ -2747,7 +2747,7 @@ impl Renderer {
             let is_transparent = k >= n_opaque;
 
             if let Some(s) = &item.splats {
-                splat_inputs.push(crate::splats_gpu::SplatInput { draw: s, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), viewport: item.viewport.unwrap_or(layer_rect) });
+                splat_inputs.push(crate::splats_gpu::SplatInput { draw: s, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), viewport: item.viewport.unwrap_or(layer_rect), fog: item.fog.as_ref().or(frame.fog.as_ref()) });
                 calls.push(Call {
                     key: PipelineKey::new(Topology::Triangles, Cull::Back, true, true, false, true),
                     blend_constant: None,

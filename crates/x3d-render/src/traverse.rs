@@ -1357,8 +1357,14 @@ impl<'a> Builder<'a> {
             return self.bbox_display(sg, n, mv);
         }
 
-        // X3DGroupingNode: a child whose `visible` is FALSE is not a visible object.
+        // X3DGroupingNode: a child whose `visible` is FALSE is not a visible object (a GaussianSplats node's bbox node is).
         if !sg.bool(n, "visible", true) {
+            if ty == "GaussianSplats" && sg.bool(n, "bboxDisplay", false) {
+                let data = self.splat_data(sg, n);
+                let bbox = Self::splats_bbox(sg, n, &data);
+                self.bbox_shape(n, bbox, mv);
+            }
+
             return;
         }
 
@@ -1455,6 +1461,11 @@ impl<'a> Builder<'a> {
 
         let size = sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0));
         let bbox = if size.equals(&Vector3::new(-1.0, -1.0, -1.0)) { Box3::EMPTY } else { Box3::new(&size, &sg.vec3(n, "bboxCenter", Vector3::ZERO)) };
+        self.bbox_shape(n, bbox, mv);
+    }
+
+    /// X3DBBoxNode.traverse: the shared bbox shape in `bbox`'s box.
+    pub(super) fn bbox_shape(&mut self, n: NodeId, bbox: Box3, mv: &Matrix4) {
         let (min, max) = bbox.extents();
         let mut extent = max;
         extent.subtract(&min);
