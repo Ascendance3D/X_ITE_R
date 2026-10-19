@@ -55,7 +55,7 @@ See `git log d6355339..HEAD` (picking, GL-state, `#include`, volume init, partic
 Accept or reject the P4 pins as known differences; whether P6 is worth a deeper asm.js float-state model; the VolumeScatter and HTML-parser contract readings.
 
 ## 18. Final backup and restore
-See `~/backups/xite-rust-b06-b08/final-rem/` (`BACKUP_EVIDENCE.md`, `restore-compare.log`).
+See `~/backups/xite-rust-b06-b08/final-rem/`; logs copied to `backup/` here.
 
 ## 19. Not done
 P4 and P6 fixes; transformFeedbackVaryings; context-dependent include linking; CodeMirror (out of scope).
