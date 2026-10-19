@@ -1,13 +1,13 @@
 # X_ITE Rust REA Batches 06-08 Final Closure Report
 
 **Lane:** `XITE_RUST_REA_B06_B08_FINAL_INTEGRATION`
-**Verdict (running):** `XITE_RUST_REA_B06_B08_FINAL_PARTIAL` (work in progress; sections marked TODO are not yet run)
+**Verdict:** `XITE_RUST_REA_B06_B08_FINAL_PARTIAL`
 **Pinned X_ITE:** 16.5.0 at `34cdf9f97`
 **Integration branch:** `integration/xite-rust-b06-b08-final` (worktree `~/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08`), local only, not pushed.
 
 ## 1. Overall verdict
 
-PARTIAL so far. Integration, the full workspace build, and the workspace tests are done. Two real shader defects were found and fixed. Three required gates are still open (see section 16). Nothing is promoted in the ledger yet.
+PARTIAL. Integration, build, the full gate runner, the seven-rate physics matrix and the 20,000-case picking sweep are done; two shader defects were found and fixed. Required closure gates not run: volume initialization parity, VolumeEmitter/BoundedPhysics replays, volume style tests, most shader and Batch 08 entry items. One workspace test fails (MSAA 4 multi-viewer). No ledger change was applied.
 
 ## 2. Starting source states
 
@@ -21,7 +21,7 @@ PARTIAL so far. Integration, the full workspace build, and the workspace tests a
 
 ## 3. Final integration SHA
 
-TODO (set at the last commit).
+Code tip before this report commit: `git rev-parse integration/xite-rust-b06-b08-final~1` at the time of writing is the gates commit; the branch tip (which adds this report and its evidence) is the integration SHA. Read it with `git rev-parse integration/xite-rust-b06-b08-final` in the worktree; a report cannot contain its own commit hash.
 
 ## 4. Files changed on the integration branch
 
@@ -33,17 +33,25 @@ TODO (set at the last commit).
 ## 5. Codex repair integration evidence
 
 - Applied with `git cherry-pick -x 3342611`; no conflicts. Batch 08 (`f9d3223`) does not touch any of the three files (`git diff a91f0a4 f9d3223 --stat` for them is empty).
-- Semantic review: the old render-time `VOXELS` cache is gone; `State::Volume { voxels }` is set in `initialize_node` from `pre_value`. `VolumeData` still reads the live field. Open edge: slot reuse and disposal of `State::Volume` (TODO: explicit test).
+- Semantic review: the old render-time `VOXELS` cache is gone; `State::Volume { voxels }` is set in `initialize_node` from `pre_value`. `VolumeData` still reads the live field. Open edge: slot reuse and disposal of `State::Volume`.
 - `initialized_volume_types_capture_voxels_once`: pass.
 - `cargo build --release --workspace --locked`: exit 0.
 
 ## 6. Physics and particle findings
 
-TODO. Not yet run: seven-rate rigid-body matrix, three picking inputs, VolumeEmitter/BoundedPhysicsModel replays (preserved inputs are listed in the Codex report section 6), WindPhysicsModel (stays PARTIAL).
+All run on the integration tree with `evidence/b06b08-final/gates/run.sh` (derived from the B08 runner; read first; physics matrix logs redirected into `evidence/` so historical reports were not overwritten).
+
+- Rigid-body frame-rate matrix against saved pinned-X_ITE baselines, tolerances unchanged: 11 stack worlds at 24/30/50/60/75/120/144 Hz = 11/11 at each of 7 rates; 47 physics worlds at 24/30/50/75/120/144 Hz = 47/47 at each of 6 rates, plus 47/47 at the base rate (`rea_b06` oracle). `bullet_dyn_scenes` 66/66, `bullet_box_box` and the frame-16 test pass. (60 Hz exists only in the stack set; that is how the historical matrix is built.) No divergence found, so no repair.
+- Picking (`sub:physics.engine`, stays PARTIAL per owner): regenerated all 20,000 cases from pinned Ammo (`oracle/tools/ammo_pick_vectors.mjs`, seed 20261018; byte-identical to Batch 08's file). Rust: 3 differ, the same three. **Correction to the earlier report: they are not all cylinder pairs.** 4697 = cylinder vs triangle mesh, 5480 = cylinder vs cylinder, 11878 = cylinder vs height field. In all three Ammo reports no contact and Rust reports one. Every one has a cylinder on side `a`, and the 4000-case committed set passes at 0. One repair attempt (rounding the cylinder support point to float32) changed nothing and was reverted. Root cause still unproven; not promoted.
+- ParticleSystem: 100-cycle removal test and the particle suites pass (`b06 particles` 37/37, `b07 ps` 103/103, 30+5+4 tests). Implementation untouched.
+- VolumeEmitter (1.72e-5) and BoundedPhysicsModel (6.68e-6): **not reproduced this session.** The preserved worlds/controls exist (paths in the Codex report section 6) but are not staged in this tree's harness, and I did not stage them. Both remain proposed PARTIAL. No tolerance changed.
+- WindPhysicsModel: PARTIAL, unchanged, not replayed.
 
 ## 7. Volume initialization parity
 
-TODO. Pinned-X_ITE cases (initial, ROUTE pre-draw, Script pre-draw, post-draw, reload, parent removal, id reuse, cleanup; MSAA 0 and 4) are not yet written. Until they pass, Iso and Segmented stay PARTIAL.
+Not established. The Codex repair is integrated and its regression test passes; the 38-case Batch 07 volume suite passes at MSAA 0 and 4 in the same run (`b07 vol viewer`, images true), plus 290 render shots and the reload suite. The new pinned-X_ITE cases (ROUTE and Script writes before first draw, later writes, reload, parent removal, id reuse, cleanup) were **not written**. Iso and Segmented therefore stay PARTIAL pending that comparison (matches the Codex proposal). Slot reuse of `State::Volume` is not directly tested either; release.rs was not changed.
+
+Volume styles: the Codex report confirms eight, not seven. I did not add per-style combined-sequence tests, so no style entry is promoted or changed.
 
 ## 8. Shader parity
 
@@ -66,7 +74,7 @@ Caveats: `rea_batch08_shader_cases_match_x_ite` passing means 16 of 18 cases mat
 
 ## 9. Batch 08 remaining entry results
 
-TODO.
+Passing in this run: DIS/net suites (`rea_batch08_net`, `rea_b08_net_reload`, `render_rea_b08_net`) as part of the workspace run, gltf/svg/vs/gs/multiview suites except the one MSAA 4 case. Not done: InlineGeometry routed shared-geometry case, FontLibrary CFF, glTF extension/decoder audit, GaussianSplats beyond existing tests, VolumeScatter extra comparisons, shader items listed in section 8, `#include` support. Those entries stay as Batch 08 proposed (PARTIAL).
 
 ## 10. GPU MSAA 0/4 results
 
@@ -74,9 +82,9 @@ GPU identity (evidence `evidence/b06b08-final/gpu-identity.txt`):
 
 - Rust headless `x3d_render::gpu::Gpu::new` (used by `x3d-drive`, so by `x10_compare.py`): `NVIDIA GeForce RTX 3060 Ti`, Vulkan, DiscreteGpu, driver 595.91.07. The machine also exposes `llvmpipe`; it was not selected.
 - X_ITE side (system Chrome, `--use-gl=angle --use-angle=gl`): `ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)`.
-- So the 16 stepped shader baselines at MSAA 0 and 4 are real-GPU on both sides. Viewer integration tests create their own default-options wgpu instance; their adapter is not logged (TODO: log it).
+- So the 16 stepped shader baselines at MSAA 0 and 4 are real-GPU on both sides. Viewer integration tests create their own default-options wgpu instance; their adapter is not logged.
 
-Other GPU gates: TODO. Known failure: `multi_viewer_b08 x_ite_two_canvases_rigid_bodies_msaa4`, frame 40, `rb-a`: X_ITE pair vs alone 0, Rust pair vs alone 0, Rust vs X_ITE 0.0058 in both pair and alone. So it is a single-canvas rigid-body MSAA 4 difference, not a multi-viewer defect. Not yet investigated.
+Item corpus on the GPU (`x3d-shot`, items2, 296 shots): MSAA 0 and MSAA 4 each 294 within tolerance, 2 over (`art/djascendance-live`, 1.85%/1.84%, and `art/rainbow-room`, 2.54%/2.55%, max level 94 and 82); these are the known GPU corpus exceptions, unchanged. Batch 02-07 render/viewer suites (images true) pass at both sample counts where they cover them; Batch 07 volume 38 cases, 290 shots. Known failure: `multi_viewer_b08 x_ite_two_canvases_rigid_bodies_msaa4`, frame 40, `rb-a`: X_ITE pair vs alone 0, Rust pair vs alone 0, Rust vs X_ITE 0.0058 in both pair and alone. So it is a single-canvas rigid-body MSAA 4 difference, not a multi-viewer defect. Not yet investigated.
 
 ## 11. Workspace test results
 
@@ -87,19 +95,19 @@ Other GPU gates: TODO. Known failure: `multi_viewer_b08 x_ite_two_canvases_rigid
 | 1 (before fixes, before restoring prerequisites) | 957 | 4 | 1 | `items_runtime_matches_x_ite`, `x1_runtime_matches_x_ite` (missing baseline symlinks), `x_ite_two_canvases_rigid_bodies_msaa4`, `rea_batch08_shader_cases_match_x_ite` (stepped baseline missing) |
 | 2 (after fixes) | 960 | 1 | 1 | `x_ite_two_canvases_rigid_bodies_msaa4` |
 
-The two corpus failures were missing local prerequisites (symlinks to `X_ITE/scratch/rust-port/oracle`), not defects; after restoring them `corpus` is 6/6. The ignored test has not been identified yet (TODO). Logs: `evidence/b06b08-final/b06b08-test*.log`.
+The two corpus failures were missing local prerequisites (symlinks to `X_ITE/scratch/rust-port/oracle`), not defects; after restoring them `corpus` is 6/6. The ignored test is `gen_oracle_worlds`, a world generator, not a gate. Logs: `evidence/b06b08-final/b06b08-test*.log`.
 
 ## 12. Oracle comparison results
 
-TODO: the Batch 08 gate runner and the established oracle tools have not been run. `_batch08_context/reports/tools/local_finish.sh` `gates`, `backup` and `apply` have not been run; `apply` is unnecessary (the recovery commit is the base).
+From the gate run: items2 296/296 exact; items 606/606; x0 47 exact + 3 expected; x1 470 exact + 25 expected + 3 mismatch (0 unexplained) + 2 oracle timeouts; synthetic inline-scripts 18/18; x6 8/8; externproto 12/12; followers 10/10 worlds (649 checks); future-gate 12/12; reload suites pass; b05 sound 65 pass + 1 known; b06 physics 47/47; particles 37/37; b07 ps 103/103. Gate workspace step: 169 ok groups, 1 failing test (`x_ite_two_canvases_rigid_bodies_msaa4`). Batch 08 `local_finish.sh`: only `shaders` was run (read first); `apply`, `gates`, `backup` were not used (own derived runner and backup instead). CodeMirror (`cm5-*`) baselines exist; the cm5 suites were not part of this runner, NOT RUN. Ignored: 1 test, `gen_oracle_worlds` (generator, not a gate).
 
 ## 13. Final REA ledger totals
 
-TODO. Authoritative start: COMPLETE 214, PARTIAL 52, DIFFERENT 25, NOT_TESTED 33, MISSING 22 = 346. No change has been applied.
+**Authoritative ledger NOT changed** (`xite-rust-full-port-rea-completion/ledger/status.json` stays 214/52/25/33/22 = 346). Proposal, in `LEDGER_PROPOSAL.md` beside this report: Batch 08's 20 selected entries as proposed there (5 DIS COMPLETE, 15 PARTIAL), then the four Codex downgrades (VolumeEmitter, BoundedPhysicsModel, IsoSurfaceVolumeData, SegmentedVolumeData: COMPLETE to PARTIAL). Resulting totals if accepted: COMPLETE 215, PARTIAL 71, DIFFERENT 25, NOT_TESTED 33, MISSING 2 = 346. `sub:physics.engine`, all five shader entries, WindPhysicsModel stay PARTIAL; WebXR and keyboard UI stay MISSING. The 215/71 figures are arithmetic from the two proposals, not re-verified with `ledger_verify.py`.
 
 ## 14. Outstanding PARTIAL and DIFFERENT entries
 
-TODO (final). Known so far: `sub:physics.engine` stays PARTIAL (owner decision), WindPhysicsModel PARTIAL, InlineGeometry PARTIAL, all five shader entries PARTIAL, FontLibrary (CFF) PARTIAL, multi-viewer PARTIAL, GaussianSplats PARTIAL.
+PARTIAL (relevant here): physics.engine (3 picking cases), WindPhysicsModel, VolumeEmitter, BoundedPhysicsModel, IsoSurfaceVolumeData, SegmentedVolumeData, five shader entries (textures-runtime sampler state, `#include`, error/shared/reload/Group-removal/Script cases), InlineGeometry, FontLibrary (CFF), glTF/GLB (extensions), multi-viewer (MSAA 4 single-canvas rigid body), GaussianSplats, VolumeScatterMaterialExtension. The 25 DIFFERENT entries are untouched.
 
 ## 15. Final backup and restore evidence
 
@@ -107,8 +115,14 @@ TODO. Must include the symlink targets in `X_ITE/scratch/rust-port/oracle` (item
 
 ## 16. Owner decisions still needed
 
-TODO (final).
+1. Accept the ledger proposal (215/71/25/33/2) or hold the four Codex downgrades.
+2. Approve a deeper Ammo EPA/GJK trace for the three cylinder picking cases (about a day, per the Batch 08 report), or keep them as a known limit (not approved so far).
+3. Approve emulating program-resident GL state (texture units and sampler bindings) so `textures-runtime` can match X_ITE; the clip-plane fix is the first instance.
+4. Decide whether the stepped baseline set may stay at 16 of 18 cases.
 
 ## 17. Recommendations for Batch 09
 
-TODO (final).
+1. Close the open gates first: volume Script/ROUTE ordering cases, VolumeEmitter/BoundedPhysics replays, per-style combined lifecycle tests, shader reload/Group-removal/stale-id/`#include`.
+2. Model GL program state generally (uniforms, sampler units), not one uniform at a time.
+3. Pull the cylinder-in-compound picking trace.
+4. Log the adapter in every GPU test.
