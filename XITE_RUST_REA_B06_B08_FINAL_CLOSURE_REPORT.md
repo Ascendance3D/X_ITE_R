@@ -111,7 +111,7 @@ PARTIAL (relevant here): physics.engine (3 picking cases), WindPhysicsModel, Vol
 
 ## 15. Final backup and restore evidence
 
-TODO. Must include the symlink targets in `X_ITE/scratch/rust-port/oracle` (items, items2, x1 baselines and render baselines), which are in no earlier backup, or record their checksums.
+`~/backups/xite-rust-b06-b08/final/` (details in `BACKUP_EVIDENCE.md` there; earlier backups in `../recovery/` untouched). Integration worktree 12,660 files, restored to a disposable directory and compared file by file: 0 differences. `X_ITE/scratch/rust-port/oracle` (the baseline symlink targets, in no earlier backup) 9,924 files: 0 differences. Authoritative ledger dir: identical. Git bundle of the three branches verified. The backup was taken at `fc9587e`; the only later change is this section.
 
 ## 16. Owner decisions still needed
 
