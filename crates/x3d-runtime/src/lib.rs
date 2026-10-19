@@ -846,9 +846,13 @@ impl Runtime {
         }
     }
 
-    /// X3DNode.getCloneCount: one per non-private holder.
+    /// X3DNode.getCloneCount: one per non-private holder; a field of a private node (`setPrivate (true)`,
+    /// e.g. the LoadSensor of a ComposedShader) is not a holder.
     pub fn clone_count(&self, node: NodeId) -> usize {
-        self.parents.get(&node).map(|l| l.iter().filter(|h| !matches!(h, Holder::Field((_, FieldLoc::Priv(_))))).count()).unwrap_or(0)
+        self.parents
+            .get(&node)
+            .map(|l| l.iter().filter(|h| !matches!(h, Holder::Field((_, FieldLoc::Priv(_)))) && !matches!(h, Holder::Field((owner, _)) if self.shaders.is_private_load_sensor(*owner))).count())
+            .unwrap_or(0)
     }
 
     /// Record a field write on `node` (see [`Runtime::stamps`]).
