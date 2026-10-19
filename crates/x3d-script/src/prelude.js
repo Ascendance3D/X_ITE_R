@@ -1057,9 +1057,19 @@ for (const name of ["sin", "cos", "tan", "exp", "log", "acos", "asin", "atan2", 
       Math [name] = f;
 }
 
+// The page's console (Script globals fall through to `window`): log, warn and error reach the browser's log.
+const consoleText = args => args .map (a => typeof a === "string" ? a : String (a)) .join (" ");
+const scriptConsole =
+{
+   log: (... args) => { X ("console", "log", consoleText (args)); },
+   warn: (... args) => { X ("console", "warn", consoleText (args)); },
+   error: (... args) => { X ("console", "error", consoleText (args)); },
+};
+
 const standardGlobals =
 {
    NULL: null, FALSE: false, TRUE: true,
+   console: scriptConsole,
    print: println, trace: println,
    Browser,
    X3DConstants,

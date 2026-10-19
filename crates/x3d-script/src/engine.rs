@@ -1014,6 +1014,17 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             Ok(undefined)
         }
+        "console" => {
+            let text = str_arg(ctx, a, 1);
+
+            match str_arg(ctx, a, 0).as_str() {
+                "warn" => rt().log_warn(text),
+                "error" => rt().log_error(text),
+                _ => rt().print(text),
+            }
+
+            Ok(undefined)
+        }
         "mathfn" => math_fn(ctx, &str_arg(ctx, a, 0)),
         "new" => {
             let ty_name = str_arg(ctx, a, 0);
