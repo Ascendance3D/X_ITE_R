@@ -724,7 +724,7 @@ fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
         let c = v.core().unwrap();
         c.frame_rate = 60.0;
 
-        for _ in 0..8 {
+        for _ in 0..std::env::var("MV_WARM").ok().and_then(|v| v.parse().ok()).unwrap_or(8) {
             c.step(T0);
         }
     }
@@ -741,7 +741,7 @@ fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
         for (i, v) in viewers.iter_mut().enumerate() {
             let img = rig.shot(v, k);
 
-            if ORACLE_FRAMES.contains(&k) {
+            if ORACLE_FRAMES.contains(&k) || std::env::var_os("MV_ALL").is_some() {
                 if let Ok(d) = std::env::var("MV_DUMP") {
                     std::fs::write(format!("{d}/rust-{}-msaa{samples}-f{k}.rgba", worlds[i]), &img).unwrap();
                 }
