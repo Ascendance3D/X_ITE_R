@@ -179,3 +179,60 @@ fn several_parts_of_one_stage_link_the_first() {
     let fs = "precision mediump float; void main() { gl_FragColor = vec4 (1.0); }".to_string();
     assert!(link(&[(vs.clone(), vec![]), (vs, vec![])], &[(fs, vec![])]).is_ok());
 }
+
+// ---- REA remediation (integration-b06-b08): context-dependent includes, link texts, transform feedback ----
+
+#[test]
+fn a_function_declared_first_and_defined_after_its_caller_compiles() {
+    // naga numbers functions in definition order and wants the callee first; X_ITE's Fragment include does this.
+    let fs = "precision mediump float;\nvec4 f ();\nvoid main() { gl_FragColor = f (); }\nvec4 f () { return vec4 (1.0); }\n";
+    assert_eq!(compile_part(Stage::Fragment, fs, &[]), Ok(()));
+}
+
+#[test]
+fn a_switch_case_that_returns_compiles() {
+    let fs = "precision mediump float;\nuniform int i;\nvec4 g (const in int k) { switch (k) { case 0: { return vec4 (0.0); } case 1: { return vec4 (1.0); } default: { return vec4 (0.5); } } }\nvoid main() { gl_FragColor = g (i); }\n";
+    assert_eq!(compile_part(Stage::Fragment, fs, &[]), Ok(()));
+}
+
+#[test]
+fn a_define_in_the_head_selects_the_x_ite_types() {
+    // X_ITE inserts its options and types after the head (version, comments, directives) of the source:
+    // X3D_PHYSICAL_MATERIAL there makes x3d_PhysicalMaterialParameters known, one in the body does not.
+    let body = "#version 300 es\nprecision mediump float;\n#define X3D_PHYSICAL_MATERIAL\nuniform x3d_PhysicalMaterialParameters m;\nout vec4 c;\nvoid main() { c = vec4 (m.transparency); }\n";
+    let head = "#version 300 es\n#define X3D_PHYSICAL_MATERIAL\nprecision mediump float;\nuniform x3d_PhysicalMaterialParameters m;\nout vec4 c;\nvoid main() { c = vec4 (m.transparency); }\n";
+    assert!(compile_part(Stage::Fragment, body, &[]).is_err());
+    assert_eq!(compile_part(Stage::Fragment, head, &[]), Ok(()));
+}
+
+#[test]
+fn link_logs_use_the_driver_texts() {
+    let vs = "attribute vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvarying vec3 vN;\nvoid main() { vN = vec3 (1.0); gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex; }\n";
+    let fs = |decl: &str, body: &str| format!("precision mediump float;\n{decl}\nvoid main() {{ gl_FragColor = {body}; }}\n");
+
+    for (decl, body, want) in [
+        ("varying vec3 vX;", "vec4 (vX, 1.0)", "FRAGMENT varying vX does not match any VERTEX varying"),
+        ("varying vec4 vN;", "vN", "Types of varying 'vN' differ between VERTEX and FRAGMENT shaders."),
+        ("uniform vec3 x3d_ModelViewMatrix;", "vec4 (x3d_ModelViewMatrix, 1.0)", "Types of uniform 'x3d_ModelViewMatrix' differ between VERTEX and FRAGMENT shaders."),
+        ("uniform mediump mat4 x3d_ModelViewMatrix;", "x3d_ModelViewMatrix [0]", "Precisions of uniform 'x3d_ModelViewMatrix' differ between VERTEX and FRAGMENT shaders."),
+    ] {
+        assert_eq!(parts(vs, &fs(decl, body)).err().as_deref(), Some(want));
+    }
+}
+
+#[test]
+fn transform_feedback_varyings_follow_the_driver() {
+    use x3d_render::glsl_compat::check_transform_feedback;
+
+    let vs = "attribute vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nvarying vec3 vP;\nvarying float vArr [2];\nvoid main() { vP = x3d_Vertex.xyz; vArr [0] = 1.0; vArr [1] = 2.0; gl_Position = x3d_ProjectionMatrix * x3d_Vertex; }\n";
+    let fs = "precision mediump float;\nvarying vec3 vP;\nvoid main() { gl_FragColor = vec4 (vP, 1.0); }\n";
+    let p = parts(vs, fs).unwrap();
+    let check = |names: &[&str]| check_transform_feedback(&p, &names.iter().map(|s| s.to_string()).collect::<Vec<_>>());
+
+    assert_eq!(check(&[]), Ok(()));
+    assert_eq!(check(&["vP", "gl_Position", ""]), Ok(()));
+    assert_eq!(check(&["nope"]), Err("Transform feedback varying nope does not exist in the vertex shader.".into()));
+    assert_eq!(check(&["vP", "vP"]), Err("Two transform feedback varyings specify the same output variable (vP).".into()));
+    assert_eq!(check(&["vArr"]), Err("Capture of arrays is undefined and not supported.".into()));
+    assert_eq!(check(&["vArr[0]"]), Err("Capture of array elements is undefined and not supported.".into()));
+}

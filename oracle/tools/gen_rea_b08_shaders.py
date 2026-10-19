@@ -823,6 +823,208 @@ for x in ("xml-basic", "xml-fields", "xml-invalid"):
     scripts[x] = {"settle": True, "size": [512, 512], "t0": 946684800, "dt": 1 / 30, "frames": 20, "capture": [12], "dump": [10, 19], "events": []}
 
 # ---------------------------------------------------------------------------------------------
+# 10. ShaderRegistry includes in the context X_ITE gives them (REA remediation, integration-b06-b08).
+#
+# 11 of the 26 registry files do not link on their own: they need macros, uniforms and varyings that
+# X_ITE's own shaders (Default2.vs = `#include <Vertex>`, Material2.fs = `#include <Material>`,
+# Unlit2.fs, Physical2.fs ...) provide. These worlds are those built-in shaders written as user
+# ComposedShaders. A ShaderPart sees the 11 customOptions of ShaderPart.js defined after the head of its
+# source, so the source drops the ones it does not want with `#undef` in its body and puts the macros the
+# X_ITE types must see (X3D_PHYSICAL_MATERIAL ...) in the head, in front of the options.
+
+CUSTOM_OPTIONS = ["X3D_GEOMETRY_0D", "X3D_GEOMETRY_1D", "X3D_GEOMETRY_2D", "X3D_GEOMETRY_3D", "X3D_FOG", "X3D_STYLE_PROPERTIES",
+                  "X3D_UNLIT_MATERIAL", "X3D_PHONG_MATERIAL", "X3D_LIGHTING", "X3D_TEXTURE", "X3D_MULTI_TEXTURING"]
+PRECISION = "precision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n"
+
+
+def ctx_src(include, defs):
+    head = "".join(f"#define {d}\n" for d in defs)
+    names = [d.split()[0] for d in defs]
+    undef = "".join(f"#undef {c}\n" for c in CUSTOM_OPTIONS if c not in names)
+    return f"#version 300 es\n{head}\n{PRECISION}{undef}#include <{include}>\n"
+
+
+def ctx_shader(vs_inc, fs_inc, defs, fields="", name=""):
+    return composed([part("vertex", ctx_src(vs_inc, defs)), part("fragment", ctx_src(fs_inc, defs))], fields, name=name)
+
+
+CTX_BASE = ["X3D_COLORSPACE_SRGB", "X3D_NORMALS", "X3D_NUM_TEXTURE_TRANSFORMS 1", "X3D_NUM_TEXTURE_COORDINATES 1"]
+SUN = "DirectionalLight { direction -0.4 -0.6 -1 intensity 1 }"
+
+worlds["ctx-unlit.wrl"] = world(shape([ctx_shader("Vertex", "Unlit", CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_UNLIT_MATERIAL"])], "Box { size 2 2 2 }", "Material { emissiveColor 0.2 0.6 1 }"))
+worlds["ctx-phong.wrl"] = world(shape([ctx_shader("Vertex", "Material", CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_PHONG_MATERIAL"])], "Sphere { radius 1.3 }", "Material { diffuseColor 0.9 0.4 0.2 specularColor 0.5 0.5 0.5 shininess 0.4 }"))
+worlds["ctx-phong-light.wrl"] = world(SUN, shape([ctx_shader("Vertex", "Material", CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_PHONG_MATERIAL", "X3D_LIGHTING", "X3D_NUM_LIGHTS 1"])], "Sphere { radius 1.3 }", "Material { diffuseColor 0.9 0.4 0.2 specularColor 0.5 0.5 0.5 shininess 0.4 }"))
+worlds["ctx-phong-lights2.wrl"] = world(SUN, "PointLight { location 2 2 2 color 0.2 0.4 1 radius 20 }", shape([ctx_shader("Vertex", "Material", CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_PHONG_MATERIAL", "X3D_LIGHTING", "X3D_NUM_LIGHTS 2"])], "Box { size 2 2 2 }", "Material { diffuseColor 0.8 0.8 0.8 specularColor 0.6 0.6 0.6 shininess 0.3 }"))
+worlds["ctx-fog.wrl"] = world("Fog { color 0.8 0.8 0.9 visibilityRange 6 fogType \"LINEAR\" }", shape([ctx_shader("Vertex", "Unlit", CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_UNLIT_MATERIAL", "X3D_FOG", "X3D_FOG_LINEAR"])], "Box { size 2 2 2 }", "Material { emissiveColor 1 0.3 0.1 }"), vp="Viewpoint { position 0 0 5 }")
+worlds["ctx-texture.wrl"] = world(shape([ctx_shader("Vertex", "Unlit", CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_UNLIT_MATERIAL", "X3D_TEXTURE", "X3D_NUM_TEXTURES 1", "X3D_TEXTURE_0_2D"])], "Box { size 2 2 2 }", "Material { emissiveColor 1 1 1 }", texture=f'ImageTexture {{ url "{CHECKER}" }}'))
+worlds["ctx-pbr.wrl"] = world(SUN, shape([ctx_shader("Vertex", "PBR", CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_PHYSICAL_MATERIAL", "X3D_MATERIAL_METALLIC_ROUGHNESS", "X3D_LIGHTING", "X3D_NUM_LIGHTS 1"])], "Sphere { radius 1.3 }", "PhysicalMaterial { baseColor 0.9 0.6 0.2 metallic 0.7 roughness 0.35 }"))
+worlds["ctx-points.wrl"] = world(shape([ctx_shader("Vertex", "Unlit", ["X3D_COLORSPACE_SRGB", "X3D_NUM_TEXTURE_TRANSFORMS 1", "X3D_NUM_TEXTURE_COORDINATES 1", "X3D_GEOMETRY_0D", "X3D_UNLIT_MATERIAL", "X3D_STYLE_PROPERTIES"])], "PointSet { coord Coordinate { point [ -1 -1 0, 1 -1 0, 0 1 0, 0 0 0.5 ] } }", "Material { emissiveColor 1 1 0 }", extra_app="pointProperties PointProperties { pointSizeScaleFactor 1 }"))
+worlds["ctx-lines.wrl"] = world(shape([ctx_shader("Vertex", "Unlit", ["X3D_COLORSPACE_SRGB", "X3D_NUM_TEXTURE_TRANSFORMS 1", "X3D_NUM_TEXTURE_COORDINATES 1", "X3D_GEOMETRY_1D", "X3D_UNLIT_MATERIAL", "X3D_STYLE_PROPERTIES"])], "IndexedLineSet { coord Coordinate { point [ -1.5 -1 0, 1.5 -1 0, 1.5 1 0, -1.5 1 0 ] } coordIndex [ 0 1 2 3 0 -1 ] }", "Material { emissiveColor 0 1 0 }", extra_app="lineProperties LineProperties { applied TRUE linetype 2 linewidthScaleFactor 1 }"))
+
+# Stepped: the same built-in-shader contexts while the scene changes under them (material, lights, fog,
+# texture, the fragment ShaderPart's url and type).
+CTX_ALL = CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_PHONG_MATERIAL", "X3D_LIGHTING", "X3D_NUM_LIGHTS 2", "X3D_FOG", "X3D_FOG_LINEAR", "X3D_TEXTURE", "X3D_NUM_TEXTURES 1", "X3D_TEXTURE_0_2D"]
+CTX_UNLIT = CTX_BASE + ["X3D_GEOMETRY_3D", "X3D_UNLIT_MATERIAL", "X3D_FOG", "X3D_FOG_LINEAR", "X3D_TEXTURE", "X3D_NUM_TEXTURES 1", "X3D_TEXTURE_0_2D"]
+
+
+def jsurl(src):
+    return durl(src, "fragment").replace("\n", "%0A")
+
+
+worlds["ctx-runtime.wrl"] = world(
+    "DEF F Fog { color 0.7 0.8 0.9 visibilityRange 12 fogType \"LINEAR\" }",
+    "DEF L1 DirectionalLight { direction -0.4 -0.6 -1 intensity 1 }",
+    "DEF L2 PointLight { location 2 2 2 color 0.3 0.5 1 radius 20 }",
+    "DEF TR Transform { children Shape { appearance DEF AP Appearance { material DEF M Material { diffuseColor 0.9 0.5 0.3 specularColor 0.4 0.4 0.4 shininess 0.3 } texture DEF TX ImageTexture { url \"" + CHECKER + "\" } shaders [ ComposedShader { language \"GLSL\" parts [ " + part("vertex", ctx_src("Vertex", CTX_ALL)) + " DEF FP " + part("fragment", ctx_src("Material", CTX_ALL)) + " ] } ] } geometry Sphere { radius 1.2 } } }",
+    KEYHEAD,
+    """DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode m USE M
+  initializeOnly SFNode l1 USE L1
+  initializeOnly SFNode l2 USE L2
+  initializeOnly SFNode f USE F
+  initializeOnly SFNode ap USE AP
+  initializeOnly SFNode fp USE FP
+  initializeOnly SFNode tr USE TR
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);
+   if (k == 'b') l1 .intensity = 0.2;
+   if (k == 'c') f .visibilityRange = 7.5;
+   if (k == 'd') l2 .on = false;
+   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');
+   if (k == 'f') fp .url = new MFString ('""" + jsurl(ctx_src("Unlit", CTX_UNLIT)) + """');
+   if (k == 'g') fp .url = new MFString ('""" + jsurl(ctx_src("Material", CTX_ALL)) + """');
+   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);
+   if (k == 'i') f .fogType = 'EXPONENTIAL';
+}
+"
+}
+ROUTE K.keyPress TO R.on_key""", vp="Viewpoint { position 0 0 5 }")
+scripts["ctx-runtime"] = runtime_json(120, list("abcdefghi"), step=8)
+
+# Compile error text: the fragment ShaderPart's url is set, one key per mistake, and the log
+# (`Error in ShaderPart 'FP' in URL ..., line N, <ANGLE log>`) is compared with X_ITE's.
+ERR_FRAG = [
+    ("a", "type mismatch", "precision mediump float;\nvoid main() { gl_FragColor = vec3 (1.0); }\n"),
+    ("b", "missing semicolon", "precision mediump float;\nvoid main() { gl_FragColor = vec4 (1.0) }\n"),
+    ("c", "undeclared function", "precision mediump float;\nvoid main() { gl_FragColor = foo (1.0); }\n"),
+    ("d", "constructor too many args", "precision mediump float;\nvoid main() { gl_FragColor = vec4 (1.0, 2.0, 3.0, 4.0, 5.0); }\n"),
+    ("e", "no main", "precision mediump float;\nfloat f () { return 1.0; }\n"),
+    ("f", "#error", "precision mediump float;\n#error custom failure\nvoid main() { gl_FragColor = vec4 (1.0); }\n"),
+    ("g", "no fragment precision", "void main() { gl_FragColor = vec4 (1.0); }\n"),
+    ("h", "int to float", "precision mediump float;\nvoid main() { float x = 1; gl_FragColor = vec4 (x); }\n"),
+    ("i", "redefinition", "precision mediump float;\nfloat a;\nfloat a;\nvoid main() { gl_FragColor = vec4 (1.0); }\n"),
+    ("j", "gl_Position in fragment", "precision mediump float;\nvoid main() { gl_Position = vec4 (1.0); gl_FragColor = vec4 (1.0); }\n"),
+    ("k", "if not bool", "precision mediump float;\nvoid main() { if (1.0) { gl_FragColor = vec4 (1.0); } }\n"),
+    ("l", "assign to uniform", "precision mediump float;\nuniform float u;\nvoid main() { u = 1.0; gl_FragColor = vec4 (u); }\n"),
+    ("m", "bad swizzle", "precision mediump float;\nvoid main() { vec2 v = vec2 (1.0); gl_FragColor = vec4 (v.z); }\n"),
+    ("n", "array index", "precision mediump float;\nvoid main() { float a [2]; a [3] = 1.0; gl_FragColor = vec4 (a [0]); }\n"),
+    ("o", "wrong arg type", "precision mediump float;\nvoid main() { gl_FragColor = vec4 (sin (vec2 (1.0), 2.0)); }\n"),
+    ("p", "unbalanced brace", "precision mediump float;\nvoid main() { gl_FragColor = vec4 (1.0); \n"),
+]
+ERR_GAPS = ("a", "d", "h", "k")  # naga type checks GLSL 4.50, ANGLE GLSL ES 1.00: the Rust log differs (glsl_errors_b08.rs GAPS)
+
+
+def errors_world(cases):
+    return world(
+        "DEF TR Transform { children Shape { appearance DEF AP Appearance { material Material { diffuseColor 0.9 0.5 0.3 } shaders [ ComposedShader { language \"GLSL\" parts [ " + part("vertex", VS) + " DEF FP " + part("fragment", FS_HEAD + "void main() { gl_FragColor = vec4 (0.2, 0.8, 0.4, 1.0); }\n") + " ] } ] } geometry Sphere { radius 1.2 } } }",
+        KEYHEAD,
+        """DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode fp USE FP
+  url "javascript:
+function on_key (k)
+{
+""" + "\n".join(f"   if (k == '{k}') fp .url = new MFString ('{jsurl(src)}');" for k, _, src in cases) + """
+}
+"
+}
+ROUTE K.keyPress TO R.on_key""", vp="Viewpoint { position 0 0 5 }")
+
+
+ok_cases = [c for c in ERR_FRAG if c[0] not in ERR_GAPS]
+gap_cases = [c for c in ERR_FRAG if c[0] in ERR_GAPS]
+worlds["errors-runtime.wrl"] = errors_world(ok_cases)
+scripts["errors-runtime"] = runtime_json(20 + 8 * len(ok_cases) + 8, [k for k, _, _ in ok_cases], step=8)
+worlds["errors-gaps-runtime.wrl"] = errors_world(gap_cases)
+scripts["errors-gaps-runtime"] = runtime_json(20 + 8 * len(gap_cases) + 8, [k for k, _, _ in gap_cases], step=8)
+
+# Link error text: the vertex shader is fixed (VS), the fragment ShaderPart's url is set, one key per mismatch
+# between the stages; `Couldn't initialize ComposedShader 'CS': <ANGLE link log>` is compared with X_ITE's.
+LINK_FRAG = [
+    ("a", "varying not written by the vertex shader", FS_HEAD + "varying vec3 vMissing;\nvoid main() { gl_FragColor = vec4 (vMissing, 1.0); }\n"),
+    ("b", "varying type mismatch", "precision mediump float;\nvarying vec4 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vN; }\n"),
+    ("c", "uniform type mismatch", FS_HEAD + "uniform vec3 x3d_NormalMatrix;\nvoid main() { gl_FragColor = vec4 (x3d_NormalMatrix, 1.0); }\n"),
+    ("d", "uniform precision mismatch", FS_HEAD + "uniform mediump mat4 x3d_ModelViewMatrix;\nvoid main() { gl_FragColor = x3d_ModelViewMatrix [0]; }\n"),
+    ("e", "valid again", FS_HEAD + "void main() { gl_FragColor = vec4 (0.9, 0.3, 0.6, 1.0); }\n"),
+    ("f", "varying not used by the fragment shader", "precision mediump float;\nvarying vec3 vN;\nvoid main() { gl_FragColor = vec4 (vN, 1.0); }\n"),
+]
+worlds["links-runtime.wrl"] = world(
+    "DEF TR Transform { children Shape { appearance DEF AP Appearance { material Material { diffuseColor 0.9 0.5 0.3 } shaders [ DEF CS ComposedShader { language \"GLSL\" parts [ " + part("vertex", VS) + " DEF FP " + part("fragment", FS_HEAD + "void main() { gl_FragColor = vec4 (0.2, 0.8, 0.4, 1.0); }\n") + " ] } ] } geometry Sphere { radius 1.2 } } }",
+    KEYHEAD,
+    """DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode fp USE FP
+  url "javascript:
+function on_key (k)
+{
+""" + "\n".join(f"   if (k == '{k}') fp .url = new MFString ('{jsurl(src)}');" for k, _, src in LINK_FRAG) + """
+}
+"
+}
+ROUTE K.keyPress TO R.on_key""", vp="Viewpoint { position 0 0 5 }")
+scripts["links-runtime"] = runtime_json(20 + 8 * len(LINK_FRAG) + 8, [k for k, _, _ in LINK_FRAG], step=8)
+
+# Stepped: PackagedShader, ProgramShader and ShaderProgram are stubs in the pinned X_ITE (fields, no behavior). Their
+# fields change at run time next to a valid ComposedShader: the shape keeps the ComposedShader, the stubs never
+# become valid or selected, and the nodes' fields (and the scene text) follow the writes. `url` while `load` is TRUE and
+# `load` := TRUE are not written. Measured: in the pinned X_ITE, after such a write to a PackagedShader the later writes
+# of the same Script had no effect (scene text unchanged), which the Rust runtime does not reproduce. Probably cause (not
+# confirmed): PackagedShader and ShaderProgram override requestImmediateLoad with an empty function and
+# X3DUrlObject.set_url__ / set_load__ call `.catch` on its result.
+STUB_VS = "data:x-shader/x-vertex,void main(){}"
+worlds["stubs-runtime.wrl"] = world(
+    "Transform { translation -1.3 0 0 children Shape { appearance DEF AP1 Appearance { material Material { diffuseColor 0.9 0.3 0.3 } shaders [ DEF PK PackagedShader { language \"GLSL\" url \"" + STUB_VS + "\" } DEF CSV " + std("gl_FragColor = vec4 (0.2, 0.9, 0.3, 1.0);") + " ] } geometry Sphere { radius 0.9 } } }",
+    "Transform { translation 1.3 0 0 children Shape { appearance DEF AP2 Appearance { material Material { diffuseColor 0.3 0.3 0.9 } shaders [ DEF PS ProgramShader { language \"GLSL\" } ] } geometry Sphere { radius 0.9 } } }",
+    "DEF SP ShaderProgram { type \"VERTEX\" url \"" + STUB_VS + "\" }",
+    KEYHEAD,
+    """DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode pk USE PK
+  initializeOnly SFNode ps USE PS
+  initializeOnly SFNode sp USE SP
+  initializeOnly SFNode csv USE CSV
+  initializeOnly SFNode ap1 USE AP1
+  initializeOnly SFNode ap2 USE AP2
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') pk .load = false;
+   if (k == 'b') pk .url = new MFString ('data:x-shader/x-fragment,void main(){gl_FragColor=vec4(1.0);}');
+   if (k == 'c') pk .autoRefresh = 5;
+   if (k == 'd') { pk .activate = true; ps .activate = true; }
+   if (k == 'e') ps .programs = new MFNode (sp);
+   if (k == 'f') sp .load = false;
+   if (k == 'g') sp .type = 'FRAGMENT';
+   if (k == 'h') sp .url = new MFString ('data:x-shader/x-fragment,void main(){}');
+   if (k == 'i') ap1 .shaders = new MFNode (pk);
+   if (k == 'j') ap1 .shaders = new MFNode (csv, pk);
+   if (k == 'k') ap2 .shaders = new MFNode (ps, pk);
+   if (k == 'l') pk .description = 'stub';
+   if (k == 'm') ap2 .shaders = new MFNode ();
+}
+"
+}
+ROUTE K.keyPress TO R.on_key""", vp="Viewpoint { position 0 0 5 }")
+scripts["stubs-runtime"] = runtime_json(130, list("abcdefghijklm"), step=8)
+
+# ---------------------------------------------------------------------------------------------
 
 for name, text in worlds.items():
     with open(os.path.join(OUT, name), "w") as f:

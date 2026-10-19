@@ -1,0 +1,69 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 5 }
+NavigationInfo { headlight FALSE }
+Transform { translation -1.3 0 0 children Shape { appearance DEF AP1 Appearance { material Material { diffuseColor 0.9 0.3 0.3 } shaders [ DEF PK PackagedShader { language "GLSL" url "data:x-shader/x-vertex,void main(){}" } DEF CSV ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+attribute vec3 x3d_Normal;
+attribute vec4 x3d_TexCoord0;
+attribute vec4 x3d_Color;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+uniform mat3 x3d_NormalMatrix;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;
+   vP = p.xyz;
+   vN = normalize (x3d_NormalMatrix * x3d_Normal);
+   vT = x3d_TexCoord0.st;
+   vC = x3d_Color;
+   gl_Position = x3d_ProjectionMatrix * p;
+}
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 vN;
+varying vec3 vP;
+varying vec2 vT;
+varying vec4 vC;
+void main()
+{
+gl_FragColor = vec4 (0.2, 0.9, 0.3, 1.0);
+}
+" } ] } ] } geometry Sphere { radius 0.9 } } }
+Transform { translation 1.3 0 0 children Shape { appearance DEF AP2 Appearance { material Material { diffuseColor 0.3 0.3 0.9 } shaders [ DEF PS ProgramShader { language "GLSL" } ] } geometry Sphere { radius 0.9 } } }
+DEF SP ShaderProgram { type "VERTEX" url "data:x-shader/x-vertex,void main(){}" }
+DEF K KeySensor { }
+
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode pk USE PK
+  initializeOnly SFNode ps USE PS
+  initializeOnly SFNode sp USE SP
+  initializeOnly SFNode csv USE CSV
+  initializeOnly SFNode ap1 USE AP1
+  initializeOnly SFNode ap2 USE AP2
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') pk .load = false;
+   if (k == 'b') pk .url = new MFString ('data:x-shader/x-fragment,void main(){gl_FragColor=vec4(1.0);}');
+   if (k == 'c') pk .autoRefresh = 5;
+   if (k == 'd') { pk .activate = true; ps .activate = true; }
+   if (k == 'e') ps .programs = new MFNode (sp);
+   if (k == 'f') sp .load = false;
+   if (k == 'g') sp .type = 'FRAGMENT';
+   if (k == 'h') sp .url = new MFString ('data:x-shader/x-fragment,void main(){}');
+   if (k == 'i') ap1 .shaders = new MFNode (pk);
+   if (k == 'j') ap1 .shaders = new MFNode (csv, pk);
+   if (k == 'k') ap2 .shaders = new MFNode (ps, pk);
+   if (k == 'l') pk .description = 'stub';
+   if (k == 'm') ap2 .shaders = new MFNode ();
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

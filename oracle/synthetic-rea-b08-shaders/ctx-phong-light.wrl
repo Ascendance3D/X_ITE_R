@@ -1,0 +1,54 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight FALSE }
+DirectionalLight { direction -0.4 -0.6 -1 intensity 1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.4 0.2 specularColor 0.5 0.5 0.5 shininess 0.4 }   shaders [ ComposedShader { language "GLSL"   parts [ ShaderPart { type "VERTEX"  url "data:x-shader/x-vertex,%23version 300 es
+%23define X3D_COLORSPACE_SRGB
+%23define X3D_NORMALS
+%23define X3D_NUM_TEXTURE_TRANSFORMS 1
+%23define X3D_NUM_TEXTURE_COORDINATES 1
+%23define X3D_GEOMETRY_3D
+%23define X3D_PHONG_MATERIAL
+%23define X3D_LIGHTING
+%23define X3D_NUM_LIGHTS 1
+
+precision highp int;
+precision highp float;
+precision highp sampler2D;
+precision highp sampler3D;
+precision highp samplerCube;
+%23undef X3D_GEOMETRY_0D
+%23undef X3D_GEOMETRY_1D
+%23undef X3D_GEOMETRY_2D
+%23undef X3D_FOG
+%23undef X3D_STYLE_PROPERTIES
+%23undef X3D_UNLIT_MATERIAL
+%23undef X3D_TEXTURE
+%23undef X3D_MULTI_TEXTURING
+%23include <Vertex>
+" } ShaderPart { type "FRAGMENT"  url "data:x-shader/x-fragment,%23version 300 es
+%23define X3D_COLORSPACE_SRGB
+%23define X3D_NORMALS
+%23define X3D_NUM_TEXTURE_TRANSFORMS 1
+%23define X3D_NUM_TEXTURE_COORDINATES 1
+%23define X3D_GEOMETRY_3D
+%23define X3D_PHONG_MATERIAL
+%23define X3D_LIGHTING
+%23define X3D_NUM_LIGHTS 1
+
+precision highp int;
+precision highp float;
+precision highp sampler2D;
+precision highp sampler3D;
+precision highp samplerCube;
+%23undef X3D_GEOMETRY_0D
+%23undef X3D_GEOMETRY_1D
+%23undef X3D_GEOMETRY_2D
+%23undef X3D_FOG
+%23undef X3D_STYLE_PROPERTIES
+%23undef X3D_UNLIT_MATERIAL
+%23undef X3D_TEXTURE
+%23undef X3D_MULTI_TEXTURING
+%23include <Material>
+" } ] } ] } geometry Sphere { radius 1.3 } }
