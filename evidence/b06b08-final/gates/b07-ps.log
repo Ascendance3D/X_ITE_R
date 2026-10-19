@@ -1,0 +1,104 @@
+PASS  ps-force-all-disabled              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0
+PASS  ps-force-big-mass                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 6.0e-08 position 2.4e-07 | draws 0
+PASS  ps-force-bounded                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 4.4e-06 | draws 0
+PASS  ps-force-cone                      life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 5.7e-07 | draws 0
+PASS  ps-force-createoff                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 0.0e+00 | draws 0
+PASS  ps-force-default-emitter           life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0
+PASS  ps-force-default-r144              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 7.2e-07 position 4.8e-07 | draws 0
+PASS  ps-force-default-r24               life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 2.4e-07 | draws 0
+PASS  ps-force-default-r60               life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 7.2e-07 | draws 0
+PASS  ps-force-disabled-first            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 4.8e-08 position 2.4e-07 | draws 0
+PASS  ps-force-events-r144               life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 4.8e-07 position 4.8e-07 | draws 0
+PASS  ps-force-events-r24                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 4.8e-07 position 4.8e-07 | draws 0
+PASS  ps-force-events-r60                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 9.5e-07 | draws 0
+PASS  ps-force-explosion                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.9e-06 position 1.4e-06 | draws 0
+PASS  ps-force-mass0                     life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0
+PASS  ps-force-massneg                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0
+PASS  ps-force-surface                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 7.0e-08 position 1.2e-07 | draws 0
+PASS  ps-force-two-r144                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 1.4e-06 | draws 0
+PASS  ps-force-two-r24                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.2e-06 position 4.8e-07 | draws 0
+PASS  ps-force-two-r60                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 4.8e-07 | draws 0
+PASS  ps-force-volume                    life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.2e-07 position 8.3e-07 | draws 0
+PASS  ps-force-zero                      life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0
+PASS  ps-polyline-bad-index              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0 | polylines 28 floats max 0.0e+00
+PASS  ps-polyline-basic-r144             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-basic-r24              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-basic-r60              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-big                    life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 4.8e-07 | draws 0 | polylines 40 floats max 0.0e+00 | chi2 xite 0.07 rust 0.07
+PASS  ps-polyline-bounded                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 1.8e-06 | draws 0 | polylines 16 floats max 0.0e+00
+PASS  ps-polyline-closed                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-createoff              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-default                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 0 floats max 0.0e+00
+PASS  ps-polyline-default-world          life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 0 floats max 0.0e+00
+PASS  ps-polyline-dir0                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 4.2e-07 position 9.5e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-dir0-wind              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.9e-06 position 9.5e-07 | draws 90 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-dirraw                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-double                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-empty-coord            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 0 floats max 0.0e+00
+PASS  ps-polyline-empty-index            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 0 floats max 0.0e+00
+PASS  ps-polyline-events-r144            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 3.6e-07 position 2.4e-07 | draws 0 | polylines 16 floats max 0.0e+00
+PASS  ps-polyline-events-r24             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 3.0e-07 position 3.6e-07 | draws 0 | polylines 16 floats max 0.0e+00
+PASS  ps-polyline-events-r60             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 2.4e-07 position 9.5e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-fixed                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-force-wind             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 4.8e-07 | draws 270 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-from-empty             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 28 floats max 0.0e+00
+PASS  ps-polyline-group-removal          life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.8e-07 position 2.4e-07 | draws 360 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-minus1-only            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 0 floats max 0.0e+00
+PASS  ps-polyline-minus2                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 28 floats max 0.0e+00
+PASS  ps-polyline-multi                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 6.0e-08 | draws 0 | polylines 76 floats max 0.0e+00
+PASS  ps-polyline-multi-r144             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0 | polylines 76 floats max 0.0e+00
+PASS  ps-polyline-multi-r24              life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 76 floats max 0.0e+00
+PASS  ps-polyline-no-terminator          life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0 | polylines 28 floats max 0.0e+00
+PASS  ps-polyline-nocoord                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 0 floats max 0.0e+00
+PASS  ps-polyline-nondefault             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 6.0e-07 position 1.4e-06 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-nospeed                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-off                    life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-single-point           life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 0 | polylines 0 floats max 0.0e+00
+PASS  ps-polyline-two-points             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0 | polylines 16 floats max 0.0e+00
+PASS  ps-polyline-zero-and-real          life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 2.4e-07 | draws 0 | polylines 40 floats max 0.0e+00
+PASS  ps-polyline-zero-length            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0 | polylines 28 floats max 0.0e+00
+PASS  ps-route-wind-r144                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.2e-06 position 6.0e-07 | draws 1296
+PASS  ps-route-wind-r24                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 8.3e-07 | draws 216
+PASS  ps-route-wind-r60                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 8.3e-07 | draws 540
+PASS  ps-script-polyline-r144            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 9.5e-07 | draws 735 | polylines 40 floats max 0.0e+00
+PASS  ps-script-polyline-r24             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 7.2e-07 position 9.5e-07 | draws 123 | polylines 40 floats max 0.0e+00
+PASS  ps-script-polyline-r60             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 9.5e-07 | draws 306 | polylines 40 floats max 0.0e+00
+PASS  ps-wind-area-neg                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 90
+PASS  ps-wind-area0                      life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 90
+PASS  ps-wind-big                        life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.1e-06 position 6.0e-07 | draws 180
+PASS  ps-wind-bounded                    life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 2.4e-06 | draws 540
+PASS  ps-wind-cone                       life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 6.0e-07 | draws 270
+PASS  ps-wind-createoff                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.3e-06 position 0.0e+00 | draws 270
+PASS  ps-wind-default-r144               life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 7.3e-12 position 1.2e-07 | draws 216
+PASS  ps-wind-default-r24                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 7.3e-12 position 1.2e-07 | draws 36
+PASS  ps-wind-default-r60                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 7.3e-12 position 2.4e-07 | draws 90
+PASS  ps-wind-dir0-r144                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 7.2e-07 | draws 648
+PASS  ps-wind-dir0-r24                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 8.3e-07 position 6.0e-07 | draws 108
+PASS  ps-wind-dir0-r60                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.7e-06 position 6.0e-07 | draws 270
+PASS  ps-wind-dirraw                     life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.9e-06 position 1.9e-06 | draws 90
+PASS  ps-wind-disabled                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0
+PASS  ps-wind-events-r144                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.2e-06 position 9.5e-07 | draws 802
+PASS  ps-wind-events-r24                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.5e-06 position 1.2e-06 | draws 220
+PASS  ps-wind-events-r60                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 7.7e-07 | draws 620
+PASS  ps-wind-explosion                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.9e-06 position 1.3e-06 | draws 540
+PASS  ps-wind-group-removal-r144         life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 3.6e-07 position 3.6e-07 | draws 648
+PASS  ps-wind-gust-r144                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 8.3e-07 position 7.2e-07 | draws 216
+PASS  ps-wind-gust-r24                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.5e-07 position 7.2e-07 | draws 36
+PASS  ps-wind-gust-r60                   life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.3e-06 position 7.2e-07 | draws 90
+PASS  ps-wind-legacy32-nodir             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 7.2e-07 | draws 270
+PASS  ps-wind-legacy33-dir               life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.9e-06 position 1.4e-06 | draws 90
+PASS  ps-wind-legacy33-events            life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 3.8e-06 position 1.9e-06 | draws 198
+PASS  ps-wind-legacy33-nodir             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 2.1e-06 position 8.3e-07 | draws 270
+PASS  ps-wind-mass0                      life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 1.2e-07 | draws 0
+PASS  ps-wind-modern-nodir-events        life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 3.8e-06 position 2.9e-06 | draws 160
+PASS  ps-wind-multi                      life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.7e-06 position 9.5e-07 | draws 360
+PASS  ps-wind-speed-neg                  life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 90
+PASS  ps-wind-speed0                     life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 0.0e+00 position 0.0e+00 | draws 90
+PASS  ps-wind-strong                     life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 4.6e-05 position 1.7e-05 | draws 270
+PASS  ps-wind-strong-r144                life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.2e-05 position 4.6e-05 | draws 216
+PASS  ps-wind-strong-r24                 life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 5.3e-05 position 3.1e-05 | draws 36
+PASS  ps-wind-surface                    life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 9.5e-07 | draws 90
+PASS  ps-wind-turbulence-clamp           life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.5e-06 position 8.6e-07 | draws 90
+PASS  ps-wind-turbulence-max             life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 9.2e-07 position 6.6e-07 | draws 90
+PASS  ps-wind-volume                     life 0.0e+00 lifetime 0.0e+00 elapsed 0.0e+00 color 0.0e+00 velocity 1.4e-06 position 7.2e-07 | draws 90
+suite rea-b07-ps: 103 pass, 0 known, 0 fail, of 103 cases

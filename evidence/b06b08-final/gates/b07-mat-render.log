@@ -1,0 +1,152 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: `x3d-render` (lib) generated 4 warnings
+   Compiling x3d-render v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-render)
+    Finished `release` profile [optimized] target(s) in 0.67s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/render_rea_b07_mat.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b07_mat-2736db353e287f6b)
+
+running 1 test
+MSAA 0 disp-combined-ibl.wrl: over 0 (0.000%), max 2
+MSAA 0 disp-layers-ibl.wrl: over 0 (0.000%), max 1
+MSAA 0 disp-runtime.wrl: over 0 (0.000%), max 1
+MSAA 0 disp-transmission-ibl.wrl: over 0 (0.000%), max 2
+MSAA 0 disp-transmission.wrl: over 0 (0.000%), max 1
+MSAA 0 inst-geometries.wrl: over 32 (0.012%), max 46
+MSAA 0 inst-lengths.wrl: over 1 (0.000%), max 55
+MSAA 0 inst-pbr-ibl.wrl: over 0 (0.000%), max 1
+MSAA 0 inst-runtime.wrl: over 0 (0.000%), max 0
+MSAA 0 inst-scale-orientation.wrl: over 0 (0.000%), max 0
+MSAA 0 inst-shadows.wrl: over 1 (0.000%), max 9
+MSAA 0 inst-transforms.wrl: over 0 (0.000%), max 0
+MSAA 0 inst-transparent-textured.wrl: over 0 (0.000%), max 2
+MSAA 0 inst-twosided-layers.wrl: over 0 (0.000%), max 0
+MSAA 0 retro-combined-ibl.wrl: over 0 (0.000%), max 3
+MSAA 0 retro-combined.wrl: over 0 (0.000%), max 1
+MSAA 0 retro-ibl-lights.wrl: over 4 (0.002%), max 35
+MSAA 0 retro-ibl.wrl: over 2 (0.001%), max 36
+MSAA 0 retro-lights.wrl: over 7 (0.003%), max 79
+MSAA 0 retro-runtime.wrl: over 0 (0.000%), max 2
+MSAA 0 tex3d-dicom-errors.wrl: over 0 (0.000%), max 1
+MSAA 0 tex3d-dicom.wrl: over 0 (0.000%), max 1
+MSAA 0 tex3d-inline.wrl: over 0 (0.000%), max 2
+MSAA 0 tex3d-layers.wrl: over 0 (0.000%), max 2
+MSAA 0 tex3d-nrrd-encodings.wrl: over 0 (0.000%), max 3
+MSAA 0 tex3d-nrrd-errors.wrl: over 0 (0.000%), max 0
+MSAA 0 tex3d-nrrd-shapes.wrl: over 0 (0.000%), max 4
+MSAA 0 tex3d-nrrd-types.wrl: over 0 (0.000%), max 1
+MSAA 0 tex3d-params.wrl: over 0 (0.000%), max 2
+MSAA 0 tex3d-runtime.wrl: over 0 (0.000%), max 1
+MSAA 4 disp-combined-ibl.wrl: over 0 (0.000%), max 2
+MSAA 4 disp-layers-ibl.wrl: over 0 (0.000%), max 1
+MSAA 4 disp-runtime.wrl: over 0 (0.000%), max 1
+MSAA 4 disp-transmission-ibl.wrl: over 0 (0.000%), max 2
+MSAA 4 disp-transmission.wrl: over 0 (0.000%), max 1
+MSAA 4 inst-geometries.wrl: over 0 (0.000%), max 0
+MSAA 4 inst-lengths.wrl: over 0 (0.000%), max 0
+MSAA 4 inst-pbr-ibl.wrl: over 0 (0.000%), max 2
+MSAA 4 inst-runtime.wrl: over 0 (0.000%), max 0
+MSAA 4 inst-scale-orientation.wrl: over 0 (0.000%), max 0
+MSAA 4 inst-shadows.wrl: over 0 (0.000%), max 5
+MSAA 4 inst-transforms.wrl: over 0 (0.000%), max 0
+MSAA 4 inst-transparent-textured.wrl: over 0 (0.000%), max 1
+MSAA 4 inst-twosided-layers.wrl: over 0 (0.000%), max 0
+MSAA 4 retro-combined-ibl.wrl: over 0 (0.000%), max 3
+MSAA 4 retro-combined.wrl: over 0 (0.000%), max 1
+MSAA 4 retro-ibl-lights.wrl: over 5 (0.002%), max 30
+MSAA 4 retro-ibl.wrl: over 6 (0.002%), max 25
+MSAA 4 retro-lights.wrl: over 10 (0.004%), max 46
+MSAA 4 retro-runtime.wrl: over 0 (0.000%), max 2
+MSAA 4 tex3d-dicom-errors.wrl: over 0 (0.000%), max 0
+MSAA 4 tex3d-dicom.wrl: over 0 (0.000%), max 0
+MSAA 4 tex3d-inline.wrl: over 0 (0.000%), max 0
+MSAA 4 tex3d-layers.wrl: over 0 (0.000%), max 0
+MSAA 4 tex3d-nrrd-encodings.wrl: over 0 (0.000%), max 1
+MSAA 4 tex3d-nrrd-errors.wrl: over 0 (0.000%), max 0
+MSAA 4 tex3d-nrrd-shapes.wrl: over 0 (0.000%), max 0
+MSAA 4 tex3d-nrrd-types.wrl: over 1 (0.000%), max 16
+MSAA 4 tex3d-params.wrl: over 0 (0.000%), max 1
+MSAA 4 tex3d-runtime.wrl: over 0 (0.000%), max 1
+60 shots checked
+test rea_b07_mat_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.14s
+

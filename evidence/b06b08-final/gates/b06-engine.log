@@ -1,0 +1,1563 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+   Compiling x3d-runtime v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-runtime)
+warning: variable does not need to be mutable
+   --> crates/x3d-runtime/tests/bullet_dyn_scenes.rs:360:13
+    |
+360 | ...   let mut bt = Built { rb, ms, compound, ccs: if xflow { pre[bi].clone() } else { make_ccs(&mut w, b, false) }, spec: b.clone() };
+    |           ----^^
+    |           |
+    |           help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `x3d-runtime` (test "bullet_dyn_scenes") generated 1 warning (run `cargo fix --test "bullet_dyn_scenes" -p x3d-runtime` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 1.38s
+     Running tests/bullet_dyn_scenes.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/bullet_dyn_scenes-e7afe9cbf0277975)
+
+running 66 tests
+pairs pairs_box_cone: 0 of 27 shallow cases differ; 0 of 13 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_box_box: 0 of 18 shallow cases differ; 0 of 22 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_box_cylinder: 0 of 19 shallow cases differ; 0 of 21 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_sphere_cylinder: 0 of 13 shallow cases differ; 0 of 27 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_box_cone ... ok
+test bullet_dyn_pairs_box_box ... ok
+test bullet_dyn_pairs_box_cylinder ... ok
+test bullet_dyn_pairs_sphere_cylinder ... ok
+scene s01c_sphere_prefer_accuracy
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s01c_sphere_prefer_accuracy ... ok
+scene s01b_sphere_fixed_dt
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s01_sphere_free_fall
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s01b_sphere_fixed_dt ... ok
+test bullet_dyn_s01_sphere_free_fall ... ok
+scene s02_box_tumbling
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_hull_hull: 0 of 26 shallow cases differ; 0 of 14 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_cone_cone: 0 of 30 shallow cases differ; 0 of 10 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_box_hull: 0 of 21 shallow cases differ; 0 of 19 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+pairs pairs_sphere_box: 0 of 14 shallow cases differ; 0 of 26 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s02_box_tumbling ... ok
+test bullet_dyn_pairs_hull_hull ... ok
+test bullet_dyn_pairs_cone_cone ... ok
+test bullet_dyn_pairs_box_hull ... ok
+test bullet_dyn_pairs_sphere_box ... ok
+pairs pairs_cylinder_cylinder: 0 of 15 shallow cases differ; 0 of 25 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_cylinder_cylinder ... ok
+pairs pairs_cylinder_hull: 0 of 22 shallow cases differ; 0 of 18 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_cylinder_hull ... ok
+pairs pairs_sphere_cone: 0 of 24 shallow cases differ; 0 of 16 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_sphere_hull: 0 of 21 shallow cases differ; 0 of 19 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_sphere_cone ... ok
+test bullet_dyn_pairs_sphere_hull ... ok
+pairs pairs_cone_hull: 0 of 29 shallow cases differ; 0 of 11 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_cone_hull ... ok
+scene b06_collider_friction_rolling
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s03d_sphere_bounce_single_steps
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_b06_collider_friction_rolling ... ok
+test bullet_dyn_s03d_sphere_bounce_single_steps ... ok
+pairs pairs_cylinder_cone: 0 of 22 shallow cases differ; 0 of 18 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+scene b06_shape_cone
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+test bullet_dyn_b06_shape_cone ... ok
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_sphere_sphere: 0 of 7 shallow cases differ; 0 of 33 deep (penetration beyond -0.03, EPA) cases differ
+  deep MAX ABS ERROR             aabb = 0e0
+  deep MAX ABS ERROR           active = 0e0
+  deep MAX ABS ERROR              ang = 0e0
+  deep MAX ABS ERROR          inertia = 0e0
+  deep MAX ABS ERROR              lin = 0e0
+  deep MAX ABS ERROR  manifold_bodies = 0e0
+  deep MAX ABS ERROR   manifold_count = 0e0
+  deep MAX ABS ERROR      point_count = 0e0
+  deep MAX ABS ERROR              pos = 0e0
+  deep MAX ABS ERROR             pt_a = 0e0
+  deep MAX ABS ERROR             pt_b = 0e0
+  deep MAX ABS ERROR      pt_distance = 0e0
+  deep MAX ABS ERROR       pt_impulse = 0e0
+  deep MAX ABS ERROR             pt_n = 0e0
+  deep MAX ABS ERROR             quat = 0e0
+  deep MAX ABS ERROR           wbasis = 0e0
+  deep MAX ABS ERROR             wpos = 0e0
+  deep MAX ABS ERROR            wquat = 0e0
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_cylinder_cone ... ok
+test bullet_dyn_pairs_sphere_sphere ... ok
+scene b06_shape_cylinder
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_b06_shape_cylinder ... ok
+scene s09_universal_joint_unconnected
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s07_ball_pendulum
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s09_universal_joint_unconnected ... ok
+test bullet_dyn_s07_ball_pendulum ... ok
+scene s08_hinge_pendulum
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s08_hinge_pendulum ... ok
+scene s03b_sphere_roll_friction
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s03b_sphere_roll_friction ... ok
+scene s06_box_incline_friction
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s06_box_incline_friction ... ok
+scene s11_damping
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s11_damping ... ok
+scene s10_slider_limits
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s10b_slider_two_dynamic
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s10_slider_limits ... ok
+test bullet_dyn_s10b_slider_two_dynamic ... ok
+scene s08c_hinge_antiparallel
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s08c_hinge_antiparallel ... ok
+scene s12g_fast_sphere_hits_box_substeps
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s05_sphere_mesh
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12g_fast_sphere_hits_box_substeps ... ok
+test bullet_dyn_s05_sphere_mesh ... ok
+scene s08b_hinge_two_dynamic
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s08b_hinge_two_dynamic ... ok
+scene s05b_box_mesh
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene b06_shape_cone_open
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s03c_box_tumble_land
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s05b_box_mesh ... ok
+test bullet_dyn_b06_shape_cone_open ... ok
+test bullet_dyn_s03c_box_tumble_land ... ok
+scene s12b_box_kicked_awake
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12b_box_kicked_awake ... ok
+scene s07b_ball_chain
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s07b_ball_chain ... ok
+scene s03_sphere_bounce_rest
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s03_sphere_bounce_rest ... ok
+scene s14b_rolling_friction_box
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s14_rolling_friction_sphere
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s14b_rolling_friction_box ... ok
+test bullet_dyn_s14_rolling_friction_sphere ... ok
+scene s14c_rolling_friction_single_axis
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s14c_rolling_friction_single_axis ... ok
+scene s13b_capsule
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s13b_capsule ... ok
+scene s06c_cylinder_cone_hull_single_steps
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s06c_cylinder_cone_hull_single_steps ... ok
+pairs solve_box: 0 of 60 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s13_compound_offset
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_solve_box ... ok
+test bullet_dyn_s13_compound_offset ... ok
+scene b06_shape_cylinder_open
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_b06_shape_cylinder_open ... ok
+scene s06b_cylinder_cone_hull
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+scene s12e_awake_box_fast_sphere
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s06b_cylinder_cone_hull ... ok
+test bullet_dyn_s12e_awake_box_fast_sphere ... ok
+scene s12c_box_sleeps_then_kicked
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12c_box_sleeps_then_kicked ... ok
+pairs pairs_box_touching_aligned: 0 of 400 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_box_touching: 0 of 400 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs pairs_box_flat: 0 of 400 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_box_touching ... ok
+test bullet_dyn_pairs_box_touching_aligned ... ok
+test bullet_dyn_pairs_box_flat ... ok
+pairs pairs_box_aligned: 0 of 400 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_pairs_box_aligned ... ok
+scene s12f_sleeping_box_fast_sphere_8m
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12f_sleeping_box_fast_sphere_8m ... ok
+pairs solve_hull: 0 of 60 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs solve_sphere: 0 of 60 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_solve_hull ... ok
+test bullet_dyn_solve_sphere ... ok
+scene s12d_sleep_wake_single_steps
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12d_sleep_wake_single_steps ... ok
+pairs solve_cylinder: 0 of 60 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+pairs solve_cone: 0 of 60 shallow cases differ; 0 of 0 deep (penetration beyond -0.03, EPA) cases differ
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_solve_cylinder ... ok
+scene s12_sleep_wake
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR         substeps = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12_sleep_wake ... ok
+test bullet_dyn_solve_cone ... ok
+scene s12h_fast_sphere_hits_box_single_steps
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12h_fast_sphere_hits_box_single_steps ... ok
+scene s04_box_stack3
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s04_box_stack3 ... ok
+scene s12i_sleep_wake_fine_steps
+  MAX ABS ERROR             aabb = 0e0
+  MAX ABS ERROR           active = 0e0
+  MAX ABS ERROR              ang = 0e0
+  MAX ABS ERROR          inertia = 0e0
+  MAX ABS ERROR              lin = 0e0
+  MAX ABS ERROR  manifold_bodies = 0e0
+  MAX ABS ERROR   manifold_count = 0e0
+  MAX ABS ERROR      point_count = 0e0
+  MAX ABS ERROR              pos = 0e0
+  MAX ABS ERROR             pt_a = 0e0
+  MAX ABS ERROR             pt_b = 0e0
+  MAX ABS ERROR      pt_distance = 0e0
+  MAX ABS ERROR       pt_impulse = 0e0
+  MAX ABS ERROR             pt_n = 0e0
+  MAX ABS ERROR             quat = 0e0
+  MAX ABS ERROR           wbasis = 0e0
+  MAX ABS ERROR             wpos = 0e0
+  MAX ABS ERROR            wquat = 0e0
+test bullet_dyn_s12i_sleep_wake_fine_steps ... ok
+
+test result: ok. 66 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+

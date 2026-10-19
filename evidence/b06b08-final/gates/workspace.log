@@ -1,0 +1,2195 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: `x3d-render` (lib) generated 4 warnings
+warning: function `setup` is never used
+   --> crates/x3d-viewer/tests/multi_viewer_b08.rs:294:4
+    |
+294 | fn setup() -> Option<Rig> {
+    |    ^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: direct cast of function item into an integer
+   --> crates/x3d-viewer/tests/multi_viewer_b08.rs:905:76
+    |
+905 |         assert_eq!(first as usize, x3d_render::traverse::particle_geometry as usize);
+    |                                                                            ^^^^^^^^
+    |
+    = note: `#[warn(function_casts_as_integer)]` on by default
+help: first cast to a pointer `as *const ()`
+    |
+905 |         assert_eq!(first as usize, x3d_render::traverse::particle_geometry as *const () as usize);
+    |                                                                            ++++++++++++
+
+warning: `x3d-viewer` (test "multi_viewer_b08") generated 2 warnings (run `cargo fix --test "multi_viewer_b08" -p x3d-viewer` to apply 1 suggestion)
+warning: unused import: `x3d_viewer::viewer::UiEvent`
+  --> crates/x3d-viewer/tests/rea_b08_gltf_reload.rs:10:5
+   |
+10 | use x3d_viewer::viewer::UiEvent;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `x3d-viewer` (test "rea_b08_gltf_reload") generated 1 warning (run `cargo fix --test "rea_b08_gltf_reload" -p x3d-viewer` to apply 1 suggestion)
+   Compiling x3d-render v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-render)
+warning: `x3d-render` (lib test) generated 4 warnings (4 duplicates)
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::alloc` is unsafe and requires unsafe block
+  --> crates/x3d-runtime/tests/physics_b08_lifecycle.rs:28:9
+   |
+28 |         System.alloc(l)
+   |         ^^^^^^^^^^^^^^^ call to unsafe function
+   |
+   = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+  --> crates/x3d-runtime/tests/physics_b08_lifecycle.rs:26:5
+   |
+26 |     unsafe fn alloc(&self, l: Layout) -> *mut u8 {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+   = note: `#[warn(unsafe_op_in_unsafe_fn)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::dealloc` is unsafe and requires unsafe block
+  --> crates/x3d-runtime/tests/physics_b08_lifecycle.rs:32:9
+   |
+32 |         System.dealloc(p, l)
+   |         ^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+   |
+   = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+  --> crates/x3d-runtime/tests/physics_b08_lifecycle.rs:30:5
+   |
+30 |     unsafe fn dealloc(&self, p: *mut u8, l: Layout) {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `std::alloc::GlobalAlloc::realloc` is unsafe and requires unsafe block
+  --> crates/x3d-runtime/tests/physics_b08_lifecycle.rs:36:9
+   |
+36 |         System.realloc(p, l, n)
+   |         ^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+   |
+   = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+  --> crates/x3d-runtime/tests/physics_b08_lifecycle.rs:34:5
+   |
+34 |     unsafe fn realloc(&self, p: *mut u8, l: Layout, n: usize) -> *mut u8 {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+For more information about this error, try `rustc --explain E0133`.
+warning: variable does not need to be mutable
+   --> crates/x3d-runtime/tests/bullet_dyn_scenes.rs:360:13
+    |
+360 | ...   let mut bt = Built { rb, ms, compound, ccs: if xflow { pre[bi].clone() } else { make_ccs(&mut w, b, false) }, spec: b.clone() };
+    |           ----^^
+    |           |
+    |           help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `x3d-runtime` (test "physics_b08_lifecycle") generated 3 warnings (run `cargo fix --test "physics_b08_lifecycle" -p x3d-runtime` to apply 3 suggestions)
+warning: `x3d-runtime` (test "bullet_dyn_scenes") generated 1 warning (run `cargo fix --test "bullet_dyn_scenes" -p x3d-runtime` to apply 1 suggestion)
+warning: variable does not need to be mutable
+   --> crates/x3d-runtime/tests/bullet_b08_engine.rs:409:13
+    |
+409 | ...   let mut bt = Built { rb, ms, compound, ccs: if xflow { pre[bi].clone() } else { make_ccs(&mut w, b, false) }, spec: b.clone() };
+    |           ----^^
+    |           |
+    |           help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: `x3d-runtime` (test "bullet_b08_engine") generated 1 warning (run `cargo fix --test "bullet_b08_engine" -p x3d-runtime` to apply 1 suggestion)
+warning: `x3d-parse` (lib test) generated 4 warnings (4 duplicates)
+    Finished `release` profile [optimized] target(s) in 0.75s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/cm_core-695d4f82d49e9fb9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fuzz_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/fuzz_oracle-15541efa337566b3)
+
+running 1 test
+test cm5_doc_ops_differential ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/upstream_doc_test.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/upstream_doc_test-c8e137c87343989e)
+
+running 21 tests
+test doc_bare_doc ... ok
+test doc_basic ... ok
+test doc_basic_separate ... ok
+test doc_copy_doc ... ok
+test doc_broad_cast ... ok
+test doc_double_rebase ... ok
+test doc_islands ... ok
+test doc_long_chain ... ok
+test doc_shared_bookmark ... ok
+test doc_shared_hist ... ok
+test doc_shared_marker ... ok
+test doc_shared_marker_copy ... ok
+test doc_shared_marker_detach ... ok
+test doc_subview ... ok
+test doc_subview_edit_on_boundary ... ok
+test doc_undo_conflict ... ok
+test doc_undo_in_subview ... ok
+test doc_undo_keep_ranges ... ok
+test doc_undo_intact ... ok
+test doc_undo_update ... ok
+test doc_unlink ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/upstream_test_js.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/upstream_test_js-268ccce91aa9887e)
+
+running 45 tests
+test always_merge_sel_event_with_change_origin ... ok
+test before_change_undo ... ok
+test before_change ... ok
+test bookmark_insert_left ... ok
+test bookmark_test ... ok
+test bug577 ... ok
+test change_generation ... ok
+test delete_span_collapsed_inclusive_left ... ok
+test dirty_bit ... ok
+test extend_selection ... ok
+test find_marks_middle ... ok
+test get_all_marks ... ok
+test get_line_number ... ok
+test get_range ... ok
+test hidden_lines_select_all ... ok
+test line_separator ... ok
+test lines ... ok
+test mark_clear_between ... ok
+test mark_text_allow_empty ... ok
+test mark_text_stacked ... ok
+test mark_text_single_line ... ok
+test mark_text_stay_gone ... ok
+test mark_text_multi_line ... ok
+test pos_from_index ... ok
+test mark_text_undo ... ok
+test read_only_marker ... ok
+test replace_range ... ok
+test restore_history ... ok
+test sel_change_in_operation_does_not_split ... ok
+test selection ... ok
+test selection_bias ... ok
+test selection_change_confuses_history ... ok
+test selection_history_non_overlapping ... ok
+test set_value_clears ... ok
+test undo_composite ... ok
+test undo_depth ... ok
+test undo ... ok
+test undo_doesnt_clear_value ... ok
+test undo_multi_line ... ok
+test undo_preserves_new_marks ... ok
+test undo_selection_as_before ... ok
+test weird_linebreaks ... ok
+test undo_selection ... ok
+test random_collapsed_ranges ... ok
+test btree_stress ... ok
+
+test result: ok. 45 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/util_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/util_oracle-ea44290242f578f0)
+
+running 6 tests
+test skip_extending_and_find_first ... ok
+test count_and_find_column ... ok
+test is_extending_char_all_code_units ... ok
+test string_stream_scripts ... ok
+test is_word_char_basic_all_code_units ... ok
+test bidi_ordering_and_helpers ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/cm_modes-58375e3a4e61afdd)
+
+running 14 tests
+test css::tests::regexes ... ok
+test htmlmixed::tests::attr_value ... ok
+test javascript::tests::regexes ... ok
+test htmlmixed::tests::end_tags ... ok
+test js::tests::lower ... ok
+test tests::extend_mode_and_mode_props ... ok
+test tests::null_mode_run ... ok
+test tests::inner_mode_of_htmlmixed ... ok
+test toml::tests::regexes ... ok
+test tests::resolve_mode_rules ... ok
+test vrml::tests::numbers ... ok
+test xml::tests::electric ... ok
+test vrml::tests::small_scene ... ok
+test xml::tests::word_regex ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/css_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/css_oracle-5715840ff69919a1)
+
+running 1 test
+test css_tokens_match_cm5_runmode ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/htmlmixed_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/htmlmixed_oracle-16350449e71ffa6d)
+
+running 1 test
+test htmlmixed_tokens_match_cm5_runmode ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/javascript_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/javascript_oracle-ea4ea6429ceba53e)
+
+running 1 test
+test javascript_tokens_match_cm5_runmode ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests/toml_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/toml_oracle-9c738f9e729c3828)
+
+running 1 test
+test toml_tokens_match_cm5_runmode ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/upstream_mode_tests.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/upstream_mode_tests-60f76f60924c8ba1)
+
+running 174 tests
+test css_atmediafeaturevaluekeyword ... ok
+test css_atmediamaxwidthnested ... ok
+test css_atmediaunknownfeaturevaluekeyword ... ok
+test css_atmediaunknowntype ... ok
+test css_atmediaunknownproperty ... ok
+test css_atmediauppercase ... ok
+test css_blank_css_variable ... ok
+test css_classselector ... ok
+test css_comment_does_not_disrupt ... ok
+test css_counter_style ... ok
+test css_counter_style_additive_symbols ... ok
+test css_counter_style_symbols ... ok
+test css_counter_style_use ... ok
+test css_css_variable ... ok
+test css_document ... ok
+test css_document_domain ... ok
+test css_document_regexp ... ok
+test css_document_url ... ok
+test css_document_urlprefix ... ok
+test css_empty_url ... ok
+test css_font_face ... ok
+test css_idselector ... ok
+test css_indent_atmedia ... ok
+test css_indent_parentheses ... ok
+test css_indent_comma ... ok
+test css_indent_tagselector ... ok
+test css_parens ... ok
+test css_supports ... ok
+test css_tagbogusproperty ... ok
+test css_tagcolorhex3 ... ok
+test css_tagcolorhex4 ... ok
+test css_tagcolorhex5invalid ... ok
+test css_tagcolorhex6 ... ok
+test css_tagcolorhexinvalid ... ok
+test css_tagcolorhex8 ... ok
+test css_tagcolorkeyword ... ok
+test css_tagnegativenumber ... ok
+test css_tagpositivenumber ... ok
+test css_tagselector ... ok
+test css_tagselectorunclosed ... ok
+test css_tagstringdouble ... ok
+test css_tagstringnoquotes ... ok
+test css_tagstringsingle ... ok
+test css_tagtwoproperties ... ok
+test css_tagtwopropertiesurl ... ok
+test css_tagvendor ... ok
+test gss_atcomponent ... ok
+test javascript_abstract_class ... ok
+test javascript_anonymous_class_expression ... ok
+test javascript_arrow_prop ... ok
+test javascript_async ... ok
+test javascript_async_arrow ... ok
+test javascript_async_assignment ... ok
+test javascript_async_comment ... ok
+test javascript_async_jquery ... ok
+test javascript_async_object ... ok
+test javascript_async_object_function ... ok
+test javascript_async_object_properties ... ok
+test javascript_async_variable ... ok
+test javascript_bigint ... ok
+test javascript_class ... ok
+test javascript_class_async_method ... ok
+test javascript_class_body ... ok
+test javascript_comma_and_binop ... ok
+test javascript_const ... ok
+test javascript_destructure_trailing_comma ... ok
+test javascript_destructuring ... ok
+test javascript_enum_body ... ok
+test javascript_fatarrow ... ok
+test javascript_fatarrow_stringdefault ... ok
+test javascript_for_await ... ok
+test javascript_for_of ... ok
+test javascript_generator ... ok
+test javascript_generic_in_function_call ... ok
+test javascript_import ... ok
+test javascript_import_dynamic ... ok
+test javascript_import_dynamic_2 ... ok
+test javascript_import_trailing_comma ... ok
+test javascript_indent_below_if ... ok
+test javascript_indent_c_style ... ok
+test javascript_indent_else ... ok
+test javascript_indent_for ... ok
+test javascript_indent_funarg ... ok
+test javascript_indent_if ... ok
+test javascript_indent_semicolonless_if ... ok
+test javascript_indent_semicolonless_if_with_statement ... ok
+test javascript_indent_statement ... ok
+test javascript_indent_strange_array ... ok
+test javascript_indent_switch ... ok
+test javascript_interface_without_semicolons ... ok
+test javascript_json_ld_fake ... ok
+test javascript_let_scoping ... ok
+test javascript_locals ... ok
+test javascript_leaving_scope ... ok
+test javascript_json_ld_keywords ... ok
+test javascript_modifiers ... ok
+test javascript_numeric_separator ... ok
+test javascript_new_target ... ok
+test javascript_multilinestring ... ok
+test javascript_param_destructuring ... ok
+test javascript_private_properties ... ok
+test javascript_named_class_expression ... ok
+test javascript_parenthesized_type ... ok
+test javascript_quotedfatarrow ... ok
+test javascript_quotedstringaddition ... ok
+test javascript_return_eol ... ok
+test javascript_regexp_corner_case ... ok
+test javascript_scary_regexp ... ok
+test javascript_spread ... ok
+test javascript_typescript_arrow_type ... ok
+test javascript_type_guard ... ok
+test javascript_type_as_variable ... ok
+test javascript_typescript_class ... ok
+test javascript_typescript_complex_type_casting ... ok
+test javascript_typescript_complex_return_type ... ok
+test javascript_switch_scoping ... ok
+test javascript_typescript_generic_class ... ok
+test javascript_typescript_function_generics ... ok
+test javascript_typescript_double_extend ... ok
+test javascript_quasi ... ok
+test javascript_typescript_new_typeargs ... ok
+test javascript_typescript_extend_type ... ok
+test javascript_typescript_extend_operators ... ok
+test javascript_typescript_type_when_keyword ... ok
+test javascript_typescript_type_when_not_keyword ... ok
+test javascript_param_default ... ok
+test javascript_typescript_index_signature ... ok
+test less_interpolation ... ok
+test javascript_typescript_keyof ... ok
+test less_nest ... ok
+test less_mixin ... ok
+test less_variable ... ok
+test scss_attribute_with_hyphen ... ok
+test scss_basic_structure ... ok
+test javascript_typescript_literal_types ... ok
+test scss_directives ... ok
+test scss_divide_operator ... ok
+test scss_important_keyword ... ok
+test scss_indent_mixin ... ok
+test scss_indent_nested ... ok
+test javascript_underscore_property ... ok
+test less_amp ... ok
+test scss_indent_parentheses ... ok
+test javascript_quasi_no_function ... ok
+test scss_atom_in_nested_block ... ok
+test javascript_typescript_interface_with_const ... ok
+test scss_interpolation_error ... ok
+test scss_indent_vardef ... ok
+test scss_interpolation_in_property ... ok
+test scss_interpolation_in_selector ... ok
+test scss_mixin ... ok
+test scss_multiline_comment ... ok
+test scss_nested_structure ... ok
+test scss_nested_structure_with_id_selector ... ok
+test scss_number_percentage ... ok
+test scss_number_without_semicolon ... ok
+test scss_numbers ... ok
+test scss_selector ... ok
+test scss_singleline_comment ... ok
+test scss_string_after_attribute ... ok
+test scss_string ... ok
+test scss_url_with_double_quotes ... ok
+test scss_url_with_quotation ... ok
+test scss_url_with_single_quotes ... ok
+test scss_variable ... ok
+test scss_variable_as_attribute ... ok
+test xml_cdata ... ok
+test xml_doctype ... ok
+test xml_matching ... ok
+test xml_list ... ok
+test xml_nonmatching ... ok
+test xml_pthenarticle ... ok
+test xml_selfclose ... ok
+test xml_valueless ... ok
+
+test result: ok. 174 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/vrml_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/vrml_oracle-0d5f24c644265b4b)
+
+running 1 test
+test vrml_tokens_match_js_vrml_mode ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.79s
+
+     Running tests/xml_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/xml_oracle-d56102466c0f755a)
+
+running 1 test
+test xml_tokens_match_cm5_runmode ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/cm_view-a7172e3c0de576b1)
+
+running 3 tests
+test keymap::tests::normalize ... ok
+test measure::tests::oracle_positions_match_chromium_probe ... ok
+test fileio::tests::roundtrips ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/cm-edit.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/cm_edit-9e62b3b6219ae184)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/cm-render.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/cm_render-02e48e2e8aec4ce8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/app_script.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/app_script-66d7041870b3456d)
+
+running 5 tests
+test mouse_click_drag_double_click_shift_click ... ok
+test read_only_blocks_edits_but_not_motion ... ok
+test scripted_edit_and_save ... ok
+test wheel_scroll_is_clamped_and_virtualized ... ok
+test winit_event_loop_under_xvfb ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.52s
+
+     Running tests/cmd_fuzz_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/cmd_fuzz_oracle-f3a334c6b98e6787)
+
+running 1 test
+test cmd_fuzz_oracle ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.37s
+
+     Running tests/smoke.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/smoke-1f70219999d3d6bc)
+
+running 1 test
+test smoke ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/upstream_multi_test.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/upstream_multi_test-664c574e2c16a17f)
+
+running 17 tests
+test multi_add_selection ... ok
+test multi_extend_selection ... ok
+test multi_delete_line ... ok
+test multi_delete_h ... ok
+test multi_get_selection ... ok
+test multi_go_line_start ... ok
+test multi_go_doc_start_end ... ok
+test multi_indent_selection ... ok
+test multi_kill_line ... ok
+test multi_move_h ... ok
+test multi_move_v ... ok
+test multi_newline_and_indent ... ok
+test multi_selection_history ... ok
+test multi_set_selection ... ok
+test multi_replace_selection ... ok
+test multi_something_selected ... ok
+test multi_selections_may_touch ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/upstream_test_js.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/upstream_test_js-8120f22e6486b620)
+
+running 38 tests
+test add_key_map ... ok
+test before_selection_change ... ok
+test bidi_update ... ok
+test char_movement_commands ... ok
+test click_tab ... ok
+test atomic_marker ... ok
+test collapse_on_move ... ok
+test cursor_motion_splits_history ... ok
+test delete_wrapped ... ok
+test coords ... ok
+test extra_keys ... ok
+test get_token_at ... ok
+test find_pos_h ... ok
+test get_token_type_at ... ok
+test group_movement_commands ... ok
+test groups_and_whitespace ... ok
+test hidden_lines_auto_unfold ... ok
+test indent ... ok
+test indent_by_number ... ok
+test line_style_from_mode ... ok
+test mode_lookahead ... ok
+test jump_the_gap ... ok
+test move_v_stuck ... ok
+test moveby_text_unit ... ok
+test read_only_marker ... ok
+test scroll_back_and_forth ... ok
+test selection_history ... ok
+test selection_change_reduces_redo ... ok
+test selection_home_end ... ok
+test select_all_no_scroll ... ok
+test vertical_movement_commands_single_line ... ok
+test vertical_movement_commands_wrapping ... ok
+test vertical_scroll ... ok
+test vertical_movement_commands ... ok
+test word_movement_commands ... ok
+test coords_char ... ok
+test scroll_into_view ... ok
+test scroll_snap ... ok
+
+test result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/r0_2_c_tests-f453d7272d7116ff)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/cli.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/r0_2_c_cli-c66815cfa1c182dc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/api_surface.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/api_surface-1e94eb71c61f67fa)
+
+running 37 tests
+test fields_reexports_are_the_module_items ... ok
+test path_vrml97_fields ... ok
+test path_vrml97_fields_fdlibm ... ok
+test path_vrml97_fields_format ... ok
+test path_vrml97_fields_generator ... ok
+test path_vrml97_fields_jsmath ... ok
+test path_vrml97_fields_math ... ok
+test path_vrml97_fields_math_color ... ok
+test path_vrml97_fields_math_matrix ... ok
+test path_vrml97_fields_math_quaternion ... ok
+test path_vrml97_fields_math_rotation ... ok
+test path_vrml97_fields_math_vector ... ok
+test path_vrml97_fields_types ... ok
+test path_vrml97_fields_types_access ... ok
+test path_vrml97_fields_value ... ok
+test path_vrml97_parse ... ok
+test path_vrml97_parse_color ... ok
+test path_vrml97_parse_lexer ... ok
+test path_vrml97_parse_parser ... ok
+test path_vrml97_scene ... ok
+test path_vrml97_scene_info_array ... ok
+test path_vrml97_scene_nodes ... ok
+test module_path_list_is_complete ... ok
+test path_vrml97_scene_scene ... ok
+test path_vrml97_scene_setup ... ok
+test path_vrml97_scene_vrml ... ok
+test root_vrml97_functions_have_the_released_signatures ... ok
+test root_vrml97_is_valid_vrml_matches_vrmlparser_isvalid ... ok
+test root_vrml97_types_are_the_module_types ... ok
+test root_vrml_is_gzip ... ok
+test root_vrml_reexports_are_vrml97_items ... ok
+test root_vrml_detect ... ok
+test root_x3d_reexports_are_vrml97_items ... ok
+test root_x3d_node_and_field ... ok
+test root_x3d_nodes_components_profiles ... ok
+test root_vrml_summarize ... ok
+test parse_compare_is_not_public ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/error_compat.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/error_compat-a2b82c3e772da64e)
+
+running 10 tests
+test load_file_missing_is_io_not_found ... ok
+test load_file_returns_result_scene_load_error ... ok
+test parse_bytes_returns_result_scene_load_error ... ok
+test parse_and_load_errors_are_distinct_types ... ok
+test no_handler_error_text ... ok
+test parse_error_clone_is_equal ... ok
+test parse_failure_is_load_error_parse_variant ... ok
+test parse_error_display_and_debug ... ok
+test engine_errors_have_the_same_variants_and_text ... ok
+test errors_do_not_implement_std_error ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+
+     Running tests/field_math.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/field_math-a761a75bc29c2cb3)
+
+running 19 tests
+test field_value_engine_sfbool ... ok
+test field_value_published_sfbool ... ok
+test field_value_published_sfstring ... ok
+test field_value_published_sfvec3f ... ok
+test generator_format_engine_matches_xite ... ok
+test generator_format_facade_matches_xite ... ok
+test intl_standard_engine_matches_chrome ... ok
+test intl_standard_facade_matches_chrome ... ok
+test matrix_determinant_matches_xite ... ok
+test matrix_factor_matches_xite_node ... ok
+test matrix_get_transform_without_center_equals_factor ... ok
+test matrix_identity_is_neutral ... ok
+test matrix_inverse_matches_xite ... ok
+test matrix_mult_right_matches_xite ... ok
+test matrix_set_transform_matches_xite ... ok
+test node_flavor_is_the_default ... ok
+test node_math_engine_matches_node ... ok
+test node_math_published_matches_node ... ok
+test quaternion_identity_is_0_0_0_1 ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/future_gate.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/future_gate-69f78f834883fb8c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/future_gate_chrome.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/future_gate_chrome-2e2e671d835af771)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/future_gate_contract.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/future_gate_contract-58b841a733691a6e)
+
+running 4 tests
+test gate_sources_are_feature_gated ... ok
+test gate_sources_have_no_ignore ... ok
+test gate_tests_equal_the_script_list ... ok
+test gate_compiles_against_the_shared_implementation ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/js_math_chrome.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/js_math_chrome-9610763bc591b88e)
+
+running 3 tests
+test chrome_math_engine_matches_chrome ... ok
+test chrome_math_facade_matches_chrome ... ok
+test chrome_matrix_factor_matches_xite_chromium ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/parser_scene.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/parser_scene-d3aba44f93d9a5ad)
+
+running 26 tests
+test decode_text_replaces_invalid_utf8 ... ok
+test decode_text_strips_bom ... ok
+test gunzip_passthrough_on_non_gzip ... ok
+test parse_truncated_gzip_fails_like_xite ... ok
+test parse_empty_world ... ok
+test engine_parse_import_matches_xite_without_inline_load ... ok
+test decode_text_in_a_scene_matches_xite ... ok
+test parse_import_facade_matches_xite_without_inline_load ... ok
+test parse_externproto_with_url_in_interface_fails ... ok
+test parse_unterminated_bracket_fails ... ok
+test parse_bom_is_stripped ... ok
+test parse_unknown_node_type_warns_and_prints_null ... ok
+test parse_group_with_children ... ok
+test parse_minimal_vrml97 ... ok
+test parse_proto ... ok
+test parse_def_and_use ... ok
+test parse_externproto_with_url ... ok
+test parse_route_to_unknown_field_warns_and_drops_route ... ok
+test parse_export_facade_matches_xite ... ok
+test parse_route_declaration ... ok
+test orthoviewpoint_fieldofview_facade_prints_sfvec4f ... ok
+test scene_specification_version_is_recorded ... ok
+test scene_root_node_count_matches_input ... ok
+test scene_to_vrml_string_header_is_x3d_4_1 ... ok
+test parse_gzip_input_decodes_to_the_plain_scene ... ok
+test engine_parse_export_matches_xite ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/type_identity.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/type_identity-0b1250ad6113e47a)
+
+running 19 tests
+test field_types_and_default_variants_match_on_both_sides ... ok
+test matrix4_published_has_set_transform ... ok
+test parse_error_is_clone_debug_display_on_both_sides ... ok
+test scene_facade_is_the_engine_type ... ok
+test shared_shape_types_are_one_type ... ok
+test scene_facade_has_the_four_engine_fields ... ok
+test scene_engine_has_the_four_engine_fields ... ok
+test matrix4_facade_has_factor ... ok
+test matrix4_facade_has_get_transform ... ok
+test matrix4_engine_has_factor_and_get_transform ... ok
+test node_kind_facade_has_imported_variant ... ok
+test engine_parse_error_is_accepted_where_facade_is_expected ... ok
+test facade_scene_is_accepted_where_engine_scene_is_expected ... ok
+test node_kind_four_arm_match_is_not_exhaustive_through_the_facade ... ok
+test execution_context_facade_is_exactly_the_nine_field_literal ... ok
+test route_facade_is_exactly_the_ten_field_literal ... ok
+test route_engine_is_exactly_the_ten_field_literal ... ok
+test load_error_is_not_clone_on_either_side ... ok
+test execution_context_engine_is_exactly_the_nine_field_literal ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.93s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/vrml-a025ceef55e515ab)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/vrml.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/vrml-7ac9fcf8a3dd50a2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/toolkit.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/toolkit-003c586ec253ea16)
+
+running 3 tests
+test detects_versions ... ok
+test rejects_vrml1 ... ok
+test summarizes_a_scene ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/vrml97-90f39c4acd56250c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/oracle-1d995b22ad02d81d)
+
+running 2 tests
+test x0_matches_x_ite ... ok
+test items_parse_only ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.39s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d-bd5b0a7f4e83c307)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/reference.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/reference-e5c0a52c8de465b4)
+
+running 3 tests
+test table_is_complete ... ok
+test reads_classic_encoding ... ok
+test known_fields ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_fields-fc21b546512793ed)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/chrome_format.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/chrome_format-65eca94882c0159f)
+
+running 2 tests
+test intl_standard_matches_chrome ... ok
+test nearly_one_prints_like_icu ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/chrome_math.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/chrome_math-e361999f652e4104)
+
+running 1 test
+test chrome_math_is_correctly_rounded ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/matrix_factor.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/matrix_factor-354d3910316aa820)
+
+running 7 tests
+test factor_matches_x_ite_oracle ... ok
+test factor_negative_determinant ... ok
+test factor_non_uniform_scale_with_orientation ... ok
+test factor_reports_translation_exactly ... ok
+test factor_rotation_uniform_scale ... ok
+test factor_translation_only ... ok
+test factor_with_center ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/oracle-bd0c26a5a33800ee)
+
+running 6 tests
+test color_math_matches_x_ite ... ok
+test matrix_math_matches_x_ite ... ok
+test vector_math_matches_x_ite ... ok
+test rotation_and_quaternion_math_match_x_ite ... ok
+test js_math_functions_match_v8 ... ok
+test float_and_double_format_match_x_ite ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_parse-c043fb5ae053a549)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-parse.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_parse-09423989f14e5502)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/corpus-34545cdbe31c3759)
+
+running 1 test
+test x0_corpus_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/css_colors_b08.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/css_colors_b08-259ed0eba1242a2d)
+
+running 1 test
+test css_colors_match_chrome ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/fields.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/fields-b100bcbd168f4dd5)
+
+running 1 test
+test every_field_type_parses_and_prints_like_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/formats_rea.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/formats_rea-01c7a15dfb739413)
+
+running 1 test
+test formats_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/gltf_rea.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/gltf_rea-84b29b6aa999ce04)
+
+running 1 test
+test gltf_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+
+     Running tests/html_support_rea.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/html_support_rea-a1e88d15a1936949)
+
+running 1 test
+test html_support_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/nodes.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/nodes-8bf191d5542588d1)
+
+running 2 tests
+test vrml2_registered_node_classes_match_x_ite ... ok
+test vrml2_create_node_filters_by_specification_version ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/optimizer_rea.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/optimizer_rea-b78e185938c35966)
+
+running 1 test
+test optimizer_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/svg_rea.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/svg_rea-a8260a02221ab838)
+
+running 2 tests
+test svg_quality_options_match_x_ite ... ok
+test svg_matches_x_ite ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_render-c59ec9c53e4d0aad)
+
+running 1 test
+test tess::tests::concave_l_shape ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-shot.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_shot-cfac7da4b6226840)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/depth.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/depth-506cc6a5dbf14dbf)
+
+running 4 tests
+test log_shows_what_standard_cannot ... ok
+test reversed_leaves_other_scenes_alone ... ok
+test standard_and_log_match_x_ite ... ok
+test reversed_resolves_near_coplanar_surfaces ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.35s
+
+     Running tests/fog.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/fog-48f0cb416a4716f1)
+
+running 2 tests
+test fog_node_type_and_visibility ... ok
+test fog_interpolant_matches_the_shader ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/geometry.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/geometry-7f24b5d1ffb68c53)
+
+running 1 test
+test geometry_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/geometry_rea.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/geometry_rea-1c89643d0165f29d)
+
+running 1 test
+test rea_geometry_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/geometry_ring.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/geometry_ring-8b53564ecfeac58a)
+
+running 1 test
+test ring_geometry_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/glsl_compat_b08.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/glsl_compat_b08-6f8528f94949f795)
+
+running 11 tests
+test missing_stage_message ... ok
+test undeclared_gl_fragcolor_in_vertex_is_an_error ... ok
+test varying_without_vertex_output_is_a_link_error ... ok
+test syntax_error_names_the_user_line ... ok
+test precision_statement_for_a_sampler_type_is_accepted ... ok
+test several_parts_of_one_stage_link_the_first ... ok
+test matrix_attribute_is_assembled_from_columns ... ok
+test conditionals_and_macros ... ok
+test es100_pair_links ... ok
+test es300_in_out_structs_arrays_bool ... ok
+test max_lights_macro_sizes_arrays_and_loops ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/msaa.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/msaa-a6b997b45a8e9432)
+
+running 3 tests
+test sample_count_clamps_like_max_samples ... ok
+test multisampling_changes_edges_only ... ok
+test edge_scenes_match_the_x_ite_resolve ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+
+     Running tests/ortho.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/ortho-76c4422ca0f5f7b2)
+
+running 2 tests
+test ortho_projection_matches_camera_bounds ... ok
+test ortho_viewpoint_renders_without_unsupported_warning ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running tests/rea_b04_geometry.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b04_geometry-f746d64c7eba5391)
+
+running 1 test
+test rea_b04_nurbs_geometry_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/rea_b04_nurbs_iso.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b04_nurbs_iso-af40c01611ddb747)
+
+running 9 tests
+test iso_nurbs_set_bbox_display_default ... ok
+test iso_rational_curve ... ok
+test iso_rational_texture_coordinate ... ok
+test iso_nurbs_interpolators ... ok
+test iso_closed_ignored_for_seam_weights ... ok
+test iso_rational_trimming_curve ... ok
+test iso_weighted_swept_and_swung_curves ... ok
+test iso_rational_patch_surface ... ok
+test iso_trimming_orientation ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/render_rea2.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea2-d5a6cc0326b2cdc0)
+
+running 1 test
+test render_nodes_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.76s
+
+     Running tests/render_rea_b02.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b02-3c1b2d24c880597a)
+
+running 1 test
+test rea_b02_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.83s
+
+     Running tests/render_rea_b03.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b03-af7a94b7fd077704)
+
+running 1 test
+test rea_b03_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.26s
+
+     Running tests/render_rea_b04.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b04-47e78df5a3e43232)
+
+running 1 test
+test rea_b04_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+
+     Running tests/render_rea_b07_mat.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b07_mat-fa582701f5f02a4f)
+
+running 1 test
+test rea_b07_mat_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.22s
+
+     Running tests/render_rea_b07_vol.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b07_vol-83f06adcbbc81d11)
+
+running 1 test
+test rea_b07_vol_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.55s
+
+     Running tests/render_rea_b08_gltf.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_gltf-e85f2e5424f04f89)
+
+running 1 test
+test rea_b08_gltf_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.85s
+
+     Running tests/render_rea_b08_gs.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_gs-a5f42b4841e61a26)
+
+running 1 test
+test rea_b08_gs_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.28s
+
+     Running tests/render_rea_b08_net.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_net-d148906becdde758)
+
+running 1 test
+test rea_b08_net_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.20s
+
+     Running tests/render_rea_b08_shaders.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_shaders-6029157a1f4fff04)
+
+running 1 test
+test rea_b08_shaders_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.96s
+
+     Running tests/render_rea_b08_svg.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_svg-f3d616b146f84dbd)
+
+running 1 test
+test rea_b08_svg_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+
+     Running tests/render_rea_b08_vs.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_vs-6d291df5c28e8037)
+
+running 1 test
+test rea_b08_vs_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.00s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_runtime-f24fba2af2f88bf0)
+
+running 9 tests
+test browser_options::tests::defaults_and_page_attributes ... ok
+test browser_options::tests::deferred_interests_and_reshape ... ok
+test nodes::hanim::tests::channels_split_like_the_regular_expressions ... ok
+test sound::decode::tests::int16_uses_chromium_asymmetric_scale ... ok
+test sound::decode::tests::uint8_and_stereo_deinterleave ... ok
+test sound::param_timeline::tests::exponential_ramp_is_chromium_pow_then_double_products ... ok
+test sound::param_timeline::tests::one_old_event_ends_the_sample_accurate_path ... ok
+test sound::param_timeline::tests::set_value_lands_on_the_frame_chromium_computes ... ok
+test sound::decode::tests::resample_length_is_chromium_truncation ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bullet_b08_engine.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/bullet_b08_engine-8661b0411a781d09)
+
+running 37 tests
+test b08_h05_height_compound_body ... ok
+test b08_h01_height_sphere ... ok
+test b08_o03_pivot_change ... ok
+test b08_pairs_hull_mesh ... ok
+test b08_pairs_box_height ... ok
+test b08_pairs_hull_height ... ok
+test b08_o07_body_removed_with_joint ... ok
+test b08_j03_hinge_floor ... ok
+test b08_pairs_cylinder_height ... ok
+test b08_j02_double_axis_hinge ... ok
+test b08_pairs_sphere_mesh ... ok
+test b08_pairs_cone_height ... ok
+test b08_o02_joint_remove_add ... ok
+test b08_pairs_sphere_height ... ok
+test b08_pairs_box_mesh ... ok
+test b08_h04_height_flat ... ok
+test b08_solve_cone_height ... ok
+test b08_pairs_cylinder_mesh ... ok
+test b08_pairs_cone_mesh ... ok
+test b08_solve_box_height ... ok
+test b08_solve_sphere_height ... ok
+test b08_solve_cylinder_height ... ok
+test b08_solve_box_mesh ... ok
+test b08_solve_hull_height ... ok
+test b08_solve_sphere_mesh ... ok
+test b08_solve_hull_mesh ... ok
+test b08_solve_cylinder_mesh ... ok
+test b08_solve_cone_mesh ... ok
+test b08_o01_rebuild_world ... ok
+test b08_o06_sleeping_body_removed_readded ... ok
+test b08_j01_mixed_chain ... ok
+test b08_o05_runtime_fields ... ok
+test b08_multi_collidables ... ok
+test b08_h02_height_box ... ok
+test b08_o04_margin_gravity ... ok
+test b08_h06_height_big_wavy ... ok
+test b08_h03_height_cylinder_cone_hull ... ok
+
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running tests/bullet_box_box.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/bullet_box_box-172b294ce058ecc6)
+
+running 1 test
+test box_box_aligned_stack_n4_f120_frame16_substep5 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bullet_dyn_scenes.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/bullet_dyn_scenes-665454046e4308aa)
+
+running 66 tests
+test bullet_dyn_pairs_box_box ... ok
+test bullet_dyn_pairs_box_cone ... ok
+test bullet_dyn_pairs_box_cylinder ... ok
+test bullet_dyn_pairs_cone_cone ... ok
+test bullet_dyn_s01c_sphere_prefer_accuracy ... ok
+test bullet_dyn_s01_sphere_free_fall ... ok
+test bullet_dyn_s01b_sphere_fixed_dt ... ok
+test bullet_dyn_pairs_cylinder_cone ... ok
+test bullet_dyn_s02_box_tumbling ... ok
+test bullet_dyn_pairs_cone_hull ... ok
+test bullet_dyn_pairs_sphere_sphere ... ok
+test bullet_dyn_pairs_sphere_cylinder ... ok
+test bullet_dyn_pairs_box_hull ... ok
+test bullet_dyn_pairs_cylinder_hull ... ok
+test bullet_dyn_b06_shape_cylinder ... ok
+test bullet_dyn_pairs_sphere_box ... ok
+test bullet_dyn_s03d_sphere_bounce_single_steps ... ok
+test bullet_dyn_b06_collider_friction_rolling ... ok
+test bullet_dyn_pairs_cylinder_cylinder ... ok
+test bullet_dyn_pairs_hull_hull ... ok
+test bullet_dyn_pairs_sphere_cone ... ok
+test bullet_dyn_s09_universal_joint_unconnected ... ok
+test bullet_dyn_pairs_sphere_hull ... ok
+test bullet_dyn_s03b_sphere_roll_friction ... ok
+test bullet_dyn_b06_shape_cone ... ok
+test bullet_dyn_s07_ball_pendulum ... ok
+test bullet_dyn_s10_slider_limits ... ok
+test bullet_dyn_s08_hinge_pendulum ... ok
+test bullet_dyn_s11_damping ... ok
+test bullet_dyn_s08c_hinge_antiparallel ... ok
+test bullet_dyn_s03_sphere_bounce_rest ... ok
+test bullet_dyn_s08b_hinge_two_dynamic ... ok
+test bullet_dyn_s10b_slider_two_dynamic ... ok
+test bullet_dyn_s06_box_incline_friction ... ok
+test bullet_dyn_s05_sphere_mesh ... ok
+test bullet_dyn_b06_shape_cone_open ... ok
+test bullet_dyn_s12g_fast_sphere_hits_box_substeps ... ok
+test bullet_dyn_s12b_box_kicked_awake ... ok
+test bullet_dyn_s07b_ball_chain ... ok
+test bullet_dyn_s14_rolling_friction_sphere ... ok
+test bullet_dyn_s03c_box_tumble_land ... ok
+test bullet_dyn_s14c_rolling_friction_single_axis ... ok
+test bullet_dyn_s13b_capsule ... ok
+test bullet_dyn_s14b_rolling_friction_box ... ok
+test bullet_dyn_s05b_box_mesh ... ok
+test bullet_dyn_s13_compound_offset ... ok
+test bullet_dyn_solve_box ... ok
+test bullet_dyn_solve_cone ... ok
+test bullet_dyn_b06_shape_cylinder_open ... ok
+test bullet_dyn_s12e_awake_box_fast_sphere ... ok
+test bullet_dyn_s12f_sleeping_box_fast_sphere_8m ... ok
+test bullet_dyn_s12c_box_sleeps_then_kicked ... ok
+test bullet_dyn_solve_hull ... ok
+test bullet_dyn_solve_sphere ... ok
+test bullet_dyn_s12_sleep_wake ... ok
+test bullet_dyn_s12h_fast_sphere_hits_box_single_steps ... ok
+test bullet_dyn_s06b_cylinder_cone_hull ... ok
+test bullet_dyn_pairs_box_flat ... ok
+test bullet_dyn_s06c_cylinder_cone_hull_single_steps ... ok
+test bullet_dyn_pairs_box_touching ... ok
+test bullet_dyn_solve_cylinder ... ok
+test bullet_dyn_s12d_sleep_wake_single_steps ... ok
+test bullet_dyn_pairs_box_touching_aligned ... ok
+test bullet_dyn_pairs_box_aligned ... ok
+test bullet_dyn_s04_box_stack3 ... ok
+test bullet_dyn_s12i_sleep_wake_fine_steps ... ok
+
+test result: ok. 66 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+
+     Running tests/geometry_provider_bare.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/geometry_provider_bare-3617b3d770148d8d)
+
+running 3 tests
+test two_bare_runtimes_in_one_process_each_warn ... ok
+test bare_runtime_warns_once_per_node_and_its_geometry_is_empty ... ok
+test a_concave_collidable_shape_without_provider_warns_and_has_no_collision_shape ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/geometry_provider_installed.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/geometry_provider_installed-c862ce07f10dae73)
+
+running 1 test
+test runtimes_with_an_installed_provider_do_not_warn_and_share_it ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/particles_b07_units.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b07_units-df8e2753b96afbd5)
+
+running 4 tests
+test an_empty_polyline_set_has_no_vertices_and_one_texel ... ok
+test force_draws_replay_in_order ... ok
+test polylines_texture_layout_is_x_ites ... ok
+test the_lengths_are_float_rounded_double_sums ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/physics_b08_lifecycle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/physics_b08_lifecycle-f61f1596422797a5)
+
+running 5 tests
+test body_removed_with_contacts_and_joint_100_cycles ... ok
+test constraint_churn_100_cycles ... ok
+test in_world_churn_100_cycles ... ok
+test reload_is_bit_identical ... ok
+test world_churn_100_cycles ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/runtime.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/runtime-a5a5fb5b8d251320)
+
+running 5 tests
+test time_sensor_starts_at_load_and_sends_first_frame_events ... ok
+test missing_inline_reports_like_file_loader ... ok
+test route_loop_is_broken_once_per_field ... ok
+test interpolator_setup_resizes_key_value_and_routes_first_fraction ... ok
+test initialized_volume_types_capture_voxels_once ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_scene-cf2049cbac7ae14f)
+
+running 3 tests
+test scene::slot_tests::released_context_slots_change_generation ... ok
+test scene::slot_tests::the_root_context_is_never_released - should panic ... ok
+test scene::slot_tests::merge_takes_a_released_run ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/xml_json_oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/xml_json_oracle-99d7491b71afbe97)
+
+running 2 tests
+test synthetic_worlds_match_x_ite ... ok
+test corpus_x0_matches_x_ite ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_script-b8823978dafac7b9)
+
+running 2 tests
+test engine::slot_tests::a_stale_handle_does_not_reach_a_reused_slot ... ok
+test engine::slot_tests::an_element_keeps_its_parent ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-run.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_run-7401f90300d6c9dd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/corpus-b5d77a97133c1406)
+
+running 6 tests
+test synthetic_externproto_matches_x_ite ... ok
+test synthetic_x6_matches_x_ite ... ok
+test synthetic_followers_matches_x_ite ... ok
+test x0_runtime_matches_x_ite ... ok
+test x1_runtime_matches_x_ite ... ok
+test items_runtime_matches_x_ite ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.15s
+
+     Running tests/disposal_records.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/disposal_records-a971279632182222)
+
+running 8 tests
+test a_cached_externproto_scene_goes_with_the_world ... ok
+test repeated_fetch_failures_recover ... ok
+test different_urls_with_the_same_proto_name_stay_apart ... ok
+test nested_proto_and_inline_combinations_find_the_cached_proto ... ok
+test reloading_an_inline_with_export_keeps_the_arena_flat ... ok
+test reloading_an_inline_with_import_keeps_the_arena_flat ... ok
+test mixed_import_export_reloads_keep_live_references_and_the_arena_flat ... ok
+test a_cached_externproto_outlives_the_inline_that_fetched_it ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.39s
+
+     Running tests/extern_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/extern_reload-fce21ee7757d266e)
+
+running 1 test
+test synthetic_externproto_reload_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running tests/extern_reload_safety.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/extern_reload_safety-53835e8e4629f73f)
+
+running 8 tests
+test extern_removed_declaration_keeps_no_load ... ok
+test extern_disabled_declaration_ignores_old_request ... ok
+test extern_recovers_when_the_resource_appears ... ok
+test extern_older_request_does_not_replace_newer ... ok
+test extern_reload_after_failure_builds_one_body_per_instance ... ok
+test extern_auto_refresh_is_bounded ... ok
+test extern_reload_keeps_routes_unique ... ok
+test extern_reload_leaves_no_pending_state ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/gltf_inline_b08.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/gltf_inline_b08-f338c12d27b01d26)
+
+running 1 test
+test gltf_inline_scenarios_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/inline_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/inline_reload-9e96eb141e628376)
+
+running 1 test
+test synthetic_inline_reload_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/inline_reload_safety.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/inline_reload_safety-d98ccb859344b268)
+
+running 14 tests
+test request_cancelled_before_its_fetch_runs_loads_nothing ... ok
+test unload_now_cancels_a_request_in_the_same_frame ... ok
+test no_auto_refresh_after_a_failed_load ... ok
+test inline_taken_out_of_its_group_finishes_its_load ... ok
+test overlapping_request_never_shows_the_older_scene ... ok
+test disabled_inline_drops_the_late_result_and_recovers ... ok
+test auto_refresh_timer_is_cleared_with_its_scene ... ok
+test nested_request_queued_in_a_disposed_scene_is_cancelled ... ok
+test parent_routes_survive_every_reload ... ok
+test cyclic_inline_fails_instead_of_loading_without_end ... ok
+test shared_resources_are_not_cycles ... ok
+test disposed_scene_cancels_nested_loads_and_script_interests ... ok
+test repeated_reloads_do_not_accumulate_live_state ... ok
+test every_scenario_leaves_nothing_behind ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/rea_b08_net_unload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_net_unload-87b167d1099fdfa2)
+
+running 1 test
+test net_worlds_leave_nothing_behind_after_unload_and_reload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running tests/retention_tables.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/retention_tables-d1fd19a96a5e7a94)
+
+running 17 tests
+test a_late_fetch_task_does_not_reach_the_declaration_that_took_its_slot ... ok
+test a_held_proto_instance_keeps_its_declaration_slot ... ok
+test a_stale_context_handle_does_not_reach_the_scene_that_took_its_slot ... ok
+test script_wrappers_of_released_nodes_keep_their_value_and_then_go ... ok
+test stale_import_and_export_records_do_not_stay_active ... ok
+test a_stale_cache_entry_does_not_resolve_to_the_context_that_took_its_slot ... ok
+test a_held_nested_scene_keeps_its_parent_slot ... ok
+test a_script_disposed_during_its_own_event_cascade ... ok
+test w3_inline_proto ... ok
+test w1_inline_export_with_world_import ... ok
+test w2_inline_import ... ok
+test w5b_late_externproto_delivery ... ok
+test w5_externproto_cache_reuse ... ok
+test uncached_externproto_scenes_are_released_with_their_inline ... ok
+test w4_inline_script ... ok
+test w8_combined ... ok
+test rapid_unload_and_reload_of_scripted_scenes ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.75s
+
+     Running tests/script.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/script-ab7448851baeb61d)
+
+running 5 tests
+test mf_fields_grow_and_shrink_through_index_and_length ... ok
+test browser_time_is_frozen ... ok
+test script_errors_use_x_ite_wording ... ok
+test sfint32_truncates_and_sfbool_coerces ... ok
+test node_fields_are_live_and_events_reach_routes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/world_disposal.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/world_disposal-8962b31bc392f852)
+
+running 9 tests
+test a_node_that_a_live_field_holds_stays ... ok
+test nothing_runs_after_shutdown_and_events_to_deleted_nodes_are_dropped ... ok
+test replaced_scene_shuts_its_scripts_down_once ... ok
+test unloading_the_world_shuts_everything_down_once ... ok
+test unloading_an_inline_shuts_its_scene_down ... ok
+test a_stale_wrapper_does_not_alias_a_reused_slot ... ok
+test a_throwing_shutdown_is_reported_and_does_not_stop_the_rest ... ok
+test reloaded_content_is_correct_after_slots_are_reused ... ok
+test repeated_reloads_keep_the_arena_bounded ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/xml_json_runtime.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/xml_json_runtime-e0c04267ef8f9274)
+
+running 2 tests
+test synthetic_xml_json_after_load_match_x_ite ... ok
+test x0_xml_json_after_load_match_x_ite ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.69s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_text-1b592d62c242bf76)
+
+running 3 tests
+test libtess::tests::square_is_two_triangles ... ok
+test libtess::tests::square_with_hole ... ok
+test timsort::tests::sorts_with_consistent_comparator ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/oracle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/oracle-a58351d6cb7af623)
+
+running 2 tests
+test font_metrics_kerning_and_glyphs ... ok
+test text_layouts ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_viewer-8dedbef739df4461)
+
+running 13 tests
+test geom::tests::closest_point_to_parallel_line_returns_false ... ok
+test geom::tests::interval_wraps_values_like_js ... ok
+test geom::tests::line_plane_intersection_by_hand ... ok
+test geom::tests::ortho_matrix_layout_is_column_major ... ok
+test geom::tests::plane_distance_and_closest_point ... ok
+test geom::tests::project_point_hand_values_and_unproject_inverse ... ok
+test geom::tests::sphere_line_intersection_by_hand ... ok
+test geom::tests::triangle_intersection_keeps_js_quirks ... ok
+test geom::tests::unproject_ray_then_project_point_round_trip ... ok
+test pick_shapes::tests::manifold_keeps_four_points ... ok
+test pick_shapes::tests::boxes_and_gjk ... ok
+test pick_shapes::tests::point_against_triangles ... ok
+test pick_shapes::tests::point_against_margins ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-bench.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_bench-3703569b8778d0df)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-drive.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_drive-46447db376c2c28f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-particles-drive.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_particles_drive-341ee1cec0ca356c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-view.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_view-b0d5e8f422004909)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/x3d-zfight.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/x3d_zfight-be0267ef935e435a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/depth_modes.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/depth_modes-e5bdc04cc5531691)
+
+running 1 test
+test depth_modes_cycle_and_agree_on_plain_scenes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.46s
+
+     Running tests/embed.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/embed-d32c301deff6147c)
+
+running 5 tests
+test renders_into_a_host_texture_and_reloads ... ok
+test a_failed_replacement_leaves_no_world_and_does_not_revive_the_old_one ... ok
+test unload_shuts_the_world_down_once ... ok
+test reload_and_replacement_shut_the_old_world_down_first ... ok
+test dropping_the_viewer_unloads_its_world ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.15s
+
+     Running tests/geometry_provider_viewer.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/geometry_provider_viewer-ade60f7c6409ea75)
+
+running 1 test
+test a_viewer_installs_the_provider_for_every_runtime_of_the_process ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/multi_viewer_b08.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/multi_viewer_b08-37654d49c7ae1217)
+
+running 18 tests
+test gen_oracle_worlds ... ignored
+test unload_prints_stay_per_viewer ... ok
+test geometry_provider_is_one_stateless_function ... ok
+test random_stream_is_shared_on_the_thread ... ok
+test particle_state_two_viewers_equal_alone ... ok
+test x_ite_two_canvases_rigid_bodies_msaa4 ... FAILED
+test script_hosts_released_per_viewer ... ok
+test x_ite_two_canvases_scripts_msaa0 ... ok
+test scripts_two_viewers_interleaved_msaa4 ... ok
+test resources_released_per_viewer ... ok
+test x_ite_two_canvases_scripts_msaa4 ... ok
+test x_ite_two_canvases_rigid_bodies_msaa0 ... ok
+test scripts_two_viewers_interleaved_msaa0 ... ok
+test independent_drop ... ok
+test independent_reload ... ok
+test rendering_options_stay_per_viewer ... ok
+test particles_and_physics_three_viewers_msaa4 ... ok
+test particles_and_physics_three_viewers_msaa0 ... ok
+
+failures:
+
+---- x_ite_two_canvases_rigid_bodies_msaa4 stdout ----
+MULTIVIEW msaa=4 world=rb-a frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-a frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00145; Rust alone vs X_ITE alone 0.00145; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-a frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00579; Rust alone vs X_ITE alone 0.00579; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-b frame=5: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00000; Rust alone vs X_ITE alone 0.00000; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-b frame=20: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00289; Rust alone vs X_ITE alone 0.00289; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 world=rb-b frame=40: X_ITE pair vs X_ITE alone 0.00000; Rust pair vs X_ITE pair 0.00289; Rust alone vs X_ITE alone 0.00289; Rust pair vs Rust alone 0.00000
+MULTIVIEW msaa=4 pair=["rb-a", "rb-b"] worst 0.00579
+
+thread '<unnamed>' (1589877) panicked at crates/x3d-viewer/tests/multi_viewer_b08.rs:797:9:
+[
+    "rb-a frame 40: X_ITE pair/alone 0, Rust pair/X_ITE pair 0.005787037037037037, Rust alone/X_ITE alone 0.005787037037037037, Rust pair/alone 0",
+]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'x_ite_two_canvases_rigid_bodies_msaa4' (1589632) panicked at crates/x3d-viewer/src/embed.rs:42:101:
+viewer thread panicked: Any { .. }
+
+
+failures:
+    x_ite_two_canvases_rigid_bodies_msaa4
+
+test result: FAILED. 16 passed; 1 failed; 1 ignored; 0 measured; 0 filtered out; finished in 4.28s
+
+error: test failed, to rerun pass `-p x3d-viewer --test multi_viewer_b08`
+     Running tests/particles_b06_events.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_events-f0f23929aae241da)
+
+running 4 tests
+test emitter_and_system_fields_change_while_particles_fly ... ok
+test max_particles_scenario_numbers ... ok
+test max_particles_and_enabled_change ... ok
+test explosion_fields_change_between_bursts ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/particles_b06_exact.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_exact-1680dbcbaad4f8d0)
+
+running 30 tests
+test bounded_disabled ... ok
+test bounded_two ... ok
+test cone_basic ... ok
+test bounded_floor_damp1 ... ok
+test point_dir ... ok
+test point_create_off ... ok
+test point_off ... ok
+test bounded_floor ... ok
+test surface_ifs_twosided ... ok
+test point_dirraw ... ok
+test cone_zeroangle ... ok
+test surface_box ... ok
+test explosion_basic ... ok
+test cone_spherical ... ok
+test explosion_fixed ... ok
+test cone_tilt ... ok
+test point_nospeed ... ok
+test cone_down ... ok
+test surface_ifs_solid ... ok
+test surface_nosurface ... ok
+test point_fixed ... ok
+test volume_empty ... ok
+test bounded_floor_gravity ... ok
+test volume_cube ... ok
+test cone_wide ... ok
+test volume_cube_spherical ... ok
+test point_spherical ... ok
+test bounded_box ... ok
+test volume_twocubes ... ok
+test spot_values_from_the_gpu ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/particles_b06_retention.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_retention-21b2221085642b27)
+
+running 2 tests
+test a_released_system_has_no_state_and_no_interest ... ok
+test particle_systems_come_and_go_with_their_inline_100_cycles ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/particles_b06_stat.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_stat-b7d9c8e1697e7001)
+
+running 8 tests
+test explosion_stat ... ok
+test surface_ifs_twosided_stat ... ok
+test cone_wide_stat ... ok
+test cone_basic_stat ... ok
+test surface_box_stat ... ok
+test point_spherical_stat ... ok
+test volume_cube_stat ... ok
+test volume_twocubes_stat ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/particles_b06_unreachable.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_unreachable-437183c88cfb146f)
+
+running 11 tests
+test a_created_scene_goes_as_a_whole ... ok
+test a_node_held_by_a_script_variable_survives_until_the_script_drops_it ... ok
+test a_node_in_a_script_mfnode_survives_until_the_script_drops_it ... ok
+test a_node_reachable_only_through_a_route_survives_until_the_route_is_deleted ... ok
+test a_node_used_elsewhere_survives_removal_from_one_parent ... ok
+test a_released_system_leaves_no_interest_no_watcher_and_no_buffer ... ok
+test a_script_host_that_cannot_report_keeps_every_created_node ... ok
+test a_system_held_by_a_group_stays_and_goes_with_the_children ... ok
+test released_ids_are_reused_safely ... ok
+test unloading_an_inline_releases_what_its_script_created ... ok
+test unreferenced_runtime_created_systems_are_released_100_cycles ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/particles_b07.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b07-2c31a1cafb3b0b4d)
+
+running 5 tests
+test a_world_system_removed_from_its_group_runs_on_without_growing ... ok
+test oracle_cases_match_x_ite ... ok
+test polyline_cache_follows_the_scene_over_100_inline_reloads ... ok
+test script_created_polyline_systems_are_released_100_cycles ... ok
+test polyline_cache_tracks_coord_changes_without_growing ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.40s
+
+     Running tests/physics_b06_baseline.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/physics_b06_baseline-815dd1a17f5fbf94)
+
+running 48 tests
+test fields_roundtrip ... ok
+test center_of_mass ... ok
+test finite_rotation ... ok
+test gravity_flags ... ok
+test fall_sphere ... ok
+test joint_motor ... ok
+test joint_universal ... ok
+test forces_torques ... ok
+test fall_masses ... ok
+test joint_hinge_double_rate ... ok
+test damping ... ok
+test inertia_ignored ... ok
+test joint_hinge_single ... ok
+test joint_slider_gravity ... ok
+test joint_ball_offaxis ... ok
+test reload_inline ... ok
+test joint_slider ... ok
+test joint_ball ... ok
+test joint_hinge_single_all ... ok
+test rt_collection ... ok
+test joint_hinge_double ... ok
+test prefer_accuracy ... ok
+test rt_joint ... ok
+test shape_cylinder ... ok
+test joint_chain ... ok
+test shape_box_box ... ok
+test rt_sensor ... ok
+test shape_elevation_origin ... ok
+test quirks_of_x_ite_are_in_the_baselines_and_in_ours ... ok
+test shape_box ... ok
+test shape_sphere ... ok
+test shape_cone ... ok
+test shape_ifs_floor ... ok
+test sensor_partial ... ok
+test collision_space ... ok
+test shape_thickness ... ok
+test shape_cone_open ... ok
+test shape_elevation ... ok
+test shape_ifs_dynamic ... ok
+test velocities ... ok
+test rt_body ... ok
+test collider_friction ... ok
+test rt_collider ... ok
+test sleep_rest ... ok
+test collider_bounce ... ok
+test collidable_offset ... ok
+test shape_cylinder_open ... ok
+test sleep_wake ... ok
+
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
+     Running tests/physics_b06_lifecycle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/physics_b06_lifecycle-d019e5171140fbc0)
+
+running 6 tests
+test reused_node_ids_inherit_nothing ... ok
+test a_joint_removed_from_joints_leaves_the_bullet_world ... ok
+test a_body_removed_from_bodies_leaves_the_bullet_world ... ok
+test a_removed_body_no_longer_affects_the_world ... ok
+test repeated_body_and_joint_create_remove_stay_flat ... ok
+test physics_worlds_come_and_go_with_their_inline_100_cycles ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/pointer_slot_reuse.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/pointer_slot_reuse-2b1b28f888dd2c0b)
+
+running 6 tests
+test a_held_cylinder_sensor_does_not_drive_the_node_that_takes_its_slot ... ok
+test a_held_world_sensor_survives_an_inline_swap ... ok
+test a_held_plane_sensor_does_not_drive_the_node_that_takes_its_slot ... ok
+test a_hover_does_not_carry_over_to_the_node_that_takes_its_slot ... ok
+test a_held_sphere_sensor_does_not_drive_the_node_that_takes_its_slot ... ok
+test a_pressed_anchor_does_not_fire_the_anchor_that_takes_its_slot ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/rea_b02_layers.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b02_layers-c96a1383b5e73417)
+
+running 3 tests
+test a_press_held_in_a_layer_does_not_drive_the_node_that_takes_its_slot ... ok
+test pick_sensors_survive_inline_reloads ... ok
+test rea_b02_layers_survive_reload_and_are_released ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.96s
+
+     Running tests/rea_b02_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b02_reload-5d090ebfc79edc5f)
+
+running 1 test
+test rea_b02_textures_survive_reload_and_are_released ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.76s
+
+     Running tests/rea_b03_pick_vectors.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b03_pick_vectors-81b3d14961b49513)
+
+running 1 test
+test contacts_match_ammo ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/rea_b03_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b03_reload-30dd56413d98bba7)
+
+running 1 test
+test rea_b03_pick_state_is_released_on_reload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.34s
+
+     Running tests/rea_b03_render_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b03_render_reload-3d4931cc2a32cc5f)
+
+running 1 test
+test rea_b03_render_features_survive_reload_and_are_released ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.19s
+
+     Running tests/rea_b04_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b04_reload-5516d923f120836e)
+
+running 1 test
+test rea_b04_runtime_state_is_released_on_reload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/rea_b04_render_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b04_render_reload-d6add5b77061d20d)
+
+running 1 test
+test rea_b04_render_features_survive_reload_and_are_released ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.35s
+
+     Running tests/rea_b05_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b05_reload-107f2b3a0396236b)
+
+running 1 test
+test rea_b05_sound_state_is_released_on_reload ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running tests/rea_b07_mat_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b07_mat_reload-5038528d5bc42d1b)
+
+running 2 tests
+test rea_b07_instanced_shape_removal_from_live_group_releases_geometry ... ok
+test rea_b07_mat_survive_reload_and_are_released ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.37s
+
+     Running tests/rea_b07_vol_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b07_vol_reload-58baf744293f66c6)
+
+running 2 tests
+test rea_b07_iso_and_segmented_removal_release_resources ... ok
+test rea_b07_volume_survives_reload_and_is_released ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.25s
+
+     Running tests/rea_b08_gltf_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_gltf_reload-74df0cc6a4386041)
+
+running 1 test
+test rea_b08_gltf_survive_reload_and_are_released ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.35s
+
+     Running tests/rea_b08_gltf_viewer_buffers.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_gltf_viewer_buffers-ef7d521d92a7c668)
+
+running 1 test
+test top_level_gltf_with_external_buffer_loads_in_the_viewer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/rea_b08_gs_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_gs_reload-f267c5c937570ec4)
+
+running 2 tests
+test rea_b08_gs_removal_from_live_group_releases_buffers ... ok
+test rea_b08_gs_survive_reload_and_are_released ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.95s
+
+     Running tests/rea_b08_net_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_net_reload-c62300ae389d3236)
+
+running 3 tests
+test rea_b08_inline_geometry_removal_and_script_creation_release_geometry ... ok
+test rea_b08_dis_nodes_removal_and_script_creation ... ok
+test rea_b08_net_survive_reload_and_are_released ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.32s
+
+     Running tests/rea_b08_release_tables.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_release_tables-75a7a12560cd63b1)
+
+running 1 test
+test shader_and_font_library_tables_are_released_with_their_nodes ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/rea_b08_shaders_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_shaders_reload-66675f4b4fb018f8)
+
+running 3 tests
+test rea_b08_shader_removal_from_live_group_releases_program ... ok
+test rea_b08_script_created_shader_draws_and_is_released ... ok
+test rea_b08_shaders_survive_reload_and_are_released ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.82s
+
+     Running tests/rea_b08_vs_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_vs_reload-8d941350c187f219)
+
+running 2 tests
+test rea_b08_vs_extension_cleared_and_shape_removed_release_the_buffer ... ok
+test rea_b08_vs_survive_reload_and_are_released ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.18s
+
+     Running tests/rea_batch01.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch01-54de1f3b81325c75)
+
+running 1 test
+test rea_batch01_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.05s
+
+     Running tests/rea_batch02.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch02-107c301d7240c8a5)
+
+running 1 test
+test rea_batch02_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 18.55s
+
+     Running tests/rea_batch03.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch03-94d785bf61366a96)
+
+running 1 test
+test rea_batch03_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.90s
+
+     Running tests/rea_batch04.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch04-8746355d9af71237)
+
+running 1 test
+test rea_batch04_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.99s
+
+     Running tests/rea_batch07_mat.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch07_mat-ec086d83e025f950)
+
+running 1 test
+test rea_batch07_mat_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.22s
+
+     Running tests/rea_batch07_vol.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch07_vol-6d4f21429146855d)
+
+running 1 test
+test rea_batch07_vol_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.10s
+
+     Running tests/rea_batch08_gs.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch08_gs-a48653744fb5335a)
+
+running 1 test
+test rea_batch08_gs_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.02s
+
+     Running tests/rea_batch08_net.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch08_net-06a2cdd7226b5889)
+
+running 1 test
+test rea_batch08_net_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.02s
+
+     Running tests/rea_batch08_shaders.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch08_shaders-45f04dd4770e6976)
+
+running 1 test
+test rea_batch08_shader_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.20s
+
+     Running tests/rea_batch08_vs.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch08_vs-235e14d3573f4632)
+
+running 1 test
+test rea_batch08_vs_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.37s
+
+     Running tests/retention_viewer.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/retention_viewer-3d0e8062a967e6b0)
+
+running 2 tests
+test w6_viewer_pointer_slot_reuse ... ok
+test embedded::w7_embedded_viewer_load_and_unload ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.61s
+
+     Running tests/svg_b08_lifecycle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/svg_b08_lifecycle-bd816052269f83ad)
+
+running 2 tests
+test parsing_svg_100_times_keeps_nothing ... ok
+test an_svg_inline_comes_and_goes_100_cycles ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.47s
+
+     Running tests/viewer.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/viewer-fd4cce89554a2d29)
+
+running 11 tests
+test chaser_converges_with_cosine_step_response ... ok
+test anchor_activation_is_reported_not_opened ... ok
+test render_cache_rebuilds_only_changed_geometry ... ok
+test touch_and_plane_sensors_fire ... ok
+test script_events_processed_each_frame ... ok
+test live_time_sensor_drives_interpolator ... ok
+test walk_forward_moves_and_gravity_holds_on_ground ... ok
+test examine_drag_rotates_and_wheel_zooms ... ok
+test examine_pan_accumulates_moves_within_a_frame ... ok
+test viewpoint_stack_next_previous_first_last ... ok
+test render_cache_keeps_background_textures ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+   Doc-tests cm_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests cm_modes
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests cm_view
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests r0_2_c_tests
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests vrml
+
+running 1 test
+test crates/vrml/src/lib.rs - (line 12) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.21s; merged doctests compilation took 0.21s
+   Doc-tests vrml97
+
+running 1 test
+test crates/vrml97/src/lib.rs - (line 8) - compile ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.19s; merged doctests compilation took 0.19s
+   Doc-tests x3d
+
+running 1 test
+test crates/x3d/src/lib.rs - (line 8) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 0.19s; merged doctests compilation took 0.18s
+   Doc-tests x3d_fields
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x3d_parse
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x3d_render
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x3d_runtime
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x3d_scene
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x3d_script
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x3d_text
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests x3d_viewer
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: 1 target failed:
+    `-p x3d-viewer --test multi_viewer_b08`

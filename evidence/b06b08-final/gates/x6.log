@@ -1,0 +1,14 @@
+MATCH      s01-router.wrl
+MATCH      s02-interpolators.wrl
+MATCH      s03-timesensors.wrl
+MATCH      s04-marshalling.wrl
+MATCH      s05-browser.wrl
+MATCH      s06-errors.wrl
+LOGDIFF    s06-errors.wrl  [needs X6 engine] log only: a JavaScript SyntaxError message is engine wording (V8 "Unexpected token ';'", QuickJS "invalid property name"); runtime TypeError wording is mapped to V8's, syntax errors are not
+           log -x_ite warn: Script: Couldn't load URL 'javascript: function initialize ( {', trying URL 2 of 2. SyntaxError: Unexpected token ';'
+           log +rust  warn: Script: Couldn't load URL 'javascript: function initialize ( {', trying URL 2 of 2. SyntaxError: invalid property name
+MATCH      s07-protos.wrl
+MATCH      s08-external-js.wrl
+
+8 files: 8 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared
+logs: 7 of 8 sorted console logs identical (0 differences unexplained)

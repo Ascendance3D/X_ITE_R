@@ -1,0 +1,543 @@
+MATCH      00-89chevy4.wrl
+MATCH      01-jail.wrl
+MATCH      02-coffee.wrl
+XFAIL-OK   03-av.wrl  (Couldn't load X3D file.)
+MATCH      04-Nice2.wrl
+MATCH      05-whiterocket.wrl
+MATCH      06-exampleD.13.1.wrl
+MATCH      07-xtree.wrl
+MATCH      08-billboardtree.wrl
+XFAIL-OK   09-tomiko.wrl  (Couldn't load X3D file.)
+MATCH      10-Sears_stove.wrl
+MATCH      100-Cash_Register.wrl
+MATCH      101-Kings_bed1.wrl
+MATCH      102-myavatar.wrl
+MATCH      103-token.wrl
+MATCH      104-Glass of beer 2.wrl
+MATCH      105-sky_kitchen.wrl
+MATCH      106-Phonograph.wrl
+MATCH      107-_moondial.wrl
+MATCH      108-bed1.wrl
+MATCH      109-doubleminttwist2_chsl_gz.wrl
+MATCH      11-blkcftbl.wrl
+MATCH      110-swan.wrl
+MATCH      111-mf2.wrl
+MATCH      112-koo-koo.wrl
+MATCH      113-MyPoorPuppy.wrl
+MATCH      114-srchest.wrl
+MATCH      115-lionrug.wrl
+MATCH      116-portal3.wrl
+MATCH      117-stocking.wrl
+MATCH      118-amyskitty.wrl
+MATCH      119-hypocrates.wrl
+MATCH      12-stage.wrl
+MATCH      120-chair.wrl
+MATCH      121-bluebirdlounge.wrl
+MATCH      122-brockzip.wrl
+MATCH      123-ctfighter.wrl
+MATCH      124-wrap10.wrl
+MATCH      125-shapesofart.wrl
+MATCH      126-brockzip.wrl
+MATCH      127-lightsaber.wrl
+MATCH      128-PeaceShroom.wrl
+MATCH      129-ChampagneTableBlue.wrl
+MATCH      13-monkey.wrl
+MATCH      130-purpatio4ch.wrl
+MATCH      131-ricearmoire.wrl
+MATCH      132-desk.wrl
+MATCH      133-Display.wrl
+MATCH      134-goldfish.wrl
+MATCH      135-tmpung2.wrl
+MATCH      136-keshlilyzip.wrl
+MATCH      137-md.wrl
+MATCH      138-drophandler.wrl
+MATCH      139-cup.wrl
+MATCH      14-object1.wrl
+MATCH      140-club_proto.wrl
+MATCH      141-ferrarip.wrl
+MATCH      142-alarm1.wrl
+XFAIL-OK   143-Treasure_Hunt_Script_Test.wrl  (Couldn't load X3D file.)
+MATCH      144-citi1.wrl
+MATCH      145-VR_Computer.wrl
+MATCH      146-outdoorcanopy.wrl
+MATCH      147-cliptron.wrl
+MATCH      148-forestgladekitchen_2.wrl
+MATCH      149-Sisko1.wrl
+MATCH      15-directory.wrl
+MATCH      150-sign.wrl
+MATCH      151-newcat.wrl
+MATCH      152-fangswrl.wrl
+MATCH      153-hugelava.wrl
+MATCH      154-Pyramids_Of_Giza.wrl
+MATCH      155-nrbhead.wrl
+MATCH      156-taz.wrl
+MATCH      157-av0x.wrl
+MATCH      158-great_grandfather_clock.wrl
+MATCH      159-trashcan2.wrl
+MATCH      16-briefng2.wrl
+MATCH      160-couch1_1er.wrl
+MATCH      161-nt.wrl
+MATCH      162-forestFAIRY2.wrl
+MATCH      163-ladysbthrm_2.wrl
+MATCH      164-plantz_proto.wrl
+MATCH      165-ThunderSword.wrl
+MATCH      166-wizardmale.wrl
+MATCH      167-Toilet.wrl
+MATCH      168-gv.wrl
+MATCH      169-Red Ball.wrl
+MATCH      17-snowglobe.wrl
+MATCH      170-av0x.wrl
+MATCH      171-welcome.wrl
+MATCH      172-index.wrl
+MATCH      173-av0x.wrl
+MATCH      174-SilentRunningDrone1-88.wrl
+MATCH      175-neostand2.wrl
+MATCH      176-Spazzfirewroks(1).wrl
+MATCH      177-CelestialEntertainUnit.wrl
+MATCH      178-av0.wrl
+MATCH      179-jailpris_000821_pm.wrl
+MATCH      18-beam.wrl
+MATCH      180-example2.wrl
+MATCH      181-Xander.wrl
+MATCH      182-b2.wrl
+MATCH      183-stonehengealtar.wrl
+MATCH      184-office2.wrl
+MATCH      185-tmp.wrl
+MATCH      186-table.wrl
+MATCH      187-Scorp1.wrl
+MATCH      188-banner.wrl
+MATCH      189-gothicchalice.wrl
+MATCH      19-fish.wrl
+LOGDIFF    19-fish.wrl  [needs render (out of scope)] log only: X_ITE prints "RuntimeError: unreachable", a WebAssembly trap during rendering (MikkTSpace tangent generation is the only WASM in that path); rendering is not ported
+           log -x_ite error: RuntimeError: unreachable
+MATCH      190-helpman.wrl
+MATCH      191-jazzjackrabbit.wrl
+MATCH      192-ship.wrl
+MATCH      193-Herculeshead.wrl
+MATCH      194-festive.wrl
+MATCH      195-PFC_Frog.wrl
+MATCH      196-welcome.wrl
+MATCH      197-coolpink.wrl
+MATCH      198-ricepaper.wrl
+MATCH      199-xmas.wrl
+MATCH      20-Brass_Bed.wrl
+MATCH      200-ic_exleb.wrl
+MATCH      201-phenomenatheater.wrl
+MATCH      202-dream.wrl
+MATCH      203-hop2.wrl
+MATCH      204-Doorprox.wrl
+MATCH      205-goldcandleholder.wrl
+MATCH      206-pyrodragon.wrl
+MATCH      207-rdmarbcftbl.wrl
+MATCH      208-Torch.wrl
+MATCH      209-greg2.wrl
+MATCH      21-charm.wrl
+MATCH      210-fairydefensesys.wrl
+MATCH      211-Party_Ballons.wrl
+MATCH      212-tunnel_layer.wrl
+MATCH      213-picture4x3_proto.wrl
+MATCH      214-tragicdance.wrl
+MATCH      215-Shunshim.wrl
+MATCH      216-woodenbench.wrl
+MATCH      217-world.wrl
+MATCH      218-cscream.wrl
+MATCH      219-Ultimate_Pool.wrl
+MATCH      22-cad_manutec_compress_r2_link4_1.geo.wrl
+MATCH      220-temp_bots-bases.wrl
+MATCH      221-cad_manutec_compress_rollj2_6.geo.wrl
+MATCH      222-cpbench100.wrl
+MATCH      223-heavenzip.wrl
+MATCH      224-spazztmp_2.wrl
+MATCH      225-avx.wrl
+MATCH      226-sword_1.wrl
+MATCH      227-GothicEndTable.wrl
+MATCH      228-Table.wrl
+MATCH      229-hooptie.wrl
+MATCH      23-snobell2zip.wrl
+MATCH      230-dragon.wrl
+MATCH      231-Weedle.wrl
+MATCH      232-angel_love.wrl
+MATCH      233-hutch.wrl
+MATCH      234-Tupper_ware_oranges.wrl
+MATCH      235-webdocmemorial.wrl
+MATCH      236-av5.wrl
+MATCH      237-spectrum-lamp.wrl
+MATCH      238-BlJediCrystal.wrl
+MATCH      239-darthmaul.wrl
+MATCH      24-STNCHAIR.WRL
+MATCH      240-pickup.wrl
+MATCH      241-arcade_game.wrl
+MATCH      242-jeep.wrl
+MATCH      243-Rose_pic_Framed.wrl
+MISMATCH   244-tardis666.wrl  [needs X6 nondeterministic] Script initialize() writes new Date() hours:minutes:seconds into Text.string; the oracle baked its own wall clock ("8:05:17") into the baseline
+           line 19917
+             x_ite:               string "8:05:17"
+             rust:                string "21:05:03"
+MATCH      245-blue.wrl
+XFAIL-OK   246-av1.wrl  (Couldn't load X3D file.)
+MATCH      247-portal2.wrl
+MATCH      248-Spazzfountian1.wrl
+MATCH      249-heavenzip.wrl
+MATCH      25-Wills rockgarden.wrl
+MATCH      250-srchest.wrl
+MATCH      251-alarmclock.wrl
+MATCH      252-PokeScr1.wrl
+MATCH      253-excelsior.wrl
+MATCH      254-crystalt.wrl
+MATCH      255-ringneck.wrl
+MATCH      256-texturefont_mt.wrl
+MATCH      257-gatebathzip.wrl
+MATCH      258-sofabed.wrl
+MATCH      259-SeaDragonT.wrl
+MATCH      26-ottoman.wrl
+MATCH      260-avx.wrl
+MATCH      261-barchair1.wrl
+XFAIL-OK   262-largeitems.wrl  (Couldn't load X3D file.)
+MATCH      263-snowglobe.wrl
+MATCH      264-dinette.wrl
+MISMATCH   265-tardis666.wrl  [needs X6 nondeterministic] same clock Script as 244-tardis666 (oracle wall clock "8:05:47")
+           line 19917
+             x_ite:               string "8:05:47"
+             rust:                string "21:05:03"
+MATCH      266-SpiralTree.wrl
+MATCH      267-engine_ok.wrl
+MATCH      268-tlamp.wrl
+MATCH      269-milfpv2zip.wrl
+MATCH      27-photorobo.wrl
+MATCH      270-firstknight.wrl
+MATCH      271-fairy.wrl
+XFAIL-OK   272-av.wrl  (Couldn't load X3D file.)
+MATCH      273-stgtable.wrl
+MATCH      274-meerkats.wrl
+MATCH      275-stain_divider.wrl
+MATCH      276-index.wrl
+MATCH      277-mowtron.wrl
+MATCH      278-DividerC.wrl
+MATCH      279-freyaposter.wrl
+MATCH      28-alienszip.wrl
+MATCH      280-venus_gradient.wrl
+MATCH      281-itemselection.wrl
+XFAIL-OK   282-fred.wrl  (Couldn't load X3D file.)
+MATCH      283-lava.wrl
+MATCH      284-frauorange.wrl
+MATCH      285-Kitchen.wrl
+MATCH      286-wagonfinal.wrl
+MATCH      287-roommate_mike.wrl
+MATCH      288-pingpong.wrl
+MATCH      289-Entertainment_Center.wrl
+XFAIL-OK   29-Treasure_Hunt_Script_Test.wrl  (Couldn't load X3D file.)
+MATCH      290-av0.wrl
+MATCH      291-pool.wrl
+MATCH      292-av__q__action_avtext_ar_bluecyl_fe_bluecyl_ha_bluecyl_he_bluecyl_inline_1_lb_bluecyl_ub_bluecyl.pl
+MATCH      293-tmp.wrl
+MATCH      294-MoodRose.wrl
+MATCH      295-TVSet.wrl
+MATCH      296-artistic_fireplace.wrl
+MATCH      297-superspeaker.wrl
+MATCH      298-history3.wrl
+MATCH      299-darksproe2.wrl
+MATCH      30-kitchen.wrl
+MATCH      300-drag1red.wrl
+MATCH      301-classic.wrl
+MATCH      302-vwbugold.wrl
+MATCH      303-dovepet.wrl
+MATCH      304-graveyard1.wrl
+MATCH      305-Spazzfountian1.wrl
+MATCH      306-av1x.wrl
+MATCH      307-light1.wrl
+MATCH      308-vwbugold.wrl
+MATCH      309-PinballMachine.wrl
+MATCH      31-zporsmagn.wrl
+XFAIL-OK   310-av0.wrl  (Couldn't load X3D file.)
+MATCH      311-Refridgerator.wrl
+MATCH      312-r2d2.wrl
+MATCH      313-butterfly_rug.wrl
+MATCH      314-Unicorn_3.wrl
+MATCH      315-meerkats.wrl
+MATCH      316-av0x.wrl
+MATCH      317-HarleyVCX.wrl
+MATCH      318-couch1.wrl
+MATCH      319-nautkraktank3.wrl
+MATCH      32-HadesTheDragon2GzipCX.wrl
+MATCH      320-canisters3.wrl
+MATCH      321-snowman.wrl
+MATCH      322-drums12.wrl
+MATCH      323-splatter.wrl
+MATCH      324-dragon.wrl
+MATCH      325-gestures.wrl
+MATCH      326-sofagroup.wrl
+MATCH      327-DBZ.wrl
+MATCH      328-Refrigerator.wrl
+MATCH      329-gazebo.wrl
+MATCH      33-zilbed.wrl
+MATCH      330-Drinkthingy.wrl
+MATCH      331-couch.wrl
+MATCH      332-lavalmpred.wrl
+MATCH      333-Deluxe_Cabnet.wrl
+MATCH      334-firezstarbed.wrl
+MATCH      335-romantic_isle.wrl
+MATCH      336-PinballMachine.wrl
+MATCH      337-gargoyle.wrl
+MATCH      338-giftbear2.wrl
+MATCH      339-RollieChairByNeovalis.wrl
+MATCH      34-av0x.wrl
+MATCH      340-pearlbunny.wrl
+MATCH      341-TV_Set.wrl
+MATCH      342-alien2.wrl
+MATCH      343-elf.wrl
+MATCH      344-celestrialpatioset.wrl
+MATCH      345-jap_table.wrl
+MATCH      346-BloodMoonRedo.wrl
+MATCH      347-electric.wrl
+MATCH      348-Dragonstaff_2.wrl
+TIMEOUT    349-queen.wrl  (oracle timed out; not compared)
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/corpus-x1/queen.jpg'. Error: Not Found
+           log +rust  error: X3DExternProtoDeclaration: Couldn't load any of the 2 URLs, tried in this order:
+           log +rust  error: X3DExternProtoDeclaration: Couldn't load any of the 2 URLs, tried in this order:
+           log +rust  warn: X3DExternProtoDeclaration: Couldn't load URL 'urn:inet:blaxxun.com:node:TextureCoordGen', trying URL 2 of 2. TypeError: Failed to fetch
+           log +rust  warn: X3DExternProtoDeclaration: Couldn't load URL 'urn:inet:blaxxun.com:node:TextureCoordGen', trying URL 2 of 2. TypeError: Failed to fetch
+MATCH      35-entertaincentr.wrl
+MATCH      350-veggies.wrl
+MATCH      351-vase.wrl
+MATCH      352-joelle.wrl
+MATCH      353-dock.wrl
+MATCH      354-rosetta.wrl
+MATCH      355-gabriel.wrl
+MATCH      356-dutchy_2.wrl
+MATCH      357-world3.wrl
+MATCH      358-beamstation.wrl
+MATCH      359-Dogy1.wrl
+MATCH      36-McLeod_Gallery.wrl
+MATCH      360-Mountain.wrl
+MATCH      361-home.wrl
+MATCH      362-pictures.wrl
+MATCH      363-Tableandchairs.wrl
+MATCH      364-Graveyard.wrl
+MATCH      365-pink kitchen set.wrl
+MATCH      366-doctragoz.wrl
+MATCH      367-4.wrl
+MATCH      368-jupiter.wrl
+MATCH      369-benchlotus.wrl
+MATCH      37-pyth7.wrl
+MATCH      370-sink.wrl
+MATCH      371-table.wrl
+MATCH      372-tree.wrl
+MATCH      373-palmtree.wrl
+MATCH      374-fireplace.wrl
+MATCH      375-wavepool.wrl
+MATCH      376-htrshldwcoa.wrl
+MATCH      377-blacktub.wrl
+MATCH      378-texgen_mona.wrl
+TIMEOUT    379-ifs_lightmap.wrl  (oracle timed out; not compared)
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/textures/shine3.png'. Error: Not Found
+           log +rust  error: ImageTexture: Couldn't load URL 'http://oracle/textures/stripes.jpg'. Error: Not Found
+           log +rust  error: X3DExternProtoDeclaration: Couldn't load URL 'http://oracle/event/drop/drophandler.wrl#DropHandler'. Error: Not Found
+           log +rust  error: X3DExternProtoDeclaration: Couldn't load any of the 3 URLs, tried in this order:
+           log +rust  error: X3DExternProtoDeclaration: Couldn't load any of the 3 URLs, tried in this order:
+           log +rust  warn: Added extern proto 'MultiTexture', but will not override built-in node of same type if profile/components include this node.
+           log +rust  warn: Added extern proto 'MultiTextureCoordinate', but will not override built-in node of same type if profile/components include this node.
+           log +rust  warn: X3DExternProtoDeclaration: Couldn't load URL 'http://www.blaxxun.com/vrml/protos/nodes.wrl#MultiTexture', trying URL 3 of 3. TypeError: Failed to fetch
+           log +rust  warn: X3DExternProtoDeclaration: Couldn't load URL 'http://www.blaxxun.com/vrml/protos/nodes.wrl#MultiTextureCoordinate', trying URL 3 of 3. TypeError: Failed to fetch
+           log +rust  warn: X3DExternProtoDeclaration: Couldn't load URL 'urn:inet:blaxxun.com:node:MultiTexture', trying URL 2 of 3. TypeError: Failed to fetch
+           log +rust  warn: X3DExternProtoDeclaration: Couldn't load URL 'urn:inet:blaxxun.com:node:MultiTextureCoordinate', trying URL 2 of 3. TypeError: Failed to fetch
+MATCH      38-pilotv3.wrl
+MATCH      380-RedCarpet.wrl
+MATCH      381-av0.wrl
+MATCH      382-fountain4.wrl
+MATCH      383-ToxicallySweetsJustifier.wrl
+MATCH      384-wrap4.wrl
+MATCH      385-LaundryCombo.wrl
+MATCH      386-scifispacetrophy4.wrl
+XFAIL-OK   387-av__q__action_bxxtext_ar_bluecyl_fe_bluecyl_ha_bluecyl_he_bluecyl_lb_bluecyl_ub_bluecyl.pl  (Couldn't load X3D file.)
+MATCH      388-mermaid_encounter_vrml.wrl
+MATCH      389-lefty.wrl
+MATCH      39-us-iron_and_stone1.wrl
+MATCH      390-Caution.wrl
+MATCH      391-VRSpace.wrl
+MATCH      392-vampressyacht.wrl
+XFAIL-OK   393-wl.wrl  (Couldn't load X3D file.)
+MATCH      394-Unicorn_3.wrl
+MATCH      395-sword_1.wrl
+XFAIL-OK   396-check.wrl  (Couldn't load X3D file.)
+MATCH      397-female_receptionist.wrl
+MATCH      398-trophy_ace_gold.wrl
+MATCH      399-art_deco_bed.wrl
+MATCH      40-antiquechair2.wrl
+MATCH      400-car3.wrl
+MATCH      401-jp.wrl
+MATCH      402-root.wrl
+MATCH      403-jj5b.wrl
+XFAIL-OK   404-cleo.wrl  (Couldn't load X3D file.)
+MATCH      405-Spazz3D3.wrl
+MATCH      406-serpent-staff.wrl
+MATCH      407-Tiger.wrl
+MATCH      408-royaldinette.wrl
+MATCH      409-castle.wrl
+MATCH      41-ChampagneTableBlue.wrl
+MATCH      410-Fclock.wrl
+MATCH      411-oven.wrl
+MATCH      412-ld.wrl
+MATCH      413-Oak_Dresser.wrl
+MATCH      414-bunny.wrl
+XFAIL-OK   415-av1.wrl  (Couldn't load X3D file.)
+MATCH      416-lightbeams.wrl
+MATCH      417-sinred2.wrl
+MATCH      418-pizza.wrl
+MATCH      419-logo.wrl
+XFAIL-OK   42-gogoalien.wrl  (Couldn't load X3D file.)
+XFAIL-OK   420-taharutben1.wrl  (Couldn't load X3D file.)
+MATCH      421-blue_chair.wrl
+MATCH      422-portie.wrl
+MATCH      423-bed.wrl
+MATCH      424-BON.wrl
+MATCH      425-sonyablue.wrl
+MATCH      426-section-o-fence.wrl
+MATCH      427-Television.wrl
+MATCH      428-dj.wrl
+MATCH      429-laz_welcome.wrl
+MATCH      43-creepwall.wrl
+MATCH      430-villasantzip.wrl
+MATCH      431-Camera.wrl
+MATCH      432-TV_Closet.wrl
+MATCH      433-asiangirl_flower.wrl
+MATCH      434-marblewalltablebrn.wrl
+MATCH      435-armom.wrl
+MATCH      436-Radar.wrl
+MATCH      437-revolvr.wrl
+MATCH      438-leadsled.wrl
+MATCH      439-PikachuThing.wrl
+MATCH      44-bunny.wrl
+MATCH      440-proto.wrl
+MATCH      441-dancers.wrl
+XFAIL-OK   442-Doc_s_MazeEXP9.wrl.gz  (Couldn't load X3D file.)
+MATCH      443-Tea_Time.wrl
+MATCH      444-entcenter.wrl
+MATCH      445-GrJediCyrstal.wrl
+MATCH      446-bed.wrl
+MATCH      447-av4.wrl
+MATCH      448-twistbr.wrl
+MATCH      449-Copvan.wrl
+MATCH      45-blue demon.wrl
+MATCH      450-cash.wrl
+MATCH      451-circle.wrl
+MATCH      452-artistic_fireplace.wrl
+XFAIL-OK   453-av0x.wrl  (Couldn't load X3D file.)
+MATCH      454-av1x.wrl
+MATCH      455-road.wrl
+MATCH      456-7rave.wrl
+MATCH      457-stgtable.wrl
+MATCH      458-picture3x4_proto.wrl
+MATCH      459-officelamp.wrl
+MATCH      46-suburbs.wrl
+MATCH      460-av0.wrl
+MATCH      461-av1.wrl
+MATCH      462-GClock.wrl
+MATCH      463-blackwidowjew.wrl
+MATCH      464-welcomemat.wrl
+MATCH      465-stuffedduck2.wrl
+MATCH      466-trio.wrl
+MATCH      467-wwf2.wrl
+MATCH      468-Lamp1.wrl
+MATCH      469-warning.wrl
+MATCH      47-SwordofHate.wrl
+MATCH      470-Birthday bird.wrl
+MATCH      471-portal7.wrl
+MATCH      472-av0.wrl
+MATCH      473-landdrag.wrl
+MATCH      474-Phonograch.wrl
+MATCH      475-vault.wrl
+MATCH      476-kalsculp1zip.wrl
+MATCH      477-beautifulnitemare.wrl
+MATCH      478-SdpLargePlant.wrl
+MATCH      479-Parachutedropb.wrl
+XFAIL-OK   48-movies.wrl  (Couldn't load X3D file.)
+MATCH      480-lib.wrl
+MATCH      481-cad_manutec_compress_r2_link5_1.geo.wrl
+MATCH      482-newscene.wrl
+MATCH      483-av1.wrl
+MATCH      484-sapo.wrl
+MATCH      485-ryanzzz0.wrl
+MATCH      486-bearflot.wrl
+MATCH      487-dogcrate1.wrl
+MATCH      488-fan.wrl
+MATCH      489-PikaRadio.wrl
+MATCH      49-wrap2.wrl
+MATCH      490-big-safe.wrl
+MATCH      491-bar2.wrl
+XFAIL-OK   492-av0.wrl  (Couldn't load X3D file.)
+MATCH      493-dawgrocks.wrl
+MATCH      494-snowman.wrl
+MATCH      495-DgnChair.wrl
+MATCH      496-straight.wrl
+MATCH      497-fpole.wrl
+MATCH      498-xmashouse.wrl
+MATCH      499-movie1.wrl
+MATCH      50-Susan2.wrl
+MATCH      51-dream.wrl
+MATCH      52-kandi.wrl
+MATCH      53-starthousehelp.wrl
+MATCH      54-MerryGoRound.wrl
+MATCH      55-movie4.wrl
+MATCH      56-repulsor_a.wrl
+MATCH      57-Radar.wrl
+MATCH      58-autumn_leaves.wrl
+MATCH      59-iggy.wrl
+XFAIL-OK   60-kue.wrl  (Couldn't load X3D file.)
+XFAIL-OK   61-shared.wrl.txt  (Couldn't load X3D file.)
+MATCH      62-av0.wrl
+XFAIL-OK   63-hermes.wrl  (Couldn't load X3D file.)
+XFAIL-OK   64-WovForm.wrl  (Couldn't load X3D file.)
+MATCH      65-av1x.wrl
+MATCH      66-blueglassuni.wrl
+MATCH      67-berge3.wrl
+XFAIL-OK   68-av0.wrl  (Couldn't load X3D file.)
+MATCH      69-computer2.wrl
+MATCH      70-bookcase.wrl
+MATCH      71-vase1.wrl
+MATCH      72-pool table.wrl
+MATCH      73-WOFormula.wrl
+MATCH      74-lamp.wrl
+MATCH      75-planetcheck.wrl
+MATCH      76-dizz_pic04.wrl
+MATCH      77-stairs_chsl_gz.wrl
+MATCH      78-av6.wrl
+MATCH      79-Room14.wrl
+MATCH      80-fairie_statue.wrl
+MATCH      81-WeWishYouCaroler.wrl
+MATCH      82-twins.wrl
+MATCH      83-midwayfishy.wrl
+MATCH      84-malfalcn.wrl
+MATCH      85-christmastree.wrl
+MATCH      86-VampiressDoll.wrl
+MISMATCH   87-weaver_anime_final_fixed2.wrl  [needs X6 nondeterministic] Script DisplayTime() seeds a clock from new Date(); the hand rotations routed from it depend on the wall clock
+           line 13999
+             x_ite:                   rotation 0 0 1 1.98240339144279
+             rust:                    rotation 0 0 1 1.52713014515672
+MATCH      88-test3.wrl
+MATCH      89-office_chair.wrl
+MATCH      90-midwayjugs.wrl
+MATCH      91-Stereo.wrl
+MATCH      92-Bed_with_blue_quilt_II.wrl
+MATCH      93-Jack.rsd.wrl
+MATCH      94-red_chair.wrl
+MATCH      95-Room9.wrl
+MATCH      96-jmpfish1.wrl
+MATCH      97-rattycrate1.wrl
+MATCH      98-trampoline.wrl
+MATCH      99-gandola2.wrl
+
+500 files: 470 exact match, 3 mismatch (0 unexplained), 25 expected failure reproduced, 2 oracle timeouts not compared
+logs: 497 of 498 sorted console logs identical (0 differences unexplained)
