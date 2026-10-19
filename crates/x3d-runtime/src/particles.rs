@@ -931,12 +931,8 @@ impl Shader<'_> {
         let r = [t, u, v];
         let mut position = [0.0f32; 4];
 
-        // `r.z * vertex0 + r.x * vertex1 + r.y * vertex2` as the GPU compiled it: the last product
-        // rounded, the other two fused (multiply-add). A volume whose faces sit at a large offset
-        // (an emitter at x = 3.5) reads a different float32 origin for the ray otherwise, and the
-        // ray's grazing intersections amplify that ulp to 1.7e-5.
         for c in 0..4 {
-            position[c] = v0[c].mul_add(r[2], v1[c].mul_add(r[0], r[1] * v2[c]));
+            position[c] = r[2] * v0[c] + r[0] * v1[c] + r[1] * v2[c];
         }
 
         let normal = normalize(add(add(scale(n0, r[2]), scale(n1, r[0])), scale(n2, r[1])));
