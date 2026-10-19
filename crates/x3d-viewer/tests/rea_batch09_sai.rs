@@ -60,6 +60,11 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, failures: &m
         fail(format!("scene text differs at {} dumped frames, first {}", bad.len(), bad[0]));
     }
 
+    // `"console": true` in the script: every console message, in order.
+    if js.get("console") != rs.get("console") {
+        fail(format!("console differs: {} / {}", js["console"], rs["console"]));
+    }
+
     if js.get("log") != rs.get("log") {
         fail(format!("log differs: {} / {}", js["log"], rs["log"]));
     }

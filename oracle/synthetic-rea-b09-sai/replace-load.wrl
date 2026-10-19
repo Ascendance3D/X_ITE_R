@@ -1,0 +1,25 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+# Synthetic REA oracle world: Browser.loadURL replaces the world (shutdown of the old Scripts, the new world's initialize, bindables). Authored.
+META "title" "world A"
+DEF WA WorldInfo { title "A" }
+DEF VPA Viewpoint { description "vpA" }
+DEF AS Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    function cycle () {
+      step = step + 1;
+      if (step == 3) {
+        var r = Browser .loadURL (new MFString ('assets/world-b.wrl'));
+        hist = hist + 'ret=' + typeof r + ':' + (r instanceof Promise);
+        r .then (function () { console .log ('A: loadURL resolved'); }, function (e) { console .log ('A: loadURL rejected ' + e .message); });
+      }
+    }
+    function shutdown () { console .log ('A: shutdown'); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO AS.cycle
