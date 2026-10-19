@@ -52,6 +52,20 @@ pub struct ComposedState {
     /// written again and X_ITE writes only the enabled planes, so a plane that was switched off
     /// keeps clipping a custom shader. A new link starts from zero.
     pub clip_planes: Rc<RefCell<[[f32; 4]; 6]>>,
+    /// The texture state the linked program keeps between draws. A new link starts empty.
+    pub gl: Rc<RefCell<GlResident>>,
+}
+
+/// What a GL program remembers about its textures (X3DProgrammableShaderObject.textures and the
+/// sampler uniforms). X_ITE adds a texture field to a Set when it holds a texture node and deletes
+/// it when the field is cleared; the uniform of a cleared field is not written, so it keeps its
+/// unit, and the unit keeps whatever texture was bound there last.
+#[derive(Debug, Default)]
+pub struct GlResident {
+    /// The Set of texture locations in insertion order: `field` or `field[i]`.
+    pub textures: Vec<String>,
+    /// The sampler uniforms written so far: `name` or `name[i]` to the texture unit.
+    pub units: HashMap<String, u32>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -228,7 +242,7 @@ impl Runtime {
         let sensor = self.scene.instantiate_builtin(ctx, index);
         self.nrt_mut(sensor);
         self.construct_node(sensor);
-        self.shaders.composed.insert(node, ComposedState { load_sensor: Some(sensor), valid: false, linked: None, clip_planes: Default::default() });
+        self.shaders.composed.insert(node, ComposedState { load_sensor: Some(sensor), valid: false, linked: None, clip_planes: Default::default(), gl: Default::default() });
     }
 
     /// ComposedShader.initialize.
@@ -331,6 +345,7 @@ impl Runtime {
                 if let Some(c) = self.shaders.composed.get_mut(&node) {
                     c.linked = Some((vertex, fragment));
                     c.clip_planes = Default::default();
+                    c.gl = Default::default();
                 }
 
                 self.shader_set_valid(node, true);
@@ -472,6 +487,11 @@ impl Runtime {
     /// The program-resident `x3d_ClipPlane` values of a linked ComposedShader.
     pub fn composed_clip_planes(&self, node: NodeId) -> Option<Rc<RefCell<[[f32; 4]; 6]>>> {
         self.shaders.composed.get(&node).map(|c| c.clip_planes.clone())
+    }
+
+    /// The program-resident texture state of a linked ComposedShader.
+    pub fn composed_gl(&self, node: NodeId) -> Option<Rc<RefCell<GlResident>>> {
+        self.shaders.composed.get(&node).map(|c| c.gl.clone())
     }
 
     pub fn composed_shader_sources(&self, node: NodeId) -> Option<&(Vec<ShaderSource>, Vec<ShaderSource>)> {

@@ -57,6 +57,8 @@ pub struct CustomDraw {
     pub user_textures: Vec<Option<Rc<TextureImage>>>,
     /// The program's resident `x3d_ClipPlane` uniforms (see `ComposedState::clip_planes`).
     pub clip_planes: Rc<std::cell::RefCell<[[f32; 4]; 6]>>,
+    /// The program's resident texture locations and sampler units (see `ComposedState::gl`).
+    pub gl: Rc<std::cell::RefCell<x3d_runtime::nodes::shaders::GlResident>>,
 }
 
 /// The pipeline state of one draw (the parts of `gpu::PipelineKey` a custom draw uses).
@@ -293,25 +295,108 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     buf
 }
 
-/// The texture of each sampler of the program: the draw's own (appearance texture units) for the
-/// x3d_ arrays, else the field's. `None` binds the default texture of the sampler's dimension.
-pub fn sampler_textures(input: &CustomInput) -> Vec<Option<Rc<TextureImage>>> {
-    let p = &*input.draw.program;
+/// The first texture unit of the pool X_ITE pops units from. The default units
+/// (`DEFAULT_UNIT`) and GL's unit 0, the initial value of a user sampler, lie outside it.
+const POOL: u32 = 100;
 
-    p.samplers
-        .iter()
-        .enumerate()
-        .map(|(k, s)| {
-            let unit = s.index.unwrap_or(0) as usize;
+/// The default 2D / 3D / cube unit of `getDefaultTexture2DUnit` and its siblings: a sampler
+/// uniform that was never written reads these (white 1x1 textures).
+fn default_unit(dim: SamplerDim) -> u32 {
+    match dim {
+        SamplerDim::D2 => 1,
+        SamplerDim::D3 => 2,
+        SamplerDim::Cube => 3,
+    }
+}
 
-            match (s.name.as_str(), s.dim) {
-                ("x3d_Texture2D", SamplerDim::D2) => input.item.textures.get(unit).filter(|t| !t.cube && !t.volume).cloned(),
-                ("x3d_Texture3D", SamplerDim::D3) => input.item.textures.get(unit).filter(|t| t.volume).cloned(),
-                ("x3d_TextureCube" | "x3d_CubeMapTexture", SamplerDim::Cube) => input.item.textures.get(unit).filter(|t| t.cube).cloned(),
-                _ => input.draw.user_textures.get(k).cloned().flatten(),
-            }
-        })
-        .collect()
+fn texture_dim(t: &TextureImage) -> SamplerDim {
+    if t.cube {
+        SamplerDim::Cube
+    } else if t.volume {
+        SamplerDim::D3
+    } else {
+        SamplerDim::D2
+    }
+}
+
+/// `x3d_Texture2D[i]`, `x3d_Texture3D[i]`, `x3d_TextureCube[i]` for the built-in arrays (the
+/// `x3d_CubeMapTexture` alias is the same uniform), else `name` / `name[i]`.
+fn sampler_key(name: &str, index: Option<u32>) -> String {
+    let name = if name == "x3d_CubeMapTexture" { "x3d_TextureCube" } else { name };
+
+    match index {
+        Some(i) => format!("{name}[{i}]"),
+        None => name.to_string(),
+    }
+}
+
+/// What the GL context has bound on each texture unit, per target. A binding stays until another
+/// texture is bound there, so a sampler whose texture field was cleared keeps reading the last
+/// texture of its unit. The entries are weak: a texture that no longer exists binds nothing.
+#[derive(Default)]
+pub struct Units {
+    bound: HashMap<(u32, SamplerDim), std::rc::Weak<TextureImage>>,
+}
+
+impl Units {
+    fn bind(&mut self, unit: u32, t: &Rc<TextureImage>) {
+        self.bound.insert((unit, texture_dim(t)), Rc::downgrade(t));
+    }
+
+    fn get(&self, unit: u32, dim: SamplerDim) -> Option<Rc<TextureImage>> {
+        self.bound.get(&(unit, dim)).and_then(|w| w.upgrade())
+    }
+
+    /// A built-in shader draw: the appearance textures take the pool's units in order
+    /// (`X3DTextureNode.setShaderUniforms` pops one each).
+    pub fn builtin_draw(&mut self, textures: &[Rc<TextureImage>]) {
+        for (k, t) in textures.iter().enumerate() {
+            self.bind(POOL + k as u32, t);
+        }
+    }
+
+    /// A custom shader draw: `enable` pops a unit for each texture location in the program's Set,
+    /// then the appearance textures pop theirs, each writing its sampler uniform. Returns the
+    /// texture each sampler of the program reads.
+    fn custom_draw(&mut self, input: &CustomInput) -> Vec<Option<Rc<TextureImage>>> {
+        let p = &*input.draw.program;
+        let mut gl = input.draw.gl.borrow_mut();
+        let mut pop = POOL;
+
+        for key in gl.textures.clone() {
+            let Some((k, s)) = p.samplers.iter().enumerate().find(|(_, s)| sampler_key(&s.name, s.index) == key) else { continue };
+            let Some(t) = input.draw.user_textures.get(k).and_then(|t| t.as_ref()) else { continue };
+
+            self.bind(pop, t);
+            gl.units.insert(key, pop);
+            pop += 1;
+            let _ = s;
+        }
+
+        for (i, t) in input.item.textures.iter().enumerate() {
+            let name = match texture_dim(t) {
+                SamplerDim::D2 => "x3d_Texture2D",
+                SamplerDim::D3 => "x3d_Texture3D",
+                SamplerDim::Cube => "x3d_TextureCube",
+            };
+
+            self.bind(pop, t);
+            gl.units.insert(sampler_key(name, Some(i as u32)), pop);
+            pop += 1;
+        }
+
+        p.samplers
+            .iter()
+            .map(|s| {
+                let unit = gl.units.get(&sampler_key(&s.name, s.index)).copied();
+
+                match unit {
+                    Some(u) => self.get(u, s.dim),
+                    None => None,
+                }
+            })
+            .collect()
+    }
 }
 
 // ---- vertex data ------------------------------------------------------------------------------
@@ -462,6 +547,8 @@ pub struct ShaderGpu {
     uniform_groups: HashMap<u64, wgpu::BindGroup>,
     /// 1x1 black textures (2D, 3D, cube) for the sampler uniforms no texture was given to.
     black: Option<[(wgpu::TextureView, wgpu::Sampler); 3]>,
+    /// The texture units of the GL context, across draws and frames.
+    units: Units,
     prepared: Vec<Prepared>,
     pub pipelines_created: usize,
     pub buffers_created: usize,
@@ -533,10 +620,29 @@ impl ShaderGpu {
         samples: u32,
         frame_no: u64,
         inputs: &[CustomInput],
+        // The built-in shader draws between the custom ones: (number of custom draws before it, its textures).
+        builtin: &[(usize, Vec<Rc<TextureImage>>)],
         texture: &dyn Fn(*const TextureImage) -> Option<(&'a wgpu::TextureView, &'a wgpu::Sampler)>,
         whites: [(&'a wgpu::TextureView, &'a wgpu::Sampler); 3],
     ) {
         self.prepared.clear();
+
+        // The draws in order: each one leaves its textures on the units for the next.
+        let mut resolved = vec![];
+        let mut next = 0;
+
+        for (i, input) in inputs.iter().enumerate() {
+            while next < builtin.len() && builtin[next].0 <= i {
+                self.units.builtin_draw(&builtin[next].1);
+                next += 1;
+            }
+
+            resolved.push(self.units.custom_draw(input));
+        }
+
+        for (_, textures) in &builtin[next..] {
+            self.units.builtin_draw(textures);
+        }
 
         if inputs.is_empty() {
             return;
@@ -684,7 +790,7 @@ impl ShaderGpu {
             }
 
             // Texture bind group.
-            let textures = sampler_textures(input);
+            let textures = resolved[i].clone();
             let ptrs: Vec<usize> = textures.iter().map(|t| t.as_ref().map_or(0, |t| Rc::as_ptr(t) as usize)).collect();
             let gkey = (p.key, ptrs);
 
@@ -794,4 +900,47 @@ fn attribute_key(attributes: &[AttrDecl]) -> u64 {
     }
 
     h.finish()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_binding_stays_until_another_texture_takes_the_unit() {
+        let mut u = Units::default();
+        let (a, b) = (Rc::new(TextureImage::white()), Rc::new(TextureImage::white()));
+
+        u.builtin_draw(&[a.clone()]);
+        assert!(Rc::ptr_eq(&u.get(POOL, SamplerDim::D2).unwrap(), &a));
+        // A draw without textures leaves the unit alone.
+        u.builtin_draw(&[]);
+        assert!(Rc::ptr_eq(&u.get(POOL, SamplerDim::D2).unwrap(), &a));
+        u.builtin_draw(&[b.clone()]);
+        assert!(Rc::ptr_eq(&u.get(POOL, SamplerDim::D2).unwrap(), &b));
+        // Another target of the same unit is a different binding.
+        assert!(u.get(POOL, SamplerDim::D3).is_none());
+    }
+
+    #[test]
+    fn a_released_texture_leaves_no_binding_and_the_table_stays_bounded() {
+        let mut u = Units::default();
+
+        for _ in 0..1000 {
+            let t = Rc::new(TextureImage::white());
+            u.builtin_draw(&[t.clone(), t.clone()]);
+        }
+
+        // Every texture is gone: the units read the default, and one entry per unit remains.
+        assert!(u.get(POOL, SamplerDim::D2).is_none());
+        assert!(u.get(POOL + 1, SamplerDim::D2).is_none());
+        assert_eq!(u.bound.len(), 2);
+    }
+
+    #[test]
+    fn sampler_keys_name_the_cube_alias_once() {
+        assert_eq!(sampler_key("x3d_CubeMapTexture", Some(1)), "x3d_TextureCube[1]");
+        assert_eq!(sampler_key("map", None), "map");
+        assert_eq!(sampler_key("maps", Some(2)), "maps[2]");
+    }
 }

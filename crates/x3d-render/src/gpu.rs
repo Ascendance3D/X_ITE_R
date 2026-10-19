@@ -2727,6 +2727,7 @@ impl Renderer {
         let mut volume_inputs: Vec<crate::volume_gpu::VolumeInput> = vec![];
         // ComposedShader: the custom draws of the frame, in draw order (crate::shader_gpu).
         let mut custom_inputs: Vec<crate::shader_gpu::CustomInput> = vec![];
+        let mut builtin_draws: Vec<(usize, Vec<Rc<TextureImage>>)> = vec![];
 
         // GaussianSplats: the splat draws of the frame, in draw order (crate::splats_gpu).
         let mut splat_inputs: Vec<crate::splats_gpu::SplatInput> = vec![];
@@ -3148,6 +3149,8 @@ impl Renderer {
                     });
                     c.source = Source::Custom(custom_inputs.len() - 1, back);
                 }
+            } else if calls.len() > calls_before && !item.textures.is_empty() {
+                builtin_draws.push((custom_inputs.len(), item.textures.clone()));
             }
         }
 
@@ -3299,6 +3302,7 @@ impl Renderer {
                 samples,
                 frame_no,
                 &custom_inputs,
+                &builtin_draws,
                 &|p| textures.get(&p).map(|e| (&e.view, &e.sampler)),
                 [(&white_2d.0, &white_2d.1), (&white_3d.0, &white_3d.1), (&white_cube.0, &white_cube.1)],
             );
