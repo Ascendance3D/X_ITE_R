@@ -1,2 +1,3 @@
 sai-create oracle/synthetic-rea-b09-sai/sai-create.wrl oracle/synthetic-rea-b09-sai/sai.json
 sai-context oracle/synthetic-rea-b09-sai/sai-context.wrl oracle/synthetic-rea-b09-sai/sai.json
+sai-scenes oracle/synthetic-rea-b09-sai/sai-scenes.wrl oracle/synthetic-rea-b09-sai/sai.json

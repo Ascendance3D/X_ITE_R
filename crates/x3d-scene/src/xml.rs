@@ -21,7 +21,12 @@ pub struct XmlGenerator<'a> {
 impl Scene {
     /// `scene .toXMLString ()` with X_ITE's default (TIDY) generator options.
     pub fn to_xml_string(&self) -> String {
-        XmlGenerator::new(self).scene_to_xml()
+        XmlGenerator::new(self).scene_to_xml(ROOT)
+    }
+
+    /// X3DScene.toXMLStream of the scene whose root context is `root` (an Inline's or a script-made scene).
+    pub fn to_xml_string_ctx(&self, root: CtxId) -> String {
+        XmlGenerator::new(self).scene_to_xml(root)
     }
 }
 
@@ -256,7 +261,7 @@ impl<'a> XmlGenerator<'a> {
     // --- X3DScene / X3DExecutionContext ----------------------------------------------------
 
     /// X3DScene.toXMLStream, with the toXMLString frame (a `null` execution context below the scene).
-    fn scene_to_xml(mut self) -> String {
+    fn scene_to_xml(mut self, scene_root: CtxId) -> String {
         let scene = self.scene();
 
         self.base.push_ctx(None);
@@ -273,7 +278,7 @@ impl<'a> XmlGenerator<'a> {
         self.g().tidy_break();
 
         self.open_tag("X3D");
-        self.attribute("profile", scene.profile_of(ROOT).unwrap_or("Full"));
+        self.attribute("profile", scene.profile_of(scene_root).unwrap_or("Full"));
         self.attribute("version", LATEST_VERSION);
         self.attribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance");
         self.attribute("xsd:noNamespaceSchemaLocation", &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}.xsd"));
@@ -282,9 +287,9 @@ impl<'a> XmlGenerator<'a> {
 
         // <head>: components, then units whose conversion factor is not 1, then meta.
 
-        let components = scene.components_of(ROOT);
-        let metadata = scene.meta_of(ROOT);
-        let units: Vec<_> = scene.units_of(ROOT).iter().filter(|u| u.conversion_factor != 1.0).collect();
+        let components = scene.components_of(scene_root);
+        let metadata = scene.meta_of(scene_root);
+        let units: Vec<_> = scene.units_of(scene_root).iter().filter(|u| u.conversion_factor != 1.0).collect();
 
         if !components.is_empty() || !units.is_empty() || !metadata.is_empty() {
             self.opening_tag("head");
@@ -323,15 +328,15 @@ impl<'a> XmlGenerator<'a> {
 
         // <Scene>
 
-        let root = scene.ctx(ROOT);
+        let root = scene.ctx(scene_root);
 
         if !root.externprotos.is_empty() || !root.protos.is_empty() || !root.root_nodes.is_empty() {
             self.opening_tag("Scene");
             self.g().tidy_break();
             self.g().inc_indent();
 
-            self.base.push_ctx(Some(ROOT));
-            self.context_to_xml(ROOT);
+            self.base.push_ctx(Some(scene_root));
+            self.context_to_xml(scene_root);
 
             for &e in root.exported.values() {
                 self.exported_to_xml(e);

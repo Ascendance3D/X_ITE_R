@@ -18,7 +18,12 @@ pub struct JsonGenerator<'a> {
 impl Scene {
     /// `scene .toJSONString ()` with X_ITE's default (TIDY) generator options.
     pub fn to_json_string(&self) -> String {
-        JsonGenerator::new(self).scene_to_json()
+        JsonGenerator::new(self).scene_to_json(ROOT)
+    }
+
+    /// X3DScene.toJSONStream of the scene whose root context is `root`.
+    pub fn to_json_string_ctx(&self, root: CtxId) -> String {
+        JsonGenerator::new(self).scene_to_json(root)
     }
 }
 
@@ -224,23 +229,23 @@ impl<'a> JsonGenerator<'a> {
     // --- scene -------------------------------------------------------------------------------
 
     /// X3DScene.toJSONStream, with the toJSONString frame.
-    fn scene_to_json(mut self) -> String {
+    fn scene_to_json(mut self, scene_root: CtxId) -> String {
         let scene = self.scene();
 
         self.base.push_ctx(None);
 
         self.begin_object(Some("X3D"), false, true);
         self.string_property("encoding", "UTF-8", false);
-        self.string_property("@profile", scene.profile_of(ROOT).unwrap_or("Full"), true);
+        self.string_property("@profile", scene.profile_of(scene_root).unwrap_or("Full"), true);
         self.string_property("@version", LATEST_VERSION, true);
         self.string_property("@xsd:noNamespaceSchemaLocation", &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}.xsd"), true);
         self.string_property("JSON schema", &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}-JSONSchema.json"), true);
 
         // Head: meta data, then components, then units whose conversion factor is not 1.
 
-        let components = scene.components_of(ROOT);
-        let metadata = scene.meta_of(ROOT);
-        let units: Vec<_> = scene.units_of(ROOT).iter().filter(|u| u.conversion_factor != 1.0).cloned().collect();
+        let components = scene.components_of(scene_root);
+        let metadata = scene.meta_of(scene_root);
+        let units: Vec<_> = scene.units_of(scene_root).iter().filter(|u| u.conversion_factor != 1.0).cloned().collect();
 
         if !components.is_empty() || !units.is_empty() || !metadata.is_empty() {
             let mut head_last_property = false;
@@ -312,10 +317,10 @@ impl<'a> JsonGenerator<'a> {
         self.begin_object(Some("Scene"), true, false);
         self.begin_array(Some("-children"), false);
 
-        self.base.push_ctx(Some(ROOT));
+        self.base.push_ctx(Some(scene_root));
 
-        let comma = self.context_to_json(ROOT);
-        let exported: Vec<ExportedId> = scene.ctx(ROOT).exported.values().to_vec();
+        let comma = self.context_to_json(scene_root);
+        let exported: Vec<ExportedId> = scene.ctx(scene_root).exported.values().to_vec();
 
         self.info_array_json(&exported, comma, |this, e| {
             this.exported_to_json(e);
