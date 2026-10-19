@@ -1,0 +1,127 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+   Compiling x3d-runtime v0.1.0 (/home/user/x_ite_r/crates/x3d-runtime)
+   Compiling x3d-script v0.1.0 (/home/user/x_ite_r/crates/x3d-script)
+   Compiling x3d-render v0.1.0 (/home/user/x_ite_r/crates/x3d-render)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+   Compiling x3d-viewer v0.1.0 (/home/user/x_ite_r/crates/x3d-viewer)
+warning: `x3d-render` (lib) generated 4 warnings
+    Finished `release` profile [optimized] target(s) in 46.66s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/rea_b08_gltf_viewer_buffers.rs (target/release/deps/rea_b08_gltf_viewer_buffers-00616092971dc1d5)
+
+running 1 test
+test top_level_gltf_with_external_buffer_loads_in_the_viewer ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/rea_b08_release_tables.rs (target/release/deps/rea_b08_release_tables-cb6ad738c3b4915c)
+
+running 1 test
+
+thread '<unnamed>' (19608) panicked at crates/x3d-viewer/tests/rea_b08_release_tables.rs:67:21:
+assertion `left == right` failed: cycle 1: shader state of released nodes kept
+  left: [0, 0, 4, 0]
+ right: [0, 0, 0, 0]
+stack backtrace:
+   0: __rustc::rust_begin_unwind
+   1: core::panicking::panic_fmt
+   2: core::panicking::assert_failed_inner
+   3: core::panicking::assert_failed::<[usize; 4], [usize; 4]>
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+
+thread 'shader_and_font_library_tables_are_released_with_their_nodes' (19607) panicked at crates/x3d-viewer/tests/rea_b08_release_tables.rs:81:10:
+called `Result::unwrap()` on an `Err` value: Any { .. }
+stack backtrace:
+   0: __rustc::rust_begin_unwind
+   1: core::panicking::panic_fmt
+   2: core::result::unwrap_failed
+   3: <rea_b08_release_tables::shader_and_font_library_tables_are_released_with_their_nodes::{closure#0} as core::ops::function::FnOnce<()>>::call_once
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+test shader_and_font_library_tables_are_released_with_their_nodes ... FAILED
+
+failures:
+
+failures:
+    shader_and_font_library_tables_are_released_with_their_nodes
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+error: test failed, to rerun pass `-p x3d-viewer --test rea_b08_release_tables`
