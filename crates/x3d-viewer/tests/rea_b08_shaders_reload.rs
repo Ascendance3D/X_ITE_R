@@ -21,7 +21,7 @@ fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
 
 fn worlds() -> Vec<PathBuf> {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-b08-shaders");
-    ["basic.wrl", "es300.wrl", "lights.wrl", "texture-field.wrl", "texture-appearance.wrl", "attrib-float.wrl", "geometries.wrl", "fog.wrl", "bad-syntax.wrl", "select-first-valid.wrl", "file-fallback.wrl", "stub-nodes.wrl"].iter().map(|n| dir.join(n)).collect()
+    ["basic.wrl", "es300.wrl", "lights.wrl", "texture-field.wrl", "texture-appearance.wrl", "attrib-float.wrl", "geometries.wrl", "fog.wrl", "bad-syntax.wrl", "select-first-valid.wrl", "file-fallback.wrl", "stub-nodes.wrl", "ctx-phong-light.wrl", "ctx-pbr.wrl", "ctx-fog.wrl", "ctx-texture.wrl"].iter().map(|n| dir.join(n)).collect()
 }
 
 fn shot(v: &mut EmbeddedViewer, device: &wgpu::Device, queue: &wgpu::Queue, now: f64) -> Vec<u8> {

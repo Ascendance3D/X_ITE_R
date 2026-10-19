@@ -29,8 +29,10 @@ impl ShaderCompiler for NagaCompiler {
         crate::glsl_compat::compile_part(if fragment { crate::glsl_compat::Stage::Fragment } else { crate::glsl_compat::Stage::Vertex }, source, options)
     }
 
-    fn link(&self, vertex: &[ShaderSource], fragment: &[ShaderSource]) -> Result<Vec<String>, String> {
-        link_sources(vertex, fragment).map(|p| p.warnings.clone())
+    fn link(&self, vertex: &[ShaderSource], fragment: &[ShaderSource], transform_feedback_varyings: &[String]) -> Result<Vec<String>, String> {
+        let program = link_sources(vertex, fragment)?;
+        crate::glsl_compat::check_transform_feedback(&program, transform_feedback_varyings)?;
+        Ok(program.warnings.clone())
     }
 }
 
@@ -174,6 +176,12 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
     }
 
     // Lights: the shape's lights in order, at most maxLights (x3d_MaxLights).
+    let mut resident = input.draw.gl.borrow_mut();
+    let mut set_light = |buf: &mut [[f32; 4]], path: String, v: &[f32]| {
+        p.set(buf, &path, v);
+        resident.lights.insert(path, v.to_vec());
+    };
+
     for (i, &li) in item.lights.iter().take(8).enumerate() {
         let Some(l) = frame.lights.get(li as usize) else { continue };
         // The legacy names (x3d_LightType [i] ...) when the program has no x3d_LightSource.
@@ -203,29 +211,40 @@ pub fn fill_builtins(input: &CustomInput) -> Vec<[f32; 4]> {
             if p.has(&legacy) { legacy } else { new }
         };
 
-        p.set(&mut buf, &at("type"), &[l.kind as f32]);
-        p.set(&mut buf, &at("color"), &l.color.map(|v| v as f32));
-        p.set(&mut buf, &at("intensity"), &[l.intensity as f32]);
-        p.set(&mut buf, &at("ambientIntensity"), &[l.ambient_intensity as f32]);
-        p.set(&mut buf, &at("shadowIntensity"), &[0.0]);
+        set_light(&mut buf, at("type"), &[l.kind as f32]);
+        set_light(&mut buf, at("color"), &l.color.map(|v| v as f32));
+        set_light(&mut buf, at("intensity"), &[l.intensity as f32]);
+        set_light(&mut buf, at("ambientIntensity"), &[l.ambient_intensity as f32]);
+        set_light(&mut buf, at("shadowIntensity"), &[0.0]);
 
         match l.kind {
             1 => {
-                p.set(&mut buf, &at("direction"), &[l.direction.x as f32, l.direction.y as f32, l.direction.z as f32]);
-                p.set(&mut buf, &at("radius"), &[-1.0]);
+                set_light(&mut buf, at("direction"), &[l.direction.x as f32, l.direction.y as f32, l.direction.z as f32]);
+                set_light(&mut buf, at("radius"), &[-1.0]);
             }
             _ => {
-                p.set(&mut buf, &at("attenuation"), &l.attenuation.map(|v| v as f32));
-                p.set(&mut buf, &at("location"), &[l.location.x as f32, l.location.y as f32, l.location.z as f32]);
-                p.set(&mut buf, &at("radius"), &[l.radius as f32]);
-                p.set(&mut buf, &at("matrix"), &l.matrix);
+                set_light(&mut buf, at("attenuation"), &l.attenuation.map(|v| v as f32));
+                set_light(&mut buf, at("location"), &[l.location.x as f32, l.location.y as f32, l.location.z as f32]);
+                set_light(&mut buf, at("radius"), &[l.radius as f32]);
+                set_light(&mut buf, at("matrix"), &l.matrix);
 
                 if l.kind == 3 {
-                    p.set(&mut buf, &at("direction"), &[l.direction.x as f32, l.direction.y as f32, l.direction.z as f32]);
-                    p.set(&mut buf, &at("beamWidth"), &[l.beam_width as f32]);
-                    p.set(&mut buf, &at("cutOffAngle"), &[l.cut_off_angle as f32]);
+                    set_light(&mut buf, at("direction"), &[l.direction.x as f32, l.direction.y as f32, l.direction.z as f32]);
+                    set_light(&mut buf, at("beamWidth"), &[l.beam_width as f32]);
+                    set_light(&mut buf, at("cutOffAngle"), &[l.cut_off_angle as f32]);
                 }
             }
+        }
+    }
+
+    // The uniforms of the lights the shape does not have keep their last values.
+    let lights = item.lights.iter().take(8).count();
+
+    for (path, v) in resident.lights.iter() {
+        let index = path.split_once('[').and_then(|(_, r)| r.split_once(']')).and_then(|(n, _)| n.parse::<usize>().ok());
+
+        if index.is_some_and(|i| i >= lights) {
+            p.set(&mut buf, path, v);
         }
     }
 

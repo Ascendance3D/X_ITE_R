@@ -1,0 +1,95 @@
+{
+ "pinned": "x_ite-pin",
+ "vertex": "\nattribute vec4 x3d_Vertex;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nvarying vec3 vP;\nvarying vec4 vC;\nvarying float vArr [2];\nvoid main() { vec4 p = x3d_ModelViewMatrix * x3d_Vertex; vP = p.xyz; vC = vec4 (1.0); vArr [0] = 1.0; vArr [1] = 2.0; gl_Position = x3d_ProjectionMatrix * p; }\n",
+ "fragment": "\nprecision mediump float;\nvarying vec3 vP;\nvoid main() { gl_FragColor = vec4 (vP, 1.0); }\n",
+ "cases": [
+  {
+   "name": "none",
+   "varyings": [],
+   "valid": true,
+   "warnings": []
+  },
+  {
+   "name": "one",
+   "varyings": [
+    "vP"
+   ],
+   "valid": true,
+   "warnings": []
+  },
+  {
+   "name": "two",
+   "varyings": [
+    "vP",
+    "vC"
+   ],
+   "valid": true,
+   "warnings": []
+  },
+  {
+   "name": "builtin",
+   "varyings": [
+    "gl_Position"
+   ],
+   "valid": true,
+   "warnings": []
+  },
+  {
+   "name": "empty-name",
+   "varyings": [
+    ""
+   ],
+   "valid": true,
+   "warnings": []
+  },
+  {
+   "name": "missing",
+   "varyings": [
+    "nope"
+   ],
+   "valid": false,
+   "warnings": [
+    "Couldn't initialize ComposedShader 'missingShader': Transform feedback varying nope does not exist in the vertex shader."
+   ]
+  },
+  {
+   "name": "duplicate",
+   "varyings": [
+    "vP",
+    "vP"
+   ],
+   "valid": false,
+   "warnings": [
+    "Couldn't initialize ComposedShader 'duplicateShader': Two transform feedback varyings specify the same output variable (vP)."
+   ]
+  },
+  {
+   "name": "array",
+   "varyings": [
+    "vArr"
+   ],
+   "valid": false,
+   "warnings": [
+    "Couldn't initialize ComposedShader 'arrayShader': Capture of arrays is undefined and not supported."
+   ]
+  },
+  {
+   "name": "array-element",
+   "varyings": [
+    "vArr[0]"
+   ],
+   "valid": false,
+   "warnings": [
+    "Couldn't initialize ComposedShader 'array-elementShader': Capture of array elements is undefined and not supported."
+   ]
+  },
+  {
+   "name": "not-read-by-fragment",
+   "varyings": [
+    "vC"
+   ],
+   "valid": true,
+   "warnings": []
+  }
+ ]
+}

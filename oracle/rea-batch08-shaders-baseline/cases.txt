@@ -24,3 +24,11 @@ include-utils oracle/synthetic-rea-b08-shaders/include-utils.wrl oracle/syntheti
 include-utils oracle/synthetic-rea-b08-shaders/include-utils.wrl oracle/synthetic-rea-b08-shaders/include.json 4
 include-tonemapping oracle/synthetic-rea-b08-shaders/include-tonemapping.wrl oracle/synthetic-rea-b08-shaders/include.json 0
 include-tonemapping oracle/synthetic-rea-b08-shaders/include-tonemapping.wrl oracle/synthetic-rea-b08-shaders/include.json 4
+errors-runtime oracle/synthetic-rea-b08-shaders/errors-runtime.wrl oracle/synthetic-rea-b08-shaders/errors-runtime.json 0
+errors-runtime oracle/synthetic-rea-b08-shaders/errors-runtime.wrl oracle/synthetic-rea-b08-shaders/errors-runtime.json 4
+ctx-runtime oracle/synthetic-rea-b08-shaders/ctx-runtime.wrl oracle/synthetic-rea-b08-shaders/ctx-runtime.json 0
+ctx-runtime oracle/synthetic-rea-b08-shaders/ctx-runtime.wrl oracle/synthetic-rea-b08-shaders/ctx-runtime.json 4
+links-runtime oracle/synthetic-rea-b08-shaders/links-runtime.wrl oracle/synthetic-rea-b08-shaders/links-runtime.json 0
+links-runtime oracle/synthetic-rea-b08-shaders/links-runtime.wrl oracle/synthetic-rea-b08-shaders/links-runtime.json 4
+stubs-runtime oracle/synthetic-rea-b08-shaders/stubs-runtime.wrl oracle/synthetic-rea-b08-shaders/stubs-runtime.json 0
+stubs-runtime oracle/synthetic-rea-b08-shaders/stubs-runtime.wrl oracle/synthetic-rea-b08-shaders/stubs-runtime.json 4
