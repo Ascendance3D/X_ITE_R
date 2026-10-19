@@ -1,0 +1,1410 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT Geospatial : 2\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Navigation : 2\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  children [\n    DEF GT1 GeoTouchSensor {\n      description \"gd\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  children [\n    DEF GT2 GeoTouchSensor {\n      description \"utm\"\n      geoOrigin GeoOrigin {\n        geoSystem \"GD\"\n        geoCoords 37.4 -122.1 0\n      }\n      geoSystem [\n        \"UTM\",\n        \"Z10\"\n      ]\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true p1=0.4005518 0.007280968 1 g1=-0.0013419072615793 1.04137039166823 -6378136.59939375 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=true p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 a1=false t1=0.3833 p1=0.546176 -0.225711 1 g1=-0.00134191324588162 -22.4531968698249 -6378136.40903482 p1=0.6918002 0.211149 1 g1=-0.00134191740506486 16.973066395598 -6378136.27670584 o1=false o2=true x2=0.4607837 0.5019132 n2=-0.2437037 0.005986716 0.9698313 g2=4139628.01075266 579657.642167738 0.821932170540094 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 t2=0.7167 x2=0.4804608 0.4005967 n2=-0.1198736 -0.3084077 0.943671 g2=4139627.83982906 579657.968220722 0.987614332698286 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3d  geo1\n  inputOnly   SFBool   over2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n  inputOnly   SFVec3d  geo2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v, t) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function geo1 (v) { hist = hist + ' g1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n    function geo2 (v) { hist = hist + ' g2=' + v; }\n  \"\n}\n\nROUTE GT1.isOver TO LOG.over1\nROUTE GT1.isActive TO LOG.active1\nROUTE GT1.touchTime TO LOG.touch1\nROUTE GT1.hitPoint_changed TO LOG.point1\nROUTE GT1.hitGeoCoord_changed TO LOG.geo1\nROUTE GT2.isOver TO LOG.over2\nROUTE GT2.touchTime TO LOG.touch2\nROUTE GT2.hitNormal_changed TO LOG.normal2\nROUTE GT2.hitTexCoord_changed TO LOG.tex2\nROUTE GT2.hitGeoCoord_changed TO LOG.geo2\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

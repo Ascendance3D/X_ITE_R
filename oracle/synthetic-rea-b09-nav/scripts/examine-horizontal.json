@@ -1,0 +1,66 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  6,
+  89
+ ],
+ "dump": [],
+ "frames": 89,
+ "events": [
+  {
+   "frame": 2,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 3,
+   "type": "mousemove",
+   "x": 316,
+   "y": 256
+  },
+  {
+   "frame": 4,
+   "type": "mousemove",
+   "x": 376,
+   "y": 256
+  },
+  {
+   "frame": 5,
+   "type": "mousemove",
+   "x": 436,
+   "y": 256
+  },
+  {
+   "frame": 6,
+   "type": "mousemove",
+   "x": 496,
+   "y": 256
+  },
+  {
+   "frame": 7,
+   "type": "mousemove",
+   "x": 556,
+   "y": 256
+  },
+  {
+   "frame": 8,
+   "type": "mousemove",
+   "x": 616,
+   "y": 256
+  },
+  {
+   "frame": 49,
+   "type": "mouseup",
+   "button": 0,
+   "x": 616,
+   "y": 256
+  }
+ ]
+}

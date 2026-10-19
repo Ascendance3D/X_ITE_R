@@ -574,6 +574,46 @@ try
    if (script .physics)
       result .physics .dt = await page .evaluate (() => window .__phDt);
 
+   // Script key "pickProbes": [[x, y], ...] (pointer coordinates of the events, y up). After the last
+   // frame, browser .touch (x, y) picks each point into the pointing buffer; the hit's id, view space
+   // point, normal (after hit .modelViewMatrix .submatrix .inverse ()) and texCoord are recorded at
+   // full precision. x3d-drive does the same with its pointing pass; x10_compare compares them exactly.
+   if (script .pickProbes)
+      result .pickProbes = await page .evaluate (points =>
+      {
+         const browser = document .getElementById ("c") .browser;
+
+         return points .map (([ x, y ]) =>
+         {
+            if (!browser .touch (x, y))
+               return { id: 0 };
+
+            const h = browser .getHit ();
+
+            return { id: 1, point: [ h .point .x, h .point .y, h .point .z ], normal: [ h .normal .x, h .normal .y, h .normal .z ],
+                     texCoord: [ h .texCoord .x, h .texCoord .y, h .texCoord .z, h .texCoord .w ] };
+         });
+      }, script .pickProbes);
+
+   // Script key "collisionProbes": [[x, y, z], ...] (directions in the viewpoint's translation frame).
+   // After the last frame, the active layer's getClosestObject (direction) renders the collision
+   // shapes into the 16x16 depth buffer; its distance and normal are recorded at full precision.
+   if (script .collisionProbes)
+      result .collisionProbes = await page .evaluate (directions =>
+      {
+         const
+            browser = document .getElementById ("c") .browser,
+            layer   = browser .getActiveLayer (),
+            Vector3 = browser .getActiveViewpoint () .getPosition () .constructor;
+
+         return directions .map (([ x, y, z ]) =>
+         {
+            const c = layer .getClosestObject (new Vector3 (x, y, z));
+
+            return { distance: c .distance, id: c .id, normal: [ c .normal .x, c .normal .y, c .normal .z ] };
+         });
+      }, script .collisionProbes);
+
    result .log = (await page .evaluate (() => window .getLog ())) .map (l => l .replaceAll (base, "http://oracle"));
 
    if (script .console)

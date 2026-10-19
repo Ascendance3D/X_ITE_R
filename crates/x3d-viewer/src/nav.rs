@@ -1185,13 +1185,15 @@ impl Fly {
     fn add_roll(&mut self, roll_angle: f64, cx: &mut Cx) {
         let roll = Rotation4::new(1.0, 0.0, 0.0, roll_angle);
         let mut oo = inv(&cx.base.orientation);
-        oo.mult_right(&roll).mult_right(&cx.base.orientation);
+        oo.mult_right(&roll);
 
         if self.chaser.is_active && self.chaser.connected {
-            oo.mult_right(&self.chaser.set_destination_value);
+            // `.multRight (viewpoint .getOrientation ()) .multRight (orientationChaser ._set_destination)`
+            oo.mult_right(&cx.base.orientation).mult_right(&self.chaser.set_destination_value);
             self.chaser.set_destination_value = oo; // the field changes at once (FlyViewer addRotation/addRoll read it)
             self.pending.push(FPend::Dest(oo));
         } else {
+            // `.multRight (viewpoint .getUserOrientation ())`
             oo.mult_right(&cx.vp.user_orientation(cx.base));
             self.pending.push(FPend::Value(cx.vp.orientation_offset));
             self.chaser.set_destination_value = oo; // the field changes at once (FlyViewer addRotation/addRoll read it)

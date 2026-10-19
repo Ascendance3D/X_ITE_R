@@ -80,7 +80,7 @@ fn pose(v: &mut Viewer3d) -> Value {
     let bound = v.layer.viewpoint();
     let name = if x3d_viewer::layer::is_default(bound) { "<default>".to_string() } else { v.rt.scene.node(bound).name.clone() };
     let (fov_scale, fov_offset) = v.field_of_view_state();
-    let mut j = json!({ "position": vec3(&p), "orientation": rot(&o), "centerOfRotation": vec3(&c), "viewpoint": name, "viewer": v.viewer_kind(), "fieldOfViewScale": fov_scale });
+    let mut j = json!({ "position": vec3(&p), "orientation": rot(&o), "centerOfRotation": vec3(&c), "viewpoint": name, "viewer": v.viewer_field(), "fieldOfViewScale": fov_scale });
     // OrthoViewpoint ._fieldOfViewOffset (the oracle reports it for an OrthoViewpoint only).
     if let Some(o) = fov_offset {
         j["fieldOfViewOffset"] = json!(o);
@@ -145,6 +145,21 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     // `--warmup-from <oracle.json>` copies the oracle's warmupFrames (frames traversed while the
     // loaded world was current), so frame-count dependent behavior (WALK gravity) lines up.
     let warmup = warmup_override.or(script["warmup"].as_u64()).unwrap_or(8);
+
+    // The pointing buffer on the GPU, like X_ITE's (`--cpu-pointing`: the ray cast's double values).
+    if !std::env::args().any(|a| a == "--cpu-pointing") {
+        v.pointing_gpu = match x3d_render::pointing_gpu::PointingGpu::new_headless() {
+            Ok(g) => {
+                // The collision depth buffer shares the device.
+                v.depth_gpu = Some(std::rc::Rc::new(std::cell::RefCell::new(x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone()))));
+                Some(g)
+            }
+            Err(e) => {
+                eprintln!("x3d-drive: no pointing GPU ({e}); picks use the ray cast");
+                None
+            }
+        };
+    }
 
     let mut gpu = if png_dir.is_some() { x3d_render::gpu::Gpu::new().ok() } else { None };
     // The RenderingProperties of the page (Multisampling 0 for anim.html, N for `--msaa N`).
@@ -288,6 +303,38 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
     if console {
         result["console"] = json!(v.rt.console);
+    }
+
+    // Script key "collisionProbes" (see oracle/x_ite-anim.mjs): getClosestObject of the active layer.
+    if let Some(directions) = script["collisionProbes"].as_array() {
+        let probes: Vec<Value> = directions
+            .iter()
+            .map(|d| {
+                let c = v.probe_closest(x3d_fields::math::Vector3::new(d[0].as_f64().unwrap_or(0.0), d[1].as_f64().unwrap_or(0.0), d[2].as_f64().unwrap_or(0.0)));
+
+                json!({ "distance": c.distance, "id": if c.hit { 0 } else { -1 }, "normal": vec3(&c.normal) })
+            })
+            .collect();
+
+        result["collisionProbes"] = Value::Array(probes);
+    }
+
+    // Script key "pickProbes" (see oracle/x_ite-anim.mjs): the hit at each point, as X_ITE's touch records it.
+    if let Some(points) = script["pickProbes"].as_array() {
+        let probes: Vec<Value> = points
+            .iter()
+            .map(|p| {
+                let h = v.probe_pick(p[0].as_f64().unwrap_or(0.0), p[1].as_f64().unwrap_or(0.0));
+
+                if !h.id {
+                    return json!({ "id": 0 });
+                }
+
+                json!({ "id": 1, "point": vec3(&h.point), "normal": vec3(&h.normal), "texCoord": [h.tex_coord.x, h.tex_coord.y, h.tex_coord.z, h.tex_coord.w] })
+            })
+            .collect();
+
+        result["pickProbes"] = Value::Array(probes);
     }
 
     if physics {

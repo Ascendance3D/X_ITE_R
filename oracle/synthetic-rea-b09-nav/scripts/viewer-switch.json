@@ -1,0 +1,177 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  3,
+  13,
+  23,
+  33,
+  43,
+  53,
+  63,
+  80
+ ],
+ "dump": [],
+ "frames": 80,
+ "events": [
+  {
+   "frame": 2,
+   "type": "viewer",
+   "name": "WALK"
+  },
+  {
+   "frame": 4,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 5,
+   "type": "mousemove",
+   "x": 256,
+   "y": 300
+  },
+  {
+   "frame": 11,
+   "type": "mouseup",
+   "button": 0,
+   "x": 256,
+   "y": 300
+  },
+  {
+   "frame": 12,
+   "type": "viewer",
+   "name": "EXAMINE"
+  },
+  {
+   "frame": 14,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 15,
+   "type": "mousemove",
+   "x": 270,
+   "y": 280
+  },
+  {
+   "frame": 21,
+   "type": "mouseup",
+   "button": 0,
+   "x": 270,
+   "y": 280
+  },
+  {
+   "frame": 22,
+   "type": "viewer",
+   "name": "FLY"
+  },
+  {
+   "frame": 24,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 25,
+   "type": "mousemove",
+   "x": 290,
+   "y": 310
+  },
+  {
+   "frame": 31,
+   "type": "mouseup",
+   "button": 0,
+   "x": 290,
+   "y": 310
+  },
+  {
+   "frame": 32,
+   "type": "viewer",
+   "name": "PLANE"
+  },
+  {
+   "frame": 34,
+   "type": "mousedown",
+   "button": 1,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 35,
+   "type": "mousemove",
+   "x": 280,
+   "y": 300
+  },
+  {
+   "frame": 41,
+   "type": "mouseup",
+   "button": 1,
+   "x": 280,
+   "y": 300
+  },
+  {
+   "frame": 42,
+   "type": "viewer",
+   "name": "LOOKAT"
+  },
+  {
+   "frame": 44,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 45,
+   "type": "mousemove",
+   "x": 240,
+   "y": 290
+  },
+  {
+   "frame": 51,
+   "type": "mouseup",
+   "button": 0,
+   "x": 240,
+   "y": 290
+  },
+  {
+   "frame": 52,
+   "type": "viewer",
+   "name": "NONE"
+  },
+  {
+   "frame": 54,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 55,
+   "type": "mousemove",
+   "x": 240,
+   "y": 290
+  },
+  {
+   "frame": 61,
+   "type": "mouseup",
+   "button": 0,
+   "x": 240,
+   "y": 290
+  },
+  {
+   "frame": 62,
+   "type": "viewer",
+   "name": "ANY"
+  }
+ ]
+}

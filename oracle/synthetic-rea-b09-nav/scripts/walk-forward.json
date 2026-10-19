@@ -1,0 +1,38 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  10,
+  30,
+  60,
+  90
+ ],
+ "dump": [],
+ "frames": 90,
+ "events": [
+  {
+   "frame": 2,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 3,
+   "type": "mousemove",
+   "x": 256,
+   "y": 330
+  },
+  {
+   "frame": 43,
+   "type": "mouseup",
+   "button": 0,
+   "x": 256,
+   "y": 330
+  }
+ ]
+}

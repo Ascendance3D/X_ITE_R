@@ -1,0 +1,35 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT PointingDeviceSensor:1
+# Synthetic REA oracle world: the pointing buffer's hit point, normal and texCoord (script key
+# pickProbes) over primitives and an indexed face set under rotated, scaled, translated Transforms.
+Viewpoint { position 0 0 10 }
+Transform { translation -2.5 1.5 0 children [ TouchSensor { } Shape { geometry Box { size 2 2 2 } } ] }
+Transform { translation 0 1.5 0 rotation 1 1 0 0.7 scale 1 1.3 0.8 children [ TouchSensor { } Shape { geometry Sphere { radius 1.1 } } ] }
+Transform { translation 2.5 1.5 0 rotation 0 1 0 0.9 children [ TouchSensor { } Shape { geometry Cone { } } ] }
+Transform { translation -2.5 -1.5 0 rotation 1 0 0 0.5 children [ TouchSensor { } Shape { geometry Cylinder { } } ] }
+Transform {
+  translation 0 -1.5 0
+  rotation 0.3 0.4 0.5 0.8
+  children [
+    TouchSensor { }
+    Shape {
+      geometry IndexedFaceSet {
+        solid FALSE
+        coord Coordinate { point [ -1 -1 0.3, 1 -1 -0.2, 1.2 1 0.1, -0.8 1.1 0.4, 0 0 1 ] }
+        texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1, 0.5 0.5 ] }
+        coordIndex [ 0 1 4 -1 1 2 4 -1 2 3 4 -1 3 0 4 -1 ]
+        texCoordIndex [ 0 1 4 -1 1 2 4 -1 2 3 4 -1 3 0 4 -1 ]
+      }
+    }
+  ]
+}
+Transform {
+  translation 2.5 -1.5 0
+  rotation 0.2 1 0.1 0.6
+  scale 0.9 0.9 0.9
+  children [
+    TouchSensor { }
+    Shape { geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.6 zSpacing 0.6 height [ 0 0.2 0.1 0 0.1 0.4 0.3 0.1 0 0.2 0.5 0.2 0 0.1 0.2 0 ] creaseAngle 1 } }
+  ]
+}

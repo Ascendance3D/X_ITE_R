@@ -224,6 +224,25 @@ try
       }
    }
 
+   // Script key "collisionProbes": [[x, y, z], ...] (directions in the viewpoint's translation frame).
+   // After the last frame, the active layer's getClosestObject (direction) renders the collision
+   // shapes into the 16x16 depth buffer; its distance and normal are recorded at full precision.
+   if (script .collisionProbes)
+      result .collisionProbes = await page .evaluate (directions =>
+      {
+         const
+            browser = document .getElementById ("c") .browser,
+            layer   = browser .getActiveLayer (),
+            Vector3 = browser .getActiveViewpoint () .getPosition () .constructor;
+
+         return directions .map (([ x, y, z ]) =>
+         {
+            const c = layer .getClosestObject (new Vector3 (x, y, z));
+
+            return { distance: c .distance, id: c .id, normal: [ c .normal .x, c .normal .y, c .normal .z ] };
+         });
+      }, script .collisionProbes);
+
    result .log = (await page .evaluate (() => window .getLog ())) .map (l => l .replaceAll (base, "http://oracle"));
    result .ok  = true;
 }
