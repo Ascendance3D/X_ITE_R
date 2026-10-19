@@ -1,0 +1,14 @@
+#X3D V4.0 utf8
+PROFILE Immersive
+COMPONENT X_ITE:1
+# REA batch 09: look at an InstancedShape by double click (the bounding box is the union of all instances).
+NavigationInfo { type [ "EXAMINE" ] }
+Viewpoint { position 0.5 0.3 14 orientation 0 1 0 0.04 description "main" }
+Transform { translation 0 -2.2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.5 0.5 0.5 } } geometry Box { size 12 0.2 8 } } }
+InstancedShape {
+  translations [ -3 0 0, 0 1 -1, 3 0.5 1, 5 -1 0 ]
+  rotations [ 0 1 0 0.3, 1 0 0 0.5 ]
+  scales [ 1 1 1, 1.5 0.5 1, 0.7 1.4 0.7 ]
+  appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 } }
+  geometry Box { size 1.5 1.5 1.5 }
+}

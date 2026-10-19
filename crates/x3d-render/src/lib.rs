@@ -12,6 +12,7 @@
 
 pub mod bbox_display;
 pub mod compare;
+pub mod depth_gpu;
 pub mod extras;
 pub mod composed;
 pub mod fog;
@@ -24,6 +25,7 @@ pub mod hanim;
 pub mod layer;
 pub mod load;
 pub mod nurbs;
+pub mod pointing_gpu;
 pub mod sg;
 pub mod splats;
 pub mod scatter_gpu;

@@ -40,6 +40,15 @@ pub struct ShapeInst {
     pub geometry: NodeId,
     /// X3DRenderObject.getModelViewMatrix () for this shape.
     pub model_view: Matrix4,
+    /// The shape's own model-view matrix and, for an InstancedShape, the instance matrix that
+    /// `model_view` has folded in (the pointing shader applies it to the vertex first).
+    pub shape_model_view: Matrix4,
+    pub instance: Option<Matrix4>,
+    /// Every instance matrix of the InstancedShape (the shape's bbox is their union).
+    pub all_instances: Option<Rc<Vec<Matrix4>>>,
+    /// The shape's explicit `bboxSize` / `bboxCenter` as min and max (X3DShapeNode.getBBox uses them
+    /// instead of the geometry's box unless bboxSize is -1 -1 -1).
+    pub explicit_bbox: Option<(Vector3, Vector3)>,
     /// Pointing device sensors that apply (X3DGroupingNode pointingDeviceSensorNodes of every
     /// enclosing group), outermost first.
     pub sensors: Vec<SensorRef>,
@@ -715,23 +724,37 @@ impl<'a> Walker<'a> {
 
                 // InstancedShape: the pointing shader draws every instance, so each is a hit
                 // candidate under its own matrix (the sensors are those of the shape).
-                let instance_matrices: Vec<Matrix4> = if ty == "InstancedShape" {
+                let explicit_bbox = {
+                    let size = sg.vec3(n, "bboxSize", Vector3::new(-1.0, -1.0, -1.0));
+                    let center = sg.vec3(n, "bboxCenter", Vector3::ZERO);
+
+                    // isDefaultBBoxSize: every component -1.
+                    (!(size.x == -1.0 && size.y == -1.0 && size.z == -1.0)).then(|| {
+                        let half = Vector3::new(size.x / 2.0, size.y / 2.0, size.z / 2.0);
+                        (Vector3::new(center.x - half.x, center.y - half.y, center.z - half.z), Vector3::new(center.x + half.x, center.y + half.y, center.z + half.z))
+                    })
+                };
+                let all_instances: Option<Rc<Vec<Matrix4>>> = (ty == "InstancedShape").then(|| Rc::new(x3d_render::traverse::instance_data(sg, n).matrices.to_vec()));
+                let instance_matrices: Vec<(Matrix4, Option<Matrix4>)> = if ty == "InstancedShape" {
                     x3d_render::traverse::instance_data(sg, n).matrices.iter().map(|m| {
-                        let mut m = *m;
-                        m.mult_right(mv);
-                        m
+                        let mut c = *m;
+                        c.mult_right(mv);
+                        (c, Some(*m))
                     }).collect()
                 } else {
-                    vec![*mv]
+                    vec![(*mv, None)]
                 };
 
-                for model_view in instance_matrices.iter().filter(|_| sg.node(n, "geometry").is_some()) {
-                    let model_view = &model_view;
+                for (model_view, instance) in instance_matrices.iter().filter(|_| sg.node(n, "geometry").is_some()) {
                     let g = sg.node(n, "geometry").unwrap();
                     self.scan.shapes.push(ShapeInst {
                         shape: me(),
                         geometry: g,
-                        model_view: **model_view,
+                        model_view: *model_view,
+                        shape_model_view: *mv,
+                        instance: *instance,
+                        all_instances: all_instances.clone(),
+                        explicit_bbox,
                         sensors: sensors.to_vec(),
                         collidable,
                         anchors: anchors.to_vec(),

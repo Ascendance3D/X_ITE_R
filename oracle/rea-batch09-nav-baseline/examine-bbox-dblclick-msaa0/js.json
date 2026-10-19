@@ -1,0 +1,119 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0.18971380220122963,
+        0.5448001193046721,
+        13.226186106770697
+      ],
+      "orientation": [
+        0.13200768245097808,
+        0.9912346702132533,
+        -0.00527260282205691,
+        0.047587613836287
+      ],
+      "centerOfRotation": [
+        -2.000000102114801,
+        1.999999988079071,
+        1.3887838434811783e-8
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        -1.223811388015747,
+        1.6600000143051148,
+        9.701035976409912
+      ],
+      "orientation": [
+        0.40054198885725,
+        0.9161387282955995,
+        -0.01599830238353962,
+        0.0871404234789123
+      ],
+      "centerOfRotation": [
+        -2.000000102114801,
+        1.999999988079071,
+        1.3887838434811783e-8
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        -1.223811388015747,
+        1.6600000143051148,
+        9.701035976409912
+      ],
+      "orientation": [
+        0.40054198885725,
+        0.9161387282955995,
+        -0.01599830238353962,
+        0.0871404234789123
+      ],
+      "centerOfRotation": [
+        -2.000000102114801,
+        1.999999988079071,
+        1.3887838434811783e-8
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        -1.223811388015747,
+        1.6600000143051148,
+        9.701035976409912
+      ],
+      "orientation": [
+        0.40054198885725,
+        0.9161387282955995,
+        -0.01599830238353962,
+        0.0871404234789123
+      ],
+      "centerOfRotation": [
+        -2.000000102114801,
+        1.999999988079071,
+        1.3887838434811783e-8
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nNavigationInfo {\n  type \"EXAMINE\"\n}\n\nViewpoint {\n  description \"main\"\n  position 0.5 0.3 14\n  orientation 0 1 0 0.04\n}\n\nTransform {\n  translation -3 0 0\n  children Shape {\n    bboxSize 6 1 1\n    bboxCenter 1 2 0\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.3 0.3\n      }\n    }\n    geometry Box {\n      size 1.5 1.5 1.5\n    }\n  }\n}\n\nTransform {\n  translation 3.5 0 0\n  rotation 0 0 1 0.5\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.3 0.3 0.8\n      }\n    }\n    geometry Cone {\n      height 3\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

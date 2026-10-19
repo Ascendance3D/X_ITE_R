@@ -1,0 +1,75 @@
+{
+  "ok": true,
+  "poses": {
+    "30": {
+      "position": [
+        1.2050009394946128,
+        1.6,
+        10.771272878373013
+      ],
+      "orientation": [
+        0,
+        -0.999999999999996,
+        0,
+        0.4001097940769618
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        1.308456609358843,
+        1.6,
+        10.703373307336916
+      ],
+      "orientation": [
+        0,
+        -0.9999999999999986,
+        0,
+        0.42868910095593477
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "start",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"FLY\"\n  speed 4\n}\n\nViewpoint {\n  description \"start\"\n  position 0 1.6 12\n}\n\nViewpoint {\n  description \"side\"\n  position 8 1.6 8\n  orientation 0 1 0 0.6\n}\n\nViewpoint {\n  description \"high\"\n  position 0 10 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nCollision {\n  children [\n    Transform {\n      translation 0 1.5 -6\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.3 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n    Transform {\n      translation -4.2 1.5 -2\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 0.4 3 8\n        }\n      }\n    }\n    Transform {\n      translation 6.305 0.15 5.525\n      rotation 0 1 0 0.35\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.5 0.3\n          }\n        }\n        geometry Box {\n          size 3 0.3 1\n        }\n      }\n    }\n    Transform {\n      translation 5.74 0.3 4.7\n      rotation 0 1 0 0.35\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.5 0.3\n          }\n        }\n        geometry Box {\n          size 3 0.6 1\n        }\n      }\n    }\n    Transform {\n      translation 5.175 0.45 3.875\n      rotation 0 1 0 0.35\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.5 0.3\n          }\n        }\n        geometry Box {\n          size 3 0.9 1\n        }\n      }\n    }\n    Transform {\n      translation 4.045 1 2.225\n      rotation 0 1 0 0.35\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.5 0.3\n          }\n        }\n        geometry Box {\n          size 3 2 1\n        }\n      }\n    }\n  ]\n}\n\nTransform {\n  translation 3 0.5 2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.2\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation -3 1 4\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nTransform {\n  translation 0 2.5 -9\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.2 0.9\n      }\n    }\n    geometry Box {\n      size 6 0.4 0.4\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

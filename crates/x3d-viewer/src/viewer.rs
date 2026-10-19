@@ -116,6 +116,9 @@ pub struct Viewer3d {
     nav_info_node: NodeId,
     /// The bound NavigationInfo's `_viewer` (set_type__) the browser's viewer follows.
     nav_viewer: String,
+    /// The browser's `viewer` field (`browser .getCurrentViewer ()`): whatever was set last, the
+    /// NavigationInfo's choice or a name given to `set_viewer`, even one that falls back to EXAMINE.
+    viewer_field: String,
     pub pointer: Pointer,
     pub width: u32,
     pub height: u32,
@@ -144,6 +147,11 @@ pub struct Viewer3d {
     camera_log_depth: bool,
     gravity_speed: f64,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
+    /// The pointing buffer on the GPU (float32 hit values like X_ITE's); without it picks use the
+    /// ray cast's double values.
+    pub pointing_gpu: Option<x3d_render::pointing_gpu::PointingGpu>,
+    /// The collision depth buffer on the GPU (X_ITE's rasterization of the 16x16 buffer).
+    pub depth_gpu: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
     /// The Ammo state of the pick shapes (X3DPickSensorNode.getPickShape).
     pub pick_shapes: crate::pick_shapes::PickShapes,
     /// Geometry and textures kept between frames (rebuilt only when their nodes change).
@@ -260,6 +268,7 @@ impl Viewer3d {
             nav: Viewer::None,
             nav_info_node: DEFAULT,
             nav_viewer: String::new(),
+            viewer_field: String::new(),
             pointer: Pointer::new(),
             width,
             height,
@@ -275,6 +284,8 @@ impl Viewer3d {
             pinned_frame_rate: None,
             gravity_speed: 0.0,
             geom_cache: HashMap::new(),
+            pointing_gpu: None,
+            depth_gpu: None,
             pick_shapes: Default::default(),
             render_cache: Default::default(),
             scan_cam: Scan::default(),
@@ -525,6 +536,11 @@ impl Viewer3d {
         self.nav.kind()
     }
 
+    /// `browser .getCurrentViewer ()`: the browser's `viewer` field.
+    pub fn viewer_field(&self) -> &str {
+        if self.viewer_field.is_empty() { self.nav.kind() } else { &self.viewer_field }
+    }
+
     /// X3DNavigationContext.set_activeNavigationInfo__ / set_viewer__.
     fn set_active_navigation_info(&mut self, force: bool) {
         let node = self.layer.navigation_info();
@@ -541,6 +557,7 @@ impl Viewer3d {
 
     /// Switch the viewer (the context menu's viewer choice).
     pub fn set_viewer(&mut self, kind: &str) {
+        self.viewer_field = kind.to_string();
         let base = self.base();
         let nav = self.nav_info();
         let vp_node = self.layer.viewpoint();
@@ -896,6 +913,11 @@ impl Viewer3d {
             return None;
         }
 
+        self.collision_world_unconditional()
+    }
+
+    /// The shapes the COLLISION traversal collected, whatever the viewer and the transitions say.
+    fn collision_world_unconditional(&mut self) -> Option<World> {
         let mut shapes = vec![];
 
         for s in &self.scan_display.shapes {
@@ -904,7 +926,7 @@ impl Viewer3d {
             }
 
             if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
-                shapes.push(CShape { geometry: g, model_view: s.model_view, clip_planes: s.clip_planes.clone() });
+                shapes.push(CShape { geometry: g, model_view: s.model_view, base_model_view: s.shape_model_view, instance: s.instance, clip_planes: s.clip_planes.clone() });
             }
         }
 
@@ -914,7 +936,7 @@ impl Viewer3d {
             _ => crate::collision::Fill::Triangles,
         };
 
-        Some(World { shapes, fill })
+        Some(World { shapes, fill, gpu: self.depth_gpu.clone() })
     }
 
     fn collision_pass(&mut self) {
@@ -1568,6 +1590,24 @@ impl Viewer3d {
     /// order, into one pointing buffer: each layer clears the depth, so the last layer with a
     /// shape under the pointer wins. A layer takes part with `pointerEvents` TRUE and the pointer
     /// in its viewport, or while it holds the pointer (pointingLayer: only that one).
+    /// `layerNode .getClosestObject (direction)` for the oracle's `collisionProbes`: the collision
+    /// shapes of the last traversal drawn into the depth buffer toward `direction`.
+    pub fn probe_closest(&mut self, direction: Vector3) -> crate::collision::Closest {
+        let base = self.base();
+        let nav = self.nav_info();
+        let vp = self.layer.vp(self.layer.viewpoint()).clone();
+
+        match self.collision_world_unconditional() {
+            Some(w) => w.closest_object(&vp, &base, &nav, &direction),
+            None => crate::collision::Closest { distance: 0.0, normal: Vector3::ZERO, hit: false },
+        }
+    }
+
+    /// `browser .touch (x, y)` for the oracle's `pickProbes`: the hit, without any sensor event.
+    pub fn probe_pick(&mut self, x: f64, y: f64) -> Hit {
+        self.do_pick(x, y)
+    }
+
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
         let home = self.current;
         let mut hit: Option<Hit> = None;
@@ -1589,7 +1629,7 @@ impl Viewer3d {
             let shapes = std::mem::take(&mut self.scan_display.shapes);
             let mut cache = std::mem::take(&mut self.geom_cache);
             let rt = &self.rt;
-            let mut h = pick(&shapes, &mut |s| geom_of(rt, &mut cache, s), &cam, x, y, self.pointing_layer.is_some());
+            let mut h = pick(&shapes, &mut |s| geom_of(rt, &mut cache, s), &cam, x, y, self.pointing_layer.is_some(), self.pointing_gpu.as_mut());
             self.geom_cache = cache;
             self.scan_display.shapes = shapes;
             h.layer = key;

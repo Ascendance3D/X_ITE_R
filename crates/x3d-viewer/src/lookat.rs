@@ -73,6 +73,15 @@ impl Box3 {
         (min, max)
     }
 
+    /// Box3.getExtents: the extents of the box in the space it is in (absolute extents + center).
+    pub fn extents(&self) -> (Vector3, Vector3) {
+        let (mut min, mut max) = self.absolute_extents();
+        let c = self.center();
+        min.add(&c);
+        max.add(&c);
+        (min, max)
+    }
+
     /// Box3.size.
     pub fn size(&self) -> Vector3 {
         let (min, mut max) = self.absolute_extents();

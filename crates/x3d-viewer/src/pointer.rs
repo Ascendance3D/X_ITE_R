@@ -13,6 +13,7 @@ use std::rc::Rc;
 use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3, Vector4};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_render::geometry::Geometry;
+use x3d_render::pointing_gpu::{PointingGpu, PointingTriangle};
 use x3d_runtime::Runtime;
 
 #[derive(Clone, Debug)]
@@ -82,6 +83,9 @@ pub fn hit_ray(cam: &PickCamera, x: f64, y: f64) -> Line3 {
 }
 
 struct TriHit {
+    /// The ray is inside the triangle (within [`EDGE`]); the others are near enough that the
+    /// GPU's snapped vertices might still cover the pixel centre.
+    strict: bool,
     t: f64,
     u: f64,
     v: f64,
@@ -91,12 +95,12 @@ struct TriHit {
 /// Möller-Trumbore in object space; both faces.
 /// The nearest triangle hit along the ray whose point `keep` accepts (the pointing shader
 /// discards clipped fragments, so a clipped hit lets the ray reach the triangles behind it).
-fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3, keep: &dyn Fn(f64) -> bool) -> Option<TriHit> {
+fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3, keep: &dyn Fn(f64) -> bool) -> Vec<TriHit> {
     if g.geometry_type < 2 {
-        return None;
+        return vec![];
     }
 
-    let mut best: Option<TriHit> = None;
+    let mut hits: Vec<TriHit> = vec![];
 
     let vert = |k: usize| {
         let v = &g.vertices[k * 4..k * 4 + 3];
@@ -122,7 +126,8 @@ fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3, keep: &dyn Fn(f6
         s.subtract(&a);
         let u = s.dot(&p) * inv;
 
-        if !(0.0..=1.0).contains(&u) {
+        // A ray through an edge belongs to both neighbours; the GPU's fill rule picks one.
+        if !(-NEAR..=1.0 + NEAR).contains(&u) {
             continue;
         }
 
@@ -130,25 +135,32 @@ fn ray_triangles(g: &Geometry, origin: &Vector3, dir: &Vector3, keep: &dyn Fn(f6
         q.cross(&e1);
         let v = dir.dot(&q) * inv;
 
-        if v < 0.0 || u + v > 1.0 {
+        if v < -NEAR || u + v > 1.0 + NEAR {
             continue;
         }
 
         let t = e2.dot(&q) * inv;
 
-        if best.as_ref().is_none_or(|b| t < b.t) && keep(t) {
-            best = Some(TriHit { t, u, v, tri });
+        if keep(t) {
+            hits.push(TriHit { strict: (-EDGE..=1.0 + EDGE).contains(&u) && v >= -EDGE && u + v <= 1.0 + EDGE, t, u, v, tri });
         }
     }
 
-    best
+    hits
 }
+
+/// Barycentric slack of the ray cast: the pointing shader decides the triangles on an edge.
+const EDGE: f64 = 1e-9;
+
+/// Candidates for the GPU: triangles whose edge the ray passes within this barycentric distance
+/// (the rasterizer snaps vertices to 1/256 pixel).
+const NEAR: f64 = 0.05;
 
 /// Pick: the nearest shape under the pointer ray (X3DPointingDeviceSensorContext.touch).
 /// A shape inside Viewport nodes is drawn into the pointing buffer with its own viewport: it is
 /// skipped when the pointer is outside that rectangle (Viewport.traverse, unless `pointing`, a
 /// layer holds the pointer), and its ray goes through that viewport.
-pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>, cam: &PickCamera, x: f64, y: f64, pointing: bool) -> Hit {
+pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option<Rc<Geometry>>, cam: &PickCamera, x: f64, y: f64, pointing: bool, mut gpu: Option<&mut PointingGpu>) -> Hit {
     let ray = hit_ray(cam, x, y);
     // The hit point, normal and texCoord come from the pointing buffer: a 1x1 float buffer drawn
     // with the viewport shifted so that it covers the pixel under the pointer
@@ -157,7 +169,7 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
     let sray = hit_ray(cam, x.floor() + 0.5, y.floor() + 0.5);
     let mut hit = Hit { pointer: Vector2::new(x, y), ray: ray.copy(), view_matrix: cam.view, ..Default::default() };
 
-    let mut best: Option<(f64, usize, TriHit, Rc<Geometry>)> = None;
+    let mut best: Option<(f64, usize, Vec<TriHit>, Rc<Geometry>)> = None;
 
     let shape_ray = |s: &ShapeInst| {
         if s.viewport == [cam.viewport.x, cam.viewport.y, cam.viewport.z, cam.viewport.w] {
@@ -201,7 +213,8 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             x3d_render::traverse::is_clipped(&s.clip_planes, &p)
         };
 
-        let Some(th) = ray_triangles(&g, &o, &d, &|t| !clipped(t)) else { continue };
+        let hits = ray_triangles(&g, &o, &d, &|t| !clipped(t));
+        let Some(th) = hits.iter().filter(|h| h.strict).min_by(|a, b| a.t.total_cmp(&b.t)) else { continue };
 
         // View space hit point and its distance along the view ray.
         let mut p = o;
@@ -219,11 +232,15 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
         let dist = -p.z;
 
         if best.as_ref().is_none_or(|b| dist < b.0) {
-            best = Some((dist, i, th, g));
+            best = Some((dist, i, hits, g));
         }
     }
 
-    if let Some((_, i, th, g)) = best {
+    if let Some((_, i, mut candidates, g)) = best {
+        // The nearest triangle is the ray cast's own hit; every candidate goes to the GPU, far to
+        // near (the pointing buffer's depth test keeps the nearest fragment).
+        candidates.sort_by(|a, b| b.t.total_cmp(&a.t));
+        let th = candidates.iter().rev().find(|h| h.strict).unwrap();
         let s = &shapes[i];
         let sray = shape_ray(s);
         let mut inv = s.model_view;
@@ -276,14 +293,87 @@ pub fn pick(shapes: &[ShapeInst], geometry: &mut dyn FnMut(&ShapeInst) -> Option
             );
         }
 
+        let mut p = p;
+        let mut normal = normal;
+        let mut tc = tc;
+
+        // The pointing buffer's own float32 values: the same triangle through the pointing shader.
+        if let Some(gpu) = gpu.as_deref_mut() {
+            let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
+            let vert = |j: usize| [g.vertices[j * 4], g.vertices[j * 4 + 1], g.vertices[j * 4 + 2], g.vertices[j * 4 + 3]];
+            let norm = |j: usize| if has_normals { [g.normals[j * 3], g.normals[j * 3 + 1], g.normals[j * 3 + 2]] } else { [0.0, 0.0, 1.0] };
+            let has_tex = g.tex_coords.len() >= g.vertex_count() * 4;
+            let tex = |j: usize| if has_tex { [g.tex_coords[j * 4], g.tex_coords[j * 4 + 1], g.tex_coords[j * 4 + 2], g.tex_coords[j * 4 + 3]] } else { [0.0, 0.0, 0.0, 1.0] };
+            let v = s.viewport;
+            let corners: Vec<usize> = candidates.iter().flat_map(|c| [c.tri * 3, c.tri * 3 + 1, c.tri * 3 + 2]).collect();
+            // gl .viewport (viewport .x - x, viewport .y - y, viewport .z, viewport .w): GLint arguments.
+            let tri = PointingTriangle {
+                vertices: corners.iter().map(|&j| vert(j)).collect(),
+                normals: corners.iter().map(|&j| norm(j)).collect(),
+                tex_coords: corners.iter().map(|&j| tex(j)).collect(),
+                projection: f32x16(&cam.projection),
+                model_view: f32x16(&s.shape_model_view),
+                instance: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
+                instance_normal: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY3, |m| {
+                    let mut n = m.submatrix();
+                    n.transpose();
+                    n.inverse();
+                    n.0.map(|v| v as f32)
+                }),
+                viewport: [(v[0] - x) as i32, (v[1] - y) as i32, v[2] as i32, v[3] as i32],
+                id: 1.0,
+            };
+
+            if let Some(sample) = gpu.sample(&tri) {
+                p = Vector3::new(sample.point[0] as f64, sample.point[1] as f64, sample.point[2] as f64);
+                tc = Vector4::new(sample.tex_coord[0] as f64, sample.tex_coord[1] as f64, sample.tex_coord[2] as f64, sample.tex_coord[3] as f64);
+
+                // touch (): hit .modelViewMatrix .submatrix .inverse () .multMatrixVec (hit .normal)
+                // when the geometry has normals, else the Z axis.
+                normal = Vector3::Z_AXIS;
+
+                if has_normals {
+                    let mut n = Vector3::new(sample.normal[0] as f64, sample.normal[1] as f64, sample.normal[2] as f64);
+                    let mut mv = s.shape_model_view;
+                    mv.0 = mv.0.map(|v| v as f32 as f64);
+                    let mut inv3 = mv.submatrix();
+                    inv3.inverse();
+                    inv3.mult_matrix_vec3(&mut n);
+                    normal = n;
+                }
+            }
+        }
+
         hit.id = true;
         hit.point = p;
         hit.normal = normal;
         hit.tex_coord = tc;
-        hit.model_view = s.model_view;
+        // hit .modelViewMatrix is the shape's own (an InstancedShape's instance matrices are in its
+        // vertex shader) and hit .shapeNode .getBBox () the union of the instances' boxes
+        // (InstancedShape.set_bbox__: `bbox .add (subBBox .assign (geometryBBox) .multRight (matrix))`).
+        hit.model_view = s.shape_model_view;
         hit.sensors = s.sensors.clone();
         hit.shape = Some(s.shape.clone());
-        hit.bbox = Some((g.min, g.max));
+        hit.bbox = Some(match (&s.explicit_bbox, &s.all_instances) {
+            (Some(explicit), _) => *explicit,
+            (None, Some(all)) => {
+                let mut union: Option<(Vector3, Vector3)> = None;
+
+                for m in all.iter() {
+                    let mut b = crate::lookat::Box3::from_extents(&g.min, &g.max);
+                    b.mult_right(m);
+                    let (lo, hi) = b.extents();
+
+                    union = Some(match union {
+                        None => (lo, hi),
+                        Some((mut a, mut c)) => (*a.min(&lo), *c.max(&hi)),
+                    });
+                }
+
+                union.unwrap_or((g.min, g.max))
+            }
+            (None, None) => (g.min, g.max),
+        });
         hit.anchors = s.anchors.clone();
     }
 
