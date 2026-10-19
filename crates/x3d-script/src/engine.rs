@@ -20,6 +20,8 @@ use x3d_fields::{FieldType, FieldValue, Generator, Image, NodeId, access, jsmath
 use x3d_runtime::*;
 use x3d_scene::*;
 
+mod ctx_api;
+
 const PRELUDE: &str = include_str!("prelude.js");
 const NOFIELD: &str = "\u{0}nofield";
 
@@ -963,6 +965,22 @@ fn ctx_of_script(x: f64) -> x3d_scene::CtxId {
     if x >= 0.0 { rt().scene.node(x as NodeId).ctx } else { (-(x + 1.0)) as x3d_scene::CtxId }
 }
 
+/// X3DImportedNodeInstance delegates getTypeName / getField / getFieldDefinitions … to the node its Inline exports,
+/// as long as the Inline provides it (`$.try (() => importedNode .getExportedNode ())`).
+fn inner_node(id: NodeId) -> NodeId {
+    if let NodeKind::Imported(i) = rt().scene.node(id).kind {
+        let rec = &rt().scene.imported[i];
+
+        if let Some(&scene) = rt().inline_scenes.get(&rec.inline) {
+            if let Some(n) = rt().scene.get_exported_node(scene, &rec.exported_name) {
+                return n;
+            }
+        }
+    }
+
+    id
+}
+
 fn handle_arg(args: &[Value<'_>], i: usize) -> Option<u32> {
     args.get(i).and_then(arg_handle)
 }
@@ -1122,7 +1140,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         // --- nodes
         "nget" | "nfield" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             let field = str_arg(ctx, a, 1);
 
             match rt().get_field(id, &field) {
@@ -1143,7 +1161,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "nset" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             let field = str_arg(ctx, a, 1);
 
             match rt().get_field(id, &field) {
@@ -1165,12 +1183,12 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "nhas" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             let field = str_arg(ctx, a, 1);
             Ok(Value::new_bool(ctx.clone(), rt().get_field(id, &field).is_some()))
         }
         "ntype" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             Ok(rquickjs::String::from_str(ctx.clone(), &rt().type_name(id))?.into_value())
         }
         "nname" => {
@@ -1182,7 +1200,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.node_to_vrml_string(id))?.into_value())
         }
         "nfields" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             let arr = Array::new(ctx.clone())?;
             let n = rt().scene.node(id);
 
@@ -1291,6 +1309,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 Err(e) => throw(ctx, e.strip_prefix("Error: ").unwrap_or(&e)),
             }
         }
+        "cx" => ctx_api::op(ctx, a),
         "ctxOf" => Ok(Value::new_number(ctx.clone(), ctx_of_script(num_arg(ctx, a, 0)) as f64)),
         // X3DBrowser.createX3DFromString / createX3DFromURL: the request, or the message of the rejection.
         "browserScene" => {
@@ -1643,9 +1662,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     for (i, &id) in s.ctx(c).imported.values().iter().enumerate() {
                         let m = &s.imported[id];
                         let o = Object::new(ctx.clone())?;
+                        o.set("id", id as f64)?;
                         o.set("inlineNode", node_js(ctx, Some(m.inline)))?;
                         o.set("exportedName", m.exported_name.as_str())?;
                         o.set("importedName", m.imported_name.as_str())?;
+                        o.set("description", m.description.as_str())?;
                         arr.set(i, o)?;
                     }
                 }
@@ -1654,7 +1675,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     for (i, &id) in s.ctx(root).exported.values().iter().enumerate() {
                         let m = &s.exported[id];
                         let o = Object::new(ctx.clone())?;
+                        o.set("id", id as f64)?;
                         o.set("exportedName", m.exported_name.as_str())?;
+                        o.set("description", m.description.as_str())?;
                         o.set("localNode", node_js(ctx, Some(m.local)))?;
                         arr.set(i, o)?;
                     }

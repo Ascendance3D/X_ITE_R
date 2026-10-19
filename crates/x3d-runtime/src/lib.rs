@@ -1189,6 +1189,29 @@ impl Runtime {
         }
     }
 
+    /// X3DExecutionContext.deleteRoute (route): the route with this id leaves `ctx`; whether there was one.
+    pub fn delete_route_by_id(&mut self, ctx: CtxId, id: usize) -> bool {
+        let Some(i) = self.scene.ctx(ctx).routes.iter().position(|r| r.id == id) else {
+            return false;
+        };
+
+        let r = self.scene.ctx_mut(ctx).routes.remove(i);
+
+        self.dispose_route(r);
+        self.dynamic_dirty = true;
+        true
+    }
+
+    /// Something a Script changed may have dropped the last reference to a node, declaration or record.
+    pub fn dynamic_dirty_mark(&mut self) {
+        self.dynamic_dirty = true;
+    }
+
+    /// X3DExecutionContext `sceneGraph_changed`.
+    pub fn scene_graph_changed(&mut self) {
+        self.dynamic_dirty = true;
+    }
+
     /// X3DExecutionContext.deleteRoute: also removes the field interest.
     pub fn delete_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) {
         self.dynamic_dirty = true;
