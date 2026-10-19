@@ -463,6 +463,127 @@ SFNode .prototype = SFNodeBase .prototype;
 Object .defineProperty (SFNode, "typeName", { value: "SFNode" });
 classes .SFNode = SFNode;
 
+
+// Base/X3DInfoArray.js: the arrays of an execution context (namedNodes, importedNodes, exportedNodes, protos, externprotos, routes,
+// components, units). A context's own array is a live view; the copies `filter`, `map` and `slice` make hold their values and check them.
+const INFO = Symbol ("info");
+
+const infoHandler =
+{
+   get (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = + key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return infoValues (target) [index];
+      }
+
+      return Reflect .get (target, key);
+   },
+   set (target, key, value)
+   {
+      if (typeof key === "string")
+      {
+         const index = + key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return false;
+      }
+
+      return Reflect .set (target, key, value);
+   },
+   has (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = + key;
+
+         if (Number .isInteger (index) && index >= 0)
+            return index < infoValues (target) .length;
+      }
+
+      return Reflect .has (target, key);
+   },
+   ownKeys (target)
+   {
+      return Object .keys (infoValues (target)) .concat (Reflect .ownKeys (target));
+   },
+   getOwnPropertyDescriptor (target, key)
+   {
+      if (typeof key === "string")
+      {
+         const index = + key;
+
+         if (Number .isInteger (index) && index >= 0)
+         {
+            const values = infoValues (target);
+
+            if (index < values .length)
+               return { value: values [index], writable: false, enumerable: true, configurable: true };
+         }
+      }
+
+      return Reflect .getOwnPropertyDescriptor (target, key);
+   },
+};
+
+function infoValues (target) { const s = target [INFO] .source; return typeof s === "function" ? s () : s; }
+
+const infoProto =
+{
+   *[Symbol .iterator] () { yield* infoValues (this); },
+   getTypeName () { return this [INFO] .typeName; },
+   has (key) { return infoValues (this) .some (v => this [INFO] .keyOf (v) === key); },
+   get (key) { return infoValues (this) .find (v => this [INFO] .keyOf (v) === key); },
+   equals (array) { const a = infoValues (this), b = infoValues (array); return a === b || (a .length === b .length && a .every ((v, i) => v === b [i])); },
+   ... Object .fromEntries (["at", "entries", "every", "find", "findIndex", "findLast", "findLastIndex", "flat", "flatMap", "forEach", "includes", "indexOf",
+                             "join", "keys", "lastIndexOf", "reduce", "reduceRight", "some", "values"] .map (name => [name, function (... args) { return Array .prototype [name] .apply (infoValues (this), args); }])),
+   filter (f, t) { return copyInfo (this, Array .prototype .filter .call (this, f, t)); },
+   map (f, t) { return copyInfo (this, Array .prototype .map .call (this, f, t)); },
+   slice (start, end) { return copyInfo (this, Array .prototype .slice .call (this, start, end)); },
+   toReversed () { return copyInfo (this, [... this] .reverse ()); },
+   toSorted (f) { return copyInfo (this, [... this] .sort (f)); },
+   toSpliced (start, count, ... values) { const a = [... this]; a .splice (start, count, ... values); return copyInfo (this, a); },
+   with (index, value) { const a = [... this]; a [index] = value; return copyInfo (this, a); },
+};
+
+for (const key of Object .keys (infoProto))
+   Object .defineProperty (infoProto, key, { enumerable: false });
+
+function copyInfo (array, values) { const i = array [INFO]; return infoArray (i .typeName, values, i .keyOf, i .check); }
+
+// `source` is a function (a live view) or the array of values; X3DInfoArray.add checks each value.
+function infoArray (typeName, source, keyOf, check)
+{
+   const target = Object .create (infoProto);
+
+   Object .defineProperties (target, { [INFO]: { value: { typeName, source, keyOf, check } }, length: { get () { return infoValues (this) .length; } } });
+
+   if (typeof source !== "function")
+   {
+      const keys = new Set ();
+
+      for (const value of source)
+      {
+         const key = keyOf (value);
+
+         if (keys .has (key))
+            throw new Error (`Couldn't add value to ${typeName}, key '${key}' already exists.`);
+
+         if (!check (value))
+            throw new Error (`Couldn't add value to ${typeName}, value for key '${key}' has wrong type.`);
+
+         keys .add (key);
+      }
+   }
+
+   return new Proxy (target, infoHandler);
+}
+
+const infoObjects = new WeakSet (); // ComponentInfo and UnitInfo
+
 // X3DConstants (field types and access types used by scripts).
 // Base/X3DConstants.js: access types, then one value counting up from 1001 per name.
 const X3DConstants = { initializeOnly: 1, inputOnly: 2, outputOnly: 4, inputOutput: 7 };
@@ -606,8 +727,8 @@ function convertOption (type, value)
 }
 
 // Configuration/{ComponentInfo,ProfileInfo,UnitInfo}.js (title and providerURL not kept).
-function componentInfo ([name, level]) { return Object .freeze ({ name, level, title: undefined, providerURL: undefined }); }
-function componentArray (list)         { return Object .freeze (list .map (componentInfo)); }
+function componentInfo ([name, level]) { const o = Object .freeze ({ name, level, title: undefined, providerURL: undefined }); infoObjects .add (o); return o; }
+function componentArray (list)         { return infoArray ("ComponentInfoArray", list .map (componentInfo), c => c .name, c => infoObjects .has (c)); }
 function profileInfo (name)
 {
    if (name === null)
@@ -639,44 +760,79 @@ function makeExecutionContext (script)
    const node = n => R (n);
    const metaValues = v => Array .isArray (v) ? v .map (String) : [String (v)];
 
+   // One live array per context.
+   const named    = infoArray ("NamedNodesArray", () => X ("nodeArrays", script, "named") .map (R), n => n .getNodeName (), n => n instanceof SFNodeBase);
+   const imported = infoArray ("ImportedNodesArray", () => X ("nodeArrays", script, "imported") .map (m => importedObject (script, m .id)), n => n .getImportedName (), n => importedKeys .has (n));
+   const exported = infoArray ("ExportedNodesArray", () => X ("nodeArrays", script, "exported") .map (m => exportedObject (script, m .id)), n => n .getExportedName (), n => exportedKeys .has (n));
+   const protos   = infoArray ("ProtoDeclarationArray", () => X ("cx", script, "protoIds", false) .map (id => protoObject (false, id)), p => p .name, p => protoKeys .get (p)?.[0] === false);
+   const externs  = infoArray ("ExternProtoDeclarationArray", () => X ("cx", script, "protoIds", true) .map (id => protoObject (true, id)), p => p .name, p => protoKeys .get (p)?.[0] === true);
+   const routes   = infoArray ("RouteArray", () => X ("cx", script, "routeList") .map (r => routeObject (script, r .id)), r => r .getId (), r => routeIds .has (r));
+   const comps    = infoArray ("ComponentInfoArray", () => info () .components .map (componentInfo), c => c .name, c => infoObjects .has (c));
+   const units    = infoArray ("UnitInfoArray", () => info () .units .map (([category, name, conversionFactor]) => { const o = Object .freeze ({ category, name, conversionFactor }); infoObjects .add (o); return o; }), u => u .category, u => infoObjects .has (u));
+
    return {
       get isScene ()          { return info () .isScene; },
       get encoding ()         { return info () .encoding; },
       get profile ()          { return profileInfo (info () .profile); },
-      get components ()       { return componentArray (info () .components); },
-      get units ()            { return Object .freeze (info () .units .map (([category, name, conversionFactor]) => Object .freeze ({ category, name, conversionFactor }))); },
-      get protos ()           { return protoArray (X ("protoDecls", script, false)); },
-      get externprotos ()     { return protoArray (X ("protoDecls", script, true)); },
-      get routes ()           { return Object .freeze (X ("routeList", script) .map (r => Object .freeze ({ sourceNode: node (r .sourceNode), sourceField: r .sourceField, destinationNode: node (r .destinationNode), destinationField: r .destinationField }))); },
-      get namedNodes ()       { return Object .freeze (X ("nodeArrays", script, "named") .map (R)); },
-      get importedNodes ()    { return Object .freeze (X ("nodeArrays", script, "imported") .map (m => Object .freeze ({ inlineNode: R (m .inlineNode), exportedName: m .exportedName, importedName: m .importedName }))); },
-      get exportedNodes ()    { return Object .freeze (X ("nodeArrays", script, "exported") .map (m => Object .freeze ({ exportedName: m .exportedName, localNode: R (m .localNode) }))); },
-      getNamedNodes ()        { return this .namedNodes; },
-      getImportedNodes ()     { return this .importedNodes; },
-      getExportedNodes ()     { return this .exportedNodes; },
+      get components ()       { return comps; },
+      get units ()            { return units; },
+      get protos ()           { return protos; },
+      get externprotos ()     { return externs; },
+      get routes ()           { return routes; },
+      get namedNodes ()       { return named; },
+      get importedNodes ()    { return imported; },
+      get exportedNodes ()    { return exported; },
+      getNamedNodes ()        { return named; },
+      getImportedNodes ()     { return imported; },
+      getExportedNodes ()     { return exported; },
       getTypeName ()          { return info () .isScene ? "X3DScene" : "X3DExecutionContext"; },
       getEncoding ()          { return this .encoding; },
       getProfile ()           { return this .profile; },
-      getComponents ()        { return this .components; },
+      getComponents ()        { return comps; },
       hasComponent (name, level = 0) { if (name && typeof name === "object") ({ name, level } = name); return X ("hasComponent", script, String (name), level | 0); },
       addComponent (c)        { X ("addComponent", script, String (c .name), c .level | 0); },
-      getUnits ()             { return this .units; },
-      getUnit (category)      { return this .units .find (u => u .category === String (category)); },
+      getUnits ()             { return units; },
+      getUnit (category)      { return units .get (String (category)); },
       getMetaData (name)      { const v = info () .meta .filter (e => e [0] === String (name)) .map (e => e [1]); return v .length ? v : undefined; },
       getMetaDatas ()         { return info () .meta; },
       setMetaData (name, v)   { X ("metaData", script, "set", String (name), metaValues (v)); },
       addMetaData (name, v)   { X ("metaData", script, "add", String (name), metaValues (v)); },
       removeMetaData (name)   { X ("metaData", script, "remove", String (name)); },
-      addRootNode (n)         { X ("rootNode", script, "add", A (n)); },
-      removeRootNode (n)      { X ("rootNode", script, "remove", A (n)); },
-      addNamedNode (name, n)  { X ("namedNodeOp", script, "add", String (name), A (n)); },
-      updateNamedNode (name, n) { X ("namedNodeOp", script, "remove", String (name)); X ("namedNodeOp", script, "add", String (name), A (n)); },
-      removeNamedNode (name)  { X ("namedNodeOp", script, "remove", String (name)); },
-      addExportedNode (name, n) { X ("exportedNode", script, "add", String (name), A (n)); },
+      addRootNode (n)         { rootNodeArgument (n); X ("rootNode", script, "add", A (n)); },
+      removeRootNode (n)      { rootNodeArgument (n); X ("rootNode", script, "remove", A (n)); },
+      addNamedNode (name, n)  { X ("cx", script, "named", "add", String (name), A (n)); },
+      updateNamedNode (name, n) { X ("cx", script, "named", "update", String (name), A (n)); },
+      removeNamedNode (name)  { X ("cx", script, "named", "remove", String (name)); },
+      getUniqueName (name)    { return X ("cx", script, "unique", "named", String (name)); },
+      getUniqueImportName (name) { return X ("cx", script, "unique", "imported", String (name)); },
+      getUniqueProtoName (name) { return X ("cx", script, "unique", "proto", String (name)); },
+      getUniqueExternProtoName (name) { return X ("cx", script, "unique", "extern", String (name)); },
+      getUniqueExportName (name) { return X ("cx", script, "unique", "export", String (name)); },
+      getImportedNode (name)  { return R (X ("cx", script, "importedGet", String (name))); },
+      getLocalNode (name)     { return R (X ("cx", script, "localNode", String (name))); },
+      getNodeOrImportedNode (n) { return R (X ("cx", script, "nodeOrImported", A (n))); },
+      addImportedNode (inline, exportedName, importedName = exportedName, description = "") { X ("cx", script, "importedAdd", A (inline), String (exportedName), importedName === undefined ? undefined : String (importedName), String (description)); },
+      updateImportedNode (inline, exportedName, importedName, description = "") { X ("cx", script, "importedUpdate", A (inline), String (exportedName), importedName === undefined ? undefined : String (importedName), String (description)); },
+      renameImportedNode (oldName, newName) { X ("cx", script, "importedRename", String (oldName), String (newName)); },
+      removeImportedNode (name) { X ("cx", script, "importedRemove", String (name)); },
+      addExportedNode (name, n, description = "") { X ("cx", script, "exportedUpdate", String (name), A (n), String (description), "add"); },
+      updateExportedNode (name, n, description = "") { X ("cx", script, "exportedUpdate", String (name), A (n), String (description), "update"); },
+      removeExportedNode (name) { X ("cx", script, "exportedRemove", String (name)); },
       getExportedNode (name)  { return R (X ("exportedNode", script, "get", String (name))); },
-      getRoutes ()            { return this .routes; },
-      getProtoDeclarations () { return this .protos; },
-      getExternProtoDeclarations () { return this .externprotos; },
+      getProtoDeclaration (name) { return protoObject (false, X ("cx", script, "protoGet", false, String (name))); },
+      getExternProtoDeclaration (name) { return protoObject (true, X ("cx", script, "protoGet", true, String (name))); },
+      addProtoDeclaration (name, p) { X ("cx", script, "protoOp", false, "add", String (name), protoId (false, p)); },
+      updateProtoDeclaration (name, p) { X ("cx", script, "protoOp", false, "update", String (name), protoId (false, p)); },
+      removeProtoDeclaration (name) { X ("cx", script, "protoOp", false, "remove", String (name)); },
+      addExternProtoDeclaration (name, p) { X ("cx", script, "protoOp", true, "add", String (name), protoId (true, p)); },
+      updateExternProtoDeclaration (name, p) { X ("cx", script, "protoOp", true, "update", String (name), protoId (true, p)); },
+      removeExternProtoDeclaration (name) { X ("cx", script, "protoOp", true, "remove", String (name)); },
+      getRoutes ()            { return routes; },
+      getRootNodes ()         { return this .rootNodes; },
+      setRootNodes (value)    { X ("cx", script, "rootSet", A (value)); },
+      getRoute (a, b, c, d)   { const id = X ("cx", script, "routeGet", A (a), String (b), A (c), String (d)); return id === null ? undefined : routeObject (script, id); },
+      getProtoDeclarations () { return protos; },
+      getExternProtoDeclarations () { return externs; },
       toVRMLString ()         { return X ("sceneString", script, "vrml"); },
       toXMLString ()          { return X ("sceneString", script, "xml"); },
       toJSONString ()         { return X ("sceneString", script, "json"); },
@@ -689,9 +845,138 @@ function makeExecutionContext (script)
       createNode (type)       { return R (X ("createNode", script, String (type))); },
       createProto (type)      { return R (X ("createProto", script, String (type))); },
       getNamedNode (name)     { return R (X ("namedNode", script, String (name))); },
-      addRoute (a, b, c, d)   { X ("addRoute", script, A (a), String (b), A (c), String (d)); },
-      deleteRoute (a, b, c, d) { X ("deleteRoute", script, A (a), String (b), A (c), String (d)); },
+      addRoute (a, b, c, d)   { return routeObject (script, X ("cx", script, "routeAdd", A (a), String (b), A (c), String (d))); },
+      deleteRoute (a, b, c, d)
+      {
+         // Case: sourceNode, sourceField, destinationNode, destinationField.
+         const route = arguments .length === 4 ? this .getRoute (a, b, c, d) : a;
+
+         if (routeIds .has (route))
+            X ("cx", script, "routeDelete", routeIds .get (route));
+      },
    };
+}
+
+// SFNodeCache .get (X3DCast (X3DNode, node, false)): a value that is no node is no WeakMap key.
+function rootNodeArgument (n)
+{
+   if (!(n instanceof SFNodeBase))
+      throw new TypeError ("Invalid value used as weak map key");
+}
+
+// X3DRoute objects, one per route.
+const routeObjects = new Map (); // route id → object
+const routeIds     = new WeakMap (); // object → route id
+
+function routeObject (script, id)
+{
+   let o = routeObjects .get (id);
+
+   if (!o)
+   {
+      const get = key => () => { const r = X ("cx", script, "routeList") .find (r => r .id === id); return r ? (key .endsWith ("Node") ? R (r [key]) : r [key]) : undefined; };
+
+      o = { };
+      Object .defineProperties (o, { id: { value: id }, getId: { value () { return id; } }, sourceNode: { get: get ("sourceNode"), enumerable: true }, sourceField: { get: get ("sourceField"), enumerable: true },
+                                     destinationNode: { get: get ("destinationNode"), enumerable: true }, destinationField: { get: get ("destinationField"), enumerable: true } });
+      routeObjects .set (id, o);
+      routeIds .set (o, id);
+   }
+
+   return o;
+}
+
+// X3DImportedNode / X3DExportedNode objects, one per record.
+const importedObjects = new Map ();
+const importedKeys    = new WeakSet ();
+const exportedObjects = new Map ();
+const exportedKeys    = new WeakSet ();
+
+function importedObject (script, id)
+{
+   let o = importedObjects .get (id);
+
+   if (!o)
+   {
+      const record = () => X ("nodeArrays", script, "imported") .find (m => m .id === id);
+
+      o = { };
+      Object .defineProperties (o, {
+         inlineNode:   { get: () => R (record () .inlineNode), enumerable: true },
+         exportedName: { get: () => record () .exportedName, enumerable: true },
+         exportedNode: { get: () => R (X ("cx", script, "importedExported", id)), enumerable: true },
+         importedName: { get: () => record () .importedName, enumerable: true },
+         description:  { get: () => record () .description, enumerable: true },
+         getInlineNode: { value () { return this .inlineNode; } },
+         getExportedName: { value () { return this .exportedName; } },
+         getExportedNode: { value () { return this .exportedNode; } },
+         getImportedName: { value () { return this .importedName; } },
+         getDescription: { value () { return this .description; } },
+         setDescription: { value (v) { X ("cx", script, "importedDescription", id, String (v)); } },
+      });
+      importedObjects .set (id, o);
+      importedKeys .add (o);
+   }
+
+   return o;
+}
+
+function exportedObject (script, id)
+{
+   let o = exportedObjects .get (id);
+
+   if (!o)
+   {
+      const record = () => X ("nodeArrays", script, "exported") .find (m => m .id === id);
+
+      o = { };
+      Object .defineProperties (o, {
+         exportedName: { get: () => record () .exportedName, enumerable: true },
+         localNode:    { get: () => R (record () .localNode), enumerable: true },
+         description:  { get: () => record () .description, enumerable: true },
+         getExportedName: { value () { return this .exportedName; } },
+         getLocalNode: { value () { return this .localNode; } },
+         getDescription: { value () { return this .description; } },
+      });
+      exportedObjects .set (id, o);
+      exportedKeys .add (o);
+   }
+
+   return o;
+}
+
+// X3DProtoDeclaration / X3DExternProtoDeclaration objects, one per declaration.
+const protoObjects = new Map (); // "p3" → object
+const protoKeys    = new WeakMap (); // object → [extern, id]
+
+function protoObject (extern, id)
+{
+   const key = (extern ? "e" : "p") + id;
+   let o = protoObjects .get (key);
+
+   if (!o)
+   {
+      const info = () => X ("cx", -1, "protoInfo", extern, id);
+      const fields = () => Object .freeze (info () .fields .map (f => Object .freeze ({ name: f .name, accessType: f .accessType, dataType: X3DConstants [f .dataType], value: R (f .value) })));
+
+      o = Object .create (null);
+      Object .defineProperties (o, { name: { get: () => info () .name, enumerable: true }, isExternProto: { value: extern, enumerable: true }, fields: { get: fields, enumerable: true } });
+
+      if (extern)
+         Object .defineProperty (o, "urls", { get: () => R (info () .urls), enumerable: true });
+
+      protoObjects .set (key, o);
+      protoKeys .set (o, [extern, id]);
+   }
+
+   return o;
+}
+
+function protoId (extern, p)
+{
+   const k = p && typeof p === "object" ? protoKeys .get (p) : undefined;
+
+   return k && k [0] === extern ? k [1] : undefined;
 }
 
 // X3DProtoDeclaration / X3DExternProtoDeclaration as the SAI sees them.

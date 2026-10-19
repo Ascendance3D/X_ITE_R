@@ -1201,13 +1201,11 @@ impl Scene {
         matches!(self.node(id).kind, NodeKind::Imported(_))
     }
 
-    /// X3DExecutionContext.addRoute (with X3DRoute.checkFields). Returns an error message for
-    /// the cases where X_ITE throws. A route that ends at an imported node is created
-    /// unconnected; the runtime connects it once the Inline provides the exported node.
-    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<Option<usize>, String> {
+    /// X3DExecutionContext.getRoute up to the search: the fields of ordinary nodes must exist (`Unknown field`) and
+    /// X3DRoute.checkFields must accept them. An imported node has no fields to check.
+    pub fn route_ends(&self, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(Option<FieldLoc>, Option<FieldLoc>), String> {
         let (src_imp, dst_imp) = (self.is_imported(source), self.is_imported(destination));
 
-        // X3DExecutionContext.getRoute: the fields of ordinary nodes must exist.
         let src = if src_imp {
             None
         } else {
@@ -1247,8 +1245,16 @@ impl Scene {
             }
         }
 
-        // The existing route with the same ends.
-        let duplicate = self.contexts[ctx].routes.iter().any(|r| {
+        Ok((src, dst))
+    }
+
+    /// The route of `ctx` with these ends (X3DExecutionContext.getRoute's search), by index.
+    pub fn find_route_index(&self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Option<usize> {
+        let (src_imp, dst_imp) = (self.is_imported(source), self.is_imported(destination));
+        let src = if src_imp { None } else { self.get_field(source, source_field) };
+        let dst = if dst_imp { None } else { self.get_field(destination, destination_field) };
+
+        self.contexts[ctx].routes.iter().position(|r| {
             r.source_node == source
                 && r.destination_node == destination
                 && match (src, r.conn) {
@@ -1259,9 +1265,24 @@ impl Scene {
                     (Some(loc), _) if !dst_imp => r.destination_loc == loc,
                     _ => r.raw_destination_field == destination_field,
                 }
-        });
+        })
+    }
 
-        if duplicate {
+    /// X3DExecutionContext.removeImportedNode: the record leaves the context (the runtime releases it once nothing names it).
+    pub fn remove_imported_node(&mut self, ctx: CtxId, imported_name: &str) -> Option<ImportedId> {
+        let id = self.contexts[ctx].imported.get(imported_name)?;
+
+        self.contexts[ctx].imported.remove(imported_name);
+        Some(id)
+    }
+
+    /// X3DExecutionContext.addRoute (with X3DRoute.checkFields). Returns an error message for
+    /// the cases where X_ITE throws. A route that ends at an imported node is created
+    /// unconnected; the runtime connects it once the Inline provides the exported node.
+    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<Option<usize>, String> {
+        let (src, dst) = self.route_ends(source, source_field, destination, destination_field)?;
+
+        if self.find_route_index(ctx, source, source_field, destination, destination_field).is_some() {
             return Ok(None);
         }
 
@@ -1399,6 +1420,12 @@ impl Scene {
 
     pub fn get_unique_export_name(&self, name: &str) -> String {
         let exported = &self.contexts[ROOT].exported;
+        get_unique_name(|n| exported.has(n), name)
+    }
+
+    /// X3DScene.getUniqueExportName of the scene whose root context is `root`.
+    pub fn get_unique_export_name_of(&self, root: CtxId, name: &str) -> String {
+        let exported = &self.contexts[root].exported;
         get_unique_name(|n| exported.has(n), name)
     }
 

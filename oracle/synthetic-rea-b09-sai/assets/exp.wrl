@@ -1,0 +1,7 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+DEF E1 Transform { translation 1 0 0 }
+DEF E2 Group { }
+DEF E3 Transform { translation 3 0 0 }
+EXPORT E1
+EXPORT E2 AS Two

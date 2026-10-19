@@ -1,0 +1,124 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+# Synthetic REA oracle world: X3DExecutionContext / X3DScene write API: imported nodes, proto and extern proto declarations,
+# routes, named nodes, unique names, exported nodes, change events. Every probe is wrapped so an error records its message. Authored.
+EXTERNPROTO EP [ inputOutput SFFloat v ] [ "missing-ep.wrl#EP" ]
+PROTO PA [ inputOutput SFVec3f p 1 2 3 ] { Group { } }
+PROTO PB [ ] { Group { } }
+DEF INL Inline { url "assets/exp.wrl" }
+DEF INL2 Inline { url "assets/exp.wrl" }
+DEF T1 Transform { }
+DEF T2 Transform { translation 100 0 0 }
+DEF TS TimeSensor { }
+IMPORT INL.E1 AS IM1
+DEF CI PositionInterpolator { key [0 1] keyValue [0 0 0, 1 1 1] }
+ROUTE TS.fraction_changed TO CI.set_fraction
+DEF OUT Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    var slots = [], vals = { };
+    function show () { hist = slots .map (function (n) { return n + '=' + (n in vals ? vals [n] : '...'); }) .join (' '); }
+    function p (name, f) {
+      var v;
+      slots .push (name);
+      try { v = f (); } catch (e) { v = 'ERR:' + e .message; }
+      vals [name] = v;
+      show ();
+    }
+    function cycle (v) {
+      step = step + 1;
+      var s = Browser .currentScene;
+      var inl = s .getNamedNode ('INL'), inl2 = s .getNamedNode ('INL2');
+      if (step == 2) {
+        p ('imp0', function () { return s .importedNodes .length + ':' + s .importedNodes [0] .importedName + ':' + s .importedNodes [0] .exportedName; });
+        p ('getImp', function () { return s .getImportedNode ('IM1') .getNodeName (); });
+        p ('getImpType', function () { return s .getImportedNode ('IM1') .getNodeTypeName (); });
+        p ('getImpMissing', function () { return s .getImportedNode ('NOPE'); });
+        p ('getLocal', function () { return s .getLocalNode ('T1') .getNodeName () + ':' + s .getLocalNode ('IM1') .getNodeTypeName (); });
+        p ('getLocalMissing', function () { return s .getLocalNode ('NOPE'); });
+        p ('addImp', function () { s .addImportedNode (inl, 'Two', 'IM2'); return s .importedNodes .length + ':' + s .getImportedNode ('IM2') .getNodeTypeName (); });
+        p ('addImpDefault', function () { s .addImportedNode (inl, 'E1'); return s .importedNodes .length + ':' + s .importedNodes [s .importedNodes .length - 1] .importedName; });
+        p ('addImpDup', function () { s .addImportedNode (inl, 'E1', 'IM1'); return 'ok'; });
+        p ('addImpNotInline', function () { s .addImportedNode (s .getNamedNode ('T1'), 'E1', 'IMX'); return 'ok'; });
+        p ('addImpEmptyExported', function () { s .addImportedNode (inl, '', 'IMY'); return 'ok'; });
+        p ('addImpEmptyImported', function () { s .addImportedNode (inl, 'E1', ''); return 'ok'; });
+        p ('addImpOtherCtx', function () { var ctx = Browser .createVrmlFromString ('Inline { url \"assets/exp.wrl\" }'); s .addImportedNode (ctx [0], 'E1', 'IMZ'); return 'ok'; });
+        p ('updImp', function () { s .updateImportedNode (inl2, 'E1', 'IM1'); var r = ''; for (var i = 0; i < s .importedNodes .length; ++ i) r += s .importedNodes [i] .importedName + '/' + s .importedNodes [i] .inlineNode .getNodeName () + ','; return s .importedNodes .length + ':' + r; });
+        p ('updImpNoImportedName', function () { s .updateImportedNode (inl2, 'E2'); return s .importedNodes .length; });
+        p ('renameImp', function () { s .renameImportedNode ('IM2', 'IM3'); var r = ''; for (var i = 0; i < s .importedNodes .length; ++ i) r += s .importedNodes [i] .importedName + ','; return r; });
+        p ('renameImpMissing', function () { s .renameImportedNode ('NOPE', 'IM9'); return 'ok'; });
+        p ('renameImpDup', function () { s .renameImportedNode ('IM3', 'IM1'); return 'ok'; });
+        p ('uniqueImp', function () { return s .getUniqueImportName ('IM1') + ':' + s .getUniqueImportName ('FRESH'); });
+        p ('uniqueName', function () { return s .getUniqueName ('T1') + ':' + s .getUniqueName ('T') + ':' + s .getUniqueName ('Z'); });
+        p ('uniqueProto', function () { return s .getUniqueProtoName ('PA') + ':' + s .getUniqueProtoName ('PN'); });
+        p ('uniqueExtern', function () { return s .getUniqueExternProtoName ('EP') + ':' + s .getUniqueExternProtoName ('EN'); });
+        p ('removeImp', function () { s .removeImportedNode ('IM3'); return s .importedNodes .length; });
+        p ('removeImpMissing', function () { s .removeImportedNode ('NOPE'); return s .importedNodes .length; });
+      }
+      if (step == 3) {
+        p ('imp1', function () { return s .toVRMLString () .split ('\n') .filter (function (l) { return l .indexOf ('IMPORT') >= 0; }) .join ('|'); });
+        p ('routeAdd', function () { var r = s .addRoute (s .getNamedNode ('TS'), 'cycleTime', s .getNamedNode ('OUT'), 'cycle'); return typeof r + ':' + s .routes .length; });
+        p ('routeAddDup', function () { s .addRoute (s .getNamedNode ('TS'), 'cycleTime', s .getNamedNode ('OUT'), 'cycle'); return s .routes .length; });
+        p ('routeGet', function () { var r = s .getRoute (s .getNamedNode ('TS'), 'cycleTime', s .getNamedNode ('OUT'), 'cycle'); return typeof r + ':' + (r && r .sourceField); });
+        p ('routeGetNone', function () { return s .getRoute (s .getNamedNode ('T1'), 'translation_changed', s .getNamedNode ('T2'), 'translation'); });
+        p ('routeBadField', function () { return s .getRoute (s .getNamedNode ('T1'), 'nope', s .getNamedNode ('T2'), 'translation'); });
+        p ('routeBadNode', function () { s .addRoute (null, 'a', s .getNamedNode ('T2'), 'translation'); return 'ok'; });
+        p ('routeBadNode2', function () { s .addRoute (s .getNamedNode ('T2'), 'translation_changed', null, 'translation'); return 'ok'; });
+        p ('routeBadType', function () { s .addRoute (s .getNamedNode ('T1'), 'translation_changed', s .getNamedNode ('T2'), 'scale'); return 'ok'; });
+        p ('routeDel4', function () { s .deleteRoute (s .getNamedNode ('TS'), 'cycleTime', s .getNamedNode ('OUT'), 'cycle'); return s .routes .length; });
+        p ('routeDelObj', function () { var r = s .addRoute (s .getNamedNode ('T1'), 'translation_changed', s .getNamedNode ('T2'), 'translation'); s .deleteRoute (r); return s .routes .length; });
+        p ('routeDelNone', function () { s .deleteRoute ({ }); return s .routes .length; });
+      }
+      if (step == 4) {
+        p ('protoGet', function () { return s .getProtoDeclaration ('PA') .name; });
+        p ('protoGetMissing', function () { return s .getProtoDeclaration ('NOPE'); });
+        p ('externGet', function () { return s .getExternProtoDeclaration ('EP') .name; });
+        p ('externGetMissing', function () { return s .getExternProtoDeclaration ('NOPE'); });
+        p ('protoAddBad', function () { s .addProtoDeclaration ('X', { }); return 'ok'; });
+        p ('protoAddDup', function () { s .addProtoDeclaration ('PA', s .getProtoDeclaration ('PA')); return 'ok'; });
+        p ('protoAddOther', function () { var pr = s .getProtoDeclaration ('PB'); s .addProtoDeclaration ('PB2', pr); return 'ok:' + s .protos .length; });
+        p ('protoRemove', function () { s .removeProtoDeclaration ('PB2'); return s .protos .length; });
+        p ('protoRemoveMissing', function () { s .removeProtoDeclaration ('NOPE'); return s .protos .length; });
+        p ('protoUpdateBad', function () { s .updateProtoDeclaration ('PB', { }); return 'ok'; });
+        p ('protoUpdateEmpty', function () { s .updateProtoDeclaration ('', s .getProtoDeclaration ('PB')); return 'ok'; });
+        p ('protoUpdate', function () { s .updateProtoDeclaration ('PBX', s .getProtoDeclaration ('PB')); var r = ''; for (var i = 0; i < s .protos .length; ++ i) r += s .protos [i] .name + ','; return r; });
+        p ('createProto', function () { var n = s .createProto ('PA'); return n .getNodeTypeName () + ':' + n .p; });
+        p ('createProtoBad', function () { return s .createProto ('NOPE'); });
+        p ('createNodeBad', function () { return s .createNode ('NoSuchNode'); });
+        p ('externRemove', function () { s .removeExternProtoDeclaration ('EP'); return s .externprotos .length; });
+      }
+      if (step == 5) {
+        p ('nameAdd', function () { var n = s .createNode ('Group'); s .addNamedNode ('G1', n); return n .getNodeName (); });
+        p ('nameAddDup', function () { s .addNamedNode ('G1', s .createNode ('Group')); return 'ok'; });
+        p ('nameAddRenamed', function () { var n = s .getNamedNode ('G1'); s .addNamedNode ('G2', n); return 'ok'; });
+        p ('nameAddEmpty', function () { s .addNamedNode ('', s .createNode ('Group')); return 'ok'; });
+        p ('nameAddNotNode', function () { s .addNamedNode ('G3', null); return 'ok'; });
+        p ('nameAddOtherCtx', function () { var g = Browser .createVrmlFromString ('Group { }') [0]; s .addNamedNode ('G4', g); return 'ok'; });
+        p ('nameUpdate', function () { var n = s .getNamedNode ('G1'); s .updateNamedNode ('G5', n); return n .getNodeName () + ':' + s .namedNodes .length; });
+        p ('nameRemove', function () { s .removeNamedNode ('G5'); return s .namedNodes .length; });
+        p ('nameRemoveMissing', function () { s .removeNamedNode ('NOPE'); return s .namedNodes .length; });
+        p ('exportAdd', function () { s .addExportedNode ('X1', s .getNamedNode ('T1')); return s .exportedNodes .length; });
+        p ('exportUpdate', function () { s .updateExportedNode ('X1', s .getNamedNode ('T2')); return s .getExportedNode ('X1') .getNodeName (); });
+        p ('exportMissing', function () { return s .getExportedNode ('NOPE'); });
+        p ('exportUnique', function () { return s .getUniqueExportName ('X1') + ':' + s .getUniqueExportName ('Y'); });
+        p ('exportRemove', function () { s .removeExportedNode ('X1'); return s .exportedNodes .length; });
+        p ('exportRemoveMissing', function () { s .removeExportedNode ('NOPE'); return s .exportedNodes .length; });
+        p ('rootAddNull', function () { s .addRootNode (null); return s .rootNodes .length; });
+      }
+      if (step == 6) {
+        p ('arrMap', function () { return s .importedNodes .map (function (n) { return n; }) .length + ':' + s .importedNodes .filter (function (n) { return n .importedName === 'E1'; }) .length + ':' + s .protos .slice (0, 1) [0] .name; });
+        p ('arrGet', function () { return s .protos .get ('PA') .name + ':' + s .protos .has ('PA') + ':' + s .protos .has ('ZZ') + ':' + s .namedNodes .get ('T1') .getNodeName () + ':' + s .routes .getTypeName () + ':' + s .protos .getTypeName (); });
+        p ('arrIdentity', function () { return (s .protos [0] === s .getProtoDeclaration ('PA')) + ':' + (s .protos === s .protos) + ':' + (s .importedNodes [0] === s .importedNodes [0]); });
+        p ('arrIter', function () { var r = ''; for (var x of s .protos) r += x .name + ','; return r; });
+        p ('arrFrozen', function () { try { s .protos [0] = 1; } catch (e) { return 'threw'; } return 'silent:' + (s .protos [0] === 1); });
+        p ('arrMapBad', function () { return s .protos .map (function (x) { return 1; }) .length; });
+        p ('compGet', function () { return s .components .get ('Scripting') .level + ':' + s .units .get ('length') .name + ':' + s .units .length; });
+      }
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle
