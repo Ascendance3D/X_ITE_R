@@ -1,0 +1,80 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+AdapterInfo { name: "NVIDIA GeForce RTX 3060 Ti", vendor: 4318, device: 9236, device_type: DiscreteGpu, device_pci_bus_id: "0000:2b:00.0", driver: "NVIDIA", driver_info: "595.91.07", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }
+{"vendor":"Google Inc. (NVIDIA Corporation)","renderer":"ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)"}
