@@ -226,8 +226,9 @@ impl Viewer3d {
         let rel = file.strip_prefix(root).unwrap_or(&file).to_string_lossy().replace('\\', "/");
         let url = format!("{ORACLE_PREFIX}{}", encode_path(&rel));
         let data = std::fs::read(&file).map_err(|e| format!("{}: {e}", file.display()))?;
-        let scene = x3d_parse::parse_bytes(&data, &url).map_err(|e| format!("{e:?}"))?;
         let fetcher = Box::new(LocalFetcher { root: root.to_path_buf(), prefix: ORACLE_PREFIX.to_string() });
+        // glTF buffers and images of a top-level world come through the runtime fetcher, as in x3d-render's load.rs.
+        let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url).map_err(|e| format!("{e:?}"))?;
         let mut rt = Runtime::new(scene, fetcher);
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
         x3d_render::shader_gpu::install(&mut rt);

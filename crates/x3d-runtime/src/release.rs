@@ -410,6 +410,14 @@ impl Runtime {
         self.font_library_fonts.retain(|n, _| !dead.contains(n));
         self.font_style_fonts.retain(|n, _| !dead.contains(n));
         self.pending_font_styles.retain(|p| !dead.contains(&p.node));
+        self.shaders.parts.retain(|n, _| !dead.contains(n));
+        self.shaders.composed.retain(|n, _| !dead.contains(n));
+        self.shaders.selected_count.retain(|n, _| !dead.contains(n));
+        self.shaders.appearances.retain(|n, _| !dead.contains(n));
+        for a in self.shaders.appearances.values_mut() {
+            a.nodes.retain(|s| !dead.contains(s));
+            a.selected = a.selected.filter(|s| !dead.contains(s));
+        }
         self.background_textures.retain(|n, _| !dead.contains(n));
         for textures in self.background_textures.values_mut() {
             textures.retain(|(_, t)| !dead.contains(t));
@@ -478,6 +486,8 @@ impl Runtime {
 
         self.scene.scene_infos.remove(&c);
         self.inline_live.remove(&c);
+        // X3DTextContext keeps a WeakMap per execution context: a reused slot starts with no fonts.
+        self.font_libraries.remove(&c);
         self.emptied_ctxs.insert(c);
 
         for p in self.scene.protos.iter_mut().filter(|p| p.ctx == c) {

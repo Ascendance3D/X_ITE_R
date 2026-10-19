@@ -1,0 +1,15 @@
+test gate_all_public_paths_accessible ... ok
+test gate_execution_context_has_imported_and_exported ... ok
+test gate_float_format_matches_chrome ... ok
+test gate_node_kind_has_imported_variant ... ok
+test gate_matrix_factor_get_transform_present ... ok
+test gate_reexports_are_internal_types ... ok
+test gate_route_has_extra_fields ... ok
+test gate_scene_has_extra_fields ... ok
+test gate_one_type_authority ... ok
+test gate_orthoviewpoint_serializes_to_sfvec4f ... ok
+test gate_export_import_parses ... ok
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+test gate_chrome_math_matches_chrome ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+future-gate: PASS (12 of 12 passed, 0 ignored)

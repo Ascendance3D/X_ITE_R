@@ -1,0 +1,21 @@
+MATCH      basic-inner.wrl
+MATCH      basic.wrl
+MATCH      browser-inner.wrl
+MATCH      browser.wrl
+MATCH      exportimport-inner.wrl
+MATCH      exportimport.wrl
+MATCH      nested-a.wrl
+MATCH      nested-b.wrl
+MATCH      nested-c.wrl
+MATCH      nested.wrl
+MATCH      order-a.wrl
+MATCH      order-b.wrl
+MATCH      order.wrl
+MATCH      output-inner.wrl
+MATCH      output.wrl
+MATCH      reload-a.wrl
+MATCH      reload-b.wrl
+MATCH      reload.wrl
+
+18 files: 18 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared
+logs: 18 of 18 sorted console logs identical (0 differences unexplained)
