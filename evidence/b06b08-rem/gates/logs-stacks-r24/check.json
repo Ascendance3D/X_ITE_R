@@ -1,0 +1,206 @@
+{
+ "pile-mixed-sensor": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0,
+   "CollisionSensor.contacts.position": 0.0,
+   "CollisionSensor.contacts.contactNormal": 0.0,
+   "CollisionSensor.contacts.depth": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "pile-mixed": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "pyramid-grid": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "pyramid321": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "stack12-aligned": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "stack12": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "stack5-aligned": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "stack5-sensor": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0,
+   "CollisionSensor.contacts.position": 0.0,
+   "CollisionSensor.contacts.contactNormal": 0.0,
+   "CollisionSensor.contacts.depth": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "stack5": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "stack8": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ },
+ "wall3x3": {
+  "status": "PASS",
+  "text_diff_frames": [],
+  "inline_diff_frames": [],
+  "errs": {
+   "dt": 0.0,
+   "RigidBody.position": 0.0,
+   "RigidBody.orientation": 0.0,
+   "RigidBody.linearVelocity": 0.0,
+   "RigidBody.angularVelocity": 0.0
+  },
+  "over": {},
+  "exact_mismatch": [],
+  "n_exact_mismatch": 0,
+  "shape": null,
+  "console_equal": true,
+  "warmup_equal": false
+ }
+}

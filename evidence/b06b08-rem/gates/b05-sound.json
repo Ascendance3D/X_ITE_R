@@ -1,0 +1,1520 @@
+{
+ "analyser": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "analyser-data": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 152,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "analyser-stereo": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 152,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.0,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "biquad-highshelf": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "biquad-lowpass": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.7958435416221619,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.7958435416221619,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "biquad-peaking": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "buffer-bad-url": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.788116455078125,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.766502857208252,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "buffer-inline": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.7996900081634521,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.7996900081634521,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "buffer-rate": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.7955919504165649,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.7955919504165649,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "buffer-wav-events": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 4,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.788116455078125,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.766502857208252,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "buffer-wav22": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.7609437704086304,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.7609437704086304,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "buffer-wav48": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.788116455078125,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.766502857208252,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "compressor": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.7964118123054504,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.7964118123054504,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "conv-delta-1200": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.045564569532871246,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.045564569532871246,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "conv-delta-140": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.01736011728644371,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.01736011728644371,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "conv-delta-2060": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.05929606780409813,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.05929606780409813,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "conv-delta-300": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.023859208449721336,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.023859208449721336,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "conv-delta-600": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.03273455798625946,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.03273455798625946,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "conv-delta-70": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.013571031391620636,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.013571031391620636,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "convolver": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.005391833372414112,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.005391833372414112,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "convolver-4ch": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.019490698352456093,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.0013013547286391258,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "convolver-long": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.04456787928938866,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.04456787928938866,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "convolver-long-raw": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.04456787928938866,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.04456787928938866,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "convolver-norm": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.004951417446136475,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.004722964949905872,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "custom-wave": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9999998211860657,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9999998211860657,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "delay": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804351925849915,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804351925849915,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "destination-fields": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 3,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.4902177155017853,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.4902177155017853,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "enabled-toggle": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 1.4044711589813232,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 1.4044711589813232,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "gain": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.24510885775089264,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.24510885775089264,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "listener": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.16361814737319946,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.1920580416917801,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "listener-runtime": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.317274808883667,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.3155338168144226,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "listener-track": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.11878972500562668,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.2101672738790512,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "merger": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.0,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "microphone": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "osc-events": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 40,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "osc-sawtooth": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.4857638478279114,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.4857638478279114,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "osc-sine": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.5,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.5,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "osc-square": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.49548792839050293,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.49548792839050293,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "osc-triangle": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.4953451156616211,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.4953451156616211,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "remove-children": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 1.4044711589813232,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 1.4044711589813232,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-curve": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-delay": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-fdetune": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8367619514465332,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8367619514465332,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-gain": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8135893940925598,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8135893940925598,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-osc": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-over": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8135895729064941,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8135895729064941,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-q": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9388788342475891,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9388788342475891,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-stop": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8135896921157837,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "rt-type": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 1.3216336965560913,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 1.3216336965560913,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "runtime": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.8135893940925598,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.8135893940925598,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "selector": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.4937146008014679,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.4937146008014679,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-cone": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.06155412644147873,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.06155412644147873,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-eq": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.07689689099788666,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.0984877273440361,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-exp": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.07042405009269714,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.0647994875907898,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-hrtf": {
+  "status": "KNOWN",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.10109127312898636,
+    "max_abs_diff": 0.12609056383371353,
+    "rms_diff": 0.08334428798383517,
+    "first_diff": 2304
+   },
+   {
+    "peak": 0.12148725986480713,
+    "max_abs_diff": 0.1413751281797886,
+    "rms_diff": 0.09082995658758769,
+    "first_diff": 2304
+   }
+  ]
+ },
+ "spatial-linear": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.27132970094680786,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.3162649869918823,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-linear-beyond": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.0,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.0,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-linear-stereo": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.4601784348487854,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.041834451258182526,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-moving": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.23469014465808868,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.25189071893692017,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-nospatialize": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "spatial-runtime": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.08627811819314957,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.10337956249713898,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "splitter-outputs": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9804354310035706,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.4937146008014679,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "stream": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.0,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.0,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "waveshaper-2x": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 1.0348033905029297,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 1.0348033905029297,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "waveshaper-4x": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 1.0404486656188965,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 1.0404486656188965,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ },
+ "waveshaper-none": {
+  "status": "PASS",
+  "text_equal": true,
+  "log_equal": true,
+  "prints_equal": true,
+  "prints": 0,
+  "suspend_equal": true,
+  "audio_shape_equal": true,
+  "channels": [
+   {
+    "peak": 0.9921730756759644,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   },
+   {
+    "peak": 0.9921730756759644,
+    "max_abs_diff": 0.0,
+    "rms_diff": 0.0,
+    "first_diff": null
+   }
+  ]
+ }
+}

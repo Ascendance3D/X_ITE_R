@@ -1,0 +1,5 @@
+error: no test target named `rea_b08_net_unload` in `x3d-viewer` package
+
+help: a target with a similar name exists: `rea_b08_net_reload`
+help: available test in `x3d-script` package:
+    rea_b08_net_unload

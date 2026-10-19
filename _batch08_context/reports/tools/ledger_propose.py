@@ -91,6 +91,26 @@ P = {
 }
 
 
+# Final remediation (2026-10-18, lane XITE_RUST_REA_B06_B08_FINAL_REMEDIATION): evidence-based overrides.
+def _amend(id_, missing=None, note=None, tests=()):
+    st, rust, t, m, n, alt = P[id_]
+    P[id_] = (st, rust, list(t) + list(tests), m if missing is None else missing, (n + " " + note).strip() if note else n, alt)
+
+_amend("sub:physics.engine",
+    missing="rb-a (box falling from rest, 8 substeps/frame) takes one substep fewer than pinned X_ITE at frame 8 when sum/fixedTimeStep lands one ulp below an integer; rounding the quotient to float32 fixes it but regresses the rate/stack corpus, so it is not applied (x_ite_two_canvases_rigid_bodies_msaa4 f40 0.579% stays open)",
+    note="Remediation: picking fixed (nested compound dbvt cull, pick_shapes.rs): 20000 fresh cases at seeds 20261018, 1, 2, 3 show 0 differences; frame-rate matrix r24-r144 rates and stacks all pass.",
+    tests=["rea_b03_pick_vectors nested_compound_tree_culls_like_ammo (3)", "physics_rem_fall (frames 1-7; full run ignored, open)"])
+_amend("node:ComposedShader",
+    missing="transformFeedbackVaryings not ported; 11 of 26 ShaderRegistry includes need macro/uniform context and do not link standalone (not exercised against X_ITE); MSAA runtime cases pass",
+    note="Remediation: GL texture-unit residency ported (Set order, weak bindings per unit/dim, shared programs, relink, removal, null sampler, replacement); stepped textures-runtime 9/9 and textures-shared 9/9 at MSAA 0 and 4 (18/18 each); #include <Name> implemented from X_ITE's ShaderRegistry (26 files, #line numbering) with literal tests; include-unknown/utils/tonemapping worlds pass MSAA 0/4.",
+    tests=["rea_b08_shaders case textures-runtime, textures-shared (MSAA 0/4)", "shader_include (x3d-runtime unit, x3d-render link)", "include-* worlds MSAA 0/4"])
+_amend("node:ShaderPart",
+    missing="stepped url/type change cases vs X_ITE not run; compile error console text not compared with X_ITE; include of the 11 context-dependent registry files only unit-tested",
+    note="Remediation: #include <Name> expansion implemented and tested against X_ITE output.")
+_amend("sub:browser.multi-viewer-thread",
+    note="Remediation: x_ite_two_canvases_rigid_bodies_msaa4 f40 0.579% traced to the physics substep boundary above (not multi-viewer: pair equals alone in both engines); limit not relaxed; test still fails.")
+
+
 def main():
     before = json.load(open(BEFORE))
     sel = re.findall(r"\| \d+ \| (\S+) \|", open(os.path.join(HERE, "selection", "SELECTION.md")).read())

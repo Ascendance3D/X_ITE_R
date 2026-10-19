@@ -1,0 +1,53 @@
+MATCH      00-89chevy4.wrl
+MATCH      01-Sears_stove.wrl
+MATCH      02-Brass_Bed.wrl
+MATCH      03-kitchen.wrl
+MATCH      04-antiquechair2.wrl
+MATCH      05-Susan2.wrl
+XFAIL-OK   06-kue.wrl  (Couldn't load X3D file.)
+MATCH      07-bookcase.wrl
+MATCH      08-fairie_statue.wrl
+MATCH      09-midwayjugs.wrl
+MATCH      10-Cash_Register.wrl
+MATCH      11-swan.wrl
+MATCH      12-chair.wrl
+MATCH      13-purpatio4ch.wrl
+MATCH      14-club_proto.wrl
+MATCH      15-sign.wrl
+MATCH      16-couch1_1er.wrl
+MATCH      17-av0x.wrl
+MATCH      18-example2.wrl
+MATCH      19-helpman.wrl
+MATCH      20-ic_exleb.wrl
+MATCH      21-fairydefensesys.wrl
+MATCH      22-temp_bots-bases.wrl
+MATCH      23-dragon.wrl
+MATCH      24-pickup.wrl
+MATCH      25-srchest.wrl
+MATCH      26-avx.wrl
+MATCH      27-firstknight.wrl
+MATCH      28-venus_gradient.wrl
+MATCH      29-av0.wrl
+MATCH      30-drag1red.wrl
+XFAIL-OK   31-av0.wrl  (Couldn't load X3D file.)
+MATCH      32-canisters3.wrl
+MATCH      33-Drinkthingy.wrl
+MATCH      34-pearlbunny.wrl
+MATCH      35-veggies.wrl
+MATCH      36-Mountain.wrl
+MATCH      37-sink.wrl
+MATCH      38-RedCarpet.wrl
+MATCH      39-Caution.wrl
+MATCH      40-car3.wrl
+MATCH      41-Fclock.wrl
+XFAIL-OK   42-taharutben1.wrl  (Couldn't load X3D file.)
+MATCH      43-villasantzip.wrl
+MATCH      44-proto.wrl
+MATCH      45-cash.wrl
+MATCH      46-av0.wrl
+MATCH      47-Birthday bird.wrl
+MATCH      48-lib.wrl
+MATCH      49-big-safe.wrl
+
+50 files: 47 exact match, 0 mismatch (0 unexplained), 3 expected failure reproduced, 0 oracle timeouts not compared
+logs: 50 of 50 sorted console logs identical (0 differences unexplained)
