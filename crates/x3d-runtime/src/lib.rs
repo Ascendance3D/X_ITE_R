@@ -177,6 +177,8 @@ pub enum Cb {
     TimeSensorSetTime,
     // X3DBindableNode.set_bind__
     BindableSetBind,
+    // Collision.set_enabled__: disabling ends isActive.
+    CollisionSetEnabled,
     // X3DViewpointNode.set_navigationInfo__: `_isBound .addFieldInterest (navigationInfoNode ._set_bind)`.
     ViewpointIsBound,
     // GeoLOD.set_rootLoadState__ / set_childLoadState__ (interests on its private Inlines' loadState).

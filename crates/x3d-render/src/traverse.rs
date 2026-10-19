@@ -478,6 +478,8 @@ pub struct DrawItem {
     pub splats: Option<Rc<crate::splats::SplatDraw>>,
     /// The Appearance selected a valid ComposedShader (Batch 08): the renderer draws with its program.
     pub custom: Option<Rc<crate::shader_gpu::CustomDraw>>,
+    /// The innermost LocalFog in scope (renderContext .fogNode); `None` uses the layer's Fog.
+    pub fog: Option<FogParams>,
 }
 
 /// InstancedShape.set_matrices__: the matrix and the normal matrix (`submatrix .transpose () .inverse ()`,
@@ -1016,6 +1018,9 @@ pub struct Builder<'a> {
     /// The X3DLightNode part of renderObject.getLocalObjects (): the `global FALSE` lights of the
     /// enclosing grouping nodes (indices into `lights`).
     local_lights: Vec<u32>,
+    /// renderObject.getLocalFogs () past the global fog: the enabled LocalFog nodes of the enclosing grouping
+    /// nodes (the innermost, last, is the shape's fog).
+    local_fogs: Vec<FogParams>,
     /// Interactive camera (see [`CameraOverride`]); `None` for the oracle renders.
     pub camera: Option<CameraOverride>,
     /// Results kept between frames (interactive viewer); `None` rebuilds everything per frame.
@@ -1184,6 +1189,7 @@ impl<'a> Builder<'a> {
             shadow_maps: vec![],
             shadow_sources: vec![],
             local_lights: vec![],
+            local_fogs: vec![],
             camera: None,
             cache: None,
             clip_planes: vec![],
@@ -1488,6 +1494,7 @@ impl<'a> Builder<'a> {
             instances: None,
             splats: None,
             custom: None,
+            fog: self.local_fogs.last().cloned(),
         });
     }
 
@@ -1495,6 +1502,13 @@ impl<'a> Builder<'a> {
     /// ClipPlane children pushed before the children and popped after.
     fn group_children(&mut self, sg: &Sg, kids: Vec<NodeId>, m: &Matrix4, depth: usize) {
         let pushed = self.push_clip_planes(sg, &kids, m);
+        // LocalFog.push: an enabled fog with a fogType, in the group's model-view space.
+        let fogs = self.local_fogs.len();
+        for c in kids.iter().filter(|c| sg.type_name(**c) == Some("LocalFog") && sg.bool(**c, "enabled", true)) {
+            if let Some(f) = fog_params(sg, *c, Some(m), &Matrix4::IDENTITY) {
+                self.local_fogs.push(f);
+            }
+        }
         let local = self.local_lights.len();
         let local_projectors = self.local_projectors.len();
         let (lights, rest): (Vec<NodeId>, Vec<NodeId>) = kids
@@ -1505,6 +1519,7 @@ impl<'a> Builder<'a> {
         }
         // X3DLightNode.pop: the group's local lights end with the group.
         self.local_lights.truncate(local);
+        self.local_fogs.truncate(fogs);
         self.local_projectors.truncate(local_projectors);
         self.clip_planes.truncate(self.clip_planes.len() - pushed);
     }
@@ -2296,12 +2311,14 @@ impl<'a> Builder<'a> {
             "IndexedLineSet" => {
                 let coord = self.coord(sg, n);
                 let colors = self.colors(sg, n);
+                let ex = self.extras(sg, n);
                 geometry::indexed_line_set(
                     coord.as_deref(),
                     sg.i32s(n, "coordIndex"),
                     colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
                     sg.i32s(n, "colorIndex"),
                     sg.bool(n, "colorPerVertex", true),
+                    &ex.view(),
                 )
             }
             "PointSet" => {
@@ -2799,6 +2816,7 @@ impl<'a> Builder<'a> {
             instances,
             splats: None,
             custom,
+            fog: self.local_fogs.last().cloned(),
         });
     }
 
@@ -2839,15 +2857,19 @@ impl<'a> Builder<'a> {
             instances: None,
             splats: None,
             custom: None,
+            fog: self.local_fogs.last().cloned(),
         });
     }
 
     /// The named textures of a PhysicalMaterial or SpecularGlossinessMaterial (X3DCast
     /// (X3DSingleTextureNode, field)); one that has not loaded binds the default white texture.
     fn material_textures(&mut self, sg: &Sg, m: NodeId, transforms: &[String], coords: &[String]) -> Vec<MaterialTexture> {
-        let names: [&str; 5] = match sg.type_name(m) {
-            Some("PhysicalMaterial") => ["baseTexture", "emissiveTexture", "metallicRoughnessTexture", "occlusionTexture", "normalTexture"],
-            Some("SpecularGlossinessMaterial") => ["diffuseTexture", "emissiveTexture", "specularGlossinessTexture", "occlusionTexture", "normalTexture"],
+        // The kinds of Material (Phong): diffuse, emissive, specular, occlusion, normal in the slots of
+        // the physical kinds, ambient and shininess after them (Material.getTextureIndices).
+        let names: &[&str] = match sg.type_name(m) {
+            Some("PhysicalMaterial") => &["baseTexture", "emissiveTexture", "metallicRoughnessTexture", "occlusionTexture", "normalTexture"],
+            Some("SpecularGlossinessMaterial") => &["diffuseTexture", "emissiveTexture", "specularGlossinessTexture", "occlusionTexture", "normalTexture"],
+            Some("Material") => &["diffuseTexture", "emissiveTexture", "specularTexture", "occlusionTexture", "normalTexture", "ambientTexture", "shininessTexture"],
             _ => return vec![],
         };
         let mut out = vec![];
@@ -2909,7 +2931,10 @@ impl<'a> Builder<'a> {
             let texture = if textured {
                 match sg.node(b, &format!("{name}Texture")) {
                     Some(t) => match sg.type_name(t) {
-                        Some("ImageTexture" | "PixelTexture") => self.texture(sg, t),
+                        Some("ImageTexture") => self.texture(sg, t),
+                        // X3DBackgroundNode.set_loadState__: a PixelTexture without an image is COMPLETE (texture bit set); its face
+                        // shows X_ITE's 1 x 1 white default texture.
+                        Some("PixelTexture") => self.texture(sg, t).or_else(|| Some(self.white_texture())),
                         Some(other) => {
                             self.unsupported.insert(other.to_string());
                             None
@@ -2977,7 +3002,7 @@ impl<'a> Builder<'a> {
 
         // A DependentRenderer pass of its own.
         let saved = (std::mem::take(&mut self.items), std::mem::take(&mut self.lights), std::mem::take(&mut self.clip_planes), self.camera_space, self.dependent, self.hidden_texture, self.environment.take());
-        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights));
+        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights), std::mem::take(&mut self.local_fogs));
         let saved_projectors = (std::mem::take(&mut self.projectors), std::mem::take(&mut self.global_projectors), std::mem::take(&mut self.local_projectors));
         let size = sg.i32(node, "size", 128).max(1) as f64;
         let saved_viewports = std::mem::replace(&mut self.viewports, vec![[0.0, 0.0, size, size]]);
@@ -3019,7 +3044,7 @@ impl<'a> Builder<'a> {
         let projectors = std::mem::take(&mut self.projectors);
         let environment = self.environment.take();
         (self.items, self.lights, self.clip_planes, self.camera_space, self.dependent, self.hidden_texture, self.environment) = saved;
-        (self.global_lights, self.local_lights) = saved_lights;
+        (self.global_lights, self.local_lights, self.local_fogs) = saved_lights;
         (self.projectors, self.global_projectors, self.local_projectors) = saved_projectors;
         self.viewports = saved_viewports;
 
@@ -3093,7 +3118,7 @@ impl<'a> Builder<'a> {
 
         // A DependentRenderer pass of its own.
         let saved = (std::mem::take(&mut self.items), std::mem::take(&mut self.lights), std::mem::take(&mut self.clip_planes), self.camera_space, self.dependent, self.hidden_texture, self.environment.take());
-        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights));
+        let saved_lights = (std::mem::take(&mut self.global_lights), std::mem::take(&mut self.local_lights), std::mem::take(&mut self.local_fogs));
         let saved_projectors = (std::mem::take(&mut self.projectors), std::mem::take(&mut self.global_projectors), std::mem::take(&mut self.local_projectors));
         let saved_viewports = std::mem::replace(&mut self.viewports, vec![[0.0, 0.0, width as f64, height as f64]]);
         self.camera_space = camera_space;
@@ -3147,7 +3172,7 @@ impl<'a> Builder<'a> {
         let projectors = std::mem::take(&mut self.projectors);
         let environment = self.environment.take();
         (self.items, self.lights, self.clip_planes, self.camera_space, self.dependent, self.hidden_texture, self.environment) = saved;
-        (self.global_lights, self.local_lights) = saved_lights;
+        (self.global_lights, self.local_lights, self.local_fogs) = saved_lights;
         (self.projectors, self.global_projectors, self.local_projectors) = saved_projectors;
         self.viewports = saved_viewports;
 
@@ -3438,6 +3463,7 @@ impl<'a> Builder<'a> {
         let mut items = std::mem::take(&mut self.items);
         shape_lights(&mut items, &std::mem::take(&mut self.global_lights));
         self.local_lights.clear();
+        self.local_fogs.clear();
         shape_projectors(&mut items, &std::mem::take(&mut self.global_projectors));
         self.local_projectors.clear();
 
@@ -4249,6 +4275,8 @@ fn material_params(sg: &Sg, m: NodeId, has_normals: bool, front: bool) -> Option
             shininess: sg.f64(m, "shininess", 0.2).clamp(0.0, 1.0),
             emissive: sg.color(m, "emissiveColor", [0.0, 0.0, 0.0]),
             transparency: sg.f64(m, "transparency", 0.0).clamp(0.0, 1.0),
+            normal_scale: sg.f64(m, "normalScale", 1.0).max(0.0),
+            occlusion_strength: sg.f64(m, "occlusionStrength", 1.0).clamp(0.0, 1.0),
             ..default_material()
         }),
         // PhysicalMaterial: set_metallic__ / set_roughness__ / set_occlusionStrength__ clamp to

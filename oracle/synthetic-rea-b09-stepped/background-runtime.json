@@ -1,0 +1,152 @@
+{
+ "settle": false,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 145,
+ "capture": [
+  4,
+  9,
+  16,
+  23,
+  30,
+  37,
+  44,
+  51,
+  58,
+  65,
+  72,
+  79,
+  86,
+  93,
+  100,
+  107,
+  114,
+  121,
+  128,
+  135
+ ],
+ "dump": [
+  4,
+  9,
+  16,
+  23,
+  30,
+  37,
+  44,
+  51,
+  58,
+  65,
+  72,
+  79,
+  86,
+  93,
+  100,
+  107,
+  114,
+  121,
+  128,
+  135,
+  144
+ ],
+ "events": [
+  {
+   "frame": 6,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 13,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 20,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 27,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 34,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 41,
+   "type": "key",
+   "key": "f"
+  },
+  {
+   "frame": 48,
+   "type": "key",
+   "key": "g"
+  },
+  {
+   "frame": 55,
+   "type": "key",
+   "key": "h"
+  },
+  {
+   "frame": 62,
+   "type": "key",
+   "key": "i"
+  },
+  {
+   "frame": 69,
+   "type": "key",
+   "key": "j"
+  },
+  {
+   "frame": 76,
+   "type": "key",
+   "key": "k"
+  },
+  {
+   "frame": 83,
+   "type": "key",
+   "key": "l"
+  },
+  {
+   "frame": 90,
+   "type": "key",
+   "key": "m"
+  },
+  {
+   "frame": 97,
+   "type": "key",
+   "key": "n"
+  },
+  {
+   "frame": 104,
+   "type": "key",
+   "key": "o"
+  },
+  {
+   "frame": 111,
+   "type": "key",
+   "key": "p"
+  },
+  {
+   "frame": 118,
+   "type": "key",
+   "key": "q"
+  },
+  {
+   "frame": 125,
+   "type": "key",
+   "key": "r"
+  },
+  {
+   "frame": 132,
+   "type": "key",
+   "key": "s"
+  }
+ ]
+}

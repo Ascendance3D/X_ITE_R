@@ -27,9 +27,15 @@ pub struct CShape {
     pub instance: Option<Matrix4>,
     /// The ClipPlanes in scope, in the same view space (renderContext .clipPlanes).
     pub clip_planes: Vec<[f64; 4]>,
+    /// The Collision nodes the COLLISION traversal was inside of when it reached the shape
+    /// (renderContext .collisions), outermost first.
+    pub collisions: Vec<x3d_fields::NodeId>,
 }
 
 pub struct Closest {
+    /// The collision shape (index into [`World::shapes`]) the depth pass found; `None` without a hit
+    /// and on the CPU stand-in.
+    pub shape: Option<usize>,
     pub distance: f64,
     /// Normal in the frame the translation lives in (None when nothing was hit).
     pub normal: Vector3,
@@ -72,7 +78,7 @@ impl World {
     /// smallest window z, unprojected with the orthographic matrix. Returns the distance and, if a
     /// shape was hit, its normal in the frame of the translation (`closestObject .modelViewMatrix
     /// .multRight (viewMatrix) .submatrix .inverse () .multMatrixVec (normal)`).
-    fn depth_gpu(&self, gpu: &Rc<RefCell<DepthGpu>>, view: &Matrix4, ortho: &Matrix4) -> (f64, Option<Vector3>) {
+    fn depth_gpu(&self, gpu: &Rc<RefCell<DepthGpu>>, view: &Matrix4, ortho: &Matrix4) -> (f64, Option<(Vector3, usize)>) {
         let mut view_projection = *view;
         view_projection.mult_right(ortho);
 
@@ -135,16 +141,16 @@ impl World {
         let mut sub = mv.submatrix();
         sub.inverse();
         sub.mult_matrix_vec3(&mut normal);
-        (distance, Some(normal))
+        (distance, Some((normal, id as usize)))
     }
 
     /// Closest depth under an orthographic view (l, r, b, t, near, far) of the collision camera.
-    fn depth(&self, view: &Matrix4, (l, r, b, t, near, far): (f64, f64, f64, f64, f64, f64)) -> Option<(f64, Vector3)> {
+    fn depth(&self, view: &Matrix4, (l, r, b, t, near, far): (f64, f64, f64, f64, f64, f64)) -> Option<(f64, Vector3, Option<usize>)> {
         if let (Some(gpu), Fill::Triangles) = (&self.gpu, self.fill) {
             let mut ortho = Matrix4::IDENTITY;
             Camera::ortho(l, r, b, t, near, far, &mut ortho);
             let (distance, normal) = self.depth_gpu(gpu, view, &ortho);
-            return normal.map(|n| (distance, n));
+            return normal.map(|(n, id)| (distance, n, Some(id)));
         }
 
         let mut best: Option<(f64, Vector3)> = None;
@@ -333,7 +339,7 @@ impl World {
         // TextureBuffer.readDepth unprojects it again.
         best.map(|(d, n)| {
             let z = ((d - near) / (far - near)) as f32 as f64;
-            (near + z * (far - near), n)
+            (near + z * (far - near), n, None)
         })
     }
 
@@ -357,13 +363,13 @@ impl World {
         Camera::ortho(-radius, radius, bottom.min(-radius), radius, near, far, &mut proj);
 
         match self.depth(&view, (-radius, radius, bottom.min(-radius), radius, near, far)) {
-            Some((d, n)) => {
+            Some((d, n, shape)) => {
                 let mut normal = n;
                 rotation.mult_vec_rot(&mut normal);
                 normal.normalize();
-                Closest { distance: d, normal, hit: true }
+                Closest { shape, distance: d, normal, hit: true }
             }
-            None => Closest { distance: far, normal: Vector3::new(0.0, 0.0, 1.0), hit: false },
+            None => Closest { shape: None, distance: far, normal: Vector3::new(0.0, 0.0, 1.0), hit: false },
         }
     }
 

@@ -146,6 +146,8 @@ pub struct Viewer3d {
     /// The LogarithmicDepthBuffer rendering property the camera last used.
     camera_log_depth: bool,
     gravity_speed: f64,
+    /// X3DRenderObject.activeCollisions: the Collision nodes whose isActive the last COLLISION traversal set.
+    active_collisions: Vec<x3d_fields::NodeId>,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
     /// The pointing buffer on the GPU (float32 hit values like X_ITE's); without it picks use the
     /// ray cast's double values.
@@ -283,6 +285,7 @@ impl Viewer3d {
             advance_only_time: false,
             pinned_frame_rate: None,
             gravity_speed: 0.0,
+            active_collisions: vec![],
             geom_cache: HashMap::new(),
             pointing_gpu: None,
             depth_gpu: None,
@@ -926,7 +929,14 @@ impl Viewer3d {
             }
 
             if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
-                shapes.push(CShape { geometry: g, model_view: s.model_view, base_model_view: s.shape_model_view, instance: s.instance, clip_planes: s.clip_planes.clone() });
+                shapes.push(CShape { geometry: g, model_view: s.model_view, base_model_view: s.shape_model_view, instance: s.instance, clip_planes: s.clip_planes.clone(), collisions: s.collisions.clone() });
+            }
+        }
+
+        // Collision.proxy: the proxy nodes' shapes are collision objects too.
+        for s in &self.scan_display.proxy_shapes {
+            if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
+                shapes.push(CShape { geometry: g, model_view: s.model_view, base_model_view: s.shape_model_view, instance: s.instance, clip_planes: s.clip_planes.clone(), collisions: s.collisions.clone() });
             }
         }
 
@@ -939,7 +949,76 @@ impl Viewer3d {
         Some(World { shapes, fill, gpu: self.depth_gpu.clone() })
     }
 
+    /// X3DRenderObject.collide: the closest object along each of the six axes within the collision radius
+    /// (times sqrt 2) makes the Collision nodes around it active (isActive, collideTime). It runs for every
+    /// viewer while an enabled Collision exists.
+    fn collide(&mut self) {
+        if self.scan_display.collisions == 0 {
+            return;
+        }
+
+        let Some(world) = self.collision_world() else { return };
+        let base = self.base();
+        let nav = self.nav_info();
+        let vp_node = self.layer.viewpoint();
+        let vp = self.layer.vp(vp_node).clone();
+        let mut active: Vec<x3d_fields::NodeId> = vec![];
+
+        if !world.shapes.is_empty() {
+            let radius = nav.collision_radius() * std::f64::consts::SQRT_2;
+            let mut closest_shapes: Vec<usize> = vec![];
+
+            for axis in [Vector3::new(1.0, 0.0, 0.0), Vector3::new(0.0, 1.0, 0.0), Vector3::new(0.0, 0.0, 1.0), Vector3::new(-1.0, 0.0, 0.0), Vector3::new(0.0, -1.0, 0.0), Vector3::new(0.0, 0.0, -1.0)] {
+                let closest = world.closest_object(&vp, &base, &nav, &axis);
+
+                if let Some(id) = closest.shape.filter(|_| closest.distance <= radius) {
+                    if !closest_shapes.contains(&id) {
+                        closest_shapes.push(id);
+                    }
+                }
+            }
+
+            for id in closest_shapes {
+                active.extend(world.shapes[id].collisions.iter().copied());
+            }
+        }
+
+        // Set isActive to FALSE for affected nodes, then TRUE.
+        for c in std::mem::take(&mut self.active_collisions) {
+            if !active.contains(&c) {
+                self.set_collision_active(c, false);
+            }
+        }
+
+        for c in &active {
+            self.set_collision_active(*c, true);
+        }
+
+        self.active_collisions = active;
+    }
+
+    /// Collision.set_active__.
+    fn set_collision_active(&mut self, node: x3d_fields::NodeId, value: bool) {
+        if self.rt.get_bool(node, "isActive") == value {
+            return;
+        }
+
+        if let Some(k) = self.rt.pre(node, "isActive") {
+            self.rt.set_value(k, FieldValue::SFBool(value));
+        }
+
+        if value {
+            let now = self.rt.now;
+
+            if let Some(k) = self.rt.pre(node, "collideTime") {
+                self.rt.set_value(k, FieldValue::SFTime(now));
+            }
+        }
+    }
+
     fn collision_pass(&mut self) {
+        self.collide();
+
         if self.nav.kind() != "WALK" {
             return;
         }
@@ -1417,6 +1496,20 @@ impl Viewer3d {
         }
     }
 
+    /// X3DBrowser.changeViewpoint: the first viewpoint of the active layer with the name gets `set_bind`
+    /// (with the VRML transition), the field event is processed by the next frame.
+    pub fn change_viewpoint(&mut self, name: &str) {
+        let found = self.layer.viewpoint_list().iter().copied().find(|n| !is_default(*n) && self.rt.scene.node(*n).name == name);
+
+        if let Some(n) = found {
+            self.layer.vp(n).vrml_transition = true;
+
+            if let Some(k) = self.rt.pre(n, "set_bind") {
+                self.rt.set_value(k, FieldValue::SFBool(true));
+            }
+        }
+    }
+
     /// X3DBrowser.bindViewpoint.
     pub fn bind_viewpoint(&mut self, n: NodeId) {
         self.layer.vp(n).vrml_transition = true;
@@ -1599,7 +1692,7 @@ impl Viewer3d {
 
         match self.collision_world_unconditional() {
             Some(w) => w.closest_object(&vp, &base, &nav, &direction),
-            None => crate::collision::Closest { distance: 0.0, normal: Vector3::ZERO, hit: false },
+            None => crate::collision::Closest { shape: None, distance: 0.0, normal: Vector3::ZERO, hit: false },
         }
     }
 
@@ -1662,6 +1755,14 @@ impl Viewer3d {
 
         for a in out.anchors {
             self.status = format!("Anchor: {} -> {}", if a.description.is_empty() { "(no description)" } else { &a.description }, a.urls.first().cloned().unwrap_or_default());
+
+            // Anchor.requestImmediateLoad → FileLoader.loadDocumentAsync: an url that is only a fragment
+            // names a viewpoint of this world (Browser.changeViewpoint); the first url decides, the others
+            // are not tried. Other urls (scenes, foreign content) are only reported.
+            if let Some(name) = a.urls.first().and_then(|u| u.trim().strip_prefix('#')) {
+                self.change_viewpoint(&percent_decode(name));
+            }
+
             self.anchors.push(a);
         }
     }
@@ -1831,4 +1932,23 @@ fn box_in_frustum(size: &Vector3, center: &Vector3, model_view: &Matrix4, proj: 
     }
 
     !outside.iter().any(|o| *o)
+}
+
+
+/// decodeURIComponent: %XX sequences as UTF-8 bytes (an invalid sequence is kept as it is).
+fn percent_decode(s: &str) -> String {
+    let b = s.as_bytes();
+    let (mut out, mut i) = (Vec::with_capacity(b.len()), 0);
+
+    while i < b.len() {
+        if b[i] == b'%' && i + 2 < b.len() && b.get(i + 1).zip(b.get(i + 2)).is_some_and(|(x, y)| x.is_ascii_hexdigit() && y.is_ascii_hexdigit()) {
+            out.push(u8::from_str_radix(&s[i + 1..i + 3], 16).unwrap());
+            i += 3;
+        } else {
+            out.push(b[i]);
+            i += 1;
+        }
+    }
+
+    String::from_utf8(out).unwrap_or_else(|_| s.to_string())
 }

@@ -1,0 +1,14 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 6 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.2 0.2 0.25 }
+Transform { translation -1.5 0 0 children Shape {
+  appearance Appearance { material UnlitMaterial { emissiveTexture PixelTexture { image 4 4 4 0x28c800ff 0x64c81eff 0xa0c83cff 0xdcc85aff 0x28a078ff 0x64a096ff 0xa0a0b4ff 0xdca0d2ff 0x2878f0ff 0x64780eff 0xa0782cff 0xdc784aff 0x285068ff 0x645086ff 0xa050a4ff 0xdc50c2ff } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ]  }
+} }Transform { translation 1.5 0 0 children Shape {
+  appearance Appearance { material UnlitMaterial { emissiveColor 0.5 1 0.5 emissiveTexture PixelTexture { image 4 4 3 0xff5a80 0xef7380 0xdf8c80 0xcfa580 0xbfbe80 0xafd780 0x9ff080 0x8f0980 0x7f2280 0x6f3b80 0x5f5480 0x4f6d80 0x3f8680 0x2f9f80 0x1fb880 0x0fd180 } transparency 0.3 } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] }
+    texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } coordIndex [ 0 1 2 3 -1 ]  }
+} }

@@ -486,7 +486,8 @@ pub fn custom_vertices(g: &crate::geometry::Geometry, attributes: &[AttrDecl]) -
                     take(&g.fog_depths, 1, &mut x);
                 }
                 name => {
-                    if let Some(arr) = g.attribs.iter().find(|r| r.name == name) {
+                    // Attributes of one name: each enables the same location, the last pointer wins.
+                    if let Some(arr) = g.attribs.iter().rev().find(|r| r.name == name) {
                         let n = arr.components;
 
                         if arr.values.len() >= (v + 1) * n {

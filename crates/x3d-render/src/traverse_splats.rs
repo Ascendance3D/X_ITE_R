@@ -90,6 +90,7 @@ impl Builder<'_> {
             instances: None,
             splats: Some(Rc::new(SplatDraw { node: n, data, model_view: *mv, linear })),
             custom: None,
+            fog: self.local_fogs.last().cloned(),
         });
     }
 }

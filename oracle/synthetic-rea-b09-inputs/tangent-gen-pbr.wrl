@@ -1,0 +1,14 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 8 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.1 0.1 0.12 }
+DirectionalLight { direction 0.5 -0.4 -1 intensity 1.2 }
+PointLight { location 1 1 3 intensity 1 radius 30 }
+Transform { translation -3 0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 0.1 roughness 0.4 normalTexture PixelTexture { image 4 4 3 0x0c0cff 0x590cff 0xa50cff 0xf20cff 0x0c59ff 0x5959ff 0xa559ff 0xf259ff 0x0ca5ff 0x59a5ff 0xa5a5ff 0xf2a5ff 0x0cf2ff 0x59f2ff 0xa5f2ff 0xf2f2ff } } }
+ geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ]
+   normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 1 0, 0 0, 0 1, 1 1 ] }  } } }Transform { translation 0 0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 0.1 roughness 0.4 normalTexture PixelTexture { image 4 4 3 0x0c0cff 0x590cff 0xa50cff 0xf20cff 0x0c59ff 0x5959ff 0xa559ff 0xf259ff 0x0ca5ff 0x59a5ff 0xa5a5ff 0xf2a5ff 0x0cf2ff 0x59f2ff 0xa5f2ff 0xf2f2ff } } }
+ geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ]
+   normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 0 1, 1 1, 1 0 ] }  } } }Transform { translation 3 0 0 children Shape { appearance Appearance { material PhysicalMaterial { baseColor 0.8 0.8 0.8 metallic 0.1 roughness 0.4 normalTexture PixelTexture { image 4 4 3 0x0c0cff 0x590cff 0xa50cff 0xf20cff 0x0c59ff 0x5959ff 0xa559ff 0xf259ff 0x0ca5ff 0x59a5ff 0xa5a5ff 0xf2a5ff 0x0cf2ff 0x59f2ff 0xa5f2ff 0xf2f2ff } } }
+ geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ]
+   normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 2 0, 2 2, 0 2 ] } tangent Tangent { vector [ 0 -1 0 1, 0 -1 0 1, 0 -1 0 1, 0 -1 0 1 ] } } } }
