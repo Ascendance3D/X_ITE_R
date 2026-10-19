@@ -230,6 +230,17 @@ fn golden_gate(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
     Err(LoadError::NoHandler)
 }
 
+/// X3DBrowser.importJS: `new JSONParser (scene)` with the JSON text as its input, parsed into a new scene (no GoldenGate checks).
+pub fn parse_json_x3d(text: &str, world_url: &str) -> Result<Scene, LoadError> {
+    let value = json::json_parse(text).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
+    let root = json::to_x3d_element(&value).map_err(|message| LoadError::Parse(ParseError { message, line: 0 }))?;
+    let mut scene = xml::parse_x3d_element(&root, world_url).map_err(LoadError::Parse)?;
+
+    scene.encoding = "JSON".into();
+    scene.clone_counts = Some(scene.parse_clone_counts());
+    Ok(scene)
+}
+
 pub fn load_file(path: &std::path::Path) -> Result<Scene, LoadError> {
     let data = std::fs::read(path).map_err(LoadError::Io)?;
     let url = format!("file://{}", path.display());

@@ -42,6 +42,42 @@ impl Runtime {
         Ok(id)
     }
 
+    /// X3DBrowser.importJS: the JSON text is parsed by JSONParser straight into a new scene.
+    pub fn browser_import_json(&mut self, text: &str, parent: CtxId, script: Option<NodeId>) -> Result<u64, String> {
+        let id = self.next_browser_request();
+        let world = self.scene.world_url_of(parent).to_string();
+
+        self.sync_svg_quality();
+
+        let scene = match x3d_parse::parse_json_x3d(text, &world) {
+            Ok(scene) => scene,
+            Err(x3d_parse::LoadError::Parse(e)) => return Err(e.message),
+            Err(e) => return Err(format!("{e}")),
+        };
+
+        self.browser_attach(id, script, parent, scene);
+        Ok(id)
+    }
+
+    /// X3DBrowser.createScene: an empty scene (encoding SCRIPTED) with the profile and components, live at once.
+    pub fn browser_create_scene(&mut self, profile: Option<String>, components: Vec<(String, i32)>, parent: CtxId) -> CtxId {
+        let mut scene = Scene::new(self.scene.world_url_of(parent));
+
+        scene.profile = profile;
+
+        for (name, level) in components {
+            scene.update_component(&name, level);
+        }
+
+        let ctx_count = scene.contexts.len();
+        let m = self.scene.merge_extern(scene, parent);
+
+        self.attach_merged_scene(m, ctx_count, vec![]);
+        self.inline_live.insert(m.root_ctx, true);
+        self.refresh_live();
+        m.root_ctx
+    }
+
     /// X3DBrowser.createX3DFromURL: the fetch is a macrotask.
     pub fn browser_create_from_url(&mut self, urls: Vec<String>, parent: CtxId, script: Option<NodeId>) -> u64 {
         let id = self.next_browser_request();
@@ -100,6 +136,12 @@ impl Runtime {
             Err(e) => return Err(format!("Error: {e}")),
         };
 
+        self.browser_attach(id, script, parent, scene);
+        Ok(())
+    }
+
+    /// Merge a parsed scene, set up its nodes and wait for its loadCount.
+    fn browser_attach(&mut self, id: u64, script: Option<NodeId>, parent: CtxId, mut scene: Scene) {
         for w in std::mem::take(&mut scene.warnings) {
             self.log_warn(w);
         }
@@ -117,7 +159,6 @@ impl Runtime {
 
         // FileLoader.setScene: `scene ._loadCount .addEvent ()`.
         self.add_event(count);
-        Ok(())
     }
 
     /// FileLoader.set_loadCount__ for a browser scene whose count reached 0: wait for the next frame.

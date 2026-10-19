@@ -583,6 +583,8 @@ function infoArray (typeName, source, keyOf, check)
 }
 
 const infoObjects = new WeakSet (); // ComponentInfo and UnitInfo
+const componentInfos = new WeakSet ();
+const profileInfos = new WeakSet ();
 
 // X3DConstants (field types and access types used by scripts).
 // Base/X3DConstants.js: access types, then one value counting up from 1001 per name.
@@ -636,6 +638,38 @@ const Browser =
 
       return browserScene ("url", url .toArray ());
    },
+   createScene (... args)
+   {
+      return new Promise ((resolve, reject) =>
+      {
+         try
+         {
+            const [profile, ... components] = args;
+
+            if (args .length)
+            {
+               if (!profileInfos .has (profile))
+                  throw new Error ("Couldn't create scene: profile must be of type ProfileInfo.");
+
+               for (const component of components)
+               {
+                  if (!componentInfos .has (component))
+                     throw new Error ("Couldn't create scene: component must be of type ComponentInfo.");
+               }
+            }
+
+            const r = X ("browserScene", currentScript, "create", args .length ? profile .name : undefined, components .map (c => [c .name, c .level]));
+
+            resolve (executionContext (- (r .ctx + 1)));
+         }
+         catch (error)
+         {
+            reject (error);
+         }
+      });
+   },
+   importJS (json) { return browserScene ("json", typeof json === "string" ? json : JSON .stringify (json)); },
+   importDocument () { return Promise .reject (new Error ("Browser.importDocument: there is no DOM in a native Script realm.")); },
    createVrmlFromURL (url, node, event)
    {
       node  = node instanceof SFNodeBase ? node : null;
@@ -727,7 +761,7 @@ function convertOption (type, value)
 }
 
 // Configuration/{ComponentInfo,ProfileInfo,UnitInfo}.js (title and providerURL not kept).
-function componentInfo ([name, level]) { const o = Object .freeze ({ name, level, title: undefined, providerURL: undefined }); infoObjects .add (o); return o; }
+function componentInfo ([name, level]) { const o = Object .freeze ({ name, level, title: undefined, providerURL: undefined }); infoObjects .add (o); componentInfos .add (o); return o; }
 function componentArray (list)         { return infoArray ("ComponentInfoArray", list .map (componentInfo), c => c .name, c => infoObjects .has (c)); }
 function profileInfo (name)
 {
@@ -736,7 +770,29 @@ function profileInfo (name)
 
    const components = X ("profileComponents", name);
 
-   return Object .freeze ({ name, title: undefined, providerURL: undefined, components: componentArray (components || [ ]) });
+   const o = Object .freeze ({ name, title: undefined, providerURL: undefined, components: componentArray (components || [ ]) });
+
+   profileInfos .add (o);
+   return o;
+}
+
+// X3DScene.fromUnit / toUnit ("acceleration:" is X_ITE's spelling: acceleration is never converted).
+function unitConversion (units, category, value, from)
+{
+   const factor = name => units .get (name) .conversionFactor;
+   const apply = f => from ? value * f : value / f;
+
+   switch (category)
+   {
+      case "angle": case "force": case "length": case "mass": return apply (factor (category));
+      case "acceleration:": return apply (factor ("length"));
+      case "angularRate": return apply (factor ("angle"));
+      case "area": return apply (factor ("length") ** 2);
+      case "speed": return apply (factor ("length"));
+      case "volume": return apply (factor ("length") ** 3);
+   }
+
+   return value;
 }
 
 // One object per execution context (`Browser .currentScene === Browser .currentScene`).
@@ -793,6 +849,8 @@ function makeExecutionContext (script)
       addComponent (c)        { X ("addComponent", script, String (c .name), c .level | 0); },
       getUnits ()             { return units; },
       getUnit (category)      { return units .get (String (category)); },
+      fromUnit (category, value) { return unitConversion (units, category, value, true); },
+      toUnit (category, value) { return unitConversion (units, category, value, false); },
       getMetaData (name)      { const v = info () .meta .filter (e => e [0] === String (name)) .map (e => e [1]); return v .length ? v : undefined; },
       getMetaDatas ()         { return info () .meta; },
       setMetaData (name, v)   { X ("metaData", script, "set", String (name), metaValues (v)); },

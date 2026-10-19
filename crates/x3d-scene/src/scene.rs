@@ -556,7 +556,8 @@ impl Scene {
 
     /// X3DExecutionContext.hasComponent of the scene that holds `ctx`.
     pub fn has_component_in(&self, ctx: CtxId, name: &str) -> bool {
-        if let Some(p) = self.profile_of(ctx).and_then(|p| self.table.profile(p)) {
+        // `this [_profile] ?? browser .getProfile ("Full")`.
+        if let Some(p) = self.table.profile(self.profile_of(ctx).unwrap_or("Full")) {
             if p.components.iter().any(|c| c.0 == name) {
                 return true;
             }

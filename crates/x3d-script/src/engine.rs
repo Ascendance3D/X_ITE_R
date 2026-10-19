@@ -1318,8 +1318,23 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let node = (script >= 0.0).then_some(script as NodeId);
             let o = Object::new(ctx.clone())?;
 
-            if str_arg(ctx, a, 1) == "string" {
-                match rt().browser_create_from_string(&str_arg(ctx, a, 2), parent, node) {
+            let kind = str_arg(ctx, a, 1);
+
+            if kind == "create" {
+                // createScene (profile, ... components): the scene is there at once.
+                let profile = a.get(2).filter(|v| !v.is_undefined() && !v.is_null()).map(|v| coerce_string(ctx, v));
+                let components: Vec<(String, i32)> = a
+                    .get(3)
+                    .and_then(|v| v.as_array())
+                    .map(|arr| arr.iter::<Value>().filter_map(Result::ok).filter_map(|e| e.as_array().and_then(|p| Some((p.get::<Coerced<String>>(0).ok()?.0, p.get::<Coerced<f64>>(1).ok()?.0 as i32)))).collect())
+                    .unwrap_or_default();
+
+                o.set("ctx", rt().browser_create_scene(profile, components, parent) as f64)?;
+            } else if kind == "string" || kind == "json" {
+                let text = str_arg(ctx, a, 2);
+                let made = if kind == "string" { rt().browser_create_from_string(&text, parent, node) } else { rt().browser_import_json(&text, parent, node) };
+
+                match made {
                     Ok(id) => o.set("id", id as f64)?,
                     Err(e) => o.set("error", e)?,
                 }
@@ -1377,7 +1392,10 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             o.set("isScene", s.is_scene_root(c))?;
             o.set("encoding", encoding)?;
-            o.set("profile", s.profile_of(c).map(|p| p.to_string()))?;
+            match s.profile_of(c) {
+                Some(p) => o.set("profile", p)?,
+                None => o.set("profile", Value::new_null(ctx.clone()))?,
+            }
 
             let comps = Array::new(ctx.clone())?;
             for (i, (n, l)) in s.components_of(c).iter().enumerate() {
@@ -1690,8 +1708,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let script = num_arg(ctx, a, 0);
             let root = rt().scene.scene_root(ctx_of_script(script));
             let text = match str_arg(ctx, a, 1).as_str() {
-                "xml" if root == x3d_scene::ROOT => rt().scene.to_xml_string(),
-                "json" if root == x3d_scene::ROOT => rt().scene.to_json_string(),
+                "xml" => rt().scene.to_xml_string_ctx(root),
+                "json" => rt().scene.to_json_string_ctx(root),
                 _ => rt().scene.to_vrml_string_ctx(root),
             };
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
