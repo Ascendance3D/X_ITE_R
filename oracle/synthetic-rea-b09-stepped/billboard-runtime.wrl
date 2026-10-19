@@ -1,0 +1,49 @@
+#X3D V4.0 utf8
+PROFILE Full
+NavigationInfo { type "NONE" headlight FALSE transitionType [ "TELEPORT" ] }
+Background { skyColor 0.2 0.25 0.3 }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+DEF V1 Viewpoint { position 0 0 8 }
+DEF V2 Viewpoint { position 6 0 4 orientation 0 1 0 1.0 }
+DEF V3 Viewpoint { position 0 7 5 orientation 1 0 0 -1.0 }
+DEF V4 Viewpoint { position -5 -3 5 orientation 0.3 -1 0 -0.8 }
+DEF BA Transform { translation -3 1.5 0 children DEF B1 Billboard { axisOfRotation 0 1 0 children Shape { appearance Appearance { material Material { diffuseColor 1 0.3 0.3 emissiveColor 1 0.3 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.6 -0.4 0, 0.6 -0.4 0, 0.6 0.4 0, 0 0.7 0, -0.6 0.4 0 ] } coordIndex [ 0 1 2 3 4 -1 ] } } } }
+DEF BB Transform { translation 0 1.5 0 children DEF B2 Billboard { axisOfRotation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 1 0.3 emissiveColor 0.3 1 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.6 -0.4 0, 0.6 -0.4 0, 0.6 0.4 0, 0 0.7 0, -0.6 0.4 0 ] } coordIndex [ 0 1 2 3 4 -1 ] } } } }
+DEF BC Transform { translation 3 1.5 0 children DEF B3 Billboard { axisOfRotation 1 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.3 1 emissiveColor 0.3 0.3 1 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.6 -0.4 0, 0.6 -0.4 0, 0.6 0.4 0, 0 0.7 0, -0.6 0.4 0 ] } coordIndex [ 0 1 2 3 4 -1 ] } } } }
+DEF BD Transform { translation -3 -1.5 0 rotation 0 0 1 0.6 scale 1.3 1 1 children DEF B4 Billboard { axisOfRotation 1 1 1 children Shape { appearance Appearance { material Material { diffuseColor 1 1 0.3 emissiveColor 1 1 0.3 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.6 -0.4 0, 0.6 -0.4 0, 0.6 0.4 0, 0 0.7 0, -0.6 0.4 0 ] } coordIndex [ 0 1 2 3 4 -1 ] } } } }
+DEF BE Transform { translation 0 -1.5 0 rotation 1 0 0 0.9 children DEF B5 Billboard { axisOfRotation 0 1 0 children [ Shape { appearance Appearance { material Material { diffuseColor 0.3 1 1 emissiveColor 0.3 1 1 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.6 -0.4 0, 0.6 -0.4 0, 0.6 0.4 0, 0 0.7 0, -0.6 0.4 0 ] } coordIndex [ 0 1 2 3 4 -1 ] } } Transform { translation 1 0 0 rotation 0 1 0 1 children Shape { appearance Appearance { material Material { diffuseColor 1 0.3 1 emissiveColor 1 0.3 1 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.6 -0.4 0, 0.6 -0.4 0, 0.6 0.4 0, 0 0.7 0, -0.6 0.4 0 ] } coordIndex [ 0 1 2 3 4 -1 ] } } } ] } }
+DEF BF Transform { translation 3 -1.5 0 children DEF B6 Billboard { axisOfRotation 0 -1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 emissiveColor 0.9 0.6 0.2 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.6 -0.4 0, 0.6 -0.4 0, 0.6 0.4 0, 0 0.7 0, -0.6 0.4 0 ] } coordIndex [ 0 1 2 3 4 -1 ] } } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode v2 USE V2
+  initializeOnly SFNode v3 USE V3
+  initializeOnly SFNode v4 USE V4
+  initializeOnly SFNode b1 USE B1
+  initializeOnly SFNode b2 USE B2
+  initializeOnly SFNode b3 USE B3
+  initializeOnly SFNode b5 USE B5
+  initializeOnly SFNode ba USE BA
+  initializeOnly SFNode be USE BE
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') v2 .set_bind = true;
+   if (k == 'b') v3 .set_bind = true;
+   if (k == 'c') v4 .set_bind = true;
+   if (k == 'd') b1 .axisOfRotation = new SFVec3f (0, 0, 1);
+   if (k == 'e') b2 .axisOfRotation = new SFVec3f (0, 1, 0);
+   if (k == 'f') b3 .axisOfRotation = new SFVec3f (0, 0, 0);
+   if (k == 'g') ba .rotation = new SFRotation (0, 0, 1, 0.7);
+   if (k == 'h') be .rotation = new SFRotation (0, 1, 0, 0.8);
+   if (k == 'i') b5 .axisOfRotation = new SFVec3f (0, 0, 0);
+   if (k == 'j') ba .scale = new SFVec3f (1, 2, 1);
+   if (k == 'k') b1 .axisOfRotation = new SFVec3f (0, 2, 0);
+   if (k == 'l') v2 .position = new SFVec3f (-6, 0, 4);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

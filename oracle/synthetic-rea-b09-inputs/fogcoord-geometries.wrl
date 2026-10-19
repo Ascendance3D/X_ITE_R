@@ -1,0 +1,11 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 7 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.15 0.18 0.22 }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+Fog { color 0.9 0.5 0.1 visibilityRange 10 }
+Transform { translation -2.5 -1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 } } geometry ElevationGrid { xDimension 3 zDimension 3 xSpacing 1 zSpacing 1 solid FALSE height [ 0 0.4 0 0.4 0.8 0.4 0 0.4 0 ]
+  fogCoord FogCoordinate { depth [ 0 0.2 0.4 0.2 0.5 0.7 0.5 0.8 1 ] } } } }Transform { translation 1 1 0 children Shape { appearance Appearance { material Material { emissiveColor 1 1 0.5 diffuseColor 0 0 0 } }
+  geometry IndexedLineSet { coord Coordinate { point [ -1 -1 0, 0 1 0, 1 -1 0, 2 1 0 ] } coordIndex [ 0 1 2 3 -1 ] fogCoord FogCoordinate { depth [ 0 0.3 0.7 1 ] } } } }Transform { translation 1 -1.5 0 children Shape { appearance Appearance { material Material { emissiveColor 0.5 1 1 diffuseColor 0 0 0 } }
+  geometry LineSet { vertexCount [ 3 ] coord Coordinate { point [ -1 0 0, 0 1 0, 1 0 0 ] } fogCoord FogCoordinate { depth [ 0 1 0.5 ] } } } }

@@ -54,6 +54,9 @@ pub struct ShapeInst {
     pub sensors: Vec<SensorRef>,
     /// Inside no disabled Collision node (Collision.set_collisionObjects__).
     pub collidable: bool,
+    /// The enabled Collision nodes around the shape in the COLLISION traversal (renderContext .collisions),
+    /// outermost first.
+    pub collisions: Vec<NodeId>,
     /// Anchor nodes of the sensors list (their hidden TouchSensor), for activation reports.
     pub anchors: Vec<NodeRef>,
     /// renderContext .clipPlanes: the enabled ClipPlanes in scope, in the space of the walk's
@@ -98,6 +101,9 @@ pub struct Scan {
     /// CAMERA: X3DViewpointNode.traverse computes the descriptions of each viewpoint reached.
     pub viewpoint_descriptions: Vec<(NodeId, Vec<String>)>,
     pub shapes: Vec<ShapeInst>,
+    /// The shapes of enabled Collision nodes' `proxy` nodes: collision objects only (Collision.set_collisionObjects__),
+    /// never drawn, picked or measured.
+    pub proxy_shapes: Vec<ShapeInst>,
     pub proximity: Vec<EnvInst>,
     pub visibility: Vec<EnvInst>,
     /// Enabled Collision nodes seen (browser.getCollisionCount).
@@ -117,6 +123,18 @@ pub struct Scan {
 
 const GROUPS: &[&str] =
     &["Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "GeoLocation", "GeoTransform", "GeoLOD", "CADAssembly", "CADLayer", "CADPart", "CADFace", "PickableGroup", "GroupAnnotation", "HAnimHumanoid", "HAnimJoint", "HAnimSegment", "HAnimSite"];
+/// X3DCast (X3DChildNode, node) for the node types that can be a Collision's `proxy`: everything but the
+/// geometry, appearance, material, texture and property nodes.
+fn is_child_node(sg: &Sg, n: NodeId) -> bool {
+    let Some(ty) = sg.type_name(n) else { return false };
+    !(matches!(
+        ty,
+        "Appearance" | "Material" | "TwoSidedMaterial" | "UnlitMaterial" | "PhysicalMaterial" | "SpecularGlossinessMaterial" | "Coordinate" | "Normal" | "Color" | "ColorRGBA" | "TextureCoordinate" | "ImageTexture" | "PixelTexture"
+            | "MovieTexture" | "TextureTransform" | "Box" | "Sphere" | "Cone" | "Cylinder" | "IndexedFaceSet" | "IndexedLineSet" | "PointSet" | "LineSet" | "ElevationGrid" | "Extrusion" | "Text" | "FontStyle" | "Rectangle2D"
+            | "Circle2D" | "Arc2D" | "Disk2D" | "Polyline2D" | "Polypoint2D" | "TriangleSet2D" | "TriangleSet" | "IndexedTriangleSet" | "FillProperties" | "LineProperties" | "PointProperties"
+    ))
+}
+
 const SENSORS: &[&str] = &["TouchSensor", "GeoTouchSensor", "PlaneSensor", "SphereSensor", "CylinderSensor"];
 
 /// Resolve a runtime path from the root runtime (all nodes live in the root runtime).
@@ -398,6 +416,8 @@ struct Walker<'a> {
     hanim: Vec<Option<Rc<(x3d_render::hanim::SkinTables, Vec<f32>)>>>,
     /// HAnimJoint model-view matrices of this walk.
     joint_model_views: std::collections::HashMap<NodeId, Matrix4>,
+    /// renderObject .getCollisions (): the enabled Collision nodes around the walk's position.
+    collision_stack: Vec<NodeId>,
 }
 
 /// Walk the world starting with `start` as the model-view matrix (identity for the CAMERA
@@ -450,7 +470,7 @@ pub fn scan_display(root: &Runtime, layer: &LayerWalk, start: &Matrix4, lod: &mu
 
 impl<'a> Walker<'a> {
     fn new(scan: &'a mut Scan, lod: Option<&'a mut LodPass>, picking: Option<&'a std::collections::HashSet<NodeId>>, camera: bool, layer: &LayerWalk) -> Walker<'a> {
-        Walker { scan, lod, picking, pick: None, camera, clip_planes: vec![], layer: *layer, viewports: vec![layer.viewport], layouts: LayoutStack::default(), viewpoint_groups: vec![], inv_humanoid: vec![Matrix4::IDENTITY], hanim: vec![None], joint_model_views: Default::default() }
+        Walker { scan, lod, picking, pick: None, camera, clip_planes: vec![], layer: *layer, viewports: vec![layer.viewport], layouts: LayoutStack::default(), viewpoint_groups: vec![], inv_humanoid: vec![Matrix4::IDENTITY], hanim: vec![None], joint_model_views: Default::default(), collision_stack: vec![] }
     }
 
     fn viewport(&self) -> [f64; 4] {
@@ -540,9 +560,16 @@ impl<'a> Walker<'a> {
 
         let mut collidable = collidable;
 
+        let mut proxy = None;
+        let collision = ty == "Collision" && sg.bool(n, "enabled", true);
+
         if ty == "Collision" {
-            if sg.bool(n, "enabled", true) {
+            if collision {
                 self.scan.collisions += 1;
+                // Collision.set_collisionObjects__: an X3DChildNode proxy replaces the children as the collision objects.
+                proxy = sg.node(n, "proxy").filter(|p| is_child_node(sg, *p));
+                collidable = collidable && proxy.is_none();
+                self.collision_stack.push(n);
             } else {
                 collidable = false;
             }
@@ -552,6 +579,18 @@ impl<'a> Walker<'a> {
 
         for c in kids {
             self.node(sg, path, c, m, &local, &local_anchors, collidable, depth + 1);
+        }
+
+        if let Some(p) = proxy {
+            // Only the proxy's shapes are kept: it is traversed for COLLISION only.
+            let saved = std::mem::take(&mut *self.scan);
+            self.node(sg, path, p, m, &[], &[], true, depth + 1);
+            let walked = std::mem::replace(&mut *self.scan, saved);
+            self.scan.proxy_shapes.extend(walked.shapes);
+        }
+
+        if collision {
+            self.collision_stack.pop();
         }
 
         self.clip_planes.truncate(self.clip_planes.len() - pushed);
@@ -655,7 +694,7 @@ impl<'a> Walker<'a> {
                 }
             }
             "NavigationInfo" => self.scan.navigation_infos.push(me()),
-            "Background" => self.scan.backgrounds.push((me(), *mv)),
+            "Background" | "TextureBackground" => self.scan.backgrounds.push((me(), *mv)),
             "Fog" => self.scan.fogs.push(me()),
             "ProximitySensor" | "GeoProximitySensor" => self.scan.proximity.push(EnvInst { node: me(), model_view: *mv }),
             "VisibilitySensor" => self.scan.visibility.push(EnvInst { node: me(), model_view: *mv }),
@@ -757,6 +796,7 @@ impl<'a> Walker<'a> {
                         explicit_bbox,
                         sensors: sensors.to_vec(),
                         collidable,
+                        collisions: self.collision_stack.clone(),
                         anchors: anchors.to_vec(),
                         clip_planes: self.clip_planes.clone(),
                         viewport: self.viewport(),

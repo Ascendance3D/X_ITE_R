@@ -317,7 +317,16 @@ impl Runtime {
                     self.geo_viewpoint_initialize(node);
                 }
             }
-            "NavigationInfo" | "Fog" | "LocalFog" => self.interest(node, "set_bind", Cb::BindableSetBind),
+            // TextureBackground: X3DBindableNode only (its textures are plain child nodes).
+            "NavigationInfo" | "Fog" | "LocalFog" | "TextureBackground" => self.interest(node, "set_bind", Cb::BindableSetBind),
+            "Collision" => {
+                self.interest(node, "enabled", Cb::CollisionSetEnabled);
+                // X3DGroupingNode.initialize
+                if self.pre(node, "addChildren").is_some() && self.pre(node, "removeChildren").is_some() && self.pre(node, "children").is_some() {
+                    self.interest(node, "addChildren", Cb::GroupAddChildren);
+                    self.interest(node, "removeChildren", Cb::GroupRemoveChildren);
+                }
+            }
             "GeoLOD" => self.geo_lod_initialize(node),
             "ViewpointGroup" => self.viewpoint_group_initialize(node),
             "HAnimHumanoid" => self.hanim_humanoid_initialize(node),
@@ -575,6 +584,14 @@ impl Runtime {
                 // X3DBindableNode.set_bind__: modificationCount = ++modificationCount.
                 self.bind_counter += 1;
                 self.bind_modifications.insert(node, self.bind_counter);
+            }
+            Cb::CollisionSetEnabled => {
+                // Collision.set_enabled__: `set_active__ (false)`.
+                if !self.get_bool(node, "enabled") && self.get_bool(node, "isActive") {
+                    if let Some(k) = self.pre(node, "isActive") {
+                        self.set_value(k, FieldValue::SFBool(false));
+                    }
+                }
             }
             Cb::GeoLodRootLoadState => self.geo_lod_set_root_load_state(node),
             Cb::GeoLodChildLoadState => self.geo_lod_set_child_load_state(node),

@@ -1062,8 +1062,9 @@ pub fn make_cylinder(height: f64, radius: f64, side: bool, top: bool, bottom: bo
 // Lines and points.
 
 /// IndexedLineSet.build.
-pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Option<Colors>, color_index: &[i32], color_per_vertex: bool) -> Geometry {
+pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Option<Colors>, color_index: &[i32], color_per_vertex: bool, extras: &crate::extras::Extras) -> Geometry {
     let mut g = Geometry { geometry_type: 1, solid: false, ccw: true, ..Default::default() };
+    extras.init(&mut g);
 
     if let Some(points) = coord.filter(|c| c.len() >= 3) {
         let coord = Coords(points);
@@ -1091,6 +1092,7 @@ pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Optio
                         let index = coord_index[i] as i64;
 
                         g.coord_indices.push(index as u32);
+                        extras.add_attribs_and_fog(index, &mut g);
 
                         if let Some(c) = &color {
                             let ci = if color_per_vertex { at_or(color_index, i, index) } else { at_or(color_index, face, face as i64) };

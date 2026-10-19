@@ -1,0 +1,56 @@
+#X3D V4.0 utf8
+PROFILE Full
+NavigationInfo { type [ "WALK" ] avatarSize [ 0.25 1.6 0.75 ] speed 4 }
+Background { skyColor 0.2 0.25 0.3 }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+Viewpoint { position 0 1.6 12 }
+Transform { translation 0 -0.1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.4 0.4 } } geometry Box { size 40 0.2 40 } } }
+DEF C1 Collision { enabled TRUE children [ Transform { translation 0 1.5 9 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.3 0.3 } } geometry Box { size 8 3 0.4 } } } ] }
+DEF C2 Collision { enabled TRUE proxy Shape { geometry Box { size 8 3 0.4 } } children [ Transform { translation 0 1.5 6 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.8 0.3 } } geometry Box { size 8 3 0.4 } } } ] }
+DEF C3 Collision { enabled TRUE proxy Group { } children [ Transform { translation 0 1.5 3 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.3 0.8 } } geometry Box { size 8 3 0.4 } } } ] }
+DEF C4 Collision { enabled TRUE children [ DEF C5 Collision { enabled FALSE children [ Transform { translation 0 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.3 } } geometry Box { size 8 3 0.4 } } } ] } ] }
+Transform { translation 5 1 8 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry Box { size 1 2 1 } } }DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode c1 USE C1
+  initializeOnly SFNode c2 USE C2
+  initializeOnly SFNode c3 USE C3
+  initializeOnly SFNode c4 USE C4
+  initializeOnly SFNode c5 USE C5
+  inputOnly SFBool on_a1
+  inputOnly SFTime on_ct1
+  inputOnly SFBool on_a2
+  inputOnly SFTime on_ct2
+  inputOnly SFBool on_a3
+  inputOnly SFBool on_a4
+  inputOnly SFBool on_a5
+  url "javascript:
+function on_a1 (v) { log = log + 'C1:' + v + ' '; }
+function on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }
+function on_a2 (v) { log = log + 'C2:' + v + ' '; }
+function on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }
+function on_a3 (v) { log = log + 'C3:' + v + ' '; }
+function on_a4 (v) { log = log + 'C4:' + v + ' '; }
+function on_a5 (v) { log = log + 'C5:' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') c1 .enabled = false;
+   if (k == 'b') c1 .enabled = true;
+   if (k == 'c') c2 .enabled = false;
+   if (k == 'd') c2 .enabled = true;
+   if (k == 'e') c5 .enabled = true;
+   if (k == 'f') c4 .enabled = false;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE C1.isActive TO R.on_a1
+ROUTE C1.collideTime TO R.on_ct1
+ROUTE C2.isActive TO R.on_a2
+ROUTE C2.collideTime TO R.on_ct2
+ROUTE C3.isActive TO R.on_a3
+ROUTE C4.isActive TO R.on_a4
+ROUTE C5.isActive TO R.on_a5

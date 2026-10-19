@@ -1,0 +1,50 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 7.5 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.2 0.2 0.25 }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+Transform { translation -2.4 1.8 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "SPHERE" } } } }
+Transform { translation -1.2 1.8 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "CAMERASPACENORMAL" } } } }
+Transform { translation 0.0 1.8 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "CAMERASPACEPOSITION" } } } }
+Transform { translation 1.1999999999999997 1.8 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "CAMERASPACEREFLECTIONVECTOR" } } } }
+Transform { translation 2.4 1.8 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "SPHERE-LOCAL" } } } }
+Transform { translation -2.4 0.6000000000000001 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "COORD" } } } }
+Transform { translation -1.2 0.6000000000000001 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "COORD-EYE" } } } }
+Transform { translation 0.0 0.6000000000000001 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "NOISE" } } } }
+Transform { translation 1.1999999999999997 0.6000000000000001 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "NOISE-EYE" } } } }
+Transform { translation 2.4 0.6000000000000001 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "SPHERE-REFLECT" } } } }
+Transform { translation -2.4 -0.5999999999999999 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 1 1 1 } texture PixelTexture { image 4 4 3 0x0a0aff 0x5a0af0 0xaa0ae1 0xfa0ad2 0x0a5ac3 0x5a5ab4 0xaa5aa5 0xfa5a96 0x0aaa87 0x5aaa78 0xaaaa69 0xfaaa5a 0x0afa4b 0x5afa3c 0xaafa2d 0xfafa1e } }
+  geometry ElevationGrid { xDimension 4 zDimension 4 xSpacing 0.3 zSpacing 0.3 height [ 0 0.2 0 0.2 0.2 0 0.2 0 0 0.2 0 0.2 0.2 0 0.2 0 ] solid FALSE
+    texCoord TextureCoordinateGenerator { mode "SPHERE-REFLECT-LOCAL" } } } }

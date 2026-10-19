@@ -1,0 +1,10 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 7 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.15 0.18 0.22 }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+Group { children [ LocalFog { color 1 0.2 0.2 visibilityRange 8 }
+Transform { translation -1 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.8 0.4 transparency 0.5 } } geometry Sphere { radius 1 } } }
+] }
+Transform { translation 1 0 -3 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.8 0.4 transparency 0.5 } } geometry Sphere { radius 1 } } }

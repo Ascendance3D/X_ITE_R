@@ -1,0 +1,187 @@
+{
+ "settle": false,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 180,
+ "capture": [
+  4,
+  9,
+  16,
+  23,
+  30,
+  37,
+  44,
+  51,
+  58,
+  65,
+  72,
+  79,
+  86,
+  93,
+  100,
+  107,
+  114,
+  121,
+  128,
+  135,
+  142,
+  149,
+  156,
+  163,
+  170
+ ],
+ "dump": [
+  4,
+  9,
+  16,
+  23,
+  30,
+  37,
+  44,
+  51,
+  58,
+  65,
+  72,
+  79,
+  86,
+  93,
+  100,
+  107,
+  114,
+  121,
+  128,
+  135,
+  142,
+  149,
+  156,
+  163,
+  170,
+  179
+ ],
+ "events": [
+  {
+   "frame": 6,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 13,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 20,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 27,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 34,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 41,
+   "type": "key",
+   "key": "q"
+  },
+  {
+   "frame": 48,
+   "type": "key",
+   "key": "f"
+  },
+  {
+   "frame": 55,
+   "type": "key",
+   "key": "g"
+  },
+  {
+   "frame": 62,
+   "type": "key",
+   "key": "h"
+  },
+  {
+   "frame": 69,
+   "type": "key",
+   "key": "i"
+  },
+  {
+   "frame": 76,
+   "type": "key",
+   "key": "j"
+  },
+  {
+   "frame": 83,
+   "type": "key",
+   "key": "k"
+  },
+  {
+   "frame": 90,
+   "type": "key",
+   "key": "l"
+  },
+  {
+   "frame": 97,
+   "type": "key",
+   "key": "m"
+  },
+  {
+   "frame": 104,
+   "type": "key",
+   "key": "n"
+  },
+  {
+   "frame": 111,
+   "type": "key",
+   "key": "o"
+  },
+  {
+   "frame": 118,
+   "type": "key",
+   "key": "p"
+  },
+  {
+   "frame": 125,
+   "type": "key",
+   "key": "s"
+  },
+  {
+   "frame": 132,
+   "type": "key",
+   "key": "t"
+  },
+  {
+   "frame": 139,
+   "type": "key",
+   "key": "u"
+  },
+  {
+   "frame": 146,
+   "type": "key",
+   "key": "v"
+  },
+  {
+   "frame": 153,
+   "type": "key",
+   "key": "r"
+  },
+  {
+   "frame": 160,
+   "type": "key",
+   "key": "s"
+  },
+  {
+   "frame": 167,
+   "type": "key",
+   "key": "w"
+  }
+ ]
+}

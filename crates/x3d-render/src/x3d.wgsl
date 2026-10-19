@@ -136,6 +136,14 @@ struct DrawUniforms {
     inst_n0: vec4<f32>,
     inst_n1: vec4<f32>,
     inst_n2: vec4<f32>,
+    // X3DFogObject / FogContainer of the draw (the bound Fog or the innermost LocalFog): color and type,
+    // visibilityStart / visibilityRange, the fog matrix columns; x of fog_flags: X3D_FOG_COORDS.
+    fog_color_type: vec4<f32>,
+    fog_range: vec4<f32>,
+    fog_m0: vec4<f32>,
+    fog_m1: vec4<f32>,
+    fog_m2: vec4<f32>,
+    fog_flags: vec4<u32>,
 };
 
 @group(0) @binding(0) var<uniform> frame: FrameUniforms;
@@ -191,6 +199,8 @@ struct VIn {
     @location(6) tex_coord2: vec4<f32>,
     @location(7) tex_coord3: vec4<f32>,
     @location(8) tangent: vec4<f32>,
+    // x3d_FogDepth (FogCoordinate).
+    @location(9) fog_depth: f32,
 };
 
 struct VOut {
@@ -212,6 +222,8 @@ struct VOut {
     // Vertex2.glsl TBN (X3D_NORMALS and X3D_TANGENTS): tangent, bitangent.
     @location(13) tbn_t: vec3<f32>,
     @location(14) tbn_b: vec3<f32>,
+    // Fog2.glsl fogDepth (X3D_FOG_COORDS).
+    @location(15) fog_depth: f32,
 };
 
 // Vertex2.glsl with the x3d_LineStipple attribute (LineProperties): start point, length so far.
@@ -225,11 +237,12 @@ struct VInStipple {
     @location(6) tex_coord2: vec4<f32>,
     @location(7) tex_coord3: vec4<f32>,
     @location(8) tangent: vec4<f32>,
+    @location(9) fog_depth: f32,
 };
 
 @vertex
 fn vs_stipple(in: VInStipple) -> VOut {
-    var out = vertex_common(VIn(in.position, in.normal, in.tex_coord, in.color, in.tex_coord1, in.tex_coord2, in.tex_coord3, in.tangent));
+    var out = vertex_common(VIn(in.position, in.normal, in.tex_coord, in.color, in.tex_coord1, in.tex_coord2, in.tex_coord3, in.tangent, in.fog_depth));
     out.point = vec3<f32>(in.tex_coord.xy, 0.0);
     out.stipple = in.stipple.xyz;
     return out;
@@ -285,6 +298,7 @@ fn vertex_common(in: VIn) -> VOut {
     // tangent = x3d_NormalMatrix * x3d_Tangent .xyz; bitangent = cross (normal, tangent) * x3d_Tangent .w.
     out.tbn_t = normal_matrix * local_tangent;
     out.tbn_b = cross(out.normal, out.tbn_t) * in.tangent.w;
+    out.fog_depth = in.fog_depth;
 
     var p = frame.projection * t_vertex;
 
@@ -523,7 +537,7 @@ fn get_shadow_intensity(light: Light, vertex: vec3<f32>) -> f32 {
 
 // Perlin2.glsl
 fn rand1(co: vec2<f32>) -> f32 {
-    return fract(sin(dot(co.xy, vec2<f32>(12.9898, 78.233))) * 43758.5453);
+    return fract(sin(fma(co.y, 78.233, co.x * 12.9898)) * 43758.5453);
 }
 
 fn rand3(co: vec2<f32>, l: f32, t: f32) -> f32 {
@@ -2068,6 +2082,20 @@ fn get_scatter_pass_color(vertex: vec3<f32>, n: vec3<f32>, base_color: vec4<f32>
     return vec4<f32>(front_color, draw.ext[9].w);
 }
 
+// The fog interpolant (Fog2.glsl) of the draw's fog (uniform x3d_Fog set by FogContainer.setShaderUniforms).
+fn get_draw_fog_interpolant(vertex: vec3<f32>) -> f32 {
+    let visibility_start = draw.fog_range.x;
+    let visibility_range = draw.fog_range.y - visibility_start;
+    let fog_matrix = mat3x3<f32>(draw.fog_m0.xyz, draw.fog_m1.xyz, draw.fog_m2.xyz);
+    let d_v = max(length(fog_matrix * vertex) - visibility_start, 0.0);
+
+    if (u32(draw.fog_color_type.w) == 1u) {
+        return max(visibility_range - d_v, 0.0) / visibility_range;
+    }
+
+    return exp(-d_v / max(visibility_range - d_v, 0.001));
+}
+
 // Fog2.glsl getFogInterpolant: 0 is the fog color, 1 the material color.
 fn get_fog_interpolant(vertex: vec3<f32>) -> f32 {
     let visibility_start = frame.fog_range.x;
@@ -2134,16 +2162,20 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
         mats[k] = vec4<f32>(1.0);
     }
     var normal_uv = in.vertex;
-    let mat_count = select(5u, 21u, draw.ext_flags.x != 0u);
+    // Material (Phong): ambient and shininess textures in kinds 5 and 6.
+    let mat_count = select(select(5u, 7u, draw.pbr_flags.x == 0u), 21u, draw.ext_flags.x != 0u);
     for (var k = 0u; k < mat_count; k = k + 1u) {
         let u = draw.mat_tex[k];
         if (u.x != 0u) {
-            var tc = get_tex_coord(tex_input, u.z, u.w);
+            // An index past X3D_NUM_TEXTURE_TRANSFORMS / X3D_NUM_TEXTURE_COORDINATES reads the last element (ANGLE clamps).
+            var tc = get_tex_coord(tex_input, min(u.z, max(draw.tex_counts.w, 1u) - 1u), min(u.w, max(draw.tex_counts.z, 1u) - 1u));
             if (u.y == 1u) {
                 tc.y = 1.0 - tc.y;
             }
             let c = sample_slot(u.x, tc);
-            let srgb = k < 2u || (k == 2u && draw.pbr_flags.x == 2u) || k == 6u || k == 10u || k == 18u || k == 20u;
+            // Material (Phong): diffuse, emissive, specular and ambient are sRGB; shininess, occlusion
+            // and normal are not.
+            let srgb = select(k < 2u || (k == 2u && draw.pbr_flags.x == 2u) || k == 6u || k == 10u || k == 18u || k == 20u, k < 3u || k == 5u, draw.pbr_flags.x == 0u);
             mats[k] = select(c, vec4<f32>(srgb_to_linear(c.rgb), c.a), linear && srgb);
             if (k == 4u) {
                 normal_uv = tc;
@@ -2180,6 +2212,38 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
         }
     }
 
+    // Normal2.glsl getNormalInfo.
+    let normals = draw.pbr_flags.w == 1u && !(frame.viewport.w == 1.0);
+    var t: vec3<f32>;
+    var b: vec3<f32>;
+    var ng: vec3<f32>;
+
+    if (normals && draw.pbr_flags.z == 1u) {
+        t = normalize(in.tbn_t);
+        b = normalize(in.tbn_b);
+        ng = normalize(in.normal);
+    } else {
+        if (length(uv_dx) <= 1e-2) {
+            uv_dx = vec2<f32>(1.0, 0.0);
+        }
+        if (length(uv_dy) <= 1e-2) {
+            uv_dy = vec2<f32>(0.0, 1.0);
+        }
+        let t_ = (uv_dy.y * vertex_dx - uv_dx.y * vertex_dy) / (uv_dx.x * uv_dy.y - uv_dy.x * uv_dx.y);
+        // Normals are either present as vertex attributes or approximated (generateFlatNormal
+        // for 2D and 3D geometry).
+        ng = select(normalize(in.normal), flat_normal, !normals && draw.flags2.z >= 2u);
+        t = normalize(t_ - ng * dot(ng, t_));
+        b = cross(ng, t);
+    }
+
+    if (!front_facing) {
+        t = -t;
+        b = -b;
+        ng = -ng;
+    }
+
+
     if (draw.pbr_flags.x != 0u) {
         // MaterialInfo2.glsl / SpecularGlossiness2.glsl getBaseColor.
         let alpha = 1.0 - draw.emissive_transparency.w;
@@ -2197,37 +2261,6 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
 
         // X3D_TEXTURE_PROJECTION
         base_color = vec4<f32>(base_color.rgb * projector_color, base_color.a);
-
-        // Normal2.glsl getNormalInfo.
-        let normals = draw.pbr_flags.w == 1u && !(frame.viewport.w == 1.0);
-        var t: vec3<f32>;
-        var b: vec3<f32>;
-        var ng: vec3<f32>;
-
-        if (normals && draw.pbr_flags.z == 1u) {
-            t = normalize(in.tbn_t);
-            b = normalize(in.tbn_b);
-            ng = normalize(in.normal);
-        } else {
-            if (length(uv_dx) <= 1e-2) {
-                uv_dx = vec2<f32>(1.0, 0.0);
-            }
-            if (length(uv_dy) <= 1e-2) {
-                uv_dy = vec2<f32>(0.0, 1.0);
-            }
-            let t_ = (uv_dy.y * vertex_dx - uv_dx.y * vertex_dy) / (uv_dx.x * uv_dy.y - uv_dy.x * uv_dx.y);
-            // Normals are either present as vertex attributes or approximated (generateFlatNormal
-            // for 2D and 3D geometry).
-            ng = select(normalize(in.normal), flat_normal, !normals && draw.flags2.z >= 2u);
-            t = normalize(t_ - ng * dot(ng, t_));
-            b = cross(ng, t);
-        }
-
-        if (!front_facing) {
-            t = -t;
-            b = -b;
-            ng = -ng;
-        }
 
         var n = ng;
 
@@ -2278,8 +2311,12 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
             alpha = alpha * in.color.a;
         }
 
-        // X3D_PHONG_MATERIAL getDiffuseColor: getTextureColor (diffuseColor, specularColor).
-        if (phong && textured) {
+        // X3D_PHONG_MATERIAL getDiffuseColor: X3D_DIFFUSE_TEXTURE, else getTextureColor (diffuseColor, specularColor).
+        if (phong && has_mat(0u)) {
+            let c = vec4<f32>(diffuse_color, alpha) * mats[0];
+            diffuse_color = c.rgb;
+            alpha = c.a;
+        } else if (phong && textured) {
             let c = get_texture_color(vec4<f32>(diffuse_color, alpha), vec4<f32>(draw.specular_shininess.xyz, alpha), textures);
             diffuse_color = c.rgb;
             alpha = c.a;
@@ -2292,20 +2329,57 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
         }
 
         if (draw.flags.y == 1u) {
-            let ambient_color = draw.diffuse_ambient.w * diffuse_color;
+            // getAmbientColor, getSpecularColor, getShininessFactor: the Material textures.
+            var ambient_color = draw.diffuse_ambient.w * diffuse_color;
+            var specular_color = draw.specular_shininess.xyz;
+            var shininess = draw.specular_shininess.w;
+
+            if (has_mat(5u)) {
+                ambient_color = ambient_color * mats[5].rgb;
+            }
+
+            if (has_mat(2u)) {
+                specular_color = specular_color * mats[2].rgb;
+            }
+
+            if (has_mat(6u)) {
+                shininess = shininess * mats[6].a;
+            }
+
             // Shading FLAT: X3DMaterialNode leaves out X3D_NORMALS for 2D and 3D geometry.
             var N = select(normalize(in.normal), flat_normal, frame.viewport.w == 1.0 && draw.flags2.z >= 2u);
             if (!front_facing && draw.flags2.z >= 2u) {
                 N = -N;
             }
-            final_color = vec4<f32>(get_material_color(in.vertex, N, ambient_color, diffuse_color, draw.specular_shininess.xyz, draw.specular_shininess.w), alpha);
+            // getNormalVector: X3D_NORMAL_TEXTURE.
+            if (has_mat(4u)) {
+                var ntex = mats[4].rgb * 2.0 - vec3<f32>(1.0);
+                ntex = ntex * vec3<f32>(vec2<f32>(draw.pbr.z), 1.0);
+                ntex = normalize(ntex);
+                N = normalize(mat3x3<f32>(t, b, ng) * ntex);
+            }
+
+            final_color = vec4<f32>(get_material_color(in.vertex, N, ambient_color, diffuse_color, specular_color, shininess), alpha);
         } else {
             final_color = vec4<f32>(vec3<f32>(0.0), alpha);
         }
 
-        final_color = vec4<f32>(final_color.rgb + draw.emissive_transparency.xyz, final_color.a);
+        // X3D_OCCLUSION_TEXTURE
+        if (has_mat(3u)) {
+            final_color = vec4<f32>(mix(final_color.rgb, final_color.rgb * mats[3].r, draw.pbr.w), final_color.a);
+        }
 
-        if (textured && !phong) {
+        var emissive_color = draw.emissive_transparency.xyz;
+
+        if (has_mat(1u)) {
+            emissive_color = emissive_color * mats[1].rgb;
+        }
+
+        final_color = vec4<f32>(final_color.rgb + emissive_color, final_color.a);
+
+        if (!phong && has_mat(0u)) {
+            final_color = final_color * mats[0];
+        } else if (textured && !phong) {
             final_color = get_texture_color(final_color, vec4<f32>(draw.specular_shininess.xyz, alpha), textures);
         }
     } else {
@@ -2355,8 +2429,17 @@ fn fs_main(in: VOut, @builtin(front_facing) front_facing: bool) -> @location(0) 
     }
 
     // Fragment2.glsl: finalColor .rgb = getFogColor (finalColor .rgb); the Background has no fog.
-    if (u32(frame.fog_color_type.w) != 0u && draw.flags2.w == 0u) {
-        final_color = vec4<f32>(mix(frame.fog_color_type.xyz, final_color.rgb, get_fog_interpolant(in.vertex)), final_color.a);
+    if (u32(draw.fog_color_type.w) != 0u && draw.flags2.w == 0u) {
+        var interpolant: f32;
+
+        if (draw.fog_flags.x != 0u) {
+            // Fog2.glsl X3D_FOG_COORDS.
+            interpolant = clamp(1.0 - in.fog_depth, 0.0, 1.0);
+        } else {
+            interpolant = get_draw_fog_interpolant(in.vertex);
+        }
+
+        final_color = vec4<f32>(mix(draw.fog_color_type.xyz, final_color.rgb, interpolant), final_color.a);
     }
 
     // finalColor .rgb = toneMap (finalColor .rgb), also for the Background (the default

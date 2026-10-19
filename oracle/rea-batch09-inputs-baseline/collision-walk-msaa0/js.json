@@ -1,0 +1,352 @@
+{
+  "ok": true,
+  "poses": {
+    "30": {
+      "position": [
+        0,
+        1.6,
+        9.80480019140625
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        1.6,
+        9.491200095703125
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        1.6,
+        9.1776
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        1.6,
+        7.92320019140625
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "68": {
+      "position": [
+        0,
+        1.6,
+        7.296000287109375
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "74": {
+      "position": [
+        0,
+        1.6,
+        6.8256
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "90": {
+      "position": [
+        0,
+        1.6,
+        5.571200191406248
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        0,
+        1.6,
+        4.787200095703123
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "108": {
+      "position": [
+        0,
+        1.6,
+        4.1600001914062466
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "114": {
+      "position": [
+        0,
+        1.6,
+        3.689600191406246
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "125": {
+      "position": [
+        0,
+        1.6,
+        2.827200287109372
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "140": {
+      "position": [
+        0,
+        1.6,
+        1.651200287109372
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "169": {
+      "position": [
+        0,
+        1.6,
+        0.4752002871093719
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    },
+    "170": {
+      "position": [
+        0,
+        1.6,
+        0.4752002871093719
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "WALK",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    enabled FALSE\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"\"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    enabled FALSE\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    enabled FALSE\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    enabled FALSE\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "68": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    enabled FALSE\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "74": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  enabled FALSE\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    enabled FALSE\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "90": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  enabled FALSE\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    enabled FALSE\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "100": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  enabled FALSE\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc Ke \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "108": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  enabled FALSE\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  children DEF C5 Collision {\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc Ke \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "114": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  enabled FALSE\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  enabled FALSE\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  enabled FALSE\n  children DEF C5 Collision {\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc Ke Kf \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "125": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  enabled FALSE\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  enabled FALSE\n  children DEF C5 Collision {\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc Ke Kf Kb \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "140": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  enabled FALSE\n  children DEF C5 Collision {\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc Ke Kf Kb Kd \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "169": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  enabled FALSE\n  children DEF C5 Collision {\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc Ke Kf Kb Kd C2:true T2:5.166666626930237 \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n",
+    "170": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nNavigationInfo {\n  type \"WALK\"\n  speed 4\n}\n\nBackground {\n  skyColor 0.2 0.25 0.3\n}\n\nDirectionalLight {\n  intensity 0.9\n  ambientIntensity 0.3\n  direction -0.3 -0.4 -1\n}\n\nViewpoint {\n  position 0 1.6 12\n}\n\nTransform {\n  translation 0 -0.1 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.4 0.4 0.4\n      }\n    }\n    geometry Box {\n      size 40 0.2 40\n    }\n  }\n}\n\nDEF C1 Collision {\n  children Transform {\n    translation 0 1.5 9\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.3 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C2 Collision {\n  proxy Shape {\n    geometry Box {\n      size 8 3 0.4\n    }\n  }\n  children Transform {\n    translation 0 1.5 6\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.8 0.3\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C3 Collision {\n  proxy Group { }\n  children Transform {\n    translation 0 1.5 3\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.3 0.3 0.8\n        }\n      }\n      geometry Box {\n        size 8 3 0.4\n      }\n    }\n  }\n}\n\nDEF C4 Collision {\n  enabled FALSE\n  children DEF C5 Collision {\n    children Transform {\n      translation 0 1.5 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.8 0.8 0.3\n          }\n        }\n        geometry Box {\n          size 8 3 0.4\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 5 1 8\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.9 0.9 0.9\n      }\n    }\n    geometry Box {\n      size 1 2 1\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"C1:true T1:1.1333333253860474 Ka C1:false Kc Ke Kf Kb Kd C2:true T2:5.166666626930237 \"\n  initializeOnly SFNode   c1 USE C1\n  initializeOnly SFNode   c2 USE C2\n  initializeOnly SFNode   c3 USE C3\n  initializeOnly SFNode   c4 USE C4\n  initializeOnly SFNode   c5 USE C5\n  inputOnly      SFBool   on_a1\n  inputOnly      SFTime   on_ct1\n  inputOnly      SFBool   on_a2\n  inputOnly      SFTime   on_ct2\n  inputOnly      SFBool   on_a3\n  inputOnly      SFBool   on_a4\n  inputOnly      SFBool   on_a5\n\n  url \"javascript:\nfunction on_a1 (v) { log = log + 'C1:' + v + ' '; }\nfunction on_ct1 (v) { log = log + 'T1:' + (v - 946684800) + ' '; }\nfunction on_a2 (v) { log = log + 'C2:' + v + ' '; }\nfunction on_ct2 (v) { log = log + 'T2:' + (v - 946684800) + ' '; }\nfunction on_a3 (v) { log = log + 'C3:' + v + ' '; }\nfunction on_a4 (v) { log = log + 'C4:' + v + ' '; }\nfunction on_a5 (v) { log = log + 'C5:' + v + ' '; }\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') c1 .enabled = false;\n   if (k == 'b') c1 .enabled = true;\n   if (k == 'c') c2 .enabled = false;\n   if (k == 'd') c2 .enabled = true;\n   if (k == 'e') c5 .enabled = true;\n   if (k == 'f') c4 .enabled = false;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE C1.isActive TO R.on_a1\nROUTE C1.collideTime TO R.on_ct1\nROUTE C2.isActive TO R.on_a2\nROUTE C2.collideTime TO R.on_ct2\nROUTE C3.isActive TO R.on_a3\nROUTE C4.isActive TO R.on_a4\nROUTE C5.isActive TO R.on_a5\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
