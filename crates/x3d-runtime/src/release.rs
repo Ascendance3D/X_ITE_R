@@ -396,7 +396,7 @@ impl Runtime {
 
         let alive = |t: &Task| match t {
             Task::ScriptLoad(n) | Task::ScriptLoaded(n, _) | Task::UrlLoad(n, _) | Task::ScriptFetch(n) => !dead.contains(n),
-            Task::ExternLoad(..) => true,
+            Task::ExternLoad(..) | Task::BrowserLoad(_) => true,
         };
 
         self.tasks.retain(alive);

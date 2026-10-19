@@ -504,8 +504,39 @@ const Browser =
    print (... args)            { println (... args); },
    println (... args)          { println (... args); },
    createVrmlFromString (s)    { return new classes .MFNode (... X ("createVrml", String (s), currentScript) .map (R .bind (null)) .map (id => typeof id === "number" ? nodeWrapper (id) : id)); },
-   createX3DFromString (s)     { return executionContext (currentScript); },
-   createVrmlFromURL (url, node, event) { X ("createVrmlFromURL", A (url), A (node), String (event), currentScript); },
+   createX3DFromString (s)     { return browserScene ("string", String (s)); },
+   createX3DFromURL (url, node, event)
+   {
+      if (arguments .length === 3)
+         return Browser .createVrmlFromURL (url, node, event);
+
+      if (!(url instanceof classes .MFString))
+         throw new Error ("Browser.createX3DFromURL: url must be of type MFString.");
+
+      return browserScene ("url", url .toArray ());
+   },
+   createVrmlFromURL (url, node, event)
+   {
+      node  = node instanceof SFNodeBase ? node : null;
+      event = String (event);
+
+      if (!(url instanceof classes .MFString))
+         throw new Error ("Browser.createVrmlFromURL: url must be of type MFString.");
+
+      if (!node)
+         throw new Error ("Browser.createVrmlFromURL: node must be of type X3DNode.");
+
+      const field = node .getField (event);
+
+      if (!field .isInput ())
+         throw new Error (`Browser.createVrmlFromURL: event named '${event}' must be a input field.`);
+
+      if (field .getType () !== X3DConstants .MFNode)
+         throw new Error (`Browser.createVrmlFromURL: event named '${event}' must be of type MFNode.`);
+
+      // The event is sent once the scene is complete; a scene that fails to load sends nothing.
+      browserScene ("url", url .toArray ()) .then (scene => field .setValue (scene .rootNodes), () => { });
+   },
    loadURL ()                  { return Promise .resolve (); },
    addRoute (a, b, c, d)       { X ("addRoute", currentScript, A (a), String (b), A (c), String (d)); },
    deleteRoute (a, b, c, d)    { X ("deleteRoute", currentScript, A (a), String (b), A (c), String (d)); },
@@ -524,6 +555,38 @@ const Browser =
    getScriptNode ()            { return nodeWrapper (currentScript); },
    getComponent (name, level)  { return componentInfo (X ("browserComponent", String (name), level | 0)); },
    getProfile (name)           { const p = profileInfo (String (name)); if (!p .components .length && X ("profileComponents", String (name)) === null) throw new Error (`Profile '${name}' is not supported.`); return p; },
+};
+
+// X3DBrowser.createX3DFromString / createX3DFromURL: the scene is made by the runtime (browser_load.rs), which
+// settles the promise once the scene is complete (`__settle`).
+const settlers = new Map ();
+
+function browserScene (kind, argument)
+{
+   return new Promise ((resolve, reject) =>
+   {
+      const r = X ("browserScene", currentScript, kind, argument);
+
+      if (r .error !== undefined)
+         reject (new Error (r .error));
+      else
+         settlers .set (r .id, { resolve, reject });
+   });
+}
+
+global .__settle = function (id, ok, value)
+{
+   const settler = settlers .get (id);
+
+   settlers .delete (id);
+
+   if (!settler)
+      return;
+
+   if (ok)
+      settler .resolve (executionContext (- (value + 1)));
+   else
+      settler .reject (new Error (value));
 };
 
 // X3DBrowser.getBrowserOption …: `getField (name) .getValue ()`; X3DBaseNode.getField throws for
@@ -555,7 +618,22 @@ function profileInfo (name)
    return Object .freeze ({ name, title: undefined, providerURL: undefined, components: componentArray (components || [ ]) });
 }
 
+// One object per execution context (`Browser .currentScene === Browser .currentScene`).
+const contextObjects = new Map ();
+
 function executionContext (script)
+{
+   const key = X ("ctxOf", script);
+
+   let object = contextObjects .get (key);
+
+   if (!object)
+      contextObjects .set (key, object = makeExecutionContext (- (key + 1)));
+
+   return object;
+}
+
+function makeExecutionContext (script)
 {
    const info = () => X ("sceneInfo", script);
    const node = n => R (n);

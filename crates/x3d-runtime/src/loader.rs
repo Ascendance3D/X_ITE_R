@@ -203,7 +203,8 @@ impl Runtime {
                     }
                 }
 
-                if loader.data_as_string && r.scheme() == "data" {
+                // A base64 data URL is fetched like any other (the browser decodes it); one without a comma is no URL fetch can read.
+                if loader.data_as_string && r.scheme() == "data" && !candidate.contains(',') {
                     return Err("TypeError: Failed to fetch".to_string());
                 }
 

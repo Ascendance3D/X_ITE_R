@@ -30,6 +30,7 @@
 //! loading and exactly one frame (FileLoader.set_loadCount__ awaits `browser .nextFrame ()`).
 
 pub mod browser_options;
+pub mod browser_load;
 pub mod bullet;
 pub mod geo;
 pub mod events;
@@ -292,6 +293,8 @@ pub enum Task {
     ExternLoad(ExternId, u64),
     /// A Script whose source is fetched (a macrotask, requested by the Script's microtask).
     ScriptFetch(NodeId),
+    /// X3DBrowser.createX3DFromURL: the fetch of request `id`.
+    BrowserLoad(u64),
 }
 
 pub struct Runtime {
@@ -344,6 +347,12 @@ pub struct Runtime {
     pub pending_audio_decodes: Vec<(NodeId, Vec<u8>)>,
     /// `await browser .nextFrame ()` continuations, resolved after the finishEvents of a frame.
     pub frame_waiters: Vec<inline::FrameWaiter>,
+    /// createX3DFromURL requests that have not been fetched (by request id).
+    pub browser_loads: HashMap<u64, browser_load::BrowserLoad>,
+    /// Scenes of createX3DFromString / createX3DFromURL waiting for their loadCount, and then for the next frame.
+    pub pending_browser: Vec<browser_load::PendingBrowserScene>,
+    pub browser_frame_waiters: Vec<browser_load::PendingBrowserScene>,
+    pub browser_request_id: u64,
     /// EXTERNPROTO scenes that were parsed and set up, waiting like `pending_scenes` (see
     /// `extern_proto.rs`, `extern_scene`).
     pub pending_externs: Vec<PendingExtern>,
@@ -518,6 +527,10 @@ impl Runtime {
             defer_audio_decodes: false,
             pending_audio_decodes: vec![],
             frame_waiters: vec![],
+            browser_loads: HashMap::new(),
+            pending_browser: vec![],
+            browser_frame_waiters: vec![],
+            browser_request_id: 0,
             pending_externs: vec![],
             extern_frame_waiters: vec![],
             extern_states: HashMap::new(),
@@ -968,6 +981,7 @@ impl Runtime {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
                 Task::ScriptFetch(node) => self.script_load(node),
+                Task::BrowserLoad(id) => self.browser_load(id),
                 Task::ScriptLoad(..) | Task::ScriptLoaded(..) => {}
             }
         }
@@ -981,6 +995,7 @@ impl Runtime {
     /// Is a load of an Inline or EXTERNPROTO still in progress (X3DBrowser loadCount > 0)?
     pub fn has_unfinished_loads(&self) -> bool {
         !self.pending_scenes.is_empty()
+            || self.browser_loads_pending()
             || !self.frame_waiters.is_empty()
             || !self.pending_externs.is_empty()
             || !self.extern_frame_waiters.is_empty()

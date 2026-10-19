@@ -26,6 +26,10 @@ pub trait ScriptHost {
     /// Script.call__ / set_field__.
     fn call(&mut self, rt: &mut Runtime, node: NodeId, call: ScriptCall) -> Result<(), ScriptError>;
 
+    /// A promise of X3DBrowser.createX3DFromString / createX3DFromURL settles: request `id` made the scene with this
+    /// root context, or was rejected with the message.
+    fn settle(&mut self, _rt: &mut Runtime, _id: u64, _outcome: Result<CtxId, String>) {}
+
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
 
