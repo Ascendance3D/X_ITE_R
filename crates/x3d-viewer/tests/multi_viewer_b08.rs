@@ -723,6 +723,11 @@ fn rust_frames(rig: &Rig, samples: u32, worlds: &[&str]) -> Vec<Vec<Vec<u8>>> {
         // The oracle page traverses 8 warm-up frames at t0 while the worlds load (x3d-drive does the same).
         let c = v.core().unwrap();
         c.frame_rate = 60.0;
+        // The oracle page returns 1 / dt from getCurrentFrameRate (): a RigidBodyCollection's moving-average time step
+        // (and so the number of substeps) depends on it. Left to measure the rate from the clock deltas, which are
+        // differences of two doubles near 9.5e8, the time step is off by up to 1e-6 relative and the box falls
+        // a fraction of a frame ahead (frame 9 on: rb-a 0.58% at MSAA 4). x3d-drive pins it the same way.
+        c.pinned_frame_rate = Some(1.0 / DT);
 
         for _ in 0..std::env::var("MV_WARM").ok().and_then(|v| v.parse().ok()).unwrap_or(8) {
             c.step(T0);
@@ -782,9 +787,8 @@ fn oracle_pair(samples: u32, pair: [&'static str; 2]) {
                 eprintln!("MULTIVIEW msaa={samples} world={w} frame={k}: X_ITE pair vs X_ITE alone {a:.5}; Rust pair vs X_ITE pair {b:.5}; Rust alone vs X_ITE alone {c:.5}; Rust pair vs Rust alone {e:.5}");
                 worst = worst.max(a).max(b).max(c).max(e);
 
-                // 0.5% everywhere (owner decision 2026-10-18: no wider limit). rb-a at MSAA 4, frame 40 is 0.579% with
-                // one viewer alone, too (a single-viewer Rust-vs-X_ITE difference of the resting box edge), so
-                // x_ite_two_canvases_rigid_bodies_msaa4 fails until that difference is fixed.
+                // 0.5% everywhere (owner decision 2026-10-18: no wider limit). The rb-a MSAA 4 difference (0.579%) was the
+                // harness measuring the frame rate; with it pinned to 1 / dt, like the oracle page, rb-a and rb-b are exact.
                 let limit = 0.005;
 
                 if a > 0.005 || b > limit || c > limit || e != 0.0 {
