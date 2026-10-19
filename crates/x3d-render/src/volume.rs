@@ -718,37 +718,16 @@ pub fn build(sg: &Sg, n: NodeId, ty: &str, model_view: &Matrix4, quality: crate:
     VolumeDraw { model_view: f32x16(&mv), tex_matrix: f32x16(&texture_matrix), normal_matrix: nm.map(|v| v as f32), planes: num_planes(quality), size: size as f32, program: Rc::new(program), values, textures }
 }
 
-thread_local! {
-    static VOXELS: std::cell::RefCell<HashMap<(u64, NodeId), (String, Option<NodeId>)>> = std::cell::RefCell::new(HashMap::new());
-}
-
 /// The `voxels` node of a volume. X_ITE's IsoSurfaceVolumeData and SegmentedVolumeData read `voxels`
-/// once, in initialize () (only VolumeData listens to the field): a later assignment is ignored. The
-/// first sight stands for initialize () of a parsed node; a node a Script created with `createNode`
-/// (in `dynamic_nodes` and already written to) was initialized with the default voxels.
+/// once, in initialize () (only VolumeData listens to the field): a later assignment is ignored.
 fn volume_voxels(sg: &Sg, n: NodeId, ty: &str) -> Option<NodeId> {
     if ty == "VolumeData" {
         return sg.node(n, "voxels");
     }
-
-    VOXELS.with(|m| {
-        let mut m = m.borrow_mut();
-
-        if m.len() > 512 {
-            m.clear();
-        }
-
-        let key = (sg.rt.uid, n);
-
-        match m.get(&key) {
-            Some((t, v)) if t == ty => *v,
-            _ => {
-                let v = if sg.rt.dynamic_nodes.contains(&n) && sg.rt.stamp(n) > 0 { None } else { sg.node(n, "voxels") };
-                m.insert(key, (ty.to_string(), v));
-                v
-            }
-        }
-    })
+    match sg.rt.nrt(n).map(|rt| &rt.state) {
+        Some(x3d_runtime::nodes::State::Volume { voxels }) => *voxels,
+        _ => None,
+    }
 }
 
 /// The write stamps of what makes a style rebuild its volume's shader (X_ITE: `renderStyleNode

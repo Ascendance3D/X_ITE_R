@@ -45,6 +45,8 @@ pub enum State {
     Projector { texture: Option<NodeId> },
     /// ComposedTexture3D.textureNodes.
     Composed3D(Vec<NodeId>),
+    /// IsoSurfaceVolumeData and SegmentedVolumeData capture `voxels` during initialize ().
+    Volume { voxels: Option<NodeId> },
     /// RenderedTexture: checkUpdate, lastUpdate (Date.now () ms), the time of the first
     /// renderTexture (`None` before), and the headlights depth map passes left in the
     /// DependentRenderer's global lights (`leaks`; `display_leaks`: those of this frame's pass).
@@ -229,6 +231,13 @@ impl Runtime {
         };
 
         match name {
+            "IsoSurfaceVolumeData" | "SegmentedVolumeData" => {
+                let voxels = self.pre_value(node, "voxels").and_then(|v| match v {
+                    FieldValue::SFNode(n) => *n,
+                    _ => None,
+                });
+                self.nrt_mut(node).state = State::Volume { voxels };
+            }
             "TimeSensor" => self.time_sensor_initialize(node),
             n if is_interpolator(n) => self.interp_initialize(node, n),
             "BooleanFilter" => self.interest(node, "set_boolean", Cb::BooleanFilterSetBoolean),
