@@ -1,0 +1,29 @@
+#X3D V4.1 utf8
+PROFILE Full
+COMPONENT Texturing3D:2
+COMPONENT VolumeRendering:4
+META "generator" "oracle/tools/gen_rem_volume_styles.py"
+NavigationInfo { type [ "NONE" ] headlight FALSE }
+Background { skyColor [ 0.12 0.16 0.3 ] }
+Viewpoint { position 0 0 4 }
+DEF G Group { children [ DEF VD VolumeData { dimensions 2 2 2 renderStyle DEF S SilhouetteEnhancementVolumeStyle { silhouetteBoundaryOpacity 0.2 silhouetteRetainedOpacity 0.5 silhouetteSharpness 1 } voxels PixelTexture3D { image [ 1 8 8 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 16 39 39 16 0 0 0 0 39 65 65 39 0 0 0 0 39 65 65 39 0 0 0 0 16 39 39 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 16 39 39 16 0 0 0 16 65 96 96 65 16 0 0 39 96 134 134 96 39 0 0 39 96 134 134 96 39 0 0 16 65 96 96 65 16 0 0 0 16 39 39 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 39 65 65 39 0 0 0 39 96 134 134 96 39 0 0 65 134 191 191 134 65 0 0 65 134 191 191 134 65 0 0 39 96 134 134 96 39 0 0 0 39 65 65 39 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 39 65 65 39 0 0 0 39 96 134 134 96 39 0 0 65 134 191 191 134 65 0 0 65 134 191 191 134 65 0 0 39 96 134 134 96 39 0 0 0 39 65 65 39 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 16 39 39 16 0 0 0 16 65 96 96 65 16 0 0 39 96 134 134 96 39 0 0 39 96 134 134 96 39 0 0 16 65 96 96 65 16 0 0 0 16 39 39 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 16 39 39 16 0 0 0 0 39 65 65 39 0 0 0 0 39 65 65 39 0 0 0 0 16 39 39 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] } } ] }
+
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  initializeOnly SFNode g USE G
+  initializeOnly SFNode vd USE VD
+  initializeOnly SFNode s USE S
+  url "javascript:
+function on_key (k)
+{
+   if (k == 'a') vd .renderStyle = new MFNode (s);
+   if (k == 'b') s .silhouetteSharpness = 4;
+   if (k == 'c') vd .renderStyle = new MFNode ();
+   if (k == 'd') g .removeChildren = new MFNode (vd);
+   if (k == 'e') g .addChildren = new MFNode (vd);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
