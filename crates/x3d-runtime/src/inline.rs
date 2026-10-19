@@ -158,6 +158,7 @@ impl Runtime {
             .iter()
             .find(|p| p.ctx == root)
             .map(|p| p.scene_node)
+            .or_else(|| self.pending_browser.iter().find(|p| p.ctx == root).map(|p| p.scene_node))
             .or_else(|| self.pending_externs.iter().find(|p| p.ctx == root).map(|p| p.scene_node));
 
         let Some(scene_node) = scene_node else {
@@ -573,6 +574,10 @@ impl Runtime {
 
     /// FileLoader.set_loadCount__ (interest on the scene's loadCount).
     pub(crate) fn scene_load_count(&mut self, scene_node: NodeId) {
+        if self.browser_scene_loaded(scene_node) {
+            return;
+        }
+
         let inline = self.pending_scenes.iter().position(|p| p.scene_node == scene_node);
         let ext = self.pending_externs.iter().position(|p| p.scene_node == scene_node);
 
@@ -621,6 +626,8 @@ impl Runtime {
         for p in std::mem::take(&mut self.extern_frame_waiters) {
             self.extern_attach(p);
         }
+
+        self.browser_finish_frame();
 
         self.run_tasks();
 

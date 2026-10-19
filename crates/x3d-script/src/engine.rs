@@ -366,6 +366,22 @@ impl ScriptHost for QuickJsHost {
         })
     }
 
+    fn settle(&mut self, rt: &mut Runtime, id: u64, outcome: Result<x3d_scene::CtxId, String>) {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            if let Ok(f) = ctx.globals().get::<_, Function>("__settle") {
+                let _ = match outcome {
+                    Ok(c) => f.call::<_, ()>((id as f64, true, c as f64)),
+                    Err(m) => f.call::<_, ()>((id as f64, false, m)),
+                };
+            }
+
+            while ctx.execute_pending_job() {}
+            with_state(State::release_fresh);
+        });
+    }
+
     fn destroy_context(&mut self, node: NodeId) {
         self.select();
         self.destroy(node);
@@ -941,6 +957,12 @@ fn num_arg(ctx: &Ctx<'_>, args: &[Value<'_>], i: usize) -> f64 {
     args.get(i).map(|v| coerce_f64(ctx, v)).unwrap_or(f64::NAN)
 }
 
+/// The execution context a script-side `script` argument names: a Script node's id (its context), or
+/// `-(context + 1)` (-1 is the world, below that a scene made by createX3DFromString / createX3DFromURL).
+fn ctx_of_script(x: f64) -> x3d_scene::CtxId {
+    if x >= 0.0 { rt().scene.node(x as NodeId).ctx } else { (-(x + 1.0)) as x3d_scene::CtxId }
+}
+
 fn handle_arg(args: &[Value<'_>], i: usize) -> Option<u32> {
     args.get(i).and_then(arg_handle)
 }
@@ -1240,18 +1262,18 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "specVersion" => {
             let script = num_arg(ctx, a, 0);
-            let c = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let c = ctx_of_script(script);
             Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.spec_version_of(c))?.into_value())
         }
         "worldURL" => {
             let script = num_arg(ctx, a, 0);
-            let c = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let c = ctx_of_script(script);
             Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.world_url_of(c))?.into_value())
         }
         "createVrml" => {
             let text = str_arg(ctx, a, 0);
             let script = num_arg(ctx, a, 1);
-            let parent = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let parent = ctx_of_script(script);
 
             match rt().create_vrml_from_string(&text, parent) {
                 Ok(roots) => {
@@ -1269,11 +1291,35 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 Err(e) => throw(ctx, e.strip_prefix("Error: ").unwrap_or(&e)),
             }
         }
-        "createVrmlFromURL" => Ok(undefined),
+        "ctxOf" => Ok(Value::new_number(ctx.clone(), ctx_of_script(num_arg(ctx, a, 0)) as f64)),
+        // X3DBrowser.createX3DFromString / createX3DFromURL: the request, or the message of the rejection.
+        "browserScene" => {
+            let script = num_arg(ctx, a, 0);
+            let parent = ctx_of_script(script);
+            let node = (script >= 0.0).then_some(script as NodeId);
+            let o = Object::new(ctx.clone())?;
+
+            if str_arg(ctx, a, 1) == "string" {
+                match rt().browser_create_from_string(&str_arg(ctx, a, 2), parent, node) {
+                    Ok(id) => o.set("id", id as f64)?,
+                    Err(e) => o.set("error", e)?,
+                }
+            } else {
+                let urls: Vec<String> = a
+                    .get(2)
+                    .and_then(|v| v.as_array())
+                    .map(|arr| arr.iter::<Coerced<String>>().filter_map(Result::ok).map(|c| c.0).collect())
+                    .unwrap_or_default();
+
+                o.set("id", rt().browser_create_from_url(urls, parent, node) as f64)?;
+            }
+
+            Ok(o.into_value())
+        }
         "sfnodeFromString" => {
             let text = str_arg(ctx, a, 0);
             let script = num_arg(ctx, a, 1);
-            let parent = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let parent = ctx_of_script(script);
 
             match rt().sfnode_from_string(&text, parent) {
                 Ok(Some(n)) => Ok(Value::new_number(ctx.clone(), n as f64)),
@@ -1282,8 +1328,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "addRoute" | "deleteRoute" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let ctx_id = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let ctx_id = ctx_of_script(script);
             let (src, dst) = (a.get(1).and_then(arg_node).flatten(), a.get(3).and_then(arg_node).flatten());
             let (sf, df) = (str_arg(ctx, a, 2), str_arg(ctx, a, 4));
 
@@ -1303,8 +1349,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         // --- X3DScene / X3DExecutionContext (the script's own execution context)
         "sceneInfo" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let s = &rt().scene;
             let o = Object::new(ctx.clone())?;
             let root = s.scene_root(c);
@@ -1360,9 +1406,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "hasComponent" => {
             // X3DScene.hasComponent: the profile's (Full without one) or the scene's own components.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
             let s = &rt().scene;
             let profile = s.profile_of(c).unwrap_or("Full");
             let in_profile = s.table.profile(profile).is_some_and(|p| p.components.iter().any(|(n, l)| *n == name && level <= *l));
@@ -1383,9 +1429,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "addComponent" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let root = rt().scene.scene_root(ctx_of_script(script));
             let comps = scene_components_mut(&mut rt().scene, root);
 
             if comps.iter().any(|(n, _)| *n == name) {
@@ -1397,7 +1443,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "metaData" => {
             // X3DScene.setMetaData / addMetaData / removeMetaData.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
             let values: Vec<String> = match a.get(3).and_then(|v| v.as_array()) {
                 Some(arr) => arr.iter::<Value>().filter_map(|v| v.ok()).map(|v| coerce_string(ctx, &v)).collect(),
@@ -1408,7 +1454,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 return throw(ctx, "Couldn't add metadata: name is empty.");
             }
 
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let root = rt().scene.scene_root(ctx_of_script(script));
             let meta = scene_meta_mut(&mut rt().scene, root);
 
             match mode.as_str() {
@@ -1429,9 +1475,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "protoDecls" => {
             // protos / externprotos: name, isExternProto, fields (FieldDefinitionArray), urls.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let extern_ = a.get(1).is_some_and(coerce_bool);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
             let arr = Array::new(ctx.clone())?;
             let s = &rt().scene;
             let decls: Vec<(String, Vec<x3d_scene::Field>, bool, Option<Vec<String>>)> = if extern_ {
@@ -1481,8 +1527,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(arr.into_value())
         }
         "routeList" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let routes: Vec<_> = rt().scene.ctx(c).routes.iter().map(|r| (r.source_node, r.source_field.clone(), r.destination_node, r.destination_field.clone())).collect();
             let arr = Array::new(ctx.clone())?;
 
@@ -1499,10 +1545,10 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "rootNode" => {
             // X3DScene.addRootNode / removeRootNode.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let add = str_arg(ctx, a, 1) == "add";
             let node = a.get(2).and_then(arg_node).flatten();
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
             let roots = &mut rt().scene.ctx_mut(c).root_nodes;
 
             if add {
@@ -1520,9 +1566,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "namedNodeOp" => {
             // X3DExecutionContext.addNamedNode / removeNamedNode.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
 
             if mode == "remove" {
                 rt().scene.remove_named_node(c, &name);
@@ -1555,9 +1601,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "exportedNode" => {
             // X3DScene.addExportedNode / getExportedNode.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let root = rt().scene.scene_root(ctx_of_script(script));
 
             if mode == "get" {
                 return match rt().scene.get_exported_node(root, &name) {
@@ -1581,9 +1627,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "nodeArrays" => {
             // namedNodes (SFNode), importedNodes (X3DImportedNode), exportedNodes (X3DExportedNode).
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let which = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
             let s = &rt().scene;
             let arr = Array::new(ctx.clone())?;
 
@@ -1618,8 +1664,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(arr.into_value())
         }
         "sceneString" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let script = num_arg(ctx, a, 0);
+            let root = rt().scene.scene_root(ctx_of_script(script));
             let text = match str_arg(ctx, a, 1).as_str() {
                 "xml" if root == x3d_scene::ROOT => rt().scene.to_xml_string(),
                 "json" if root == x3d_scene::ROOT => rt().scene.to_json_string(),
@@ -1628,21 +1674,21 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "worldInfos" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let list: Vec<Option<NodeId>> = rt().world_infos.get(&c).map(|l| l.iter().map(|n| Some(*n)).collect()).unwrap_or_default();
             Ok(new_value_js(ctx, FieldValue::MFNode(list)))
         }
         "rootNodes" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let roots = rt().scene.ctx(c).root_nodes.clone();
             Ok(new_value_js(ctx, FieldValue::MFNode(roots)))
         }
         "createNode" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let ty = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
 
             match rt().create_node_script(c, &ty) {
                 Some(n) => Ok(node_js(ctx, Some(n))),
@@ -1650,9 +1696,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "createProto" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let ty = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
 
             match rt().create_proto_setup(c, &ty) {
                 Some(n) => Ok(node_js(ctx, Some(n))),
@@ -1660,9 +1706,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "namedNode" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let nn = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
 
             match rt().scene.get_named_node(c, &nn) {
                 Some(n) => Ok(node_js(ctx, Some(n))),
