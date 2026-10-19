@@ -1,0 +1,72 @@
+== created-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== created-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== environment-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== environment-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== events-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== events-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== fields-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== fields-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== parts-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+17 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== parts-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+17 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== textures-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== textures-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-basic MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-basic MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-fields MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-fields MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-invalid MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-invalid MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
