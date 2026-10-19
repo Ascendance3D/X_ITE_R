@@ -1,0 +1,84 @@
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 10 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 11 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 10 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 11 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 10 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 11 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 10 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 11 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 10 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 11 Some([Field((12, Pre(5))), Field((13, Pre(8)))]) Some(["12:ComposedShader", "13:LoadSensor"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+DBGCC 2 Some([Field((8, User(2))), Root(0)]) Some(["8:Script"])
+DBGCC 3 Some([Field((5, Pre(7))), Field((8, User(1))), Root(0)]) Some(["5:Shape", "8:Script"])
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+PASS scene text equal at frame 10
+PASS scene text equal at frame 24
+FAIL scene text equal at frame 32
+    --- 
+    +++ 
+    @@ -19 +19 @@
+    -      ShaderPart {
+    +      DEF _1 ShaderPart {
+    @@ -22 +22 @@
+    -      ShaderPart {
+    +      DEF _2 ShaderPart {
+FAIL scene text equal at frame 40
+    --- 
+    +++ 
+    @@ -19 +19 @@
+    -      ShaderPart {
+    +      DEF _1 ShaderPart {
+    @@ -22 +22 @@
+    -      ShaderPart {
+    +      DEF _2 ShaderPart {
+PASS scene text equal at frame 48
+FAIL scene text equal at frame 56
+    --- 
+    +++ 
+    @@ -19 +19 @@
+    -      ShaderPart {
+    +      DEF _1 ShaderPart {
+    @@ -22 +22 @@
+    -      ShaderPart {
+    +      DEF _2 ShaderPart {
+PASS scene text equal at frame 64
+PASS scene text equal at frame 119
+PASS scene text equal at frame 120
+PASS pose frame 10: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 12: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 24: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 32: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 40: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 48: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 56: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 64: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 119: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS pose frame 120: |dpos| 0.00e+00 |dcenter| 0.00e+00 dangle 0.00e+00 |dfovScale| 0.00e+00 viewer EXAMINE/EXAMINE viewpoint ''/''
+PASS    12.png  max   0  over      0 ( 0.000%)  diff      0  psnr    inf  ssim 1.0000
+PASS    24.png  max   0  over      0 ( 0.000%)  diff      0  psnr    inf  ssim 1.0000
+PASS    32.png  max   0  over      0 ( 0.000%)  diff      0  psnr    inf  ssim 1.0000
+PASS    40.png  max   0  over      0 ( 0.000%)  diff      0  psnr    inf  ssim 1.0000
+PASS    48.png  max   0  over      0 ( 0.000%)  diff      0  psnr    inf  ssim 1.0000
+PASS    56.png  max   0  over      0 ( 0.000%)  diff      0  psnr    inf  ssim 1.0000
+PASS    64.png  max   0  over      0 ( 0.000%)  diff      0  psnr    inf  ssim 1.0000
+
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+PASS images within tolerance (threshold 8, max 0.5%)
