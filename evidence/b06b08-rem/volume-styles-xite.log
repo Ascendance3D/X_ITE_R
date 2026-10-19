@@ -1,0 +1,16 @@
+style-boundary MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-boundary MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-cartoon MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-cartoon MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-composed MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-composed MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-edge MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-edge MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-opacitymap MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-opacitymap MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-projection MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-projection MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-silhouette MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-silhouette MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-tonemapped MSAA 0 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
+style-tonemapped MSAA 4 exit 0: 6 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels) 0 FAIL lines
