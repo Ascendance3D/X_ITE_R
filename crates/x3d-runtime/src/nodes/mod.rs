@@ -20,6 +20,7 @@ pub mod rigid_body_physics;
 pub mod sound;
 pub mod image_texture_3d;
 pub mod shaders;
+pub mod shader_include;
 
 use crate::*;
 

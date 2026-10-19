@@ -18,3 +18,9 @@ xml-invalid oracle/synthetic-rea-b08-shaders/xml-invalid.x3d oracle/synthetic-re
 xml-invalid oracle/synthetic-rea-b08-shaders/xml-invalid.x3d oracle/synthetic-rea-b08-shaders/xml-invalid.json 4
 textures-shared oracle/synthetic-rea-b08-shaders/textures-shared.wrl oracle/synthetic-rea-b08-shaders/textures-shared.json 0
 textures-shared oracle/synthetic-rea-b08-shaders/textures-shared.wrl oracle/synthetic-rea-b08-shaders/textures-shared.json 4
+include-unknown oracle/synthetic-rea-b08-shaders/include-unknown.wrl oracle/synthetic-rea-b08-shaders/include.json 0
+include-unknown oracle/synthetic-rea-b08-shaders/include-unknown.wrl oracle/synthetic-rea-b08-shaders/include.json 4
+include-utils oracle/synthetic-rea-b08-shaders/include-utils.wrl oracle/synthetic-rea-b08-shaders/include.json 0
+include-utils oracle/synthetic-rea-b08-shaders/include-utils.wrl oracle/synthetic-rea-b08-shaders/include.json 4
+include-tonemapping oracle/synthetic-rea-b08-shaders/include-tonemapping.wrl oracle/synthetic-rea-b08-shaders/include.json 0
+include-tonemapping oracle/synthetic-rea-b08-shaders/include-tonemapping.wrl oracle/synthetic-rea-b08-shaders/include.json 4
