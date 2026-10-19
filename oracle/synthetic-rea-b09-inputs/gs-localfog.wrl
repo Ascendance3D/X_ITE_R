@@ -1,0 +1,19 @@
+#X3D V4.1 utf8
+PROFILE Full
+Viewpoint { position 0 0 7 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.2 0.2 0.28 }
+Fog { color 0.2 0.3 0.8 visibilityRange 20 }
+Group { children [ LocalFog { color 1 0.4 0.1 visibilityRange 8 }
+  Transform { translation 0 0 -3 children GaussianSplats {
+  positions [ -1 0 0, 0 0.5 0.5, 1 0 -0.5, 0.5 -0.8 0.2, -0.6 0.9 -0.4 ]
+  orientations [ 0 0 0 1, 0 0 0.3826834 0.9238795, 0 0 0 1, 0.2 0.1 0 0.97, 0 0 0 1 ]
+  scales [ 0.3 0.1 0.1, 0.4 0.15 0.1, 0.2 0.2 0.2, 0.15 0.3 0.1, 0.25 0.1 0.2 ]
+  opacities [ 0.9 0.8 0.7 0.85 0.75 ]
+  sphericalHarmonicsDegree0Coef0 [ 1 0 0, 0 1 0, 0 0 1, 1 1 0, 0 1 1 ] } } ] }
+Transform { translation 0 0 3 children GaussianSplats {
+  positions [ -1 0 0, 0 0.5 0.5, 1 0 -0.5, 0.5 -0.8 0.2, -0.6 0.9 -0.4 ]
+  orientations [ 0 0 0 1, 0 0 0.3826834 0.9238795, 0 0 0 1, 0.2 0.1 0 0.97, 0 0 0 1 ]
+  scales [ 0.3 0.1 0.1, 0.4 0.15 0.1, 0.2 0.2 0.2, 0.15 0.3 0.1, 0.25 0.1 0.2 ]
+  opacities [ 0.9 0.8 0.7 0.85 0.75 ]
+  sphericalHarmonicsDegree0Coef0 [ 1 0 0, 0 1 0, 0 0 1, 1 1 0, 0 1 1 ] } }
