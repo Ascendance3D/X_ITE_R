@@ -1,0 +1,14 @@
+#X3D V3.3 utf8
+PROFILE Full
+COMPONENT ParticleSystems:2
+
+DEF PS ParticleSystem {
+  geometryType "POINT" maxParticles 16 particleLifetime 3 lifetimeVariation 0.25
+  emitter PointEmitter { position 0 0 0 direction 0 0 0 speed 3 variation 0.25 }
+  physics [ DEF BM BoundedPhysicsModel { damping 0.9 geometry DEF BG Box { size 1 1 1 } } ]
+}
+DEF PS2 ParticleSystem { maxParticles 0 physics [ DEF BM2 BoundedPhysicsModel { damping 0.5 geometry Box { size 1.5 1.5 1.5 } } ] }
+Switch { whichChoice -1 children [
+  Shape { geometry DEF B2 Sphere { radius 1.5 } }
+  Shape { geometry DEF B3 IndexedFaceSet { solid TRUE coord DEF CB3 Coordinate { point [ -1.2 -1.2 -1.2, 1.2 -1.2 -1.2, 1.2 1.2 -1.2, -1.2 1.2 -1.2, -1.2 -1.2 1.2, 1.2 -1.2 1.2, 1.2 1.2 1.2, -1.2 1.2 1.2 ] } coordIndex [ 0 3 2 1 -1 4 5 6 7 -1 0 1 5 4 -1 2 3 7 6 -1 1 2 6 5 -1 0 4 7 3 -1 ] } }
+] }
