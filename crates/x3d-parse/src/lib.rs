@@ -23,7 +23,7 @@ mod xml;
 
 pub use gltf2::{default_fetch as gltf_default_fetch, with_fetcher as with_gltf_fetcher};
 pub use html::parse_html_x3d;
-pub use parser::{ParseError, Parser};
+pub use parser::{ParseError, Parser, take_error_detail, take_error_warnings};
 pub use svg::{Quality as SvgQuality, set_quality as set_svg_quality};
 
 use std::io::Read;
@@ -143,9 +143,24 @@ pub fn parse_bytes(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
     Ok(scene)
 }
 
+/// [`parse_bytes`] for a JavaScript string (`createX3DFromString`): the text is the input as it is (no gunzip, no
+/// byte order mark removal, as `$.decodeText` leaves a string alone). The binary parsers' input is an ArrayBuffer, which a
+/// string is not, so they never match.
+pub fn parse_string(text: &str, world_url: &str) -> Result<Scene, LoadError> {
+    let mut scene = golden_gate_input(Vec::new(), text.to_string(), world_url)?;
+
+    scene.clone_counts = Some(scene.parse_clone_counts());
+    Ok(scene)
+}
+
 fn golden_gate(data: &[u8], world_url: &str) -> Result<Scene, LoadError> {
     let data = gunzip(data);
     let text = decode_text(&data);
+
+    golden_gate_input(data, text, world_url)
+}
+
+fn golden_gate_input(data: Vec<u8>, text: String, world_url: &str) -> Result<Scene, LoadError> {
 
     let mut svg_root = None;
 

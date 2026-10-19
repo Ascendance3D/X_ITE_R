@@ -443,6 +443,10 @@ impl Runtime {
                 return Err(e.message);
             }
             Err(x3d_parse::LoadError::Parse(e)) => {
+                for w in x3d_parse::take_error_warnings() {
+                    self.log_warn(w);
+                }
+
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
                 self.log_error(format!("Error: {}", e.message));
                 return Err(format!("Error: \n{e}"));

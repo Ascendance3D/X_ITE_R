@@ -143,7 +143,7 @@ impl Runtime {
 
         // The `X3DScene` objects of loads that are over carry nothing: they are candidates as soon as
         // no pending load needs them.
-        let needed: HashSet<NodeId> = self.pending_scenes.iter().map(|p| p.scene_node).chain(self.pending_externs.iter().map(|p| p.scene_node)).collect();
+        let needed: HashSet<NodeId> = self.pending_scenes.iter().map(|p| p.scene_node).chain(self.pending_externs.iter().map(|p| p.scene_node)).chain(self.pending_browser.iter().chain(self.browser_frame_waiters.iter()).map(|p| p.scene_node)).collect();
         let loose: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId)
             .filter(|n| matches!(self.scene.node(*n).kind, NodeKind::Internal("X3DScene")) && !needed.contains(n))
             .collect();
@@ -677,6 +677,7 @@ impl Runtime {
         h.ctxs.extend(self.release_ctxs.iter().copied());
         h.ctxs.extend(self.pending_scenes.iter().map(|p| p.ctx));
         h.ctxs.extend(self.frame_waiters.iter().map(|w| w.ctx));
+        h.ctxs.extend(self.pending_browser.iter().chain(self.browser_frame_waiters.iter()).map(|p| p.ctx));
 
         for p in self.pending_externs.iter().chain(self.extern_frame_waiters.iter()) {
             h.ctxs.insert(p.ctx);

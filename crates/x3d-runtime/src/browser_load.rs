@@ -32,13 +32,19 @@ pub struct PendingBrowserScene {
     pub scene_node: NodeId,
 }
 
+/// What a scene is parsed from: fetched bytes, or a JavaScript string.
+enum Input<'a> {
+    Bytes(&'a [u8]),
+    Text(&'a str),
+}
+
 impl Runtime {
     /// X3DBrowser.createX3DFromString: parse `text` in the Script's scene. `Err` is the message of the rejection.
     pub fn browser_create_from_string(&mut self, text: &str, parent: CtxId, script: Option<NodeId>) -> Result<u64, String> {
         let id = self.next_browser_request();
         let world = self.scene.world_url_of(parent).to_string();
 
-        self.browser_scene(id, script, parent, text.as_bytes(), &world)?;
+        self.browser_scene(id, script, parent, Input::Text(text), &world)?;
         Ok(id)
     }
 
@@ -108,7 +114,7 @@ impl Runtime {
                 Loaded::Data(data, url) => (data, url.to_string()),
             };
 
-            rt.browser_scene(id, req.script, req.parent, &data, &url)
+            rt.browser_scene(id, req.script, req.parent, Input::Bytes(&data), &url)
         });
 
         // loadDocumentError: `callback (null)`.
@@ -118,18 +124,27 @@ impl Runtime {
     }
 
     /// FileLoader.createX3DFromString for the browser: parse into a new X3DScene, set up its nodes and wait for its loadCount.
-    fn browser_scene(&mut self, id: u64, script: Option<NodeId>, parent: CtxId, data: &[u8], url: &str) -> Result<(), String> {
+    fn browser_scene(&mut self, id: u64, script: Option<NodeId>, parent: CtxId, input: Input<'_>, url: &str) -> Result<(), String> {
         self.sync_svg_quality();
 
-        let mut scene = match crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url) {
+        let parsed = match input {
+            Input::Bytes(data) => crate::loader::parse_bytes_with_fetcher(&*self.fetcher, data, url),
+            Input::Text(text) => x3d_parse::parse_string(text, url),
+        };
+
+        let mut scene = match parsed {
             Ok(scene) => scene,
             Err(x3d_parse::LoadError::Parse(e)) if e.line == 0 && ["TypeError: ", "RangeError: ", "Error: "].iter().any(|p| e.message.starts_with(p)) => {
                 return Err(e.message);
             }
             Err(x3d_parse::LoadError::Parse(e)) => {
-                // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
+                for w in x3d_parse::take_error_warnings() {
+                    self.log_warn(w);
+                }
+
+                // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown with the line of the input.
                 self.log_error(format!("Error: {}", e.message));
-                return Err(format!("Error: \n{e}"));
+                return Err(x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}")));
             }
             // GoldenGate.parseIntoScene.
             Err(x3d_parse::LoadError::NoHandler) => return Err(format!("Couldn't parse X3D. No suitable file handler found for '{url}'.")),

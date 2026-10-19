@@ -73,8 +73,12 @@ pub(crate) fn parse_x3d_html_element(root: &Element, world_url: &str) -> Result<
 }
 
 fn parse_x3d(root: &Element, world_url: &str, html: bool) -> Result<Scene, ParseError> {
+    let mut p = Parser::new("", world_url);
+
+    p.name = "XML Parser";
+
     let mut parser = XmlParser {
-        p: Parser::new("", world_url),
+        p,
         parents: vec![],
         placeholder_types: Default::default(),
         links: vec![],
@@ -422,8 +426,8 @@ impl<'a> XmlParser<'a> {
         let field = self.p.scene.field(node, loc);
 
         if field.ty() != reference.ty() {
-            let message = format!("Field '{}' and '{}' in PROTO {} have different types.", field.name, reference.name, self.p.outer_name());
-            return self.warn(format!("XML Parser: Couldn't create IS reference. {message}"));
+            // XMLParser.isReference reads `this .proto`, which nothing ever assigns: the TypeError is what the warning carries.
+            return self.warn("XML Parser: Couldn't create IS reference. Cannot read properties of undefined (reading 'getName')".into());
         }
 
         if !reference.is_reference(field.access) {
@@ -549,6 +553,8 @@ impl<'a> XmlParser<'a> {
                 return self.add_node(el, None);
             }
 
+            // Known gap: XMLParser.nodeElement prints this with console.error (a log level the scene's warning list has no
+            // channel for), here it is a warning.
             return self.warn(format!(
                 "XML Parser: Unknown node type '{}'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
                 el.name
