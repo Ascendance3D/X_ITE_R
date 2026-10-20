@@ -3,6 +3,7 @@ pub mod collision;
 #[cfg(feature = "embed")]
 pub mod embed;
 pub mod geom;
+pub mod geom2;
 pub mod layer;
 pub mod lookat;
 pub mod nav;
