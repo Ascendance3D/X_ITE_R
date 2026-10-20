@@ -201,6 +201,18 @@ cases["ctxev-loadurl"] = world("ctxev loadurl", A_SW.replace("@ACT@", "Browser .
 cases["ctxev-loadurl-meta"] = world("ctxev loadurl meta", A_SW.replace("@ACT@", "Browser .loadURL (new MFString ('assets/ce-b-meta.wrl')) .then (function () { console .log ('A: resolved@' + step); }); return 'started';"), gate=True)
 cases["ctxev-replace"] = world("ctxev replace", A_SW.replace("@ACT@", "Browser .replaceWorld (null); return 'ok';"), gate=True)
 
+# A scene's toVRMLString / toXMLString / toJSONString reads the root nodes of every PROTO declaration body through the MFNode proxy;
+# the first read makes their SFNodes (SFNodeCache), whose addParent is a parentsChanged of the body: sceneGraph_changed of the scene.
+# The worlds are dumped at the last frame only (sai-last.json), so the page's own toVRMLString does not read them first.
+STREAM_DECLS = ("PROTO PA [ ] { Group { children Transform { } } }\n"
+                "PROTO PB [ ] { PROTO PC [ ] { Transform { } } Group { } }\n"
+                "PROTO PE [ ] { }\n")
+for fmt in ("VRML", "XML", "JSON"):
+    cases["ctxev-stream-" + fmt.lower()] = world("ctxev stream " + fmt.lower(), f"""
+  if (step == 4) p ('first', function () {{ return s .to{fmt}String () .length > 0; }});
+  if (step == 8) p ('again', function () {{ return s .to{fmt}String () .length > 0; }});
+""", nodes="DEF PI PA { }\n", decls=STREAM_DECLS)
+
 if __name__ == "__main__":
     os.makedirs(os.path.join(out_dir, "assets"), exist_ok=True)
 

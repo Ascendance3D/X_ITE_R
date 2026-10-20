@@ -5,7 +5,9 @@
 //! context of its own ([`x3d_scene::Scene::merge_extern`]), a child of the context of the calling Script
 //! (`scene .setExecutionContext (currentScene)`). The timeline is FileLoader's:
 //!
-//! 1. `createX3DFromString` parses at once. `createX3DFromURL` fetches in a macrotask (`Task::BrowserLoad`).
+//! 1. `createX3DFromString` parses in a microtask (`Task::BrowserParse`): the parsers run their statements once
+//!    `browser .loadComponents (scene)` resolved, so a request made during a frame is parsed after the frame.
+//!    `createX3DFromURL` fetches in a macrotask (`Task::BrowserLoad`).
 //! 2. The scene's nodes are set up (a Script's `initialize ()` runs), then `scene ._loadCount` gets an event;
 //!    `set_loadCount__` waits for the count to reach 0 (nested Inlines) and then for `browser .nextFrame ()`.
 //! 3. X3DBrowser `scene .setLive (true)`, then the promise (or the `createVrmlFromURL` event) settles.
@@ -30,6 +32,14 @@ pub struct BrowserLoad {
     pub world: Option<Vec<String>>,
     /// The Anchor whose activation made the request (Anchor.requestImmediateLoad): its FileLoader belongs to the Anchor.
     pub anchor: Option<NodeId>,
+}
+
+/// A `createX3DFromString` request waiting for its microtask.
+#[derive(Clone, Debug)]
+pub struct BrowserString {
+    pub script: Option<NodeId>,
+    pub parent: CtxId,
+    pub text: String,
 }
 
 /// A scene that was parsed and set up and waits for its loadCount to reach 0.
@@ -99,13 +109,28 @@ enum Input<'a> {
 }
 
 impl Runtime {
-    /// X3DBrowser.createX3DFromString: parse `text` in the Script's scene. `Err` is the message of the rejection.
+    /// X3DBrowser.createX3DFromString: parse `text` in the Script's scene. The parse is a microtask
+    /// (VRMLParser, XMLParser and JSONParser parse their statements after `browser .loadComponents (scene)`);
+    /// a rejection settles from there too.
     pub fn browser_create_from_string(&mut self, text: &str, parent: CtxId, script: Option<NodeId>) -> Result<u64, String> {
         let id = self.next_browser_request();
-        let world = self.scene.world_url_of(parent).to_string();
 
-        self.browser_scene(id, script, parent, Input::Text(text), &world)?;
+        self.browser_strings.insert(id, BrowserString { script, parent, text: text.to_string() });
+        self.tasks.push_back(Task::BrowserParse(id));
         Ok(id)
+    }
+
+    /// `Task::BrowserParse`: the statements of a createX3DFromString request.
+    pub(crate) fn browser_parse(&mut self, id: u64) {
+        let Some(req) = self.browser_strings.remove(&id) else {
+            return;
+        };
+
+        let world = self.scene.world_url_of(req.parent).to_string();
+
+        if let Err(e) = self.browser_scene(id, req.script, req.parent, Input::Text(&req.text), &world) {
+            self.browser_settle(id, Err(e));
+        }
     }
 
     /// X3DBrowser.importJS: the JSON text is parsed by JSONParser straight into a new scene.
@@ -334,7 +359,7 @@ impl Runtime {
 
     /// Is a browser scene still loading?
     pub(crate) fn browser_loads_pending(&self) -> bool {
-        !self.browser_loads.is_empty() || !self.pending_browser.is_empty() || !self.browser_frame_waiters.is_empty() || !self.world_state.waiters.is_empty()
+        !self.browser_loads.is_empty() || !self.browser_strings.is_empty() || !self.pending_browser.is_empty() || !self.browser_frame_waiters.is_empty() || !self.world_state.waiters.is_empty()
     }
 }
 

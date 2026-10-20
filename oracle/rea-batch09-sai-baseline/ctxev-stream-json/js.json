@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "poses": {
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ctxev stream json\"\n\nPROTO PA [ ]\n{\n  Group {\n    children Transform { }\n  }\n}\n\nPROTO PB [ ]\n{\n  PROTO PC [ ]\n  {\n    Transform { }\n  }\n\n  Group { }\n}\n\nPROTO PE [ ]\n{\n}\n\nDEF T1 Transform { }\n\nDEF T2 Transform {\n  translation 100 0 0\n}\n\nDEF T3 Transform { }\n\nDEF T4 Transform { }\n\nDEF PI PA { }\n\nDEF P Script {\n  inputOutput SFString hist \"4:first=true SG@4 SG@4 SG@4 8:again=true \"\n  inputOutput SFInt32  step 21\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + ' '; }\nfunction recg (s) { if (step >= 2) rec (s); }\nfunction p (name, f) {\n  var v;\n  try { v = f (); } catch (e) { v = 'ERR:' + e .message; }\n  rec (step + ':' + name + '=' + v);\n}\nfunction types (s) {\n  return ['namedNodes', 'importedNodes', 'exportedNodes', 'protos', 'externprotos', 'rootNodes', 'routes', 'sceneGraph', 'profile', 'metadata', 'bbox']\n    .map (function (n) { return n + ':' + typeof s ['_' + n + '_changed'] + '/' + typeof s [n + '_changed']; }) .join (',');\n}\nfunction watch (s, label, gate) {\n  var r = gate ? recg : rec;\n  s .sceneGraph_changed .addFieldCallback ('sg' + label, function () { r ('SG' + label + '@' + step); });\n  s .profile_changed  .addFieldCallback ('pr' + label, function () { r ('PR' + label + '@' + step); });\n  s .metadata_changed .addFieldCallback ('md' + label, function () { r ('MD' + label + '@' + step); });\n}\n\n\nfunction initialize () {\n  var s = Browser .currentScene;\n\n  watch (s, '', true);\n}\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  if (step == 4) p ('first', function () { return s .toJSONString () .length > 0; });\n  if (step == 8) p ('again', function () { return s .toJSONString () .length > 0; });\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
