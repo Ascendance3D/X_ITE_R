@@ -49,12 +49,22 @@ Rust run, can reproduce it byte for byte. This is a property of the worlds, not 
    members: WebGL, DOM, dashboard), brx-call-open (getCanvas, getElement, getNotification, getContextMenu, getViewer,
    getBrowserTime, getBrowserTimings return null; X_ITE returns its page objects), X3DConstants of external-component node
    types in scr-browser-open (X_ITE's load order).
-4. OWNER DECISION NEEDED, scr-classes-open: the web page's own globals a Script reaches in X_ITE (Script.js evaluates
-   `with (globalObject)` in the page): `window`, `document`, `globalThis` (the page's window: name "", length 0),
-   `XMLHttpRequest`, `fetch`. They are not X_ITE's; the port has none. Every global X_ITE's Script.js defines now matches
-   (scr-globals, 150 probes).
-5. Field representation differences (sub:fields.types): an SF component that is neither number, undefined nor null is stored as
-   NaN by the runtime; IterableWeakSet strong members (QuickJS); external-component X3DConstants order (X_ITE nondeterministic).
+4. scr-classes-open stays unresolved (owner decision 2026-10-20, Decision 1): no DOM. The page globals a Script reaches in
+   X_ITE (Script.js evaluates `with (globalObject)` in the page) are not added: `window`, `document`, `globalThis` as the
+   page's window (name "", length 0), `XMLHttpRequest`, `fetch`. No nonfunctional stand-ins are added to satisfy reflection
+   probes. Browser methods that hand out page objects keep returning null (brx-call-open). Every global X_ITE's own Script.js
+   defines matches (scr-globals, 150 probes). node:Script keeps its current status for this reason.
+5. Field representation (sub:fields.types stays PARTIAL, Decision 2: no string-to-NaN difference accepted).
+   Done, fldx-internal (3 identical X_ITE recordings, Rust exact): X_ITE's internal value objects (Vector2/3/4, Color3/4
+   written through `getValue ()`) hold any JavaScript value; the setters, constructors, Rotation4, SFFloat and MF elements
+   coerce with Number (). The port keeps the Script realm's raw components under a token that goes with the runtime value
+   and along routes (Scene::raw_tokens), so the Script objects of the field and of every routed destination read the same
+   raw components; such a value is never the default (X_ITE's isDefaultValue compares with `===`). VRML printing: a field
+   with a unit category prints ToNumber (raw) / factor (X3DScene.toUnit); a field without one prints `String (raw)`
+   (X3DGenerator.FloatFormat). The runtime and rendering use ToNumber (raw), as X_ITE's math does.
+   Open: XML/JSON printing of such raw components (no probe yet); `String (raw)` is taken when the Script hands the value
+   over, X_ITE takes it at print time (differs only for an object whose toString changes later); IterableWeakSet strong
+   members (QuickJS); external-component X3DConstants order (X_ITE nondeterministic).
 6. sub:exec.context-api stays PARTIAL (owner decision 2026-10-20). Its component state (cfg-comp) and the X3DScene /
    X3DExecutionContext class chain (scx-api) and the objects it hands out (scx-members) now match; what is left in it is item 1.
 7. scr-url-order-open (documented open): the order Scripts initialize in when a URL candidate fails or needs a fetch is Chrome's

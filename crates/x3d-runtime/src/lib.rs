@@ -964,6 +964,10 @@ impl Runtime {
 
     /// Set a field's value without an event (X3DField.set), keeping the parent index.
     pub fn set_raw(&mut self, k: FKey, value: FieldValue) {
+        if !self.scene.raw_tokens.is_empty() {
+            self.scene.raw_tokens.remove(&k);
+        }
+
         let old = Self::node_values(self.value(k));
         let new = Self::node_values(&value);
 

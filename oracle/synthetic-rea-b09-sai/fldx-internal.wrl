@@ -1,0 +1,478 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx internal"
+DEF A_vec_internal_num Transform { }
+DEF B_vec_internal_num Transform { }
+ROUTE A_vec_internal_num.translation_changed TO B_vec_internal_num.set_translation
+DEF A_vec_internal_numstr Transform { }
+DEF B_vec_internal_numstr Transform { }
+ROUTE A_vec_internal_numstr.translation_changed TO B_vec_internal_numstr.set_translation
+DEF A_vec_internal_str Transform { }
+DEF B_vec_internal_str Transform { }
+ROUTE A_vec_internal_str.translation_changed TO B_vec_internal_str.set_translation
+DEF A_vec_internal_empty Transform { }
+DEF B_vec_internal_empty Transform { }
+ROUTE A_vec_internal_empty.translation_changed TO B_vec_internal_empty.set_translation
+DEF A_vec_internal_null Transform { }
+DEF B_vec_internal_null Transform { }
+ROUTE A_vec_internal_null.translation_changed TO B_vec_internal_null.set_translation
+DEF A_vec_internal_undef Transform { }
+DEF B_vec_internal_undef Transform { }
+ROUTE A_vec_internal_undef.translation_changed TO B_vec_internal_undef.set_translation
+DEF A_vec_internal_nan Transform { }
+DEF B_vec_internal_nan Transform { }
+ROUTE A_vec_internal_nan.translation_changed TO B_vec_internal_nan.set_translation
+DEF A_vec_internal_true Transform { }
+DEF B_vec_internal_true Transform { }
+ROUTE A_vec_internal_true.translation_changed TO B_vec_internal_true.set_translation
+DEF A_vec_internal_obj Transform { }
+DEF B_vec_internal_obj Transform { }
+ROUTE A_vec_internal_obj.translation_changed TO B_vec_internal_obj.set_translation
+DEF A_vec_internal_expstr Transform { }
+DEF B_vec_internal_expstr Transform { }
+ROUTE A_vec_internal_expstr.translation_changed TO B_vec_internal_expstr.set_translation
+DEF A_vec_setter_num Transform { }
+DEF B_vec_setter_num Transform { }
+ROUTE A_vec_setter_num.translation_changed TO B_vec_setter_num.set_translation
+DEF A_vec_setter_numstr Transform { }
+DEF B_vec_setter_numstr Transform { }
+ROUTE A_vec_setter_numstr.translation_changed TO B_vec_setter_numstr.set_translation
+DEF A_vec_setter_str Transform { }
+DEF B_vec_setter_str Transform { }
+ROUTE A_vec_setter_str.translation_changed TO B_vec_setter_str.set_translation
+DEF A_vec_setter_empty Transform { }
+DEF B_vec_setter_empty Transform { }
+ROUTE A_vec_setter_empty.translation_changed TO B_vec_setter_empty.set_translation
+DEF A_vec_setter_null Transform { }
+DEF B_vec_setter_null Transform { }
+ROUTE A_vec_setter_null.translation_changed TO B_vec_setter_null.set_translation
+DEF A_vec_setter_undef Transform { }
+DEF B_vec_setter_undef Transform { }
+ROUTE A_vec_setter_undef.translation_changed TO B_vec_setter_undef.set_translation
+DEF A_vec_setter_nan Transform { }
+DEF B_vec_setter_nan Transform { }
+ROUTE A_vec_setter_nan.translation_changed TO B_vec_setter_nan.set_translation
+DEF A_vec_setter_true Transform { }
+DEF B_vec_setter_true Transform { }
+ROUTE A_vec_setter_true.translation_changed TO B_vec_setter_true.set_translation
+DEF A_vec_setter_obj Transform { }
+DEF B_vec_setter_obj Transform { }
+ROUTE A_vec_setter_obj.translation_changed TO B_vec_setter_obj.set_translation
+DEF A_vec_setter_expstr Transform { }
+DEF B_vec_setter_expstr Transform { }
+ROUTE A_vec_setter_expstr.translation_changed TO B_vec_setter_expstr.set_translation
+DEF A_vec_new_num Transform { }
+DEF B_vec_new_num Transform { }
+ROUTE A_vec_new_num.translation_changed TO B_vec_new_num.set_translation
+DEF A_vec_new_numstr Transform { }
+DEF B_vec_new_numstr Transform { }
+ROUTE A_vec_new_numstr.translation_changed TO B_vec_new_numstr.set_translation
+DEF A_vec_new_str Transform { }
+DEF B_vec_new_str Transform { }
+ROUTE A_vec_new_str.translation_changed TO B_vec_new_str.set_translation
+DEF A_vec_new_empty Transform { }
+DEF B_vec_new_empty Transform { }
+ROUTE A_vec_new_empty.translation_changed TO B_vec_new_empty.set_translation
+DEF A_vec_new_null Transform { }
+DEF B_vec_new_null Transform { }
+ROUTE A_vec_new_null.translation_changed TO B_vec_new_null.set_translation
+DEF A_vec_new_undef Transform { }
+DEF B_vec_new_undef Transform { }
+ROUTE A_vec_new_undef.translation_changed TO B_vec_new_undef.set_translation
+DEF A_vec_new_nan Transform { }
+DEF B_vec_new_nan Transform { }
+ROUTE A_vec_new_nan.translation_changed TO B_vec_new_nan.set_translation
+DEF A_vec_new_true Transform { }
+DEF B_vec_new_true Transform { }
+ROUTE A_vec_new_true.translation_changed TO B_vec_new_true.set_translation
+DEF A_vec_new_obj Transform { }
+DEF B_vec_new_obj Transform { }
+ROUTE A_vec_new_obj.translation_changed TO B_vec_new_obj.set_translation
+DEF A_vec_new_expstr Transform { }
+DEF B_vec_new_expstr Transform { }
+ROUTE A_vec_new_expstr.translation_changed TO B_vec_new_expstr.set_translation
+DEF A_color_internal_num Material { }
+DEF B_color_internal_num Material { }
+ROUTE A_color_internal_num.diffuseColor_changed TO B_color_internal_num.set_diffuseColor
+DEF A_color_internal_numstr Material { }
+DEF B_color_internal_numstr Material { }
+ROUTE A_color_internal_numstr.diffuseColor_changed TO B_color_internal_numstr.set_diffuseColor
+DEF A_color_internal_str Material { }
+DEF B_color_internal_str Material { }
+ROUTE A_color_internal_str.diffuseColor_changed TO B_color_internal_str.set_diffuseColor
+DEF A_color_internal_empty Material { }
+DEF B_color_internal_empty Material { }
+ROUTE A_color_internal_empty.diffuseColor_changed TO B_color_internal_empty.set_diffuseColor
+DEF A_color_internal_null Material { }
+DEF B_color_internal_null Material { }
+ROUTE A_color_internal_null.diffuseColor_changed TO B_color_internal_null.set_diffuseColor
+DEF A_color_internal_undef Material { }
+DEF B_color_internal_undef Material { }
+ROUTE A_color_internal_undef.diffuseColor_changed TO B_color_internal_undef.set_diffuseColor
+DEF A_color_internal_nan Material { }
+DEF B_color_internal_nan Material { }
+ROUTE A_color_internal_nan.diffuseColor_changed TO B_color_internal_nan.set_diffuseColor
+DEF A_color_internal_true Material { }
+DEF B_color_internal_true Material { }
+ROUTE A_color_internal_true.diffuseColor_changed TO B_color_internal_true.set_diffuseColor
+DEF A_color_internal_obj Material { }
+DEF B_color_internal_obj Material { }
+ROUTE A_color_internal_obj.diffuseColor_changed TO B_color_internal_obj.set_diffuseColor
+DEF A_color_internal_expstr Material { }
+DEF B_color_internal_expstr Material { }
+ROUTE A_color_internal_expstr.diffuseColor_changed TO B_color_internal_expstr.set_diffuseColor
+DEF A_rot_setter_num Transform { }
+DEF B_rot_setter_num Transform { }
+ROUTE A_rot_setter_num.rotation_changed TO B_rot_setter_num.set_rotation
+DEF A_rot_setter_numstr Transform { }
+DEF B_rot_setter_numstr Transform { }
+ROUTE A_rot_setter_numstr.rotation_changed TO B_rot_setter_numstr.set_rotation
+DEF A_rot_setter_str Transform { }
+DEF B_rot_setter_str Transform { }
+ROUTE A_rot_setter_str.rotation_changed TO B_rot_setter_str.set_rotation
+DEF A_rot_setter_empty Transform { }
+DEF B_rot_setter_empty Transform { }
+ROUTE A_rot_setter_empty.rotation_changed TO B_rot_setter_empty.set_rotation
+DEF A_rot_setter_null Transform { }
+DEF B_rot_setter_null Transform { }
+ROUTE A_rot_setter_null.rotation_changed TO B_rot_setter_null.set_rotation
+DEF A_rot_setter_undef Transform { }
+DEF B_rot_setter_undef Transform { }
+ROUTE A_rot_setter_undef.rotation_changed TO B_rot_setter_undef.set_rotation
+DEF A_rot_setter_nan Transform { }
+DEF B_rot_setter_nan Transform { }
+ROUTE A_rot_setter_nan.rotation_changed TO B_rot_setter_nan.set_rotation
+DEF A_rot_setter_true Transform { }
+DEF B_rot_setter_true Transform { }
+ROUTE A_rot_setter_true.rotation_changed TO B_rot_setter_true.set_rotation
+DEF A_rot_setter_obj Transform { }
+DEF B_rot_setter_obj Transform { }
+ROUTE A_rot_setter_obj.rotation_changed TO B_rot_setter_obj.set_rotation
+DEF A_rot_setter_expstr Transform { }
+DEF B_rot_setter_expstr Transform { }
+ROUTE A_rot_setter_expstr.rotation_changed TO B_rot_setter_expstr.set_rotation
+DEF A_mffloat_index_num ScalarInterpolator { }
+DEF B_mffloat_index_num ScalarInterpolator { }
+ROUTE A_mffloat_index_num.key_changed TO B_mffloat_index_num.set_key
+DEF A_mffloat_index_numstr ScalarInterpolator { }
+DEF B_mffloat_index_numstr ScalarInterpolator { }
+ROUTE A_mffloat_index_numstr.key_changed TO B_mffloat_index_numstr.set_key
+DEF A_mffloat_index_str ScalarInterpolator { }
+DEF B_mffloat_index_str ScalarInterpolator { }
+ROUTE A_mffloat_index_str.key_changed TO B_mffloat_index_str.set_key
+DEF A_mffloat_index_empty ScalarInterpolator { }
+DEF B_mffloat_index_empty ScalarInterpolator { }
+ROUTE A_mffloat_index_empty.key_changed TO B_mffloat_index_empty.set_key
+DEF A_mffloat_index_null ScalarInterpolator { }
+DEF B_mffloat_index_null ScalarInterpolator { }
+ROUTE A_mffloat_index_null.key_changed TO B_mffloat_index_null.set_key
+DEF A_mffloat_index_undef ScalarInterpolator { }
+DEF B_mffloat_index_undef ScalarInterpolator { }
+ROUTE A_mffloat_index_undef.key_changed TO B_mffloat_index_undef.set_key
+DEF A_mffloat_index_nan ScalarInterpolator { }
+DEF B_mffloat_index_nan ScalarInterpolator { }
+ROUTE A_mffloat_index_nan.key_changed TO B_mffloat_index_nan.set_key
+DEF A_mffloat_index_true ScalarInterpolator { }
+DEF B_mffloat_index_true ScalarInterpolator { }
+ROUTE A_mffloat_index_true.key_changed TO B_mffloat_index_true.set_key
+DEF A_mffloat_index_obj ScalarInterpolator { }
+DEF B_mffloat_index_obj ScalarInterpolator { }
+ROUTE A_mffloat_index_obj.key_changed TO B_mffloat_index_obj.set_key
+DEF A_mffloat_index_expstr ScalarInterpolator { }
+DEF B_mffloat_index_expstr ScalarInterpolator { }
+ROUTE A_mffloat_index_expstr.key_changed TO B_mffloat_index_expstr.set_key
+DEF A_mfvec_internal_num Coordinate { }
+DEF B_mfvec_internal_num Coordinate { }
+ROUTE A_mfvec_internal_num.point_changed TO B_mfvec_internal_num.set_point
+DEF A_mfvec_internal_numstr Coordinate { }
+DEF B_mfvec_internal_numstr Coordinate { }
+ROUTE A_mfvec_internal_numstr.point_changed TO B_mfvec_internal_numstr.set_point
+DEF A_mfvec_internal_str Coordinate { }
+DEF B_mfvec_internal_str Coordinate { }
+ROUTE A_mfvec_internal_str.point_changed TO B_mfvec_internal_str.set_point
+DEF A_mfvec_internal_empty Coordinate { }
+DEF B_mfvec_internal_empty Coordinate { }
+ROUTE A_mfvec_internal_empty.point_changed TO B_mfvec_internal_empty.set_point
+DEF A_mfvec_internal_null Coordinate { }
+DEF B_mfvec_internal_null Coordinate { }
+ROUTE A_mfvec_internal_null.point_changed TO B_mfvec_internal_null.set_point
+DEF A_mfvec_internal_undef Coordinate { }
+DEF B_mfvec_internal_undef Coordinate { }
+ROUTE A_mfvec_internal_undef.point_changed TO B_mfvec_internal_undef.set_point
+DEF A_mfvec_internal_nan Coordinate { }
+DEF B_mfvec_internal_nan Coordinate { }
+ROUTE A_mfvec_internal_nan.point_changed TO B_mfvec_internal_nan.set_point
+DEF A_mfvec_internal_true Coordinate { }
+DEF B_mfvec_internal_true Coordinate { }
+ROUTE A_mfvec_internal_true.point_changed TO B_mfvec_internal_true.set_point
+DEF A_mfvec_internal_obj Coordinate { }
+DEF B_mfvec_internal_obj Coordinate { }
+ROUTE A_mfvec_internal_obj.point_changed TO B_mfvec_internal_obj.set_point
+DEF A_mfvec_internal_expstr Coordinate { }
+DEF B_mfvec_internal_expstr Coordinate { }
+ROUTE A_mfvec_internal_expstr.point_changed TO B_mfvec_internal_expstr.set_point
+DEF A_sffloat_num Material { }
+DEF B_sffloat_num Material { }
+ROUTE A_sffloat_num.transparency_changed TO B_sffloat_num.set_transparency
+DEF A_sffloat_numstr Material { }
+DEF B_sffloat_numstr Material { }
+ROUTE A_sffloat_numstr.transparency_changed TO B_sffloat_numstr.set_transparency
+DEF A_sffloat_str Material { }
+DEF B_sffloat_str Material { }
+ROUTE A_sffloat_str.transparency_changed TO B_sffloat_str.set_transparency
+DEF A_sffloat_empty Material { }
+DEF B_sffloat_empty Material { }
+ROUTE A_sffloat_empty.transparency_changed TO B_sffloat_empty.set_transparency
+DEF A_sffloat_null Material { }
+DEF B_sffloat_null Material { }
+ROUTE A_sffloat_null.transparency_changed TO B_sffloat_null.set_transparency
+DEF A_sffloat_undef Material { }
+DEF B_sffloat_undef Material { }
+ROUTE A_sffloat_undef.transparency_changed TO B_sffloat_undef.set_transparency
+DEF A_sffloat_nan Material { }
+DEF B_sffloat_nan Material { }
+ROUTE A_sffloat_nan.transparency_changed TO B_sffloat_nan.set_transparency
+DEF A_sffloat_true Material { }
+DEF B_sffloat_true Material { }
+ROUTE A_sffloat_true.transparency_changed TO B_sffloat_true.set_transparency
+DEF A_sffloat_obj Material { }
+DEF B_sffloat_obj Material { }
+ROUTE A_sffloat_obj.transparency_changed TO B_sffloat_obj.set_transparency
+DEF A_sffloat_expstr Material { }
+DEF B_sffloat_expstr Material { }
+ROUTE A_sffloat_expstr.transparency_changed TO B_sffloat_expstr.set_transparency
+DEF P Script {
+  inputOutput MFString out [ ]
+  inputOutput SFFloat sf 1
+  inputOutput SFVec3f sv 1 1 1
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function initialize () {
+  SELF = this;
+  T ('script sffloat num', function () { sf = 2.5; return [typeof sf, String (sf)]; });
+  T ('script sffloat numstr', function () { sf = '2'; return [typeof sf, String (sf)]; });
+  T ('script sffloat str', function () { sf = 'abc'; return [typeof sf, String (sf)]; });
+  T ('script sffloat empty', function () { sf = ''; return [typeof sf, String (sf)]; });
+  T ('script sffloat null', function () { sf = null; return [typeof sf, String (sf)]; });
+  T ('script sffloat undef', function () { sf = undefined; return [typeof sf, String (sf)]; });
+  T ('script sffloat nan', function () { sf = NaN; return [typeof sf, String (sf)]; });
+  T ('script sffloat true', function () { sf = true; return [typeof sf, String (sf)]; });
+  T ('script sffloat obj', function () { sf = ({ }); return [typeof sf, String (sf)]; });
+  T ('script sffloat expstr', function () { sf = '1e3'; return [typeof sf, String (sf)]; });
+  T ('script sfvec internal num', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = 2.5; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal numstr', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = '2'; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal str', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = 'abc'; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal empty', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = ''; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal null', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = null; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal undef', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = undefined; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal nan', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = NaN; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal true', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = true; return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal obj', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = ({ }); return [typeof sv .z, String (sv .z), String (sv)]; });
+  T ('script sfvec internal expstr', function () { sv = new SFVec3f (1, 1, 1); sv .getValue () .z = '1e3'; return [typeof sv .z, String (sv .z), String (sv)]; });
+  flush_ ();
+}
+var F_ = 0;
+function prepareEvents () {
+  ++ F_;
+  if (F_ === 3) {
+  T ('vec-internal num set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_num'); var V = 2.5; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_numstr'); var V = '2'; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal str set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_str'); var V = 'abc'; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal empty set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_empty'); var V = ''; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal null set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_null'); var V = null; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal undef set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_undef'); var V = undefined; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal nan set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_nan'); var V = NaN; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal true set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_true'); var V = true; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal obj set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_obj'); var V = ({ }); var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-internal expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_expstr'); var V = '1e3'; var f = N .translation; f .getValue () .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter num set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_num'); var V = 2.5; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_numstr'); var V = '2'; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter str set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_str'); var V = 'abc'; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter empty set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_empty'); var V = ''; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter null set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_null'); var V = null; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter undef set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_undef'); var V = undefined; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter nan set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_nan'); var V = NaN; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter true set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_true'); var V = true; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter obj set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_obj'); var V = ({ }); var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-setter expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_expstr'); var V = '1e3'; var f = N .translation; f .x = V; N .translation = f; return 'ok'; });
+  T ('vec-new num set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_num'); var V = 2.5; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_numstr'); var V = '2'; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new str set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_str'); var V = 'abc'; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new empty set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_empty'); var V = ''; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new null set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_null'); var V = null; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new undef set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_undef'); var V = undefined; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new nan set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_nan'); var V = NaN; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new true set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_true'); var V = true; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new obj set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_obj'); var V = ({ }); N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('vec-new expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_expstr'); var V = '1e3'; N .translation = new SFVec3f (V, 1, 1); return 'ok'; });
+  T ('color-internal num set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_num'); var V = 2.5; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_numstr'); var V = '2'; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal str set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_str'); var V = 'abc'; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal empty set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_empty'); var V = ''; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal null set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_null'); var V = null; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal undef set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_undef'); var V = undefined; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal nan set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_nan'); var V = NaN; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal true set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_true'); var V = true; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal obj set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_obj'); var V = ({ }); var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('color-internal expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_expstr'); var V = '1e3'; var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f; return 'ok'; });
+  T ('rot-setter num set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_num'); var V = 2.5; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_numstr'); var V = '2'; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter str set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_str'); var V = 'abc'; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter empty set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_empty'); var V = ''; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter null set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_null'); var V = null; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter undef set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_undef'); var V = undefined; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter nan set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_nan'); var V = NaN; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter true set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_true'); var V = true; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter obj set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_obj'); var V = ({ }); var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('rot-setter expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_expstr'); var V = '1e3'; var f = N .rotation; f .angle = V; N .rotation = f; return 'ok'; });
+  T ('mffloat-index num set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_num'); var V = 2.5; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_numstr'); var V = '2'; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index str set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_str'); var V = 'abc'; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index empty set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_empty'); var V = ''; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index null set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_null'); var V = null; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index undef set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_undef'); var V = undefined; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index nan set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_nan'); var V = NaN; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index true set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_true'); var V = true; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index obj set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_obj'); var V = ({ }); var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mffloat-index expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_expstr'); var V = '1e3'; var f = new MFFloat (0, 1); f [1] = V; N .key = f; return 'ok'; });
+  T ('mfvec-internal num set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_num'); var V = 2.5; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_numstr'); var V = '2'; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal str set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_str'); var V = 'abc'; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal empty set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_empty'); var V = ''; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal null set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_null'); var V = null; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal undef set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_undef'); var V = undefined; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal nan set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_nan'); var V = NaN; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal true set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_true'); var V = true; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal obj set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_obj'); var V = ({ }); var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('mfvec-internal expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_expstr'); var V = '1e3'; var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f; return 'ok'; });
+  T ('sffloat num set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_num'); var V = 2.5; N .transparency = V; return 'ok'; });
+  T ('sffloat numstr set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_numstr'); var V = '2'; N .transparency = V; return 'ok'; });
+  T ('sffloat str set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_str'); var V = 'abc'; N .transparency = V; return 'ok'; });
+  T ('sffloat empty set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_empty'); var V = ''; N .transparency = V; return 'ok'; });
+  T ('sffloat null set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_null'); var V = null; N .transparency = V; return 'ok'; });
+  T ('sffloat undef set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_undef'); var V = undefined; N .transparency = V; return 'ok'; });
+  T ('sffloat nan set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_nan'); var V = NaN; N .transparency = V; return 'ok'; });
+  T ('sffloat true set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_true'); var V = true; N .transparency = V; return 'ok'; });
+  T ('sffloat obj set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_obj'); var V = ({ }); N .transparency = V; return 'ok'; });
+  T ('sffloat expstr set', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_expstr'); var V = '1e3'; N .transparency = V; return 'ok'; });
+  }
+  if (F_ === 6) {
+  T ('vec-internal num read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_num'), M = Browser .currentScene .getNamedNode ('B_vec_internal_num'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_numstr'), M = Browser .currentScene .getNamedNode ('B_vec_internal_numstr'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal str read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_str'), M = Browser .currentScene .getNamedNode ('B_vec_internal_str'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal empty read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_empty'), M = Browser .currentScene .getNamedNode ('B_vec_internal_empty'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal null read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_null'), M = Browser .currentScene .getNamedNode ('B_vec_internal_null'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal undef read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_undef'), M = Browser .currentScene .getNamedNode ('B_vec_internal_undef'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal nan read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_nan'), M = Browser .currentScene .getNamedNode ('B_vec_internal_nan'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal true read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_true'), M = Browser .currentScene .getNamedNode ('B_vec_internal_true'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal obj read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_obj'), M = Browser .currentScene .getNamedNode ('B_vec_internal_obj'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-internal expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_internal_expstr'), M = Browser .currentScene .getNamedNode ('B_vec_internal_expstr'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter num read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_num'), M = Browser .currentScene .getNamedNode ('B_vec_setter_num'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_numstr'), M = Browser .currentScene .getNamedNode ('B_vec_setter_numstr'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter str read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_str'), M = Browser .currentScene .getNamedNode ('B_vec_setter_str'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter empty read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_empty'), M = Browser .currentScene .getNamedNode ('B_vec_setter_empty'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter null read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_null'), M = Browser .currentScene .getNamedNode ('B_vec_setter_null'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter undef read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_undef'), M = Browser .currentScene .getNamedNode ('B_vec_setter_undef'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter nan read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_nan'), M = Browser .currentScene .getNamedNode ('B_vec_setter_nan'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter true read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_true'), M = Browser .currentScene .getNamedNode ('B_vec_setter_true'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter obj read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_obj'), M = Browser .currentScene .getNamedNode ('B_vec_setter_obj'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-setter expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_setter_expstr'), M = Browser .currentScene .getNamedNode ('B_vec_setter_expstr'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new num read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_num'), M = Browser .currentScene .getNamedNode ('B_vec_new_num'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_numstr'), M = Browser .currentScene .getNamedNode ('B_vec_new_numstr'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new str read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_str'), M = Browser .currentScene .getNamedNode ('B_vec_new_str'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new empty read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_empty'), M = Browser .currentScene .getNamedNode ('B_vec_new_empty'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new null read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_null'), M = Browser .currentScene .getNamedNode ('B_vec_new_null'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new undef read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_undef'), M = Browser .currentScene .getNamedNode ('B_vec_new_undef'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new nan read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_nan'), M = Browser .currentScene .getNamedNode ('B_vec_new_nan'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new true read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_true'), M = Browser .currentScene .getNamedNode ('B_vec_new_true'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new obj read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_obj'), M = Browser .currentScene .getNamedNode ('B_vec_new_obj'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('vec-new expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_vec_new_expstr'), M = Browser .currentScene .getNamedNode ('B_vec_new_expstr'); var f = N .translation, g = M .translation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal num read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_num'), M = Browser .currentScene .getNamedNode ('B_color_internal_num'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_numstr'), M = Browser .currentScene .getNamedNode ('B_color_internal_numstr'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal str read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_str'), M = Browser .currentScene .getNamedNode ('B_color_internal_str'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal empty read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_empty'), M = Browser .currentScene .getNamedNode ('B_color_internal_empty'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal null read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_null'), M = Browser .currentScene .getNamedNode ('B_color_internal_null'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal undef read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_undef'), M = Browser .currentScene .getNamedNode ('B_color_internal_undef'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal nan read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_nan'), M = Browser .currentScene .getNamedNode ('B_color_internal_nan'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal true read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_true'), M = Browser .currentScene .getNamedNode ('B_color_internal_true'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal obj read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_obj'), M = Browser .currentScene .getNamedNode ('B_color_internal_obj'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('color-internal expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_color_internal_expstr'), M = Browser .currentScene .getNamedNode ('B_color_internal_expstr'); var f = N .diffuseColor, g = M .diffuseColor; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter num read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_num'), M = Browser .currentScene .getNamedNode ('B_rot_setter_num'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_numstr'), M = Browser .currentScene .getNamedNode ('B_rot_setter_numstr'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter str read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_str'), M = Browser .currentScene .getNamedNode ('B_rot_setter_str'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter empty read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_empty'), M = Browser .currentScene .getNamedNode ('B_rot_setter_empty'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter null read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_null'), M = Browser .currentScene .getNamedNode ('B_rot_setter_null'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter undef read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_undef'), M = Browser .currentScene .getNamedNode ('B_rot_setter_undef'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter nan read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_nan'), M = Browser .currentScene .getNamedNode ('B_rot_setter_nan'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter true read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_true'), M = Browser .currentScene .getNamedNode ('B_rot_setter_true'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter obj read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_obj'), M = Browser .currentScene .getNamedNode ('B_rot_setter_obj'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('rot-setter expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_rot_setter_expstr'), M = Browser .currentScene .getNamedNode ('B_rot_setter_expstr'); var f = N .rotation, g = M .rotation; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index num read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_num'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_num'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_numstr'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_numstr'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index str read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_str'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_str'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index empty read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_empty'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_empty'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index null read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_null'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_null'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index undef read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_undef'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_undef'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index nan read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_nan'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_nan'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index true read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_true'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_true'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index obj read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_obj'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_obj'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mffloat-index expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_mffloat_index_expstr'), M = Browser .currentScene .getNamedNode ('B_mffloat_index_expstr'); var f = N .key, g = M .key; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal num read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_num'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_num'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_numstr'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_numstr'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal str read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_str'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_str'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal empty read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_empty'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_empty'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal null read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_null'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_null'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal undef read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_undef'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_undef'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal nan read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_nan'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_nan'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal true read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_true'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_true'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal obj read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_obj'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_obj'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('mfvec-internal expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_mfvec_internal_expstr'), M = Browser .currentScene .getNamedNode ('B_mfvec_internal_expstr'); var f = N .point, g = M .point; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat num read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_num'), M = Browser .currentScene .getNamedNode ('B_sffloat_num'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat numstr read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_numstr'), M = Browser .currentScene .getNamedNode ('B_sffloat_numstr'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat str read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_str'), M = Browser .currentScene .getNamedNode ('B_sffloat_str'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat empty read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_empty'), M = Browser .currentScene .getNamedNode ('B_sffloat_empty'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat null read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_null'), M = Browser .currentScene .getNamedNode ('B_sffloat_null'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat undef read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_undef'), M = Browser .currentScene .getNamedNode ('B_sffloat_undef'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat nan read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_nan'), M = Browser .currentScene .getNamedNode ('B_sffloat_nan'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat true read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_true'), M = Browser .currentScene .getNamedNode ('B_sffloat_true'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat obj read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_obj'), M = Browser .currentScene .getNamedNode ('B_sffloat_obj'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+  T ('sffloat expstr read', function () { var N = Browser .currentScene .getNamedNode ('A_sffloat_expstr'), M = Browser .currentScene .getNamedNode ('B_sffloat_expstr'); var f = N .transparency, g = M .transparency; var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) { return typeof x + ':' + String (x); }))]; });
+    flush_ ();
+  }
+}
+
+  "
+}

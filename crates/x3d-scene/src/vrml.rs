@@ -696,7 +696,12 @@ impl<'a> VrmlGenerator<'a> {
 
             if field.is_initializable() {
                 self.g.space();
-                self.value_to_vrml(&field.value);
+
+                let loc = FieldLoc::User(self.scene.node(id).user_fields.iter().position(|f| std::ptr::eq(f, field)).unwrap_or(usize::MAX));
+
+                if !raw_value_to_stream(self.scene, &mut self.g, id, loc, &field.value) {
+                    self.value_to_vrml(&field.value);
+                }
             }
         } else {
             let mut initializable_references = false;
@@ -750,7 +755,7 @@ impl<'a> VrmlGenerator<'a> {
                 self.g.indent();
                 self.g.push(&field.name);
                 self.g.space();
-                self.field_value_to_vrml(id, &field.name, &field.value);
+                self.pre_field_value_to_vrml(id, i);
             }
         } else {
             let mut initializable_references = false;
@@ -777,9 +782,20 @@ impl<'a> VrmlGenerator<'a> {
                 self.g.indent();
                 self.g.push(&field.name);
                 self.g.space();
-                self.field_value_to_vrml(id, &field.name, &field.value);
+                self.pre_field_value_to_vrml(id, i);
             }
         }
+    }
+
+    /// The value of predefined field `i`: raw components (see [`raw_value_to_stream`]) when the field has no unit category.
+    fn pre_field_value_to_vrml(&mut self, id: NodeId, i: usize) {
+        let field = &self.scene.node(id).fields[i];
+
+        if !self.scene.field_has_unit(id, &field.name) && raw_value_to_stream(self.scene, &mut self.g, id, FieldLoc::Pre(i), &field.value) {
+            return;
+        }
+
+        self.field_value_to_vrml(id, &field.name, &field.value);
     }
 
     /// X3DBaseNode.getConvertedFields → OrthoViewpoint.convertFields: for specification versions up to 4.0
@@ -889,4 +905,44 @@ impl Scene {
         self.field_mut(destination, dst).input_routes -= 1;
         Some(r)
     }
+}
+
+/// SFVecPrototypeTemplate / SFColor toStream of a value a Script gave with components that are not all numbers, for a field
+/// without a unit category: X3DGenerator.ToUnit returns such a component as it is and FloatFormat writes `String (value)` for
+/// anything that is not a finite number. Returns false (nothing written) when the field holds no such value.
+pub(crate) fn raw_value_to_stream(scene: &Scene, g: &mut Generator, id: NodeId, loc: FieldLoc, value: &FieldValue) -> bool {
+    let Some(raw) = scene.raw_tokens.get(&(id, loc)) else {
+        return false;
+    };
+
+    let (numbers, double): (Vec<f64>, bool) = match value {
+        FieldValue::SFColor(c) => (c.components().to_vec(), false),
+        FieldValue::SFColorRGBA(c) => (c.components().to_vec(), false),
+        FieldValue::SFVec2f(v) => (v.to_array().to_vec(), false),
+        FieldValue::SFVec3f(v) => (v.to_array().to_vec(), false),
+        FieldValue::SFVec4f(v) => (v.to_array().to_vec(), false),
+        FieldValue::SFVec2d(v) => (v.to_array().to_vec(), true),
+        FieldValue::SFVec3d(v) => (v.to_array().to_vec(), true),
+        FieldValue::SFVec4d(v) => (v.to_array().to_vec(), true),
+        _ => return false,
+    };
+
+    if raw.texts.len() != numbers.len() {
+        return false;
+    }
+
+    let last = numbers.len() - 1;
+
+    for (i, v) in numbers.iter().enumerate() {
+        match &raw.texts[i] {
+            Some(t) => g.push(t),
+            None => g.push(&if double { g.double_format(*v) } else { g.float_format(*v) }),
+        }
+
+        if i != last {
+            g.space();
+        }
+    }
+
+    true
 }

@@ -144,3 +144,4 @@ meta-parse-proto oracle/synthetic-rea-b09-sai/meta-parse-proto.wrl oracle/synthe
 parse-formats oracle/synthetic-rea-b09-sai/parse-formats.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
 parse-xml-mfstring oracle/synthetic-rea-b09-sai/parse-xml-mfstring.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
 scr-url-order-sync oracle/synthetic-rea-b09-sai/scr-url-order-sync.wrl oracle/synthetic-rea-b09-sai/sai.json
+fldx-internal oracle/synthetic-rea-b09-sai/fldx-internal.wrl oracle/synthetic-rea-b09-sai/sai.json
