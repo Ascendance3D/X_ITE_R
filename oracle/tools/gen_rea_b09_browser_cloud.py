@@ -132,17 +132,88 @@ def later(probes, frame=5):
 NODES = 'DEF V1 Viewpoint { description "first" }\nDEF N1 NavigationInfo { type "EXAMINE" }\n'
 PRE = CHAIN + "\n" + DESC
 # Kept open (OPEN_WORK.md): the reflection of X_ITE's engine classes past the SAI edge (the Browser's ~590 internal members, the
-# X3DScene and node class chains: the port hands out X3DNodeRef), and the page objects the owner decided return null (DOM, viewer,
+# node class chains: the port hands out X3DNodeRef), and the page objects the owner decided return null (DOM, viewer,
 # dashboard, StopWatch).
 BOUNDARY = ("Browser chain", "getViewer ()", "getActiveViewpoint () desc", "getActiveNavigationInfo () desc", "getActiveLayer () desc",
             "getActiveViewpoint ()", "getActiveNavigationInfo ()", "getActiveLayer ()", "getBrowserOptions () desc", "getCanvas ()",
-            "getElement ()", "getNotification ()", "getContextMenu ()", "getBrowserTime ()", "getBrowserTimings ()",
-            "getExecutionContext", "currentScene desc")
+            "getElement ()", "getNotification ()", "getContextMenu ()", "getBrowserTime ()", "getBrowserTimings ()")
 G.register("brx-api", P_API, open_prefixes=BOUNDARY, pre=PRE, nodes=NODES)
 G.register("brx-call", P_CALL, open_prefixes=BOUNDARY, pre=PRE, nodes=NODES)
 G.register("brx-obj", P_OBJ, open_prefixes=BOUNDARY, pre=PRE, nodes=NODES)
 G.register("brx-data", P_DATA, pre=PRE + "\n" + DEFS, after=later(P_LATER), nodes=NODES)
 
+
+# The scene objects a Script gets (X3DScene → X3DExecutionContext → X3DBaseNode → X3DChildObject → X3DObject): for each public
+# member, the class that owns it and its kind (m method, g getter, gs getter + setter, v value; + enumerable), and what each kind
+# of scene is (the world being initialized, the first empty world, createScene, createX3DFromString).
+SCX_NAMES = ("addComponent addExportedNode addExternProtoDeclaration addImportedNode addMetaData addNamedNode addProtoDeclaration "
+             "addRootNode addRoute baseURL bbox_changed components createNode createProto deleteRoute encoding exportedNodes "
+             "externprotos fromUnit getBaseURL getComponents getEncoding getExportedNode getExportedNodes getExternProtoDeclaration "
+             "getExternProtoDeclarations getField getFieldDefinitions getImportedNode getImportedNodes getLocalNode getMetaData "
+             "getMetaDatas getNamedNode getNamedNodes getNodeOrImportedNode getProfile getProtoDeclaration getProtoDeclarations "
+             "getRootNodes getRoute getRoutes getSpecificationVersion getTypeName getUniqueExportName getUniqueExternProtoName "
+             "getUniqueImportName getUniqueName getUniqueProtoName getUnit getUnits getWorldInfos getWorldURL hasComponent "
+             "importedNodes isScene metadata_changed namedNodes profile profile_changed protos removeComponent removeExportedNode "
+             "removeExternProtoDeclaration removeImportedNode removeMetaData removeNamedNode removeProtoDeclaration removeRootNode "
+             "renameImportedNode rootNodes routes sceneGraph_changed setMetaData setProfile setRootNodes specificationVersion "
+             "toJSONString toUnit toVRMLString toXMLString units updateComponent updateExportedNode updateExternProtoDeclaration "
+             "updateImportedNode updateNamedNode updateProtoDeclaration updateUnit worldURL getType getName getId getUserData "
+             "setUserData removeUserData addInterest removeInterest getExecutionContext getBrowser isLive getLive toString "
+             "toVRMLStream toXMLStream toJSONStream dispose getFields getUserDefinedFields getPredefinedFields addEvent "
+             "isInitialized setup initialize getMainScene getLocalScene getOuterNode isRootContext getComponentName getContainerField "
+             "addChildObjects getUnitInfo").split()
+SCX = ("var SCX_NAMES = " + repr(SCX_NAMES) + ";\n"
+       "function owner (o, n) { var p = o, k = 0; while (p && k ++ < 10) { var d = Object .getOwnPropertyDescriptor (p, n); "
+       "if (d) return (p === o ? 'OWN' : p .constructor && Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : '-') + ':' "
+       "+ ('value' in d ? (typeof d .value === 'function' ? 'm' : 'v') : (d .get ? 'g' : '') + (d .set ? 's' : '')) + (d .enumerable ? '+' : ''); "
+       "p = Object .getPrototypeOf (p); } return 'none'; }\n"
+       "function owners (o) { return SCX_NAMES .map (function (n) { return n + '=' + owner (o, n); }); }\n"
+       "var MADE = null, STR = null;\n"
+       "var MADE_ERR = '';\n"
+       "Browser .createScene (Browser .getProfile ('Core'), Browser .getComponent ('Grouping', 1)) .then (function (s) { MADE = s; }, function (e) { MADE_ERR = String (e && e .message); });\n"
+       "Browser .createX3DFromString ('#X3D V3.3 utf8\\nPROFILE Core\\nDEF T Transform { }') .then (function (s) { STR = s; });\n")
+P_SCX = [
+    ("world desc", "return desc (Browser .currentScene);"),
+    ("world owners", "return owners (Browser .currentScene);"),
+    ("first desc", "return desc (Browser .getExecutionContext ());"),
+    ("first owners", "return owners (Browser .getExecutionContext ());"),
+    ("world chain", "return chain (Browser .currentScene);"),
+]
+P_SCX_LATER = [
+    ("later world desc", "return desc (Browser .currentScene);"),
+    ("later made error", "return MADE_ERR;"),
+    ("later made desc", "return desc (MADE);"),
+    ("later made owners", "return owners (MADE);"),
+    ("later string desc", "return desc (STR);"),
+    ("later string owners", "return owners (STR);"),
+    ("later made === string", "return [MADE === STR, MADE .constructor === STR .constructor, Object .getPrototypeOf (MADE) === Object .getPrototypeOf (Browser .currentScene)];"),
+    ("later typeof globals", "return [typeof X3DScene, typeof X3DExecutionContext, typeof X3DBaseNode];"),
+    ("later string desc after DEF", "STR .addNamedNode ('Q', STR .createNode ('Group')); return desc (STR);"),
+    ("later made desc after comp", "MADE .removeComponent ('Nope'); return desc (MADE);"),
+]
+# What the members do on a scene object (the world's, the string scene's, the createScene scene).
+P_SCX_BEHAVIOR = []
+for who in ["Browser .currentScene", "STR", "MADE"]:
+    P_SCX_BEHAVIOR += [
+        (f"{who} names", f"var o = {who}; return [o .getTypeName (), String (o), o .toString (), Object .prototype .toString .call (o), o .getName (), typeof o .getId ()];"),
+        (f"{who} getType", f"return Array .from ({who} .getType ());"),
+        (f"{who} getExecutionContext", f"var c = {who} .getExecutionContext (); return c === null ? 'null' : [c === Browser .currentScene, c .getTypeName ()];"),
+        (f"{who} getLocalScene", f"return {who} .getLocalScene () === {who};"),
+        (f"{who} getOuterNode", f"return String ({who} .getOuterNode ());"),
+        (f"{who} getField", f"try {{ return {who} .getField ('rootNodes'); }} catch (e) {{ return e .message; }}"),
+        (f"{who} getFieldDefinitions", f"return {who} .getFieldDefinitions () .length;"),
+        (f"{who} fields", f"return [{who} .getFields () .length, {who} .getUserDefinedFields () .length, {who} .getPredefinedFields () .length];"),
+        (f"{who} toVRMLString", f"return {who} .toVRMLString () .split ('\\n') .length;"),
+        (f"{who} instanceof", f"var o = {who}; return [o instanceof X3DScene, o instanceof X3DExecutionContext, o instanceof X3DBaseNode, o instanceof X3DObject];"),
+        (f"{who} isScene", f"return [{who} .isScene, Object .prototype .hasOwnProperty .call ({who}, 'isScene')];"),
+    ]
+P_SCX_BEHAVIOR += [
+    ("classes", "return [X3DScene .length, X3DScene .typeName, X3DExecutionContext .length, X3DExecutionContext .typeName, X3DScene .name, Object .getPrototypeOf (X3DScene .prototype) === X3DExecutionContext .prototype];"),
+    ("method lengths", "var p = X3DScene .prototype, q = X3DExecutionContext .prototype; return ['addComponent', 'setProfile', 'fromUnit', 'updateUnit', 'addMetaData', 'addRootNode', 'toVRMLStream'] .map (function (n) { return n + p [n] .length; }) .concat (['addRoute', 'deleteRoute', 'getRoute', 'addImportedNode', 'updateImportedNode', 'createNode', 'getUniqueName'] .map (function (n) { return n + q [n] .length; }));"),
+]
+P_SCX_LATER += P_SCX_BEHAVIOR
+G.register("scx-api", P_SCX, open_prefixes=("world chain",), pre=PRE + "\n" + SCX, after=later(P_SCX_LATER), nodes=NODES)
+
 if __name__ == "__main__":
-    sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith("brx-")]
+    sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith(("brx-", "scx-"))]
     G.main()

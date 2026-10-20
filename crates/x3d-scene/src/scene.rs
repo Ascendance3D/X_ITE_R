@@ -207,6 +207,8 @@ pub struct SceneInfo {
     /// The source had a PROFILE statement (the parser then set the scene's profile, an event on `profile_changed`).
     pub profile_statement: bool,
     pub components: Vec<(String, i32)>,
+    /// See [`Scene::component_level_texts`].
+    pub component_level_texts: std::collections::HashMap<String, String>,
     pub meta: Vec<(String, String)>,
     pub units: Vec<UnitInfo>,
 }
@@ -266,6 +268,9 @@ pub struct Scene {
     pub profile_statement: bool,
     /// Ordered like X_ITE's ComponentInfoArray (update keeps the position).
     pub components: Vec<(String, i32)>,
+    /// The level of a component a Script gave (X3DScene.addComponent / updateComponent keep the ComponentInfo as given: its
+    /// level may be any value), as `String (level)`, by component name; printed in place of the number.
+    pub component_level_texts: std::collections::HashMap<String, String>,
     pub meta: Vec<(String, String)>,
     /// X3DScene units (UNIT statements update the four default entries in place).
     pub units: Vec<UnitInfo>,
@@ -429,6 +434,7 @@ impl Scene {
             profile: None,
             profile_statement: false,
             components: vec![],
+            component_level_texts: Default::default(),
             units: default_units(),
             meta: vec![],
             contexts: vec![ExecutionContext {
@@ -511,6 +517,16 @@ impl Scene {
             Some(i) => &i.components,
             None => &self.components,
         }
+    }
+
+    /// What the printers write as the level of the component `name` (`String (level)` of the ComponentInfo).
+    pub fn component_level_text(&self, ctx: CtxId, name: &str, level: i32) -> String {
+        let texts = match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.component_level_texts,
+            None => &self.component_level_texts,
+        };
+
+        texts.get(name).cloned().unwrap_or_else(|| level.to_string())
     }
 
     pub fn units_of(&self, ctx: CtxId) -> &[UnitInfo] {
@@ -1620,6 +1636,7 @@ impl Scene {
             profile: other.profile.clone(),
             profile_statement: other.profile_statement,
             components: other.components.clone(),
+            component_level_texts: other.component_level_texts.clone(),
             meta: other.meta.clone(),
             units: other.units.clone(),
         };

@@ -55,6 +55,8 @@ function initialize () {
   T ('navigationInfo getTypeName', function () { var v = Browser .getActiveNavigationInfo (); return [v .getTypeName (), v .getName ()]; });
   T ('layer getTypeName', function () { var v = Browser .getActiveLayer (); return v && [v .getTypeName (), v .getName ()]; });
   T ('getScriptNode', function () { var n = Browser .getScriptNode (); return [n .getTypeName (), n .getName (), n === SELF, n === SELF .getValue ()]; });
+  T ('getExecutionContext', function () { var c = Browser .getExecutionContext (); return [desc (c), c === Browser .currentScene]; });
+  T ('currentScene desc', function () { return desc (Browser .currentScene); });
   T ('browserTime vs time', function () { return [typeof Browser .getBrowserTime (), Browser .getBrowserTime () > 0]; });
   flush_ ();
 }

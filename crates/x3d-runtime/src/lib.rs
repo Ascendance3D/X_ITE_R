@@ -1125,6 +1125,11 @@ impl Runtime {
         self.go_live();
     }
 
+    /// The page's first, empty world, once something asked for it (see [`Runtime::browser_execution_context`]).
+    pub fn first_world(&self) -> Option<CtxId> {
+        self.first_world
+    }
+
     /// X3DBrowserContext.getExecutionContext (): the world once it is installed, the page's first, empty world before.
     pub fn browser_execution_context(&mut self) -> CtxId {
         if self.world_installed {

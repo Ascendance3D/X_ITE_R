@@ -1919,6 +1919,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 let e = Array::new(ctx.clone())?;
                 e.set(0, n.as_str())?;
                 e.set(1, *l)?;
+                e.set(2, s.component_level_text(c, n, *l))?;
                 comps.set(i, e)?;
             }
             o.set("components", comps)?;
@@ -1990,9 +1991,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             o.set("scriptURL", rt().page_url.as_str())?;
             Ok(o.into_value())
         }
+        // X3DScene.addComponent / updateComponent: `level` is the number the scene keeps, `text` is `String (level)` of the
+        // ComponentInfo the Script gave (any value; the printers write it).
         "addComponent" => {
             let script = num_arg(ctx, a, 0);
-            let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
+            let (name, level, text) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32, str_arg(ctx, a, 3));
             let root = rt().scene.scene_root(ctx_of_script(script));
             let comps = scene_components_mut(&mut rt().scene, root);
 
@@ -2000,21 +2003,23 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 return throw(ctx, &format!("Couldn't add component. Component '{name}' already exists."));
             }
 
-            comps.push((name, level));
+            comps.push((name.clone(), level));
+            set_component_level_text(&mut rt().scene, root, name, level, text);
             Ok(undefined)
         }
         "updateComponent" => {
             // X3DScene.updateComponent: a component of that name is replaced where it stands, else added.
             let script = num_arg(ctx, a, 0);
-            let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
+            let (name, level, text) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32, str_arg(ctx, a, 3));
             let root = rt().scene.scene_root(ctx_of_script(script));
             let comps = scene_components_mut(&mut rt().scene, root);
 
             match comps.iter_mut().find(|(n, _)| *n == name) {
                 Some(c) => c.1 = level,
-                None => comps.push((name, level)),
+                None => comps.push((name.clone(), level)),
             }
 
+            set_component_level_text(&mut rt().scene, root, name, level, text);
             Ok(undefined)
         }
         "removeComponent" => {
@@ -2023,6 +2028,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let root = rt().scene.scene_root(ctx_of_script(script));
 
             scene_components_mut(&mut rt().scene, root).retain(|(n, _)| *n != name);
+            set_component_level_text(&mut rt().scene, root, name, 0, "0".into());
             Ok(undefined)
         }
         "fobserve" => {
@@ -2403,6 +2409,20 @@ fn scene_components_mut(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId) -> &mu
         &mut s.scene_infos.get_mut(&root).unwrap().components
     } else {
         &mut s.components
+    }
+}
+
+/// The level text of a component (see `Scene::component_level_texts`); none when it is the number's own.
+fn set_component_level_text(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId, name: String, level: i32, text: String) {
+    let texts = match s.scene_infos.get_mut(&root) {
+        Some(i) => &mut i.component_level_texts,
+        None => &mut s.component_level_texts,
+    };
+
+    if text == level.to_string() {
+        texts.remove(&name);
+    } else {
+        texts.insert(name, text);
     }
 }
 

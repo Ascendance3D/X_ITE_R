@@ -290,7 +290,7 @@ impl<'a> JsonGenerator<'a> {
 
                     self.begin_object(None, false, false);
                     self.string_property("@name", name, false);
-                    self.number_property("@level", &level.to_string(), true);
+                    self.number_property("@level", &scene.component_level_text(scene_root, name, *level), true);
                     self.end_object();
                     comma = true;
                 }

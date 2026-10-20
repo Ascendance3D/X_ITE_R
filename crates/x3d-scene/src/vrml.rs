@@ -256,7 +256,7 @@ impl<'a> VrmlGenerator<'a> {
                 g.tidy_space();
                 g.push(":");
                 g.tidy_space();
-                g.push(&level.to_string());
+                g.push(&scene.component_level_text(root, name, *level));
                 g.brk();
             }
 

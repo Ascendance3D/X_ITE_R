@@ -84,6 +84,26 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
     }
 
     match what.as_str() {
+        // X3DBaseNode.getExecutionContext of an execution context: the context it was put in (`scene .setExecutionContext (…)` of
+        // createX3DFromString and Inline, a PROTO instance's body); none for a world, the page's first world and createScene's scene.
+        "parentCtx" => {
+            let r = rt();
+            let own = c == r.scene.world || r.ctx_events.no_forward.contains(&c) || r.first_world() == Some(c);
+
+            match r.scene.contexts[c].parent.filter(|_| !own) {
+                Some(p) => Ok(Value::new_number(ctx.clone(), p as f64)),
+                None => Ok(Value::new_null(ctx.clone())),
+            }
+        }
+        // X3DBaseNode.isLive of an execution context.
+        "live" => Ok(Value::new_bool(ctx.clone(), rt().ctx_live(c))),
+        // X3DExecutionContext.getLocalScene: the scene the context belongs to.
+        "sceneRoot" => Ok(Value::new_number(ctx.clone(), rt().scene.scene_root(c) as f64)),
+        // X3DExecutionContext.getOuterNode: the PROTO instance whose body the context is; null for a scene.
+        "outerNode" => match rt().scene.contexts[c].outer {
+            x3d_scene::Outer::Instance(n) => Ok(node_js(ctx, Some(n))),
+            _ => Ok(Value::new_null(ctx.clone())),
+        },
         "unique" => {
             let name = str_at(1);
             let r = &rt().scene;

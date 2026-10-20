@@ -21,6 +21,43 @@ SNAP = os.path.join(HERE, "..", "ledger", "before-cloud", "ledger.json")
 
 # id: (status, tests, missing, note)
 C = {
+    "sub:exec.context-api": (
+        "PARTIAL",
+        ["crates/x3d-viewer/tests/rea_batch09_sai.rs ctxev-* cfg-scene cfg-comp"],
+        "X3DExecutionContext / X3DScene class chain (brx-obj-open: the port's scene objects are plain objects); kept PARTIAL by "
+        "owner decision 2026-10-20 until its full REA requirements pass",
+        "b09 cloud: timing differences A-C fixed (createX3DFromString parse as a microtask, SFNode creation on a stream's first "
+        "read, Inline change events after the frame); component state of a scene exact (cfg-comp)",
+    ),
+    "sub:exec.import-export": (
+        "COMPLETE",
+        ["crates/x3d-viewer/tests/rea_batch09_sai.rs ie-chain ie-rename ie-direct ie-err-* ie-err-string ie-err-string-frames"],
+        "",
+        "b09 cloud e62be31+: IMPORT -> local node -> EXPORT chains, renameImportedNode / updateImportedNode / removeImportedNode / "
+        "addImportedNode from a Script, duplicate and missing names, exports of imported nodes, ROUTE before load, failed load, "
+        "self import, createX3DFromString with IMPORT/EXPORT (incl. the frame its promise settles): 14 cases, each baselined from "
+        "X_ITE (3 identical recordings), exact (scene text every frame, sorted log)",
+    ),
+    "sub:exec.bindable-stacks": (
+        "COMPLETE",
+        ["crates/x3d-viewer/tests/rea_batch09_sai.rs bind-*"],
+        "",
+        "b09 cloud e62be31+: bind-{Viewpoint,OrthoViewpoint,GeoViewpoint,NavigationInfo,Background,TextureBackground,Fog}, "
+        "bind-route, bind-inline, bind-read, bind-browser, bind-switch, bind-layers (isBound / bindTime of every node routed to a "
+        "Script, per layer, activeLayer changes, layers removed and added): 13 cases baselined from X_ITE (3 identical "
+        "recordings), exact; poses 1e-4",
+    ),
+    "sub:config.components-profiles": (
+        "COMPLETE",
+        ["crates/x3d-viewer/tests/rea_batch09_sai.rs cfg-browser cfg-scene cfg-comp cfg-parse-*"],
+        "",
+        "b09 cloud: supported profiles and components (title, providerURL, external, dependencies, aliases), getProfile / "
+        "getComponent / loadComponents incl. errors, the add/update/removeSupported* calls, scene profile and components "
+        "(cfg-comp: any name or level a Script gives is kept and printed as X_ITE does; missing, null and unknown arguments), "
+        "PROFILE/COMPONENT statements in VRML, XML and JSON: 8 cases baselined from X_ITE (3 identical recordings), exact. Kept "
+        "documented (cfg-scene-odd): the text of the TypeError addComponent () throws is the JavaScript engine's (QuickJS words "
+        "it differently from V8); the thrown class and the state are compared",
+    ),
     "node:MetadataSet": (
         "COMPLETE",
         ["crates/x3d-viewer/tests/rea_batch09_sai.rs meta-parse meta-events meta-nodes", "crates/x3d-parse/tests/gltf_rea.rs"],
