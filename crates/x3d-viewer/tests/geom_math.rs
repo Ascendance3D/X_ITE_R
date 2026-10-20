@@ -6,6 +6,7 @@
 use serde_json::Value;
 use x3d_fields::math::{Matrix3, Matrix4, Vector2, Vector3, Vector4};
 use x3d_viewer::geom::{Camera, Cylinder3, Line2, Line3, Plane3, Sphere3, Triangle3, Uvt, ViewVolume};
+use x3d_viewer::geom2::{Bezier, Box2, Sat, Spheroid3, Triangle2, ViewVolumeObject, eigen_decomposition, merge_sort, quick_sort};
 use x3d_viewer::lookat::Box3;
 
 /// The inputs of one case, read in order.
@@ -33,6 +34,16 @@ impl In {
         let mut m = [0.0; 9];
         m.iter_mut().for_each(|x| *x = self.f());
         Matrix3(m)
+    }
+
+    fn b(&mut self) -> bool {
+        self.f() != 0.0
+    }
+
+    fn rest(&mut self) -> Vec<f64> {
+        let r = self.0[self.1..].to_vec();
+        self.1 = self.0.len();
+        r
     }
 
     fn m4(&mut self) -> Matrix4 {
@@ -65,6 +76,27 @@ impl Out {
 
     fn m4(&mut self, m: &Matrix4) -> &mut Self {
         m.0.iter().for_each(|x| self.0.push(*x));
+        self
+    }
+
+    fn m3(&mut self, m: &Matrix3) -> &mut Self {
+        m.0.iter().for_each(|x| self.0.push(*x));
+        self
+    }
+
+    fn v4(&mut self, v: &Vector4) -> &mut Self {
+        self.f(v.x).f(v.y).f(v.z).f(v.w)
+    }
+
+    fn v3s(&mut self, vs: &[Vector3]) -> &mut Self {
+        vs.iter().for_each(|v| {
+            self.v3(v);
+        });
+        self
+    }
+
+    fn fs(&mut self, vs: &[f64]) -> &mut Self {
+        self.0.extend_from_slice(vs);
         self
     }
 }
@@ -170,6 +202,138 @@ fn run(op: &str, i: &mut In) -> Vec<f64> {
             let (lo, hi) = b.extents();
             o.v3(&lo).v3(&hi);
         }
+        "box2" => {
+            let (min, max, m, mb, p, size, center) = (i.v2(), i.v2(), i.m3(), i.m3(), i.v2(), i.v2(), i.v2());
+            let (q1, q2, q3, omin, omax) = (i.v2(), i.v2(), i.v2(), i.v2(), i.v2());
+            let mut b = Box2::from_extents(&min, &max);
+            let c = Box2::new(&size, &center);
+            o.m3(&c.matrix).b(b.is_empty()).b(Box2::default().is_empty()).b(b.contains_point(&p)).b(b.equals(&b.copy()));
+            o.v2(&b.size()).v2(&b.center());
+            b.mult_right(&m);
+            let (lo, hi) = b.extents();
+            o.v2(&lo).v2(&hi).b(b.contains_point(&p));
+            b.mult_left(&mb);
+            let (lo, hi) = b.extents();
+            o.v2(&lo).v2(&hi).v2(&b.size());
+            let ob = Box2::from_extents(&omin, &omax);
+            b.add(&ob);
+            let (lo, hi) = b.extents();
+            o.v2(&lo).v2(&hi);
+            let mut e = Box2::default();
+            e.add(&ob);
+            let (lo, hi) = e.extents();
+            o.v2(&lo).v2(&hi);
+            let (lo, hi) = Box2::from_points(&[q1, q2, q3]).extents();
+            o.v2(&lo).v2(&hi).m3(&Box2::from_points(&[]).matrix);
+        }
+        "triangle2" => {
+            let (a, b, c, p) = (i.v2(), i.v2(), i.v2(), i.v2());
+            let bc = Triangle2::to_barycentric(&p, &a, &b, &c);
+            o.f(Triangle2::area(&a, &b, &c)).b(Triangle2::is_point_in_triangle(&p, &a, &b, &c)).f(bc.u).f(bc.v).f(bc.t);
+        }
+        "spheroid3" => {
+            let (a, c, f) = (i.f(), i.f(), i.b());
+            let s = Spheroid3::new(a, c, f);
+            o.f(s.semi_major_axis).f(s.semi_minor_axis).b(s.equals(&s));
+        }
+        "box3.more" => {
+            let (size, center, m, min, max, mo, p) = (i.v3(), i.v3(), i.m4(), i.v3(), i.v3(), i.m4(), i.v3());
+            let arr = i.rest();
+            let mut a = Box3::default();
+            a.set(Some((&size, &center)));
+            let mut b = Box3::from_extents(&min, &max);
+            b.mult_left(&mo);
+            o.m4(&a.matrix).b(a.is_empty()).b(Box3::default().is_empty()).v3s(&a.points()).v3s(&a.axes()).v3s(&a.normals());
+            o.b(a.contains_point(&p)).b(a.intersects_box(&b)).b(b.intersects_box(&a)).b(a.intersects_box(&Box3::default()));
+            o.v3s(&b.points()).v3s(&b.normals());
+            let mut c = a.clone();
+            c.mult_left(&m);
+            let (lo, hi) = c.extents();
+            o.v3(&lo).v3(&hi);
+            let mut d = a.clone();
+            d.add(&b);
+            let (lo, hi) = d.extents();
+            o.v3(&lo).v3(&hi);
+            let mut e = Box3::default();
+            e.add(&b);
+            o.m4(&e.matrix);
+            let (lo, hi) = Box3::from_points(&[size, center, min, max, p]).extents();
+            o.v3(&lo).v3(&hi);
+            let (lo, hi) = Box3::from_array(&arr, 3).extents();
+            o.v3(&lo).v3(&hi);
+            let (lo, hi) = Box3::from_array(&arr, 4).extents();
+            o.v3(&lo).v3(&hi);
+            o.m4(&Box3::from_points(&[]).matrix).m4(&Box3::from_array(&[], 3).matrix).v3(&a.size());
+            let mut om = Matrix4([0.0; 16]);
+            Camera::ortho_box(&b, &mut om);
+            o.m4(&om);
+        }
+        "camera" => {
+            let (l, r, b, t, n, f, fov, w, h) = (i.f(), i.f(), i.f(), i.f(), i.f(), i.f(), i.f(), i.f(), i.f());
+            let (mut m1, mut m2, mut m3) = (Matrix4([0.0; 16]), Matrix4([0.0; 16]), Matrix4([0.0; 16]));
+            Camera::frustum(l, r, b, t, n, f, &mut m1);
+            Camera::perspective(fov, n, f, w, h, &mut m2);
+            Camera::perspective2(fov, n, f, &mut m3);
+            o.m4(&m1).m4(&m2).m4(&m3);
+        }
+        "viewvolume.object" => {
+            let (pm, vp, radius, center, size, bc, m) = (i.m4(), i.v4(), i.f(), i.v3(), i.v3(), i.v3(), i.m4());
+            let mut v = ViewVolumeObject::new(&pm, &vp);
+            let mut b = Box3::default();
+            b.set(Some((&size, &bc)));
+            b.mult_right(&m);
+            o.v3s(&v.points).v3s(&v.normals);
+            for p in &v.planes {
+                o.v3(&p.normal).f(p.distance_from_origin);
+            }
+            let edges = v.edges();
+            o.v3s(&edges).v4(&v.viewport().clone()).b(v.intersects_sphere(radius, &center)).b(v.intersects_box(&b));
+            let mut c = Box3::default();
+            c.set(Some((&size, &center)));
+            o.b(v.intersects_box(&c));
+        }
+        "sat" => {
+            let axes = [i.v3(), i.v3(), i.v3()];
+            let p1 = [i.v3(), i.v3(), i.v3(), i.v3()];
+            let p2 = [i.v3(), i.v3(), i.v3(), i.v3()];
+            o.b(Sat::is_separated(&axes, &p1, &p2));
+        }
+        "bezier" => {
+            let c: Vec<f64> = (0..12).map(|_| i.f()).collect();
+            let steps = i.f() as i64;
+            let (ax, ay, rx, ry, rot, large, sweep, x, y, st) = (i.f(), i.f(), i.f(), i.f(), i.f(), i.b(), i.b(), i.f(), i.f(), i.f());
+            let (mut q, mut k, mut a) = (vec![], vec![], vec![]);
+            Bezier::quadric(c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], steps, &mut q);
+            Bezier::cubic(c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7], c[8], c[9], c[10], c[11], steps, &mut k);
+            Bezier::arc(ax, ay, rx, ry, rot, large, sweep, x, y, st, &mut a);
+            o.f(q.len() as f64).v3s(&q).f(k.len() as f64).v3s(&k).f(a.len() as f64).v3s(&a);
+        }
+        "eigen" => {
+            let order = i.f() as usize;
+            let m = i.rest();
+            let (values, vectors) = eigen_decomposition(&m, order);
+            o.fs(&values);
+            for row in &vectors {
+                o.fs(row);
+            }
+        }
+        "sort" => {
+            let n = i.f() as usize;
+            let keys: Vec<f64> = (0..n).map(|_| i.f()).collect();
+            let (first, last) = (i.f() as usize, i.f() as usize);
+            let items: Vec<(f64, usize)> = keys.iter().copied().zip(0..).collect();
+            let cmp = |a: &(f64, usize), b: &(f64, usize)| a.0 < b.0;
+            let num = |a: &f64, b: &f64| a < b;
+            let mut m = items.clone();
+            merge_sort(&mut m, first, last, &cmp);
+            let mut q = items.clone();
+            quick_sort(&mut q, first, last, &cmp);
+            let mut mn = keys.clone();
+            merge_sort(&mut mn, first, last, &num);
+            let mut qn = keys.clone();
+            quick_sort(&mut qn, first, last, &num);
+            o.fs(&m.iter().map(|x| x.1 as f64).collect::<Vec<_>>()).fs(&q.iter().map(|x| x.1 as f64).collect::<Vec<_>>()).fs(&mn).fs(&qn);
+        }
         _ => panic!("unknown op {op}"),
     }
 
@@ -196,6 +360,19 @@ fn geometry_matches_x_ite_bit_for_bit() {
 
         if !same {
             failures.push(format!("case {n} {op}:\n  x_ite {expected:?}\n  port  {got:?}"));
+        }
+    }
+
+    // x3d-render's own Camera.perspective (traverse.rs, used for drawing) against X_ITE's, on the same cases.
+    for case in cases.iter().filter(|c| c["op"] == "camera") {
+        let input: Vec<f64> = case["in"].as_array().unwrap().iter().map(bits).collect();
+        let expected: Vec<f64> = case["out"].as_array().unwrap().iter().map(bits).collect();
+        let (n, f, fov, w, h) = (input[4], input[5], input[6], input[7], input[8]);
+        let got = x3d_render::traverse::perspective(fov, n, f, w, h);
+        let want = &expected[16..32];
+
+        if !got.0.iter().zip(want).all(|(a, b)| a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan())) {
+            failures.push(format!("x3d-render perspective {input:?}:\n  x_ite {want:?}\n  port  {:?}", got.0));
         }
     }
 
