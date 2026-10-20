@@ -13,6 +13,13 @@ events only). Each world is a grid of cells that vary one node's fields side by 
   vis-light-spot    SpotLight
   vis-texturing     ImageTexture, PixelTexture (1-4 components), TextureTransform
   vis-texturing3d   TextureCoordinate3D, TextureCoordinate4D (with a PixelTexture3D)
+  vis-text-font     Text, FontStyle: family, style, size, spacing
+  vis-text-layout   Text, FontStyle: justify, direction, length, maxExtent, several strings
+  vis-layout        LayoutGroup (Layout, Viewport)
+  vis-screen        ScreenGroup, ScreenFontStyle
+  vis-localfog      LocalFog
+  vis-texturebackground-*   TextureBackground (front, corner, sky + transparency, partial)
+  vis-ortho-40-* / -41-*    OrthoViewpoint with an MFFloat (4.0) and an SFVec4f (4.1) fieldOfView
 
 Not covered: MovieTexture (the corpus holds no movie file; a frame at a fixed time cannot be
 recorded without one). Textures are the clean synthetic PNGs of synthetic-rea-b02 / b03.
@@ -195,6 +202,134 @@ worlds["vis-texturing3d.wrl"] = world([
     t3("TextureCoordinate3D { point [ 0 0 0, 1 0 0, 1 1 1, 0 1 1 ] }"),
     t3("TextureCoordinate4D { point [ 0 0 0 1, 1 0 0 1, 1 1 1 1, 0 1 1 1 ] }"),
 ], head=HEAD3D)
+
+# --- Text, FontStyle -------------------------------------------------------------------------------
+HEADF = "#X3D V4.0 utf8\nPROFILE Full\n"
+def txt(strings, fs="", extra="", mat="Material { diffuseColor 0.95 0.95 0.95 }"):
+    s = " ".join(f'"{x}"' for x in strings)
+    fontstyle = f"fontStyle FontStyle {{ {fs} }}" if fs else ""
+    return shape(f"Text {{ string [ {s} ] {fontstyle} {extra} solid FALSE }}", f"Appearance {{ material {mat} }}")
+MARK = "Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }"
+def txm(strings, fs="", extra=""):
+    return MARK + "\n" + txt(strings, fs, extra)
+
+worlds["vis-text-font.wrl"] = world([
+    txt(["Abc"]),
+    txt(["Abc"], 'family "SERIF"'),
+    txt(["Abc"], 'family "SANS"'),
+    txt(["Abc"], 'family "TYPEWRITER"'),
+    txt(["Abc"], 'family "SERIF" style "BOLD"'),
+    txt(["Abc"], 'family "SERIF" style "ITALIC"'),
+    txt(["Abc"], 'family "SANS" style "BOLDITALIC"'),
+    txt(["Ag"], "size 0.5"),
+    txt(["Ag"], "size 1.4"),
+    txt(["Ab", "Cd"], "spacing 2"),
+    txt(["Abc"], 'family [ "NoSuchFont" "SANS" ]'),
+    txt(["Abc"], 'family "Arial" style "PLAIN"'),
+], head=HEADF)
+
+worlds["vis-text-layout.wrl"] = world([
+    txm(["Ab", "Xy"], 'justify [ "BEGIN" "BEGIN" ]'),
+    txm(["Ab", "Xy"], 'justify [ "MIDDLE" "MIDDLE" ]'),
+    txm(["Ab", "Xy"], 'justify [ "END" "END" ]'),
+    txm(["Ab", "Xy"], 'justify [ "BEGIN" "FIRST" ]'),
+    txm(["Abc"], "horizontal FALSE"),
+    txm(["Abc"], "horizontal FALSE leftToRight FALSE topToBottom FALSE"),
+    txm(["Abc"], "leftToRight FALSE"),
+    txm(["Ab", "Xy"], "topToBottom FALSE"),
+    txm(["Ab"], "", "length [ 3 ]"),
+    txm(["Abcdefg"], "", "maxExtent 1"),
+    txm(["Ab", "Xyz"], "", "length [ 1 2 ] maxExtent 2.5"),
+    txm(["A", "", "B"], "spacing 1.5"),
+], head=HEADF)
+
+# --- LayoutGroup, ScreenGroup, ScreenFontStyle ---------------------------------------------------
+LAYOUT_HEAD = "#X3D V4.0 utf8\nPROFILE Full\nCOMPONENT Layout:2\n"
+def rect(w, h, color):
+    return (f"Shape {{ appearance Appearance {{ material Material {{ emissiveColor {color} diffuseColor 0 0 0 }} }} geometry IndexedFaceSet "
+            f"{{ coord Coordinate {{ point [ {-w/2} {-h/2} 0, {w/2} {-h/2} 0, {w/2} {h/2} 0, {-w/2} {h/2} 0 ] }} coordIndex [ 0 1 2 3 -1 ] }} }}")
+def layout(fields, children, viewport=""):
+    return f"LayoutGroup {{ layout Layout {{ {fields} }} {viewport} children [ {children} ] }}"
+LP = 'sizeUnits [ "PIXEL" "PIXEL" ] scaleMode [ "PIXEL" "PIXEL" ]'
+SCENE = "Transform { translation -1.5 0 0 children " + shape("Box { size 1.5 1.5 1.5 }", "Appearance { material Material { diffuseColor 0.3 0.5 0.9 } }") + " }\n"
+SCENE += "Transform { translation 1.5 0 0 children " + shape("Sphere { radius 0.9 }", "Appearance { material Material { diffuseColor 0.9 0.6 0.2 } }") + " }"
+worlds["vis-layout.wrl"] = (
+    LAYOUT_HEAD + "Viewpoint { position 0 0 8 }\n" + BG + "\n" + SCENE + "\n"
+    + layout(f'align [ "LEFT" "BOTTOM" ] offsetUnits [ "PIXEL" "PIXEL" ] offset [ 10 10 ] size [ 100 50 ] {LP}', rect(100, 50, "1 0.4 0.1")) + "\n"
+    + layout(f'align [ "RIGHT" "TOP" ] offsetUnits [ "PIXEL" "PIXEL" ] offset [ -10 -10 ] size [ 80 80 ] {LP}', rect(80, 80, "0.2 0.9 0.4")) + "\n"
+    + layout(f'align [ "CENTER" "BOTTOM" ] offsetUnits [ "FRACTION" "PIXEL" ] offset [ 0 10 ] sizeUnits [ "FRACTION" "PIXEL" ] size [ 0.5 30 ] scaleMode [ "FRACTION" "PIXEL" ]', rect(1, 1, "0.9 0.2 0.9")) + "\n"
+    + layout(f'align [ "LEFT" "TOP" ] offset [ 0.05 -0.05 ] size [ 0.2 0.2 ] scaleMode [ "STRETCH" "STRETCH" ]', rect(1, 1, "0.2 0.7 0.9")) + "\n"
+    + layout(f'align [ "CENTER" "CENTER" ] size [ 120 60 ] {LP}', rect(60, 30, "0.9 0.9 0.2") + "\n" + rect(20, 20, "0.1 0.1 0.1"),
+             "viewport Viewport { clipBoundary [ 0.4 0.6 0.4 0.6 ] }") + "\n"
+)
+SG = lambda tr, body: f"Transform {{ translation {tr} children ScreenGroup {{ children [ {body} ] }} }}"
+SFS = lambda f: f"fontStyle ScreenFontStyle {{ {f} }}"
+def stext(strings, f, mat="Material { emissiveColor 1 1 1 diffuseColor 0 0 0 }"):
+    s = " ".join(f'"{x}"' for x in strings)
+    return shape(f"Text {{ string [ {s} ] {SFS(f)} solid FALSE }}", f"Appearance {{ material {mat} }}")
+worlds["vis-screen.wrl"] = (
+    LAYOUT_HEAD + "Viewpoint { position 0 0 8 }\n" + BG + "\n" + SCENE + "\n"
+    + SG("-2.5 2 0", rect(60, 40, "1 0.4 0.1")) + "\n"
+    + SG("2.5 2 0", rect(60, 40, "0.2 0.9 0.4")) + "\n"
+    + SG("0 0 2", rect(30, 30, "0.9 0.2 0.9")) + "\n"
+    + SG("-2.5 -2 0", stext(["Screen"], "pointSize 24")) + "\n"
+    + SG("2.5 -2 0", stext(["Screen", "Text"], 'pointSize 12 justify [ "MIDDLE" "MIDDLE" ] spacing 1.5')) + "\n"
+    + SG("0 -2.8 0", stext(["Bold"], 'family "SANS" style "BOLD" pointSize 18')) + "\n"
+    + "Transform { translation 0 2.8 -3 children ScreenGroup { children [ " + rect(60, 40, "0.5 0.5 0.5") + " ] } }\n"
+)
+
+# --- LocalFog, TextureBackground -----------------------------------------------------------------
+BOX3 = "".join(
+    f"Transform {{ translation {dx} 0 {z} children " + shape("Sphere { radius 0.45 }", "Appearance { material Material { diffuseColor 0.9 0.6 0.4 } }") + " }\n"
+    for dx, z in ((-0.7, 0), (0, -4), (0.7, -8)))
+def fogcell(fog):
+    return f"Group {{ children [ {fog}\n{BOX3} ] }}"
+LF = lambda f: f"LocalFog {{ {f} }}"
+worlds["vis-localfog.wrl"] = world([
+    fogcell(""),
+    fogcell(LF("color 0.9 0.2 0.2 visibilityRange 6")),
+    fogcell(LF("color 0.2 0.9 0.4 visibilityRange 12")),
+    fogcell(LF("color 0.9 0.9 0.9 visibilityRange 6 fogType \"EXPONENTIAL\"")),
+    fogcell(LF("color 0.2 0.4 1 visibilityRange 12 fogType \"EXPONENTIAL\"")),
+    fogcell(LF("color 1 1 0 visibilityRange 0")),
+    fogcell(LF("color 1 0 1 visibilityRange 6 enabled FALSE")),
+    fogcell(LF("color 0.9 0.2 0.2 visibilityRange 3")),
+    fogcell(LF("color 0.5 0.5 0.5 visibilityRange 10 fogType \"EXPONENTIAL2\"")),
+    fogcell(LF("color 0 1 1 visibilityRange 20 fogType \"LINEAR\"")),
+    f"Group {{ children [ Group {{ children [ {LF('color 1 0.5 0 visibilityRange 6')} ] }}\n{BOX3} ] }}",
+    fogcell(LF("color 0.9 0.2 0.2 visibilityRange 100")),
+], head=HEADF, vp="Viewpoint { position 0 0 14 fieldOfView 0.9 }")
+
+def tbg(fields, vp="Viewpoint { position 0 0 5 }", tex_sides="front back left right top bottom"):
+    sides = " ".join(f'{s}Texture ImageTexture {{ url "{PBR}env-{s}.png" }}' for s in tex_sides.split())
+    return (HEADF + vp + "\n" + f"TextureBackground {{ {sides} {fields} }}\n"
+            + shape("Sphere { radius 0.8 }", "Appearance { material Material { diffuseColor 0.8 0.8 0.8 } }") + "\n")
+worlds["vis-texturebackground-front.wrl"] = tbg("")
+worlds["vis-texturebackground-corner.wrl"] = tbg("", "Viewpoint { position 0 0 5 orientation 0.3 0.9 0.1 0.9 }")
+worlds["vis-texturebackground-sky.wrl"] = tbg("skyColor [ 0.1 0.2 0.8, 0.9 0.9 0.6 ] skyAngle 1.4 groundColor [ 0.3 0.2 0.1, 0.5 0.4 0.3 ] groundAngle 1.4 transparency 0.5",
+                                              "Viewpoint { position 0 0 5 orientation 1 0 0 0.3 }")
+worlds["vis-texturebackground-partial.wrl"] = tbg("skyColor 0.9 0.4 0.1", "Viewpoint { position 0 0 5 orientation 0 1 0 0.6 }", "front top")
+
+# --- OrthoViewpoint (X3D 4.0 MFFloat, 4.1 SFVec4f) -----------------------------------------------
+DOTS = "".join(
+    "Transform { translation %d %d 0 children Shape { appearance Appearance { material Material { diffuseColor %s } } geometry Box { size 1.2 1.2 1.2 } } }\n"
+    % (x, y, "0.9 0.2 0.2" if (x, y) == (0, 0) else ("0.3 0.5 0.9" if (x + y) % 4 == 0 else "0.7 0.7 0.7"))
+    for x in range(-6, 7, 2) for y in range(-6, 7, 2))
+def ortho(version, fov, extra=""):
+    if fov is None:
+        field = ""
+    elif version == "4.0":
+        field = "fieldOfView [ %s ]" % " ".join(map(str, fov))
+    else:
+        field = "fieldOfView %s" % " ".join(map(str, fov))
+    return f"#X3D V{version} utf8\nPROFILE Full\nOrthoViewpoint {{ position 0 0 10 {field} {extra} }}\n{BG}\n{DOTS}"
+for v in ("4.0", "4.1"):
+    t = v.replace(".", "")
+    worlds[f"vis-ortho-{t}-default.wrl"] = ortho(v, None)
+    worlds[f"vis-ortho-{t}-wide.wrl"] = ortho(v, (-8, -4, 8, 4))
+    worlds[f"vis-ortho-{t}-tall.wrl"] = ortho(v, (-3, -8, 3, 8))
+    worlds[f"vis-ortho-{t}-offset.wrl"] = ortho(v, (0, -2, 8, 6))
+    worlds[f"vis-ortho-{t}-rotated.wrl"] = ortho(v, (-5, -5, 5, 5), "orientation 0 0 1 0.5")
 
 if __name__ == "__main__":
     out = sys.argv[1]
