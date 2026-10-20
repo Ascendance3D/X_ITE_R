@@ -114,3 +114,27 @@ ctxev-inline, ctxev-stream-vrml, ctxev-stream-xml, ctxev-stream-json. cases.txt:
   value is not raw: picking-groups, picking-layers, vpick-layers caught that). data_numbers uses ToNumber for every
   component (null → 0, "" → 0, true → 1).
   sub:fields.types stays PARTIAL. Ledger notes only; totals unchanged.
+
+## Checkpoint after b2e5b9f (cloud agent items 1-6)
+
+1. Raw components in VRML, XML and JSON: `String (raw)` wherever X3DGenerator.ToUnit leaves a component as it is (a field
+   without a unit category, or a node's / field's own toXXXString: X3DObject pushes a `null` execution context, so no unit
+   converts, numbers included); JSONGenerator.Number quotes NaN / Infinity texts; XML / JSON user fields with raw components are
+   never default. New fldx-print, fldx-units, fldx-cross (3 identical X_ITE recordings each, exact).
+2. Text that changes after assignment: the texts are taken again when a host's Scripts have run and before a Script prints, so
+   the current text prints (fldx-print `mut`). The number of toString calls differs (fldx-print-count-open, documented).
+3. IterableWeakSet (tests/weak_set_engine.rs): in the bundled QuickJS a FinalizationRegistry target that is its own unregister
+   token stays alive, so X_ITE's own class holds its members strongly here too; freeing a cycle with a WeakRef to such a target
+   corrupts the QuickJS heap (reproduced without port code), so the WeakRef stays replaced. Unreachable members are freed
+   (memory flat over 80 000 dropped cycles). No unsafe collection was added.
+4. Script URL candidates step as X_ITE's FileLoader: a throwing callback reaches the next candidate three microtask ticks
+   later, a URL fetch rejects at once two ticks later, an unparsable URL one, a fetched one after its fetch; the failure prints
+   when the next starts. New scr-url-order-micro (exact). Still open: the frame network fetches complete in (oracle page).
+5. Geometry: oracle/tools/geom_xite.mjs runs the pinned X_ITE's standard/Math/Geometry modules on 2434 cases;
+   tests/geom_math.rs: the port is bit-exact on all of them.
+6. NOT_TESTED nodes: 12 node-* worlds (field definitions, created text, events of every settable field on a live node), each
+   3 identical X_ITE recordings, exact. Fix: OrthoViewpoint's fieldOfView prints as `new SFVec4f (... fieldOfView)` for any
+   length (missing components 0 0 0 1); a FontStyle whose family and style change together loads once (X3DUrlObject buffers
+   the reload in its `_loadData` field), so a missing family warns once. Open: Text's layout output events (node-text-outputs-open).
+   Ledger: the 33 node entries NOT_TESTED -> PARTIAL (visual evidence still missing). Ledger tool fixed: `apply` rebuilds each
+   entry from the cloud-start snapshot (a note was appended twice in b2e5b9f, node:Script's missing text was not taken).

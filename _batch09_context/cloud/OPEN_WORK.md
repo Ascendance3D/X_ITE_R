@@ -36,47 +36,32 @@ Rust run, can reproduce it byte for byte. This is a property of the worlds, not 
 
 ## Remaining work, hardest first
 
-1. Engine internals of the objects an execution context hands out (scx-layers-open, documented, not PASS): X_ITE's X3DRoute,
+1. Event-loop timing that follows the oracle page's network, not X_ITE's code (documented open): a fetched Script candidate (a file,
+   a base64 data URL) completes 3 frames later in the oracle (the port: the same frame), and Chrome completes a base64 data URL's
+   fetch after the files' (scr-url-order-open); a scene a Script asks for whose EXTERNPROTO, Inline or Script file is fetched
+   resolves 1-2 frames later (parse-def-proto snippets 37, 38, 40; parse-loads). The files are served locally by the oracle, so
+   network access does not change this. The microtask part matches since this checkpoint (scr-url-order-micro).
+2. Text's layout outputs (node-text-outputs-open): X_ITE sends origin, textBounds and lineBounds when it rebuilds the text, after
+   its default font has loaded, twice for one change; the port computes the same values (x3d-text oracle test, 1e-6) but its
+   runtime sends no such events. Needs X_ITE's rebuild triggers and the font load modelled.
+3. Engine internals of the objects an execution context hands out (scx-layers-open, documented, not PASS): X_ITE's X3DRoute,
    X3DImportedNode, X3DExportedNode, X3DProtoDeclaration and X3DExternProtoDeclaration prototypes also carry the engine's own
-   members (connect, refreshInstance, newInstance, loadNow, the X3DBaseNode field machinery, the private `_url`, `_load` …
-   child fields); the port's carry the public ones (scx-members: owner, kind and value of each, exact). Also not passed to
-   Scripts: a loaded EXTERNPROTO's appinfo and documentation (the declaration's own are), toVRMLString / toXMLString /
-   toJSONString of a route, an imported or an exported node (X_ITE prints the statement), X3DScene.dispose tearing a scene down.
-2. Node class chains: a node X_ITE hands out (SFNode.getValue (), getActiveViewpoint …) is an instance of its node class
-   (Viewpoint → X3DViewpointNode → X3DBindableNode → …); the port's is an X3DNodeRef (owner boundary 2026-10-20). The type list
-   is the same (getType ()), the constructor names and internal members are not (brx-call-open).
-3. Browser boundary kept open (owner decision 2026-10-20, documented, not PASS): brx-api-open (the Browser's ~590 engine
-   members: WebGL, DOM, dashboard), brx-call-open (getCanvas, getElement, getNotification, getContextMenu, getViewer,
-   getBrowserTime, getBrowserTimings return null; X_ITE returns its page objects), X3DConstants of external-component node
-   types in scr-browser-open (X_ITE's load order).
-4. scr-classes-open stays unresolved (owner decision 2026-10-20, Decision 1): no DOM. The page globals a Script reaches in
-   X_ITE (Script.js evaluates `with (globalObject)` in the page) are not added: `window`, `document`, `globalThis` as the
-   page's window (name "", length 0), `XMLHttpRequest`, `fetch`. No nonfunctional stand-ins are added to satisfy reflection
-   probes. Browser methods that hand out page objects keep returning null (brx-call-open). Every global X_ITE's own Script.js
-   defines matches (scr-globals, 150 probes). node:Script keeps its current status for this reason.
-5. Field representation (sub:fields.types stays PARTIAL, Decision 2: no string-to-NaN difference accepted).
-   Done, fldx-internal (3 identical X_ITE recordings, Rust exact): X_ITE's internal value objects (Vector2/3/4, Color3/4
-   written through `getValue ()`) hold any JavaScript value; the setters, constructors, Rotation4, SFFloat and MF elements
-   coerce with Number (). The port keeps the Script realm's raw components under a token that goes with the runtime value
-   and along routes (Scene::raw_tokens), so the Script objects of the field and of every routed destination read the same
-   raw components; such a value is never the default (X_ITE's isDefaultValue compares with `===`). VRML printing: a field
-   with a unit category prints ToNumber (raw) / factor (X3DScene.toUnit); a field without one prints `String (raw)`
-   (X3DGenerator.FloatFormat). The runtime and rendering use ToNumber (raw), as X_ITE's math does.
-   Open: XML/JSON printing of such raw components (no probe yet); `String (raw)` is taken when the Script hands the value
-   over, X_ITE takes it at print time (differs only for an object whose toString changes later); IterableWeakSet strong
-   members (QuickJS); external-component X3DConstants order (X_ITE nondeterministic).
-6. sub:exec.context-api stays PARTIAL (owner decision 2026-10-20). Its component state (cfg-comp) and the X3DScene /
-   X3DExecutionContext class chain (scx-api) and the objects it hands out (scx-members) now match; what is left in it is item 1.
-7. scr-url-order-open (documented open): the order Scripts initialize in when a URL candidate fails or needs a fetch is Chrome's
-   microtask and task order (a candidate whose callback throws reaches the next one after the async callback's hops, a failed
-   `fetch ("foo:bar")` sooner; a base64 data URL's fetch completes after the files'); the port runs a failed candidate's
-   fallback at once and fetches in request order. The synchronous part matches (scr-url-order-sync). parse-def-proto,
-   parse-loads (documented open): a scene a Script asks for in initialize () resolves one to three frames later in X_ITE; the
-   port's world-load loop keeps running frames while such scenes load (X_ITE's world loadCount does not count them) and the
-   oracle page's warm-up frames run without returning to the event loop.
-8. sub:fields.math: compare the Rust Geometry math (Box3, Line3, Plane3, Triangle, ViewVolume, Spline) with X_ITE's
-   standard/Math/Geometry directly.
-9. The rest of the REA queue.
+   members; the port's carry the public ones (scx-members). Not passed to Scripts: a loaded EXTERNPROTO's appinfo and
+   documentation, toVRMLString / toXMLString / toJSONString of a route, an imported or an exported node, X3DScene.dispose.
+4. Node class chains: a node X_ITE hands out is an instance of its node class; the port's is an X3DNodeRef (owner boundary
+   2026-10-20); getType () matches (brx-call-open).
+5. Browser boundary kept open (owner decisions 2026-10-20, documented, not PASS): brx-api-open, brx-call-open (page objects are
+   null), scr-classes-open (Decision 1: no DOM, no stand-in objects), X3DConstants of external-component node types.
+6. sub:fields.types (PARTIAL): the number of toString calls on a raw component (fldx-print-count-open: X_ITE calls it once per
+   print of it; the port takes the texts of a host's raw values when its Scripts have run and before a Script prints); engine
+   Intl / Error.stack wording; external-component X3DConstants order. IterableWeakSet: the bundled QuickJS holds X_ITE's own
+   class's members strongly too (weak_set_engine.rs) and crashes on the WeakRef pattern, so the strong reference stays.
+7. sub:fields.math (PARTIAL): the X_ITE geometry the port has no counterpart of is not compared (Box2, Triangle2, Spheroid3,
+   Camera.frustum / perspective, the ViewVolume instance, Box3 beyond extents, Triangle3.triangulatePolygon, Algorithms). Everything
+   the port has is bit-exact (geom_math.rs, 2434 cases).
+8. NOT_TESTED nodes: field and event evidence (node-* worlds) is in; visual evidence needs the desktop GPU run.
+9. sub:exec.context-api stays PARTIAL (owner decision 2026-10-20) until item 3 is done.
+10. The rest of the REA queue; promotion review by exact REA ID.
 
 Kept documented (not defects of the port's model): the text of TypeErrors the engine words (cfg-scene-odd: QuickJS "cannot read
 property 'name' of undefined", V8 "Cannot read properties of undefined (reading 'name')"; the thrown class and the state are

@@ -124,12 +124,19 @@ pub(crate) fn printed_value(scene: &Scene, id: NodeId, i: usize) -> FieldValue {
     let field = &scene.node(id).fields[i];
 
     if let FieldValue::MFFloat(v) = &field.value {
-        if field.name == "fieldOfView" && v.len() == 4 && scene.type_name(id) == "OrthoViewpoint" {
-            return FieldValue::SFVec4f(Vector4::new(v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64));
+        if field.name == "fieldOfView" && scene.type_name(id) == "OrthoViewpoint" {
+            return FieldValue::SFVec4f(field_of_view_vec4(v));
         }
     }
 
     field.value.clone()
+}
+
+/// `new Fields .SFVec4f (... fieldOfView)`: the first four values, the missing ones SFVec4's defaults (0, 0, 0, 1).
+pub(crate) fn field_of_view_vec4(v: &[f32]) -> Vector4 {
+    let at = |i: usize, default: f64| v.get(i).map_or(default, |x| *x as f64);
+
+    Vector4::new(at(0, 0.0), at(1, 0.0), at(2, 0.0), at(3, 1.0))
 }
 
 /// X3DField.references: the interface field of the PROTO a reference points to is initializable.
