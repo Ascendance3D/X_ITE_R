@@ -147,6 +147,10 @@ pub enum Cb {
     FontLibrarySetFamily,
     /// X3DFontStyleNode: `family` or `style` changed (`set_url__`).
     FontStyleReload,
+    /// X3DGeometryNode (Text): requestRebuild (node interest), rebuild (`_rebuild`), Text.set_fontStyle__.
+    TextRequestRebuild,
+    TextRebuild,
+    TextSetFontStyle,
     // Script (X3DScriptNode): field callback index into user-defined fields.
     ScriptField(usize),
     ScriptEventsProcessed,
@@ -302,6 +306,8 @@ pub enum Task {
     BrowserLoad(u64),
     /// X3DBrowser.createX3DFromString: the parser's statements run once `browser .loadComponents (scene)` resolved.
     BrowserParse(u64),
+    /// The browser's default FontStyle loaded its font (`await $.sleep (0)`, then the fetch): a macrotask.
+    DefaultFontLoad,
 }
 
 /// X3DBrowserContext's active nodes (getActiveLayer, getActiveNavigationInfo, getActiveViewpoint) and getCurrentViewer.
@@ -366,6 +372,21 @@ pub struct Runtime {
     pub font_style_fonts: HashMap<NodeId, std::rc::Rc<x3d_text::Font>>,
     /// FontStyle load loops that wait for a FontLibrary that is still loading.
     pub pending_font_styles: Vec<font_library::PendingFontStyle>,
+    /// X3DFontStyleNode.font: what each FontStyle's last completed loadData chose (kept while the next one loads).
+    pub font_style_font: HashMap<NodeId, Option<std::rc::Rc<x3d_text::Font>>>,
+    /// The font style node each Text listens to (None: the browser's default FontStyle).
+    pub text_font_styles: HashMap<NodeId, Option<NodeId>>,
+    /// The Texts that use the browser's default FontStyle, in the order they connected.
+    pub default_font_texts: Vec<NodeId>,
+    pub default_font: nodes::text::DefaultFont,
+    /// X3DFontStyleNode.loadData runs waiting for their `await $.sleep (0)` timer or their font file (see nodes/text.rs).
+    pub font_style_loads: Vec<nodes::text::FontStyleLoad>,
+    /// browser.loadFont's cache: the default font files a FontStyle has loaded.
+    pub loaded_font_files: std::collections::HashSet<String>,
+    /// The family and style the running loadData of a FontStyle took when it began.
+    pub font_style_snapshot: HashMap<NodeId, (Vec<String>, String)>,
+    /// A frame has run (timers run at the start of each): loadData waits for its timer from then on.
+    pub frames_started: bool,
     /// Script nodes in the order their contexts became active, for diagnostics.
     pub scripts: Vec<NodeId>,
     /// Inline.getInternalScene: Inline node → root context of the scene it loaded and attached.
@@ -584,6 +605,14 @@ impl Runtime {
             font_epoch: 0,
             pending_font_styles: vec![],
             font_style_fonts: HashMap::new(),
+            font_style_font: HashMap::new(),
+            text_font_styles: HashMap::new(),
+            default_font_texts: vec![],
+            default_font: Default::default(),
+            font_style_loads: vec![],
+            loaded_font_files: Default::default(),
+            font_style_snapshot: HashMap::new(),
+            frames_started: false,
             scripts: vec![],
             inline_scenes: HashMap::new(),
             inline_geometries: HashMap::new(),
@@ -1099,6 +1128,7 @@ impl Runtime {
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
                 Task::ScriptFetch(node, index) => self.script_fetch(node, index),
                 Task::BrowserLoad(id) => self.browser_load(id),
+                Task::DefaultFontLoad => self.default_font_loaded(),
                 Task::ScriptLoad(..) | Task::ScriptCandidate(..) | Task::ScriptLoaded(..) | Task::BrowserParse(..) => {}
             }
         }

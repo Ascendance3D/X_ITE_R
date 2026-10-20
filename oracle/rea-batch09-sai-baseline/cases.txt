@@ -161,3 +161,7 @@ node-navigation oracle/synthetic-rea-b09-sai/node-navigation.wrl oracle/syntheti
 node-hanim oracle/synthetic-rea-b09-sai/node-hanim.wrl oracle/synthetic-rea-b09-sai/sai.json
 node-sound oracle/synthetic-rea-b09-sai/node-sound.wrl oracle/synthetic-rea-b09-sai/sai.json
 node-dis oracle/synthetic-rea-b09-sai/node-dis.wrl oracle/synthetic-rea-b09-sai/sai.json
+text-events oracle/synthetic-rea-b09-sai/text-events.wrl oracle/synthetic-rea-b09-sai/sai.json
+text-fontstyle oracle/synthetic-rea-b09-sai/text-fontstyle.wrl oracle/synthetic-rea-b09-sai/sai.json
+text-family oracle/synthetic-rea-b09-sai/text-family.wrl oracle/synthetic-rea-b09-sai/sai.json
+fcb-sfnode oracle/synthetic-rea-b09-sai/fcb-sfnode.wrl oracle/synthetic-rea-b09-sai/sai.json

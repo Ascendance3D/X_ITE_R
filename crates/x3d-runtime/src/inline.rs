@@ -641,6 +641,7 @@ impl Runtime {
         }
 
         self.browser_finish_frame();
+        self.font_style_continuations();
 
         self.run_tasks();
 
@@ -770,6 +771,8 @@ impl Runtime {
                     self.particle_system_set_live(node);
                 } else if self.physics_watches_live(node) {
                     self.physics_set_live(node);
+                } else if self.builtin_name(node) == Some("Text") {
+                    self.text_set_live(node);
                 } else {
                     self.time_set_live(node, now);
 

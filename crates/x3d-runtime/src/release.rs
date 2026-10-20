@@ -377,12 +377,17 @@ impl Runtime {
         self.tainted_fields.retain(|(k, e)| !dead.contains(&k.0) && !dead.contains(&e.origin.0));
         self.tainted_nodes.retain(|n| !dead.contains(n));
         self.scene.raw_tokens.retain(|k, _| !dead.contains(&k.0));
+        self.font_style_font.retain(|n, _| !dead.contains(n));
+        self.font_style_loads.retain(|l| !dead.contains(&l.node));
+        self.font_style_snapshot.retain(|n, _| !dead.contains(n));
+        self.text_font_styles.retain(|n, _| !dead.contains(n));
+        self.default_font_texts.retain(|n| !dead.contains(n));
         self.decoded_images.retain(|(n, ..)| !dead.contains(n));
         self.rendered_now.retain(|n| !dead.contains(n));
 
         let alive = |t: &Task| match t {
             Task::ScriptLoad(n) | Task::ScriptLoaded(n, _) | Task::UrlLoad(n, _) | Task::ScriptFetch(n, _) | Task::ScriptCandidate(n, ..) => !dead.contains(n),
-            Task::ExternLoad(..) | Task::BrowserLoad(_) | Task::BrowserParse(_) => true,
+            Task::ExternLoad(..) | Task::BrowserLoad(_) | Task::BrowserParse(_) | Task::DefaultFontLoad => true,
         };
 
         self.tasks.retain(alive);

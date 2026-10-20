@@ -21,6 +21,7 @@ pub mod sound;
 pub mod image_texture_3d;
 pub mod shaders;
 pub mod shader_include;
+pub mod text;
 
 use crate::*;
 
@@ -163,6 +164,7 @@ impl Runtime {
                 self.nrt_mut(node).state = State::UrlObject(UrlState { start_ms: now_ms, complete_ms: now_ms, ..Default::default() });
             }
             "ComposedCubeMapTexture" => self.nrt_mut(node).state = State::ComposedCube([None; 6]),
+            "Text" => self.text_construct(node),
             "HAnimHumanoid" => self.hanim_humanoid_construct(node),
             n if sound::is_sound_node(n) => self.sound_construct(node, n),
             "RenderedTexture" => self.nrt_mut(node).state = State::Rendered { check_update: false, last_update_ms: -1.0, first_ms: None, leaks: 0, display_leaks: 0 },
@@ -219,6 +221,11 @@ impl Runtime {
 
         self.initialize_node(node);
         self.nrt_mut(node).initialized = true;
+
+        // X3DGeometryNode.setup: X3DNode.setup (initialize), then `this .rebuild ()`.
+        if self.builtin_name(node) == Some("Text") {
+            self.text_rebuild(node);
+        }
     }
 
     fn initialize_node(&mut self, node: NodeId) {
@@ -338,6 +345,7 @@ impl Runtime {
             "HAnimPose" => self.hanim_pose_initialize(node),
             "HAnimMotion" => self.hanim_motion_initialize(node),
             "FontStyle" | "ScreenFontStyle" => self.font_style_initialize(node),
+            "Text" => self.text_initialize(node),
             "Contour2D" | "NurbsSet" | "NurbsTrimmedSurface" | "NurbsPositionInterpolator" | "NurbsOrientationInterpolator" | "NurbsSurfaceInterpolator" => self.nurbs_initialize(node, name),
             _ if !GEOMETRY_FIELD_INTERESTS.iter().any(|(t, _)| *t == name) => {
                 // X3DGroupingNode.initialize
@@ -505,13 +513,10 @@ impl Runtime {
             Cb::FontLibrarySetFamily => self.font_library_set_family(node),
             // set_url__ → requestImmediateLoad: `this ._loadData = time`, a field event, so family and style changed together
             // load once.
-            Cb::FontStyleReload => {
-                let queued = |t: &Task| matches!(t, Task::UrlLoad(n, 0) if *n == node);
-
-                if !self.tasks.iter().any(queued) && !self.fetches.iter().any(queued) {
-                    self.tasks.push_back(Task::UrlLoad(node, 0));
-                }
-            }
+            Cb::TextRequestRebuild => self.text_request_rebuild(node),
+            Cb::TextRebuild => self.text_rebuild(node),
+            Cb::TextSetFontStyle => self.text_set_font_style(node),
+            Cb::FontStyleReload => self.font_style_request(node, true),
             Cb::SceneLoadCount => self.scene_load_count(node),
             Cb::WorldLoadCount => self.world_check_load_count(),
             Cb::RouteReconnect(id) => self.reconnect_route(id),

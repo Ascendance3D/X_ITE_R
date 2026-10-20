@@ -534,21 +534,19 @@ impl Runtime {
     pub(crate) fn font_style_initialize(&mut self, node: NodeId) {
         self.interest(node, "family", Cb::FontStyleReload);
         self.interest(node, "style", Cb::FontStyleReload);
-        self.tasks.push_back(Task::UrlLoad(node, 0));
+        self.font_style_request(node, false);
     }
 
     /// X3DFontStyleNode.loadData (font selection only): the snapshot of `family` with "SERIF" appended.
     pub(crate) fn font_style_load(&mut self, node: NodeId) {
-        let style = match self.pre_value(node, "style") {
-            Some(FieldValue::SFString(s)) => s.clone(),
-            _ => String::new(),
-        };
-        let mut family = match self.pre_value(node, "family") {
-            Some(FieldValue::MFString(v)) => v.clone(),
-            _ => vec![],
-        };
+        let (family, style) = self.font_style_families(node);
 
-        family.push("SERIF".into());
+        // browser.loadFont caches the default font file this load takes.
+        if let Some(key) = family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &style).map(|_| format!("{f}/{style}"))) {
+            self.loaded_font_files.insert(key);
+        }
+
+        self.font_style_snapshot.insert(node, (family.clone(), style.clone()));
         self.font_style_continue(node, family, 0, style);
     }
 

@@ -218,6 +218,21 @@ FC_AFTER = ("var F_ = 0;\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 3)
             "    flush_ ();\n  }\n}\n")
 G.register("fldx-cross", [], pre=CHAIN, after=FC_AFTER, nodes=FC_NODES)
 
+# Field callbacks on node fields of every kind of value (checkpoint after 804802d): an SFNode field's callback is added to the
+# target of its Proxy (SFNode.addFieldCallback), so the port must observe the field through the target too.
+FS_AFTER = ("var F_ = 0, LOG = [];\nfunction prepareEvents () { ++ F_;\n"
+            " if (F_ === 10) { var s = Browser .currentScene .getNamedNode ('S'), g = Browser .currentScene .getNamedNode ('G');"
+            "  s .addFieldCallback ('w', 'appearance', function (v) { LOG .push ('F' + F_ + ' appearance=' + String (v)); });"
+            "  g .addFieldCallback ('w', 'children', function (v) { LOG .push ('F' + F_ + ' children=' + v .length); });"
+            "  s .addFieldCallback ('w', 'visible', function (v) { LOG .push ('F' + F_ + ' visible=' + v); });"
+            "  s .getField ('geometry') .addFieldCallback ('k', function (v) { LOG .push ('F' + F_ + ' geometry=' + String (v)); }); }\n"
+            " if (F_ === 12) { var s = Browser .currentScene .getNamedNode ('S'); s .appearance = Browser .currentScene .createNode ('Appearance'); s .visible = false; }\n"
+            " if (F_ === 13) { var g = Browser .currentScene .getNamedNode ('G'); g .children = new MFNode (Browser .currentScene .createNode ('Group')); }\n"
+            " if (F_ === 14) { var s = Browser .currentScene .getNamedNode ('S'); s .appearance = null; s .geometry = Browser .currentScene .createNode ('Box'); }\n"
+            " if (F_ === 15) { var s = Browser .currentScene .getNamedNode ('S'); s .removeFieldCallback ('w', 'appearance'); s .appearance = Browser .currentScene .createNode ('Appearance'); }\n"
+            " if (F_ === 17) { T ('log', function () { return LOG; }); flush_ (); } }\n")
+G.register("fcb-sfnode", [], after=FS_AFTER, nodes="DEF S Shape { }\nDEF G Group { }\n")
+
 if __name__ == "__main__":
-    sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith("fldx-")]
+    sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith("fldx-") or n == "fcb-sfnode"]
     G.main()

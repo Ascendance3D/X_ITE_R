@@ -448,6 +448,7 @@ impl Runtime {
     /// Fire the timeouts due at `now` in time order (setTimeout order). processTimeout:
     /// `if (!enabled) return; advanceOnlyTime (); this [callback] ()`.
     pub fn fire_timeouts(&mut self, now: f64) {
+        self.font_style_timers();
         loop {
             let node_timeout = self.timeouts.iter().enumerate().filter(|(_, t)| t.time <= now).min_by(|a, b| a.1.time.partial_cmp(&b.1.time).unwrap()).map(|(i, _)| i);
 
