@@ -1,0 +1,56 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0 0 -1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction -1 -1 -1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 1.100 2.200 0 children [
+Group { children [ DirectionalLight { direction 1 0 -0.3 color 1 0.4 0.2 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 3.300 2.200 0 children [
+Group { children [ DirectionalLight { direction 0 -1 -0.3 intensity 0.4 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 0 0 -1 intensity 2 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0 0 -1 intensity 0 ambientIntensity 0.7 color 0.4 0.8 1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 1.100 0.000 0 children [
+Group { children [ DirectionalLight { direction 0 0 -1 on FALSE }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 3.300 0.000 0 children [
+Group { children [ DirectionalLight { direction 2 -2 -2 color 0.6 1 0.6 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0 0 -1 intensity 1.5 color 1 0 0 }
+DirectionalLight { direction 0 0 1 intensity 1.5 color 0 0 1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Group { children [ Group { children DirectionalLight { direction -1 0 -1 global TRUE } }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Group { children [ Group { children DirectionalLight { direction -1 0 -1 global FALSE } }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Group { children [ DirectionalLight { direction 0 0 -1 intensity 0.5 }
+DirectionalLight { direction 1 1 -1 intensity 0.5 color 1 1 0 }
+Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 specularColor 0.5 0.5 0.5 shininess 0.3 } } geometry Sphere { radius 0.9 } } ] }
+] }

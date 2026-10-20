@@ -1,0 +1,117 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.84",
+ "ms": "4",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 4,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "maxSamples": 8,
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "vis-light-dir.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a90ed04a0bbbfbf5133acf2d05542df58b1b6a0498cae0c0e3701af4d7c91479",
+   "pngSha256": "cd48dca67e30aef99e0b29cd01b5211c622f5de833a126c2bef66ca7939b3744",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-light-point.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "636f408eebaee688a06d4b3b883bbf01e7f7ba2bbd2a4665d1f63970efc401b2",
+   "pngSha256": "b6cd4f9e3e7d7d98ec2027c2f5327d31119f54f31daa1fbca22b9a6e34d14dc6",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-light-spot.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "47c3ea21790f041f567d146a4ead8b1332742d1e8ee1bb193c7ccfa74ce5caa4",
+   "pngSha256": "9e949b6a13e955a5b733d209f7b1f1998dc32d4773dc05f8724ef90c541e814d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-rendering.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "2c5491a2dc387a88368f2bb93ba1a06bf3bef872c8bbdb0670a9344fd107c45b",
+   "pngSha256": "a58123cd171a9d4b9b26b9356cc5ebaab9d704b1bb91ae5d20fc315fb261a163",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-shape.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "33366ce8fd6a1e9e8cc83051714144d1654d783194af24ea8fa63a9cf672d71e",
+   "pngSha256": "039dfd9bb67906579ff4d5c7646dabbdd87efbdb9539492e5171815d4ace0c9f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturing.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "6d8624f2f024718102d2932d8dab3bec5bc5468e922ddea44ece573a8176c40d",
+   "pngSha256": "9acce0fb950b028113a6d1bbc9a46e1fcd6e4a4e0f58bb5934ed633041e21466",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturing3d.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8879af13746ad2220bf3788fafb4bcc1e7692056477309efc51d75084d0d1e6f",
+   "pngSha256": "0280c7e34c56350484d5cafa8bdb1b97391616a0127a7f06f748f112ba0b9b0f",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}
