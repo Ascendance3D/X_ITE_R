@@ -150,6 +150,62 @@ pub enum Loaded {
     Data(Vec<u8>, url::Url),
 }
 
+/// The callbacks of FileLoader.createX3DFromURL (url, parameter, callback, bindViewpoint, foreign).
+#[derive(Default, Clone, Debug)]
+pub struct LoadHooks {
+    /// `bindViewpoint` was given: a URL with only a new fragment names a viewpoint of the referring document.
+    pub bind_viewpoint: bool,
+    /// `foreign` was given: a `target` parameter (not `_self`) or a page URL goes to another window or document.
+    pub foreign: bool,
+    /// The `parameter` field / argument (`target=_blank`, ...).
+    pub parameters: Vec<String>,
+}
+
+/// How a FileLoader run ended.
+#[derive(Clone, Debug, PartialEq)]
+pub enum LoadResult {
+    /// A candidate was accepted.
+    Loaded,
+    /// `bindViewpoint (name)`: the decoded fragment.
+    Fragment(String),
+    /// `foreign (href, target)`.
+    Foreign(String, String),
+    /// Every candidate failed (or there was none).
+    Failed,
+}
+
+/// The decoded fragment of `candidate` if FileLoader's `bindViewpoint` branch takes it: a URL that, resolved against
+/// `base`, differs from the referring document only by a non-empty fragment.
+pub fn viewpoint_fragment(base: &str, candidate: &str, hooks: &LoadHooks) -> Option<String> {
+    if !hooks.bind_viewpoint || candidate.is_empty() {
+        return None;
+    }
+
+    let referer = url::Url::parse(base).ok()?;
+    let r = referer.join(candidate).ok()?;
+
+    if r.scheme() == "data" || r.fragment().is_none_or(str::is_empty) {
+        return None;
+    }
+
+    let same = referer.scheme() == r.scheme() && referer.host_str() == r.host_str() && referer.port() == r.port() && referer.path() == r.path();
+
+    same.then(|| percent_encoding::percent_decode_str(r.fragment().unwrap_or_default()).decode_utf8().map(|d| d.into_owned()).ok()).flatten()
+}
+
+/// FileLoader.getTarget: the value of the first `target=value` parameter.
+pub fn loader_target(parameters: &[String]) -> String {
+    for parameter in parameters {
+        let pair: Vec<&str> = parameter.split('=').collect();
+
+        if pair.len() == 2 && pair[0] == "target" {
+            return pair[1].to_string();
+        }
+    }
+
+    String::new()
+}
+
 /// A FileLoader instance: node type name for messages (`""` for the world) and the attempts.
 pub struct FileLoader {
     pub type_name: String,
@@ -166,12 +222,19 @@ impl Runtime {
     /// FileLoader.loadDocument with its fallback loop. `accept` is the data callback: an `Err`
     /// is a rejection of loadDocumentAsync and moves on to the next URL, like X_ITE.
     /// Returns whether a candidate was accepted.
-    pub fn load_document(&mut self, loader: &FileLoader, urls: &[String], mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> bool {
+    pub fn load_document(&mut self, loader: &FileLoader, urls: &[String], accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> bool {
+        !matches!(self.load_document_hooks(loader, urls, &LoadHooks::default(), accept), LoadResult::Failed)
+    }
+
+    /// [`Runtime::load_document`] with the two callbacks X3DBrowser.loadURL and Anchor hand FileLoader.createX3DFromURL
+    /// (`bindViewpoint` and `foreign`, see [`LoadHooks`]).
+    pub fn load_document_hooks(&mut self, loader: &FileLoader, urls: &[String], hooks: &LoadHooks, mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> LoadResult {
         let mut attempts = 0usize;
+        let mut special: Option<LoadResult> = None;
 
         if urls.is_empty() {
             // loadDocumentError () without an error prints nothing.
-            return false;
+            return LoadResult::Failed;
         }
 
         for (i, candidate) in urls.iter().enumerate() {
@@ -203,6 +266,35 @@ impl Runtime {
                     }
                 }
 
+                // Bind Viewpoint URLs: a URL that only adds a fragment to the referring document names a viewpoint.
+                if hooks.bind_viewpoint && r.scheme() != "data" && r.fragment().is_some_and(|f| !f.is_empty()) {
+                    let same = url::Url::parse(&loader.base).is_ok_and(|referer| {
+                        referer.scheme() == r.scheme() && referer.host_str() == r.host_str() && referer.port() == r.port() && referer.path() == r.path()
+                    });
+
+                    if same {
+                        let fragment = r.fragment().unwrap_or_default();
+                        let name = percent_encoding::percent_decode_str(fragment).decode_utf8().map(|d| d.into_owned()).map_err(|_| "URIError: URI malformed".to_string())?;
+                        special = Some(LoadResult::Fragment(name));
+                        return Ok(());
+                    }
+                }
+
+                // Foreign targets: another window, or foreign content (a page). Never loaded here.
+                if hooks.foreign {
+                    let target = loader_target(&hooks.parameters);
+
+                    if !target.is_empty() && target != "_self" {
+                        special = Some(LoadResult::Foreign(r.as_str().to_string(), target));
+                        return Ok(());
+                    }
+
+                    if r.scheme() != "data" && ["html", "htm", "xhtml"].iter().any(|e| r.as_str().ends_with(&format!(".{e}"))) {
+                        special = Some(LoadResult::Foreign(r.as_str().to_string(), target));
+                        return Ok(());
+                    }
+                }
+
                 // A base64 data URL is fetched like any other (the browser decodes it); one without a comma is no URL fetch can read.
                 if loader.data_as_string && r.scheme() == "data" && !candidate.contains(',') {
                     return Err("TypeError: Failed to fetch".to_string());
@@ -214,7 +306,7 @@ impl Runtime {
             })();
 
             match result {
-                Ok(()) => return true,
+                Ok(()) => return special.take().unwrap_or(LoadResult::Loaded),
                 Err(error) => {
                     attempts += 1;
                     self.print_load_error(loader, candidate, resolved.as_ref(), &error, attempts, remaining);
@@ -222,7 +314,7 @@ impl Runtime {
             }
         }
 
-        false
+        LoadResult::Failed
     }
 
     /// FileLoader.printError for the candidate that just failed: `attempts` counts it, `remaining`
@@ -495,7 +587,7 @@ impl Runtime {
             let font_file = [".woff2", ".woff", ".otf", ".ttf"].iter().any(|e| path.ends_with(e));
 
             if file_url.scheme() == "data" || font_file {
-                if self.scene.specification_version.as_str() >= "4.1" {
+                if self.scene.spec_version_of(self.scene.world) >= "4.1" {
                     self.log_warn("Loading a font file via family field is deprecated, please use new FontLibrary node instead.");
                 }
 

@@ -1,0 +1,42 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "lu replaceworld-none"
+DEF WA WorldInfo { title "A" }
+DEF NA NavigationInfo { type "FLY" headlight FALSE }
+DEF BGA Background { skyColor 1 0 0 }
+DEF VPA Viewpoint { description "vpA" position 0 0 10 }
+DEF VPA2 Viewpoint { description "vpA2" position 4 0 10 }
+DEF AS Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+function H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }
+function L (s) { console .log (s); }
+
+function initialize () {
+  var f = function (e) { L ('A: cb ' + e); };
+  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);
+  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);
+  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);
+
+}
+function cycle () {
+  step = step + 1;
+  go (step);
+}
+function go (s) {
+  if (s == 3) {
+    (function () {
+  var p = Browser .replaceWorld ();
+  L ('A: replace ret ' + typeof p + ' ' + (p instanceof Promise));
+  p .then (function (v) { L ('A: replace resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },
+           function (e) { L ('A: replace rejected ' + (e && e .message)); });
+}) ();
+  }
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO AS.cycle

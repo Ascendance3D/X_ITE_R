@@ -612,7 +612,7 @@ const Browser =
    set description (v)         { X ("bsetdescription", String (v)); },
    get currentScene ()         { return executionContext (currentScript); },
    getExecutionContext ()      { return executionContext (-1); },
-   get baseURL ()              { return X ("worldURL", currentScript); },
+   get baseURL ()              { return X ("baseURL", currentScript); },
    get currentFrameRate ()     { return 0; },
    get currentSpeed ()         { return 0; },
    getName ()                  { return X ("bname"); },
@@ -623,7 +623,7 @@ const Browser =
    getCurrentSpeed ()          { return 0; },
    getCurrentFrameRate ()      { return 0; },
    getWorldURL ()              { return X ("worldURL", currentScript); },
-   getBaseURL ()               { return X ("worldURL", currentScript); },
+   getBaseURL ()               { return X ("baseURL", currentScript); },
    print (... args)            { println (... args); },
    println (... args)          { println (... args); },
    createVrmlFromString (s)    { return new classes .MFNode (... X ("createVrml", String (s), currentScript) .map (R .bind (null)) .map (id => typeof id === "number" ? nodeWrapper (id) : id)); },
@@ -660,7 +660,7 @@ const Browser =
 
             const r = X ("browserScene", currentScript, "create", args .length ? profile .name : undefined, components .map (c => [c .name, c .level]));
 
-            resolve (executionContext (- (r .ctx + 1)));
+            resolve (executionContext (- (r .ctx + 2)));
          }
          catch (error)
          {
@@ -692,7 +692,103 @@ const Browser =
       // The event is sent once the scene is complete; a scene that fails to load sends nothing.
       browserScene ("url", url .toArray ()) .then (scene => field .setValue (scene .rootNodes), () => { });
    },
-   loadURL ()                  { return Promise .resolve (); },
+   // X3DBrowser.loadURL: the runtime fetches the world (browser_load.rs) and settles the promise (`__settlePlain`) once the
+   // new world is installed. A wrong argument rejects the promise.
+   loadURL (url, parameter = new classes .MFString ())
+   {
+      return new Promise ((resolve, reject) =>
+      {
+         if (!(url instanceof classes .MFString))
+            throw new Error ("Browser.loadURL: url must be of type MFString.");
+
+         if (!(parameter instanceof classes .MFString))
+            throw new Error ("Browser.loadURL: parameter must be of type MFString.");
+
+         const r = X ("browserScene", currentScript, "load", url .toArray (), parameter .toArray ());
+
+         if (r .error !== undefined)
+            reject (new Error (r .error));
+         else if (r .id === undefined)
+            resolve ();
+         else
+            settlers .set (r .id, { resolve, reject, plain: true, script: currentScript });
+      });
+   },
+   // X3DBrowser.replaceWorld: an X3DScene, an MFNode (VRML97), or anything else for an empty world.
+   replaceWorld (scene)
+   {
+      return new Promise ((resolve, reject) =>
+      {
+         let kind = "none", argument;
+
+         if (scene instanceof classes .MFNode)
+         {
+            kind     = "nodes";
+            argument = A (scene);
+         }
+         else if (contextKeys .has (scene) && scene .isScene)
+         {
+            kind     = "scene";
+            argument = contextKeys .get (scene);
+         }
+
+         const r = X ("replaceWorld", currentScript, kind, argument);
+
+         settlers .set (r .id, { resolve, reject, plain: true, script: currentScript });
+      });
+   },
+   // X3DBrowserContext.initialized () and shutdown (): the browser's SFTime event fields (a copy of the value here).
+   // `initialized` is set to the browser time by checkLoadCount; X_ITE 16.5.0 never sets `shutdown`.
+   initialized ()              { return new classes .SFTime (X ("browserTime", "initialized")); },
+   shutdown ()                 { return new classes .SFTime (- 1); },
+   addBrowserCallback (... args)
+   {
+      switch (args .length)
+      {
+         case 2:
+         {
+            const [key, object] = args;
+
+            for (const [event, map] of browserCallbacks)
+               browserCallbacks .set (event, new Map (map) .set (key, { object, script: currentScript }));
+
+            break;
+         }
+         case 3:
+         {
+            const [key, event, object] = args, map = new Map (browserCallbacks .get (event));
+
+            browserCallbacks .set (event, map);
+            map .set (key, { object, script: currentScript });
+            break;
+         }
+      }
+   },
+   removeBrowserCallback (... args)
+   {
+      switch (args .length)
+      {
+         case 1:
+         {
+            for (const map of browserCallbacks .values ())
+               map .delete (args [0]);
+
+            break;
+         }
+         case 2:
+         {
+            browserCallbacks .get (args [1]) .delete (args [0]);
+            break;
+         }
+      }
+   },
+   getBrowserCallbacks (event)
+   {
+      if (arguments .length === 1)
+         return new Map ([... browserCallbacks .get (event)] .map (([k, c]) => [k, c .object]));
+
+      return new Map ([... browserCallbacks] .flatMap (([, map]) => [... map] .map (([k, c]) => [k, c .object])));
+   },
    addRoute (a, b, c, d)       { X ("addRoute", currentScript, A (a), String (b), A (c), String (d)); },
    deleteRoute (a, b, c, d)    { X ("deleteRoute", currentScript, A (a), String (b), A (c), String (d)); },
    beginUpdate ()              { },
@@ -705,7 +801,7 @@ const Browser =
    lastViewpoint ()            { X ("brequest", "lastViewpoint"); },
    nextViewpoint ()            { X ("brequest", "nextViewpoint"); },
    previousViewpoint ()        { X ("brequest", "previousViewpoint"); },
-   changeViewpoint ()          { },
+   changeViewpoint (name)      { X ("brequest", "changeViewpoint:" + String (name)); },
    viewAll ()                  { },
    getScriptNode ()            { return nodeWrapper (currentScript); },
    getComponent (name, level)  { return componentInfo (X ("browserComponent", String (name), level | 0)); },
@@ -715,6 +811,30 @@ const Browser =
 // X3DBrowser.createX3DFromString / createX3DFromURL: the scene is made by the runtime (browser_load.rs), which
 // settles the promise once the scene is complete (`__settle`).
 const settlers = new Map ();
+
+// X3DBrowser [_browserCallbacks]: the functions of addBrowserCallback by event. A Map is replaced, not edited, when a
+// callback is added, so callbacks added while the others run wait for the next event.
+const browserCallbacks = new Map ([1001, 1002, 1003, 1004, 1005] .map (event => [event, new Map ()]));
+
+global .__browserEvent = function (event)
+{
+   const previous = currentScript;
+
+   try
+   {
+      for (const { object, script } of browserCallbacks .get (event) .values ())
+      {
+         currentScript = script;
+
+         try { object (event); }
+         catch (error) { console .error (error); }
+      }
+   }
+   finally
+   {
+      currentScript = previous;
+   }
+};
 
 function browserScene (kind, argument)
 {
@@ -729,6 +849,9 @@ function browserScene (kind, argument)
    });
 }
 
+// A promise continuation runs as the Script that made the promise (X_ITE: each Script has its own Browser object).
+global .__endSettle = function () { currentScript = -1; };
+
 global .__settle = function (id, ok, value)
 {
    const settler = settlers .get (id);
@@ -738,8 +861,14 @@ global .__settle = function (id, ok, value)
    if (!settler)
       return;
 
+   if (settler .script !== undefined)
+      currentScript = settler .script;
+
+   if (settler .plain)
+      return ok ? settler .resolve () : settler .reject (new Error (value));
+
    if (ok)
-      settler .resolve (executionContext (- (value + 1)));
+      settler .resolve (executionContext (- (value + 2)));
    else
       settler .reject (new Error (value));
 };
@@ -797,6 +926,7 @@ function unitConversion (units, category, value, from)
 
 // One object per execution context (`Browser .currentScene === Browser .currentScene`).
 const contextObjects = new Map ();
+const contextKeys = new WeakMap ();
 
 function executionContext (script)
 {
@@ -805,7 +935,10 @@ function executionContext (script)
    let object = contextObjects .get (key);
 
    if (!object)
-      contextObjects .set (key, object = makeExecutionContext (- (key + 1)));
+   {
+      contextObjects .set (key, object = makeExecutionContext (- (key + 2)));
+      contextKeys .set (object, key);
+   }
 
    return object;
 }

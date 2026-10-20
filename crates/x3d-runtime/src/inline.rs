@@ -101,6 +101,15 @@ impl Runtime {
     /// X3DUrlObject.setLoadState for the nodes that fetch: updates the state, sends the
     /// `loadState` event of an Inline and keeps the loadCount of its scene.
     pub(crate) fn set_load_state(&mut self, node: NodeId, state: LoadState) {
+        self.set_load_state_node(node, state);
+
+        // X3DUrlObject.setLoadState: every url object (a Script, a texture) is a loading object of its scene while it loads.
+        if !self.is_scene_loader(node) && self.nrt(node).is_some_and(|n| matches!(n.state, nodes::State::UrlObject(_) | nodes::State::Script(_))) {
+            self.update_load_count(self.scene.scene_root(self.scene.node(node).ctx));
+        }
+    }
+
+    fn set_load_state_node(&mut self, node: NodeId, state: LoadState) {
         match &mut self.nrt_mut(node).state {
             nodes::State::UrlObject(s) => s.load_state = state,
             nodes::State::Script(s) => s.load_state = state,
@@ -167,7 +176,7 @@ impl Runtime {
 
         let inlines = (0..self.scene.nodes.len() as NodeId)
             .filter(|&n| {
-                self.is_scene_loader(n)
+                self.nrt(n).is_some_and(|r| matches!(r.state, nodes::State::UrlObject(_) | nodes::State::Script(_)))
                     && self.url_load_state(n) == LoadState::InProgress
                     && self.scene.scene_root(self.scene.node(n).ctx) == root
             })
@@ -699,7 +708,7 @@ impl Runtime {
 
         let root = self.scene.scene_root(ctx);
 
-        if root == ROOT {
+        if root == self.scene.world {
             return self.live && self.scene_live;
         }
 
@@ -867,7 +876,7 @@ impl Runtime {
     /// (ISO/IEC 14772-1 4.12.3) and the world stops. Events the Scripts queued are left for the
     /// caller's next event processing.
     pub fn unload_world(&mut self) {
-        self.dispose_scene(ROOT);
+        self.dispose_scene(self.scene.world);
 
         // The cached EXTERNPROTO scenes belong to the world (see `extern_scene`) and went with it.
         self.extern_cache.clear();

@@ -1,0 +1,1413 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPA",
+      "description": "vpA",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "VPB",
+      "description": "vpB",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;\"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;\"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;\"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;A: load2 ret object true;\"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu loadurl-badscene\"\n\nDEF WA WorldInfo {\n  title \"A\"\n}\n\nDEF NA NavigationInfo {\n  type \"FLY\"\n  headlight FALSE\n}\n\nDEF BGA Background {\n  skyColor 1 0 0\n}\n\nDEF VPA Viewpoint {\n  description \"vpA\"\n}\n\nDEF VPA2 Viewpoint {\n  description \"vpA2\"\n  position 4 0 10\n}\n\nDEF AS Script {\n  inputOutput SFString hist \"A: cb 1004;A: cb 1003;A: load ret object true;A: cb 1005;A: load rejected Couldn't load X3D file.;A: load2 ret object true;\"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\n\nfunction initialize () {\n  var f = function (e) { L ('A: cb ' + e); };\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('a', X3DConstants .INITIALIZED_ERROR, f);\n\n}\nfunction cycle () {\n  step = step + 1;\n  go (step);\n}\nfunction go (s) {\n  if (s == 3) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bad.wrl'));\n  L ('A: load ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load rejected ' + (e && e .message)); });\n}) ();\n  if (s == 7) (function () {\n  var p = Browser .loadURL (new MFString ('assets/lu-bh.wrl'));\n  L ('A: load2 ret ' + typeof p + ' ' + (p instanceof Promise));\n  p .then (function (v) { L ('A: load2 resolved ' + typeof v + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)); },\n           function (e) { L ('A: load2 rejected ' + (e && e .message)); });\n}) ();\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO AS.cycle\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB];\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB];\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"lu world B\"\n\nDEF WB WorldInfo {\n  title \"B\"\n}\n\nDEF VPB Viewpoint {\n  description \"vpB\"\n  position 0 0 7\n}\n\nDEF VPB2 Viewpoint {\n  description \"vpB2\"\n  position 2 0 7\n}\n\nDEF BS Script {\n  inputOutput SFString hist \"B: initialize desc=[vpA] initialized=946684800;init wurl=undefined get=H/synthetic-rea-b09-sai/assets/lu-bh.wrl cs=H/synthetic-rea-b09-sai/assets/lu-bh.wrl ec=H/synthetic-rea-b09-sai/loadurl-badscene.wrl roots=5 vpb=VPB vpa=none leak=undef name=X_ITE enc=VRML profile=ImmersiveB: cb 1004;B: cb 1003;B: VPB isBound true desc=[vpB]; | step2 desc=[vpB] init=946684800.35 shut=-1 seen=b1@1 t@1 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   bound\n  inputOnly   SFBool   bound2\n  inputOnly   SFTime   bindtime\n\n  url \"ecmascript:\nfunction H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }\nfunction L (s) { hist = hist + s + ';'; }\nvar seen = '';\nfunction initialize () {\n  var f = function (e) { L ('B: cb ' + e); };\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);\n  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);\n  var named;\n  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }\n  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());\n  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)\n    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length\n    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named\n    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name\n    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;\n}\nfunction bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }\nfunction bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }\nfunction bindtime (t) { seen = seen + 't@' + step + ' '; }\nfunction cycle () {\n  step = step + 1;\n  if (step == 2)\n    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO BS.cycle\nROUTE VPB.isBound TO BS.bound\nROUTE VPB2.isBound TO BS.bound2\nROUTE VPB.bindTime TO BS.bindtime\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Error: Couldn't read value for field 'translation'.",
+    "error: Script: Couldn't load URL 'http://oracle/synthetic-rea-b09-sai/assets/lu-bad.wrl'. Error: "
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

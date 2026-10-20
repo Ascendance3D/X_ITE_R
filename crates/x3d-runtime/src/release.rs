@@ -678,6 +678,8 @@ impl Runtime {
         h.ctxs.extend(self.pending_scenes.iter().map(|p| p.ctx));
         h.ctxs.extend(self.frame_waiters.iter().map(|w| w.ctx));
         h.ctxs.extend(self.pending_browser.iter().chain(self.browser_frame_waiters.iter()).map(|p| p.ctx));
+        h.ctxs.insert(self.scene.world);
+        h.ctxs.extend(self.world_state.waiters.iter().filter_map(|w| if let crate::browser_load::WorldScene::Ctx(c) = w.scene { Some(c) } else { None }));
 
         for p in self.pending_externs.iter().chain(self.extern_frame_waiters.iter()) {
             h.ctxs.insert(p.ctx);

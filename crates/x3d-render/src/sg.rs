@@ -49,7 +49,7 @@ impl<'a> Sg<'a> {
 
     /// Root nodes of the runtime's scene (inner nodes of PROTO instances).
     pub fn roots(&self) -> Vec<NodeId> {
-        self.roots_of(x3d_scene::ROOT)
+        self.roots_of(self.rt.scene.world)
     }
 
     /// Root nodes of the scene whose root context is `ctx` (the world's, or the one an Inline

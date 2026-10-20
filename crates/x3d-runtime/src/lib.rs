@@ -187,6 +187,7 @@ pub enum Cb {
     GeoLodChildLoadState,
     // FileLoader.set_loadCount__ of a scene that an Inline loaded (interest on the scene's loadCount).
     SceneLoadCount,
+    WorldLoadCount,
     // X3DRoute.reconnect: interest on the loadState of an Inline that an imported node of the route belongs to.
     RouteReconnect(usize),
     // ComposedCubeMapTexture.set_texture__ (index): the face slot a texture field change fills.
@@ -353,6 +354,11 @@ pub struct Runtime {
     pub pending_browser: Vec<browser_load::PendingBrowserScene>,
     pub browser_frame_waiters: Vec<browser_load::PendingBrowserScene>,
     pub browser_request_id: u64,
+    /// The URL of the page the browser element lives in (`location`): the world URL of a new X3DScene and the browser's
+    /// `baseURL`. Empty: the embedder has no page.
+    pub page_url: String,
+    /// X3DBrowser.loadURL / replaceWorld (see `browser_load.rs`).
+    pub world_state: browser_load::WorldState,
     /// EXTERNPROTO scenes that were parsed and set up, waiting like `pending_scenes` (see
     /// `extern_proto.rs`, `extern_scene`).
     pub pending_externs: Vec<PendingExtern>,
@@ -531,6 +537,8 @@ impl Runtime {
             pending_browser: vec![],
             browser_frame_waiters: vec![],
             browser_request_id: 0,
+            page_url: String::new(),
+            world_state: browser_load::WorldState { initialized_time: -1.0, ..Default::default() },
             pending_externs: vec![],
             extern_frame_waiters: vec![],
             extern_states: HashMap::new(),
@@ -1022,7 +1030,13 @@ impl Runtime {
     pub fn replace_world(&mut self) {
         self.frame();
         self.run_tasks();
+
+        // `this .shutdown () .processInterests (); this .callBrowserCallbacks (SHUTDOWN_EVENT)` of the empty first world,
+        // and the browser's loadCount event for the first events of the next frame (checkLoadCount).
+        self.browser_callbacks(browser_load::SHUTDOWN_EVENT);
         self.go_live();
+        self.world_state.init = Some(None);
+        self.world_load_count_event();
     }
 
     /// The loading part of [`Runtime::load_world`], without `go_live`.
@@ -1109,7 +1123,7 @@ impl Runtime {
     /// scene's world URL; the new scene's root nodes.
     pub fn create_vrml_from_string(&mut self, text: &str, parent: CtxId) -> Result<Vec<Option<NodeId>>, String> {
         let source = format!("#VRML V2.0 utf8\n\n{text}");
-        let world_url = self.scene.world_url.clone();
+        let world_url = self.scene.world_url_of(parent).to_string();
         let scene = match x3d_parse::Parser::new(&source, &world_url).parse() {
             Ok(scene) => scene,
             Err(e) => {

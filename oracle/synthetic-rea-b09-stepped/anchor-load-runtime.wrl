@@ -1,0 +1,13 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Scripting:1
+META "title" "anchor load A"
+NavigationInfo { type "NONE" headlight FALSE }
+Background { skyColor 0.2 0.25 0.3 }
+DEF V1 Viewpoint { position 0 0 8 description "home" }
+DEF A1 Anchor { url [ "anchor-load-b.wrl" ] description "ok" children Transform { translation -2.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.2 emissiveColor 0.8 0.2 0.2 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A2 Anchor { url [ "anchor-load-missing.wrl", "anchor-load-b.wrl" ] description "fallback" children Transform { translation 0 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.2 emissiveColor 0.2 0.8 0.2 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A3 Anchor { url [ "anchor-load-missing.wrl" ] description "fail" children Transform { translation 2.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.2 0.8 emissiveColor 0.2 0.2 0.8 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A4 Anchor { url [ "anchor-load-b.wrl" ] parameter [ "foo=bar", "target=_self" ] description "parameter" children Transform { translation -2.5 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 emissiveColor 0.8 0.8 0.2 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A5 Anchor { url [ "anchor-load-b.wrl#VPB2" ] description "hash" children Transform { translation 0 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.8 emissiveColor 0.2 0.8 0.8 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A6 Anchor { url [ "anchor-load-b.wrl" ] load FALSE description "disabled" children Transform { translation 2.5 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.8 emissiveColor 0.8 0.2 0.8 } } geometry Box { size 1.2 1.2 1.2 } } } }

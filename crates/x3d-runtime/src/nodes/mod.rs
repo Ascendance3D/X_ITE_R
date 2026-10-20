@@ -505,6 +505,7 @@ impl Runtime {
             Cb::FontLibrarySetFamily => self.font_library_set_family(node),
             Cb::FontStyleReload => self.tasks.push_back(Task::UrlLoad(node, 0)),
             Cb::SceneLoadCount => self.scene_load_count(node),
+            Cb::WorldLoadCount => self.world_check_load_count(),
             Cb::RouteReconnect(id) => self.reconnect_route(id),
             Cb::ScriptField(_) | Cb::ScriptEventsProcessed | Cb::ScriptPrepareEvents => self.script_interest(node, i.cb, k),
             Cb::LoadSensorSetEnabled | Cb::LoadSensorSetTimeOut | Cb::LoadSensorSetChildren | Cb::LoadSensorLoadState => self.load_sensor_interest(node, i.cb, k),
@@ -600,6 +601,13 @@ impl Runtime {
             Cb::Physics(cb) => self.physics_interest(node, cb),
             Cb::Shader(cb) => self.shader_interest(node, cb),
             Cb::ViewpointIsBound => {
+                // X3DViewpointNode.set_bound__: `getBrowser () .setDescription (this ._description)`.
+                if self.get_bool(node, "isBound") {
+                    if let Some(FieldValue::SFString(d)) = self.pre_value(node, "description") {
+                        self.description = d.clone();
+                    }
+                }
+
                 if let (Some(nav), Some(bound)) = (self.viewpoint_navigation_info(node), self.pre(node, "isBound")) {
                     let value = self.value(bound).clone();
 

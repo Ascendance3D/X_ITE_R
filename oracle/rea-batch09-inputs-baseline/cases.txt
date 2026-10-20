@@ -14,3 +14,8 @@ anchor-drag-off oracle/synthetic-rea-b09-stepped/anchor-runtime.wrl oracle/synth
 anchor-drag-off oracle/synthetic-rea-b09-stepped/anchor-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-drag-off.json 4
 background-runtime oracle/synthetic-rea-b09-stepped/background-runtime.wrl oracle/synthetic-rea-b09-stepped/background-runtime.json 0
 background-runtime oracle/synthetic-rea-b09-stepped/background-runtime.wrl oracle/synthetic-rea-b09-stepped/background-runtime.json 4
+anchor-load-ok oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-ok.json 0
+anchor-load-fail oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-fail.json 0
+anchor-load-param oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-param.json 0
+anchor-load-hash oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-hash.json 0
+anchor-load-disabled oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-disabled.json 0

@@ -101,6 +101,15 @@ struct ProxState {
     layer: LayerKey,
 }
 
+/// What `browser .getActiveViewpoint ()` and `getCurrentViewer ()` answer right after `replaceWorld`: the bindables of
+/// the new world are bound, but the browser's `activeViewpoint` and `viewer` fields follow their stacks by events.
+struct HeldPose {
+    pose: (Vector3, Rotation4, Vector3),
+    /// The name of the viewpoint (`<default>` for the default one): its node may be released by now.
+    viewpoint: String,
+    viewer: String,
+}
+
 /// The state of a layer (X3DLayerNode) other than the one in [`Viewer3d::layer`].
 pub struct LayerSlot {
     pub key: LayerKey,
@@ -172,6 +181,14 @@ pub struct Viewer3d {
     pub status: String,
     pub anchors: Vec<AnchorActivation>,
     pub frame_count: u64,
+    /// The world the viewer's state is for ([`x3d_runtime::browser_load::WorldState::generation`]).
+    world_gen: u64,
+    /// The browser description that the status line shows.
+    status_description: String,
+    /// Anchors clicked and not yet loading: (Anchor, url, parameter).
+    pending_anchors: Vec<(NodeId, Vec<String>, Vec<String>)>,
+    /// The active viewpoint and viewer of the world that was replaced, until the first events of the new one.
+    held_pose: Option<HeldPose>,
     /// The layer whose state `layer`, `scan_cam` and `scan_display` hold: the active layer
     /// (navigation, viewpoint lists), except while a pass visits the layers one by one.
     current: LayerKey,
@@ -240,6 +257,8 @@ impl Viewer3d {
         // glTF buffers and images of a top-level world come through the runtime fetcher, as in x3d-render's load.rs.
         let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url).map_err(|e| format!("{e:?}"))?;
         let mut rt = Runtime::new(scene, fetcher);
+        // The oracle page (oracle/x_ite-pin/src/anim.html) is the document the browser lives in.
+        rt.page_url = format!("{ORACLE_PREFIX}x_ite-pin/src/anim.html");
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
         x3d_render::shader_gpu::install(&mut rt);
         rt.live = true;
@@ -301,6 +320,10 @@ impl Viewer3d {
             status: String::new(),
             anchors: vec![],
             frame_count: 0,
+            world_gen: 0,
+            pending_anchors: vec![],
+            status_description: String::new(),
+            held_pose: None,
             current: None,
             others: vec![],
             drawn: vec![None],
@@ -311,6 +334,60 @@ impl Viewer3d {
         v.layer.viewport = (width as f64, height as f64);
         v.bind_world();
         v
+    }
+
+    /// X3DBrowser.setExecutionContext: `new X3DWorld (scene)` has layers of its own and `bindBindables ()` binds the first
+    /// viewpoint, navigation info, background and fog of the new world. Everything the viewer remembers of the old world
+    /// (stacks, saved viewpoints, sensors, hits, caches keyed by node) goes.
+    fn hold_pose(&mut self) -> HeldPose {
+        match &self.held_pose {
+            Some(h) => HeldPose { pose: h.pose, viewpoint: h.viewpoint.clone(), viewer: h.viewer.clone() },
+            None => HeldPose { pose: self.user_pose(), viewpoint: self.bound_viewpoint_name(), viewer: self.viewer_field().to_string() },
+        }
+    }
+
+    fn reset_world(&mut self, before: Option<HeldPose>) {
+        self.world_gen = self.rt.world_state.generation;
+
+        // `browser .getActiveViewpoint ()` and the viewer still name the old world's until the events of the new bindables run.
+        self.held_pose = Some(before.unwrap_or_else(|| self.hold_pose()));
+        self.nav.disconnect(self.date_now);
+        self.nav = Viewer::None;
+        self.nav_info_node = DEFAULT;
+        self.nav_viewer = String::new();
+        self.viewer_field = String::new();
+        self.layer = Layer::new();
+        self.layer.viewport = (self.width as f64, self.height as f64);
+        self.others.clear();
+        self.current = None;
+        self.drawn = vec![None];
+        self.active = Some(None);
+        self.pointing_layer = None;
+        self.pointer = Pointer::new();
+        self.geom_cache.clear();
+        self.render_cache = Default::default();
+        self.pick_shapes = Default::default();
+        self.scan_cam = Scan::default();
+        self.scan_display = Scan::default();
+        self.lod_pass = Default::default();
+        self.generated_none.clear();
+        self.prox.clear();
+        self.vis.clear();
+        self.active_collisions.clear();
+        self.gravity_speed = 0.0;
+        self.verify_motion = None;
+        self.bind_world_events(false);
+    }
+
+    fn bound_viewpoint_name(&self) -> String {
+        let bound = self.layer.viewpoint();
+
+        if is_default(bound) { "<default>".to_string() } else { self.rt.scene.node(bound).name.clone() }
+    }
+
+    /// The name of the viewpoint `browser .getActiveViewpoint ()` names (`<default>` for the default one; see [`HeldPose`]).
+    pub fn active_viewpoint_name(&self) -> String {
+        self.held_pose.as_ref().map_or_else(|| self.bound_viewpoint_name(), |h| h.viewpoint.clone())
     }
 
     fn viewport(&self) -> [f64; 4] {
@@ -509,20 +586,34 @@ impl Viewer3d {
 
     /// X3DWorld.bindBindables: layer 0 and every layer of the LayerSet bind their first bindables.
     fn bind_world(&mut self) {
+        self.bind_world_events(true);
+    }
+
+    /// X3DWorld.bindBindables; `process` runs the events it queued at once (the first world) or leaves them for the
+    /// next events of the browser (a world that replaced another: `replaceWorld` runs in a continuation).
+    fn bind_world_events(&mut self, process: bool) {
         self.update_layers();
         let all = layers::all_layers(&x3d_render::sg::Sg::new(&self.rt));
+
+        // X3DWorld.bindBindables: `decodeURIComponent (new URL (worldURL) .hash .substring (1))` names the first viewpoint.
+        let fragment = self.rt.scene.world_url_of(self.rt.scene.world).split_once('#').map(|(_, f)| percent_decode(f));
+        let fragment = fragment.filter(|f| !f.is_empty());
 
         for key in all {
             self.swap_to(key);
             self.scan_cam = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
             let bbox = self.scene_bbox();
             let scan_cam = std::mem::take(&mut self.scan_cam);
-            self.layer.bind_bindables(&mut self.rt, &scan_cam, None, &move || bbox);
+            self.layer.bind_bindables(&mut self.rt, &scan_cam, fragment.as_deref(), &move || bbox);
             self.scan_cam = scan_cam;
         }
 
         self.swap_to(self.home_layer());
-        self.rt.process_events();
+
+        if process {
+            self.rt.process_events();
+        }
+
         self.set_active_navigation_info(true);
         self.refresh_display_scan();
     }
@@ -541,6 +632,10 @@ impl Viewer3d {
 
     /// `browser .getCurrentViewer ()`: the browser's `viewer` field.
     pub fn viewer_field(&self) -> &str {
+        if let Some(h) = &self.held_pose {
+            return &h.viewer;
+        }
+
         if self.viewer_field.is_empty() { self.nav.kind() } else { &self.viewer_field }
     }
 
@@ -622,11 +717,23 @@ impl Viewer3d {
     fn phase(&mut self, name: &str) {
         let now = self.time;
         let rate = self.pinned_frame_rate.unwrap_or(self.frame_rate);
+
+        // The Anchors that were clicked since the last frame request their urls when their TouchSensors' events run.
+        if name == "prepareEvents" {
+            for (anchor, urls, parameters) in std::mem::take(&mut self.pending_anchors) {
+                self.rt.anchor_load(anchor, urls, parameters);
+            }
+        }
+
         self.for_each_rt(&mut |rt| {
             rt.now = now;
             rt.frame_rate = rate;
             rt.process_phase(name);
         });
+
+        if name == "prepareEvents" {
+            self.held_pose = None;
+        }
 
         // X3DBrowser.bindViewpoint sets `set_bind` while the Script runs, so the viewpoint is
         // bound in the same frame (at its time), not in the next one.
@@ -642,6 +749,9 @@ impl Viewer3d {
                 "previousViewpoint" => self.next_viewpoint(-1),
                 "firstViewpoint" => self.first_viewpoint(),
                 "lastViewpoint" => self.last_viewpoint(),
+                // Browser.changeViewpoint (name), and loadURL (url) with a fragment of the world's own URL.
+                r if r.starts_with("changeViewpoint:") => self.change_viewpoint(&r["changeViewpoint:".len()..]),
+                // loadURL with a foreign target (window.open) or a page URL: another window or document, outside the native scope.
                 _ => {}
             }
         }
@@ -780,7 +890,18 @@ impl Viewer3d {
         self.display_scan();
         self.display_pass();
         self.phase("displayFinishEvents");
+
+        // finishEvents runs the continuation of a pending replaceWorld, and the end of the frame releases the old world's
+        // nodes: what `browser .getActiveViewpoint ()` names is read before.
+        let replacing = !self.rt.world_state.waiters.is_empty();
+        let before = replacing.then(|| self.hold_pose());
+
         self.phase("finishEvents");
+
+        // X3DBrowser.replaceWorld ran in the continuation of this frame: a new X3DWorld binds its bindables.
+        if self.rt.world_state.generation != self.world_gen {
+            self.reset_world(before);
+        }
 
         if let Some((x, y)) = self.verify_motion.take() {
             self.pointer_motion(x, y);
@@ -790,8 +911,9 @@ impl Viewer3d {
             self.status = d;
         }
 
-        if !self.rt.description.is_empty() {
+        if !self.rt.description.is_empty() && self.rt.description != self.status_description {
             self.status = self.rt.description.clone();
+            self.status_description = self.status.clone();
         }
     }
 
@@ -1255,7 +1377,7 @@ impl Viewer3d {
 
             // X3DLayerNode constructor: the layer's group is a PickableGroup when its scene has
             // the Picking component.
-            let ctx = key.map_or(x3d_scene::ROOT, |n| self.rt.scene.node(n).ctx);
+            let ctx = key.map_or(self.rt.scene.world, |n| self.rt.scene.node(n).ctx);
             let pickable_layer = self.rt.scene.has_component_in(ctx, "Picking");
 
             self.swap_to(key);
@@ -1483,7 +1605,7 @@ impl Viewer3d {
             .iter()
             .copied()
             .filter(|n| !is_default(*n) && !self.layer.descriptions(*n).is_empty())
-            .filter(|n| inline_viewpoints || self.rt.scene.scene_root(self.rt.scene.node(*n).ctx) == x3d_scene::ROOT)
+            .filter(|n| inline_viewpoints || self.rt.scene.scene_root(self.rt.scene.node(*n).ctx) == self.rt.scene.world)
             .collect()
     }
 
@@ -1560,6 +1682,10 @@ impl Viewer3d {
 
     /// The bound viewpoint's user position and orientation (what the navigation oracle compares).
     pub fn user_pose(&mut self) -> (Vector3, Rotation4, Vector3) {
+        if let Some(h) = &self.held_pose {
+            return h.pose;
+        }
+
         let base = self.base();
         let vp = self.layer.vp(self.layer.viewpoint());
         (vp.user_position(&base), vp.user_orientation(&base), vp.user_center_of_rotation(&base))
@@ -1750,18 +1876,22 @@ impl Viewer3d {
         let out = std::mem::take(&mut self.pointer.out);
 
         if let Some(d) = out.description {
+            // X3DPointingDeviceSensorNode.set_over__: `getBrowser () .setDescription (this ._description)`.
+            self.rt.description = d.clone();
+            self.status_description = d.clone();
             self.status = d;
         }
 
         for a in out.anchors {
             self.status = format!("Anchor: {} -> {}", if a.description.is_empty() { "(no description)" } else { &a.description }, a.urls.first().cloned().unwrap_or_default());
 
-            // Anchor.requestImmediateLoad → FileLoader.loadDocumentAsync: an url that is only a fragment
-            // names a viewpoint of this world (Browser.changeViewpoint); the first url decides, the others
-            // are not tried. Other urls (scenes, foreign content) are only reported.
-            if let Some(name) = a.urls.first().and_then(|u| u.trim().strip_prefix('#')) {
-                self.change_viewpoint(&percent_decode(name));
-            }
+            // Anchor.requestImmediateLoad: FileLoader.createX3DFromURL (url, parameter, replaceWorld, changeViewpoint,
+            // window.open): a url that only names a viewpoint of this world changes the viewpoint, a scene replaces the
+            // world once it is loaded (`Runtime::anchor_load`), the urls are tried in turn. A foreign target (another
+            // window, a page) is only reported: the viewer opens nothing.
+            // The sensor's events are processed with the next events of the browser, which is where the interest of the
+            // Anchor's TouchSensor (`set_active__`) runs (see [`Viewer3d::phase`]).
+            self.pending_anchors.push((a.node.node, a.urls.clone(), a.parameters.clone()));
 
             self.anchors.push(a);
         }

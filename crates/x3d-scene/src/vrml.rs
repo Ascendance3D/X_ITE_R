@@ -812,6 +812,10 @@ fn is_underscore_number(name: &str) -> bool {
 impl Scene {
     /// `scene .toVRMLString ()` with X_ITE's default (TIDY) generator options.
     pub fn to_vrml_string(&self) -> String {
+        if self.world != ROOT {
+            return self.to_vrml_string_ctx(self.world);
+        }
+
         VrmlGenerator::new(self).scene_to_vrml()
     }
 

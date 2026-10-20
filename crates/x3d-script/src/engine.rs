@@ -380,6 +380,45 @@ impl ScriptHost for QuickJsHost {
             }
 
             while ctx.execute_pending_job() {}
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__endSettle") {
+                let _ = f.call::<_, ()>(());
+            }
+
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn settle_plain(&mut self, rt: &mut Runtime, id: u64, outcome: Result<(), String>) {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            if let Ok(f) = ctx.globals().get::<_, Function>("__settle") {
+                let _ = match outcome {
+                    Ok(()) => f.call::<_, ()>((id as f64, true, 0.0)),
+                    Err(m) => f.call::<_, ()>((id as f64, false, m)),
+                };
+            }
+
+            while ctx.execute_pending_job() {}
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__endSettle") {
+                let _ = f.call::<_, ()>(());
+            }
+
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn browser_event(&mut self, rt: &mut Runtime, event: u32) {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            if let Ok(f) = ctx.globals().get::<_, Function>("__browserEvent") {
+                let _ = f.call::<_, ()>((event as f64,));
+            }
+
+            while ctx.execute_pending_job() {}
             with_state(State::release_fresh);
         });
     }
@@ -959,10 +998,16 @@ fn num_arg(ctx: &Ctx<'_>, args: &[Value<'_>], i: usize) -> f64 {
     args.get(i).map(|v| coerce_f64(ctx, v)).unwrap_or(f64::NAN)
 }
 
-/// The execution context a script-side `script` argument names: a Script node's id (its context), or
-/// `-(context + 1)` (-1 is the world, below that a scene made by createX3DFromString / createX3DFromURL).
+/// The execution context a script-side `script` argument names: a Script node's id (its context), -1 (the world, whichever
+/// scene it is now), or `-(context + 2)` (a scene made by createX3DFromString / createX3DFromURL, or a world that was replaced).
 fn ctx_of_script(x: f64) -> x3d_scene::CtxId {
-    if x >= 0.0 { rt().scene.node(x as NodeId).ctx } else { (-(x + 1.0)) as x3d_scene::CtxId }
+    if x >= 0.0 {
+        rt().scene.node(x as NodeId).ctx
+    } else if x == -1.0 {
+        rt().scene.world
+    } else {
+        (-(x + 2.0)) as x3d_scene::CtxId
+    }
 }
 
 /// X3DImportedNodeInstance delegates getTypeName / getField / getFieldDefinitions … to the node its Inline exports,
@@ -1228,7 +1273,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         // --- browser
         "bname" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.table.browser_name)?.into_value()),
         "bversion" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.table.browser_version)?.into_value()),
-        "bdescription" => Ok(rquickjs::String::from_str(ctx.clone(), &with_state(|s| s.description.clone()))?.into_value()),
+        "bdescription" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().description)?.into_value()),
         "bsetdescription" => {
             let d = str_arg(ctx, a, 0);
             rt().description = d.clone();
@@ -1283,6 +1328,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(undefined)
         }
         "time" => Ok(Value::new_number(ctx.clone(), rt().now)),
+        "browserTime" => Ok(Value::new_number(ctx.clone(), rt().world_state.initialized_time)),
         // Browser.nextViewpoint () and friends: queued for the viewer (X3DBrowser viewpoint API).
         "brequest" => {
             let r = str_arg(ctx, a, 0);
@@ -1293,6 +1339,14 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let script = num_arg(ctx, a, 0);
             let c = ctx_of_script(script);
             Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.spec_version_of(c))?.into_value())
+        }
+        // X3DBrowser.getBaseURL: the page's URL (an embedder without a page: the URL of the caller's scene).
+        "baseURL" => {
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
+            let page = rt().page_url.clone();
+            let url = if page.is_empty() { rt().scene.world_url_of(c).to_string() } else { page };
+            Ok(rquickjs::String::from_str(ctx.clone(), &url)?.into_value())
         }
         "worldURL" => {
             let script = num_arg(ctx, a, 0);
@@ -1341,6 +1395,15 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     .unwrap_or_default();
 
                 o.set("ctx", rt().browser_create_scene(profile, components, parent) as f64)?;
+            } else if kind == "load" {
+                // Browser.loadURL (url, parameter): `id` is absent when the url only names a viewpoint of the world.
+                let strings = |i: usize| -> Vec<String> { a.get(i).and_then(|v| v.as_array()).map(|arr| arr.iter::<Coerced<String>>().filter_map(Result::ok).map(|c| c.0).collect()).unwrap_or_default() };
+
+                match rt().browser_load_url(strings(2), strings(3), parent, node) {
+                    Ok(id) => o.set("id", id as f64)?,
+                    Err(Some(message)) => o.set("error", message)?,
+                    Err(None) => {}
+                }
             } else if kind == "string" || kind == "json" {
                 let text = str_arg(ctx, a, 2);
                 let made = if kind == "string" { rt().browser_create_from_string(&text, parent, node) } else { rt().browser_import_json(&text, parent, node) };
@@ -1359,6 +1422,23 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 o.set("id", rt().browser_create_from_url(urls, parent, node) as f64)?;
             }
 
+            Ok(o.into_value())
+        }
+        // Browser.replaceWorld (scene)
+        "replaceWorld" => {
+            use x3d_runtime::browser_load::WorldScene;
+
+            let scene = match str_arg(ctx, a, 1).as_str() {
+                "scene" => WorldScene::Ctx(num_arg(ctx, a, 2) as x3d_scene::CtxId),
+                "nodes" => match value_arg(a, 2) {
+                    Some(FieldValue::MFNode(list)) => WorldScene::Roots(list),
+                    _ => WorldScene::Empty,
+                },
+                _ => WorldScene::Empty,
+            };
+            let o = Object::new(ctx.clone())?;
+
+            o.set("id", rt().browser_replace_world(scene) as f64)?;
             Ok(o.into_value())
         }
         "sfnodeFromString" => {
