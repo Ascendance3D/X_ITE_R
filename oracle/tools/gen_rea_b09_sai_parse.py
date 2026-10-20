@@ -294,6 +294,16 @@ groups["parse-errors"] = [
     H + "Group { children [ Group { } #/* unterminated ] }",
 ]
 
+# XMLParser.nodeElement prints "Unknown node type" with console.error (the log level is compared: sai-parse-console.json).
+X = "<X3D profile=\"Full\" version=\"4.0\"><Scene>"
+groups["parse-xml-unknown"] = [
+    X + "<Bogus/><Transform DEF=\"T\" translation=\"1 2 3\"><Nonsense2 size=\"1\"/><Group DEF=\"G\"/></Transform><Shape><Box/></Shape></Scene></X3D>",
+    X + "<Shape><Bogus3/><Box size=\"1 2 3\"/></Shape><Group DEF=\"K\"/></Scene></X3D>",
+    X + "<Bogus4><Group DEF=\"inside\"/></Bogus4><Group DEF=\"after\"/></Scene></X3D>",
+    X + "<Group><Bogus5/><Bogus6/></Group><Transform DEF=\"X\"/></Scene></X3D>",
+    X + "<Group USE=\"Nope\"/><Bogus7/><Group DEF=\"ok\"/></Scene></X3D>",
+]
+
 groups["parse-formats"] = [
     "<?xml version=\"1.0\"?><X3D profile=\"Full\" version=\"4.0\"><Scene><Group DEF=\"G\"/></Scene></X3D>",
     "<X3D profile=\"Immersive\" version=\"3.3\"><head><component name=\"Scripting\" level=\"1\"/><meta name=\"a\" content=\"b\"/><unit category=\"length\" name=\"foot\" conversionFactor=\"0.3048\"/></head><Scene><Transform translation=\"1 2 3\"/></Scene></X3D>",

@@ -44,7 +44,8 @@ fn main() -> ExitCode {
             ("check", Ok(scene)) => {
                 println!("{file}: OK ({} warnings)", scene.warnings.len());
                 for w in &scene.warnings {
-                    println!("  warning: {}", w.lines().next().unwrap_or(""));
+                    // Entries marked "\u{1}error\u{1}" are console.error messages of the scene (Scene::error).
+                    println!("  warning: {}", w.trim_start_matches("\u{1}error\u{1}").lines().next().unwrap_or(""));
                 }
             }
             ("fmt", Ok(scene)) => print!("{}", scene.to_vrml_string()),
