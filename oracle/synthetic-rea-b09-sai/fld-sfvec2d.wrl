@@ -1,0 +1,168 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld sfvec2d"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('SFVec2d new ()', function () { return new SFVec2d (); });
+  T ('SFVec2d new (1)', function () { return new SFVec2d (1); });
+  T ('SFVec2d new (all)', function () { return new SFVec2d (1, 2); });
+  T ('SFVec2d new (extra)', function () { return new SFVec2d (1, 2, 99); });
+  T ('SFVec2d new (strings)', function () { return new SFVec2d ('1.5', '2.5'); });
+  T ('SFVec2d new (bad)', function () { return new SFVec2d ('a', null, undefined, true); });
+  T ('SFVec2d new (NaN)', function () { return new SFVec2d (NaN, Infinity, -Infinity, -0); });
+  T ('SFVec2d new (object)', function () { return new SFVec2d ({ x: 1 }); });
+  T ('SFVec2d float rounding', function () { var v = new SFVec2d (0.1, 0.2, 0.3, 0.4); return [v .x, v [0], String (v), v .toString (), v .toVRMLString ()]; });
+  T ('SFVec2d big', function () { return new SFVec2d (1e300, 1e-300, 123456789.123456789, 5e-324); });
+  T ('SFVec2d get x', function () { return [new SFVec2d (1, 2) .x, new SFVec2d (1, 2) [0]]; });
+  T ('SFVec2d set x', function () { var v = new SFVec2d (1, 2); v .x = 7.5; v [1] = 8.25; return v; });
+  T ('SFVec2d get y', function () { return [new SFVec2d (1, 2) .y, new SFVec2d (1, 2) [1]]; });
+  T ('SFVec2d set y', function () { var v = new SFVec2d (1, 2); v .y = 7.5; v [0] = 8.25; return v; });
+  T ('SFVec2d set string', function () { var v = new SFVec2d (1, 2); v .x = '9'; v [1] = 'abc'; return v; });
+  T ('SFVec2d set null/undefined', function () { var v = new SFVec2d (1, 2); v .x = null; v [1] = undefined; return v; });
+  T ('SFVec2d index out', function () { var v = new SFVec2d (1, 2); return [v [2], v [-1], v ['1'], v ['x'], v .nope, v [1.5]]; });
+  T ('SFVec2d index write out', function () { var v = new SFVec2d (1, 2); v [2] = 5; v .nope = 6; v [-1] = 7; return [v, v [2], v .nope, v [-1]]; });
+  T ('SFVec2d keys', function () { var v = new SFVec2d (1, 2); return [Object .keys (v), JSON .stringify (v), Object .getOwnPropertyNames (v) .length, 'x' in v, 0 in v, 2 in v]; });
+  T ('SFVec2d iterate', function () { var v = new SFVec2d (1, 2); var o = []; for (var x of v) o .push (x); return [o, Array .from (v), [... v], Math .max (... v)]; });
+  T ('SFVec2d for in', function () { var v = new SFVec2d (1, 2); var o = []; for (var k in v) o .push (k); return o; });
+  T ('SFVec2d concat', function () { var v = new SFVec2d (1, 2); return ['' + v, v + '', `${v}`, v + 1, v * 2, +v, String (v), v .valueOf () === v, typeof v]; });
+  T ('SFVec2d identity', function () { var v = new SFVec2d (1, 2); var w = v .copy (); return [v === w, v .equals (w), v .equals (v), w .constructor === v .constructor, v instanceof SFVec2d, v instanceof X3DField]; });
+  T ('SFVec2d equals other type', function () { var v = new SFVec2d (1, 2); return v .equals (new SFVec2f (1, 2)); });
+  T ('SFVec2d getName/Type', function () { var v = new SFVec2d (1, 2); return [v .getTypeName (), v .getType (), v .getName (), v .getAccessType (), v .isDefaultValue (), new SFVec2d () .isDefaultValue ()]; });
+  T ('SFVec2d toStrings', function () { var v = new SFVec2d (2.5, 5.0); return [v .toString (), v .toVRMLString (), v .toXMLString (), v .toJSONString ()]; });
+  T ('SFVec2d toStrings nan', function () { var v = new SFVec2d (NaN, Infinity, -Infinity, 1e21); return [v .toString (), v .toXMLString (), v .toJSONString ()]; });
+  T ('SFVec2d add', function () { return new SFVec2d (1, 2) .add (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d add zero', function () { return new SFVec2d (1, 2) .add (new SFVec2d ()); });
+  T ('SFVec2d add nan', function () { return new SFVec2d (1, 2) .add (new SFVec2d (NaN)); });
+  T ('SFVec2d add missing', function () { return new SFVec2d (1, 2) .add (); });
+  T ('SFVec2d add wrongtype', function () { return new SFVec2d (1, 2) .add (5); });
+  T ('SFVec2d subtract', function () { return new SFVec2d (1, 2) .subtract (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d subtract zero', function () { return new SFVec2d (1, 2) .subtract (new SFVec2d ()); });
+  T ('SFVec2d subtract nan', function () { return new SFVec2d (1, 2) .subtract (new SFVec2d (NaN)); });
+  T ('SFVec2d subtract missing', function () { return new SFVec2d (1, 2) .subtract (); });
+  T ('SFVec2d subtract wrongtype', function () { return new SFVec2d (1, 2) .subtract (5); });
+  T ('SFVec2d multVec', function () { return new SFVec2d (1, 2) .multVec (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d multVec zero', function () { return new SFVec2d (1, 2) .multVec (new SFVec2d ()); });
+  T ('SFVec2d multVec nan', function () { return new SFVec2d (1, 2) .multVec (new SFVec2d (NaN)); });
+  T ('SFVec2d multVec missing', function () { return new SFVec2d (1, 2) .multVec (); });
+  T ('SFVec2d multVec wrongtype', function () { return new SFVec2d (1, 2) .multVec (5); });
+  T ('SFVec2d divVec', function () { return new SFVec2d (1, 2) .divVec (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d divVec zero', function () { return new SFVec2d (1, 2) .divVec (new SFVec2d ()); });
+  T ('SFVec2d divVec nan', function () { return new SFVec2d (1, 2) .divVec (new SFVec2d (NaN)); });
+  T ('SFVec2d divVec missing', function () { return new SFVec2d (1, 2) .divVec (); });
+  T ('SFVec2d divVec wrongtype', function () { return new SFVec2d (1, 2) .divVec (5); });
+  T ('SFVec2d min', function () { return new SFVec2d (1, 2) .min (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d min zero', function () { return new SFVec2d (1, 2) .min (new SFVec2d ()); });
+  T ('SFVec2d min nan', function () { return new SFVec2d (1, 2) .min (new SFVec2d (NaN)); });
+  T ('SFVec2d min missing', function () { return new SFVec2d (1, 2) .min (); });
+  T ('SFVec2d min wrongtype', function () { return new SFVec2d (1, 2) .min (5); });
+  T ('SFVec2d max', function () { return new SFVec2d (1, 2) .max (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d max zero', function () { return new SFVec2d (1, 2) .max (new SFVec2d ()); });
+  T ('SFVec2d max nan', function () { return new SFVec2d (1, 2) .max (new SFVec2d (NaN)); });
+  T ('SFVec2d max missing', function () { return new SFVec2d (1, 2) .max (); });
+  T ('SFVec2d max wrongtype', function () { return new SFVec2d (1, 2) .max (5); });
+  T ('SFVec2d reflect', function () { return new SFVec2d (1, 2) .reflect (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d reflect zero', function () { return new SFVec2d (1, 2) .reflect (new SFVec2d ()); });
+  T ('SFVec2d reflect nan', function () { return new SFVec2d (1, 2) .reflect (new SFVec2d (NaN)); });
+  T ('SFVec2d reflect missing', function () { return new SFVec2d (1, 2) .reflect (); });
+  T ('SFVec2d reflect wrongtype', function () { return new SFVec2d (1, 2) .reflect (5); });
+  T ('SFVec2d distance', function () { return new SFVec2d (1, 2) .distance (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d distance zero', function () { return new SFVec2d (1, 2) .distance (new SFVec2d ()); });
+  T ('SFVec2d distance nan', function () { return new SFVec2d (1, 2) .distance (new SFVec2d (NaN)); });
+  T ('SFVec2d distance missing', function () { return new SFVec2d (1, 2) .distance (); });
+  T ('SFVec2d distance wrongtype', function () { return new SFVec2d (1, 2) .distance (5); });
+  T ('SFVec2d dot', function () { return new SFVec2d (1, 2) .dot (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d dot zero', function () { return new SFVec2d (1, 2) .dot (new SFVec2d ()); });
+  T ('SFVec2d dot nan', function () { return new SFVec2d (1, 2) .dot (new SFVec2d (NaN)); });
+  T ('SFVec2d dot missing', function () { return new SFVec2d (1, 2) .dot (); });
+  T ('SFVec2d dot wrongtype', function () { return new SFVec2d (1, 2) .dot (5); });
+  T ('SFVec2d abs', function () { return new SFVec2d (1, 2) .abs (); });
+  T ('SFVec2d abs zero', function () { return new SFVec2d () .abs (); });
+  T ('SFVec2d abs neg', function () { return new SFVec2d (-1.5, 2.5) .abs (); });
+  T ('SFVec2d abs nan', function () { return new SFVec2d (NaN, 1, 2, 3) .abs (); });
+  T ('SFVec2d inverse', function () { return new SFVec2d (1, 2) .inverse (); });
+  T ('SFVec2d inverse zero', function () { return new SFVec2d () .inverse (); });
+  T ('SFVec2d inverse neg', function () { return new SFVec2d (-1.5, 2.5) .inverse (); });
+  T ('SFVec2d inverse nan', function () { return new SFVec2d (NaN, 1, 2, 3) .inverse (); });
+  T ('SFVec2d length', function () { return new SFVec2d (1, 2) .length (); });
+  T ('SFVec2d length zero', function () { return new SFVec2d () .length (); });
+  T ('SFVec2d length neg', function () { return new SFVec2d (-1.5, 2.5) .length (); });
+  T ('SFVec2d length nan', function () { return new SFVec2d (NaN, 1, 2, 3) .length (); });
+  T ('SFVec2d negate', function () { return new SFVec2d (1, 2) .negate (); });
+  T ('SFVec2d negate zero', function () { return new SFVec2d () .negate (); });
+  T ('SFVec2d negate neg', function () { return new SFVec2d (-1.5, 2.5) .negate (); });
+  T ('SFVec2d negate nan', function () { return new SFVec2d (NaN, 1, 2, 3) .negate (); });
+  T ('SFVec2d normalize', function () { return new SFVec2d (1, 2) .normalize (); });
+  T ('SFVec2d normalize zero', function () { return new SFVec2d () .normalize (); });
+  T ('SFVec2d normalize neg', function () { return new SFVec2d (-1.5, 2.5) .normalize (); });
+  T ('SFVec2d normalize nan', function () { return new SFVec2d (NaN, 1, 2, 3) .normalize (); });
+  T ('SFVec2d multiply', function () { return new SFVec2d (1, 2) .multiply (2.5); });
+  T ('SFVec2d multiply zero', function () { return new SFVec2d (1, 2) .multiply (0); });
+  T ('SFVec2d multiply string', function () { return new SFVec2d (1, 2) .multiply ('2'); });
+  T ('SFVec2d multiply nan', function () { return new SFVec2d (1, 2) .multiply (NaN); });
+  T ('SFVec2d multiply missing', function () { return new SFVec2d (1, 2) .multiply (); });
+  T ('SFVec2d multiply vector', function () { return new SFVec2d (1, 2) .multiply (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d divide', function () { return new SFVec2d (1, 2) .divide (2.5); });
+  T ('SFVec2d divide zero', function () { return new SFVec2d (1, 2) .divide (0); });
+  T ('SFVec2d divide string', function () { return new SFVec2d (1, 2) .divide ('2'); });
+  T ('SFVec2d divide nan', function () { return new SFVec2d (1, 2) .divide (NaN); });
+  T ('SFVec2d divide missing', function () { return new SFVec2d (1, 2) .divide (); });
+  T ('SFVec2d divide vector', function () { return new SFVec2d (1, 2) .divide (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d clamp', function () { return new SFVec2d (1, 2) .clamp (new SFVec2d (0.5), new SFVec2d (1.5)); });
+  T ('SFVec2d clamp swapped', function () { return new SFVec2d (1, 2) .clamp (new SFVec2d (1.5), new SFVec2d (0.5)); });
+  T ('SFVec2d clamp missing', function () { return new SFVec2d (1, 2) .clamp (new SFVec2d (0.5)); });
+  T ('SFVec2d lerp', function () { return new SFVec2d (1, 2) .lerp (new SFVec2d (2.5, 5.0), 0.25); });
+  T ('SFVec2d lerp t=0/1/2', function () { return [new SFVec2d (1, 2) .lerp (new SFVec2d (2.5, 5.0), 0), new SFVec2d (1, 2) .lerp (new SFVec2d (2.5, 5.0), 1), new SFVec2d (1, 2) .lerp (new SFVec2d (2.5, 5.0), 2), new SFVec2d (1, 2) .lerp (new SFVec2d (2.5, 5.0), -1)]; });
+  T ('SFVec2d lerp nan', function () { return new SFVec2d (1, 2) .lerp (new SFVec2d (2.5, 5.0), NaN); });
+  T ('SFVec2d lerp missing t', function () { return new SFVec2d (1, 2) .lerp (new SFVec2d (2.5, 5.0)); });
+  T ('SFVec2d cross', function () { return typeof new SFVec2d (1, 2) .cross; });
+  T ('SFVec2d chain', function () { return new SFVec2d (1, 2) .add (new SFVec2d (2.5, 5.0)) .multiply (0.5) .normalize () .negate (); });
+  T ('SFVec2d non mutating', function () { var v = new SFVec2d (1, 2); var w = v .add (new SFVec2d (2.5, 5.0)); return [v, w, v === w]; });
+  T ('SFVec2d result type', function () { var r = [new SFVec2d (1, 2) .add (new SFVec2d (2.5, 5.0)), new SFVec2d (1, 2) .abs (), new SFVec2d (1, 2) .copy ()]; return r .map (function (x) { return x .constructor .name + '/' + x .getTypeName (); }); });
+  T ('SFVec2d add other precision', function () { return new SFVec2d (1, 2) .add (new SFVec2f (2.5, 5.0)); });
+  T ('SFVec2d add array', function () { return new SFVec2d (1, 2) .add ([2.5, 5.0]); });
+  T ('SFVec2d add object', function () { return new SFVec2d (1, 2) .add ({ x: 1, y: 2, z: 3, w: 4 }); });
+  T ('SFVec2d setValue', function () { var v = new SFVec2d (1, 2); v .setValue (new SFVec2d (2.5, 5.0)); return v; });
+  T ('SFVec2d assign', function () { var v = new SFVec2d (1, 2); v .assign (new SFVec2d (2.5, 5.0)); return v; });
+  T ('SFVec2d setValue other precision', function () { var v = new SFVec2d (1, 2); v .setValue (new SFVec2f (2.5, 5.0)); return v; });
+  flush_ ();
+}
+
+  "
+}

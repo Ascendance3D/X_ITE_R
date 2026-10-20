@@ -1,0 +1,312 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr field defaults"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  initializeOnly SFBool iBool TRUE
+  initializeOnly SFInt32 iInt 7
+  initializeOnly SFFloat iFloat 1.5
+  initializeOnly SFDouble iDouble 2.5
+  initializeOnly SFTime iTime 3
+  initializeOnly SFString iString "str"
+  initializeOnly SFVec2f iV2f 1 2
+  initializeOnly SFVec3f iV3f 1 2 3
+  initializeOnly SFVec3d iV3d 4 5 6
+  initializeOnly SFVec4f iV4f 1 2 3 4
+  initializeOnly SFColor iCol 0.1 0.2 0.3
+  initializeOnly SFColorRGBA iColA 0.1 0.2 0.3 0.4
+  initializeOnly SFRotation iRot 0 1 0 1.5
+  initializeOnly SFMatrix3f iM3 1 0 0 0 1 0 0 0 1
+  initializeOnly SFMatrix4f iM4 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+  initializeOnly SFNode iNode NULL
+  initializeOnly SFImage iImg 1 1 3 0x112233
+  initializeOnly MFBool mBool [TRUE FALSE]
+  initializeOnly MFInt32 mInt [1 2 3]
+  initializeOnly MFFloat mFloat [1.5 2.5]
+  initializeOnly MFDouble mDouble [1.5]
+  initializeOnly MFTime mTime [1 2]
+  initializeOnly MFString mString ["a" "b"]
+  initializeOnly MFVec2f mV2f [1 2, 3 4]
+  initializeOnly MFVec3f mV3f [1 2 3, 4 5 6]
+  initializeOnly MFVec4f mV4f [1 2 3 4]
+  initializeOnly MFColor mCol [1 0 0]
+  initializeOnly MFColorRGBA mColA [1 0 0 1]
+  initializeOnly MFRotation mRot [0 0 1 1]
+  initializeOnly MFMatrix3f mM3 [1 0 0 0 1 0 0 0 1]
+  initializeOnly MFMatrix4f mM4 [1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]
+  initializeOnly MFNode mNode [ ]
+  initializeOnly MFImage mImg [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('iBool', function () { return iBool; });
+  T ('iBool typeof', function () { return typeof iBool; });
+  T ('iBool getType', function () { return SELF .getField ('iBool') .getType (); });
+  T ('iBool typeName', function () { return SELF .getField ('iBool') .getTypeName (); });
+  T ('iBool json', function () { return SELF .getField ('iBool') .toJSONString (); });
+  T ('iBool xml', function () { return SELF .getField ('iBool') .toXMLString (); });
+  T ('iBool isDefault', function () { return SELF .getField ('iBool') .isDefaultValue (); });
+  T ('iInt', function () { return iInt; });
+  T ('iInt typeof', function () { return typeof iInt; });
+  T ('iInt getType', function () { return SELF .getField ('iInt') .getType (); });
+  T ('iInt typeName', function () { return SELF .getField ('iInt') .getTypeName (); });
+  T ('iInt json', function () { return SELF .getField ('iInt') .toJSONString (); });
+  T ('iInt xml', function () { return SELF .getField ('iInt') .toXMLString (); });
+  T ('iInt isDefault', function () { return SELF .getField ('iInt') .isDefaultValue (); });
+  T ('iFloat', function () { return iFloat; });
+  T ('iFloat typeof', function () { return typeof iFloat; });
+  T ('iFloat getType', function () { return SELF .getField ('iFloat') .getType (); });
+  T ('iFloat typeName', function () { return SELF .getField ('iFloat') .getTypeName (); });
+  T ('iFloat json', function () { return SELF .getField ('iFloat') .toJSONString (); });
+  T ('iFloat xml', function () { return SELF .getField ('iFloat') .toXMLString (); });
+  T ('iFloat isDefault', function () { return SELF .getField ('iFloat') .isDefaultValue (); });
+  T ('iDouble', function () { return iDouble; });
+  T ('iDouble typeof', function () { return typeof iDouble; });
+  T ('iDouble getType', function () { return SELF .getField ('iDouble') .getType (); });
+  T ('iDouble typeName', function () { return SELF .getField ('iDouble') .getTypeName (); });
+  T ('iDouble json', function () { return SELF .getField ('iDouble') .toJSONString (); });
+  T ('iDouble xml', function () { return SELF .getField ('iDouble') .toXMLString (); });
+  T ('iDouble isDefault', function () { return SELF .getField ('iDouble') .isDefaultValue (); });
+  T ('iTime', function () { return iTime; });
+  T ('iTime typeof', function () { return typeof iTime; });
+  T ('iTime getType', function () { return SELF .getField ('iTime') .getType (); });
+  T ('iTime typeName', function () { return SELF .getField ('iTime') .getTypeName (); });
+  T ('iTime json', function () { return SELF .getField ('iTime') .toJSONString (); });
+  T ('iTime xml', function () { return SELF .getField ('iTime') .toXMLString (); });
+  T ('iTime isDefault', function () { return SELF .getField ('iTime') .isDefaultValue (); });
+  T ('iString', function () { return iString; });
+  T ('iString typeof', function () { return typeof iString; });
+  T ('iString getType', function () { return SELF .getField ('iString') .getType (); });
+  T ('iString typeName', function () { return SELF .getField ('iString') .getTypeName (); });
+  T ('iString json', function () { return SELF .getField ('iString') .toJSONString (); });
+  T ('iString xml', function () { return SELF .getField ('iString') .toXMLString (); });
+  T ('iString isDefault', function () { return SELF .getField ('iString') .isDefaultValue (); });
+  T ('iV2f', function () { return iV2f; });
+  T ('iV2f typeof', function () { return typeof iV2f; });
+  T ('iV2f getType', function () { return SELF .getField ('iV2f') .getType (); });
+  T ('iV2f typeName', function () { return SELF .getField ('iV2f') .getTypeName (); });
+  T ('iV2f json', function () { return SELF .getField ('iV2f') .toJSONString (); });
+  T ('iV2f xml', function () { return SELF .getField ('iV2f') .toXMLString (); });
+  T ('iV2f isDefault', function () { return SELF .getField ('iV2f') .isDefaultValue (); });
+  T ('iV3f', function () { return iV3f; });
+  T ('iV3f typeof', function () { return typeof iV3f; });
+  T ('iV3f getType', function () { return SELF .getField ('iV3f') .getType (); });
+  T ('iV3f typeName', function () { return SELF .getField ('iV3f') .getTypeName (); });
+  T ('iV3f json', function () { return SELF .getField ('iV3f') .toJSONString (); });
+  T ('iV3f xml', function () { return SELF .getField ('iV3f') .toXMLString (); });
+  T ('iV3f isDefault', function () { return SELF .getField ('iV3f') .isDefaultValue (); });
+  T ('iV3d', function () { return iV3d; });
+  T ('iV3d typeof', function () { return typeof iV3d; });
+  T ('iV3d getType', function () { return SELF .getField ('iV3d') .getType (); });
+  T ('iV3d typeName', function () { return SELF .getField ('iV3d') .getTypeName (); });
+  T ('iV3d json', function () { return SELF .getField ('iV3d') .toJSONString (); });
+  T ('iV3d xml', function () { return SELF .getField ('iV3d') .toXMLString (); });
+  T ('iV3d isDefault', function () { return SELF .getField ('iV3d') .isDefaultValue (); });
+  T ('iV4f', function () { return iV4f; });
+  T ('iV4f typeof', function () { return typeof iV4f; });
+  T ('iV4f getType', function () { return SELF .getField ('iV4f') .getType (); });
+  T ('iV4f typeName', function () { return SELF .getField ('iV4f') .getTypeName (); });
+  T ('iV4f json', function () { return SELF .getField ('iV4f') .toJSONString (); });
+  T ('iV4f xml', function () { return SELF .getField ('iV4f') .toXMLString (); });
+  T ('iV4f isDefault', function () { return SELF .getField ('iV4f') .isDefaultValue (); });
+  T ('iCol', function () { return iCol; });
+  T ('iCol typeof', function () { return typeof iCol; });
+  T ('iCol getType', function () { return SELF .getField ('iCol') .getType (); });
+  T ('iCol typeName', function () { return SELF .getField ('iCol') .getTypeName (); });
+  T ('iCol json', function () { return SELF .getField ('iCol') .toJSONString (); });
+  T ('iCol xml', function () { return SELF .getField ('iCol') .toXMLString (); });
+  T ('iCol isDefault', function () { return SELF .getField ('iCol') .isDefaultValue (); });
+  T ('iColA', function () { return iColA; });
+  T ('iColA typeof', function () { return typeof iColA; });
+  T ('iColA getType', function () { return SELF .getField ('iColA') .getType (); });
+  T ('iColA typeName', function () { return SELF .getField ('iColA') .getTypeName (); });
+  T ('iColA json', function () { return SELF .getField ('iColA') .toJSONString (); });
+  T ('iColA xml', function () { return SELF .getField ('iColA') .toXMLString (); });
+  T ('iColA isDefault', function () { return SELF .getField ('iColA') .isDefaultValue (); });
+  T ('iRot', function () { return iRot; });
+  T ('iRot typeof', function () { return typeof iRot; });
+  T ('iRot getType', function () { return SELF .getField ('iRot') .getType (); });
+  T ('iRot typeName', function () { return SELF .getField ('iRot') .getTypeName (); });
+  T ('iRot json', function () { return SELF .getField ('iRot') .toJSONString (); });
+  T ('iRot xml', function () { return SELF .getField ('iRot') .toXMLString (); });
+  T ('iRot isDefault', function () { return SELF .getField ('iRot') .isDefaultValue (); });
+  T ('iM3', function () { return iM3; });
+  T ('iM3 typeof', function () { return typeof iM3; });
+  T ('iM3 getType', function () { return SELF .getField ('iM3') .getType (); });
+  T ('iM3 typeName', function () { return SELF .getField ('iM3') .getTypeName (); });
+  T ('iM3 json', function () { return SELF .getField ('iM3') .toJSONString (); });
+  T ('iM3 xml', function () { return SELF .getField ('iM3') .toXMLString (); });
+  T ('iM3 isDefault', function () { return SELF .getField ('iM3') .isDefaultValue (); });
+  T ('iM4', function () { return iM4; });
+  T ('iM4 typeof', function () { return typeof iM4; });
+  T ('iM4 getType', function () { return SELF .getField ('iM4') .getType (); });
+  T ('iM4 typeName', function () { return SELF .getField ('iM4') .getTypeName (); });
+  T ('iM4 json', function () { return SELF .getField ('iM4') .toJSONString (); });
+  T ('iM4 xml', function () { return SELF .getField ('iM4') .toXMLString (); });
+  T ('iM4 isDefault', function () { return SELF .getField ('iM4') .isDefaultValue (); });
+  T ('iNode', function () { return iNode; });
+  T ('iNode typeof', function () { return typeof iNode; });
+  T ('iNode getType', function () { return SELF .getField ('iNode') .getType (); });
+  T ('iNode typeName', function () { return SELF .getField ('iNode') .getTypeName (); });
+  T ('iNode json', function () { return SELF .getField ('iNode') .toJSONString (); });
+  T ('iNode xml', function () { return SELF .getField ('iNode') .toXMLString (); });
+  T ('iNode isDefault', function () { return SELF .getField ('iNode') .isDefaultValue (); });
+  T ('iImg', function () { return iImg; });
+  T ('iImg typeof', function () { return typeof iImg; });
+  T ('iImg getType', function () { return SELF .getField ('iImg') .getType (); });
+  T ('iImg typeName', function () { return SELF .getField ('iImg') .getTypeName (); });
+  T ('iImg json', function () { return SELF .getField ('iImg') .toJSONString (); });
+  T ('iImg xml', function () { return SELF .getField ('iImg') .toXMLString (); });
+  T ('iImg isDefault', function () { return SELF .getField ('iImg') .isDefaultValue (); });
+  T ('mBool', function () { return mBool; });
+  T ('mBool typeof', function () { return typeof mBool; });
+  T ('mBool getType', function () { return SELF .getField ('mBool') .getType (); });
+  T ('mBool typeName', function () { return SELF .getField ('mBool') .getTypeName (); });
+  T ('mBool json', function () { return SELF .getField ('mBool') .toJSONString (); });
+  T ('mBool xml', function () { return SELF .getField ('mBool') .toXMLString (); });
+  T ('mBool isDefault', function () { return SELF .getField ('mBool') .isDefaultValue (); });
+  T ('mInt', function () { return mInt; });
+  T ('mInt typeof', function () { return typeof mInt; });
+  T ('mInt getType', function () { return SELF .getField ('mInt') .getType (); });
+  T ('mInt typeName', function () { return SELF .getField ('mInt') .getTypeName (); });
+  T ('mInt json', function () { return SELF .getField ('mInt') .toJSONString (); });
+  T ('mInt xml', function () { return SELF .getField ('mInt') .toXMLString (); });
+  T ('mInt isDefault', function () { return SELF .getField ('mInt') .isDefaultValue (); });
+  T ('mFloat', function () { return mFloat; });
+  T ('mFloat typeof', function () { return typeof mFloat; });
+  T ('mFloat getType', function () { return SELF .getField ('mFloat') .getType (); });
+  T ('mFloat typeName', function () { return SELF .getField ('mFloat') .getTypeName (); });
+  T ('mFloat json', function () { return SELF .getField ('mFloat') .toJSONString (); });
+  T ('mFloat xml', function () { return SELF .getField ('mFloat') .toXMLString (); });
+  T ('mFloat isDefault', function () { return SELF .getField ('mFloat') .isDefaultValue (); });
+  T ('mDouble', function () { return mDouble; });
+  T ('mDouble typeof', function () { return typeof mDouble; });
+  T ('mDouble getType', function () { return SELF .getField ('mDouble') .getType (); });
+  T ('mDouble typeName', function () { return SELF .getField ('mDouble') .getTypeName (); });
+  T ('mDouble json', function () { return SELF .getField ('mDouble') .toJSONString (); });
+  T ('mDouble xml', function () { return SELF .getField ('mDouble') .toXMLString (); });
+  T ('mDouble isDefault', function () { return SELF .getField ('mDouble') .isDefaultValue (); });
+  T ('mTime', function () { return mTime; });
+  T ('mTime typeof', function () { return typeof mTime; });
+  T ('mTime getType', function () { return SELF .getField ('mTime') .getType (); });
+  T ('mTime typeName', function () { return SELF .getField ('mTime') .getTypeName (); });
+  T ('mTime json', function () { return SELF .getField ('mTime') .toJSONString (); });
+  T ('mTime xml', function () { return SELF .getField ('mTime') .toXMLString (); });
+  T ('mTime isDefault', function () { return SELF .getField ('mTime') .isDefaultValue (); });
+  T ('mString', function () { return mString; });
+  T ('mString typeof', function () { return typeof mString; });
+  T ('mString getType', function () { return SELF .getField ('mString') .getType (); });
+  T ('mString typeName', function () { return SELF .getField ('mString') .getTypeName (); });
+  T ('mString json', function () { return SELF .getField ('mString') .toJSONString (); });
+  T ('mString xml', function () { return SELF .getField ('mString') .toXMLString (); });
+  T ('mString isDefault', function () { return SELF .getField ('mString') .isDefaultValue (); });
+  T ('mV2f', function () { return mV2f; });
+  T ('mV2f typeof', function () { return typeof mV2f; });
+  T ('mV2f getType', function () { return SELF .getField ('mV2f') .getType (); });
+  T ('mV2f typeName', function () { return SELF .getField ('mV2f') .getTypeName (); });
+  T ('mV2f json', function () { return SELF .getField ('mV2f') .toJSONString (); });
+  T ('mV2f xml', function () { return SELF .getField ('mV2f') .toXMLString (); });
+  T ('mV2f isDefault', function () { return SELF .getField ('mV2f') .isDefaultValue (); });
+  T ('mV3f', function () { return mV3f; });
+  T ('mV3f typeof', function () { return typeof mV3f; });
+  T ('mV3f getType', function () { return SELF .getField ('mV3f') .getType (); });
+  T ('mV3f typeName', function () { return SELF .getField ('mV3f') .getTypeName (); });
+  T ('mV3f json', function () { return SELF .getField ('mV3f') .toJSONString (); });
+  T ('mV3f xml', function () { return SELF .getField ('mV3f') .toXMLString (); });
+  T ('mV3f isDefault', function () { return SELF .getField ('mV3f') .isDefaultValue (); });
+  T ('mV4f', function () { return mV4f; });
+  T ('mV4f typeof', function () { return typeof mV4f; });
+  T ('mV4f getType', function () { return SELF .getField ('mV4f') .getType (); });
+  T ('mV4f typeName', function () { return SELF .getField ('mV4f') .getTypeName (); });
+  T ('mV4f json', function () { return SELF .getField ('mV4f') .toJSONString (); });
+  T ('mV4f xml', function () { return SELF .getField ('mV4f') .toXMLString (); });
+  T ('mV4f isDefault', function () { return SELF .getField ('mV4f') .isDefaultValue (); });
+  T ('mCol', function () { return mCol; });
+  T ('mCol typeof', function () { return typeof mCol; });
+  T ('mCol getType', function () { return SELF .getField ('mCol') .getType (); });
+  T ('mCol typeName', function () { return SELF .getField ('mCol') .getTypeName (); });
+  T ('mCol json', function () { return SELF .getField ('mCol') .toJSONString (); });
+  T ('mCol xml', function () { return SELF .getField ('mCol') .toXMLString (); });
+  T ('mCol isDefault', function () { return SELF .getField ('mCol') .isDefaultValue (); });
+  T ('mColA', function () { return mColA; });
+  T ('mColA typeof', function () { return typeof mColA; });
+  T ('mColA getType', function () { return SELF .getField ('mColA') .getType (); });
+  T ('mColA typeName', function () { return SELF .getField ('mColA') .getTypeName (); });
+  T ('mColA json', function () { return SELF .getField ('mColA') .toJSONString (); });
+  T ('mColA xml', function () { return SELF .getField ('mColA') .toXMLString (); });
+  T ('mColA isDefault', function () { return SELF .getField ('mColA') .isDefaultValue (); });
+  T ('mRot', function () { return mRot; });
+  T ('mRot typeof', function () { return typeof mRot; });
+  T ('mRot getType', function () { return SELF .getField ('mRot') .getType (); });
+  T ('mRot typeName', function () { return SELF .getField ('mRot') .getTypeName (); });
+  T ('mRot json', function () { return SELF .getField ('mRot') .toJSONString (); });
+  T ('mRot xml', function () { return SELF .getField ('mRot') .toXMLString (); });
+  T ('mRot isDefault', function () { return SELF .getField ('mRot') .isDefaultValue (); });
+  T ('mM3', function () { return mM3; });
+  T ('mM3 typeof', function () { return typeof mM3; });
+  T ('mM3 getType', function () { return SELF .getField ('mM3') .getType (); });
+  T ('mM3 typeName', function () { return SELF .getField ('mM3') .getTypeName (); });
+  T ('mM3 json', function () { return SELF .getField ('mM3') .toJSONString (); });
+  T ('mM3 xml', function () { return SELF .getField ('mM3') .toXMLString (); });
+  T ('mM3 isDefault', function () { return SELF .getField ('mM3') .isDefaultValue (); });
+  T ('mM4', function () { return mM4; });
+  T ('mM4 typeof', function () { return typeof mM4; });
+  T ('mM4 getType', function () { return SELF .getField ('mM4') .getType (); });
+  T ('mM4 typeName', function () { return SELF .getField ('mM4') .getTypeName (); });
+  T ('mM4 json', function () { return SELF .getField ('mM4') .toJSONString (); });
+  T ('mM4 xml', function () { return SELF .getField ('mM4') .toXMLString (); });
+  T ('mM4 isDefault', function () { return SELF .getField ('mM4') .isDefaultValue (); });
+  T ('mNode', function () { return mNode; });
+  T ('mNode typeof', function () { return typeof mNode; });
+  T ('mNode getType', function () { return SELF .getField ('mNode') .getType (); });
+  T ('mNode typeName', function () { return SELF .getField ('mNode') .getTypeName (); });
+  T ('mNode json', function () { return SELF .getField ('mNode') .toJSONString (); });
+  T ('mNode xml', function () { return SELF .getField ('mNode') .toXMLString (); });
+  T ('mNode isDefault', function () { return SELF .getField ('mNode') .isDefaultValue (); });
+  T ('mImg', function () { return mImg; });
+  T ('mImg typeof', function () { return typeof mImg; });
+  T ('mImg getType', function () { return SELF .getField ('mImg') .getType (); });
+  T ('mImg typeName', function () { return SELF .getField ('mImg') .getTypeName (); });
+  T ('mImg json', function () { return SELF .getField ('mImg') .toJSONString (); });
+  T ('mImg xml', function () { return SELF .getField ('mImg') .toXMLString (); });
+  T ('mImg isDefault', function () { return SELF .getField ('mImg') .isDefaultValue (); });
+  flush_ ();
+}
+
+  "
+}

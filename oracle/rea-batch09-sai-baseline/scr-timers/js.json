@@ -1,0 +1,1412 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [ ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [ ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [ ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"scr timers\"\n\nDEF A Script {\n  inputOnly  SFTime  tick\n  outputOnly SFInt32 outI\n  inputOnly  SFInt32 inI\n\n  url \"ecmascript:\nvar NAME = 'A';\n\nfunction log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }\nfunction first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }\n\n\nvar n = 0, ids = [];\nfunction stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }\nfunction tick (v, t) {\n  n++;\n  if (n == 2) {\n    globalThis .T0 = Date .now ();\n    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));\n    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));\n    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));\n    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));\n    ids .push (setTimeout (function () { log ('cleared'); }, 20));\n    clearTimeout (ids [4]);\n    clearTimeout (999);\n    clearTimeout (undefined);\n    clearTimeout ('x');\n    log ('ids ' + ids .join (','));\n    log ('typeof id ' + typeof ids [0]);\n  }\n  if (n == 3) {\n    setTimeout (function () {\n      log ('outer ' + stamp ());\n      setTimeout (function () { log ('inner ' + stamp ()); }, 5);\n      outI = 7;\n    }, 40);\n    setTimeout (function () { throw new Error ('timer boom'); }, 15);\n    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);\n  }\n  if (n == 5) {\n    setTimeout (function () { log ('negative ' + stamp ()); }, -50);\n    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);\n    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');\n    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);\n  }\n  if (n == 7) { log ('now ' + stamp ()); }\n}\nfunction inI (v) { log ('inI ' + v + ' ' + stamp ()); }\n\n  \"\n}\n\nDEF R Script {\n  inputOutput MFString out [\n    \"0 A.ids 1,2,3,4,5\",\n    \"1 A.typeof id number\",\n    \"2 A.t0 17ms/0ms\",\n    \"3 A.t10 args x,2 17ms/10ms\",\n    \"4 A.t10b 17ms/10ms\",\n    \"5 A.t30 33ms/30ms\",\n    \"6 A.after throw 50ms/49ms\",\n    \"7 A.outer 83ms/73ms\",\n    \"8 A.inI 7 83ms/83ms\",\n    \"9 A.inner 100ms/88ms\",\n    \"10 A.negative 150ms/133ms\",\n    \"11 A.NaN 150ms/133ms\",\n    \"12 A.string delay 167ms/158ms\",\n    \"13 A.now 233ms/233ms\"\n  ]\n  inputOnly   SFTime   tick\n\n  url \"ecmascript:\n    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE A.outI TO A.inI\nROUTE STEP.cycleTime TO A.tick\nROUTE STEP.cycleTime TO R.tick\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Error: timer boom"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,208 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr field access"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  inputOnly SFFloat evIn
+  inputOnly MFString evInM
+  outputOnly SFFloat evOut
+  outputOnly SFVec3f evOutV
+  outputOnly MFInt32 evOutM
+  initializeOnly SFFloat init 5
+  inputOutput SFFloat io 6
+  inputOutput MFFloat ioM [1 2]
+  inputOutput SFVec3f ioV 1 2 3
+  inputOutput SFString ioS "s"
+  inputOutput SFNode ioN NULL
+  inputOutput SFBool ioB FALSE
+  inputOutput SFInt32 ioI 0
+  inputOutput SFTime ioT 0
+  inputOutput SFRotation ioR 0 0 1 0
+  inputOutput SFColor ioC 0 0 0
+  inputOutput MFNode ioMN [ ]
+  inputOutput MFVec3f ioMV [ ]
+  inputOutput MFString ioMS [ ]
+  inputOutput SFDouble ioD 0
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('typeof evIn', function () { return typeof evIn; });
+  T ('typeof evInM', function () { return typeof evInM; });
+  T ('read evOut', function () { return evOut; });
+  T ('read evOutV', function () { return evOutV; });
+  T ('read evOutM', function () { return evOutM; });
+  T ('read init', function () { return init; });
+  T ('read io', function () { return io; });
+  T ('read io_changed', function () { return io_changed; });
+  T ('typeof set_io', function () { return typeof set_io; });
+  T ('read ioM', function () { return ioM; });
+  T ('read ioM_changed', function () { return ioM_changed; });
+  T ('ioM length', function () { return ioM .length; });
+  T ('ioM[1]', function () { return ioM [1]; });
+  T ('read ioV', function () { return ioV; });
+  T ('ioV same object', function () { return ioV === ioV; });
+  T ('ioM same object', function () { return ioM === ioM; });
+  T ('ioV vs ioV_changed', function () { return ioV === ioV_changed; });
+  T ('write evOut', function () { evOut = 3; return evOut; });
+  T ('write evOutV', function () { evOutV = new SFVec3f (1, 2, 3); return evOutV; });
+  T ('write evOutV member', function () { evOutV .x = 9; return evOutV; });
+  T ('write evOutM', function () { evOutM = new MFInt32 (1, 2, 3); return evOutM; });
+  T ('write evOutM array', function () { evOutM = [4, 5]; return evOutM; });
+  T ('write init', function () { init = 8; return init; });
+  T ('write io', function () { io = 9; return io; });
+  T ('write io_changed', function () { io_changed = 10; return io; });
+  T ('write ioV', function () { ioV = new SFVec3f (4, 5, 6); return ioV; });
+  T ('write ioV member', function () { ioV .y = 50; return ioV; });
+  T ('write ioV SFVec3d', function () { ioV = new SFVec3d (1, 1, 1); return ioV; });
+  T ('write ioV null', function () { ioV = null; return ioV; });
+  T ('write ioV undefined', function () { ioV = undefined; return ioV; });
+  T ('write ioM array', function () { ioM = [3, 4, 5]; return ioM; });
+  T ('write ioM MFFloat', function () { ioM = new MFFloat (7, 8); return ioM; });
+  T ('write ioM MFDouble', function () { ioM = new MFDouble (7, 8); return ioM; });
+  T ('write ioM string', function () { ioM = 'abc'; return ioM; });
+  T ('write ioM null', function () { ioM = null; return ioM; });
+  T ('ioM push', function () { ioM .push (9); return ioM; });
+  T ('ioM index write', function () { ioM [0] = 11; return ioM; });
+  T ('ioM length write', function () { ioM .length = 2; return ioM; });
+  T ('ioM index past end', function () { ioM [5] = 1; return ioM; });
+  T ('ioS = number', function () { ioS = 5; return ioS; });
+  T ('ioS = null', function () { ioS = null; return ioS; });
+  T ('ioS = undefined', function () { ioS = undefined; return ioS; });
+  T ('ioS = object', function () { ioS = {}; return ioS; });
+  T ('ioS = SFVec3f', function () { ioS = new SFVec3f (1, 2, 3); return ioS; });
+  T ('ioS = true', function () { ioS = true; return ioS; });
+  T ('io = string num', function () { io = '2.5'; return io; });
+  T ('io = string bad', function () { io = 'abc'; return io; });
+  T ('io = null', function () { io = null; return io; });
+  T ('io = undefined', function () { io = undefined; return io; });
+  T ('io = true', function () { io = true; return io; });
+  T ('io = object', function () { io = {}; return io; });
+  T ('io = NaN', function () { io = NaN; return io; });
+  T ('io = Infinity', function () { io = Infinity; return io; });
+  T ('io = float rounding', function () { io = 0.1; return io; });
+  T ('io = big', function () { io = 1e40; return io; });
+  T ('ioD = 0.1', function () { ioD = 0.1; return ioD; });
+  T ('ioI = 3.7', function () { ioI = 3.7; return ioI; });
+  T ('ioI = -3.7', function () { ioI = -3.7; return ioI; });
+  T (\"ioI = '5'\", function () { ioI = '5'; return ioI; });
+  T ('ioI = big', function () { ioI = 4294967297; return ioI; });
+  T ('ioI = 2^31', function () { ioI = 2147483648; return ioI; });
+  T ('ioI = NaN', function () { ioI = NaN; return ioI; });
+  T ('ioI = null', function () { ioI = null; return ioI; });
+  T ('ioI = true', function () { ioI = true; return ioI; });
+  T ('ioB = 1', function () { ioB = 1; return ioB; });
+  T ('ioB = 0', function () { ioB = 0; return ioB; });
+  T (\"ioB = 'false'\", function () { ioB = 'false'; return ioB; });
+  T (\"ioB = ''\", function () { ioB = ''; return ioB; });
+  T ('ioB = null', function () { ioB = null; return ioB; });
+  T ('ioB = {}', function () { ioB = {}; return ioB; });
+  T (\"ioT = '4'\", function () { ioT = '4'; return ioT; });
+  T ('ioT = null', function () { ioT = null; return ioT; });
+  T ('ioT = Date', function () { ioT = 1.5; return ioT; });
+  T ('ioN = null', function () { ioN = null; return ioN; });
+  T ('ioN = this', function () { ioN = SELF; return ioN === SELF; });
+  T ('ioN = number', function () { ioN = 5; return ioN; });
+  T ('ioN = {}', function () { ioN = {}; return ioN; });
+  T ('ioN = undefined', function () { ioN = undefined; return ioN; });
+  T ('ioN = SFVec3f', function () { ioN = new SFVec3f (); return ioN; });
+  T ('ioN = NULL', function () { ioN = NULL; return ioN; });
+  T ('ioMN = [this]', function () { ioMN = [SELF]; return ioMN .length; });
+  T ('ioMN = [null]', function () { ioMN = [null]; return ioMN .length + ':' + ioMN [0]; });
+  T ('ioMN = [1]', function () { ioMN = [1]; return ioMN .length; });
+  T ('ioMN = this', function () { ioMN = SELF; return ioMN; });
+  T ('ioMN = new MFNode', function () { ioMN = new MFNode (SELF, SELF); return ioMN .length + ':' + (ioMN [0] === SELF); });
+  T ('ioMV = [SFVec3f]', function () { ioMV = [new SFVec3f (1, 2, 3), new SFVec3f (4, 5, 6)]; return ioMV; });
+  T ('ioMV = [arrays]', function () { ioMV = [[1, 2, 3]]; return ioMV; });
+  T ('ioMV = [1,2,3]', function () { ioMV = [1, 2, 3]; return ioMV; });
+  T ('ioMV = [SFVec2f]', function () { ioMV = [new SFVec2f (1, 2)]; return ioMV; });
+  T ('ioMV [0] member', function () { ioMV = [new SFVec3f (1, 2, 3)]; ioMV [0] .x = 9; return ioMV; });
+  T ('ioMV [0] replace', function () { ioMV [0] = new SFVec3f (5, 5, 5); return ioMV; });
+  T ('ioMV [3] gap', function () { ioMV [3] = new SFVec3f (7, 7, 7); return ioMV; });
+  T ('ioMV length', function () { return ioMV .length; });
+  T ('ioMS = [1, null]', function () { ioMS = [1, null, undefined, true, 'x']; return ioMS; });
+  T (\"ioMS = 'abc'\", function () { ioMS = 'abc'; return ioMS; });
+  T ('ioMS = new MFString', function () { ioMS = new MFString ('a', 'b'); return ioMS; });
+  T ('ioMS toString', function () { return String (ioMS); });
+  T ('ioMS join', function () { return ioMS .join ('+'); });
+  T ('ioR = SFVec4', function () { ioR = new SFVec4f (0, 0, 1, 1); return ioR; });
+  T ('ioR = array', function () { ioR = [0, 1, 0, 1]; return ioR; });
+  T ('ioR = SFRotation', function () { ioR = new SFRotation (0, 1, 0, 1); return ioR; });
+  T ('ioC = SFColor', function () { ioC = new SFColor (0.5, 0.5, 0.5); return ioC; });
+  T ('this', function () { return SELF; });
+  T ('nested this', function () { return (function () { return SELF; }) (); });
+  T ('this ctor', function () { return SELF .constructor .name; });
+  T ('this typeof', function () { return typeof SELF; });
+  T ('this.getNodeName', function () { return SELF .getNodeName (); });
+  T ('this.getType', function () { return SELF .getType (); });
+  T ('this.getTypeName', function () { return SELF .getTypeName (); });
+  T ('this.getFieldDefinitions length', function () { return SELF .getFieldDefinitions () .length; });
+  T ('this.getFieldDefinitions names', function () { return Array .from (SELF .getFieldDefinitions (), function (d) { return d .name + '/' + d .accessType + '/' + d .dataType; }); });
+  T ('this.io', function () { return SELF .io; });
+  T ('this.io_changed', function () { return SELF .io_changed; });
+  T ('this.set_io', function () { return SELF .set_io; });
+  T ('this.evIn', function () { return SELF .evIn; });
+  T ('this.evOut', function () { return SELF .evOut; });
+  T ('this.init', function () { return SELF .init; });
+  T ('this.io = ', function () { SELF .io = 21; return io + ':' + SELF .io; });
+  T ('this.evIn =', function () { SELF .evIn = 22; return SELF .evIn; });
+  T ('this.nonexistent', function () { return SELF .nonexistent; });
+  T ('this.nonexistent =', function () { SELF .nonexistent = 3; return SELF .nonexistent; });
+  T ('this.getField io', function () { var f = SELF .getField ('io'); return f .getName () + '/' + f .getType () + '/' + f .getAccessType () + '/' + f .getValue (); });
+  T ('this.getField evIn', function () { var f = SELF .getField ('evIn'); return f .getName () + '/' + f .getType () + '/' + f .getAccessType (); });
+  T ('this.getField evOut', function () { var f = SELF .getField ('evOut'); return f .getName () + '/' + f .getAccessType (); });
+  T ('this.getField missing', function () { return SELF .getField ('nope'); });
+  T ('this.getField io_changed', function () { return SELF .getField ('io_changed') .getName (); });
+  T ('this.getField set_io', function () { return SELF .getField ('set_io') .getName (); });
+  T ('this.hasField', function () { return [SELF .hasField ('io'), SELF .hasField ('nope'), SELF .hasField ('io_changed')]; });
+  T ('getField isReadable', function () { var f = SELF .getField ('evIn'); return [f .isReadable (), f .isWritable (), f .isInput (), f .isOutput ()]; });
+  T ('getField isReadable io', function () { var f = SELF .getField ('io'); return [f .isReadable (), f .isWritable (), f .isInput (), f .isOutput ()]; });
+  T ('getField isReadable init', function () { var f = SELF .getField ('init'); return [f .isReadable (), f .isWritable (), f .isInput (), f .isOutput ()]; });
+  T ('getField isReadable out', function () { var f = SELF .getField ('evOut'); return [f .isReadable (), f .isWritable (), f .isInput (), f .isOutput ()]; });
+  T ('getField setValue', function () { var f = SELF .getField ('ioS'); f .setValue ('zz'); return ioS + ':' + f .getValue (); });
+  T ('getField evIn setValue', function () { var f = SELF .getField ('evIn'); f .setValue (4); return f .getValue (); });
+  T ('getField evOut getValue', function () { var f = SELF .getField ('evOut'); return f .getValue (); });
+  T ('getField init setValue', function () { var f = SELF .getField ('init'); f .setValue (4); return init + ':' + f .getValue (); });
+  T ('getField valueOf', function () { var f = SELF .getField ('ioV'); return [typeof f .valueOf (), f .valueOf () === f]; });
+  T ('getField equals', function () { var f = SELF .getField ('ioV'); return [f .equals (new SFVec3f (7, 8, 9)), f .equals (f)]; });
+  T ('getField isDefaultValue', function () { return [SELF .getField ('ioV') .isDefaultValue (), SELF .getField ('io') .isDefaultValue ()]; });
+  T ('getField getTainted', function () { return typeof SELF .getField ('io') .getTainted; });
+  flush_ ();
+}
+
+  "
+}

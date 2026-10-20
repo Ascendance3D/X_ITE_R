@@ -1,0 +1,85 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld mfcolor"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('MFColor new ()', function () { return new MFColor (); });
+  T ('MFColor new (elems)', function () { return new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); });
+  T ('MFColor length', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .length, new MFColor () .length]; });
+  T ('MFColor index', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
+  T ('MFColor index write', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m [1] = new SFColor (0.5, 0.5, 0.5); return [m, m .length]; });
+  T ('MFColor index write past end', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m [5] = new SFColor (0.5, 0.5, 0.5); return [m, m .length]; });
+  T ('MFColor length set', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .length = 1; var n = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); n .length = 5; var o = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); o .length = 0; return [m, n, o]; });
+  T ('MFColor length set bad', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .length = -1; return m .length; });
+  T ('MFColor keys', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
+  T ('MFColor for in', function () { var o = []; for (var k in new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1))) o .push (k); return o; });
+  T ('MFColor toStrings', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('MFColor toStrings empty', function () { var m = new MFColor (); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('MFColor push', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .push (new SFColor (0.5, 0.5, 0.5)); var q = m .push (new SFColor (1, 0, 0), new SFColor (0, 1, 0)); return [r, q, m]; });
+  T ('MFColor push none', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .push (), m .length]; });
+  T ('MFColor pop', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .pop (); var e = new MFColor () .pop (); return [r, e, m, m .length]; });
+  T ('MFColor shift', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .shift (); var e = new MFColor () .shift (); return [r, e, m, m .length]; });
+  T ('MFColor unshift', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .unshift (new SFColor (0.5, 0.5, 0.5), new SFColor (0.5, 0.5, 0.5)); return [r, m]; });
+  T ('MFColor splice', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .splice (1, 1); return [r, m, m .length]; });
+  T ('MFColor splice insert', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .splice (1, 0, new SFColor (0.5, 0.5, 0.5), new SFColor (0.5, 0.5, 0.5)); return [r, m, m .length]; });
+  T ('MFColor splice neg/over', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .splice (-1); var n = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var q = n .splice (1, 100); var o = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var u = o .splice (); return [r, m, q, n, u, o]; });
+  T ('MFColor reverse', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .reverse (); return [r === m, m]; });
+  T ('MFColor fill', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .fill (new SFColor (0.5, 0.5, 0.5)); var n = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); n .fill (new SFColor (0.5, 0.5, 0.5), 1, 2); return [m, n]; });
+  T ('MFColor concat', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .concat (new MFColor (new SFColor (0.5, 0.5, 0.5))); var q = m .concat ([new SFColor (0.5, 0.5, 0.5), new SFColor (0.5, 0.5, 0.5)]); var o = m .concat (new SFColor (0.5, 0.5, 0.5)); return [r, q, o, m, r .constructor === m .constructor]; });
+  T ('MFColor slice', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .slice (1); var q = m .slice (-1); var o = m .slice (0, 2); return [r, q, o, m, r === m, r .constructor === m .constructor]; });
+  T ('MFColor indexOf', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .indexOf (new SFColor (0, 1, 0)), m .indexOf (new SFColor (0.5, 0.5, 0.5)), m .includes (new SFColor (0, 1, 0)), m .lastIndexOf (new SFColor (1, 0, 0)), m .findIndex (function (x) { return true; }), m .find (function (x) { return false; })]; });
+  T ('MFColor join', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .join (), m .join ('-'), m .join ('')]; });
+  T ('MFColor forEach', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var o = []; m .forEach (function (x, i, a) { o .push (i + ':' + (a === m) + ':' + typeof x); }); return o; });
+  T ('MFColor map', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .map (function (x) { return x; }); return [r, r .constructor .name]; });
+  T ('MFColor filter', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = m .filter (function (x, i) { return i != 1; }); return [r, r .length]; });
+  T ('MFColor reduce', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .reduce (function (a, x, i) { return a + i; }, 0), m .every (function () { return true; }, m .some (function () { return false; }))]; });
+  T ('MFColor sort', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .sort (function (a, b) { return 0; }); return m; });
+  T ('MFColor at/entries', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .at (-1), m .at (5), Array .from (m .keys ()), Array .from (m .entries ()) .length]; });
+  T ('MFColor equals/copy', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var c = m .copy (); return [m .equals (c), m === c, c .length, m .isDefaultValue (), new MFColor () .isDefaultValue ()]; });
+  T ('MFColor copy independent', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var c = m .copy (); c [0] = new SFColor (0.5, 0.5, 0.5); c .push (new SFColor (1, 0, 0)); return [m, c]; });
+  T ('MFColor setValue', function () { var m = new MFColor (); m .setValue (new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1))); return m; });
+  T ('MFColor setValue array', function () { var m = new MFColor (); m .setValue ([new SFColor (1, 0, 0), new SFColor (0, 1, 0)]); return m; });
+  T ('MFColor setValue empty', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .setValue ([]); return m; });
+  T ('MFColor setValue self', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .setValue (m); return m; });
+  flush_ ();
+}
+
+  "
+}

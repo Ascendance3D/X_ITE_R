@@ -1,0 +1,85 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld sfquaternion"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('SFQuaternion new ()', function () { return new SFQuaternion (); });
+  T ('SFQuaternion new (xyzw)', function () { return new SFQuaternion (0, 0.6, 0, 0.8); });
+  T ('SFQuaternion new (partial)', function () { return [new SFQuaternion (1), new SFQuaternion (1, 2), new SFQuaternion (1, 2, 3)]; });
+  T ('SFQuaternion new (NaN)', function () { return new SFQuaternion (NaN, 1, 2, 3); });
+  T ('SFQuaternion set x', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); v .x = 0.25; v [1] = 0.75; return [v, v .x, v [0]]; });
+  T ('SFQuaternion set y', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); v .y = 0.25; v [2] = 0.75; return [v, v .y, v [1]]; });
+  T ('SFQuaternion set z', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); v .z = 0.25; v [3] = 0.75; return [v, v .z, v [2]]; });
+  T ('SFQuaternion set w', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); v .w = 0.25; v [0] = 0.75; return [v, v .w, v [3]]; });
+  T ('SFQuaternion aliases', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); return [v .i, v .j, v .k, v .real]; });
+  T ('SFQuaternion keys', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); return [Object .keys (v), JSON .stringify (v), Array .from (v)]; });
+  T ('SFQuaternion toStrings', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); return [v .toString (), v .toVRMLString (), v .toXMLString (), v .toJSONString ()]; });
+  T ('SFQuaternion add', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .add (new SFQuaternion (0.1, 0.2, 0.3, 0.4)); });
+  T ('SFQuaternion add missing', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .add (); });
+  T ('SFQuaternion subtract', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .subtract (new SFQuaternion (0.1, 0.2, 0.3, 0.4)); });
+  T ('SFQuaternion subtract missing', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .subtract (); });
+  T ('SFQuaternion dot', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .dot (new SFQuaternion (0.1, 0.2, 0.3, 0.4)); });
+  T ('SFQuaternion dot missing', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .dot (); });
+  T ('SFQuaternion multLeft', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .multLeft (new SFQuaternion (0.1, 0.2, 0.3, 0.4)); });
+  T ('SFQuaternion multLeft missing', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .multLeft (); });
+  T ('SFQuaternion multRight', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .multRight (new SFQuaternion (0.1, 0.2, 0.3, 0.4)); });
+  T ('SFQuaternion multRight missing', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .multRight (); });
+  T ('SFQuaternion conjugate', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .conjugate (), new SFQuaternion () .conjugate (), new SFQuaternion (1, 2, 3, 4) .conjugate ()]; });
+  T ('SFQuaternion inverse', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .inverse (), new SFQuaternion () .inverse (), new SFQuaternion (1, 2, 3, 4) .inverse ()]; });
+  T ('SFQuaternion length', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .length (), new SFQuaternion () .length (), new SFQuaternion (1, 2, 3, 4) .length ()]; });
+  T ('SFQuaternion negate', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .negate (), new SFQuaternion () .negate (), new SFQuaternion (1, 2, 3, 4) .negate ()]; });
+  T ('SFQuaternion normalize', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .normalize (), new SFQuaternion () .normalize (), new SFQuaternion (1, 2, 3, 4) .normalize ()]; });
+  T ('SFQuaternion getMatrix', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .getMatrix (), new SFQuaternion () .getMatrix (), new SFQuaternion (1, 2, 3, 4) .getMatrix ()]; });
+  T ('SFQuaternion multiply', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .multiply (2), new SFQuaternion (0, 0.6, 0, 0.8) .multiply (0), new SFQuaternion (0, 0.6, 0, 0.8) .multiply ('3'), new SFQuaternion (0, 0.6, 0, 0.8) .multiply ()]; });
+  T ('SFQuaternion divide', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .divide (2), new SFQuaternion (0, 0.6, 0, 0.8) .divide (0), new SFQuaternion (0, 0.6, 0, 0.8) .divide ('3'), new SFQuaternion (0, 0.6, 0, 0.8) .divide ()]; });
+  T ('SFQuaternion multQuatVec', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .multQuatVec (new SFVec3f (1, 2, 3)), new SFQuaternion (0, 0.6, 0, 0.8) .multQuatVec (new SFVec3d (1, 2, 3))]; });
+  T ('SFQuaternion multVecQuat', function () { return [new SFQuaternion (0, 0.6, 0, 0.8) .multVecQuat (new SFVec3f (1, 2, 3)), new SFQuaternion (0, 0.6, 0, 0.8) .multVecQuat (new SFVec3d (1, 2, 3))]; });
+  T ('SFQuaternion multQuatVec missing', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .multQuatVec (); });
+  T ('SFQuaternion slerp', function () { var b = new SFQuaternion (0.6, 0, 0, 0.8); return [new SFQuaternion (0, 0.6, 0, 0.8) .slerp (b, 0), new SFQuaternion (0, 0.6, 0, 0.8) .slerp (b, 0.5), new SFQuaternion (0, 0.6, 0, 0.8) .slerp (b, 1), new SFQuaternion (0, 0.6, 0, 0.8) .slerp (b, 2), new SFQuaternion (0, 0.6, 0, 0.8) .slerp (b, NaN)]; });
+  T ('SFQuaternion slerp opposite', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .slerp (new SFQuaternion (0, 0.6, 0, 0.8) .negate (), 0.5); });
+  T ('SFQuaternion slerp zero', function () { return new SFQuaternion () .slerp (new SFQuaternion (), 0.5); });
+  T ('SFQuaternion setMatrix', function () { var v = new SFQuaternion (); v .setMatrix (new SFMatrix3f (0, 1, 0, -1, 0, 0, 0, 0, 1)); return v; });
+  T ('SFQuaternion equals/copy', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); var w = v .copy (); return [v .equals (w), v === w, v .isDefaultValue (), new SFQuaternion () .isDefaultValue (), new SFQuaternion (0, 0, 0, 1) .isDefaultValue ()]; });
+  T ('SFQuaternion setValue', function () { var v = new SFQuaternion (); v .setValue (new SFQuaternion (0, 0.6, 0, 0.8)); return v; });
+  flush_ ();
+}
+
+  "
+}

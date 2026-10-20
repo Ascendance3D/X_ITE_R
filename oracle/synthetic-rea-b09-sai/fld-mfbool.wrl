@@ -1,0 +1,85 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld mfbool"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('MFBool new ()', function () { return new MFBool (); });
+  T ('MFBool new (elems)', function () { return new MFBool (true, false, 0); });
+  T ('MFBool length', function () { var m = new MFBool (true, false, 0); return [m .length, new MFBool () .length]; });
+  T ('MFBool index', function () { var m = new MFBool (true, false, 0); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
+  T ('MFBool index write', function () { var m = new MFBool (true, false, 0); m [1] = 'x'; return [m, m .length]; });
+  T ('MFBool index write past end', function () { var m = new MFBool (true, false, 0); m [5] = 'x'; return [m, m .length]; });
+  T ('MFBool length set', function () { var m = new MFBool (true, false, 0); m .length = 1; var n = new MFBool (true, false, 0); n .length = 5; var o = new MFBool (true, false, 0); o .length = 0; return [m, n, o]; });
+  T ('MFBool length set bad', function () { var m = new MFBool (true, false, 0); m .length = -1; return m .length; });
+  T ('MFBool keys', function () { var m = new MFBool (true, false, 0); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
+  T ('MFBool for in', function () { var o = []; for (var k in new MFBool (true, false, 0)) o .push (k); return o; });
+  T ('MFBool toStrings', function () { var m = new MFBool (true, false, 0); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('MFBool toStrings empty', function () { var m = new MFBool (); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('MFBool push', function () { var m = new MFBool (true, false, 0); var r = m .push ('x'); var q = m .push (true, false); return [r, q, m]; });
+  T ('MFBool push none', function () { var m = new MFBool (true, false, 0); return [m .push (), m .length]; });
+  T ('MFBool pop', function () { var m = new MFBool (true, false, 0); var r = m .pop (); var e = new MFBool () .pop (); return [r, e, m, m .length]; });
+  T ('MFBool shift', function () { var m = new MFBool (true, false, 0); var r = m .shift (); var e = new MFBool () .shift (); return [r, e, m, m .length]; });
+  T ('MFBool unshift', function () { var m = new MFBool (true, false, 0); var r = m .unshift ('x', 'x'); return [r, m]; });
+  T ('MFBool splice', function () { var m = new MFBool (true, false, 0); var r = m .splice (1, 1); return [r, m, m .length]; });
+  T ('MFBool splice insert', function () { var m = new MFBool (true, false, 0); var r = m .splice (1, 0, 'x', 'x'); return [r, m, m .length]; });
+  T ('MFBool splice neg/over', function () { var m = new MFBool (true, false, 0); var r = m .splice (-1); var n = new MFBool (true, false, 0); var q = n .splice (1, 100); var o = new MFBool (true, false, 0); var u = o .splice (); return [r, m, q, n, u, o]; });
+  T ('MFBool reverse', function () { var m = new MFBool (true, false, 0); var r = m .reverse (); return [r === m, m]; });
+  T ('MFBool fill', function () { var m = new MFBool (true, false, 0); m .fill ('x'); var n = new MFBool (true, false, 0); n .fill ('x', 1, 2); return [m, n]; });
+  T ('MFBool concat', function () { var m = new MFBool (true, false, 0); var r = m .concat (new MFBool ('x')); var q = m .concat (['x', 'x']); var o = m .concat ('x'); return [r, q, o, m, r .constructor === m .constructor]; });
+  T ('MFBool slice', function () { var m = new MFBool (true, false, 0); var r = m .slice (1); var q = m .slice (-1); var o = m .slice (0, 2); return [r, q, o, m, r === m, r .constructor === m .constructor]; });
+  T ('MFBool indexOf', function () { var m = new MFBool (true, false, 0); return [m .indexOf (false), m .indexOf ('x'), m .includes (false), m .lastIndexOf (true), m .findIndex (function (x) { return true; }), m .find (function (x) { return false; })]; });
+  T ('MFBool join', function () { var m = new MFBool (true, false, 0); return [m .join (), m .join ('-'), m .join ('')]; });
+  T ('MFBool forEach', function () { var m = new MFBool (true, false, 0); var o = []; m .forEach (function (x, i, a) { o .push (i + ':' + (a === m) + ':' + typeof x); }); return o; });
+  T ('MFBool map', function () { var m = new MFBool (true, false, 0); var r = m .map (function (x) { return x; }); return [r, r .constructor .name]; });
+  T ('MFBool filter', function () { var m = new MFBool (true, false, 0); var r = m .filter (function (x, i) { return i != 1; }); return [r, r .length]; });
+  T ('MFBool reduce', function () { var m = new MFBool (true, false, 0); return [m .reduce (function (a, x, i) { return a + i; }, 0), m .every (function () { return true; }, m .some (function () { return false; }))]; });
+  T ('MFBool sort', function () { var m = new MFBool (true, false, 0); m .sort (function (a, b) { return 0; }); return m; });
+  T ('MFBool at/entries', function () { var m = new MFBool (true, false, 0); return [m .at (-1), m .at (5), Array .from (m .keys ()), Array .from (m .entries ()) .length]; });
+  T ('MFBool equals/copy', function () { var m = new MFBool (true, false, 0); var c = m .copy (); return [m .equals (c), m === c, c .length, m .isDefaultValue (), new MFBool () .isDefaultValue ()]; });
+  T ('MFBool copy independent', function () { var m = new MFBool (true, false, 0); var c = m .copy (); c [0] = 'x'; c .push (true); return [m, c]; });
+  T ('MFBool setValue', function () { var m = new MFBool (); m .setValue (new MFBool (true, false, 0)); return m; });
+  T ('MFBool setValue array', function () { var m = new MFBool (); m .setValue ([true, false]); return m; });
+  T ('MFBool setValue empty', function () { var m = new MFBool (true, false, 0); m .setValue ([]); return m; });
+  T ('MFBool setValue self', function () { var m = new MFBool (true, false, 0); m .setValue (m); return m; });
+  flush_ ();
+}
+
+  "
+}
