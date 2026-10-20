@@ -330,7 +330,8 @@ impl<'a> Sg<'a> {
 
     pub fn coord_points(&self, c: NodeId) -> Option<Vec<f32>> {
         match self.type_name(c)? {
-            "Coordinate" | "CoordinateDouble" => Some(self.f32s(c, "point").to_vec()),
+            "Coordinate" => Some(self.f32s(c, "point").to_vec()),
+            "CoordinateDouble" => Some(self.f64s(c, "point").iter().map(|v| *v as f32).collect()),
             "GeoCoordinate" => Some(self.geo_coord_points(c)?.iter().flat_map(|g| [g.x as f32, g.y as f32, g.z as f32]).collect()),
             _ => None,
         }
