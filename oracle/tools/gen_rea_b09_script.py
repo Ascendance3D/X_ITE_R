@@ -886,6 +886,14 @@ def _():
     return url_world("scr url order sync", ("U05", "U06", "U07", "U08", "U09", "U12", "U15", "U16", "U22", "U27"), False)
 
 
+# The order of the candidates that fail without a fetch (a callback that throws, a URL fetch rejects at once): X_ITE's microtask
+# ticks (FileLoader.loadDocumentAsync / loadDocumentError). Left out: the URLs that need a fetch (a file, a base64 data URL) and U07,
+# whose SyntaxError V8 and QuickJS word differently (U15 takes the same three ticks).
+@custom("scr-url-order-micro")
+def _():
+    return url_world("scr url order micro", ("U05", "U06", "U07", "U08", "U09", "U16", "U27"), False)
+
+
 @custom("scr-url-order-open")
 def _():
     return url_world("scr url order", (), False)

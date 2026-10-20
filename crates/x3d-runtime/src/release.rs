@@ -381,7 +381,7 @@ impl Runtime {
         self.rendered_now.retain(|n| !dead.contains(n));
 
         let alive = |t: &Task| match t {
-            Task::ScriptLoad(n) | Task::ScriptLoaded(n, _) | Task::UrlLoad(n, _) | Task::ScriptFetch(n) => !dead.contains(n),
+            Task::ScriptLoad(n) | Task::ScriptLoaded(n, _) | Task::UrlLoad(n, _) | Task::ScriptFetch(n, _) | Task::ScriptCandidate(n, ..) => !dead.contains(n),
             Task::ExternLoad(..) | Task::BrowserLoad(_) | Task::BrowserParse(_) => true,
         };
 
