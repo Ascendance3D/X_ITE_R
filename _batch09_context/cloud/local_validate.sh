@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # REA batch 09 cloud: the 8 tests the cloud container cannot run (owner decision 3, 2026-10-20). Run on the RTX 3060 Ti desktop
-# (Linux, Vulkan driver installed: `vulkaninfo --summary` must list the GPU). These are ENVIRONMENT-BLOCKED in the cloud, not PASS.
+# (Linux, Vulkan driver installed: `vulkaninfo --summary` must list the GPU). The cloud cannot run them. Owner accepted the run
+# on 0f3de08 (RTX 3060 Ti, 8 passed, 0 failed) as PASS on 2026-10-20; the historical answer keys are kept, not re-recorded.
 #
 #   bash _batch09_context/cloud/local_validate.sh [--make-baselines]
 #
@@ -19,6 +20,8 @@ echo "HEAD $(git rev-parse HEAD)"
 # 1. The two gitignored X_ITE answer keys (oracle/README.md "X3/X4"). Source data is in git: oracle/corpus-x1 (500 files) and
 #    oracle/corpus-items (606 .wrl + 21 .js + 231 .json). Copy them from the earlier local tree, or, with --make-baselines,
 #    record them from the pinned X_ITE (oracle/x_ite-pin @ 34cdf9f97) three times and keep them only if the three are identical.
+#    The x1 set cannot record identically: 244-tardis666, 265-tardis666 and 87-weaver_anime_final_fixed2 bake new Date () into
+#    the dump. Owner decision 2026-10-20: keep the historical x1 baseline; do not use --make-baselines for it.
 #    Expected sha256 prefixes: x1-baseline.json fbe54fa2a0e89f3a, items-baseline.json 8f4bb11593e98f85.
 if [[ "${1:-}" == "--make-baselines" ]]; then
   for set in x1 items; do

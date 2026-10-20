@@ -132,3 +132,13 @@ component a Script left undefined or null prints as X_ITE prints it), field call
   Triangle, ViewVolume, Spline in x3d-render / x3d-viewer / x3d-runtime). No direct comparison with X_ITE's standard/Math/Geometry
   exists yet; a node oracle can run those modules unchanged (they import only standard/Math).
 - Reason: the Geometry numerics are not compared.
+
+## Local hardware validation (owner decision 2026-10-20)
+
+The 8 tests the cloud container cannot run (two corpus answer keys not in git, no Vulkan adapter, a UDP probe) were run by the
+owner on a Linux desktop with an NVIDIA GeForce RTX 3060 Ti against pinned X_ITE 16.5.0 @ `34cdf9f97`, at commit
+`0f3de084d8c0630018f8f15e65dd15c9ad0aa749`: 8 passed, 0 failed, 0 blocked. The owner accepted them as PASS. The historical x1
+and items answer keys were used unchanged (hashes match). The three time-dependent x1 worlds (244-tardis666, 265-tardis666,
+87-weaver_anime_final_fixed2, `new Date ()` in a Script) are documented in `_batch09_context/cloud/OPEN_WORK.md` and
+`crates/x3d-script/tests/x1-known.tsv`; they are not Rust defects. Ledger unchanged: 346 entries, 232 COMPLETE, 54 PARTIAL,
+25 DIFFERENT, 33 NOT_TESTED, 2 MISSING (231 → 232 COMPLETE is node:MetadataSet).

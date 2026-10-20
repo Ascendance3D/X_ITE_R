@@ -11,7 +11,8 @@ below was recorded three times and kept only when the three were identical; the 
 | `63dc4d4` | X3DField.addFieldCallback on node and Script fields (runtime field observers, ScriptHost::field_event); fcb-basic, fcb-routes, fcb-reentry, fcb-script-fields baselines |
 | `6a1305c` | X_ITE's own field object model in the Script realm (prelude generated from the pin); X3DNodeRef boundary; node lifetime (release.rs asks the Script host last); `-0` kept across the boundary; old field natives removed; fldx-*, meta-nodes, scr-classes, scr-field-access, scr-field-defaults, scr-image-events-open baselines |
 | `8915e10` | Owner decisions 1-3: huge MF length stays a RangeError (approved safety difference in sub:fields.types, test on a node field); a throwing field callback ends that event's callbacks, is reported at error level, the runtime goes on (test); environment-blocked tests listed with the local validation script. Ledger: node:MetadataSet COMPLETE |
-| (this checkpoint) | The Browser object: X_ITE's X3DBrowser class chain and the 30 members it lacked; getExecutionContext before the world is installed; BrowserOptions / BrowserProperties / RenderingProperties nodes; bindViewpoint, resize, dispose reach the viewer |
+| `0f3de08` | The Browser object: X_ITE's X3DBrowser class chain and the 30 members it lacked; getExecutionContext before the world is installed; BrowserOptions / BrowserProperties / RenderingProperties nodes; bindViewpoint, resize, dispose reach the viewer |
+| (next) | Owner decision 2026-10-20: the 8 hardware-dependent tests validated locally (RTX 3060 Ti, commit `0f3de08`, 8 passed) accepted as PASS; historical x1/items answer keys kept; the three time-dependent x1 worlds documented (OPEN_WORK.md) |
 
 ## The Browser object (scr-browser-open)
 

@@ -2,19 +2,37 @@
 
 Branch `feature/xite-rust-rea-b09-cloud`. X_ITE 16.5.0 @ `34cdf9f97` → native Rust only.
 
-## ENVIRONMENT-BLOCKED tests (not PASS; owner decision 3, 2026-10-20)
+## Hardware-dependent tests: locally validated (owner decision 2026-10-20)
 
-The cloud container has no Vulkan adapter, lacks two gitignored answer keys and blocks a UDP probe. These 8 tests fail there
-identically before and after the batch 09 cloud commits. They are not removed, not ignored and their limits are unchanged. They
-must be run on the RTX 3060 Ti desktop with `_batch09_context/cloud/local_validate.sh` (exact commands inside).
+The cloud container has no Vulkan adapter, lacks two gitignored answer keys and blocks a UDP probe, so these 8 tests cannot run
+there. The owner ran them with `_batch09_context/cloud/local_validate.sh` and accepted the results as PASS:
 
-| test | binary | blocked by | needs |
-| --- | --- | --- | --- |
-| `items_runtime_matches_x_ite` | `x3d-script --test corpus` | `oracle/items-baseline.json` missing (gitignored, 228 MB) | the earlier local file (sha256 prefix `8f4bb11593e98f85`), or `node oracle/x_ite-dump.mjs oracle/corpus-items oracle/items-baseline.json` from the pin, 3 identical recordings. Source data in git: `oracle/corpus-items/` (606 `.wrl`, 21 `.js`, 231 `.json`) |
-| `x1_runtime_matches_x_ite` | `x3d-script --test corpus` | `oracle/x1-baseline.json` missing (gitignored, 86 MB) | the earlier local file (sha256 prefix `fbe54fa2a0e89f3a`), or `node oracle/x_ite-dump.mjs oracle/corpus-x1 oracle/x1-baseline.json`, 3 identical recordings. Source data in git: `oracle/corpus-x1/` (500 files) |
-| `rea_batch09_nav_shard0` … `shard3` (4) | `x3d-viewer --test rea_batch09_nav` | "the pointing and collision passes need a Vulkan adapter" | GPU with Vulkan (`vulkaninfo --summary`) |
-| `rea_batch09_inputs_cases_match_x_ite` | `x3d-viewer --test rea_batch09_inputs` | collision-walk: 38 frames differ on the CPU fallback (same on `f008c67`) | GPU with Vulkan |
-| `rea_batch08_net_cases_match_x_ite` | `x3d-viewer --test rea_batch08_net` | dis-runtime: "udp: port 41234 sent 2 refused 1" (the container's loopback does not answer every send with port unreachable) | 127.0.0.1 UDP 41234 and 41235 free with no listener (sender targets), 41236 free (the test's listener); no firewall rule dropping ICMP on `lo` |
+- Environment: Linux desktop, NVIDIA GeForce RTX 3060 Ti, pinned X_ITE 16.5.0 @ `34cdf9f97`.
+- Validation commit: `0f3de084d8c0630018f8f15e65dd15c9ad0aa749`.
+- Result: 8 passed, 0 failed, 0 blocked.
+- Answer keys: the historical `oracle/x1-baseline.json` (sha256 `fbe54fa2a0e89f3a…`) and `oracle/items-baseline.json`
+  (`8f4bb11593e98f85…`) were used unchanged; their hashes match the recorded ones. They are not re-recorded.
+
+| test | binary | why the cloud cannot run it |
+| --- | --- | --- |
+| `items_runtime_matches_x_ite` | `x3d-script --test corpus` | `oracle/items-baseline.json` not in git (228 MB) |
+| `x1_runtime_matches_x_ite` | `x3d-script --test corpus` | `oracle/x1-baseline.json` not in git (86 MB) |
+| `rea_batch09_nav_shard0` … `shard3` (4) | `x3d-viewer --test rea_batch09_nav` | pointing and collision passes need a Vulkan adapter |
+| `rea_batch09_inputs_cases_match_x_ite` | `x3d-viewer --test rea_batch09_inputs` | collision-walk needs the GPU path |
+| `rea_batch08_net_cases_match_x_ite` | `x3d-viewer --test rea_batch08_net` | the container's loopback does not answer every UDP send to 41234/41235 with port unreachable |
+
+### The three time-dependent x1 worlds
+
+`244-tardis666.wrl`, `265-tardis666.wrl` and `87-weaver_anime_final_fixed2.wrl` read `new Date ()` in a Script: the first two
+write the wall clock's hours:minutes:seconds into a Text node, the third seeds a clock whose hand rotations follow from it. The
+historical baseline holds the wall clock of the moment X_ITE recorded it ("8:05:17", "8:05:47"), so no new X_ITE capture, and no
+Rust run, can reproduce it byte for byte. This is a property of the worlds, not a Rust defect.
+
+- They stay listed in `crates/x3d-script/tests/x1-known.tsv` (X6 nondeterministic) against the historical baseline.
+- `Date.now` is not frozen (owner decision; `oracle/README.md`: freezing it stalls X_ITE's loading). The oracle freezes only the
+  browser's `getCurrentTime`.
+- The three-identical-recordings rule stays for every deterministic case. For these three the established historical baseline
+  is the reference and the reason above is why a new capture cannot equal it.
 
 ## Remaining work, hardest first
 
