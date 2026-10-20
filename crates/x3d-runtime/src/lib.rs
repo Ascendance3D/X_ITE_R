@@ -622,6 +622,11 @@ impl Runtime {
     }
 
     pub fn log_warn(&mut self, message: impl AsRef<str>) {
+        // Scene::warnings entries marked by Scene::error are console.error (every flush site comes through here).
+        if let (true, m) = x3d_scene::console_level(message.as_ref()) {
+            return self.log_error(m);
+        }
+
         let line = format!("warn: {}", message.as_ref().split('\n').next().unwrap_or(""));
 
         if self.record_console {

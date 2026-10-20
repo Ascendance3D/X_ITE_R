@@ -132,7 +132,8 @@ impl<'a> XmlParser<'a> {
         if self.p.scene.table.profile(&profile).is_some() {
             self.scene().profile = Some(profile);
         } else {
-            self.warn(format!("Error: Profile '{profile}' is not supported."));
+            // XMLParser.x3dElement: catch (error) { console .error (error); }
+            self.p.scene.error(format!("Error: Profile '{profile}' is not supported."));
         }
 
         // Specification version
@@ -553,10 +554,9 @@ impl<'a> XmlParser<'a> {
                 return self.add_node(el, None);
             }
 
-            // Known gap: XMLParser.nodeElement prints this with console.error (a log level the scene's warning list has no
-            // channel for), here it is a warning.
-            return self.warn(format!(
-                "XML Parser: Unknown node type '{}'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
+            // XMLParser.nodeElement throws this Error and its catch prints the Error object with console.error (DEVELOPMENT).
+            return self.p.scene.error(format!(
+                "Error: Unknown node type '{}'. You probably have insufficient component/profile statements and/or an inappropriate specification version.",
                 el.name
             ));
         };

@@ -5,3 +5,4 @@ parse-values oracle/synthetic-rea-b09-sai/parse-values.wrl oracle/synthetic-rea-
 parse-routes oracle/synthetic-rea-b09-sai/parse-routes.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
 parse-errors oracle/synthetic-rea-b09-sai/parse-errors.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
 parse-header oracle/synthetic-rea-b09-sai/parse-header.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
+parse-xml-unknown oracle/synthetic-rea-b09-sai/parse-xml-unknown.wrl oracle/synthetic-rea-b09-sai/sai-parse.json

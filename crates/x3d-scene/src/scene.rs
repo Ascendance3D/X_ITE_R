@@ -241,6 +241,18 @@ pub fn unit_factor(units: &[UnitInfo], category: &str) -> f64 {
     }
 }
 
+/// Prefix of a `Scene::warnings` entry that is a console.error rather than a console.warn. The entries share one
+/// list so the print order of warnings and errors is kept; a control character cannot start a real message.
+pub const ERROR_LEVEL_MARK: &str = "\u{1}error\u{1}";
+
+/// Split a `Scene::warnings` entry into (is_error, message without the level mark).
+pub fn console_level(entry: &str) -> (bool, &str) {
+    match entry.strip_prefix(ERROR_LEVEL_MARK) {
+        Some(m) => (true, m),
+        None => (false, entry),
+    }
+}
+
 #[derive(Debug)]
 pub struct Scene {
     pub table: &'static NodeTable,
@@ -257,7 +269,9 @@ pub struct Scene {
     pub nodes: Vec<Node>,
     pub protos: Vec<ProtoDecl>,
     pub externprotos: Vec<ExternProtoDecl>,
-    /// Console output X_ITE would have produced (warnings), for diagnostics.
+    /// Console output X_ITE would have produced, for diagnostics, in print order. Entries are console.warn
+    /// messages unless they carry [`ERROR_LEVEL_MARK`] (added by [`Scene::error`]), which makes them console.error.
+    /// Use [`console_level`] to read an entry; `Runtime::log_warn` does so for every flush site.
     pub warnings: Vec<String>,
     /// Nodes parsed outside PROTO declarations, in the order X3DParser.getNodes () collects
     /// them (when the node body closes). X3DParser.setupNodes sets them up in this order.
@@ -533,6 +547,11 @@ impl Scene {
 
     pub fn warn(&mut self, message: String) {
         self.warnings.push(message);
+    }
+
+    /// A console.error message, kept in order with the warnings (same list, marked entry).
+    pub fn error(&mut self, message: String) {
+        self.warnings.push(format!("{ERROR_LEVEL_MARK}{message}"));
     }
 
     // --- profile / components -------------------------------------------------------------
