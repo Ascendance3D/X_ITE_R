@@ -1,219 +1,79 @@
-// Base/X3DInfoArray.js: the arrays of an execution context (namedNodes, importedNodes, exportedNodes, protos, externprotos, routes,
-// components, units). A context's own array is a live view; the copies `filter`, `map` and `slice` make hold their values and check them.
-const INFO = Symbol ("info");
+// Base/X3DInfoArray.js: the arrays a Script gets (an execution context's namedNodes, importedNodes, exportedNodes, protos,
+// externprotos, routes, components, units; the browser's supported profiles and components; field definitions) are instances of
+// X_ITE's own classes (config.js, fields.js). A context's own array is a live view of the runtime: before each use it is filled
+// again with the context's current values when they changed. The copies `filter`, `map` and `slice` make are X_ITE's.
+const INFO_ARRAY_TYPES = () => ({ ComponentInfoArray, ProfileInfoArray, UnitInfoArray, ConcreteNodesArray, AbstractNodesArray, NamedNodesArray,
+   ImportedNodesArray, ExportedNodesArray, ProtoDeclarationArray, ExternProtoDeclarationArray, RouteArray, FieldDefinitionArray });
 
-const infoHandler =
+// The live view's own changes do not reach the runtime: they throw (an execution context's arrays change through its methods).
+const INFO_ARRAY_CHANGES = new Set (["add", "alias", "update", "remove", "clear", "assign"]);
+
+function infoArray (typeName, source, keyOf)
 {
-   get (target, key)
+   const array = new (INFO_ARRAY_TYPES () [typeName]) ();
+
+   const fill = values =>
    {
-      if (typeof key === "string")
-      {
-         const index = + key;
+      X3DInfoArray .prototype .clear .call (array);
 
-         if (Number .isInteger (index) && index >= 0)
-            return infoValues (target) [index];
-      }
-
-      return Reflect .get (target, key);
-   },
-   set (target, key, value)
-   {
-      if (typeof key === "string")
-      {
-         const index = + key;
-
-         if (Number .isInteger (index) && index >= 0)
-            return false;
-      }
-
-      return Reflect .set (target, key, value);
-   },
-   has (target, key)
-   {
-      if (typeof key === "string")
-      {
-         const index = + key;
-
-         if (Number .isInteger (index) && index >= 0)
-            return index < infoValues (target) .length;
-      }
-
-      return Reflect .has (target, key);
-   },
-   ownKeys (target)
-   {
-      return Object .keys (infoValues (target)) .concat (Reflect .ownKeys (target));
-   },
-   getOwnPropertyDescriptor (target, key)
-   {
-      if (typeof key === "string")
-      {
-         const index = + key;
-
-         if (Number .isInteger (index) && index >= 0)
-         {
-            const values = infoValues (target);
-
-            if (index < values .length)
-               return { value: values [index], writable: false, enumerable: true, configurable: true };
-         }
-      }
-
-      return Reflect .getOwnPropertyDescriptor (target, key);
-   },
-};
-
-const infoConstructors = new Map ();
-
-function infoConstructor (typeName)
-{
-   let f = infoConstructors .get (typeName);
-
-   if (!f)
-   {
-      f = function () { };
-      Object .defineProperty (f, "typeName", { value: typeName, enumerable: true });
-      infoConstructors .set (typeName, f);
-   }
-
-   return f;
-}
-
-function infoValues (target) { const s = target [INFO] .source; return typeof s === "function" ? s () : s; }
-
-const infoProto =
-{
-   *[Symbol .iterator] () { yield* infoValues (this); },
-   getTypeName () { return this [INFO] .typeName; },
-   has (key) { return this [INFO] .aliases ?.has (key) || infoValues (this) .some (v => this [INFO] .keyOf (v) === key); },
-   get (key) { return this [INFO] .aliases ?.get (key) ?? infoValues (this) .find (v => this [INFO] .keyOf (v) === key); },
-   // Base/X3DInfoArray.js add, alias, update, remove, clear: only the arrays that hold their values (the supported components and
-   // profiles, the copies map, filter and slice make).
-   add (key, value) { return infoAdd (this, key, value); },
-   alias (alias, value) { infoMutable (this) .aliases .set (alias, value); },
-   update (oldKey, newKey, value) { infoUpdate (this, oldKey, newKey, value); },
-   remove (key) { infoRemove (this, key); },
-   clear () { const i = infoMutable (this); i .source .length = 0; i .aliases .clear (); },
-   equals (array) { const a = infoValues (this), b = infoValues (array); return a === b || (a .length === b .length && a .every ((v, i) => v === b [i])); },
-   ... Object .fromEntries (["at", "entries", "every", "find", "findIndex", "findLast", "findLastIndex", "flat", "flatMap", "forEach", "includes", "indexOf",
-                             "join", "keys", "lastIndexOf", "reduce", "reduceRight", "some", "values"] .map (name => [name, function (... args) { return Array .prototype [name] .apply (infoValues (this), args); }])),
-   filter (f, t) { return copyInfo (this, Array .prototype .filter .call (this, f, t)); },
-   map (f, t) { return copyInfo (this, Array .prototype .map .call (this, f, t)); },
-   slice (start, end) { return copyInfo (this, Array .prototype .slice .call (this, start, end)); },
-   toReversed () { return copyInfo (this, [... this] .reverse ()); },
-   toSorted (f) { return copyInfo (this, [... this] .sort (f)); },
-   toSpliced (start, count, ... values) { const a = [... this]; a .splice (start, count, ... values); return copyInfo (this, a); },
-   with (index, value) { const a = [... this]; a [index] = value; return copyInfo (this, a); },
-};
-
-for (const key of Object .keys (infoProto))
-   Object .defineProperty (infoProto, key, { enumerable: false });
-
-function copyInfo (array, values) { const i = array [INFO]; return infoArray (i .typeName, values, i .keyOf, i .check, i .make); }
-
-function infoMutable (array)
-{
-   const i = array [INFO];
-
-   if (typeof i .source === "function")
-      throw new Error (`${i .typeName} is a view of its execution context.`);
-
-   i .aliases ??= new Map ();
-   return i;
-}
-
-function infoAdd (array, key, spec)
-{
-   const i = infoMutable (array);
-
-   // ComponentInfoArray.add (name, { level, title, ... }) and ProfileInfoArray.add (name, { title, ... }) make the value.
-   const value = i .make ? i .make (key, spec) : spec;
-
-   if (i .aliases .has (key) || i .source .some (v => i .keyOf (v) === key))
-      throw new Error (`Couldn't add value to ${i .typeName}, key '${key}' already exists.`);
-
-   if (!i .check (value))
-      throw new Error (`Couldn't add value to ${i .typeName}, value for key '${key}' has wrong type.`);
-
-   i .source .push (value);
-}
-
-function infoUpdate (array, oldKey, newKey, value)
-{
-   const i = infoMutable (array);
-
-   if (!i .check (value))
-      throw new Error (`Couldn't update value of ${i .typeName}, value for key '${newKey}' has wrong type.`);
-
-   const find = key => i .aliases .get (key) ?? i .source .find (v => i .keyOf (v) === key);
-   const old = find (oldKey);
-
-   if (oldKey !== newKey)
-      infoRemove (array, newKey);
-
-   i .aliases .delete (oldKey);
-   i .aliases .set (newKey, value);
-
-   const index = old === undefined ? -1 : i .source .indexOf (old);
-
-   if (old !== undefined)
-   {
-      if (index > -1)
-         i .source [index] = value;
-   }
-   else
-   {
-      i .source .push (value);
-   }
-}
-
-function infoRemove (array, key)
-{
-   const i = infoMutable (array);
-   const value = i .aliases .get (key) ?? i .source .find (v => i .keyOf (v) === key);
-
-   if (value === undefined)
-      return;
-
-   const index = i .source .indexOf (value);
-
-   i .aliases .delete (key);
-
-   if (index > -1)
-      i .source .splice (index, 1);
-}
-
-// `source` is a function (a live view) or the array of values; X3DInfoArray.add checks each value.
-function infoArray (typeName, source, keyOf, check, make)
-{
-   const target = Object .create (infoProto);
-
-   Object .defineProperties (target, { constructor: { value: infoConstructor (typeName) }, [INFO]: { value: { typeName, source: typeof source === "function" ? source : [... source], keyOf, check, make, aliases: undefined } }, length: { get () { return infoValues (this) .length; } } });
+      for (const value of values)
+         X3DInfoArray .prototype .add .call (array, keyOf (value), value);
+   };
 
    if (typeof source !== "function")
    {
-      const keys = new Set ();
-
-      for (const value of source)
-      {
-         const key = keyOf (value);
-
-         if (keys .has (key))
-            throw new Error (`Couldn't add value to ${typeName}, key '${key}' already exists.`);
-
-         if (!check (value))
-            throw new Error (`Couldn't add value to ${typeName}, value for key '${key}' has wrong type.`);
-
-         keys .add (key);
-      }
+      fill (source);
+      return array;
    }
 
-   return new Proxy (target, infoHandler);
+   let last = null;
+
+   const sync = () =>
+   {
+      const values = source ();
+
+      if (last && values .length === last .length && values .every ((v, i) => v === last [i]))
+         return;
+
+      last = values;
+      fill (values);
+   };
+
+   // The view's own target is empty (the proxy invariants then hold for whatever X_ITE's array reports); every trap is the array's.
+   const view = new Proxy (Object .create (Object .getPrototypeOf (array)),
+   {
+      get (target, key)
+      {
+         if (INFO_ARRAY_CHANGES .has (key))
+            return function () { throw new Error (`${typeName} is a view of its execution context.`); };
+
+         sync ();
+         return Reflect .get (array, key);
+      },
+      set (target, key, value) { sync (); return Reflect .set (array, key, value); },
+      has (target, key) { sync (); return Reflect .has (array, key); },
+      ownKeys (target) { sync (); return Reflect .ownKeys (array); },
+      getOwnPropertyDescriptor (target, key)
+      {
+         sync ();
+
+         const descriptor = Reflect .getOwnPropertyDescriptor (array, key);
+
+         if (descriptor)
+            descriptor .configurable = true;
+
+         return descriptor;
+      },
+      getPrototypeOf (target) { return Object .getPrototypeOf (array); },
+   });
+
+   return view;
 }
 
-const infoObjects = new WeakSet (); // ComponentInfo and UnitInfo
-const componentInfos = new WeakSet ();
-const profileInfos = new WeakSet ();
+// What config.js names from X_ITE's engine (gen_prelude_xite.py ENGINE): URLs.getProviderURL, HTMLSupport (the page's custom
+// elements: nothing to register), and the engine classes below.
+const URLs = { getProviderURL: component => getProviderURL (component) };
+const HTMLSupport = { addConcreteNode () { }, addAbstractNode () { } };
 
 // The script node whose code is running (for Browser.currentScene and SFNode ()).
 let currentScript = -1;
@@ -482,7 +342,7 @@ const Browser =
          else if (isProfileInfo (arg))
             component .push (... arg .components);
 
-         else if (arg instanceof Object && arg [INFO] ?.typeName === "ComponentInfoArray")
+         else if (arg instanceof ComponentInfoArray)
             component .push (... arg);
 
          else if (isComponentInfo (arg))
@@ -594,77 +454,13 @@ function getProviderURL (component)
    return path .substring (0, path .lastIndexOf ("/") + 1) + `assets/components/${component}Component${min}.js`;
 }
 
-// X3DObject: toString and the Symbol .toStringTag of ComponentInfo and ProfileInfo.
-function infoClass (typeName, methods)
-{
-   const f = function () { };
+const isComponentInfo = c => c instanceof ComponentInfo;
+const isProfileInfo   = p => p instanceof ProfileInfo;
 
-   Object .defineProperty (f, "name", { value: typeName });
-   Object .defineProperty (f, "typeName", { value: typeName, enumerable: true });
-   Object .defineProperties (f .prototype, {
-      [Symbol .toStringTag]: { get () { return typeName; } },
-      getTypeName: { value () { return typeName; } },
-      toString: { value () { return `[object ${typeName}]`; } },
-      ... Object .fromEntries (Object .entries (methods) .map (([k, v]) => [k, { value: v }])),
-   });
+const makeComponent = (name, { level, title, providerURL, external = false, dependencies = [ ] }) => new ComponentInfo (name, level, title, providerURL, external, dependencies);
 
-   return f;
-}
-
-const ComponentInfoBase = infoClass ("ComponentInfo",
-{
-   toVRMLString () { return `COMPONENT ${this .name} : ${this .level}`; },
-   toXMLString () { return `<component name='${this .name}' level='${this .level}'/>`; },
-   toJSONString () { return `\n{\n  "@name": ${JSON .stringify (this .name)},\n  "@level": ${this .level}\n}`; },
-});
-
-const ProfileInfoBase = infoClass ("ProfileInfo",
-{
-   toVRMLString () { return `PROFILE ${this .name}`; },
-   toXMLString () { return String (this .name); },
-   toJSONString () { return String (this .name); },
-});
-
-function ComponentInfo (name, level, title, providerURL, external = false, dependencies = [ ])
-{
-   const o = Object .create (ComponentInfoBase .prototype);
-
-   Object .defineProperties (o, {
-      name: { value: name, enumerable: true },
-      level: { value: level, enumerable: true },
-      title: { value: title, enumerable: true },
-      providerURL: { value: providerURL || getProviderURL (external && name), enumerable: true },
-      external: { value: external },
-      dependencies: { value: dependencies },
-      providerUrl: { get () { return this .providerURL; } },
-   });
-
-   return o;
-}
-
-function ProfileInfo (name, title, providerURL, components)
-{
-   const o = Object .create (ProfileInfoBase .prototype);
-
-   Object .defineProperties (o, {
-      name: { value: name, enumerable: true },
-      title: { value: title, enumerable: true },
-      providerURL: { value: providerURL || getProviderURL (), enumerable: true },
-      components: { value: components, enumerable: true },
-      providerUrl: { get () { return this .providerURL; } },
-   });
-
-   return o;
-}
-
-const isComponentInfo = c => c instanceof ComponentInfoBase;
-const isProfileInfo   = p => p instanceof ProfileInfoBase;
-
-const makeComponent = (name, { level, title, providerURL, external = false, dependencies = [ ] }) => ComponentInfo (name, level, title, providerURL, external, dependencies);
-const makeProfile   = (name, { title, providerURL, components }) => ProfileInfo (name, title, providerURL, componentArray (components));
-
-function componentArray (list) { return infoArray ("ComponentInfoArray", Array .from (list, c => c), c => c .name, isComponentInfo, makeComponent); }
-function profileArray (list)   { return infoArray ("ProfileInfoArray", Array .from (list, p => p), p => p .name, isProfileInfo, makeProfile); }
+function componentArray (list) { return new ComponentInfoArray (list); }
+function profileArray (list)   { return new ProfileInfoArray (list); }
 
 // SupportedComponents.js / SupportedProfiles.js, built on first use from the table of the pinned X_ITE (title, level, external,
 // dependencies; X_ITE's aliases).
@@ -697,7 +493,7 @@ function configTable ()
    const component = (name, level) =>
    {
       const c = components .get (name);
-      return ComponentInfo (c .name, level, c .title, c .providerURL, c .external, c .dependencies);
+      return new ComponentInfo (c .name, level, c .title, c .providerURL, c .external, c .dependencies);
    };
 
    for (const [name, title, list] of config .profiles)
@@ -721,7 +517,7 @@ function getComponent (name, level)
 
    if (component)
    {
-      return ComponentInfo (component .name,
+      return new ComponentInfo (component .name,
          Math .min (Math .max (level || component .level, 1), component .level),
          component .title,
          component .providerURL,
@@ -730,6 +526,27 @@ function getComponent (name, level)
    }
 
    throw new Error (`Component '${name}' at level '${level}' is not supported.`);
+}
+
+// X3DScene.units: one UnitInfo per category until updateUnit replaces it.
+const unitObjects = new Map ();
+
+function unitObject (key, category, name, conversionFactor)
+{
+   let list = unitObjects .get (key);
+
+   if (!list)
+      unitObjects .set (key, list = new Map ());
+
+   const u = list .get (category);
+
+   if (u && u .name === name && Object .is (u .conversionFactor, conversionFactor))
+      return u;
+
+   const o = new UnitInfo (category, name, conversionFactor);
+
+   list .set (category, o);
+   return o;
 }
 
 // The ComponentInfo objects a script gave a scene (identity), by scene and name.
@@ -751,7 +568,7 @@ function componentObject (key, name, level, text = String (level))
       sceneComponents .set (key, list = new Map ());
 
    const c = getSupportedComponents () .get (name);
-   const o = c ? ComponentInfo (name, level, c .title, c .providerURL, c .external, c .dependencies) : ComponentInfo (name, level, undefined, undefined, false, [ ]);
+   const o = c ? new ComponentInfo (name, level, c .title, c .providerURL, c .external, c .dependencies) : new ComponentInfo (name, level, undefined, undefined, false, [ ]);
 
    list .set (name, o);
    return o;
@@ -883,7 +700,7 @@ global .__ctxEvent = function (ctx, index)
 // The classes a Script sees as globals (Script.js createGlobalObject): their instances are the objects made here.
 function brandClass (typeName, length, test)
 {
-   const C = { [typeName]: function () { } } [typeName];
+   const C = { [typeName]: function () { throw new TypeError ("Cannot read properties of undefined (reading 'getBrowser')"); } } [typeName];
 
    Object .defineProperty (C, "length", { value: length });
    Object .defineProperty (C, "typeName", { value: typeName, enumerable: true });
@@ -892,7 +709,6 @@ function brandClass (typeName, length, test)
 }
 
 const X3DBrowserClass          = brandClass ("X3DBrowser", 1, o => o === Browser);
-const X3DRouteClass            = brandClass ("X3DRoute", 5, o => routeIds .has (o));
 
 // --- X3DBrowser ----------------------------------------------------------------------------------------------------------------
 //
@@ -926,9 +742,10 @@ const BROWSER_INSTANCE = new Set (["advanceTime", "getCurrentFrameRate", "getCur
 
 const NODE_FIELDS = Symbol ("nodeFields");
 
+// An engine class of X_ITE: its objects come from the port, its constructor needs an execution context (a TypeError without one).
 function namedClass (typeName)
 {
-   const C = { [typeName]: function () { } } [typeName];
+   const C = { [typeName]: function () { throw new TypeError ("Cannot read properties of undefined (reading 'getBrowser')"); } } [typeName];
 
    Object .defineProperty (C, "typeName", { value: typeName, enumerable: true });
    return C;
@@ -936,7 +753,8 @@ function namedClass (typeName)
 
 // X3DBaseNode: the field list of a node-like object of the port (Browser, BrowserOptions …), `this [NODE_FIELDS]`: name → { field,
 // definition, refresh }.
-const X3DBaseNodeClass = namedClass ("X3DBaseNode");
+// X3DBaseNode (executionContext, browser = …) has no typeName.
+const X3DBaseNodeClass = { X3DBaseNode: function (executionContext) { throw new TypeError ("Cannot read properties of undefined (reading 'getBrowser')"); } } .X3DBaseNode;
 
 X3DBaseNodeClass .prototype = Object .create (X3DChildObject .prototype, { constructor: { value: X3DBaseNodeClass, writable: true, configurable: true } });
 
@@ -1182,7 +1000,7 @@ function makeExecutionContext (script)
    const externs  = infoArray ("ExternProtoDeclarationArray", () => X ("cx", script, "protoIds", true) .map (id => protoObject (true, id)), p => p .name, p => protoKeys .get (p)?.[0] === true);
    const routes   = infoArray ("RouteArray", () => X ("cx", script, "routeList") .map (r => routeObject (script, r .id)), r => r .getId (), r => routeIds .has (r));
    const comps    = infoArray ("ComponentInfoArray", () => info () .components .map (([name, level, text]) => componentObject (script, name, level, text)), c => c .name, isComponentInfo);
-   const units    = infoArray ("UnitInfoArray", () => info () .units .map (([category, name, conversionFactor]) => { const o = Object .freeze ({ category, name, conversionFactor }); infoObjects .add (o); return o; }), u => u .category, u => infoObjects .has (u));
+   const units    = infoArray ("UnitInfoArray", () => info () .units .map (([category, name, conversionFactor]) => unitObject (script, category, name, conversionFactor)), u => u .category);
 
    const impl = {
       get isScene ()          { return info () .isScene; },
@@ -1211,7 +1029,7 @@ function makeExecutionContext (script)
       getTypeName ()          { return info () .isScene ? "X3DScene" : "X3DExecutionContext"; },
       // X3DBaseNode.getField: the change fields are private, they have no names a Script can look up.
       getField (name)         { throw new Error (`Unknown field '${name}' in node class ${info () .isScene ? "X3DScene" : "X3DExecutionContext"}.`); },
-      getFieldDefinitions ()  { return infoArray ("FieldDefinitionArray", [ ], d => d .name, d => false); },
+      getFieldDefinitions ()  { return new FieldDefinitionArray (); },
       getEncoding ()          { return this .encoding; },
       getProfile ()           { return this .profile; },
       getComponents ()        { return comps; },
@@ -1374,6 +1192,179 @@ function touchContext (o, key)
       Object .defineProperty (o, key, { get () { return X ("time"); }, enumerable: true, configurable: true });
 }
 
+// X_ITE's engine classes a Script can reach (Script.js globals): X3DRoute, X3DImportedNode, X3DExportedNode, X3DProtoDeclarationNode,
+// X3DProtoDeclaration, X3DExternProtoDeclaration. The objects a Script gets (routeObject, importedObject, exportedObject,
+// protoObject) are the port's, made from these prototypes. `new` makes what X_ITE's constructor makes without an execution context:
+// a route that cannot connect (a warning) and an exported node with nothing in it; the others throw a TypeError as X_ITE's do.
+function engineClass (typeName, length, parent, construct)
+{
+   const C = { [typeName]: function (... args)
+   {
+      if (!construct)
+         throw new TypeError ("Cannot read properties of undefined (reading 'getBrowser')");
+
+      construct .apply (this, args);
+   } } [typeName];
+
+   Object .defineProperty (C, "length", { value: length });
+   Object .defineProperty (C, "typeName", { value: typeName, enumerable: true });
+
+   C .prototype = Object .create (parent, { constructor: { value: C, writable: true, configurable: true } });
+   return C;
+}
+
+const X3DRoute = engineClass ("X3DRoute", 5, X3DObject .prototype, function (executionContext, sourceNode, sourceField, destinationNode, destinationField)
+{
+   // X3DRoute.reconnect: a route whose nodes have no such fields does not connect.
+   scriptConsole .warn (new AggregateError ([ ], "Couldn't connect route."));
+});
+
+Object .assign (X3DRoute,
+{
+   checkFields (sourceField, destinationField)
+   {
+      if (sourceField && destinationField)
+      {
+         if (sourceField .getType () !== destinationField .getType ())
+            throw new Error (`Bad ROUTE specification: source field type must match destination field type of fields named "${sourceField .getName ()}" and "${destinationField .getName ()}".`);
+      }
+
+      if (sourceField)
+      {
+         if (!sourceField .isOutput ())
+            throw new Error (`Bad ROUTE specification: source field "${sourceField .getName ()}" must be an output.`);
+      }
+
+      if (destinationField)
+      {
+         if (!destinationField .isInput ())
+            throw new Error (`Bad ROUTE specification: destination field "${destinationField .getName ()}" must be an input.`);
+      }
+   },
+});
+
+Object .defineProperty (X3DRoute, "checkFields", { enumerable: false });
+
+const X3DImportedNode = engineClass ("X3DImportedNode", 5, X3DObject .prototype);
+
+const X3DExportedNode = engineClass ("X3DExportedNode", 4, X3DObject .prototype, function () { });
+
+const X3DProtoDeclarationNode = engineClass ("X3DProtoDeclarationNode", 1, X3DBaseNodeClass .prototype);
+const X3DProtoDeclaration = engineClass ("X3DProtoDeclaration", 1, X3DProtoDeclarationNode .prototype);
+const X3DExternProtoDeclaration = engineClass ("X3DExternProtoDeclaration", 2, X3DProtoDeclarationNode .prototype);
+
+// The members of these objects, on the class X_ITE defines them on (oracle scx-members): methods not enumerable, accessors
+// enumerable. Each object's ENGINE_STATE says what the runtime knows it by.
+const ENGINE_STATE = Symbol ("engine");
+
+function engineMembers (C, members)
+{
+   for (const [key, member] of Object .entries (members))
+   {
+      if (typeof member === "function")
+         Object .defineProperty (C .prototype, key, { value: member, writable: true, configurable: true, enumerable: false });
+      else
+         Object .defineProperty (C .prototype, key, { ... member, configurable: true, enumerable: true });
+   }
+}
+
+function protoFields (state)
+{
+   const fields = state .info () .fields;
+   const key    = JSON .stringify (fields .map (f => [f .name, f .accessType, f .dataType]));
+
+   if (state .fieldsKey === key)
+      return state .fields;
+
+   const value = (dataType, v) => v instanceof X3DField ? v
+      : dataType === "SFNode" ? new Fields .SFNode (v instanceof SFNode ? v .getValue () : null)
+      : fieldFromData (dataType, v);
+
+   state .fieldsKey = key;
+   state .fields    = new FieldDefinitionArray (fields .map (f => new X3DFieldDefinition (f .accessType, f .name, value (f .dataType, R (f .value)))));
+   return state .fields;
+}
+
+engineMembers (X3DRoute,
+{
+   getExecutionContext () { return executionContext (this [ENGINE_STATE] .script); },
+   getSourceNode () { const r = this [ENGINE_STATE] .record (); return r ? R (r .sourceNode) : undefined; },
+   getSourceField () { return this [ENGINE_STATE] .record () ?.sourceField; },
+   getDestinationNode () { const r = this [ENGINE_STATE] .record (); return r ? R (r .destinationNode) : undefined; },
+   getDestinationField () { return this [ENGINE_STATE] .record () ?.destinationField; },
+   sourceNode: { get () { return this .getSourceNode (); } },
+   sourceField: { get () { return this .getSourceField (); } },
+   destinationNode: { get () { return this .getDestinationNode (); } },
+   destinationField: { get () { return this .getDestinationField (); } },
+});
+
+engineMembers (X3DImportedNode,
+{
+   getExecutionContext () { return executionContext (this [ENGINE_STATE] .script); },
+   getInlineNode () { return R (this [ENGINE_STATE] .record () .inlineNode); },
+   getExportedName () { return this [ENGINE_STATE] .record () .exportedName; },
+   getExportedNode () { const { script, id } = this [ENGINE_STATE]; return R (X ("cx", script, "importedExported", id)); },
+   getImportedName () { return this [ENGINE_STATE] .record () .importedName; },
+   getDescription () { return this [ENGINE_STATE] .record () .description; },
+   setDescription (value) { const { script, id } = this [ENGINE_STATE]; X ("cx", script, "importedDescription", id, String (value)); },
+   inlineNode: { get () { return this .getInlineNode (); } },
+   exportedName: { get () { return this .getExportedName (); } },
+   exportedNode: { get () { return this .getExportedNode (); } },
+   importedName: { get () { return this .getImportedName (); } },
+   description: { get () { return this .getDescription (); }, set (value) { this .setDescription (value); } },
+});
+
+engineMembers (X3DExportedNode,
+{
+   getExecutionContext () { return executionContext (this [ENGINE_STATE] .script); },
+   getExportedName () { return this [ENGINE_STATE] ?.record () .exportedName; },
+   getLocalNode () { return this [ENGINE_STATE] ? R (this [ENGINE_STATE] .record () .localNode) : undefined; },
+   getDescription () { return this [ENGINE_STATE] ?.record () .description; },
+   setDescription (value) { const s = this [ENGINE_STATE]; if (s) X ("cx", s .script, "exportedDescription", s .id, String (value)); },
+   exportedName: { get () { return this .getExportedName (); } },
+   localNode: { get () { return this .getLocalNode (); } },
+   description: { get () { return this .getDescription (); }, set (value) { this .setDescription (value); } },
+});
+
+engineMembers (X3DProtoDeclarationNode,
+{
+   getAppInfo () { return this [ENGINE_STATE] .appInfo; },
+   setAppInfo (value) { this [ENGINE_STATE] .appInfo = String (value); },
+   getDocumentation () { return this [ENGINE_STATE] .documentation; },
+   setDocumentation (value) { this [ENGINE_STATE] .documentation = String (value); },
+   name: { get () { return this [ENGINE_STATE] .info () .name; } },
+   // X3DProtoDeclarationNode.fields: the interface as a FieldDefinitionArray (one array while the interface stays the same).
+   fields: { get () { return protoFields (this [ENGINE_STATE]); } },
+   appInfo: { get () { return this .getAppInfo (); }, set (value) { this .setAppInfo (value); } },
+   documentation: { get () { return this .getDocumentation (); }, set (value) { this .setDocumentation (value); } },
+});
+
+Object .defineProperty (X3DProtoDeclaration .prototype, "isExternProto", { value: false, writable: true, configurable: true, enumerable: true });
+Object .defineProperty (X3DExternProtoDeclaration .prototype, "isExternProto", { value: true, writable: true, configurable: true, enumerable: true });
+
+// X3DExternProtoDeclaration.getAppInfo … read and write the loaded PROTO's, else the declaration's own. The port keeps the
+// declaration's own only (the loaded PROTO's appinfo and documentation are not passed to Scripts).
+engineMembers (X3DExternProtoDeclaration,
+{
+   getAppInfo () { return X3DProtoDeclarationNode .prototype .getAppInfo .call (this); },
+   setAppInfo (value) { X3DProtoDeclarationNode .prototype .setAppInfo .call (this, value); },
+   getDocumentation () { return X3DProtoDeclarationNode .prototype .getDocumentation .call (this); },
+   setDocumentation (value) { X3DProtoDeclarationNode .prototype .setDocumentation .call (this, value); },
+   urls: { get () { return R (this [ENGINE_STATE] .info () .urls); } },
+   loadState: { get () { return X3DConstants [this [ENGINE_STATE] .info () .loadState]; } },
+});
+
+for (const C of [X3DProtoDeclaration, X3DExternProtoDeclaration])
+{
+   Object .defineProperty (C, "fieldDefinitions", {
+      value: new FieldDefinitionArray ([new X3DFieldDefinition (X3DConstants .inputOutput, "metadata", new Fields .SFNode ())]),
+      enumerable: true,
+   });
+}
+
+// X3DBrowser.fieldDefinitions: the browser's (X3DBaseNode.getFieldDefinitions reads the class's).
+Object .defineProperty (X3DBrowserClass, "fieldDefinitions", { get () { return Browser .getFieldDefinitions (); }, enumerable: true, configurable: true });
+
 // X3DExecutionContext and X3DScene (X3DScene → X3DExecutionContext → X3DBaseNode → X3DChildObject → X3DObject): each member a
 // Script can use sits on the class X_ITE defines it on (oracle scx-api: the own names of each level of the pin's prototypes);
 // it runs on the context's state. Members X_ITE's classes have that the port does not (engine internals: addLoadingObject,
@@ -1438,6 +1429,8 @@ X3DSceneClass .prototype = Object .create (X3DExecutionContextClass .prototype, 
    Object .defineProperty (X3DSceneClass .prototype, "isScene", { value: true, writable: true, configurable: true, enumerable: true });
 }
 
+
+
 // SFNodeCache .get (X3DCast (X3DNode, node, false)): a value that is no node is no WeakMap key.
 function rootNodeArgument (n)
 {
@@ -1455,11 +1448,8 @@ function routeObject (script, id)
 
    if (!o)
    {
-      const get = key => () => { const r = X ("cx", script, "routeList") .find (r => r .id === id); return r ? (key .endsWith ("Node") ? R (r [key]) : r [key]) : undefined; };
-
-      o = { };
-      Object .defineProperties (o, { id: { value: id }, getId: { value () { return id; } }, sourceNode: { get: get ("sourceNode"), enumerable: true }, sourceField: { get: get ("sourceField"), enumerable: true },
-                                     destinationNode: { get: get ("destinationNode"), enumerable: true }, destinationField: { get: get ("destinationField"), enumerable: true } });
+      o = Object .create (X3DRoute .prototype);
+      Object .defineProperty (o, ENGINE_STATE, { value: { script, id, record: () => X ("cx", script, "routeList") .find (r => r .id === id) } });
       routeObjects .set (id, o);
       routeIds .set (o, id);
    }
@@ -1479,22 +1469,8 @@ function importedObject (script, id)
 
    if (!o)
    {
-      const record = () => X ("nodeArrays", script, "imported") .find (m => m .id === id);
-
-      o = { };
-      Object .defineProperties (o, {
-         inlineNode:   { get: () => R (record () .inlineNode), enumerable: true },
-         exportedName: { get: () => record () .exportedName, enumerable: true },
-         exportedNode: { get: () => R (X ("cx", script, "importedExported", id)), enumerable: true },
-         importedName: { get: () => record () .importedName, enumerable: true },
-         description:  { get: () => record () .description, enumerable: true },
-         getInlineNode: { value () { return this .inlineNode; } },
-         getExportedName: { value () { return this .exportedName; } },
-         getExportedNode: { value () { return this .exportedNode; } },
-         getImportedName: { value () { return this .importedName; } },
-         getDescription: { value () { return this .description; } },
-         setDescription: { value (v) { X ("cx", script, "importedDescription", id, String (v)); } },
-      });
+      o = Object .create (X3DImportedNode .prototype);
+      Object .defineProperty (o, ENGINE_STATE, { value: { script, id, record: () => X ("nodeArrays", script, "imported") .find (m => m .id === id) } });
       importedObjects .set (id, o);
       importedKeys .add (o);
    }
@@ -1508,17 +1484,8 @@ function exportedObject (script, id)
 
    if (!o)
    {
-      const record = () => X ("nodeArrays", script, "exported") .find (m => m .id === id);
-
-      o = { };
-      Object .defineProperties (o, {
-         exportedName: { get: () => record () .exportedName, enumerable: true },
-         localNode:    { get: () => R (record () .localNode), enumerable: true },
-         description:  { get: () => record () .description, enumerable: true },
-         getExportedName: { value () { return this .exportedName; } },
-         getLocalNode: { value () { return this .localNode; } },
-         getDescription: { value () { return this .description; } },
-      });
+      o = Object .create (X3DExportedNode .prototype);
+      Object .defineProperty (o, ENGINE_STATE, { value: { script, id, record: () => X ("nodeArrays", script, "exported") .find (m => m .id === id) } });
       exportedObjects .set (id, o);
       exportedKeys .add (o);
    }
@@ -1537,14 +1504,8 @@ function protoObject (extern, id)
 
    if (!o)
    {
-      const info = () => X ("cx", -1, "protoInfo", extern, id);
-      const fields = () => Object .freeze (info () .fields .map (f => Object .freeze ({ name: f .name, accessType: f .accessType, dataType: X3DConstants [f .dataType], value: R (f .value) })));
-
-      o = Object .create (null);
-      Object .defineProperties (o, { name: { get: () => info () .name, enumerable: true }, isExternProto: { value: extern, enumerable: true }, fields: { get: fields, enumerable: true } });
-
-      if (extern)
-         Object .defineProperty (o, "urls", { get: () => R (info () .urls), enumerable: true });
+      o = Object .create ((extern ? X3DExternProtoDeclaration : X3DProtoDeclaration) .prototype);
+      Object .defineProperty (o, ENGINE_STATE, { value: { extern, id, info: () => X ("cx", -1, "protoInfo", extern, id), appInfo: "", documentation: "" } });
 
       protoObjects .set (key, o);
       protoKeys .set (o, [extern, id]);
@@ -1614,8 +1575,9 @@ const timerGlobals =
 {
    setTimeout (fn, ms = 0, ... args)  { return addTimer (fn, ms, args, false); },
    setInterval (fn, ms = 0, ... args) { return addTimer (fn, ms, args, true); },
-   clearTimeout (id)                  { timerList = timerList .filter (t => t .id !== id); },
-   clearInterval (id)                 { timerList = timerList .filter (t => t .id !== id); },
+   // The page's clearTimeout and clearInterval take their id as an optional argument (length 0).
+   clearTimeout (id = undefined)      { timerList = timerList .filter (t => t .id !== id); },
+   clearInterval (id = undefined)     { timerList = timerList .filter (t => t .id !== id); },
 };
 
 Date .now = () => X ("datenow");
@@ -1671,12 +1633,17 @@ const standardGlobals =
    ... timerGlobals,
    NULL: null, FALSE: false, TRUE: true,
    console: scriptConsole,
-   print: println, trace: println,
+   // Script.js: `browser .println .bind (browser)`.
+   print: Browser .println .bind (Browser), trace: Browser .println .bind (Browser),
    Browser,
    X3DConstants,
    X3DField, X3DArrayField,
-   X3DBrowser: X3DBrowserClass, X3DExecutionContext: X3DExecutionContextClass, X3DScene: X3DSceneClass, X3DRoute: X3DRouteClass,
+   X3DBrowser: X3DBrowserClass, X3DExecutionContext: X3DExecutionContextClass, X3DScene: X3DSceneClass,
+   ComponentInfo, ComponentInfoArray, ProfileInfo, ProfileInfoArray, ConcreteNodesArray, AbstractNodesArray, UnitInfo, UnitInfoArray,
+   NamedNodesArray, ImportedNodesArray, X3DImportedNode, ExportedNodesArray, X3DExportedNode, ExternProtoDeclarationArray,
+   ProtoDeclarationArray, X3DExternProtoDeclaration, X3DProtoDeclaration, X3DProtoDeclarationNode, RouteArray, X3DRoute,
    X3DBaseNode: X3DBaseNodeClass,
+   X3DFieldDefinition, FieldDefinitionArray,
    // Script.js lists neither SFBool, SFInt32, SFFloat, SFDouble nor SFTime as globals; its SFNode is its own function.
    ... Object .fromEntries (Object .entries (Fields) .filter (([k]) => !["SFNode", "SFBool", "SFInt32", "SFFloat", "SFDouble", "SFTime"] .includes (k))),
    SFNode: ScriptSFNode,

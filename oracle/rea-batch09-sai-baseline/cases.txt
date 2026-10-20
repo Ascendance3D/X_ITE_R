@@ -116,7 +116,6 @@ fld-sfvec3f oracle/synthetic-rea-b09-sai/fld-sfvec3f.wrl oracle/synthetic-rea-b0
 fld-sfvec4d oracle/synthetic-rea-b09-sai/fld-sfvec4d.wrl oracle/synthetic-rea-b09-sai/sai.json
 fld-sfvec4f oracle/synthetic-rea-b09-sai/fld-sfvec4f.wrl oracle/synthetic-rea-b09-sai/sai.json
 meta-nodes oracle/synthetic-rea-b09-sai/meta-nodes.wrl oracle/synthetic-rea-b09-sai/sai.json
-scr-classes oracle/synthetic-rea-b09-sai/scr-classes.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-field-defaults oracle/synthetic-rea-b09-sai/scr-field-defaults.wrl oracle/synthetic-rea-b09-sai/sai.json
 fldx-api oracle/synthetic-rea-b09-sai/fldx-api.wrl oracle/synthetic-rea-b09-sai/sai.json
 fldx-call oracle/synthetic-rea-b09-sai/fldx-call.wrl oracle/synthetic-rea-b09-sai/sai.json
@@ -138,3 +137,6 @@ ctxev-inline oracle/synthetic-rea-b09-sai/ctxev-inline.wrl oracle/synthetic-rea-
 cfg-comp oracle/synthetic-rea-b09-sai/cfg-comp.wrl oracle/synthetic-rea-b09-sai/sai.json
 brx-obj oracle/synthetic-rea-b09-sai/brx-obj.wrl oracle/synthetic-rea-b09-sai/sai.json
 scx-api oracle/synthetic-rea-b09-sai/scx-api.wrl oracle/synthetic-rea-b09-sai/sai.json
+scr-classes oracle/synthetic-rea-b09-sai/scr-classes.wrl oracle/synthetic-rea-b09-sai/sai.json
+scr-globals oracle/synthetic-rea-b09-sai/scr-globals.wrl oracle/synthetic-rea-b09-sai/sai.json
+scx-members oracle/synthetic-rea-b09-sai/scx-members.wrl oracle/synthetic-rea-b09-sai/sai.json

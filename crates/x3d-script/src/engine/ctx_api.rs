@@ -268,6 +268,11 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 None => throw(ctx, &format!("Exported node '{}' not found.", rt().scene.imported[id].exported_name)),
             }
         }
+        // X3DExportedNode.setDescription.
+        "exportedDescription" => {
+            rt().scene.exported[num_arg(ctx, a, 0) as usize].description = str_at(1);
+            Ok(undefined)
+        }
         "importedDescription" => {
             rt().scene.imported[num_arg(ctx, a, 0) as usize].description = str_at(1);
             Ok(undefined)
@@ -465,6 +470,18 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
             o.set("name", name.as_str())?;
             o.set("isExternProto", urls.is_some())?;
+
+            // X3DExternProtoDeclaration.loadState (X3DUrlObject.checkLoadState).
+            if extern_ {
+                let state = rt().extern_states.get(&id).map(|s| s.load_state).unwrap_or_default();
+                let name = match state {
+                    x3d_runtime::nodes::LoadState::NotStarted => "NOT_STARTED_STATE",
+                    x3d_runtime::nodes::LoadState::InProgress => "IN_PROGRESS_STATE",
+                    x3d_runtime::nodes::LoadState::Complete => "COMPLETE_STATE",
+                    x3d_runtime::nodes::LoadState::Failed => "FAILED_STATE",
+                };
+                o.set("loadState", name)?;
+            }
 
             let fa = Array::new(ctx.clone())?;
             let mut defs: Vec<(String, i32, &'static str, FieldValue)> = vec![];

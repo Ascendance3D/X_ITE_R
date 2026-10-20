@@ -5,6 +5,7 @@
 //   head.js        this file: the native entry point `__x (op, …)` and `__bridge`, which the generated files call
 //   math.js        generated: X_ITE's standard/Math classes (Vector3, Rotation4, Matrix4, …), verbatim
 //   fields.js      generated: X_ITE's field object model (X3DObject … X3DField, every SF and MF class, the generators), verbatim
+//   config.js      generated: ComponentInfo, ProfileInfo, UnitInfo and the info arrays (ComponentInfoArray … RouteArray), verbatim
 //   node_types.js  generated: X3DBaseNode.getType () of every node class and X3DConstants, recorded from the pinned X_ITE
 //   bridge.js      the boundary: the X3DNode a field belongs to, node fields mirrored with the Rust runtime, values in and out
 //   rest.js        Browser, execution contexts, configuration, the Script global object and the entry points of engine.rs

@@ -36,12 +36,12 @@ Rust run, can reproduce it byte for byte. This is a property of the worlds, not 
 
 ## Remaining work, hardest first
 
-1. The X3DExecutionContext / X3DScene class chain (brx-obj-open: the port's scene objects are plain objects with their members
-   as own properties; X_ITE's are X3DScene → X3DExecutionContext → X3DBaseNode → X3DChildObject → X3DObject).
-   Of the timing differences A-D, A-C are fixed (REA_CHANGES.md). D, cfg-scene-odd, stays open: `addComponent ()` /
-   `addComponent (null)` / `updateComponent ()` throw TypeErrors worded by the engine (V8 "Cannot read properties of undefined
-   (reading 'name')", QuickJS "cannot read property 'name' of undefined"; same class as the Error.stack frames), and
-   `addComponent ('Core')` stores level `undefined` in X_ITE where the port's scene keeps component levels as integers (0).
+1. Engine internals of the objects an execution context hands out (scx-layers-open, documented, not PASS): X_ITE's X3DRoute,
+   X3DImportedNode, X3DExportedNode, X3DProtoDeclaration and X3DExternProtoDeclaration prototypes also carry the engine's own
+   members (connect, refreshInstance, newInstance, loadNow, the X3DBaseNode field machinery, the private `_url`, `_load` …
+   child fields); the port's carry the public ones (scx-members: owner, kind and value of each, exact). Also not passed to
+   Scripts: a loaded EXTERNPROTO's appinfo and documentation (the declaration's own are), toVRMLString / toXMLString /
+   toJSONString of a route, an imported or an exported node (X_ITE prints the statement), X3DScene.dispose tearing a scene down.
 2. Node class chains: a node X_ITE hands out (SFNode.getValue (), getActiveViewpoint …) is an instance of its node class
    (Viewpoint → X3DViewpointNode → X3DBindableNode → …); the port's is an X3DNodeRef (owner boundary 2026-10-20). The type list
    is the same (getType ()), the constructor names and internal members are not (brx-call-open).
@@ -49,13 +49,20 @@ Rust run, can reproduce it byte for byte. This is a property of the worlds, not 
    members: WebGL, DOM, dashboard), brx-call-open (getCanvas, getElement, getNotification, getContextMenu, getViewer,
    getBrowserTime, getBrowserTimings return null; X_ITE returns its page objects), X3DConstants of external-component node
    types in scr-browser-open (X_ITE's load order).
-4. scr-classes-open: 19 globals Script.js defines that the port does not (ComponentInfoArray, X3DProtoDeclaration, …).
+4. OWNER DECISION NEEDED, scr-classes-open: the web page's own globals a Script reaches in X_ITE (Script.js evaluates
+   `with (globalObject)` in the page): `window`, `document`, `globalThis` (the page's window: name "", length 0),
+   `XMLHttpRequest`, `fetch`. They are not X_ITE's; the port has none. Every global X_ITE's Script.js defines now matches
+   (scr-globals, 150 probes).
 5. Field representation differences (sub:fields.types): an SF component that is neither number, undefined nor null is stored as
    NaN by the runtime; IterableWeakSet strong members (QuickJS); external-component X3DConstants order (X_ITE nondeterministic).
-6. Step 3 promotion candidates: sub:exec.import-export, sub:exec.bindable-stacks, sub:config.components-profiles,
-   sub:exec.context-api.
+6. sub:exec.context-api stays PARTIAL (owner decision 2026-10-20). Its component state (cfg-comp) and the X3DScene /
+   X3DExecutionContext class chain (scx-api) and the objects it hands out (scx-members) now match; what is left in it is item 1.
 7. scr-url-order-open (url candidates that need a fetch finish frames later in X_ITE); meta-parse-open (PROTO field value printed
    with `DEF _1`, sub:proto.proto); the Rust XML MFString warning lacks the field name (parser).
 8. sub:fields.math: compare the Rust Geometry math (Box3, Line3, Plane3, Triangle, ViewVolume, Spline) with X_ITE's
    standard/Math/Geometry directly.
 9. The rest of the REA queue.
+
+Kept documented (not defects of the port's model): the text of TypeErrors the engine words (cfg-scene-odd: QuickJS "cannot read
+property 'name' of undefined", V8 "Cannot read properties of undefined (reading 'name')"; the thrown class and the state are
+compared in cfg-comp).
