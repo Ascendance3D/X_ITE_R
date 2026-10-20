@@ -110,6 +110,26 @@ impl Runtime {
 
             self.add_event_object(f, event.clone());
         }
+
+        // Process field callbacks.
+        if self.field_observed.contains(&k) {
+            self.field_callbacks(k);
+        }
+    }
+
+    /// The field callbacks of `k` (X3DField.processEvent: `callback (this .valueOf ())`).
+    fn field_callbacks(&mut self, k: FKey) {
+        match self.script_host.take() {
+            Some(mut host) => {
+                for p in std::mem::take(&mut self.pending_field_events) {
+                    host.field_event(self, p);
+                }
+
+                host.field_event(self, k);
+                self.script_host = Some(host);
+            }
+            None => self.pending_field_events.push(k),
+        }
     }
 
     /// X3DChildObject.processEvent for a node: untaint and call node interests.

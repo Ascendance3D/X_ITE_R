@@ -1,0 +1,51 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fcb basic"
+DEF T Transform { }
+DEF B TouchSensor { }
+DEF M Material { }
+DEF ST WorldInfo { }
+DEF C Coordinate { point [ 0 0 0 ] }
+DEF D Script {
+  directOutput TRUE
+  mustEvaluate TRUE
+  inputOutput MFString out [ ]
+  url "ecmascript:
+
+var F = 0;
+function L (s) { var a = globalThis .LOG_ = globalThis .LOG_ || []; a .push (F + ':' + s); out = new MFString (... a); }
+function show (v) {
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'number') return Object .is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON .stringify (v);
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (typeof v === 'function') return 'fn';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v);
+}
+function E (e) { return 'ERR ' + (e && e .name) + ': ' + (e && e .message); }
+function S (n) { return Browser .currentScene .getNamedNode (n); }
+
+
+function prepareEvents () {
+  ++ F;
+  if (F === 1) { try { var t = S ('T'); t .addFieldCallback ('k1', 'translation', function (v) { L ('T.translation k1 ' + show (v) + ' same ' + (v === t .translation)); }); L ('added'); t .translation = new SFVec3f (1, 2, 3); L ('assigned'); } catch (e) { L ('step 1 ' + E (e)); } }
+  if (F === 2) { try { var t = S ('T'); t .addFieldCallback ('k2', 'translation', function (v) { L ('T.translation k2 ' + show (v)); }); t .translation .x = 5; L ('x set'); } catch (e) { L ('step 2 ' + E (e)); } }
+  if (F === 3) { try { var t = S ('T'); t .addFieldCallback ('k1', 'translation', function (v) { L ('T.translation k1 replaced ' + show (v)); }); t .translation = new SFVec3f (7, 8, 9); } catch (e) { L ('step 3 ' + E (e)); } }
+  if (F === 4) { try { var t = S ('T'); t .removeFieldCallback ('k2', 'translation'); t .translation = new SFVec3f (0, 0, 1); } catch (e) { L ('step 4 ' + E (e)); } }
+  if (F === 5) { try { var t = S ('T'); t .removeFieldCallback ('k1', 'translation'); t .removeFieldCallback ('nope', 'translation'); t .translation = new SFVec3f (0, 0, 2); L ('removed all'); } catch (e) { L ('step 5 ' + E (e)); } }
+  if (F === 6) { try { var m = S ('M'); m .addFieldCallback ('f', 'transparency', function (v) { L ('M.transparency ' + show (v)); }); m .addFieldCallback ('c', 'diffuseColor', function (v) { L ('M.diffuseColor ' + show (v)); }); m .transparency = 0.25; m .diffuseColor = new SFColor (1, 0, 0); m .transparency = 0.5; } catch (e) { L ('step 6 ' + E (e)); } }
+  if (F === 7) { try { var w = S ('ST'); w .addFieldCallback ('s', 'title', function (v) { L ('W.title ' + show (v)); }); w .addFieldCallback ('i', 'info', function (v) { L ('W.info ' + show (v) + ' len ' + v .length); }); w .title = 'hello'; w .info = new MFString ('a', 'b'); } catch (e) { L ('step 7 ' + E (e)); } }
+  if (F === 8) { try { var c = S ('C'); c .addFieldCallback ('p', 'point', function (v) { L ('C.point ' + v .length + ' ' + show (v [0])); }); c .point [0] = new SFVec3f (1, 1, 1); c .point .push (new SFVec3f (2, 2, 2)); } catch (e) { L ('step 8 ' + E (e)); } }
+  if (F === 9) { try { var b = S ('B'); b .addFieldCallback ('e', 'enabled', function (v) { L ('B.enabled ' + show (v)); }); b .enabled = false; b .enabled = true; } catch (e) { L ('step 9 ' + E (e)); } }
+  if (F === 10) { try { var t = S ('T'); var f = t .translation; f .addFieldCallback ('fo', function (v) { L ('field object cb ' + show (v) + ' this ' + (this === undefined ? 'undef' : typeof this)); }); t .translation = new SFVec3f (3, 3, 3); } catch (e) { L ('step 10 ' + E (e)); } }
+  if (F === 11) { try { var t = S ('T'); var f = t .translation; var m = f .getFieldCallbacks (); L ('getFieldCallbacks ' + (m instanceof Map) + ' ' + m .size + ' ' + Array .from (m .keys ()) .join (',')); f .removeFieldCallback ('fo'); L ('after remove ' + f .getFieldCallbacks () .size); t .translation = new SFVec3f (4, 4, 4); } catch (e) { L ('step 11 ' + E (e)); } }
+  if (F === 12) { try { var t = S ('T'); t .addFieldCallback ('again', 'translation', function (v) { L ('T again ' + show (v)); }); t .translation = t .translation; L ('self assign'); } catch (e) { L ('step 12 ' + E (e)); } }
+  if (F === 13) { try { try { S ('T') .addFieldCallback ('x', 'nosuch', function () { }); L ('unknown field ok'); } catch (e) { L ('unknown field ' + E (e)); } } catch (e) { L ('step 13 ' + E (e)); } }
+  if (F === 14) { try { var r = S ('T') .addFieldCallback ('again', 'translation', function () { }); L ('return ' + show (r)); var q = S ('T') .removeFieldCallback ('again', 'translation'); L ('remove return ' + show (q)); } catch (e) { L ('step 14 ' + E (e)); } }
+  if (F === 15) { try { var n = new SFNode ('Transform { }'); var r = n .addFieldCallback ('k', function () { L ('two-arg sfnode cb'); }); L ('two-arg ' + show (r)); n .translation = new SFVec3f (1, 0, 0); } catch (e) { L ('step 15 ' + E (e)); } }
+}
+
+  "
+}

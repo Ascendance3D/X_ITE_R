@@ -321,6 +321,10 @@ pub struct Runtime {
     pub script_host: Option<Box<dyn ScriptHost>>,
     /// Events of the change fields of execution contexts and scenes ([`ctx_events`]).
     pub ctx_events: ctx_events::CtxEvents,
+    /// Fields that a Script gave a callback with X3DField.addFieldCallback: X3DField.processEvent calls the host for them.
+    pub field_observed: std::collections::HashSet<FKey>,
+    /// Field callbacks due while the host was busy; they run when it is back.
+    pub(crate) pending_field_events: Vec<FKey>,
     /// The Shaders component: the compiler the renderer installs, parts, links and the Appearance selection.
     pub shaders: nodes::shaders::ShaderHost,
     pub fetcher: Box<dyn Fetcher>,
@@ -529,6 +533,8 @@ impl Runtime {
             browser_node: 0,
             script_host: None,
             ctx_events: Default::default(),
+            field_observed: Default::default(),
+            pending_field_events: vec![],
             shaders: Default::default(),
             fetcher,
             extern_loaded: HashMap::new(),

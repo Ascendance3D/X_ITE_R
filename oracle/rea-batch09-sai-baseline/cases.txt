@@ -112,3 +112,7 @@ fld-mfstring oracle/synthetic-rea-b09-sai/fld-mfstring.wrl oracle/synthetic-rea-
 fld-mfdouble oracle/synthetic-rea-b09-sai/fld-mfdouble.wrl oracle/synthetic-rea-b09-sai/sai.json
 fld-mffloat oracle/synthetic-rea-b09-sai/fld-mffloat.wrl oracle/synthetic-rea-b09-sai/sai.json
 fld-mftime oracle/synthetic-rea-b09-sai/fld-mftime.wrl oracle/synthetic-rea-b09-sai/sai.json
+fcb-basic oracle/synthetic-rea-b09-sai/fcb-basic.wrl oracle/synthetic-rea-b09-sai/sai.json
+fcb-routes oracle/synthetic-rea-b09-sai/fcb-routes.wrl oracle/synthetic-rea-b09-sai/sai.json
+fcb-reentry oracle/synthetic-rea-b09-sai/fcb-reentry.wrl oracle/synthetic-rea-b09-sai/sai.json
+fcb-script-fields oracle/synthetic-rea-b09-sai/fcb-script-fields.wrl oracle/synthetic-rea-b09-sai/sai.json

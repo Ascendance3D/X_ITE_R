@@ -444,6 +444,8 @@ impl Runtime {
         }
         self.world_infos.retain(|_, list| !list.is_empty());
         self.scripts.retain(|n| !dead.contains(n));
+        self.field_observed.retain(|k| !dead.contains(&k.0));
+        self.pending_field_events.retain(|k| !dead.contains(&k.0));
         self.pending_scenes.retain(|p| !dead.contains(&p.node) && !dead.contains(&p.scene_node));
         self.frame_waiters.retain(|w| !dead.contains(&w.node));
         self.scene.setup_order.retain(|n| !dead.contains(n));

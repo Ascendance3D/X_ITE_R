@@ -40,6 +40,10 @@ pub trait ScriptHost {
     /// `metadata_changed` = 3): the callbacks Scripts gave `addFieldCallback` run with the field's value.
     fn ctx_event(&mut self, _rt: &mut Runtime, _ctx: CtxId, _field: u32) {}
 
+    /// X3DField.processEvent of a field in [`Runtime::field_observed`]: the callbacks Scripts gave `addFieldCallback`
+    /// run with the field's value, after the event went on to the routes.
+    fn field_event(&mut self, _rt: &mut Runtime, _k: FKey) {}
+
     /// The due time (ms) of the earliest `setTimeout` / `setInterval` timer of the Scripts, if it is due at `until_ms`.
     fn next_timer(&mut self, _rt: &mut Runtime, _until_ms: f64) -> Option<f64> {
         None
