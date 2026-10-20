@@ -57,8 +57,13 @@ Rust run, can reproduce it byte for byte. This is a property of the worlds, not 
    NaN by the runtime; IterableWeakSet strong members (QuickJS); external-component X3DConstants order (X_ITE nondeterministic).
 6. sub:exec.context-api stays PARTIAL (owner decision 2026-10-20). Its component state (cfg-comp) and the X3DScene /
    X3DExecutionContext class chain (scx-api) and the objects it hands out (scx-members) now match; what is left in it is item 1.
-7. scr-url-order-open (url candidates that need a fetch finish frames later in X_ITE); meta-parse-open (PROTO field value printed
-   with `DEF _1`, sub:proto.proto); the Rust XML MFString warning lacks the field name (parser).
+7. scr-url-order-open (documented open): the order Scripts initialize in when a URL candidate fails or needs a fetch is Chrome's
+   microtask and task order (a candidate whose callback throws reaches the next one after the async callback's hops, a failed
+   `fetch ("foo:bar")` sooner; a base64 data URL's fetch completes after the files'); the port runs a failed candidate's
+   fallback at once and fetches in request order. The synchronous part matches (scr-url-order-sync). parse-def-proto,
+   parse-loads (documented open): a scene a Script asks for in initialize () resolves one to three frames later in X_ITE; the
+   port's world-load loop keeps running frames while such scenes load (X_ITE's world loadCount does not count them) and the
+   oracle page's warm-up frames run without returning to the event loop.
 8. sub:fields.math: compare the Rust Geometry math (Box3, Line3, Plane3, Triangle, ViewVolume, Spline) with X_ITE's
    standard/Math/Geometry directly.
 9. The rest of the REA queue.

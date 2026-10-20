@@ -534,10 +534,10 @@ ROUTE STEP.cycleTime TO D.tick
     return lifecycle_world("scr self events", [a, d], routes, nodes="DEF T1 Transform { }\nDEF T2 Transform { translation 1 0 0 }\n")
 
 
-@custom("scr-image-events-open")
+@custom("scr-image-events")
 def _():
     # X_ITE delivers an SFImage event twice when a Script assigns an outputOnly SFImage (the image's MFInt32 array reports to its parent as
-    # well); the port delivers once. Not baselined.
+    # well); the port's field objects are X_ITE's and do the same.
     d = lscript("D", """  outputOnly SFImage outImg
   inputOnly SFTime tick""", r"""
 var n = 0;
@@ -878,6 +878,14 @@ def _():
     return url_world("scr url", ("U05", "U06", "U07", "U08", "U09", "U16", "U27"), True)
 
 
+# The order Scripts initialize in, unsorted, for the URLs FileLoader.loadDocumentAsync handles before its first await: Script URLs
+# and (dataAsString) data URLs that are not base64. scr-url-order-open (documented open) also has the candidates that fail or need
+# a fetch: Chrome's microtask and task order for those (a rejected callback's hops, a base64 data URL fetched after files).
+@custom("scr-url-order-sync")
+def _():
+    return url_world("scr url order sync", ("U05", "U06", "U07", "U08", "U09", "U12", "U15", "U16", "U22", "U27"), False)
+
+
 @custom("scr-url-order-open")
 def _():
     return url_world("scr url order", (), False)
@@ -1053,15 +1061,15 @@ META_PARSE_SCRIPT = r"""DEF OUT Script {
 """
 
 
-# X_ITE names the node a PROTO instance's field value holds (`meta DEF _1 MetadataString`) when the proto body refers to the field; the port prints it
-# without a name (the printer-names difference of parse-def-proto in the scene-sai report).
+# X_ITE names the node a PROTO instance's field value holds (`meta DEF _1 MetadataString`) when the proto body refers to the field.
 META_OPEN_SNIPPETS = [
     "#X3D V3.3 utf8\nPROFILE Immersive\nPROTO P [ inputOutput SFNode meta NULL ] { Group { metadata IS meta } }\nP { meta MetadataString { name \"pm\" } }",
 ]
 
 
-@custom("meta-parse-open")
+@custom("meta-parse-proto")
 def _():
+    # A PROTO instance's node field value is also its body's (IS): clone count 2, so the generator names it (DEF _1).
     return meta_parse_world(META_OPEN_SNIPPETS)
 
 

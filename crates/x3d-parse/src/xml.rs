@@ -358,7 +358,7 @@ impl<'a> XmlParser<'a> {
         let initializable = access_type & access::INITIALIZE_ONLY != 0;
 
         if initializable {
-            if let Some(v) = self.field_value(ty, &field.value, el.attr("value"), None) {
+            if let Some(v) = self.field_value("", ty, &field.value, el.attr("value"), None) {
                 field.value = v;
                 field.modified = true;
             }
@@ -512,7 +512,7 @@ impl<'a> XmlParser<'a> {
             return;
         }
 
-        let (ty, mut current) = (field.ty(), field.value.clone());
+        let (ty, mut current, field_name) = (field.ty(), field.value.clone(), field.name.clone());
 
         if ty == FieldType::MFNode {
             current = FieldValue::MFNode(vec![]);
@@ -521,7 +521,7 @@ impl<'a> XmlParser<'a> {
             f.modified = true;
         }
 
-        if let Some(v) = self.field_value(ty, &current, el.attr("value"), None) {
+        if let Some(v) = self.field_value(&field_name, ty, &current, el.attr("value"), None) {
             let f = self.p.scene.field_mut(node, loc);
             f.value = v;
             f.modified = true;
@@ -803,9 +803,9 @@ impl<'a> XmlParser<'a> {
                 // An alias of a private child object (GeoViewpoint navType and headlight up to 3.2).
                 if let Some(p) = self.p.scene.child_alias(node, name) {
                     let field = &self.p.scene.node(node).private_fields[p];
-                    let (ty, current) = (field.ty(), field.value.clone());
+                    let (ty, current, field_name) = (field.ty(), field.value.clone(), field.name.clone());
 
-                    if let Some(v) = self.field_value(ty, &current, Some(value), None) {
+                    if let Some(v) = self.field_value(&field_name, ty, &current, Some(value), None) {
                         let f = &mut self.scene().node_mut(node).private_fields[p];
                         f.value = v;
                         f.modified = true;
@@ -824,7 +824,7 @@ impl<'a> XmlParser<'a> {
             let field_name = field.name.clone();
             let unit = self.p.field_unit_of(node, &field_name);
 
-            if let Some(v) = self.field_value(ty, &current, Some(value), unit) {
+            if let Some(v) = self.field_value(&field_name, ty, &current, Some(value), unit) {
                 let f = &mut self.scene().node_mut(node).fields[i];
                 f.value = v;
                 f.modified = true;
@@ -834,7 +834,8 @@ impl<'a> XmlParser<'a> {
 
     /// XMLParser.fieldValue: the new value, or `None` when the attribute is missing, the value
     /// did not parse, or reading it threw (the callers ignore or log that).
-    fn field_value(&mut self, ty: FieldType, current: &FieldValue, value: Option<&'a str>, unit: Option<String>) -> Option<FieldValue> {
+    /// `name` is the field object's name (`field .getName ()`): "" for the value of a `<field>` definition, which is not named yet.
+    fn field_value(&mut self, name: &str, ty: FieldType, current: &FieldValue, value: Option<&'a str>, unit: Option<String>) -> Option<FieldValue> {
         let value = value?;
         let ctx = self.ctx();
 
@@ -849,7 +850,7 @@ impl<'a> XmlParser<'a> {
                 let v = self.p.string_values();
 
                 if v.is_empty() && !value.is_empty() {
-                    self.p.warn("XML Parser: Field is an MFString array and can have multiple values, so make sure to separate each individual string with double quotation marks!".into());
+                    self.p.warn(format!("XML Parser: Field '{name}' is an MFString array and can have multiple values, so make sure to separate each individual string with double quotation marks!"));
                     Ok(Some(FieldValue::MFString(vec![value.to_string()])))
                 } else {
                     Ok(Some(FieldValue::MFString(v)))

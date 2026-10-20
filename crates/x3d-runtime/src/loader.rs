@@ -129,7 +129,7 @@ fn truncate(s: &str) -> String {
 /// FileLoader.loadDocumentAsync, the `dataAsString` branch: `url .match (/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/s)`;
 /// unless the header ends with `;base64`, the text after the first comma is `decodeURIComponent`ed (kept as it is when
 /// that fails) and a leading `ï»¿` (a UTF-8 BOM read as Latin-1) is removed.
-fn data_url_text(candidate: &str) -> Option<String> {
+pub(crate) fn data_url_text(candidate: &str) -> Option<String> {
     let rest = candidate.trim_start().strip_prefix("data:")?;
     let (header, data) = rest.split_once(',')?;
 

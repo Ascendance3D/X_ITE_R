@@ -123,7 +123,6 @@ fldx-from oracle/synthetic-rea-b09-sai/fldx-from.wrl oracle/synthetic-rea-b09-sa
 fldx-value oracle/synthetic-rea-b09-sai/fldx-value.wrl oracle/synthetic-rea-b09-sai/sai.json
 fldx-edge oracle/synthetic-rea-b09-sai/fldx-edge.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-field-access oracle/synthetic-rea-b09-sai/scr-field-access.wrl oracle/synthetic-rea-b09-sai/sai.json
-scr-image-events-open oracle/synthetic-rea-b09-sai/scr-image-events-open.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-browser oracle/synthetic-rea-b09-sai/scr-browser.wrl oracle/synthetic-rea-b09-sai/sai.json
 brx-api oracle/synthetic-rea-b09-sai/brx-api.wrl oracle/synthetic-rea-b09-sai/sai.json
 brx-call oracle/synthetic-rea-b09-sai/brx-call.wrl oracle/synthetic-rea-b09-sai/sai.json
@@ -140,3 +139,8 @@ scx-api oracle/synthetic-rea-b09-sai/scx-api.wrl oracle/synthetic-rea-b09-sai/sa
 scr-classes oracle/synthetic-rea-b09-sai/scr-classes.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-globals oracle/synthetic-rea-b09-sai/scr-globals.wrl oracle/synthetic-rea-b09-sai/sai.json
 scx-members oracle/synthetic-rea-b09-sai/scx-members.wrl oracle/synthetic-rea-b09-sai/sai.json
+scr-image-events oracle/synthetic-rea-b09-sai/scr-image-events.wrl oracle/synthetic-rea-b09-sai/sai.json
+meta-parse-proto oracle/synthetic-rea-b09-sai/meta-parse-proto.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
+parse-formats oracle/synthetic-rea-b09-sai/parse-formats.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
+parse-xml-mfstring oracle/synthetic-rea-b09-sai/parse-xml-mfstring.wrl oracle/synthetic-rea-b09-sai/sai-parse.json
+scr-url-order-sync oracle/synthetic-rea-b09-sai/scr-url-order-sync.wrl oracle/synthetic-rea-b09-sai/sai.json

@@ -39,7 +39,7 @@ component a Script left undefined or null prints as X_ITE prints it), field call
 
 - Status: PARTIAL. Proposed: **PARTIAL** (unchanged).
 - Tests: `crates/x3d-viewer/tests/rea_batch09_sai.rs` cases scr-lifecycle, scr-direct-output, scr-self-events, scr-browser,
-  scr-errors, scr-timers, scr-url, scr-classes, scr-field-access, scr-field-defaults, scr-image-events-open, fcb-basic,
+  scr-errors, scr-timers, scr-url, scr-classes, scr-field-access, scr-field-defaults, scr-image-events, fcb-basic,
   fcb-routes, fcb-reentry, fcb-script-fields; `crates/x3d-script/tests/script.rs` (6); `script_shutdown_kept_difference.rs` (4).
   Generators: `oracle/tools/gen_rea_b09_script.py`, `gen_rea_b09_fieldcb.py`.
 - Verified against X_ITE: lifecycle and callback order, direct output, own-field events, the Browser object subset in scr-browser,

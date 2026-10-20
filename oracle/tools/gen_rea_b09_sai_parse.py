@@ -304,6 +304,18 @@ groups["parse-xml-unknown"] = [
     X + "<Group USE=\"Nope\"/><Bogus7/><Group DEF=\"ok\"/></Scene></X3D>",
 ]
 
+# XMLParser: an MFString attribute that is not a list of quoted strings becomes one string, with a warning that names the field object
+# (`field .getName ()`: "" for the value of a <field> definition, which is not named yet).
+groups["parse-xml-mfstring"] = [
+    X + "<WorldInfo info=\"plain text\"/></Scene></X3D>",
+    X + "<Anchor url=\"a.wrl\" parameter='\"q\" r'/></Scene></X3D>",
+    X + "<Script DEF=\"S\"><field name=\"s\" type=\"MFString\" accessType=\"initializeOnly\" value=\"abc\"/></Script></Scene></X3D>",
+    X + "<ProtoDeclare name=\"P\"><ProtoInterface><field name=\"m\" type=\"MFString\" accessType=\"inputOutput\" value=\"x y\"/></ProtoInterface><ProtoBody><Group/></ProtoBody></ProtoDeclare>"
+        "<ProtoInstance name=\"P\"><fieldValue name=\"m\" value=\"z\"/></ProtoInstance></Scene></X3D>",
+    "<X3D profile=\"Full\" version=\"3.2\"><Scene><GeoViewpoint navType=\"FLY\"/></Scene></X3D>",
+    X + "<WorldInfo info='\"ok\" \"two\"'/></Scene></X3D>",
+]
+
 groups["parse-formats"] = [
     "<?xml version=\"1.0\"?><X3D profile=\"Full\" version=\"4.0\"><Scene><Group DEF=\"G\"/></Scene></X3D>",
     "<X3D profile=\"Immersive\" version=\"3.3\"><head><component name=\"Scripting\" level=\"1\"/><meta name=\"a\" content=\"b\"/><unit category=\"length\" name=\"foot\" conversionFactor=\"0.3048\"/></head><Scene><Transform translation=\"1 2 3\"/></Scene></X3D>",
