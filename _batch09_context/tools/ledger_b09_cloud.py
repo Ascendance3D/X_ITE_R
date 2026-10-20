@@ -21,6 +21,33 @@ SNAP = os.path.join(HERE, "..", "ledger", "before-cloud", "ledger.json")
 
 # id: (status, tests, missing, note)
 C = {
+    "node:MetadataSet": (
+        "COMPLETE",
+        ["crates/x3d-viewer/tests/rea_batch09_sai.rs meta-parse meta-events meta-nodes", "crates/x3d-parse/tests/gltf_rea.rs"],
+        "",
+        "b09 cloud 6a1305c+: meta-nodes (55 probes: all six metadata nodes' values, events, nesting, cycles, USE, VRML/XML/JSON "
+        "printing, getNodeType) baselined from X_ITE (3 identical recordings) and exact; meta-parse, meta-events exact; gltf_rea 287 "
+        "X_ITE results incl. KHR_materials_variants MetadataSet. X3DNode getMetaData/setMetaData are internal (not reachable from a "
+        "Script); their only output, the glTF variants metadata, is compared. Report: _batch09_context/step3-final/REPORT.md",
+    ),
+    "sub:fields.types": (
+        "PARTIAL",
+        ["crates/x3d-viewer/tests/rea_batch09_sai.rs fld-* fldx-* fcb-* scr-field-access scr-field-defaults",
+         "crates/x3d-script/tests/script.rs"],
+        "X3DConstants of external-component node types (X_ITE order varies run to run); IterableWeakSet members held strongly "
+        "(QuickJS); a non-number SF component stored as NaN by the runtime; engine-level Intl/Error.stack",
+        "b09 cloud: Script field objects are X_ITE's own classes (prelude generated from the pin). Owner decision 2026-10-20 "
+        "(approved safety difference, kept within this entry): a length or index near 2^32 is a RangeError and the field keeps its "
+        "prior value; X_ITE allocates and runs out of memory (script.rs huge_mf_length_or_index_is_a_range_error_not_an_allocation, "
+        "huge_length_on_a_node_field_keeps_its_prior_value)",
+    ),
+    "node:Script": (
+        "PARTIAL",
+        ["crates/x3d-script/tests/script.rs a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on"],
+        "scr-browser-open (38 Browser probes), scr-classes-open (19 globals), scr-url-order-open (fetch timing)",
+        "b09 cloud: owner decision 2026-10-20: a field callback that throws is reported at error level and ends the callbacks of "
+        "that event (as X_ITE's processEvent loop); the runtime goes on (X_ITE's browser stops), value and routes kept",
+    ),
 }
 
 

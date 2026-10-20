@@ -107,3 +107,70 @@ fn browser_time_is_frozen() {
 fn assert_fv(actual: FieldValue, expected: FieldValue) {
     assert!(actual.equals(&expected), "{actual:?} != {expected:?}");
 }
+
+fn frames(rt: &mut Runtime, n: usize) {
+    for _ in 0..n {
+        rt.settle();
+        rt.now += 1.0 / 60.0;
+        rt.frame();
+        rt.settle();
+    }
+}
+
+/// Owner decision 2026-10-20 (approved safety difference, sub:fields.types): a length near 2^32 on a node field is a RangeError
+/// and the field keeps its prior value, in the runtime and in the Script's object of it. X_ITE allocates and runs out of memory.
+#[test]
+fn huge_length_on_a_node_field_keeps_its_prior_value() {
+    let rt = run(r#"DEF C Coordinate { point [ 1 2 3, 4 5 6 ] } DEF S Script { field SFNode c USE C field SFString r ""
+        url "javascript:
+          function initialize () {
+            var o = [];
+            try { c .point .length = 4294967295; } catch (e) { o .push (e .name); }
+            try { c .point [4294967295] = new SFVec3f (); } catch (e) { o .push (e .name); }
+            o .push (c .point .length, String (c .point [1]));
+            r = o .join ();
+          }" }"#);
+
+    assert_fv(field(&rt, "S", "r"), FieldValue::SFString("RangeError,RangeError,2,4 5 6".into()));
+    assert_fv(field(&rt, "C", "point"), FieldValue::MFVec3f(vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]));
+}
+
+/// Owner decision 2026-10-20: a field callback that throws is reported at error level and ends the callbacks of that event (in
+/// X_ITE the exception leaves X3DField.processEvent: callback `c` does not run). Unlike X_ITE, whose browser then stops, the
+/// runtime goes on: the field keeps its value, its route delivered the event, other fields' callbacks run, and the next event
+/// runs the callbacks again.
+#[test]
+fn a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on() {
+    let mut rt = run(r#"DEF T Transform { } DEF U Transform { } DEF V Transform { }
+        DEF S Script { eventIn SFBool again directOutput TRUE
+          url "javascript:
+            function S (n) { return Browser .currentScene .getNamedNode (n); }
+            function initialize () {
+              var t = S ('T'), u = S ('U');
+              t .addFieldCallback ('a', 'translation', function (v) { print ('a ' + v); });
+              t .addFieldCallback ('b', 'translation', function (v) { print ('b throws'); throw new Error ('boom'); });
+              t .addFieldCallback ('c', 'translation', function (v) { print ('c ' + v); });
+              u .addFieldCallback ('u', 'translation', function (v) { print ('U ' + v); });
+              t .translation = new SFVec3f (1, 0, 0);
+              u .translation = new SFVec3f (2, 0, 0);
+            }
+            function again (v) { S ('T') .translation = new SFVec3f (4, 0, 0); }
+          " }
+        ROUTE T.translation TO V.translation"#);
+
+    frames(&mut rt, 2);
+
+    let s = named(&rt, "S");
+    let k = rt.get_field(s, "again").unwrap();
+
+    rt.set_value(k, FieldValue::SFBool(true));
+    frames(&mut rt, 2);
+
+    let errors: Vec<&String> = rt.log.iter().filter(|l| l.starts_with("error:")).collect();
+
+    assert_eq!(rt.prints, ["a 1 0 0", "b throws", "U 2 0 0", "a 4 0 0", "b throws"], "{:?}", rt.log);
+    assert_eq!(errors, ["error: Error: boom", "error: Error: boom"], "{:?}", rt.log);
+    assert_fv(field(&rt, "T", "translation"), FieldValue::SFVec3f(x3d_fields::math::Vector3::new(4.0, 0.0, 0.0)));
+    assert_fv(field(&rt, "V", "translation"), FieldValue::SFVec3f(x3d_fields::math::Vector3::new(4.0, 0.0, 0.0)));
+    assert_fv(field(&rt, "U", "translation"), FieldValue::SFVec3f(x3d_fields::math::Vector3::new(2.0, 0.0, 0.0)));
+}

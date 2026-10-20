@@ -67,13 +67,19 @@ component a Script left undefined or null prints as X_ITE prints it), field call
   1. scr-browser-open: 38 probes (Browser properties and methods; next task).
   2. scr-classes-open: 19 probes (globals Script.js defines that the port does not: ComponentInfoArray, X3DProtoDeclaration, …).
   3. scr-url-order-open: url candidates that need a fetch finish frames later in X_ITE (timing).
-  4. A field callback that throws: X_ITE lets the exception escape its event loop; the page stops advancing (oracle world
-     `fcb-throw.wrl`, 2 of 2 recordings hung until the harness timeout). The port logs the error and continues. Owner decision.
-- Reason: items 1-3 are unresolved Script behavior.
+  4. A field callback that throws (owner decision 2026-10-20, approved with conditions): X_ITE lets the exception leave
+     X3DField.processEvent, so the remaining callbacks of the event do not run, and its event loop does not catch it either: the
+     page stops advancing (oracle world `fcb-throw.wrl`, 2 of 2 recordings hung until the harness timeout, so no baseline). The
+     port ends the callbacks of that event at the same point, reports the error at error level (`error: Error: boom`), and goes
+     on: the field keeps its value, its routes delivered the event, other fields' callbacks run, the next event runs them all
+     again. Test: script.rs a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on. Observable difference: after the
+     throw X_ITE does nothing more; the port continues.
+- Reason: items 1-3 are unresolved Script behavior. Ledger: PARTIAL kept, decision 4 recorded in its notes.
 
 ## node:MetadataSet
 
-- Status: PARTIAL. Proposed: **COMPLETE**.
+- Status: **COMPLETE** (applied 2026-10-20 after the owner's review; meta-parse, meta-events, meta-nodes and gltf_rea re-run
+  and exact on the commit that applied it).
 - Tests: rea_batch09_sai meta-parse, meta-events, meta-nodes (55 probes, now baselined: field values and events of all six metadata
   nodes, nesting, cycles, USE, printing in VRML/XML/JSON, `instanceof SFNode`, `getNodeType ()` against X_ITE's constants);
   `crates/x3d-parse/tests/gltf_rea.rs` (the 287 X_ITE glTF results, including KHR_materials_variants, whose Switch carries the
@@ -86,7 +92,7 @@ component a Script left undefined or null prints as X_ITE prints it), field call
 
 ## sub:fields.types
 
-- Status: PARTIAL. Proposed: **PARTIAL**, pending three owner decisions below.
+- Status: **PARTIAL** (kept: items 1, 4, 5, 6 below are open).
 - Tests: rea_batch09_sai fld-* (29 batteries, every former `-open` probe now in the base worlds), fldx-api (139 probes: the
   statics and the whole prototype chain of all 45 field classes, X3DField and X3DArrayField, against X_ITE's reflection),
   fldx-call (45: a call without `new`), fldx-from (342: fromString / fromVRMLString / fromXMLString / fromJSONString, static and
@@ -99,8 +105,11 @@ component a Script left undefined or null prints as X_ITE prints it), field call
      recordings of the Immersive, Interactive, MedicalInterchange and Full profiles gave three different orders; the port numbers
      them in the order X_ITE requests them. Not a parity target (the reference varies run to run).
   2. A length or index near 2^32 (`a .length = 4294967295`): X_ITE allocates the typed array and the page runs out of memory; the
-     port throws a RangeError and keeps the value. Proposed kept safety difference: owner decision.
-  3. A throwing field callback (see node:Script item 4): owner decision.
+     port throws a RangeError and the field keeps its prior value, in the runtime and in the Script's object. **Approved safety
+     difference** (owner 2026-10-20), recorded in this entry's notes, no DIFFERENT status. Tests: script.rs
+     huge_mf_length_or_index_is_a_range_error_not_an_allocation (Script fields), huge_length_on_a_node_field_keeps_its_prior_value
+     (a Coordinate's point).
+  3. A throwing field callback: decided, see node:Script item 4.
   4. IterableWeakSet holds its members strongly (QuickJS corrupts its heap when a WeakRef target in it is collected). Only the
      moment an otherwise unreachable member leaves a parent set differs; X_ITE's moment follows its garbage collector.
   5. An SF component that is neither a number, undefined nor null (a string assigned through an internal value object): the
@@ -108,7 +117,7 @@ component a Script left undefined or null prints as X_ITE prints it), field call
   6. Engine level, not fields: QuickJS has no `Intl`; `Error.stack` frames are QuickJS's (the V8 header line is added);
      `Map.prototype.getOrInsert`, `Math.sumPrecise` and `Float16Array` come from X_ITE's polyfills (Features.js) unless the
      engine has them.
-- Reason: 2 and 3 need an owner decision; 5 is unresolved.
+- Reason: 1, 4, 5 and 6 are open.
 
 ## sub:fields.math
 
