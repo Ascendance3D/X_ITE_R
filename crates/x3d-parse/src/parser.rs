@@ -370,11 +370,12 @@ impl<'a> Parser<'a> {
             if self.id() {
                 let name = self.result.clone();
 
-                if self.scene.table.profile(&name).is_none() {
+                let Some(profile) = self.scene.table.profile(&name).map(|p| p.name.clone()) else {
                     return self.err(format!("Profile '{name}' is not supported."));
-                }
+                };
 
-                self.scene.profile = Some(name);
+                self.scene.profile = Some(profile);
+                self.scene.profile_statement = true;
                 return Ok(());
             }
 
