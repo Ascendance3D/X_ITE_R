@@ -1074,7 +1074,7 @@ impl Layer {
             let mut kind = nav.transition_kind().to_string();
 
             // VRML behavior
-            if rt.scene.specification_version.parse::<f64>().ok() == Some(2.0) {
+            if rt.scene.spec_version_of(rt.scene.world).parse::<f64>().ok() == Some(2.0) {
                 kind = if self.vp(top).vrml_transition { "LINEAR".into() } else { "TELEPORT".into() };
             }
 

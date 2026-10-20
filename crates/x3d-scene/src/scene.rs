@@ -289,6 +289,10 @@ pub struct Scene {
     /// New nodes go to the end of the arena, never into a released slot: whoever sets this
     /// finds the nodes it creates as the range `len..` (SFNode.fromString).
     pub append_only: bool,
+    /// The root context of the world: [`ROOT`] until a `Browser.loadURL` / `replaceWorld` installs a scene that was
+    /// merged as a child of [`ROOT`] (X3DBrowser.replaceWorld). [`ROOT`] then stays as the browser's own context
+    /// (the default scene, the cached EXTERNPROTO scenes); its old contents are disposed.
+    pub world: CtxId,
     /// While `Some`, the id of every node that [`Scene::alloc_node`] and the `create_…` functions
     /// hand out is recorded here (the runtime uses it to find the nodes a Script creates).
     pub alloc_log: Option<Vec<NodeId>>,
@@ -445,6 +449,7 @@ impl Scene {
             route_counter: 0,
             free_nodes: Default::default(),
             append_only: false,
+            world: ROOT,
             alloc_log: None,
             ctx_slots: Default::default(),
             proto_slots: Default::default(),
@@ -570,7 +575,7 @@ impl Scene {
 
     /// X3DScene.hasComponent: profile components or scene components.
     pub fn has_component(&self, name: &str) -> bool {
-        self.has_component_in(ROOT, name)
+        self.has_component_in(self.world, name)
     }
 
     /// X3DExecutionContext.hasComponent of the scene that holds `ctx`.
@@ -1439,7 +1444,7 @@ impl Scene {
     }
 
     pub fn get_unique_export_name(&self, name: &str) -> String {
-        let exported = &self.contexts[ROOT].exported;
+        let exported = &self.contexts[self.world].exported;
         get_unique_name(|n| exported.has(n), name)
     }
 

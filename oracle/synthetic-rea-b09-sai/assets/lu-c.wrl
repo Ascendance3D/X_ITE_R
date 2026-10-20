@@ -1,0 +1,21 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "lu world C"
+DEF VPC Viewpoint { description "vpC" position 0 0 4 }
+DEF NC NavigationInfo { type "FLY" }
+DEF CC Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+function H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }
+function initialize () {
+  var vpb; try { vpb = Browser .currentScene .getNamedNode ('VPB') .getNodeName (); } catch (e) { vpb = 'none'; }
+  hist = 'C init ' + H (Browser .worldURL) + ' vpb=' + vpb;
+}
+function cycle () { step = step + 1; }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO CC.cycle

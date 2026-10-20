@@ -30,6 +30,12 @@ pub trait ScriptHost {
     /// root context, or was rejected with the message.
     fn settle(&mut self, _rt: &mut Runtime, _id: u64, _outcome: Result<CtxId, String>) {}
 
+    /// A promise of X3DBrowser.loadURL / replaceWorld settles (it resolves without a value).
+    fn settle_plain(&mut self, _rt: &mut Runtime, _id: u64, _outcome: Result<(), String>) {}
+
+    /// X3DBrowser.callBrowserCallbacks (event): the functions registered with `addBrowserCallback` run.
+    fn browser_event(&mut self, _rt: &mut Runtime, _event: u32) {}
+
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
 

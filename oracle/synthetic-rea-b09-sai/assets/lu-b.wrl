@@ -1,0 +1,47 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "lu world B"
+DEF WB WorldInfo { title "B" }
+DEF VPB Viewpoint { description "vpB" position 0 0 7 }
+DEF VPB2 Viewpoint { description "vpB2" position 2 0 7 }
+DEF BS Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool bound
+  inputOnly SFBool bound2
+  inputOnly SFTime bindtime
+  url "ecmascript:
+function H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }
+function L (s) { console .log (s); }
+var seen = '';
+function initialize () {
+  var f = function (e) { L ('B: cb ' + e); };
+  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_EVENT, f);
+  Browser .addBrowserCallback ('b', X3DConstants .SHUTDOWN_EVENT, f);
+  Browser .addBrowserCallback ('b', X3DConstants .INITIALIZED_ERROR, f);
+  var named;
+  try { named = Browser .currentScene .getNamedNode ('VPA') .getNodeName (); } catch (e) { named = 'none'; }
+  L ('B: initialize desc=[' + Browser .description + '] initialized=' + Browser .initialized () .getValue ());
+  hist = hist + 'init wurl=' + H (Browser .worldURL) + ' get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL)
+    + ' ec=' + H (Browser .getExecutionContext () .worldURL) + ' roots=' + Browser .currentScene .rootNodes .length
+    + ' vpb=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' vpa=' + named
+    + ' leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' name=' + Browser .name
+    + ' enc=' + Browser .currentScene .encoding + ' profile=' + Browser .currentScene .profile .name;
+}
+function bound (v) { seen = seen + 'b' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB isBound ' + v + ' desc=[' + Browser .description + ']'); }
+function bound2 (v) { seen = seen + 'c' + (v ? 1 : 0) + '@' + step + ' '; L ('B: VPB2 isBound ' + v); }
+function bindtime (t) { seen = seen + 't@' + step + ' '; }
+function cycle () {
+  step = step + 1;
+  if (step == 2)
+    hist = hist + ' | step2 desc=[' + Browser .description + '] init=' + Browser .initialized () .getValue () + ' shut=' + Browser .shutdown () .getValue () + ' seen=' + seen;
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO BS.cycle
+ROUTE VPB.isBound TO BS.bound
+ROUTE VPB2.isBound TO BS.bound2
+ROUTE VPB.bindTime TO BS.bindtime

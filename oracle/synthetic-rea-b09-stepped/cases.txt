@@ -6,3 +6,8 @@ collision-walk oracle/synthetic-rea-b09-stepped/collision-runtime.wrl oracle/syn
 collision-walk-disabled oracle/synthetic-rea-b09-stepped/collision-runtime.wrl oracle/synthetic-rea-b09-stepped/collision-walk-disabled.json
 anchor-click oracle/synthetic-rea-b09-stepped/anchor-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-click.json
 anchor-drag-off oracle/synthetic-rea-b09-stepped/anchor-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-drag-off.json
+anchor-load-ok oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-ok.json
+anchor-load-fail oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-fail.json
+anchor-load-param oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-param.json
+anchor-load-hash oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-hash.json
+anchor-load-disabled oracle/synthetic-rea-b09-stepped/anchor-load-runtime.wrl oracle/synthetic-rea-b09-stepped/anchor-load-disabled.json

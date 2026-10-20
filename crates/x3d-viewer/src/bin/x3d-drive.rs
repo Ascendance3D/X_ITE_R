@@ -77,8 +77,7 @@ fn rot(r: &x3d_fields::math::Rotation4) -> Value {
 
 fn pose(v: &mut Viewer3d) -> Value {
     let (p, o, c) = v.user_pose();
-    let bound = v.layer.viewpoint();
-    let name = if x3d_viewer::layer::is_default(bound) { "<default>".to_string() } else { v.rt.scene.node(bound).name.clone() };
+    let name = v.active_viewpoint_name();
     let (fov_scale, fov_offset) = v.field_of_view_state();
     let mut j = json!({ "position": vec3(&p), "orientation": rot(&o), "centerOfRotation": vec3(&c), "viewpoint": name, "viewer": v.viewer_field(), "fieldOfViewScale": fov_scale });
     // OrthoViewpoint ._fieldOfViewOffset (the oracle reports it for an OrthoViewpoint only).
@@ -247,7 +246,7 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         if dump_inlines && (dump.contains(&k) || k == frames) {
             v.rt.publish_clone_counts();
             let mut out = serde_json::Map::new();
-            inline_scenes(&v.rt, x3d_scene::ROOT, "", &mut out);
+            inline_scenes(&v.rt, v.rt.scene.world, "", &mut out);
             inlines.insert(k.to_string(), Value::Object(out));
         }
 
@@ -387,7 +386,7 @@ fn take_dt(v: &mut Viewer3d, frame: u64, out: &mut Vec<Value>) {
 
 /// The node a path names: a DEF name, or `Inline/Name`.
 fn physics_resolve(rt: &x3d_runtime::Runtime, path: &str) -> Option<x3d_fields::NodeId> {
-    let mut ctx = x3d_scene::ROOT;
+    let mut ctx = rt.scene.world;
     let mut node = None;
     let parts: Vec<&str> = path.split('/').collect();
 
