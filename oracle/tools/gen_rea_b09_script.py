@@ -347,9 +347,9 @@ for _n in CLASS_NAMES:
     P_CLASSES.append((f"{_n} instance", f"var i = new {_n} (); return [i .constructor .name, i instanceof {_n}, i .getTypeName (), i .getType (), String (i)];"))
 
 
-OPEN_GLOBALS = ("X3DBrowser", "X3DExecutionContext", "X3DScene", "X3DBaseNode", "X3DRoute", "window", "document", "globalThis name", "setTimeout",
-                "clearTimeout", "setInterval", "XMLHttpRequest", "fetch", "print name", "trace name", "SFNode name", "X3DField name", "X3DField instance",
-                "X3DArrayField name", "X3DArrayField instance")
+# The page's own globals (not X_ITE's: Script.js evaluates `with (globalObject)` in the page, whose window, document, XMLHttpRequest
+# and fetch a Script then reaches). Kept open for the owner (OPEN_WORK.md).
+OPEN_GLOBALS = ("window", "document", "globalThis name", "XMLHttpRequest", "fetch")
 register("scr-classes", P_CLASSES, open_prefixes=OPEN_GLOBALS)
 
 

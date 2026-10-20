@@ -23,11 +23,12 @@ use x3d_scene::*;
 
 mod ctx_api;
 
-/// prelude/head.js lists the parts; math.js, fields.js and node_types.js are generated (tools/gen_prelude_xite.py).
+/// prelude/head.js lists the parts; math.js, fields.js, config.js and node_types.js are generated (tools/gen_prelude_xite.py).
 const PRELUDE: &str = concat!(
     include_str!("prelude/head.js"),
     include_str!("prelude/math.js"),
     include_str!("prelude/fields.js"),
+    include_str!("prelude/config.js"),
     include_str!("prelude/node_types.js"),
     include_str!("prelude/bridge.js"),
     include_str!("prelude/rest.js"),

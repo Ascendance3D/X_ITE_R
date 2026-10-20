@@ -61,3 +61,29 @@ Each found by tracing the pinned X_ITE (a scratch copy with logging; the pin is 
 
 New baselines (each 3 identical X_ITE recordings, a 4th equal, Rust exact): ie-err-string-frames, ctxev-startup-proto,
 ctxev-inline, ctxev-stream-vrml, ctxev-stream-xml, ctxev-stream-json. cases.txt: 138.
+
+## Components, X3DScene class chain, Script globals (after e62be31)
+
+- Components (owner decision 2026-10-20: X_ITE's component state): X3DScene.addComponent / updateComponent keep the
+  ComponentInfo a Script gives as it is, any name and level; the printers write `String (level)` (x3d-scene
+  `Scene::component_level_texts`, engine.rs `set_component_level_text`, rest.js `componentObject`). cfg-comp: 33 probes (no,
+  null, string and number arguments, plain objects with integer, fractional, string, negative, NaN and missing levels, unknown
+  and missing names, add twice, update, remove, getComponent edge cases), exact. cfg-scene-odd keeps only the engine's TypeError
+  text.
+- X3DScene / X3DExecutionContext: X_ITE's classes (rest.js `makeExecutionContext`): the members on the class X_ITE defines them
+  on (the own names per prototype level, recorded from the pin), own properties as X_ITE's (`_namedNodes_changed`,
+  `_components_changed` once set, the change fields not enumerable), getType, getExecutionContext (ctx_api `parentCtx`),
+  getLocalScene, getOuterNode, isLive, getLive, getBrowser, setup, initialize, addChildObjects. scx-api (122 member owners for
+  each of four kinds of scene, behavior of each), brx-obj (now without its open part), exact.
+- Script globals: every global X_ITE's Script.js defines (scr-globals: what it is, its statics, its prototype chain, what `new`
+  gives). ComponentInfo, ProfileInfo, UnitInfo and the info arrays are X_ITE's own classes, generated from the pin into
+  prelude/config.js (gen_prelude_xite.py CONFIG); an execution context's arrays are instances of them, filled from the runtime
+  when its values change. X3DRoute, X3DImportedNode, X3DExportedNode, X3DProtoDeclarationNode, X3DProtoDeclaration,
+  X3DExternProtoDeclaration have X_ITE's names, lengths, statics and chains; print / trace are `Browser .println .bind`.
+- Members of the objects an execution context hands out (scx-members): X3DRoute, X3DImportedNode, X3DExportedNode,
+  X3DProtoDeclarationNode / X3DProtoDeclaration / X3DExternProtoDeclaration carry their public members on X_ITE's prototypes
+  (methods not enumerable, accessors enumerable, no own keys); a declaration's `fields` is a FieldDefinitionArray of
+  X3DFieldDefinition; appInfo / documentation; X3DExternProtoDeclaration.loadState; X3DExportedNode.setDescription (ctx_api
+  `exportedDescription`). The full layers, engine internals included, are scx-layers-open (documented open).
+- Ledger: sub:exec.import-export, sub:exec.bindable-stacks, sub:config.components-profiles COMPLETE on their evidence (14, 13 and
+  8 cases); sub:exec.context-api PARTIAL (owner decision). 235 COMPLETE, 51 PARTIAL, 25 DIFFERENT, 33 NOT_TESTED, 2 MISSING.

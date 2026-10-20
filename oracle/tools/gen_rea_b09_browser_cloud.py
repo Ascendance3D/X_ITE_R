@@ -214,6 +214,69 @@ P_SCX_BEHAVIOR += [
 P_SCX_LATER += P_SCX_BEHAVIOR
 G.register("scx-api", P_SCX, open_prefixes=("world chain",), pre=PRE + "\n" + SCX, after=later(P_SCX_LATER), nodes=NODES)
 
+
+# The objects an execution context hands out (routes, imported and exported nodes, proto declarations, ComponentInfo, ProfileInfo,
+# UnitInfo, X3DFieldDefinition, the info arrays): for each prototype level, its class and its own string-keyed members with their
+# kind (m method, g getter, s setter, v value; + enumerable), then the object's own enumerable keys.
+LAYERS = ("function layers (o) { var r = [], p = o, k = 0; while (p && p !== Object .prototype && k ++ < 10) { "
+          "var c = Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : (p === o ? 'OWN' : '-'); "
+          "r .push (c + ':' + Object .getOwnPropertyNames (p) .filter (function (n) { return !/^[0-9]+$/ .test (n); }) .sort () .map (function (n) { var d = Object .getOwnPropertyDescriptor (p, n); "
+          "return n + '=' + ('value' in d ? (typeof d .value === 'function' ? 'm' : 'v') : (d .get ? 'g' : '') + (d .set ? 's' : '')) + (d .enumerable ? '+' : ''); }) .join (',')); "
+          "p = Object .getPrototypeOf (p); } return r; }")
+MEMBER_NODES = ('DEF I1 Inline { url "assets/ie-mid.wrl" }\nIMPORT I1.MI AS IMI\nDEF T1 Transform { }\nDEF T2 Transform { }\n'
+                'ROUTE T1.translation_changed TO T2.set_translation\nEXPORT T1 AS ET\n'
+                'PROTO PA [ inputOutput SFFloat f 1 ] { Group { } }\nEXTERNPROTO EP [ inputOutput SFFloat g ] "assets/nope.wrl"\n'
+                'DEF PI PA { }\n')
+MEMBER_OBJECTS = [
+    ("route", "Browser .currentScene .routes [0]"),
+    ("imported", "Browser .currentScene .importedNodes [0]"),
+    ("exported", "Browser .currentScene .exportedNodes [0]"),
+    ("proto", "Browser .currentScene .protos [0]"),
+    ("externproto", "Browser .currentScene .externprotos [0]"),
+    ("component", "Browser .currentScene .components [0]"),
+    ("profile", "Browser .currentScene .profile"),
+    ("unit", "Browser .currentScene .units [0]"),
+    ("fieldDefinition", "Browser .currentScene .getNamedNode ('T1') .getFieldDefinitions () [0]"),
+    ("namedNodes", "Browser .currentScene .namedNodes"),
+    ("routes", "Browser .currentScene .routes"),
+    ("components", "Browser .currentScene .components"),
+    ("units", "Browser .currentScene .units"),
+    ("protos", "Browser .currentScene .protos"),
+    ("supportedProfiles", "Browser .supportedProfiles"),
+]
+P_MEMBERS, P_LAYERS = [], []
+for _n, _e in MEMBER_OBJECTS:
+    P_LAYERS.append((f"{_n} layers", f"return layers ({_e});"))
+    P_MEMBERS.append((f"{_n} keys", f"return Object .keys ({_e});"))
+# The members a Script uses (the SAI and X_ITE's documented API; the rest of each layer is X_ITE's engine, kept open).
+PUBLIC_MEMBERS = {
+    "route": "sourceNode sourceField destinationNode destinationField getSourceNode getSourceField getDestinationNode getDestinationField getExecutionContext getTypeName toString getId",
+    "imported": "inlineNode exportedName exportedNode importedName description getInlineNode getExportedName getExportedNode getImportedName getDescription setDescription getExecutionContext getTypeName toString",
+    "exported": "exportedName localNode description getExportedName getLocalNode getDescription setDescription getExecutionContext getTypeName toString",
+    "proto": "name fields isExternProto appInfo documentation getAppInfo setAppInfo getDocumentation setDocumentation getTypeName toString urls loadState",
+    "externproto": "name fields isExternProto appInfo documentation getAppInfo setAppInfo getDocumentation setDocumentation getTypeName toString urls loadState",
+    "component": "name level title providerURL providerUrl external dependencies getTypeName toString toVRMLString toXMLString toJSONString",
+    "profile": "name title providerURL providerUrl components getTypeName toString toVRMLString toXMLString toJSONString",
+    "unit": "category name conversionFactor conversion_factor getTypeName toString toVRMLString toXMLString toJSONString",
+}
+OWNER = ("function owner (o, n) { var p = o, k = 0; while (p && k ++ < 10) { var d = Object .getOwnPropertyDescriptor (p, n); "
+         "if (d) return (p === o ? 'OWN' : Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : '-') + ':' "
+         "+ ('value' in d ? (typeof d .value === 'function' ? 'm' : 'v') : (d .get ? 'g' : '') + (d .set ? 's' : '')) + (d .enumerable ? '+' : ''); "
+         "p = Object .getPrototypeOf (p); } return 'none'; }")
+for _n, _e in MEMBER_OBJECTS:
+    if _n in PUBLIC_MEMBERS:
+        P_MEMBERS.append((f"{_n} owners", f"var o = {_e}; return {PUBLIC_MEMBERS[_n].split()!r} .map (function (n) {{ return n + '=' + owner (o, n); }});"))
+        P_MEMBERS.append((f"{_n} values", f"var o = {_e}; return [o .getTypeName (), String (o)] .concat ({[m for m in PUBLIC_MEMBERS[_n].split() if not m.startswith(('get', 'set', 'to'))]!r} .map (function (n) {{ var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); }}));"))
+P_MEMBERS += [
+    ("exported setDescription", "var o = Browser .currentScene .exportedNodes [0]; o .setDescription ('d1'); var a = o .description; o .description = 'd2'; return [a, o .getDescription ()];"),
+    ("imported setDescription", "var o = Browser .currentScene .importedNodes [0]; o .description = 'i1'; return o .getDescription ();"),
+    ("proto appInfo", "var o = Browser .currentScene .protos [0]; var a = [o .appInfo, o .documentation]; o .setAppInfo ('a'); o .documentation = 7; return a .concat ([o .getAppInfo (), o .getDocumentation ()]);"),
+    ("route getExecutionContext", "return Browser .currentScene .routes [0] .getExecutionContext () === Browser .currentScene;"),
+]
+G.register("scx-members", [], pre=PRE + "\n" + OWNER, after=later(P_MEMBERS, frame=12), nodes=MEMBER_NODES)
+# Documented open (not baselined): every member of each layer, X_ITE's engine internals included.
+G.register("scx-layers-open", [], pre=PRE + "\n" + LAYERS, after=later(P_LAYERS, frame=12), nodes=MEMBER_NODES)
+
 if __name__ == "__main__":
     sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith(("brx-", "scx-"))]
     G.main()

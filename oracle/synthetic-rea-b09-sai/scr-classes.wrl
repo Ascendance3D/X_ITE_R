@@ -74,6 +74,7 @@ function initialize () {
   T ('SFMatrix4f name', function () { var C = SFMatrix4f; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('SFMatrix4f instance', function () { var i = new SFMatrix4f (); return [i .constructor .name, i instanceof SFMatrix4f, i .getTypeName (), i .getType (), String (i)]; });
   T ('SFNode typeof', function () { return typeof SFNode; });
+  T ('SFNode name', function () { var C = SFNode; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('SFNode instance', function () { var i = new SFNode (); return [i .constructor .name, i instanceof SFNode, i .getTypeName (), i .getType (), String (i)]; });
   T ('SFQuaternion typeof', function () { return typeof SFQuaternion; });
   T ('SFQuaternion name', function () { var C = SFQuaternion; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
@@ -175,10 +176,29 @@ function initialize () {
   T ('MFVec4f name', function () { var C = MFVec4f; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('MFVec4f instance', function () { var i = new MFVec4f (); return [i .constructor .name, i instanceof MFVec4f, i .getTypeName (), i .getType (), String (i)]; });
   T ('X3DField typeof', function () { return typeof X3DField; });
+  T ('X3DField name', function () { var C = X3DField; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('X3DField instance', function () { var i = new X3DField (); return [i .constructor .name, i instanceof X3DField, i .getTypeName (), i .getType (), String (i)]; });
   T ('X3DArrayField typeof', function () { return typeof X3DArrayField; });
+  T ('X3DArrayField name', function () { var C = X3DArrayField; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('X3DArrayField instance', function () { var i = new X3DArrayField (); return [i .constructor .name, i instanceof X3DArrayField, i .getTypeName (), i .getType (), String (i)]; });
   T ('X3DConstants typeof', function () { return typeof X3DConstants; });
   T ('X3DConstants name', function () { var C = X3DConstants; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('X3DConstants instance', function () { var i = new X3DConstants (); return [i .constructor .name, i instanceof X3DConstants, i .getTypeName (), i .getType (), String (i)]; });
+  T ('X3DBrowser typeof', function () { return typeof X3DBrowser; });
+  T ('X3DBrowser name', function () { var C = X3DBrowser; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('X3DBrowser instance', function () { var i = new X3DBrowser (); return [i .constructor .name, i instanceof X3DBrowser, i .getTypeName (), i .getType (), String (i)]; });
+  T ('X3DExecutionContext typeof', function () { return typeof X3DExecutionContext; });
+  T ('X3DExecutionContext name', function () { var C = X3DExecutionContext; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('X3DExecutionContext instance', function () { var i = new X3DExecutionContext (); return [i .constructor .name, i instanceof X3DExecutionContext, i .getTypeName (), i .getType (), String (i)]; });
+  T ('X3DScene typeof', function () { return typeof X3DScene; });
+  T ('X3DScene name', function () { var C = X3DScene; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('X3DScene instance', function () { var i = new X3DScene (); return [i .constructor .name, i instanceof X3DScene, i .getTypeName (), i .getType (), String (i)]; });
+  T ('X3DBaseNode typeof', function () { return typeof X3DBaseNode; });
+  T ('X3DBaseNode name', function () { var C = X3DBaseNode; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('X3DBaseNode instance', function () { var i = new X3DBaseNode (); return [i .constructor .name, i instanceof X3DBaseNode, i .getTypeName (), i .getType (), String (i)]; });
+  T ('X3DRoute typeof', function () { return typeof X3DRoute; });
+  T ('X3DRoute name', function () { var C = X3DRoute; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('X3DRoute instance', function () { var i = new X3DRoute (); return [i .constructor .name, i instanceof X3DRoute, i .getTypeName (), i .getType (), String (i)]; });
   T ('Browser typeof', function () { return typeof Browser; });
   T ('Browser name', function () { var C = Browser; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('Browser instance', function () { var i = new Browser (); return [i .constructor .name, i instanceof Browser, i .getTypeName (), i .getType (), String (i)]; });
@@ -192,8 +212,10 @@ function initialize () {
   T ('FALSE name', function () { var C = FALSE; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('FALSE instance', function () { var i = new FALSE (); return [i .constructor .name, i instanceof FALSE, i .getTypeName (), i .getType (), String (i)]; });
   T ('print typeof', function () { return typeof print; });
+  T ('print name', function () { var C = print; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('print instance', function () { var i = new print (); return [i .constructor .name, i instanceof print, i .getTypeName (), i .getType (), String (i)]; });
   T ('trace typeof', function () { return typeof trace; });
+  T ('trace name', function () { var C = trace; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
   T ('trace instance', function () { var i = new trace (); return [i .constructor .name, i instanceof trace, i .getTypeName (), i .getType (), String (i)]; });
   T ('Math typeof', function () { return typeof Math; });
   T ('Math name', function () { var C = Math; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
@@ -206,6 +228,15 @@ function initialize () {
   T ('console instance', function () { var i = new console (); return [i .constructor .name, i instanceof console, i .getTypeName (), i .getType (), String (i)]; });
   T ('globalThis typeof', function () { return typeof globalThis; });
   T ('globalThis instance', function () { var i = new globalThis (); return [i .constructor .name, i instanceof globalThis, i .getTypeName (), i .getType (), String (i)]; });
+  T ('setTimeout typeof', function () { return typeof setTimeout; });
+  T ('setTimeout name', function () { var C = setTimeout; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('setTimeout instance', function () { var i = new setTimeout (); return [i .constructor .name, i instanceof setTimeout, i .getTypeName (), i .getType (), String (i)]; });
+  T ('clearTimeout typeof', function () { return typeof clearTimeout; });
+  T ('clearTimeout name', function () { var C = clearTimeout; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('clearTimeout instance', function () { var i = new clearTimeout (); return [i .constructor .name, i instanceof clearTimeout, i .getTypeName (), i .getType (), String (i)]; });
+  T ('setInterval typeof', function () { return typeof setInterval; });
+  T ('setInterval name', function () { var C = setInterval; return [C && C .name, C && C .typeName, C && C .length, typeof C]; });
+  T ('setInterval instance', function () { var i = new setInterval (); return [i .constructor .name, i instanceof setInterval, i .getTypeName (), i .getType (), String (i)]; });
   flush_ ();
 }
 

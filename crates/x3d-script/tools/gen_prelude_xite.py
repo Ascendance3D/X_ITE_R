@@ -4,6 +4,8 @@
   crates/x3d-script/src/prelude/math.js    standard/Math: Algorithm, Vector2/3/4, Color3/4, Matrix2/3/4, Quaternion, Rotation4
   crates/x3d-script/src/prelude/fields.js  the field object model: X3DObject, X3DChildObject, X3DField, the array fields, every
                                            SF and MF class, Events, IterableWeakSet, X3DConstants, the VRML/XML/JSON generators
+  crates/x3d-script/src/prelude/config.js  ComponentInfo, ProfileInfo, UnitInfo and X_ITE's info arrays (ComponentInfoArray …
+                                           RouteArray); the engine classes they name (ENGINE) are the port's, from rest.js
 
 A Script sees X_ITE's own objects (getValue () hands out a Vector3, a field's prototype chain is X3DObject -> X3DChildObject ->
 X3DField -> ...), so the port takes the modules verbatim. Each module becomes a block whose default export is assigned to a name
@@ -81,6 +83,35 @@ FIELDS = [
     "x_ite/Fields/ArrayFields.js",
     "x_ite/Fields.js",
 ]
+
+CONFIG = [
+    "x_ite/Configuration/ComponentInfo.js",
+    "x_ite/Configuration/ComponentInfoArray.js",
+    "x_ite/Configuration/ProfileInfo.js",
+    "x_ite/Configuration/ProfileInfoArray.js",
+    "x_ite/Configuration/UnitInfo.js",
+    "x_ite/Configuration/UnitInfoArray.js",
+    "x_ite/Configuration/ConcreteNodesArray.js",
+    "x_ite/Configuration/AbstractNodesArray.js",
+    "x_ite/Execution/NamedNodesArray.js",
+    "x_ite/Execution/ImportedNodesArray.js",
+    "x_ite/Execution/ExportedNodesArray.js",
+    "x_ite/Prototype/ProtoDeclarationArray.js",
+    "x_ite/Prototype/ExternProtoDeclarationArray.js",
+    "x_ite/Routing/RouteArray.js",
+]
+
+# Modules config.js imports that are X_ITE's engine: the port defines these names (prelude/rest.js), config.js uses them only when
+# its functions run (a value type to check, a provider URL, a concrete node registered with the page).
+ENGINE = {
+    "x_ite/Browser/Networking/URLs.js": "URLs",
+    "x_ite/Parser/HTMLSupport.js": "HTMLSupport",
+    "x_ite/Execution/X3DImportedNode.js": "X3DImportedNode",
+    "x_ite/Execution/X3DExportedNode.js": "X3DExportedNode",
+    "x_ite/Prototype/X3DProtoDeclaration.js": "X3DProtoDeclaration",
+    "x_ite/Prototype/X3DExternProtoDeclaration.js": "X3DExternProtoDeclaration",
+    "x_ite/Routing/X3DRoute.js": "X3DRoute",
+}
 
 # (file, old, new): `old` must occur exactly once in the file.
 PATCHES = [
@@ -374,9 +405,12 @@ def node_types():
 def outputs():
     known = {}
     math = generate(MATH, known)
+    fields = generate(FIELDS, known)
+    known.update(ENGINE)
     return {
         os.path.join(OUT_DIR, "math.js"): math,
-        os.path.join(OUT_DIR, "fields.js"): generate(FIELDS, known),
+        os.path.join(OUT_DIR, "fields.js"): fields,
+        os.path.join(OUT_DIR, "config.js"): generate(CONFIG, known),
         os.path.join(OUT_DIR, "node_types.js"): node_types(),
     }
 
