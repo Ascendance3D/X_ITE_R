@@ -1,0 +1,5 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 5 orientation 0 1 0 0.6 }
+TextureBackground { frontTexture ImageTexture { url "../synthetic-rea-b02/pbr/env-front.png" } topTexture ImageTexture { url "../synthetic-rea-b02/pbr/env-top.png" } skyColor 0.9 0.4 0.1 }
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Sphere { radius 0.8 } }
