@@ -129,8 +129,8 @@ impl<'a> XmlParser<'a> {
         // Profile
         let profile = id(el.attr("profile")).unwrap_or("Full").to_string();
 
-        if self.p.scene.table.profile(&profile).is_some() {
-            self.scene().profile = Some(profile);
+        if let Some(canonical) = self.p.scene.table.profile(&profile).map(|p| p.name.clone()) {
+            self.scene().profile = Some(canonical);
         } else {
             // XMLParser.x3dElement: catch (error) { console .error (error); }
             self.p.scene.error(format!("Error: Profile '{profile}' is not supported."));

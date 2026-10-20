@@ -78,9 +78,14 @@ impl NodeType {
     }
 }
 
+/// (alias, name) of Configuration/SupportedComponents.js and SupportedProfiles.js.
+pub const COMPONENT_ALIASES: &[(&str, &str)] = &[("H-Anim", "HAnim"), ("TextureProjector", "TextureProjection"), ("ProjectiveTextureMapping", "TextureProjection")];
+pub const PROFILE_ALIASES: &[(&str, &str)] = &[("MPEG-4", "MPEG4Interactive")];
+
 #[derive(Clone, Debug)]
 pub struct ComponentDef {
     pub name: String,
+    pub title: String,
     pub level: i32,
     pub external: bool,
     pub dependencies: Vec<String>,
@@ -89,6 +94,7 @@ pub struct ComponentDef {
 #[derive(Clone, Debug)]
 pub struct ProfileDef {
     pub name: String,
+    pub title: String,
     pub components: Vec<(String, i32)>,
 }
 
@@ -110,11 +116,16 @@ impl NodeTable {
         self.by_name.get(name).map(|i| &self.types[*i])
     }
 
+    /// SupportedComponents.js `alias` and SupportedProfiles.js `alias`: another name of a supported component or profile.
     pub fn component(&self, name: &str) -> Option<&ComponentDef> {
+        let name = COMPONENT_ALIASES.iter().find(|a| a.0 == name).map_or(name, |a| a.1);
+
         self.components.iter().find(|c| c.name == name)
     }
 
     pub fn profile(&self, name: &str) -> Option<&ProfileDef> {
+        let name = PROFILE_ALIASES.iter().find(|a| a.0 == name).map_or(name, |a| a.1);
+
         self.profiles.iter().find(|p| p.name == name)
     }
 }
@@ -194,6 +205,7 @@ fn load() -> NodeTable {
         .chain(annotation["components"].as_array().unwrap().iter())
         .map(|c| ComponentDef {
             name: c["name"].as_str().unwrap().to_string(),
+            title: c["title"].as_str().unwrap().to_string(),
             level: c["level"].as_i64().unwrap() as i32,
             external: c["external"].as_bool().unwrap(),
             dependencies: c["dependencies"].as_array().unwrap().iter().map(|d| d.as_str().unwrap().to_string()).collect(),
@@ -206,6 +218,7 @@ fn load() -> NodeTable {
         .iter()
         .map(|p| ProfileDef {
             name: p["name"].as_str().unwrap().to_string(),
+            title: p["title"].as_str().unwrap().to_string(),
             components: p["components"]
                 .as_array()
                 .unwrap()

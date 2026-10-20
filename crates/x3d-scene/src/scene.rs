@@ -204,6 +204,8 @@ pub struct SceneInfo {
     pub encoding: String,
     pub world_url: String,
     pub profile: Option<String>,
+    /// The source had a PROFILE statement (the parser then set the scene's profile, an event on `profile_changed`).
+    pub profile_statement: bool,
     pub components: Vec<(String, i32)>,
     pub meta: Vec<(String, String)>,
     pub units: Vec<UnitInfo>,
@@ -260,6 +262,8 @@ pub struct Scene {
     pub encoding: String,
     pub world_url: String,
     pub profile: Option<String>,
+    /// The source had a PROFILE statement (the parser then set the scene's profile, an event on `profile_changed`).
+    pub profile_statement: bool,
     /// Ordered like X_ITE's ComponentInfoArray (update keeps the position).
     pub components: Vec<(String, i32)>,
     pub meta: Vec<(String, String)>,
@@ -423,6 +427,7 @@ impl Scene {
             encoding: "SCRIPTED".to_string(),
             world_url: world_url.to_string(),
             profile: None,
+            profile_statement: false,
             components: vec![],
             units: default_units(),
             meta: vec![],
@@ -562,6 +567,10 @@ impl Scene {
     // --- profile / components -------------------------------------------------------------
 
     pub fn update_component(&mut self, name: &str, level: i32) {
+        // getComponent (name, level) names the component by its own name, not by an alias.
+        let name = self.table.component(name).map_or(name, |c| c.name.as_str()).to_string();
+        let name = name.as_str();
+
         match self.components.iter_mut().find(|c| c.0 == name) {
             Some(c) => c.1 = level,
             None => self.components.push((name.to_string(), level)),
@@ -1609,6 +1618,7 @@ impl Scene {
             encoding: other.encoding.clone(),
             world_url: other.world_url.clone(),
             profile: other.profile.clone(),
+            profile_statement: other.profile_statement,
             components: other.components.clone(),
             meta: other.meta.clone(),
             units: other.units.clone(),
