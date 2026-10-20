@@ -138,8 +138,9 @@ class X3DField
    toVRMLString ()      { return X ("str", this [H]); }
    toXMLString ()       { return X ("fprint", this [H], "xml"); }
    toJSONString ()      { return X ("fprint", this [H], "json"); }
-   addFieldCallback ()  { }
-   removeFieldCallback () { }
+   addFieldCallback (key, object) { fieldCallbackAdd (this, key, object); }
+   removeFieldCallback (key) { fieldCallbackRemove (this, key); }
+   getFieldCallbacks () { return fieldCallbackMap (this); }
    addReferencesCallback () { }
    addRouteCallback ()  { }
 }
@@ -437,8 +438,24 @@ const SFNodeProto =
    getField (name)      { if (! getFieldWarned) { getFieldWarned = true; X ("console", "warn", "The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"); } const r = X ("nfield", this [N], String (name)); if (r === NOFIELD) throw new Error (`Unknown field '${name}' in node class ${this .getNodeTypeName ()}.`); return R (r); },
    getFieldQuiet (name) { const r = X ("nfield", this [N], String (name)); if (r === NOFIELD) throw new Error (`Unknown field '${name}' in node class ${this .getNodeTypeName ()}.`); return R (r); },
    getFieldDefinitions () { return X ("nfields", this [N]) .map (f => ({ ... f, dataType: X3DConstants [f .dataType] })); },
-   addFieldCallback ()  { },
-   removeFieldCallback () { },
+   // SFNode.addFieldCallback (key, callback) is X3DField's on the SFNode object itself (which no event reaches);
+   // (key, name, callback) is the node field's.
+   addFieldCallback (... args)
+   {
+      switch (args .length)
+      {
+         case 2: return fieldCallbackAdd (this, args [0], args [1]);
+         case 3: return this .getFieldQuiet (args [1]) .addFieldCallback (args [0], args [2]);
+      }
+   },
+   removeFieldCallback (... args)
+   {
+      switch (args .length)
+      {
+         case 1: return fieldCallbackRemove (this, args [0]);
+         case 2: return this .getFieldQuiet (args [1]) .removeFieldCallback (args [0]);
+      }
+   },
    getNodeUserData ()   { },
    setNodeUserData ()   { },
    removeNodeUserData () { },
@@ -1311,6 +1328,96 @@ function executionContext (script)
    return object;
 }
 
+// X3DField.addFieldCallback / removeFieldCallback / getFieldCallbacks (X3DField.js). The Map of a node field is kept under
+// the field's id (engine.rs fkeyid), so every field object of the field shares it; an object of no node field keeps its own.
+// As in X_ITE, adding replaces the Map (a callback added while the others run waits for the next event) and removing
+// deletes in place.
+const fieldCallbacks = new Map (); // field id → Map (key → callback)
+const ownFieldCallbacks = new WeakMap (); // field object of no node field → Map
+const callbackScripts = new WeakMap (); // callback → the Script that added it
+
+function fieldCallbackId (field)
+{
+   return field [H] === undefined ? null : X ("fkeyid", field [H]);
+}
+
+function fieldCallbackMap (field)
+{
+   const id = fieldCallbackId (field);
+
+   if (id === null)
+   {
+      let map = ownFieldCallbacks .get (field);
+
+      if (!map)
+         ownFieldCallbacks .set (field, map = new Map ());
+
+      return map;
+   }
+
+   let map = fieldCallbacks .get (id);
+
+   if (!map)
+      fieldCallbacks .set (id, map = new Map ());
+
+   return map;
+}
+
+function fieldCallbackAdd (field, key, object)
+{
+   const id = fieldCallbackId (field);
+
+   if (typeof object === "function" && !callbackScripts .has (object))
+      callbackScripts .set (object, currentScript);
+
+   if (id === null)
+   {
+      ownFieldCallbacks .set (field, new Map (ownFieldCallbacks .get (field)) .set (key, object));
+      return;
+   }
+
+   fieldCallbacks .set (id, new Map (fieldCallbacks .get (id)) .set (key, object));
+   X ("fobserve", field [H], true);
+}
+
+function fieldCallbackRemove (field, key)
+{
+   const id = fieldCallbackId (field);
+
+   if (id === null)
+   {
+      ownFieldCallbacks .get (field) ?.delete (key);
+      return;
+   }
+
+   fieldCallbacks .get (id) ?.delete (key);
+}
+
+global .__fieldEvent = function (id, value)
+{
+   const map = fieldCallbacks .get (id);
+
+   if (!map)
+      return;
+
+   const v = R (value), previous = currentScript;
+
+   try
+   {
+      for (const callback of map .values ())
+      {
+         currentScript = callbackScripts .get (callback) ?? previous;
+
+         try { callback (v); }
+         catch (error) { console .error (error); }
+      }
+   }
+   finally
+   {
+      currentScript = previous;
+   }
+};
+
 // X3DExecutionContext / X3DScene change fields (sceneGraph_changed, bbox_changed, profile_changed, metadata_changed): SFTime output
 // fields. The runtime fires them (ctx_events.rs); a Script sees them through addFieldCallback only.
 const ctxFieldCallbacks = new Map (); // context * 4 + field → Map (key → { fn, script })
@@ -2043,6 +2150,15 @@ global .__release = function (ids, tombstone, detached)
    // later `getField` returns these wrappers.
    for (const h of detached)
       wrappers .delete (h);
+
+   // The field callbacks of released nodes go with them: the ids may be handed out again.
+   const released = new Set (ids .map (String));
+
+   for (const id of fieldCallbacks .keys ())
+   {
+      if (released .has (id .slice (0, id .indexOf (":"))))
+         fieldCallbacks .delete (id);
+   }
 
    for (const id of ids)
    {

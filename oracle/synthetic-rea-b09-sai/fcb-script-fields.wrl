@@ -1,0 +1,44 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fcb script fields"
+DEF O Script {
+  inputOutput SFInt32 io 0
+  outputOnly SFString os
+  inputOnly SFFloat inF
+  url "ecmascript:
+function set_io (v) { }
+function inF (v) { os = 'got ' + v; }
+  "
+}
+DEF D Script {
+  directOutput TRUE
+  mustEvaluate TRUE
+  inputOutput MFString out [ ]
+  inputOutput SFInt32 loc 0
+  url "ecmascript:
+
+var F = 0;
+function L (s) { var a = globalThis .LOG_ = globalThis .LOG_ || []; a .push (F + ':' + s); out = new MFString (... a); }
+function show (v) {
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'number') return Object .is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON .stringify (v);
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (typeof v === 'function') return 'fn';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v);
+}
+function E (e) { return 'ERR ' + (e && e .name) + ': ' + (e && e .message); }
+function S (n) { return Browser .currentScene .getNamedNode (n); }
+
+
+function prepareEvents () {
+  ++ F;
+  if (F === 1) { try { var o = S ('O'); o .addFieldCallback ('a', 'io', function (v) { L ('O.io ' + show (v)); }); o .addFieldCallback ('b', 'os', function (v) { L ('O.os ' + show (v)); }); o .addFieldCallback ('c', 'inF', function (v) { L ('O.inF ' + show (v)); }); o .io = 3; o .inF = 1.5; } catch (e) { L ('step 1 ' + E (e)); } }
+  if (F === 2) { try { S ('D') .addFieldCallback ('mine', 'loc', function (v) { L ('D.loc ' + show (v)); }); loc = 7; L ('loc assigned'); } catch (e) { L ('step 2 ' + E (e)); } }
+  if (F === 3) { try { loc = 8; loc = 9; } catch (e) { L ('step 3 ' + E (e)); } }
+}
+
+  "
+}

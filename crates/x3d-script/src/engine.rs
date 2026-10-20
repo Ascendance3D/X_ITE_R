@@ -468,6 +468,21 @@ impl ScriptHost for QuickJsHost {
         });
     }
 
+    fn field_event(&mut self, rt: &mut Runtime, k: FKey) {
+        self.enter(rt);
+
+        // X3DField.processEvent calls the callbacks synchronously, inside the event cascade: the promises they make run
+        // with the jobs of the next host call, as in X_ITE they run after processEvents.
+        self.context.with(|js| {
+            if let Ok(f) = js.globals().get::<_, Function>("__fieldEvent") {
+                let value = field_value_js(&js, attach(k));
+                let _ = f.call::<_, ()>((fkey_id(k), value));
+            }
+
+            with_state(State::release_fresh);
+        });
+    }
+
     fn destroy_context(&mut self, node: NodeId) {
         self.select();
         self.destroy(node);
@@ -604,6 +619,15 @@ fn write(h: u32, v: FieldValue) {
             write(p, mf);
         }
         Slot::Free => {}
+    }
+}
+
+/// The name prelude.js keeps the callbacks of a node field under (a handle can be released while the field lives on).
+fn fkey_id(k: FKey) -> String {
+    match k.1 {
+        FieldLoc::Pre(i) => format!("{}:p{i}", k.0),
+        FieldLoc::User(i) => format!("{}:u{i}", k.0),
+        FieldLoc::Priv(i) => format!("{}:x{i}", k.0),
     }
 }
 
@@ -1965,6 +1989,30 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let root = rt().scene.scene_root(ctx_of_script(script));
 
             scene_components_mut(&mut rt().scene, root).retain(|(n, _)| *n != name);
+            Ok(undefined)
+        }
+        // X3DField.addFieldCallback / removeFieldCallback: the id of a node field (null for a field of no node), and whether
+        // X3DField.processEvent of that field calls the host.
+        "fkeyid" => {
+            let h = handle_at(ctx, a, 0)?;
+
+            match slot_key(h) {
+                Some(k) => Ok(rquickjs::String::from_str(ctx.clone(), &fkey_id(k))?.into_value()),
+                None => Ok(Value::new_null(ctx.clone())),
+            }
+        }
+        "fobserve" => {
+            let h = handle_at(ctx, a, 0)?;
+            let on = a.get(1).and_then(|v| v.as_bool()).unwrap_or(false);
+
+            if let Some(k) = slot_key(h) {
+                if on {
+                    rt().field_observed.insert(k);
+                } else {
+                    rt().field_observed.remove(&k);
+                }
+            }
+
             Ok(undefined)
         }
         "ctxObserve" => {
