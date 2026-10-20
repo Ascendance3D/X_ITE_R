@@ -79,6 +79,21 @@ impl Fields {
     pub fn names(&self) -> impl Iterator<Item = &'static str> + '_ {
         self.fields.iter().map(|(n, _)| *n)
     }
+
+    /// Name and value of each field, in X_ITE's order.
+    pub fn entries(&self) -> impl Iterator<Item = (&'static str, &OptionValue)> + '_ {
+        self.fields.iter().map(|(n, v)| (*n, v))
+    }
+}
+
+/// The fields of BrowserOptions ("options"), BrowserProperties ("properties") or RenderingProperties (any other name) with
+/// X_ITE's initial values: the values of their field definitions.
+pub fn default_fields(set: &str) -> Fields {
+    match set {
+        "options" => option_fields(),
+        "properties" => property_fields(),
+        _ => rendering_fields(),
+    }
 }
 
 /// Shading (Browser/Core/Shading.js), by key: set_Shading__ maps the option string with

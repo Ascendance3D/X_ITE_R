@@ -64,7 +64,11 @@ component a Script left undefined or null prints as X_ITE prints it), field call
   - addUserDefinedField / removeUserDefinedField reload: not reachable from Script content (SFNode does not expose them). No
     observable behavior to compare.
 - Remaining differences (unresolved):
-  1. scr-browser-open: 38 probes (Browser properties and methods; next task).
+  1. scr-browser-open: resolved except the 2 X3DConstants probes (external-component numbering, X_ITE's load order). The
+     Browser is now an X3DBrowser (X3DBrowser → X3DBrowserContext → X3DBaseNode → X3DChildObject → X3DObject, each member on
+     X_ITE's class), with the 30 members it lacked; getScriptNode returns the node, getExecutionContext is the page's first,
+     empty world until the loaded world is installed. New baselined worlds brx-api, brx-call, brx-obj, brx-data and the
+     re-recorded scr-browser (each 3 identical X_ITE recordings). Kept open as the owner's boundary: brx-*-open.
   2. scr-classes-open: 19 probes (globals Script.js defines that the port does not: ComponentInfoArray, X3DProtoDeclaration, …).
   3. scr-url-order-open: url candidates that need a fetch finish frames later in X_ITE (timing).
   4. A field callback that throws (owner decision 2026-10-20, approved with conditions): X_ITE lets the exception leave
@@ -74,7 +78,7 @@ component a Script left undefined or null prints as X_ITE prints it), field call
      on: the field keeps its value, its routes delivered the event, other fields' callbacks run, the next event runs them all
      again. Test: script.rs a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on. Observable difference: after the
      throw X_ITE does nothing more; the port continues.
-- Reason: items 1-3 are unresolved Script behavior. Ledger: PARTIAL kept, decision 4 recorded in its notes.
+- Reason: items 2-3 are unresolved Script behavior. Ledger: PARTIAL kept, decision 4 recorded in its notes.
 
 ## node:MetadataSet
 

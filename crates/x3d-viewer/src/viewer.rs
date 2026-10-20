@@ -189,6 +189,11 @@ pub struct Viewer3d {
     pending_anchors: Vec<(NodeId, Vec<String>, Vec<String>)>,
     /// The active viewpoint and viewer of the world that was replaced, until the first events of the new one.
     held_pose: Option<HeldPose>,
+    /// A Script called Browser.dispose (): the browser stops (EmbeddedViewer unloads the world).
+    pub disposed: bool,
+    /// A Script called Browser.resize (width, height): applied here; a host that owns the canvas size takes it
+    /// (`EmbeddedViewer::take_resize_request`).
+    pub resize_request: Option<(u32, u32)>,
     /// The layer whose state `layer`, `scan_cam` and `scan_display` hold: the active layer
     /// (navigation, viewpoint lists), except while a pass visits the layers one by one.
     current: LayerKey,
@@ -324,6 +329,8 @@ impl Viewer3d {
             pending_anchors: vec![],
             status_description: String::new(),
             held_pose: None,
+            disposed: false,
+            resize_request: None,
             current: None,
             others: vec![],
             drawn: vec![None],
@@ -743,6 +750,8 @@ impl Viewer3d {
     /// Scripts' requests of the browser: X3DBrowser.nextViewpoint, previousViewpoint,
     /// firstViewpoint, lastViewpoint.
     fn browser_requests(&mut self) {
+        self.sync_browser_active();
+
         for r in std::mem::take(&mut self.rt.browser_requests) {
             match r.as_str() {
                 "nextViewpoint" => self.next_viewpoint(1),
@@ -751,10 +760,44 @@ impl Viewer3d {
                 "lastViewpoint" => self.last_viewpoint(),
                 // Browser.changeViewpoint (name), and loadURL (url) with a fragment of the world's own URL.
                 r if r.starts_with("changeViewpoint:") => self.change_viewpoint(&r["changeViewpoint:".len()..]),
+                // Browser.bindViewpoint (layerNode, viewpointNode): the Script checked both types.
+                r if r.starts_with("bindViewpoint:") => {
+                    if let Ok(n) = r["bindViewpoint:".len()..].parse::<NodeId>() {
+                        if self.rt.scene.is_live(n) {
+                            self.bind_viewpoint(n);
+                        }
+                    }
+                }
+                // Browser.resize (width, height) and Browser.dispose ().
+                r if r.starts_with("resize:") => {
+                    let mut it = r["resize:".len()..].split(',').map(|v| v.parse::<f64>().unwrap_or(f64::NAN));
+                    let (w, h) = (it.next().unwrap_or(f64::NAN), it.next().unwrap_or(f64::NAN));
+
+                    if w.is_finite() && h.is_finite() {
+                        let size = (w.max(1.0) as u32, h.max(1.0) as u32);
+
+                        self.resize(size.0, size.1);
+                        self.resize_request = Some(size);
+                    }
+                }
+                "dispose" => self.disposed = true,
                 // loadURL with a foreign target (window.open) or a page URL: another window or document, outside the native scope.
                 _ => {}
             }
         }
+    }
+
+    /// X3DBrowserContext.getActiveLayer / getActiveNavigationInfo / getActiveViewpoint / getCurrentViewer for Scripts: the
+    /// active layer and its bound nodes (`None`: layer 0, or the layer's default node).
+    fn sync_browser_active(&mut self) {
+        let real = |n: NodeId| (!is_default(n)).then_some(n);
+
+        self.rt.browser_active = x3d_runtime::BrowserActive {
+            layer: self.current,
+            navigation_info: real(self.layer.navigation_info()),
+            viewpoint: real(self.layer.viewpoint()),
+            viewer: self.viewer_field().to_string(),
+        };
     }
 
     /// Nodes the runtime released since the last call: nothing the viewer remembers of them may
@@ -811,6 +854,10 @@ impl Viewer3d {
     }
 
     pub fn step(&mut self, now: f64) {
+        if self.disposed {
+            return;
+        }
+
         if let Some(last) = self.last_time {
             let dt = now - last;
 

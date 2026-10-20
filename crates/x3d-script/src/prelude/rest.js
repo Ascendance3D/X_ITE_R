@@ -428,7 +428,8 @@ const Browser =
    previousViewpoint ()        { X ("brequest", "previousViewpoint"); },
    changeViewpoint (name)      { X ("brequest", "changeViewpoint:" + String (name)); },
    viewAll ()                  { },
-   getScriptNode ()            { return nodeObject (currentScript); },
+   // X3DBrowserContext.getScriptNode: X_ITE's Script node itself (here its X3DNodeRef), not an SFNode.
+   getScriptNode ()            { return currentScript >= 0 ? nodeRef (currentScript) : null; },
    // X3DBrowser: the supported profiles and components, getProfile, getComponent and loadComponents.
    get supportedProfiles ()    { return getSupportedProfiles (); },
    get supportedComponents ()  { return getSupportedComponents (); },
@@ -532,7 +533,7 @@ function browserScene (kind, argument)
       if (r .error !== undefined)
          reject (new Error (r .error));
       else
-         settlers .set (r .id, { resolve, reject });
+         settlers .set (r .id, { resolve, reject, script: currentScript });
    });
 }
 
@@ -892,6 +893,251 @@ const X3DExecutionContextClass = brandClass ("X3DExecutionContext", 1, o => cont
 const X3DSceneClass            = brandClass ("X3DScene", 1, o => contextKeys .has (o) && o .isScene);
 const X3DBrowserClass          = brandClass ("X3DBrowser", 1, o => o === Browser);
 const X3DRouteClass            = brandClass ("X3DRoute", 5, o => routeIds .has (o));
+
+// --- X3DBrowser ----------------------------------------------------------------------------------------------------------------
+//
+// X_ITE's Browser is the X3DBrowser itself: X3DBrowser → X3DBrowserContext → X3DBaseNode → X3DChildObject → X3DObject (the last two
+// are X_ITE's own, fields.js). Each member of Browser above is put on the class that defines it in X_ITE (oracle brx-api, the
+// own property names of each level); the members that only exist for X_ITE's page (WebGL, DOM, the dashboard) are SAI-edge
+// stand-ins (owner decision 2026-10-20): getCanvas, getElement, getNotification, getContextMenu, getViewer, getBrowserTime and
+// getBrowserTimings return null, getLocalStorage throws a TypeError (as it does in X_ITE's Script realm), resize and dispose
+// go to the viewer. A node X_ITE hands out (getActiveViewpoint …, getScriptNode) is its X3DNodeRef.
+
+const BROWSER_OWN = new Set (("abstractNodes activeLayer activeNavigationInfo activeViewpoint addAbstractNode addBrowserCallback addBrowserListener " +
+   "addConcreteNode addRoute addSupportedComponent addSupportedProfile baseURL beginUpdate bindViewpoint callBrowserCallbacks changeViewpoint " +
+   "checkLoadCount concreteNodes constrainTranslation contextMenu createScene createVrmlFromString createVrmlFromURL createX3DFromString " +
+   "createX3DFromURL currentFrameRate currentScene currentSpeed deleteRoute description dispose element endUpdate fieldTypes firstViewpoint " +
+   "getAbstractNode getAbstractNodes getBrowserCallbacks getBrowserOption getBrowserProperty getClosestObject getComponent getConcreteNode " +
+   "getConcreteNodes getDescription getFieldType getFieldTypes getName getProfile getRenderingProperty getSupportedComponent " +
+   "getSupportedComponents getSupportedProfile getSupportedProfiles getVersion getWelcomeMessage getWorldURL importDocument importJS initialize " +
+   "isContextLost lastViewpoint loadComponents loadURL loseContext name nextViewpoint previousViewpoint print println providerURL providerUrl " +
+   "removeAbstractNode removeBrowserCallback removeBrowserListener removeConcreteNode removeSupportedComponent removeSupportedProfile replaceWorld " +
+   "scriptURL setBrowserOption setDescription supportedComponents supportedProfiles toJSONStream toVRMLStream toXMLStream updateAbstractNode " +
+   "updateConcreteNode updateSupportedComponent updateSupportedProfile version viewAll") .split (" "));
+
+const BASE_NODE_OWN = new Set (("addAlias addChildObject addChildObjects addEvent addEventObject addNodeEvent addPredefinedField addType " +
+   "addUserDefinedField canUserDefinedFields changeField checkLiveState convertFields dispose getBrowser getChangedFields getConvertedFields " +
+   "getExecutionContext getExtendedEventHandling getField getFieldDefinition getFieldDefinitions getFields getInnerNode getLive getPredefinedField " +
+   "getPredefinedFields getScene getType getUserDefinedField getUserDefinedFields initialize isDefaultValue isInitialized isLive name_changed " +
+   "parentsChanged parents_changed removePredefinedField removeUserDefinedField setExecutionContext setLive setName setup typeName_changed") .split (" "));
+
+// X3DBrowser instances own these (X3DBrowserContext binds them in its constructor).
+const BROWSER_INSTANCE = new Set (["advanceTime", "getCurrentFrameRate", "getCurrentTime"]);
+
+const NODE_FIELDS = Symbol ("nodeFields");
+
+function namedClass (typeName)
+{
+   const C = { [typeName]: function () { } } [typeName];
+
+   Object .defineProperty (C, "typeName", { value: typeName, enumerable: true });
+   return C;
+}
+
+// X3DBaseNode: the field list of a node-like object of the port (Browser, BrowserOptions …), `this [NODE_FIELDS]`: name → { field,
+// definition, refresh }.
+const X3DBaseNodeClass = namedClass ("X3DBaseNode");
+
+X3DBaseNodeClass .prototype = Object .create (X3DChildObject .prototype, { constructor: { value: X3DBaseNodeClass, writable: true, configurable: true } });
+
+Object .assign (X3DBaseNodeClass .prototype,
+{
+   getType () { return Array .from (this [BASE_NODE_TYPES] ?? [ ]); },
+   getField (name)
+   {
+      const entry = this [NODE_FIELDS] ?.get (String (name));
+
+      if (!entry)
+         throw unknownField (this .getTypeName (), name);
+
+      entry .refresh ?.(entry .field);
+      return entry .field;
+   },
+   getFieldDefinitions () { return this [NODE_DEFINITIONS] ??= new FieldDefinitionArray (Array .from (this [NODE_FIELDS] ?.values () ?? [ ], e => e .definition)); },
+   getFieldDefinition (name)
+   {
+      const definition = this .getFieldDefinitions () .get (String (name));
+
+      if (definition)
+         return definition;
+
+      throw unknownField (this .getTypeName (), name);
+   },
+   getFields () { return Array .from (this [NODE_FIELDS] ?.keys () ?? [ ], name => this .getField (name)); },
+   getPredefinedFields () { return this .getFields (); },
+   getUserDefinedFields () { return [ ]; },
+   canUserDefinedFields () { return false; },
+   // A Script has no event of the browser's own fields to add (X3DBaseNode.addEvent taints the node for the next cascade).
+   addEvent (field) { },
+   isInitialized () { return true; },
+});
+
+const BASE_NODE_TYPES  = Symbol ("nodeTypes");
+const NODE_DEFINITIONS = Symbol ("nodeDefinitions");
+
+// A field of a node-like object: its definition holds the default, getField the current value (`refresh`).
+function nodeField (owner, name, accessType, typeName, initial, refresh)
+{
+   const field = fieldFromData (typeName, initial);
+
+   field .setName (name);
+   field .setAccessType (accessType);
+
+   owner [NODE_FIELDS] .set (name, { field, refresh, definition: new X3DFieldDefinition (accessType, name, fieldFromData (typeName, initial)) });
+   return field;
+}
+
+// The data of a primitive field value.
+function primitiveData (typeName, value)
+{
+   return typeName === "SFString" ? String (value) : value;
+}
+
+const X3DBrowserContextClass = namedClass ("X3DBrowserContext");
+
+X3DBrowserContextClass .prototype = Object .create (X3DBaseNodeClass .prototype, { constructor: { value: X3DBrowserContextClass, writable: true, configurable: true } });
+
+// X3DBrowserContext.getBrowserOptions / getBrowserProperties / getRenderingProperties: one X3DBaseNode each, its fields the
+// browser's (definitions: the defaults, browser_options.rs; values: the current ones).
+const browserNodes = new Map ();
+
+function browserNode (set, typeName, accessType)
+{
+   let node = browserNodes .get (set);
+
+   if (node)
+      return node;
+
+   const C = namedClass (typeName);
+
+   C .prototype = Object .create (X3DBaseNodeClass .prototype, { constructor: { value: C, writable: true, configurable: true } });
+
+   node = Object .create (C .prototype);
+   node [NODE_FIELDS] = new Map ();
+
+   for (const [name, type, initial] of X ("browserDefs", set))
+   {
+      const field = nodeField (node, name, accessType, type, primitiveData (type, initial), field => field .set (primitiveData (type, X ("browserField", set, name))));
+
+      // BrowserOptions fields are inputOutput: a value a Script gives the field is the option's.
+      if (set === "options")
+         Object .defineProperty (field, "setValue", { value (value) { Browser .setBrowserOption (name, value); field .set (primitiveData (type, X ("browserField", set, name))); }, configurable: true, writable: true });
+   }
+
+   browserNodes .set (set, node);
+   return node;
+}
+
+// The bound nodes of the active layer, or the layer's default nodes (X_ITE: the nodes at the bottom of its stacks).
+const ACTIVE_TYPES = { layer: "Layer", navigationInfo: "NavigationInfo", viewpoint: "Viewpoint" };
+
+function activeNode (kind)
+{
+   return nodeRef (X ("bactive", kind) ?? X ("bdefault", ACTIVE_TYPES [kind]));
+}
+
+Object .assign (X3DBrowserContextClass .prototype,
+{
+   getActiveLayer () { return activeNode ("layer"); },
+   getActiveNavigationInfo () { return activeNode ("navigationInfo"); },
+   getActiveViewpoint () { return activeNode ("viewpoint"); },
+   getCurrentViewer () { return X ("bviewer"); },
+   getBrowserOptions () { return browserNode ("options", "BrowserOptions", X3DConstants .inputOutput); },
+   getBrowserProperties () { return browserNode ("properties", "BrowserProperties", X3DConstants .initializeOnly); },
+   getRenderingProperties () { return browserNode ("rendering", "RenderingProperties", X3DConstants .outputOnly); },
+   isContextLost () { return false; },
+   getViewer () { return null; },
+   getCanvas () { return null; },
+   getElement () { return null; },
+   getNotification () { return null; },
+   getContextMenu () { return null; },
+   getBrowserTime () { return null; },
+   getBrowserTimings () { return null; },
+   getLocalStorage () { throw new TypeError ("Cannot read properties of undefined (reading 'localStorage')"); },
+   resize (width, height) { X ("brequest", `resize:${+width},${+height}`); },
+   dispose () { X ("brequest", "dispose"); },
+});
+
+X3DBrowserClass .prototype = Object .create (X3DBrowserContextClass .prototype, { constructor: { value: X3DBrowserClass, writable: true, configurable: true } });
+
+Object .assign (X3DBrowserClass .prototype,
+{
+   bindViewpoint (layerNode, viewpointNode)
+   {
+      const cast = (type, node) =>
+      {
+         const ref = node instanceof SFNode ? node .getValue () : node;
+
+         return ref instanceof X3DNodeRef && ref .getType () .includes (X3DConstants [type]) ? ref : null;
+      };
+
+      layerNode     = cast ("X3DLayerNode", layerNode);
+      viewpointNode = cast ("X3DViewpointNode", viewpointNode);
+
+      if (!layerNode)
+         throw new Error ("Browser.bindViewpoint: layerNode must be of type X3DLayerNode.");
+
+      if (!viewpointNode)
+         throw new Error ("Browser.bindViewpoint: viewpointNode must be of type X3DViewpointNode.");
+
+      X ("brequest", `bindViewpoint:${viewpointNode .getNodeId ()}`);
+   },
+   toVRMLStream (generator) { generator .string += Browser .currentScene .toVRMLString (); },
+   toXMLStream (generator) { generator .string += Browser .currentScene .toXMLString (); },
+   toJSONStream (generator) { generator .string += Browser .currentScene .toJSONString (); },
+   dispose () { X ("brequest", "dispose"); },
+});
+
+// X3DBrowser.activeLayer / activeNavigationInfo / activeViewpoint: null while the layer's default node is bound, else the SFNode.
+for (const kind of ["layer", "navigationInfo", "viewpoint"])
+{
+   const key = "active" + kind [0] .toUpperCase () + kind .slice (1);
+
+   Object .defineProperty (Browser, key, { get () { const id = X ("bactive", kind); return id === null ? null : nodeObject (id); }, enumerable: true, configurable: true });
+}
+
+// Each member of the Browser literal to the class that defines it.
+for (const key of Reflect .ownKeys (Browser))
+{
+   if (BROWSER_INSTANCE .has (key))
+   {
+      Object .defineProperty (Browser, key, { enumerable: true });
+      continue;
+   }
+
+   const descriptor = Object .getOwnPropertyDescriptor (Browser, key);
+   const target     = BROWSER_OWN .has (key) ? X3DBrowserClass .prototype : BASE_NODE_OWN .has (key) ? X3DBaseNodeClass .prototype : X3DBrowserContextClass .prototype;
+
+   // Methods are not enumerable (X_ITE: `for (const key of Object .keys (X3DBrowser .prototype)) … enumerable: false`); the
+   // accessors are.
+   descriptor .enumerable = "get" in descriptor || "set" in descriptor;
+
+   delete Browser [key];
+   Object .defineProperty (target, key, descriptor);
+}
+
+for (const C of [X3DBaseNodeClass, X3DBrowserContextClass, X3DBrowserClass])
+{
+   for (const key of Object .keys (C .prototype))
+   {
+      const descriptor = Object .getOwnPropertyDescriptor (C .prototype, key);
+
+      if (!("get" in descriptor) && !("set" in descriptor))
+         Object .defineProperty (C .prototype, key, { enumerable: false });
+   }
+}
+
+Object .setPrototypeOf (Browser, X3DBrowserClass .prototype);
+
+// The Browser's own fields: the active nodes (outputOnly SFNode; X3DBrowserContext addChildObjects).
+Browser [NODE_FIELDS] = new Map ();
+Browser [BASE_NODE_TYPES]  = [X3DConstants .X3DBrowser];
+
+for (const kind of ["layer", "navigationInfo", "viewpoint"])
+   nodeField (Browser, "active" + kind [0] .toUpperCase () + kind .slice (1), X3DConstants .outputOnly, "SFNode", null, field => field .set (activeNode (kind)));
+
+// X3DTimeContext binds advanceTime to the browser; a Script has no frame to advance.
+Object .defineProperty (Browser, "advanceTime", { value: function () { }, writable: true, configurable: true, enumerable: true });
 
 function makeExecutionContext (script)
 {

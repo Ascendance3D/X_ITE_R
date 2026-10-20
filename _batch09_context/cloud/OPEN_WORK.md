@@ -18,15 +18,23 @@ must be run on the RTX 3060 Ti desktop with `_batch09_context/cloud/local_valida
 
 ## Remaining work, hardest first
 
-1. scr-browser-open: 38 Browser object probes (properties and methods) differ.
-2. Execution context / SAI timing differences A-D (ctxev-inline, ctxev-startup-proto, ie-err-string-frames, cfg-scene-odd).
-3. scr-classes-open: 19 globals Script.js defines that the port does not (ComponentInfoArray, X3DProtoDeclaration, …).
-4. Field representation differences (sub:fields.types): an SF component that is neither number, undefined nor null is stored as
+1. Execution context / SAI timing differences A-D (ctxev-inline, ctxev-startup-proto, ie-err-string-frames, cfg-scene-odd), and
+   the X3DExecutionContext / X3DScene class chain (brx-obj-open: the port's scene objects are plain objects with their members
+   as own properties; X_ITE's are X3DScene → X3DExecutionContext → X3DBaseNode → X3DChildObject → X3DObject).
+2. Node class chains: a node X_ITE hands out (SFNode.getValue (), getActiveViewpoint …) is an instance of its node class
+   (Viewpoint → X3DViewpointNode → X3DBindableNode → …); the port's is an X3DNodeRef (owner boundary 2026-10-20). The type list
+   is the same (getType ()), the constructor names and internal members are not (brx-call-open).
+3. Browser boundary kept open (owner decision 2026-10-20, documented, not PASS): brx-api-open (the Browser's ~590 engine
+   members: WebGL, DOM, dashboard), brx-call-open (getCanvas, getElement, getNotification, getContextMenu, getViewer,
+   getBrowserTime, getBrowserTimings return null; X_ITE returns its page objects), X3DConstants of external-component node
+   types in scr-browser-open (X_ITE's load order).
+4. scr-classes-open: 19 globals Script.js defines that the port does not (ComponentInfoArray, X3DProtoDeclaration, …).
+5. Field representation differences (sub:fields.types): an SF component that is neither number, undefined nor null is stored as
    NaN by the runtime; IterableWeakSet strong members (QuickJS); external-component X3DConstants order (X_ITE nondeterministic).
-5. Step 3 promotion candidates: sub:exec.import-export, sub:exec.bindable-stacks, sub:config.components-profiles,
+6. Step 3 promotion candidates: sub:exec.import-export, sub:exec.bindable-stacks, sub:config.components-profiles,
    sub:exec.context-api.
-6. scr-url-order-open (url candidates that need a fetch finish frames later in X_ITE); meta-parse-open (PROTO field value printed
+7. scr-url-order-open (url candidates that need a fetch finish frames later in X_ITE); meta-parse-open (PROTO field value printed
    with `DEF _1`, sub:proto.proto); the Rust XML MFString warning lacks the field name (parser).
-7. sub:fields.math: compare the Rust Geometry math (Box3, Line3, Plane3, Triangle, ViewVolume, Spline) with X_ITE's
+8. sub:fields.math: compare the Rust Geometry math (Box3, Line3, Plane3, Triangle, ViewVolume, Spline) with X_ITE's
    standard/Math/Geometry directly.
-8. The rest of the REA queue.
+9. The rest of the REA queue.

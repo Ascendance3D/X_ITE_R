@@ -371,7 +371,17 @@ impl EmbeddedViewer {
             set_browser_globals(self.globals);
             c.step(now);
             self.globals = browser_globals();
+
+            // Browser.dispose () from a Script: the world goes as on unload (its Scripts' shutdown runs).
+            if c.disposed {
+                self.unload();
+            }
         }
+    }
+
+    /// The size a Script asked for (Browser.resize), once: the host resizes the canvas.
+    pub fn take_resize_request(&mut self) -> Option<(u32, u32)> {
+        self.core.as_mut().and_then(|c| c.resize_request.take())
     }
 
     /// Step the world to `now` and draw it into `target`. With no world loaded the target is
