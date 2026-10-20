@@ -21,6 +21,14 @@ SNAP = os.path.join(HERE, "..", "ledger", "before-cloud", "ledger.json")
 
 # id: (status, tests, missing, note)
 C = {
+    "sub:parse.golden-gate": (
+        "PARTIAL",
+        ["crates/x3d-viewer/tests/rea_batch09_sai.rs parse-formats parse-xml-mfstring parse-xml-unknown"],
+        "dispatch of binary input (GLB2, STLB, PLYB parsers) not compared through createX3DFromURL",
+        "b09 cloud 4b4daa1: parse-formats (50 createX3DFromString inputs: XML, VRML, JSON, glTF JSON, OBJ, STL ASCII, PLY ASCII, SVG, "
+        "HTML, unknown, empty and whitespace input; the parser chosen, the scene and the rejection text) baselined from X_ITE "
+        "(3 identical recordings), exact",
+    ),
     "sub:exec.context-api": (
         "PARTIAL",
         ["crates/x3d-viewer/tests/rea_batch09_sai.rs ctxev-* cfg-scene cfg-comp"],
@@ -80,8 +88,11 @@ C = {
     ),
     "node:Script": (
         "PARTIAL",
-        ["crates/x3d-script/tests/script.rs a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on"],
-        "scr-browser-open (38 Browser probes), scr-classes-open (19 globals), scr-url-order-open (fetch timing)",
+        ["crates/x3d-script/tests/script.rs a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on",
+         "crates/x3d-viewer/tests/rea_batch09_sai.rs scr-globals scr-classes scr-url-order-sync scr-image-events"],
+        "scr-classes-open: the page's own globals (window, document, XMLHttpRequest, fetch; owner decision pending); "
+        "scr-url-order-open: initialize order of Scripts whose URL candidates fail or need a fetch (Chrome's task order); "
+        "scr-browser-open: X3DConstants of external-component node types (X_ITE's load order)",
         "b09 cloud: owner decision 2026-10-20: a field callback that throws is reported at error level and ends the callbacks of "
         "that event (as X_ITE's processEvent loop); the runtime goes on (X_ITE's browser stops), value and routes kept",
     ),

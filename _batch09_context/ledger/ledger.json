@@ -6441,10 +6441,12 @@
    ],
    "status": "PARTIAL",
    "behavior": "",
-   "tests": [],
-   "missing": "dispatches VRML only",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs parse-formats parse-xml-mfstring parse-xml-unknown"
+   ],
+   "missing": "dispatch of binary input (GLB2, STLB, PLYB parsers) not compared through createX3DFromURL",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud 4b4daa1: parse-formats (50 createX3DFromString inputs: XML, VRML, JSON, glTF JSON, OBJ, STL ASCII, PLY ASCII, SVG, HTML, unknown, empty and whitespace input; the parser chosen, the scene and the rejection text) baselined from X_ITE (3 identical recordings), exact"
   },
   {
    "id": "sub:parse.optimizer",
