@@ -1063,6 +1063,37 @@ impl Runtime {
     }
 
     /// X3DField.setValue: set and generate an event.
+    /// A print of the scene, or of part of it, with the raw components taken when it prints them: the print runs once to meet
+    /// them, the Script host coerces them in print order, and the print runs again with them (see [`x3d_scene::RawPrint`]).
+    pub fn print_raw<R>(&mut self, print: impl Fn(&Scene) -> R) -> R {
+        if self.scene.raw_tokens.is_empty() {
+            return print(&self.scene);
+        }
+
+        *self.scene.raw_print.borrow_mut() = RawPrint::Log(vec![]);
+        print(&self.scene);
+
+        let requests = match std::mem::take(&mut *self.scene.raw_print.borrow_mut()) {
+            RawPrint::Log(log) => log,
+            _ => vec![],
+        };
+        let supply = match self.script_host.take() {
+            Some(mut host) => {
+                let supply = host.raw_coerce(self, &requests);
+                self.script_host = Some(host);
+                supply
+            }
+            None => vec![None; requests.len()],
+        };
+
+        *self.scene.raw_print.borrow_mut() = RawPrint::Supply(supply.into());
+
+        let result = print(&self.scene);
+
+        *self.scene.raw_print.borrow_mut() = RawPrint::Off;
+        result
+    }
+
     pub fn set_value(&mut self, k: FKey, value: FieldValue) {
         self.set_raw(k, value);
         self.add_event(k);

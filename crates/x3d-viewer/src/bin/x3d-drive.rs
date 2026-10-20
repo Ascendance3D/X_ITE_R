@@ -243,7 +243,7 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
             // `browser .currentScene .toVRMLString ()` in the page: X_ITE makes the SFNodes it reads (Runtime::ctx_streamed).
             let world = v.rt.scene.world;
             v.rt.ctx_streamed(world);
-            vrml.insert(k.to_string(), json!(v.rt.scene.to_vrml_string()));
+            vrml.insert(k.to_string(), json!(v.rt.print_raw(|s| s.to_vrml_string())));
         }
 
         if dump_inlines && (dump.contains(&k) || k == frames) {

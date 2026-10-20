@@ -138,3 +138,17 @@ ctxev-inline, ctxev-stream-vrml, ctxev-stream-xml, ctxev-stream-json. cases.txt:
    the reload in its `_loadData` field), so a missing family warns once. Open: Text's layout output events (node-text-outputs-open).
    Ledger: the 33 node entries NOT_TESTED -> PARTIAL (visual evidence still missing). Ledger tool fixed: `apply` rebuilds each
    entry from the cloud-start snapshot (a note was appended twice in b2e5b9f, node:Script's missing text was not taken).
+
+## Checkpoint after 804802d (work order D1-D7)
+
+1. Text: the runtime runs X3DGeometryNode's rebuild cascade for Text and sends origin, textBounds, lineBounds as X_ITE does;
+   FontStyle loadData copies family and style when it begins, waits for its `sleep (0)` timer and an uncached font file. SFNode
+   field callbacks fire (fcb-sfnode). New text-events, text-fontstyle, text-family (exact after the oracle's warm-up).
+2. Load timing: investigated to Chrome's Blob / stream reads after `settle` (OPEN_WORK item 1); no oracle change.
+3. Geometry: geom2.rs (Box2, Triangle2, Spheroid3, Box3, Camera, ViewVolume instance, SAT, Bezier, eigen, sorts), 3567 cases
+   bit-exact. The earlier oracle's random matrices were NaN (1000 cases compared NaN with NaN); fixed.
+4. Raw components are converted when printed, in print order (String without unit, ToNumber through ToUnit), in Script prints and
+   in the per-frame dumps; nothing when the value is set. fldx-count exact.
+5. scx-print: route / imported node prints throw X_ITE's errors, exported nodes and PROTO / EXTERNPROTO declarations print,
+   getProtoDeclaration of a loaded EXTERNPROTO.
+Ledger: notes and tests only; totals unchanged (235 COMPLETE / 84 PARTIAL / 25 DIFFERENT / 0 NOT_TESTED / 2 MISSING).

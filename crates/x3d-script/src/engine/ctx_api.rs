@@ -456,6 +456,14 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             sg(c);
             Ok(undefined)
         }
+        // `declaration .toVRMLString ()` … (Scene::proto_declaration_string).
+        "protoString" => {
+            let (extern_, id) = (a.first().is_some_and(coerce_bool), num_arg(ctx, a, 1) as usize);
+            let format = str_arg(ctx, a, 2);
+            let text = rt().scene.proto_declaration_string(extern_, id, &format);
+
+            Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
+        }
         "protoInfo" => {
             let (extern_, id) = (a.first().is_some_and(coerce_bool), num_arg(ctx, a, 1) as usize);
             let r = &rt().scene;
@@ -505,6 +513,13 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
             if let Some(urls) = urls {
                 o.set("urls", new_value_js(ctx, FieldValue::MFString(urls)))?;
+            }
+
+            // X3DExternProtoDeclaration.getProtoDeclaration: the PROTO the load found.
+            if extern_ {
+                if let Some(Some(p)) = rt().extern_loaded.get(&id) {
+                    o.set("loaded", *p as f64)?;
+                }
             }
 
             Ok(o.into_value())

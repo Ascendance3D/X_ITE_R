@@ -52,6 +52,12 @@ pub trait ScriptHost {
     /// Run the timer `next_timer` named (it is removed, or rearmed for an interval).
     fn fire_timer(&mut self, _rt: &mut Runtime) {}
 
+    /// The raw components a print meets, in print order (see [`x3d_scene::RawPrint`]): for each request, `String (component)`
+    /// or its ToNumber, taken now in the host's realm; None when the host does not hold the value.
+    fn raw_coerce(&mut self, _rt: &mut Runtime, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
+        vec![None; requests.len()]
+    }
+
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
 

@@ -1002,10 +1002,12 @@ impl<'a> XmlGenerator<'a> {
     /// A field value as an attribute value or element content (`toXMLStream` of Fields/*.js): a single
     /// value, or the elements of a multi-valued field, separated by `, `, MFString elements quoted.
     fn value_field_to_xml(&mut self, value: &FieldValue, source_text: bool) {
-        if let Some(texts) = self.base.take_raw() {
-            crate::vrml::write_raw(self.g(), &texts, value, false);
-            return;
-        }
+        let converted = match self.base.take_raw(value) {
+            Some(crate::vrml::RawOut::Texts(texts)) => return crate::vrml::write_raw(self.g(), &texts, value, false),
+            Some(crate::vrml::RawOut::Value(v)) => Some(v),
+            None => None,
+        };
+        let value = converted.as_ref().unwrap_or(value);
 
         self.base.apply_units();
         self.value_field_to_xml_units(value, source_text);
@@ -1051,4 +1053,21 @@ impl<'a> XmlGenerator<'a> {
             _ => value.to_vrml_stream(self.g()),
         }
     }
+}
+
+/// See [`Scene::proto_declaration_string`].
+pub(crate) fn proto_declaration_xml(scene: &Scene, extern_: bool, id: usize) -> String {
+    let mut g = XmlGenerator::new(scene);
+
+    g.base.push_ctx(None);
+    g.base.unit_base = 1;
+
+    if extern_ {
+        g.extern_proto_to_xml(id);
+    } else {
+        g.proto_to_xml(id);
+    }
+
+    g.base.pop_ctx();
+    g.base.g.string
 }

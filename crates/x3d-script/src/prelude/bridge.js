@@ -447,7 +447,7 @@ function pushField (field, event)
    entry .data = fieldData (field);
    const token = rawToken (field, entry .data);
 
-   X ("fpush", entry .h, entry .data, event, token, rawValues .get (token) ?.texts);
+   X ("fpush", entry .h, entry .data, event, token);
 }
 
 // X_ITE's Vector3 (and the other internal value objects) hold any JavaScript value a Script puts there; the runtime uses each
@@ -469,51 +469,53 @@ function rawToken (field, data)
    if (!hasRaw (field, data))
       return undefined;
 
-   const copy = data .slice ();
-
-   rawValues .set (++ rawSeq, { data: copy, texts: textsOf (copy) });
+   rawValues .set (++ rawSeq, { data: data .slice () });
    return rawSeq;
 }
 
-function textsOf (data)
+// X_ITE takes `String (component)` (X3DGenerator.FloatFormat) or ToNumber (ToUnit's division) of a raw component when it prints
+// it, and calls nothing when the value is set. A print runs twice (Runtime::print_raw): `__rawCoerce` gets the raw values it met,
+// in print order, as [token, number, ...] (token -1: not this realm's), and returns their components (null for a number).
+global .__rawCoerce = function (requests)
 {
-   return data .map (x =>
+   const out = [ ];
+
+   for (let i = 0; i < requests .length; i += 2)
    {
-      if (typeof x === "number")
-         return null;
+      const raw = rawValues .get (requests [i]), number = requests [i + 1];
 
-      try { return String (x); } catch { return null; }
-   });
-}
+      if (!raw)
+      {
+         out .push (null);
+         continue;
+      }
 
-// X_ITE takes `String (component)` when it prints. The runtime's texts are taken again when the Script's code has run (leave) and
-// before the Script prints; the values no field holds any more are forgotten.
-function rawRefresh ()
+      out .push (raw .data .map (x =>
+      {
+         if (typeof x === "number")
+            return null;
+
+         try { return number ? + x : String (x); } catch { return null; }
+      }));
+   }
+
+   return out;
+};
+
+// When the Script's code has run: the raw values no field holds any more are forgotten.
+function rawForget ()
 {
    if (!rawValues .size)
       return;
 
    const live = new Set (X ("frawlive"));
 
-   for (const [token, raw] of rawValues)
+   for (const token of rawValues .keys ())
    {
       if (!live .has (token))
-      {
          rawValues .delete (token);
-         continue;
-      }
-
-      const texts = textsOf (raw .data);
-
-      if (texts .every ((t, i) => t === raw .texts [i]))
-         continue;
-
-      raw .texts = texts;
-      X ("frawtexts", token, texts);
    }
 }
-
-global .__rawRefresh = rawRefresh;
 
 // The data of a node field from the runtime, with the Script's raw components when they went with the value.
 function rawData (h, data)
@@ -553,10 +555,10 @@ function leave ()
       entry .data = data;
       const token = rawToken (entry .field, data);
 
-      X ("fpush", entry .h, data, false, token, rawValues .get (token) ?.texts);
+      X ("fpush", entry .h, data, false, token);
    }
 
-   rawRefresh ();
+   rawForget ();
 }
 
 __bridge .fieldCallbackAdded = function (field)

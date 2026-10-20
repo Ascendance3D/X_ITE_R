@@ -36,32 +36,29 @@ Rust run, can reproduce it byte for byte. This is a property of the worlds, not 
 
 ## Remaining work, hardest first
 
-1. Event-loop timing that follows the oracle page's network, not X_ITE's code (documented open): a fetched Script candidate (a file,
-   a base64 data URL) completes 3 frames later in the oracle (the port: the same frame), and Chrome completes a base64 data URL's
-   fetch after the files' (scr-url-order-open); a scene a Script asks for whose EXTERNPROTO, Inline or Script file is fetched
-   resolves 1-2 frames later (parse-def-proto snippets 37, 38, 40; parse-loads). The files are served locally by the oracle, so
-   network access does not change this. The microtask part matches since this checkpoint (scr-url-order-micro).
-2. Text's layout outputs (node-text-outputs-open): X_ITE sends origin, textBounds and lineBounds when it rebuilds the text, after
-   its default font has loaded, twice for one change; the port computes the same values (x3d-text oracle test, 1e-6) but its
-   runtime sends no such events. Needs X_ITE's rebuild triggers and the font load modelled.
-3. Engine internals of the objects an execution context hands out (scx-layers-open, documented, not PASS): X_ITE's X3DRoute,
-   X3DImportedNode, X3DExportedNode, X3DProtoDeclaration and X3DExternProtoDeclaration prototypes also carry the engine's own
-   members; the port's carry the public ones (scx-members). Not passed to Scripts: a loaded EXTERNPROTO's appinfo and
-   documentation, toVRMLString / toXMLString / toJSONString of a route, an imported or an exported node, X3DScene.dispose.
-4. Node class chains: a node X_ITE hands out is an instance of its node class; the port's is an X3DNodeRef (owner boundary
+1. Load timing that follows Chrome's I/O, not X_ITE's code (documented open, root cause found): after a fetch, FileLoader reads the
+   body through `getBlob` (`reader .read ()` loop) and `$.gunzip` (`blob .slice () .arrayBuffer ()`, `blob .arrayBuffer ()`); those
+   reads complete on Chrome's I/O thread, after the harness's `settle` (which waits for requests in flight and three message
+   turns). So a fetched Script candidate initializes frames later (scr-url-order-open: frame 4, a base64 data URL after the files)
+   and a scene whose EXTERNPROTO / Inline / Script file is fetched resolves 1-2 frames later (parse-def-proto 37, 38, 40;
+   parse-loads). Matching it would mean modelling Chrome's I/O thread; the oracle is not changed to hide it. The microtask part
+   matches (scr-url-order-micro).
+2. Text during the oracle's warm-up (node-text-outputs-open): anim.html loads the world on wall-clock animation frames, so the frame
+   the default font arrives in is not X_ITE's logic. After the warm-up the rebuild cascade, the FontStyle load timing (timer,
+   uncached font file) and every value match (text-events, text-fontstyle, text-family). ScreenFontStyle's ScreenText outputs are
+   not modelled.
+3. toString / valueOf calls a node's own math makes on a raw component (fldx-print-count-open: 52 vs 57 = Transform 3,
+   TextureTransform 2 when the value arrives). Prints and the oracle's dumps convert raw components as X_ITE does (fldx-count
+   exact); the runtime keeps NaN for an object component and converts it only where it prints it.
+4. Engine internals of the objects an execution context hands out (scx-layers-open): the engine's own members (connect,
+   refreshInstance, newInstance, loadNow, the X3DBaseNode field machinery); X3DScene.dispose. Printing them matches since this
+   checkpoint (scx-print).
+5. Node class chains: a node X_ITE hands out is an instance of its node class; the port's is an X3DNodeRef (owner boundary
    2026-10-20); getType () matches (brx-call-open).
-5. Browser boundary kept open (owner decisions 2026-10-20, documented, not PASS): brx-api-open, brx-call-open (page objects are
-   null), scr-classes-open (Decision 1: no DOM, no stand-in objects), X3DConstants of external-component node types.
-6. sub:fields.types (PARTIAL): the number of toString calls on a raw component (fldx-print-count-open: X_ITE calls it once per
-   print of it; the port takes the texts of a host's raw values when its Scripts have run and before a Script prints); engine
-   Intl / Error.stack wording; external-component X3DConstants order. IterableWeakSet: the bundled QuickJS holds X_ITE's own
-   class's members strongly too (weak_set_engine.rs) and crashes on the WeakRef pattern, so the strong reference stays.
-7. sub:fields.math (PARTIAL): the X_ITE geometry the port has no counterpart of is not compared (Box2, Triangle2, Spheroid3,
-   Camera.frustum / perspective, the ViewVolume instance, Box3 beyond extents, Triangle3.triangulatePolygon, Algorithms). Everything
-   the port has is bit-exact (geom_math.rs, 2434 cases).
-8. NOT_TESTED nodes: field and event evidence (node-* worlds) is in; visual evidence needs the desktop GPU run.
-9. sub:exec.context-api stays PARTIAL (owner decision 2026-10-20) until item 3 is done.
-10. The rest of the REA queue; promotion review by exact REA ID.
+6. Browser boundary kept open (owner decisions 2026-10-20): brx-api-open, brx-call-open, scr-classes-open (no DOM), X3DConstants of
+   external-component node types.
+7. sub:fields.math: Triangle3.triangulatePolygon (libtess) not compared directly; everything else bit-exact (3567 cases).
+8. The 84 PARTIAL entries; the 33 nodes need the desktop GPU run for visual evidence before promotion proposals.
 
 Kept documented (not defects of the port's model): the text of TypeErrors the engine words (cfg-scene-odd: QuickJS "cannot read
 property 'name' of undefined", V8 "Cannot read properties of undefined (reading 'name')"; the thrown class and the state are
