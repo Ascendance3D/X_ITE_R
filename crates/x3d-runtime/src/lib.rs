@@ -293,8 +293,11 @@ pub enum Task {
     UrlLoad(NodeId, u64),
     /// X3DExternProtoDeclaration.loadData (declaration, generation): fetch the candidates.
     ExternLoad(ExternId, u64),
-    /// A Script whose source is fetched (a macrotask, requested by the Script's microtask).
-    ScriptFetch(NodeId),
+    /// A Script candidate whose source is fetched (a macrotask, requested by the Script's microtask): node, candidate index.
+    ScriptFetch(NodeId, usize),
+    /// FileLoader.loadDocumentError → loadDocumentAsync of the next Script candidate (node, its index), `hops` more microtask
+    /// ticks from now, printing the failure of the candidate before it when it runs.
+    ScriptCandidate(NodeId, usize, u8, Option<Box<script::CandidateError>>),
     /// X3DBrowser.createX3DFromURL: the fetch of request `id`.
     BrowserLoad(u64),
     /// X3DBrowser.createX3DFromString: the parser's statements run once `browser .loadComponents (scene)` resolved.
@@ -1072,16 +1075,12 @@ impl Runtime {
         loop {
             if let Some(task) = self.tasks.pop_front() {
                 match task {
-                    Task::ScriptLoad(node) => {
-                        let first = self.url_strings(node).into_iter().find(|u| !u.is_empty()).unwrap_or_default();
-                        // FileLoader.loadDocumentAsync handles a Script URL and (dataAsString) a data URL that is not base64 before its
-                        // first await: the Script initializes in this microtask.
-                        let inline = ["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| first.trim_start().starts_with(s)) || loader::data_url_text(&first).is_some();
-
-                        if inline || first.is_empty() {
-                            self.script_load(node);
+                    Task::ScriptLoad(node) => self.script_candidate(node, 0, None),
+                    Task::ScriptCandidate(node, index, hops, failed) => {
+                        if hops > 0 {
+                            self.tasks.push_back(Task::ScriptCandidate(node, index, hops - 1, failed));
                         } else {
-                            self.fetches.push_back(Task::ScriptFetch(node));
+                            self.script_candidate(node, index, failed.map(|f| *f));
                         }
                     }
                     Task::BrowserParse(id) => self.browser_parse(id),
@@ -1098,9 +1097,9 @@ impl Runtime {
             match task {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
-                Task::ScriptFetch(node) => self.script_load(node),
+                Task::ScriptFetch(node, index) => self.script_fetch(node, index),
                 Task::BrowserLoad(id) => self.browser_load(id),
-                Task::ScriptLoad(..) | Task::ScriptLoaded(..) | Task::BrowserParse(..) => {}
+                Task::ScriptLoad(..) | Task::ScriptCandidate(..) | Task::ScriptLoaded(..) | Task::BrowserParse(..) => {}
             }
         }
     }

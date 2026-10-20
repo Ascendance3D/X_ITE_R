@@ -1,0 +1,105 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr url order micro"
+DEF U01 Script {
+  url "javascript:(globalThis .LOG = globalThis .LOG || []) .push ('U01 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U01 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U01 shutdown'); }"
+}
+DEF U02 Script {
+  url "vrmlscript:(globalThis .LOG = globalThis .LOG || []) .push ('U02 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U02 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U02 shutdown'); }"
+}
+DEF U03 Script {
+  url "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U03 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U03 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U03 shutdown'); }"
+}
+DEF U04 Script {
+  url "data:text/javascript,%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U04%20top%27%29%3B%20function%20initialize%20%28%29%20%7B%20%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U04%20init%27%29%3B%20%7D%20function%20shutdown%20%28%29%20%7B%20%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U04%20shutdown%27%29%3B%20%7D"
+}
+DEF U10 Script {
+  url [ ]
+}
+DEF U11 Script {
+  url "ecmascript:"
+}
+DEF U12 Script {
+  url [ "foo:bar" "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U12 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U12 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U12 shutdown'); }" ]
+}
+DEF U13 Script {
+  url [ "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U13a top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U13a init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U13a shutdown'); }" "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U13b top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U13b init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U13b shutdown'); }" ]
+}
+DEF U14 Script {
+  url "ecmascript: // comment only"
+}
+DEF U15 Script {
+  url [ "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U15 a'); throw new Error ('u15');" "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U15b top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U15b init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U15b shutdown'); }" ]
+}
+DEF U17 Script {
+  inputOnly SFTime tick
+  url "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U17a top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U17a init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U17a shutdown'); }"
+}
+DEF U18 Script {
+  inputOnly SFTime tick
+    url "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U18 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U18 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U18 shutdown'); }"
+  load FALSE
+}
+DEF U19 Script {
+  url "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U19 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U19 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U19 shutdown'); } // trailing comment"
+}
+DEF U20 Script {
+  url "ecmascript:
+(globalThis .LOG = globalThis .LOG || []) .push ('U20 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U20 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U20 shutdown'); }
+"
+}
+DEF U21 Script {
+  url "  ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U21 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U21 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U21 shutdown'); }"
+}
+DEF U22 Script {
+  url "ECMAScript:(globalThis .LOG = globalThis .LOG || []) .push ('U22 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U22 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U22 shutdown'); }"
+}
+DEF U23 Script {
+  url "ecmascript: (globalThis .LOG = globalThis .LOG || []) .push ('U23 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U23 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U23 shutdown'); }"
+}
+DEF U24 Script {
+  url [ "ecmascript:(globalThis .LOG = globalThis .LOG || []) .push ('U24a top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U24a init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U24a shutdown'); }" "assets/scr-ok.js" ]
+}
+DEF U25 Script {
+  url "data:,%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U25%20top%27%29%3B%20function%20initialize%20%28%29%20%7B%20%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U25%20init%27%29%3B%20%7D%20function%20shutdown%20%28%29%20%7B%20%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U25%20shutdown%27%29%3B%20%7D"
+}
+DEF U26 Script {
+  url "data:text/plain,%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U26%20top%27%29%3B%20function%20initialize%20%28%29%20%7B%20%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U26%20init%27%29%3B%20%7D%20function%20shutdown%20%28%29%20%7B%20%28globalThis%20.LOG%20%3D%20globalThis%20.LOG%20%7C%7C%20%5B%5D%29%20.push%20%28%27U26%20shutdown%27%29%3B%20%7D"
+}
+DEF U28 Script {
+  url [ "javascript:(globalThis .LOG = globalThis .LOG || []) .push ('U28 top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U28 init'); } function shutdown () { (globalThis .LOG = globalThis .LOG || []) .push ('U28 shutdown'); }" "assets/scr-ok.js" ]
+}
+DEF DRV Script {
+  inputOnly SFTime tick
+  url "ecmascript:
+var NAME = 'DRV';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function tick () {
+  n++;
+  var u = Browser .currentScene .getNamedNode ('U17');
+  var w = Browser .currentScene .getNamedNode ('U18');
+  if (n == 3) { u .url = new MFString (\"ecmascript:\" + \"(globalThis .LOG = globalThis .LOG || []) .push ('U17b top'); function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U17b init'); }\"); log ('U17 url set'); }
+  if (n == 5) { w .load = true; log ('U18 load true'); }
+  if (n == 7) { u .url = new MFString (); log ('U17 url emptied'); }
+  if (n == 9) { u .url = new MFString (\"ecmascript:\" + \"(globalThis .LOG = globalThis .LOG || []) .push ('U17c init'); throw 1;\", \"ecmascript:\" + \"function initialize () { (globalThis .LOG = globalThis .LOG || []) .push ('U17d init'); }\"); log ('U17 url fallback'); }
+}
+
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO DRV.tick
+ROUTE STEP.cycleTime TO R.tick

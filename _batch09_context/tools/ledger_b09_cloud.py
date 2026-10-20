@@ -6,8 +6,8 @@
 
 ledger_b09.py is not used: its `apply` rebuilds from ledger/before/ledger.json and writes to another tree's path. This tool starts
 from the authoritative ledger itself, and ledger/before-cloud/ledger.json is the snapshot it was taken from at the start of the
-cloud session (231 COMPLETE, 55 PARTIAL, 25 DIFFERENT, 33 NOT_TESTED, 2 MISSING). `apply` is idempotent: an entry already at its
-target is left as it is.
+cloud session (231 COMPLETE, 55 PARTIAL, 25 DIFFERENT, 33 NOT_TESTED, 2 MISSING). `apply` is idempotent: each entry of C is
+rebuilt from the snapshot and C.
 
 Each entry of C: (new status, tests appended, missing text, note appended). Earlier notes are kept as a prefix.
 `verify` checks: the 346 IDs of the snapshot, every entry outside C equal to the snapshot, no DIFFERENT entry in C or changed, and
@@ -78,9 +78,11 @@ C = {
     "sub:fields.types": (
         "PARTIAL",
         ["crates/x3d-viewer/tests/rea_batch09_sai.rs fld-* fldx-* fcb-* scr-field-access scr-field-defaults",
-         "crates/x3d-script/tests/script.rs"],
+         "crates/x3d-script/tests/script.rs", "crates/x3d-script/tests/weak_set_engine.rs"],
         "X3DConstants of external-component node types (X_ITE order varies run to run); IterableWeakSet members held strongly "
-        "(QuickJS); engine-level Intl/Error.stack; XML/JSON printing of raw (non-number) SF components not compared",
+        "(QuickJS: X_ITE's own class holds them as strongly in this engine, weak_set_engine.rs); engine-level Intl/Error.stack; the number "
+        "of toString calls on a raw component (fldx-print-count-open: X_ITE calls it once per print of it, the port takes the texts "
+        "of a host's raw values when its Scripts have run and before a Script prints)",
         "b09 cloud: Script field objects are X_ITE's own classes (prelude generated from the pin). Owner decision 2026-10-20 "
         "(approved safety difference, kept within this entry): a length or index near 2^32 is a RangeError and the field keeps its "
         "prior value; X_ITE allocates and runs out of memory (script.rs huge_mf_length_or_index_is_a_range_error_not_an_allocation, "
@@ -88,35 +90,60 @@ C = {
         "fldx-internal (strings, numeric strings, '', null, undefined, NaN, true, objects, '1e3' written into Vector3 / Color3 "
         "through getValue (), the setters, constructors, Rotation4, MFFloat, MFVec3f elements, SFFloat; node fields with routes and "
         "Script fields) baselined from X_ITE (3 identical recordings), exact: raw components kept with the value and along routes, "
-        "never default, printed String (raw) without a unit and ToNumber / factor with one",
+        "never default, printed String (raw) without a unit and ToNumber / factor with one. Checkpoint after b2e5b9f: fldx-print "
+        "(VRML, XML, JSON of node, field and scene; units; a component whose text changes after assignment), fldx-units (a node's or "
+        "field's own toXXXString converts no unit: X3DObject pushes a null execution context), fldx-cross (a raw value one Script "
+        "writes, read by another), each 3 identical X_ITE recordings, exact; weak_set_engine.rs: the bundled QuickJS keeps a "
+        "FinalizationRegistry target that is its own token alive, and freeing a cycle with a WeakRef to such a target corrupts its "
+        "heap (reproduced without port code), so the WeakRef stays replaced; unreachable members are still freed (memory flat)",
     ),
     "node:Script": (
         "PARTIAL",
         ["crates/x3d-script/tests/script.rs a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on",
-         "crates/x3d-viewer/tests/rea_batch09_sai.rs scr-globals scr-classes scr-url-order-sync scr-image-events"],
+         "crates/x3d-viewer/tests/rea_batch09_sai.rs scr-globals scr-classes scr-url-order-sync scr-url-order-micro scr-image-events"],
         "scr-classes-open: the page's own globals (window, document, XMLHttpRequest, fetch) are not provided (owner decision "
         "2026-10-20, Decision 1: no DOM, no stand-in objects); "
-        "scr-url-order-open: initialize order of Scripts whose URL candidates fail or need a fetch (Chrome's task order); "
+        "scr-url-order-open: the frame a fetched Script candidate (a file, a base64 data URL) completes in, and that Chrome completes "
+        "a base64 data URL's fetch after the files' (network completion in the oracle page; the microtask order now matches, "
+        "scr-url-order-micro); "
         "scr-browser-open: X3DConstants of external-component node types (X_ITE's load order)",
         "b09 cloud: owner decision 2026-10-20: a field callback that throws is reported at error level and ends the callbacks of "
-        "that event (as X_ITE's processEvent loop); the runtime goes on (X_ITE's browser stops), value and routes kept",
+        "that event (as X_ITE's processEvent loop); the runtime goes on (X_ITE's browser stops), value and routes kept. Checkpoint "
+        "after b2e5b9f: Script URL candidates step as X_ITE's FileLoader does (a throwing callback reaches the next candidate three "
+        "microtask ticks later, a URL fetch rejects at once two ticks later, an unparsable URL one, a fetched one after its fetch); "
+        "scr-url-order-micro, 3 identical X_ITE recordings, exact",
+    ),
+    "sub:fields.math": (
+        "PARTIAL",
+        ["crates/x3d-viewer/tests/geom_math.rs (oracle/geom-math-baseline.json from oracle/tools/geom_xite.mjs)"],
+        "the X_ITE geometry the port has no counterpart of is not compared: Box2, Triangle2, Spheroid3, Camera.frustum / "
+        "perspective, the ViewVolume instance (set, getEdges, intersectsSphere, intersectsBox), Box3 beyond fromExtents / multRight "
+        "/ getExtents, Triangle3.triangulatePolygon (libtess), Algorithms (Bezier, SAT, eigen_decomposition, sorts)",
+        "b09 cloud checkpoint after b2e5b9f: the pinned X_ITE's own standard/Math/Geometry modules (node, three identical runs) on "
+        "2434 cases (degenerate ones and seeded random ones): Line3 (fromPoints, closest point to a point and a line, perpendicular "
+        "vectors, intersectsTriangle, multMatrixLine / multLineMatrix), Line2, Plane3 (distance, closest point, intersectsLine, "
+        "multLeft / multRight), Sphere3 and Cylinder3 intersectsLine, Triangle3 area / normal / quadNormal, ViewVolume "
+        "unProjectPoint / unProjectRay / projectPoint / projectLine, Camera.ortho, Box3 fromExtents / multRight / getExtents: the "
+        "port's geom.rs and lookat.rs equal it bit for bit",
     ),
 }
 
 
 def apply():
+    # Each entry of C is rebuilt from the snapshot (its state when the cloud session began) and C: running apply again, or after C
+    # changed, gives the same entry (no note is appended twice, a changed `missing` text is taken).
     d = json.load(open(AUTH))
+    snap = {i["id"]: i for i in json.load(open(SNAP))["items"]}
     for i in d["items"]:
         p = C.get(i["id"])
         if not p:
             continue
         st, tests, missing, note = p
-        if i["status"] == st and note in (i.get("notes") or ""):
-            continue
+        b = snap[i["id"]]
         i["status"] = st
-        i["tests"] = list(i.get("tests") or []) + [t for t in tests if t not in (i.get("tests") or [])]
+        i["tests"] = list(b.get("tests") or []) + [t for t in tests if t not in (b.get("tests") or [])]
         i["missing"] = missing
-        i["notes"] = (i.get("notes", "") + " | " if i.get("notes") else "") + note
+        i["notes"] = (b.get("notes", "") + " | " if b.get("notes") else "") + note
     json.dump(d, open(AUTH, "w"), indent=1)
 
 
