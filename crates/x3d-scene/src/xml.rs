@@ -34,6 +34,7 @@ impl Scene {
         let mut g = XmlGenerator::new(self);
 
         g.base.push_ctx(self.first_node_ctx(value));
+        g.base.unit_base = 1;
 
         match value {
             FieldValue::SFNode(n) => g.sfnode_to_xml(*n),
@@ -537,6 +538,7 @@ impl<'a> XmlGenerator<'a> {
                             self.g().push(&field.name);
                             self.g().push("='");
                             self.base.unit_field = Some((id, field.name.clone()));
+                            self.base.raw_field = Some((id, FieldLoc::Pre(i)));
                             self.value_field_to_xml(&value, source == Some(i));
                             self.g().push("'");
                         }
@@ -562,7 +564,7 @@ impl<'a> XmlGenerator<'a> {
 
         if node.can_user_defined_fields {
             for (k, field) in node.user_fields.iter().enumerate() {
-                self.user_field_to_xml(scene, k, field, in_ctx, shared, &mut references);
+                self.user_field_to_xml(scene, id, k, field, in_ctx, shared, &mut references);
             }
         }
 
@@ -620,7 +622,7 @@ impl<'a> XmlGenerator<'a> {
 
     /// X3DNode.toXMLStreamUserDefinedField: one `<field>` element of a node with user-defined fields.
     #[allow(clippy::too_many_arguments)]
-    fn user_field_to_xml(&mut self, scene: &'a Scene, k: usize, field: &Field, in_ctx: bool, shared: bool, references: &mut Vec<FieldLoc>) {
+    fn user_field_to_xml(&mut self, scene: &'a Scene, id: NodeId, k: usize, field: &Field, in_ctx: bool, shared: bool, references: &mut Vec<FieldLoc>) {
         self.open_tag("field");
         self.attribute("accessType", access::name(field.access));
         self.attribute("type", field.ty().name());
@@ -633,10 +635,11 @@ impl<'a> XmlGenerator<'a> {
                 references.push(FieldLoc::User(k));
             }
 
-            if !field.is_initializable() || field.value.is_default_value() {
+            if !field.is_initializable() || (field.value.is_default_value() && !scene.raw_tokens.contains_key(&(id, FieldLoc::User(k)))) {
                 self.close_tag("field");
                 self.g().tidy_break();
             } else {
+                self.base.raw_field = Some((id, FieldLoc::User(k)));
                 self.declared_value_to_xml(&field.value);
             }
         } else {
@@ -992,6 +995,11 @@ impl<'a> XmlGenerator<'a> {
     /// A field value as an attribute value or element content (`toXMLStream` of Fields/*.js): a single
     /// value, or the elements of a multi-valued field, separated by `, `, MFString elements quoted.
     fn value_field_to_xml(&mut self, value: &FieldValue, source_text: bool) {
+        if let Some(texts) = self.base.take_raw() {
+            crate::vrml::write_raw(self.g(), &texts, value, false);
+            return;
+        }
+
         self.base.apply_units();
         self.value_field_to_xml_units(value, source_text);
         self.g().set_unit_factors(1.0, 1.0);

@@ -432,7 +432,9 @@ function pushField (field, event)
       return;
 
    entry .data = fieldData (field);
-   X ("fpush", entry .h, entry .data, event, rawToken (field, entry .data), rawTexts (field, entry .data));
+   const token = rawToken (field, entry .data);
+
+   X ("fpush", entry .h, entry .data, event, token, rawValues .get (token) ?.texts);
 }
 
 // X_ITE's Vector3 (and the other internal value objects) hold any JavaScript value a Script puts there; the runtime uses each
@@ -454,16 +456,14 @@ function rawToken (field, data)
    if (!hasRaw (field, data))
       return undefined;
 
-   rawValues .set (++ rawSeq, data .slice ());
+   const copy = data .slice ();
+
+   rawValues .set (++ rawSeq, { data: copy, texts: textsOf (copy) });
    return rawSeq;
 }
 
-// `String (component)` of each raw component (null for a number): how a field without a unit prints it (X3DGenerator.FloatFormat).
-function rawTexts (field, data)
+function textsOf (data)
 {
-   if (!hasRaw (field, data))
-      return undefined;
-
    return data .map (x =>
    {
       if (typeof x === "number")
@@ -473,12 +473,41 @@ function rawTexts (field, data)
    });
 }
 
+// X_ITE takes `String (component)` when it prints. The runtime's texts are taken again when the Script's code has run (leave) and
+// before the Script prints; the values no field holds any more are forgotten.
+function rawRefresh ()
+{
+   if (!rawValues .size)
+      return;
+
+   const live = new Set (X ("frawlive"));
+
+   for (const [token, raw] of rawValues)
+   {
+      if (!live .has (token))
+      {
+         rawValues .delete (token);
+         continue;
+      }
+
+      const texts = textsOf (raw .data);
+
+      if (texts .every ((t, i) => t === raw .texts [i]))
+         continue;
+
+      raw .texts = texts;
+      X ("frawtexts", token, texts);
+   }
+}
+
+global .__rawRefresh = rawRefresh;
+
 // The data of a node field from the runtime, with the Script's raw components when they went with the value.
 function rawData (h, data)
 {
    const token = X ("frawtok", h);
 
-   return token === undefined ? data : rawValues .get (token) ?? data;
+   return token === undefined ? data : rawValues .get (token) ?.data ?? data;
 }
 
 // Before a Script runs: the node fields the runtime changed since.
@@ -509,8 +538,12 @@ function leave ()
          continue;
 
       entry .data = data;
-      X ("fpush", entry .h, data, false, rawToken (entry .field, data), rawTexts (entry .field, data));
+      const token = rawToken (entry .field, data);
+
+      X ("fpush", entry .h, data, false, token, rawValues .get (token) ?.texts);
    }
+
+   rawRefresh ();
 }
 
 __bridge .fieldCallbackAdded = function (field)

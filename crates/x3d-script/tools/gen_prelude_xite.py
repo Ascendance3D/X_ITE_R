@@ -139,10 +139,11 @@ __bridge .rotation4 = { _x, _y, _z, _angle, _tainted, _quaternion };
       target [_length] = newLength;
 
       if (newLength < length)"""),
-    # QuickJS workaround: when an object a WeakRef points to is collected while IterableWeakSet holds it (field and node Proxies),
-    # the bundled QuickJS corrupts its heap (free_zero_refcount assertion, malloc_consolidate). The set holds its members
-    # strongly; its class, methods, registry and unregister tokens are X_ITE's. Only the moment a member that nothing else
-    # reaches leaves the set differs, which follows the garbage collector in X_ITE too.
+    # QuickJS workaround (tests/weak_set_engine.rs): freeing a cycle in which an object's own set holds a WeakRef to it, registered
+    # with itself as unregister token, corrupts the bundled QuickJS heap (free_zero_refcount assertion, malloc_consolidate; reproduced
+    # without port code). The set holds its members strongly; its class, methods, registry and unregister tokens are X_ITE's. In
+    # this QuickJS a registry entry whose token is its target keeps the target alive, so X_ITE's own class holds its members as
+    # strongly; unreachable cycles are still freed (memory flat in the test). Only V8's collection timing differs.
     ("x_ite/Base/IterableWeakSet.js",
      """      this .#map .set (object .getId (), new WeakRef (object));""",
      """      this .#map .set (object .getId (), { deref: () => object });"""),

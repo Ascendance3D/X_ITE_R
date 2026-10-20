@@ -1,0 +1,96 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx print count open"
+DEF P_Transform_count Transform { }
+DEF P_TextureTransform_count TextureTransform { }
+DEF P_ClipPlane_count ClipPlane { }
+DEF P_Material_count Material { }
+DEF P_TextureProperties_count TextureProperties { }
+DEF P Script {
+  inputOutput MFString out [ ]
+  inputOutput SFVec3f p3f_count 1 1 1
+  inputOutput SFVec2d p2d_count 1 1
+  inputOutput SFVec3d p3d_count 1 1 1
+  inputOutput SFVec4d p4d_count 1 1 1 1
+  inputOutput SFColor pc_count 1 1 1
+  inputOutput SFColorRGBA pca_count 1 1 1 1
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+var MO = { t: 'p', toString: function () { return this .t; } };
+var CO = { n: 0, toString: function () { return 'c' + (++ this .n); } };
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+var F_ = 0;
+function prepareEvents () {
+  ++ F_;
+  if (F_ === 3) {
+  T ('Transform count set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_count'); var f = N .translation; f .getValue () .x = CO; N .translation = f; return 'ok'; });
+  T ('TextureTransform count set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_count'); var f = N .translation; f .getValue () .x = CO; N .translation = f; return 'ok'; });
+  T ('ClipPlane count set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_count'); var f = N .plane; f .getValue () .x = CO; N .plane = f; return 'ok'; });
+  T ('Material count set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_count'); var f = N .diffuseColor; f .getValue () .r = CO; N .diffuseColor = f; return 'ok'; });
+  T ('TextureProperties count set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_count'); var f = N .borderColor; f .getValue () .r = CO; N .borderColor = f; return 'ok'; });
+  T ('p3f count set', function () { var f = new SFVec3f (); f .getValue () .x = CO; p3f_count = f; return 'ok'; });
+  T ('p2d count set', function () { var f = new SFVec2d (); f .getValue () .x = CO; p2d_count = f; return 'ok'; });
+  T ('p3d count set', function () { var f = new SFVec3d (); f .getValue () .x = CO; p3d_count = f; return 'ok'; });
+  T ('p4d count set', function () { var f = new SFVec4d (); f .getValue () .x = CO; p4d_count = f; return 'ok'; });
+  T ('pc count set', function () { var f = new SFColor (); f .getValue () .r = CO; pc_count = f; return 'ok'; });
+  T ('pca count set', function () { var f = new SFColorRGBA (); f .getValue () .r = CO; pca_count = f; return 'ok'; });
+  }
+  if (F_ === 5) { MO .t = 'q'; }
+  if (F_ === 7) {
+  T ('Transform count text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_count'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform count text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_count'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('ClipPlane count text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_count'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('Material count text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_count'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('TextureProperties count text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_count'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('p3f count text', function () { return [p3f_count .toVRMLString (), p3f_count .toXMLString (), p3f_count .toJSONString ? p3f_count .toJSONString () : 'none', String (p3f_count)]; });
+  T ('p2d count text', function () { return [p2d_count .toVRMLString (), p2d_count .toXMLString (), p2d_count .toJSONString ? p2d_count .toJSONString () : 'none', String (p2d_count)]; });
+  T ('p3d count text', function () { return [p3d_count .toVRMLString (), p3d_count .toXMLString (), p3d_count .toJSONString ? p3d_count .toJSONString () : 'none', String (p3d_count)]; });
+  T ('p4d count text', function () { return [p4d_count .toVRMLString (), p4d_count .toXMLString (), p4d_count .toJSONString ? p4d_count .toJSONString () : 'none', String (p4d_count)]; });
+  T ('pc count text', function () { return [pc_count .toVRMLString (), pc_count .toXMLString (), pc_count .toJSONString ? pc_count .toJSONString () : 'none', String (pc_count)]; });
+  T ('pca count text', function () { return [pca_count .toVRMLString (), pca_count .toXMLString (), pca_count .toJSONString ? pca_count .toJSONString () : 'none', String (pca_count)]; });
+  T ('scene xml', function () { return Browser .currentScene .toXMLString (); });
+  T ('scene json', function () { return Browser .currentScene .toJSONString (); });
+  T ('count calls', function () { return CO .n; });
+    flush_ ();
+  }
+}
+
+  "
+}
