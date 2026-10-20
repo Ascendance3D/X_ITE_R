@@ -1,0 +1,59 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "bind Background"
+DEF A Background { skyColor 0 0 0 }
+DEF B Background { skyColor 0 0 0 }
+DEF C Background { skyColor 0 0 0 }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool b_A
+  inputOnly SFTime t_A
+  inputOnly SFBool b_B
+  inputOnly SFTime t_B
+  inputOnly SFBool b_C
+  inputOnly SFTime t_C
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + '@' + step + ' '; }
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }
+function b_A (v) { rec ('A:' + (v ? 1 : 0)); }
+function t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }
+function b_B (v) { rec ('B:' + (v ? 1 : 0)); }
+function t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }
+function b_C (v) { rec ('C:' + (v ? 1 : 0)); }
+function t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });
+  if (step == 3) p ('bindC', function () { s .getNamedNode ('C') .set_bind = true; });
+  if (step == 4) p ('bindA', function () { s .getNamedNode ('A') .set_bind = true; });
+  if (step == 5) p ('unbindC', function () { s .getNamedNode ('C') .set_bind = false; });
+  if (step == 6) p ('unbindA', function () { s .getNamedNode ('A') .set_bind = false; });
+  if (step == 7) p ('rebindB', function () { s .getNamedNode ('B') .set_bind = true; });
+  if (step == 8) p ('unbindC2', function () { s .getNamedNode ('C') .set_bind = false; });
+  if (step == 9) p ('unbindB', function () { s .getNamedNode ('B') .set_bind = false; });
+  if (step == 10) p ('bindAB', function () { s .getNamedNode ('A') .set_bind = true; s .getNamedNode ('B') .set_bind = true; });
+  if (step == 11) p ('unbindAB', function () { s .getNamedNode ('A') .set_bind = false; s .getNamedNode ('B') .set_bind = false; });
+  if (step == 12) p ('bindBA', function () { s .getNamedNode ('B') .set_bind = true; s .getNamedNode ('A') .set_bind = true; s .getNamedNode ('A') .set_bind = false; s .getNamedNode ('A') .set_bind = true; });
+  if (step == 13) p ('removeA', function () { s .removeRootNode (s .getNamedNode ('A')); return s .rootNodes .length; });
+  if (step == 14) p ('removeB', function () { s .removeRootNode (s .getNamedNode ('B')); return s .rootNodes .length; });
+  if (step == 15) p ('bindC', function () { s .getNamedNode ('C') .set_bind = true; });
+  if (step == 16) p ('removeC', function () { s .removeRootNode (s .getNamedNode ('C')); return s .rootNodes .length; });
+  if (step == 17) p ('create', function () { var n = s .createNode ('Background'); s .addRootNode (n); n .set_bind = true; return n .isBound; });
+  if (step == 18) p ('state', function () { return s .rootNodes .length; });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
+ROUTE A.isBound TO P.b_A
+ROUTE A.bindTime TO P.t_A
+ROUTE B.isBound TO P.b_B
+ROUTE B.bindTime TO P.t_B
+ROUTE C.isBound TO P.b_C
+ROUTE C.bindTime TO P.t_C

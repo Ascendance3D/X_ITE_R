@@ -1,0 +1,50 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "bind read"
+DEF A Viewpoint { description "A" position 0 0 10 }
+DEF B Viewpoint { description "B" position 0 0 11 }
+DEF C Viewpoint { description "C" position 0 0 12 }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool b_A
+  inputOnly SFTime t_A
+  inputOnly SFBool b_B
+  inputOnly SFTime t_B
+  inputOnly SFBool b_C
+  inputOnly SFTime t_C
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + '@' + step + ' '; }
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }
+function b_A (v) { rec ('A:' + (v ? 1 : 0)); }
+function t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }
+function b_B (v) { rec ('B:' + (v ? 1 : 0)); }
+function t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }
+function b_C (v) { rec ('C:' + (v ? 1 : 0)); }
+function t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }
+var N = ['A', 'B', 'C'];
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+  if (step == 2) p ('read0', function () { var r = []; N .forEach (function (n) { r .push (n + (s .getNamedNode (n) .isBound ? 1 : 0)); }); return r .join (','); });
+  if (step == 3) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; var r = []; N .forEach (function (n) { r .push (n + (s .getNamedNode (n) .isBound ? 1 : 0)); }); return r .join (','); });
+  if (step == 4) p ('read1', function () { var r = []; N .forEach (function (n) { r .push (n + (s .getNamedNode (n) .isBound ? 1 : 0)); }); return r .join (','); });
+  if (step == 5) p ('bindTimeSet', function () { return typeof s .getNamedNode ('B') .bindTime + (s .getNamedNode ('B') .bindTime > 0) + (s .getNamedNode ('A') .bindTime > 0) + (s .getNamedNode ('C') .bindTime > 0); });
+  if (step == 6) p ('firstTwice', function () { s .getNamedNode ('C') .set_bind = true; s .getNamedNode ('C') .set_bind = true; });
+  if (step == 7) p ('setBindNonBool', function () { s .getNamedNode ('A') .set_bind = 1; return s .getNamedNode ('A') .isBound; });
+  if (step == 8) p ('viewpoints', function () { return Browser .currentScene .getNamedNode ('A') .getNodeTypeName(); });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
+ROUTE A.isBound TO P.b_A
+ROUTE A.bindTime TO P.t_A
+ROUTE B.isBound TO P.b_B
+ROUTE B.bindTime TO P.t_B
+ROUTE C.isBound TO P.b_C
+ROUTE C.bindTime TO P.t_C

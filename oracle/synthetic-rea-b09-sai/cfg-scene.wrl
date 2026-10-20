@@ -1,0 +1,114 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "cfg scene"
+DEF OUT Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function U (s) { return String (s) .replace (/^.*?(assets\\/components\\/)/, '$1'); }
+function PI (p) { return p .name + '|' + p .title + '|' + U (p .providerURL) + '|' + p .components .length + '|' + Object .keys (p) .join (','); }
+function CI (c) { return c .name + ':' + c .level + '|' + c .title + '|' + U (c .providerURL) + '|' + c .external + '|' + (c .dependencies ? c .dependencies .join ('+') : c .dependencies) + '|' + Object .keys (c) .join (','); }
+function CL (a) { var r = []; for (var i = 0; i < a .length; ++ i) r .push (a [i] .name + ':' + a [i] .level); return r .join (','); }
+function T (f) { try { return String (f ()); } catch (e) { return 'ERR:' + String (e && e .message) .replace (/http:\\/\\/[^\\/]+/g, 'H'); } }
+function AT (f) { try { return Promise .resolve (f ()) .then (function (v) { return String (v); }, function (e) { return 'REJ:' + String (e && e .message); }); } catch (e) { return 'THROW:' + String (e && e .message); } }
+function VL (s) { var t; try { t = s .toVRMLString (); } catch (e) { return 'PRINT ' + e .message; } return t .split ('\\n') .filter (function (l) { return /^(PROFILE|COMPONENT|UNIT|META|#)/ .test (l); }) .join ('|'); }
+
+var LABELS = ['create.none', 'create.profile', 'create.profile.components', 'create.full', 'create.err.string', 'create.err.null', 'create.err.undefined', 'create.err.component', 'create.err.component2', 'create.err.component3', 'create.err.plain', 'create.identity', 'create.many', 'scene.addComponent', 'scene.updateComponent', 'scene.setProfile', 'scene.hasComponent', 'scene.print', 'scene.print.none', 'scene.units'];
+var PROBES = [
+function () { return AT (function () { return Browser .createScene () .then (function (s) { return [s .encoding, s .specificationVersion, s .profile, s .components .length, s .units .length, s .hasComponent ('Core'), s .hasComponent ('Geospatial'), s .hasComponent ('Geospatial', 1), s .hasComponent ('Core', 3), VL (s)] .join('|'); }); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Interchange')) .then (function (s) { return [s .profile .name, s .components .length, s .hasComponent ('Geometry3D', 2), s .hasComponent ('Geometry3D', 3), s .hasComponent ('Layout'), VL (s)] .join ('|'); }); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core'), Browser .getComponent ('Geospatial', 1), Browser .getComponent ('Layout', 2), Browser .getComponent ('Geospatial', 2)) .then (function (s) { return [s .profile .name, CL (s .components), s .hasComponent ('Geospatial', 2), s .hasComponent ('Layout', 3), s .hasComponent ('Core', 1), s .hasComponent ('Core', 2), VL (s)] .join ('|'); }); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Full')) .then (function (s) { return [s .profile .name, s .components .length, s .hasComponent ('Scripting'), s .hasComponent ('Annotation'), s .hasComponent ('WebXR'), VL (s)] .join ('|'); }); }); },
+function () { return AT (function () { return Browser .createScene ('Full'); }); },
+function () { return AT (function () { return Browser .createScene (null); }); },
+function () { return AT (function () { return Browser .createScene (undefined); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core'), 'Geospatial'); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core'), Browser .getComponent ('Layout', 1), {}); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core'), null); }); },
+function () { return AT (function () { return Browser .createScene ({ name: 'Core', title: 't', providerURL: 'u', components: [] }); }); },
+function () { return AT (function () { return Browser .createScene () .then (function (a) { return Browser .createScene () .then (function (b) { return (a === b) + ' ' + (a .components === b .components) + ' ' + a .worldURL .replace (/http:\\/\\/[^\\/]+/, 'H') + ' ' + a .baseURL .replace (/http:\\/\\/[^\\/]+/, 'H'); }); }); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core'), Browser .getComponent ('VolumeRendering', 1), Browser .getComponent ('Picking', 1)) .then (function (s) { return CL (s .components) + ' ' + VL (s) + ' ' + s .hasComponent ('VolumeRendering'); }); }); },
+function () { return AT(function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) {
+      var r = [];
+      r .push (T (function () { s .addComponent (Browser .getComponent ('Geospatial', 1)); return CL (s .components); }));
+      r .push (T (function () { s .addComponent (Browser .getComponent ('Geospatial', 2)); return CL (s .components); }));
+      r .push (T (function () { s .addComponent (Browser .getComponent ('Layout')); return CL (s .components); }));
+      r .push (T (function () { s .addComponent ({ name: 'Foo', level: 3 }); return CL (s .components); }));
+      r .push (T (function () { s .addComponent ({ name: 'Foo', level: 3 }); return CL (s .components); }));
+      r .push (T (function () { return s .hasComponent ('Foo', 3) + ',' + s .hasComponent ('Foo', 4); }));
+      r .push (VL (s));
+      return r .join (' ## ');
+    }); }); },
+function () { return AT(function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) {
+      var r = [];
+      r .push (T (function () { s .updateComponent (Browser .getComponent ('Geospatial', 1)); return CL (s .components); }));
+      r .push (T (function () { s .updateComponent (Browser .getComponent ('Geospatial', 2)); return CL (s .components); }));
+      r .push (T (function () { s .updateComponent (Browser .getComponent ('Layout', 1)); return CL (s .components); }));
+      r .push (T (function () { s .removeComponent ('Geospatial'); return CL (s .components); }));
+      r .push (T (function () { s .removeComponent ('Geospatial'); return CL (s .components); }));
+      r .push (T (function () { s .removeComponent ('Nope'); return CL (s .components); }));
+      r .push (T (function () { s .removeComponent (); return CL (s .components); }));
+      r .push (VL (s));
+      return r .join (' ## ');
+    }); }); },
+function () { return AT(function () { return Browser .createScene () .then (function (s) {
+      var r = [];
+      r .push (T (function () { s .setProfile (Browser .getProfile ('Interchange')); return s .profile .name + ' ' + s .hasComponent ('Geometry3D', 2); }));
+      r .push (T (function () { s .setProfile (null); return s .profile + ' ' + s .hasComponent ('Geometry3D', 4); }));
+      r .push (T (function () { s .setProfile ('Core'); return String (s .profile); }));
+      r .push (T (function () { s .setProfile (); return String (s .profile); }));
+      r .push (T (function () { s .setProfile (Browser .getProfile ('Core')); return VL (s); }));
+      r .push (T (function () { return s .getProfile () === s .profile; }));
+      return r .join (' ## ');
+    }); }); },
+function () { return AT(function () { return Browser .createScene (Browser .getProfile ('Interactive'), Browser .getComponent ('Layout', 1)) .then (function (s) {
+      var r = [];
+      [['Core', 1], ['Core', 2], ['Core', 3], ['Navigation', 1], ['Navigation', 2], ['Layout', 1], ['Layout', 2], ['Text', 1], ['Nope', 1], ['', 0], ['Core'], ['Core', 0], ['Core', -1], ['Core', 'x'], ['H-Anim', 1], ['HAnim', 1]] .forEach (function (a) {
+        r .push (a .join ('.') + '=' + T (function () { return s .hasComponent .apply (s, a); }));
+      });
+      r .push (T (function () { return s .hasComponent (Browser .getComponent ('Layout', 2)); }));
+      r .push (T (function () { return s .hasComponent (Browser .getComponent ('Layout', 1)); }));
+      r .push (T (function () { return s .hasComponent ({ name: 'Layout', level: 1 }); }));
+      r .push (T (function () { return s .hasComponent (); }));
+      return r .join (' ');
+    }); }); },
+function () { return AT(function () { return Browser .createScene (Browser .getProfile ('Immersive'), Browser .getComponent ('Geospatial', 2), Browser .getComponent ('Layout', 1)) .then (function (s) {
+      var vrml = s .toVRMLString () .split ('\\n') .join ('|');
+      var xml = s .toXMLString () .split ('\\n') .join ('|');
+      var json = s .toJSONString () .split ('\\n') .join ('|') .replace (/ +/g, ' ');
+      return vrml + ' ## ' + xml + ' ## ' + json;
+    }); }); },
+function () { return AT(function () { return Browser .createScene () .then (function (s) {
+      return s .toVRMLString () .split ('\\n') .join ('|') + ' ## ' + s .toXMLString () .split ('\\n') .join ('|') + ' ## ' + s .toJSONString () .split ('\\n') .join ('|') .replace (/ +/g, ' ');
+    }); }); },
+function () { return AT(function () { return Browser .createScene (Browser .getProfile ('Full')) .then (function (s) {
+      var r = [];
+      for (var i = 0; i < s .units .length; ++ i) r .push (s .units [i] .category + ':' + s .units [i] .name + ':' + s .units [i] .conversionFactor);
+      r .push (T (function () { return s .getUnit ('length') .name + s .getUnit ('nope'); }));
+      r .push (T (function () { s .updateUnit ('length', 'foot', 0.3048); return s .getUnit ('length') .name + ':' + s .getUnit ('length') .conversionFactor + ' ' + s .fromUnit ('length', 1) + ' ' + s .toUnit ('length', 1) + ' ' + VL (s); }));
+      r .push (T (function () { s .updateUnit ('nope', 'x', 2); return s .units .length; }));
+      r .push (T (function () { s .updateUnit ('angle', 'degree', '0.0174532925199433'); return s .getUnit ('angle') .conversionFactor + ' ' + s .fromUnit ('angle', 90); }));
+      r .push (T (function () { s .updateUnit ('mass', 5, 'x'); return s .getUnit ('mass') .name + ':' + s .getUnit ('mass') .conversionFactor; }));
+      r .push (T (function () { return s .fromUnit ('nope', 5) + ':' + s .toUnit ('nope', 5) + ':' + s .fromUnit ('speed', 5) + ':' + s .fromUnit ('area', 2); }));
+      return r .join (' ## ');
+    }); }); }
+];
+var res = [];
+var step = 0;
+function put (i, v) { res [i] = LABELS [i] + ' = ' + v; }
+function flush () { var o = []; for (var k = 0; k < LABELS .length; ++ k) o .push (k in res ? res [k] : LABELS [k] + ' = ...'); out = new MFString (... o); }
+function cycle () { step = step + 1; if (step == 12) flush (); }
+function initialize () {
+  PROBES .forEach (function (f, i) {
+    var v;
+    try { v = f (); } catch (e) { v = 'THROW ' + e .message; }
+    if (v && typeof v .then === 'function') v .then (function (x) { put (i, x); }, function (e) { put (i, 'REJECT ' + (e && e .message)); });
+    else put (i, v);
+  });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

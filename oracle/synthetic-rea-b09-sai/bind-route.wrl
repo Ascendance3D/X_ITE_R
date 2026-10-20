@@ -1,0 +1,48 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "bind route"
+DEF A Viewpoint { description "A" position 0 0 10 }
+DEF B Viewpoint { description "B" position 0 0 11 }
+DEF C Viewpoint { description "C" position 0 0 12 }
+DEF BV BooleanToggle { }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool b_A
+  inputOnly SFTime t_A
+  inputOnly SFBool b_B
+  inputOnly SFTime t_B
+  inputOnly SFBool b_C
+  inputOnly SFTime t_C
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + '@' + step + ' '; }
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }
+function b_A (v) { rec ('A:' + (v ? 1 : 0)); }
+function t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }
+function b_B (v) { rec ('B:' + (v ? 1 : 0)); }
+function t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }
+function b_C (v) { rec ('C:' + (v ? 1 : 0)); }
+function t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });
+  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });
+  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
+ROUTE A.isBound TO P.b_A
+ROUTE A.bindTime TO P.t_A
+ROUTE B.isBound TO P.b_B
+ROUTE B.bindTime TO P.t_B
+ROUTE C.isBound TO P.b_C
+ROUTE C.bindTime TO P.t_C
+DEF TRUEB BooleanFilter { }
+ROUTE BV.toggle TO B.set_bind

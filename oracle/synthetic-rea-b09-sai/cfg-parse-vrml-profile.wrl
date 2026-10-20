@@ -1,0 +1,33 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "cfg parse vrml-profile"
+DEF OUT Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime cycle
+  url "ecmascript:
+var SNIPPETS = [\"#X3D V3.3 utf8\\nPROFILE CADInterchange\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE Core\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE Full\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE Immersive\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE Interactive\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE Interchange\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE MedicalInterchange\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE MPEG4Interactive\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE MPEG-4\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE Nope\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE full\\nGroup { }\", \"#X3D V3.3 utf8\\nPROFILE \\nGroup { }\"];
+var res = [];
+
+var step = 0;
+function put (i, v) { res [i] = i + ': ' + v; }
+function flush () { var o = []; for (var k = 0; k < SNIPPETS .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }
+function cycle () { step = step + 1; if (step == 12) flush (); }
+function strip (s) { return String (s) .replace (/http:\\/\\/[^\\/]+/g, 'H'); }
+
+function initialize () {
+  SNIPPETS .forEach (function (src, i) {
+    var p;
+    try { p = Browser .createX3DFromString (src); } catch (e) { put (i, 'THROW ' + strip (e .message)); return; }
+    p .then (function (sc) {
+      var comps = []; for (var k = 0; k < sc .components .length; ++ k) comps .push (sc .components [k] .name + ':' + sc .components [k] .level + ':' + sc .components [k] .title);
+      var units = []; for (var k = 0; k < sc .units .length; ++ k) units .push (sc .units [k] .category + ':' + sc .units [k] .name + ':' + sc .units [k] .conversionFactor);
+      var text; try { text = sc .toVRMLString () .split ('\\n') .join ('|'); } catch (e) { text = 'PRINT ERR ' + e .message; }
+      put (i, [sc .profile && (sc .profile .name + '/' + sc .profile .title + '/' + sc .profile .components .length), comps .join (','), units .join (','), sc .hasComponent ('Geospatial'), sc .hasComponent ('Core', 2), text] .join (' ## '));
+    }, function (e) { put (i, 'REJ ' + strip (e && e .message) .split ('\\n') .join ('|')); });
+  });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

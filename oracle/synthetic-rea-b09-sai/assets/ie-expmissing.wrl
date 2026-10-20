@@ -1,0 +1,4 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+DEF A Transform { }
+EXPORT NOPE

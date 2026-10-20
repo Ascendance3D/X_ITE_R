@@ -1,0 +1,57 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "ctxev roots"
+DEF T1 Transform { }
+DEF T2 Transform { translation 100 0 0 }
+DEF T3 Transform { }
+DEF T4 Transform { }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + ' '; }
+function recg (s) { if (step >= 2) rec (s); }
+function p (name, f) {
+  var v;
+  try { v = f (); } catch (e) { v = 'ERR:' + e .message; }
+  rec (step + ':' + name + '=' + v);
+}
+function types (s) {
+  return ['namedNodes', 'importedNodes', 'exportedNodes', 'protos', 'externprotos', 'rootNodes', 'routes', 'sceneGraph', 'profile', 'metadata', 'bbox']
+    .map (function (n) { return n + ':' + typeof s ['_' + n + '_changed'] + '/' + typeof s [n + '_changed']; }) .join (',');
+}
+function watch (s, label, gate) {
+  var r = gate ? recg : rec;
+  s .sceneGraph_changed .addFieldCallback ('sg' + label, function () { r ('SG' + label + '@' + step); });
+  s .profile_changed  .addFieldCallback ('pr' + label, function () { r ('PR' + label + '@' + step); });
+  s .metadata_changed .addFieldCallback ('md' + label, function () { r ('MD' + label + '@' + step); });
+}
+
+
+function initialize () {
+  var s = Browser .currentScene;
+
+  watch (s, '', true);
+}
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+
+  var me = s .getNamedNode ('P');
+  if (step == 2) p ('setRoots', function () { s .rootNodes = new MFNode (me, s .getNamedNode ('STEP'), s .getNamedNode ('T1')); return s .rootNodes .length; });
+  if (step == 3) p ('setRootsSame', function () { s .rootNodes = new MFNode (me, s .getNamedNode ('STEP'), s .getNamedNode ('T1')); return s .rootNodes .length; });
+  if (step == 4) p ('addRoot', function () { s .addRootNode (s .getNamedNode ('T2')); return s .rootNodes .length; });
+  if (step == 5) p ('removeRoot', function () { s .removeRootNode (s .getNamedNode ('T2')); return s .rootNodes .length; });
+  if (step == 6) p ('createNode', function () { var n = s .createNode ('Transform'); return n .getNodeTypeName (); });
+  if (step == 7) p ('createAdd', function () { var n = s .createNode ('Transform'); s .addRootNode (n); return s .rootNodes .length; });
+  if (step == 8) p ('fieldAssign', function () { var g = s .createNode ('Group'); g .children = new MFNode (s .getNamedNode ('T1')); return 'ok'; });
+  if (step == 9) p ('setReduced', function () { s .rootNodes = new MFNode (me, s .getNamedNode ('STEP')); return s .rootNodes .length; });
+
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle

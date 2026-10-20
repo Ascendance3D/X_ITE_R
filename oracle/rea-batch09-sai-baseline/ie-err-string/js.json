@@ -1,0 +1,1421 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 19\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 19\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 19\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 20\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 20\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"\"\n  inputOutput SFInt32  step 20\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"ie err string\"\n\nDEF TS TimeSensor {\n  loop TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"0:ERR |********************************************************************************|Parser error at line 3:17|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||DEF T Transform { }|IMPORT T.LI AS X|                ^|Unexpected end of file. Node must be of type Inline node.|********************************************************************************| 1:ERR |********************************************************************************|Parser error at line 1:14|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'|||IMPORT NOSUCH.LI AS X|             ^|Named node 'NOSUCH' not found.|********************************************************************************| 2:ok 2/0 3:ERR |********************************************************************************|Parser error at line 2:14|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||DEF I Inline { }|EXPORT NOSUCH|             ^|Unknown named or imported node 'NOSUCH'.|********************************************************************************| 4:ok 0/2 5:ok 0/2 6:ERR |********************************************************************************|Parser error at line 4:9|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||IMPORT I.A AS X|EXPORT X|        ^|Unexpected end of file. Couldn't update exported node: node cannot be of type X3DImportedNodeInstance.|********************************************************************************| 7:ok 2/0 8:ERR |********************************************************************************|Parser error at line 3:9|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||DEF I Inline { }|IMPORT I|        ^|Unexpected end of file. Expected a '.' after exported node name.|********************************************************************************| 9:ERR |********************************************************************************|Parser error at line 3:10|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||DEF I Inline { }|IMPORT I.|         ^|Unexpected end of file. Expected exported node name.|********************************************************************************| 10:ERR |********************************************************************************|Parser error at line 2:8|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||DEF I Inline { }|IMPORT .A|       ^|No name given after IMPORT statement.|********************************************************************************| 11:ERR |********************************************************************************|Parser error at line 3:14|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||DEF I Inline { }|IMPORT I.A AS|             ^|Unexpected end of file. No name given after AS.|********************************************************************************| 12:ERR |********************************************************************************|Parser error at line 2:7|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'|||EXPORT|      ^|Unexpected end of file. No name given after EXPORT.|********************************************************************************| 13:ERR |********************************************************************************|Parser error at line 3:12|in 'H/synthetic-rea-b09-sai/ie-err-string.wrl'||DEF T Transform { }|EXPORT T AS|           ^|Unexpected end of file. No name given after AS.|********************************************************************************| 14:ok 0/1\"\n  inputOutput SFInt32  step 21\n  inputOnly   SFTime   cycle\n\n  url \"ecmascript:\n\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }\nfunction names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }\nfunction lines (s, w) { return s .toVRMLString () .split ('\\\\n') .map (function (l) { return l .replace (/^\\\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }\nfunction ex (s, name) { return s .getImportedNode (name); }\nvar TEXTS = [\\\"DEF T Transform { }\\\\nIMPORT T.LI AS X\\\\n\\\", \\\"IMPORT NOSUCH.LI AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nIMPORT I.B AS X\\\\n\\\", \\\"DEF I Inline { }\\\\nEXPORT NOSUCH\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nEXPORT T AS T\\\\n\\\", \\\"DEF T Transform { }\\\\nDEF U Transform { }\\\\nEXPORT T AS Q\\\\nEXPORT U AS Q\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS X\\\\nEXPORT X\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A\\\\nIMPORT I.A AS B\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT .A\\\\n\\\", \\\"DEF I Inline { }\\\\nIMPORT I.A AS\\\\n\\\", \\\"EXPORT\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T AS\\\\n\\\", \\\"DEF T Transform { }\\\\nEXPORT T\\\\nROUTE T.translation_changed TO T.set_translation\\\\n\\\"];\nvar results = [];\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n\n  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.\n  if (step >= 3 && step <= TEXTS .length + 2) {\n    var i = step - 3;\n    Browser .createX3DFromString (TEXTS [i]) .then (\n      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },\n      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\\\/\\\\/[^\\\\/]+/g, 'H') .split ('\\\\n') .join ('|'); });\n  }\n  if (step == TEXTS .length + 6) hist = results .join (' ');\n\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\n"
+  },
+  "prints": [],
+  "log": [
+    "error: Error: Couldn't update exported node: node cannot be of type X3DImportedNodeInstance.",
+    "error: Error: Expected a '.' after exported node name.",
+    "error: Error: Expected exported node name.",
+    "error: Error: Named node 'NOSUCH' not found.",
+    "error: Error: No name given after AS.",
+    "error: Error: No name given after AS.",
+    "error: Error: No name given after EXPORT.",
+    "error: Error: No name given after IMPORT statement.",
+    "error: Error: Node must be of type Inline node.",
+    "error: Error: Unknown named or imported node 'NOSUCH'."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+DEF VPB Viewpoint { description "vpB" }
+DEF TB Transform { }
+DEF BS Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + ' '; }
+function initialize () {
+  var s = Browser .currentScene;
+  rec ('init');
+  s .sceneGraph_changed .addFieldCallback ('b', function () { rec ('SGB'); });
+  s .profile_changed .addFieldCallback ('b', function () { rec ('PRB'); });
+  s .metadata_changed .addFieldCallback ('b', function () { rec ('MDB'); });
+}
+  "
+}
