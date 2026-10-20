@@ -127,7 +127,9 @@ impl Runtime {
 
     /// X3DBrowser.createScene: an empty scene (encoding SCRIPTED) with the profile and components, live at once.
     pub fn browser_create_scene(&mut self, profile: Option<String>, components: Vec<(String, i32)>, parent: CtxId) -> CtxId {
-        let mut scene = Scene::new(self.scene.world_url_of(parent));
+        // `this [_worldURL] = location .toString ()`: the page (an embedder without a page: the URL of the caller's world).
+        let url = if self.page_url.is_empty() { self.scene.world_url_of(parent).to_string() } else { self.page_url.clone() };
+        let mut scene = Scene::new(&url);
 
         scene.profile = profile;
 
@@ -141,6 +143,9 @@ impl Runtime {
         self.attach_merged_scene(m, ctx_count, vec![]);
         self.inline_live.insert(m.root_ctx, true);
         self.refresh_live();
+
+        // `new X3DScene (this)` has no execution context: its changes do not reach the world's.
+        self.ctx_events.no_forward.insert(m.root_ctx);
         m.root_ctx
     }
 
@@ -237,6 +242,7 @@ impl Runtime {
         // `new X3DScene (browser)`: setLive (false); the Browser makes it live once it is delivered.
         self.inline_live.insert(m.root_ctx, false);
         self.attach_merged_scene(m, ctx_count, setup_order);
+        self.ctx_scene_parsed(m.root_ctx);
 
         // FileLoader.setScene: `scene ._loadCount .addEvent ()`.
         self.add_event(count);
@@ -531,6 +537,10 @@ impl Runtime {
 
         let old = self.scene.world;
 
+        // The old world's scene lets go of its nodes while it is still the current scene: one `sceneGraph_changed`.
+        self.ctx_events.pending.push((old, ctx_events::CtxField::SceneGraph, 1));
+        self.deliver_ctx_events();
+
         // Kept difference (owner-approved): the Scripts of the old world get shutdown (), X_ITE has none.
         self.dispose_scene(old);
 
@@ -548,6 +558,7 @@ impl Runtime {
         self.scene.contexts[new].outer = Outer::Scene;
         self.scene.world = new;
         self.scene_live = false;
+        self.ctx_world_started(true);
         self.go_live();
         self.description.clear();
         self.world_state.generation += 1;

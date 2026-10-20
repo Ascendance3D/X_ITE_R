@@ -17,6 +17,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use x3d_fields::math::*;
 use x3d_fields::{FieldType, FieldValue, Generator, Image, NodeId, access, jsmath};
+use x3d_runtime::ctx_events::CtxField;
 use x3d_runtime::*;
 use x3d_scene::*;
 
@@ -419,6 +420,19 @@ impl ScriptHost for QuickJsHost {
             }
 
             while ctx.execute_pending_job() {}
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn ctx_event(&mut self, rt: &mut Runtime, ctx: CtxId, field: u32) {
+        self.enter(rt);
+
+        self.context.with(|js| {
+            if let Ok(f) = js.globals().get::<_, Function>("__ctxEvent") {
+                let _ = f.call::<_, ()>((ctx as f64, field as f64));
+            }
+
+            while js.execute_pending_job() {}
             with_state(State::release_fresh);
         });
     }
@@ -1532,6 +1546,53 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
             Ok(arr.into_value())
         }
+        "configTable" => {
+            // The supported components and profiles (Configuration/SupportedComponents.js, SupportedProfiles.js) and the URL of the
+            // script X_ITE runs from (Browser/Networking/URLs.js getScriptURL: the page).
+            let t = rt().scene.table;
+            let o = Object::new(ctx.clone())?;
+            let comps = Array::new(ctx.clone())?;
+
+            for (i, c) in t.components.iter().enumerate() {
+                let e = Array::new(ctx.clone())?;
+                let deps = Array::new(ctx.clone())?;
+
+                for (j, d) in c.dependencies.iter().enumerate() {
+                    deps.set(j, d.as_str())?;
+                }
+
+                e.set(0, c.name.as_str())?;
+                e.set(1, c.title.as_str())?;
+                e.set(2, c.level)?;
+                e.set(3, c.external)?;
+                e.set(4, deps)?;
+                comps.set(i, e)?;
+            }
+
+            let profiles = Array::new(ctx.clone())?;
+
+            for (i, p) in t.profiles.iter().enumerate() {
+                let e = Array::new(ctx.clone())?;
+                let list = Array::new(ctx.clone())?;
+
+                for (j, (n, l)) in p.components.iter().enumerate() {
+                    let pair = Array::new(ctx.clone())?;
+                    pair.set(0, n.as_str())?;
+                    pair.set(1, *l)?;
+                    list.set(j, pair)?;
+                }
+
+                e.set(0, p.name.as_str())?;
+                e.set(1, p.title.as_str())?;
+                e.set(2, list)?;
+                profiles.set(i, e)?;
+            }
+
+            o.set("components", comps)?;
+            o.set("profiles", profiles)?;
+            o.set("scriptURL", rt().page_url.as_str())?;
+            Ok(o.into_value())
+        }
         "hasComponent" => {
             // X3DScene.hasComponent: the profile's (Full without one) or the scene's own components.
             let script = num_arg(ctx, a, 0);
@@ -1569,6 +1630,65 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             comps.push((name, level));
             Ok(undefined)
         }
+        "updateComponent" => {
+            // X3DScene.updateComponent: a component of that name is replaced where it stands, else added.
+            let script = num_arg(ctx, a, 0);
+            let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
+            let root = rt().scene.scene_root(ctx_of_script(script));
+            let comps = scene_components_mut(&mut rt().scene, root);
+
+            match comps.iter_mut().find(|(n, _)| *n == name) {
+                Some(c) => c.1 = level,
+                None => comps.push((name, level)),
+            }
+
+            Ok(undefined)
+        }
+        "removeComponent" => {
+            let script = num_arg(ctx, a, 0);
+            let name = str_arg(ctx, a, 1);
+            let root = rt().scene.scene_root(ctx_of_script(script));
+
+            scene_components_mut(&mut rt().scene, root).retain(|(n, _)| *n != name);
+            Ok(undefined)
+        }
+        "ctxObserve" => {
+            rt().ctx_events.observed = true;
+            rt().ctx_events.watched.insert(num_arg(ctx, a, 0) as usize);
+
+            Ok(undefined)
+        }
+        "updateUnit" => {
+            // X3DScene.updateUnit (category, name, conversionFactor): only a category the scene has; the name is a string, the factor a number.
+            let script = num_arg(ctx, a, 0);
+            let (category, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
+            let factor = num_arg(ctx, a, 3);
+            let root = rt().scene.scene_root(ctx_of_script(script));
+            let units = match rt().scene.scene_infos.get_mut(&root) {
+                Some(i) => &mut i.units,
+                None => &mut rt().scene.units,
+            };
+
+            if let Some(u) = units.iter_mut().find(|u| u.category == category) {
+                u.name = name;
+                u.conversion_factor = factor;
+            }
+
+            Ok(undefined)
+        }
+        "setProfile" => {
+            let script = num_arg(ctx, a, 0);
+            let profile = a.get(1).filter(|v| v.is_string()).map(|_| str_arg(ctx, a, 1));
+            let root = rt().scene.scene_root(ctx_of_script(script));
+
+            match rt().scene.scene_infos.get_mut(&root) {
+                Some(i) => i.profile = profile,
+                None => rt().scene.profile = profile,
+            }
+
+            rt().ctx_event(root, CtxField::Profile, 1);
+            Ok(undefined)
+        }
         "metaData" => {
             // X3DScene.setMetaData / addMetaData / removeMetaData.
             let script = num_arg(ctx, a, 0);
@@ -1599,6 +1719,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 _ => meta.retain(|(k, _)| *k != name),
             }
 
+            rt().ctx_event(root, CtxField::Metadata, 1);
             Ok(undefined)
         }
         "protoDecls" => {
@@ -1690,6 +1811,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
 
             rt().rebuild_parents();
+
+            // rootNodes .push (node) / .assign (...): the rootNodes field fires.
+            let rounds = rt().root_nodes_rounds(c);
+            rt().ctx_event(c, CtxField::SceneGraph, rounds);
+            rt().ctx_event(c, CtxField::BBox, rounds);
             Ok(undefined)
         }
         "namedNodeOp" => {
@@ -1823,7 +1949,12 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             let c = ctx_of_script(script);
 
             match rt().create_node_script(c, &ty) {
-                Some(n) => Ok(node_js(ctx, Some(n))),
+                Some(n) => {
+                    // The new node's parents change (X3DBaseNode.parentsChanged): its context's sceneGraph_changed.
+                    rt().ctx_event(c, CtxField::SceneGraph, 1);
+                    rt().ctx_event(c, CtxField::BBox, 1);
+                    Ok(node_js(ctx, Some(n)))
+                }
                 None => throw(ctx, &format!("Unknown node type '{ty}'.")),
             }
         }

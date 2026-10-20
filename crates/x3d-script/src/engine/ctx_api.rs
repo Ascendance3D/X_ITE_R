@@ -15,8 +15,15 @@ fn flush_warnings() {
     }
 }
 
-fn changed() {
+/// Something a Script changed may have dropped the last reference to a node, declaration or record.
+fn dirty() {
     rt().scene_graph_changed();
+}
+
+/// `this ._sceneGraph_changed = Date .now () / 1000` on `c`.
+fn sg(c: CtxId) {
+    rt().scene_graph_changed();
+    rt().ctx_event(c, CtxField::SceneGraph, 1);
 }
 
 /// The exported node `node` of the Inline in an imported record: X3DImportedNode.getExportedNode.
@@ -98,7 +105,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
             if mode == "remove" {
                 rt().scene.remove_named_node(c, &name);
-                changed();
+                dirty();
                 return Ok(undefined);
             }
 
@@ -137,7 +144,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 rt().scene.update_named_node(c, &name, node);
             }
 
-            changed();
+            dirty();
             Ok(undefined)
         }
         // --- imported nodes
@@ -195,7 +202,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                     let instance = rt().scene.imported[id].instance;
 
                     rt().nrt_mut(instance);
-                    changed();
+                    sg(c);
                     Ok(undefined)
                 }
                 Err(e) => throw(ctx, &e),
@@ -206,7 +213,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
             match rt().scene.rename_imported_node(c, &old, &new) {
                 Ok(()) => {
-                    changed();
+                    sg(c);
                     Ok(undefined)
                 }
                 Err(e) => throw(ctx, &e),
@@ -216,7 +223,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             let name = str_at(0);
 
             if remove_imported(c, &name) {
-                changed();
+                sg(c);
             }
 
             Ok(undefined)
@@ -226,6 +233,9 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             if let Some(FieldValue::MFNode(list)) = value_arg(a, 0) {
                 rt().scene.ctx_mut(c).root_nodes = list;
                 rt().rebuild_parents();
+                let rounds = rt().root_nodes_rounds(c);
+                rt().ctx_event(c, CtxField::SceneGraph, rounds);
+                rt().ctx_event(c, CtxField::BBox, rounds);
             }
 
             Ok(undefined)
@@ -257,7 +267,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
 
             match rt().scene.update_exported_node(c, &name, node, &description) {
                 Ok(()) => {
-                    changed();
+                    sg(root);
                     Ok(undefined)
                 }
                 Err(e) => throw(ctx, &e),
@@ -270,7 +280,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             if rt().scene.ctx(root).exported.has(&name) {
                 rt().scene.ctx_mut(root).exported.remove(&name);
                 rt().dynamic_dirty_mark();
-                changed();
+                sg(root);
             }
 
             Ok(undefined)
@@ -285,6 +295,10 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 return throw(ctx, &format!("Bad ROUTE specification: {which} must be of type X3DNode."));
             };
             let (src, dst) = (node_or_imported(c, src), node_or_imported(c, dst));
+
+            if let Err(e) = rt().check_imported_route_ends(src, &sf, dst, &df) {
+                return throw(ctx, &e);
+            }
 
             if adding {
                 if let Err(e) = rt().add_route(c, src, &sf, dst, &df) {
@@ -357,7 +371,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
                 }
 
                 rt().dynamic_dirty_mark();
-                changed();
+                sg(c);
                 return Ok(undefined);
             }
 
@@ -414,7 +428,7 @@ pub(super) fn op<'js>(ctx: &Ctx<'js>, a: &[Value<'js>]) -> rquickjs::Result<Valu
             }
 
             flush_warnings();
-            changed();
+            sg(c);
             Ok(undefined)
         }
         "protoInfo" => {
