@@ -36,9 +36,12 @@ Rust run, can reproduce it byte for byte. This is a property of the worlds, not 
 
 ## Remaining work, hardest first
 
-1. Execution context / SAI timing differences A-D (ctxev-inline, ctxev-startup-proto, ie-err-string-frames, cfg-scene-odd), and
-   the X3DExecutionContext / X3DScene class chain (brx-obj-open: the port's scene objects are plain objects with their members
+1. The X3DExecutionContext / X3DScene class chain (brx-obj-open: the port's scene objects are plain objects with their members
    as own properties; X_ITE's are X3DScene → X3DExecutionContext → X3DBaseNode → X3DChildObject → X3DObject).
+   Of the timing differences A-D, A-C are fixed (REA_CHANGES.md). D, cfg-scene-odd, stays open: `addComponent ()` /
+   `addComponent (null)` / `updateComponent ()` throw TypeErrors worded by the engine (V8 "Cannot read properties of undefined
+   (reading 'name')", QuickJS "cannot read property 'name' of undefined"; same class as the Error.stack frames), and
+   `addComponent ('Core')` stores level `undefined` in X_ITE where the port's scene keeps component levels as integers (0).
 2. Node class chains: a node X_ITE hands out (SFNode.getValue (), getActiveViewpoint …) is an instance of its node class
    (Viewpoint → X3DViewpointNode → X3DBindableNode → …); the port's is an X3DNodeRef (owner boundary 2026-10-20). The type list
    is the same (getType ()), the constructor names and internal members are not (brx-call-open).

@@ -216,9 +216,9 @@ cases["ie-err-string"] = world("ie err string", "", """
   if (step == TEXTS .length + 6) hist = results .join (' ');
 """, pre="var TEXTS = " + json.dumps(STRINGS) + ";\nvar results = [];\n")
 
-# Documented-open (not in cases.txt): the same texts, each result recorded in `hist` the moment its promise settles. X_ITE settles a
-# createX3DFromString promise one frame after the request for a scene with an EXPORT / IMPORT statement or any other scene created from a
-# Script after the first frame, the port in the frame of the request.
+# The same texts, each result recorded in `hist` the moment its promise settles. The parsers run their statements after
+# `browser .loadComponents (scene)` resolves (a microtask, after the frame), so a scene requested during a frame resolves one frame
+# later than a rejection.
 cases["ie-err-string-frames"] = world("ie err string frames", "", """
   if (step >= 3 && step <= TEXTS .length + 2) {
     var i = step - 3;

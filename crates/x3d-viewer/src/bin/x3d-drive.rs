@@ -240,13 +240,17 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
         if dump.contains(&k) || k == frames {
             v.rt.publish_clone_counts();
+            // `browser .currentScene .toVRMLString ()` in the page: X_ITE makes the SFNodes it reads (Runtime::ctx_streamed).
+            let world = v.rt.scene.world;
+            v.rt.ctx_streamed(world);
             vrml.insert(k.to_string(), json!(v.rt.scene.to_vrml_string()));
         }
 
         if dump_inlines && (dump.contains(&k) || k == frames) {
             v.rt.publish_clone_counts();
             let mut out = serde_json::Map::new();
-            inline_scenes(&v.rt, v.rt.scene.world, "", &mut out);
+            let world = v.rt.scene.world;
+            inline_scenes(&mut v.rt, world, "", &mut out);
             inlines.insert(k.to_string(), Value::Object(out));
         }
 
@@ -357,8 +361,8 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
 /// The scene text of every DEF-named Inline of `ctx` (nested Inlines as `A/B`): `null` while the
 /// Inline has no scene (Inline.getInternalScene () is the empty default scene).
-fn inline_scenes(rt: &x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut serde_json::Map<String, Value>) {
-    for &n in rt.scene.ctx(ctx).named_nodes.values() {
+fn inline_scenes(rt: &mut x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut serde_json::Map<String, Value>) {
+    for n in rt.scene.ctx(ctx).named_nodes.values().to_vec() {
         if rt.builtin_name(n) != Some("Inline") {
             continue;
         }
@@ -367,6 +371,7 @@ fn inline_scenes(rt: &x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut 
 
         match rt.inline_scenes.get(&n) {
             Some(&c) => {
+                rt.ctx_streamed(c);
                 out.insert(name.clone(), json!(rt.scene.to_vrml_string_ctx(c)));
                 inline_scenes(rt, c, &format!("{name}/"), out);
             }

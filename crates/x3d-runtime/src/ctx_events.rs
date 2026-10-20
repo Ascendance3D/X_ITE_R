@@ -45,6 +45,9 @@ pub struct CtxEvents {
     pub deferred: Vec<(CtxId, CtxField, u32)>,
     /// Scenes whose changes do not reach the context they were made in (`Browser.createScene ()`).
     pub no_forward: HashSet<CtxId>,
+    /// PROTO declaration bodies whose root nodes have their SFNode (see [`Runtime::ctx_streamed`]), with the generation of
+    /// their context slot.
+    pub wrapped_bodies: HashSet<(CtxId, u32)>,
 }
 
 /// Events of one cascade overlap (the field is tainted once): the rounds are the largest of them. Events of different frames add up.
@@ -129,6 +132,38 @@ impl Runtime {
         self.ctx_event(ctx, CtxField::BBox, 1);
     }
 
+    /// X3DExecutionContext.toVRMLStream and toJSONStream read `this .rootNodes` through the MFNode proxy, whose element read is
+    /// `SFNodeCache .get (node)`: the first read of a node makes its SFNode, and `new SFNode (node)` adds itself as a parent of the
+    /// node (X3DBaseNode.parentsChanged). The root nodes of the world and of PROTO instance bodies have their SFNode from the start
+    /// (X3DWorld.set_rootNodes__, X3DPrototypeInstance.getInnerNode); those of a PROTO declaration's body get theirs the first time
+    /// the declaration is streamed (X3DProtoDeclaration.toVRMLStream streams its body, nested declarations too). Each such body
+    /// fires its fields once, and each of those events reaches the scene on its own (measured: ctxev-stream-vrml / -json).
+    /// toXMLStream streams the MFNode without the proxy and makes no SFNode (ctxev-stream-xml).
+    /// Call this when the scene with root context `ctx` is streamed as VRML or JSON.
+    pub fn ctx_streamed(&mut self, ctx: CtxId) {
+        if ctx >= self.scene.contexts.len() {
+            return;
+        }
+
+        let bodies: Vec<CtxId> = self.scene.ctx(ctx).protos.values().iter().map(|&p| self.scene.protos[p].body).collect();
+
+        for body in bodies {
+            if self.ctx_events.wrapped_bodies.insert((body, self.scene.ctx_slots.generation(body))) && self.scene.ctx(body).root_nodes.iter().any(Option::is_some) {
+                for field in [CtxField::SceneGraph, CtxField::BBox] {
+                    for c in self.ctx_chain(body, true) {
+                        if self.scene_live {
+                            merge(&mut self.ctx_events.pending, c, field, 1, true);
+                        } else {
+                            merge(&mut self.ctx_events.deferred, c, field, 1, true);
+                        }
+                    }
+                }
+            }
+
+            self.ctx_streamed(body);
+        }
+    }
+
     /// Run the callbacks of the pending events (X3DField.processEvent: `callback (this .valueOf ())`); true when something ran.
     pub(crate) fn deliver_ctx_events(&mut self) -> bool {
         if self.ctx_events.pending.is_empty() {
@@ -163,7 +198,8 @@ impl Runtime {
 
         self.ctx_events.hold = replaced;
 
-        // A PROTO instance realizes its body after the world's setup: one `sceneGraph_changed` each (X_ITE adds one more, once, a frame after the first; that one is not modeled).
+        // A PROTO instance realizes its body after the world's setup: one `sceneGraph_changed` each. (A PROTO declaration's body fires
+        // when a scene stream first reads it: see `ctx_streamed`.)
         let instances = self.scene.nodes.iter().filter(|n| n.ctx == w && matches!(n.kind, NodeKind::Instance(_))).count() as u32;
         let later = self.root_nodes_rounds(w) - 1 + instances;
         for field in [CtxField::SceneGraph, CtxField::BBox] {
@@ -225,6 +261,17 @@ impl Runtime {
 
             self.script_host = Some(host);
             self.dynamic_dirty = true;
+        }
+    }
+
+    /// Events set by the continuations that run after a frame (see `process_phase`): pending for the next frame's first events.
+    pub(crate) fn ctx_events_after_frame(&mut self, after: Vec<(CtxId, CtxField, u32)>) {
+        if !self.ctx_events.observed {
+            return;
+        }
+
+        for (c, f, n) in after {
+            merge(&mut self.ctx_events.pending, c, f, n, false);
         }
     }
 

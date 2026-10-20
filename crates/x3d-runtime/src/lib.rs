@@ -297,6 +297,8 @@ pub enum Task {
     ScriptFetch(NodeId),
     /// X3DBrowser.createX3DFromURL: the fetch of request `id`.
     BrowserLoad(u64),
+    /// X3DBrowser.createX3DFromString: the parser's statements run once `browser .loadComponents (scene)` resolved.
+    BrowserParse(u64),
 }
 
 /// X3DBrowserContext's active nodes (getActiveLayer, getActiveNavigationInfo, getActiveViewpoint) and getCurrentViewer.
@@ -381,6 +383,8 @@ pub struct Runtime {
     pub frame_waiters: Vec<inline::FrameWaiter>,
     /// createX3DFromURL requests that have not been fetched (by request id).
     pub browser_loads: HashMap<u64, browser_load::BrowserLoad>,
+    /// createX3DFromString requests whose statements are not parsed yet.
+    pub browser_strings: HashMap<u64, browser_load::BrowserString>,
     /// Scenes of createX3DFromString / createX3DFromURL waiting for their loadCount, and then for the next frame.
     pub pending_browser: Vec<browser_load::PendingBrowserScene>,
     pub browser_frame_waiters: Vec<browser_load::PendingBrowserScene>,
@@ -585,6 +589,7 @@ impl Runtime {
             pending_audio_decodes: vec![],
             frame_waiters: vec![],
             browser_loads: HashMap::new(),
+            browser_strings: HashMap::new(),
             pending_browser: vec![],
             browser_frame_waiters: vec![],
             browser_request_id: 0,
@@ -1073,6 +1078,7 @@ impl Runtime {
                             self.fetches.push_back(Task::ScriptFetch(node));
                         }
                     }
+                    Task::BrowserParse(id) => self.browser_parse(id),
                     other => self.fetches.push_back(other),
                 }
 
@@ -1088,7 +1094,7 @@ impl Runtime {
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
                 Task::ScriptFetch(node) => self.script_load(node),
                 Task::BrowserLoad(id) => self.browser_load(id),
-                Task::ScriptLoad(..) | Task::ScriptLoaded(..) => {}
+                Task::ScriptLoad(..) | Task::ScriptLoaded(..) | Task::BrowserParse(..) => {}
             }
         }
     }

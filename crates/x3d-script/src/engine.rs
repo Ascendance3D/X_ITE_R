@@ -2326,7 +2326,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "sceneString" => {
             let script = num_arg(ctx, a, 0);
             let root = rt().scene.scene_root(ctx_of_script(script));
-            let text = match str_arg(ctx, a, 1).as_str() {
+            let format = str_arg(ctx, a, 1);
+            if format != "xml" {
+                rt().ctx_streamed(root);
+            }
+            let text = match format.as_str() {
                 "xml" => rt().scene.to_xml_string_ctx(root),
                 "json" => rt().scene.to_json_string_ctx(root),
                 _ => rt().scene.to_vrml_string_ctx(root),

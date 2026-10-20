@@ -239,10 +239,16 @@ impl Runtime {
         if name == "finishEvents" {
             self.finish_frame();
 
+            // What the continuations changed (Inline.setInternalScene: `sceneGraph_changed` of the Inline's context) was set
+            // after the frame: its events are processed with the next frame's.
+            let after = std::mem::take(&mut self.ctx_events.pending);
+
             // The change events of the frame's end run their callbacks with the events that follow.
             if self.release_deferred_ctx_events() {
                 self.process_events();
             }
+
+            self.ctx_events_after_frame(after);
         }
     }
 }

@@ -130,3 +130,9 @@ brx-api oracle/synthetic-rea-b09-sai/brx-api.wrl oracle/synthetic-rea-b09-sai/sa
 brx-call oracle/synthetic-rea-b09-sai/brx-call.wrl oracle/synthetic-rea-b09-sai/sai.json
 brx-obj oracle/synthetic-rea-b09-sai/brx-obj.wrl oracle/synthetic-rea-b09-sai/sai.json
 brx-data oracle/synthetic-rea-b09-sai/brx-data.wrl oracle/synthetic-rea-b09-sai/sai.json
+ie-err-string-frames oracle/synthetic-rea-b09-sai/ie-err-string-frames.wrl oracle/synthetic-rea-b09-sai/sai.json
+ctxev-stream-vrml oracle/synthetic-rea-b09-sai/ctxev-stream-vrml.wrl oracle/synthetic-rea-b09-sai/sai-last.json
+ctxev-stream-xml oracle/synthetic-rea-b09-sai/ctxev-stream-xml.wrl oracle/synthetic-rea-b09-sai/sai-last.json
+ctxev-stream-json oracle/synthetic-rea-b09-sai/ctxev-stream-json.wrl oracle/synthetic-rea-b09-sai/sai-last.json
+ctxev-startup-proto oracle/synthetic-rea-b09-sai/ctxev-startup-proto.wrl oracle/synthetic-rea-b09-sai/sai.json
+ctxev-inline oracle/synthetic-rea-b09-sai/ctxev-inline.wrl oracle/synthetic-rea-b09-sai/sai.json
