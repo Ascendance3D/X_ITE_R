@@ -687,6 +687,12 @@ impl Runtime {
                 self.inline_live.insert(ctx, true);
                 self.refresh_live();
                 self.set_load_state(node, LoadState::Complete);
+
+                // The scene joins the graph: parentsChanged, `sceneGraph_changed` of the Inline's context.
+                let home = self.scene.node(node).ctx;
+
+                self.ctx_event(home, ctx_events::CtxField::SceneGraph, 1);
+                self.ctx_event(home, ctx_events::CtxField::BBox, 1);
             }
             // unloadData passes the browser's default scene, which is truthy: the same branch
             // with an empty scene (the default scene is shared, nothing of it is observable).
@@ -1116,6 +1122,46 @@ impl Runtime {
         }
     }
 
+    /// X3DExecutionContext.getRoute / addRoute with an imported end: `$.try (() => node .getField (name))` resolves the field of
+    /// the exported node when its Inline is loaded, then `X3DRoute.checkFields` runs on the ends that resolved.
+    pub fn check_imported_route_ends(&self, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(), String> {
+        if !self.scene.is_imported(source) && !self.scene.is_imported(destination) {
+            return Ok(());
+        }
+
+        let end = |n: NodeId, name: &str| self.route_end(n, name).ok();
+        let (src, dst) = (end(source, source_field), end(destination, destination_field));
+
+        if let (Some(s), Some(d)) = (src, dst) {
+            let (sf, df) = (self.scene.field(s.0, s.1), self.scene.field(d.0, d.1));
+
+            if sf.ty() != df.ty() {
+                return Err(format!(
+                    "Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
+                    sf.name, df.name
+                ));
+            }
+        }
+
+        if let Some(s) = src {
+            let sf = self.scene.field(s.0, s.1);
+
+            if !x3d_fields::access::is_output(sf.access) {
+                return Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name));
+            }
+        }
+
+        if let Some(d) = dst {
+            let df = self.scene.field(d.0, d.1);
+
+            if !x3d_fields::access::is_input(df.access) {
+                return Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name));
+            }
+        }
+
+        Ok(())
+    }
+
     /// X3DRoute.reconnect: disconnect, then connect to the fields of the exported nodes.
     pub(crate) fn reconnect_route(&mut self, id: usize) {
         let Some((ctx, i)) = self.scene.find_route(id) else {
@@ -1148,18 +1194,18 @@ impl Runtime {
 
                 if sf.ty() != df.ty() {
                     Err(format!(
-                        "Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
+                        "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
                         sf.name, df.name
                     ))
                 } else if !x3d_fields::access::is_output(sf.access) {
-                    Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name))
+                    Err(format!("Error: Bad ROUTE specification: source field \"{}\" must be an output.", sf.name))
                 } else if !x3d_fields::access::is_input(df.access) {
-                    Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name))
+                    Err(format!("Error: Bad ROUTE specification: destination field \"{}\" must be an input.", df.name))
                 } else {
                     Ok(())
                 }
             }
-            _ => Err("Couldn't connect route.".to_string()),
+            _ => Err("AggregateError: Couldn't connect route.".to_string()),
         };
 
         match result {
@@ -1183,7 +1229,7 @@ impl Runtime {
                 let all_complete = self.route_inlines(&r).into_iter().all(|n| self.url_load_state(n) == LoadState::Complete);
 
                 if all_complete {
-                    self.log_warn(format!("Error: {e}"));
+                    self.log_warn(e);
                 }
             }
         }

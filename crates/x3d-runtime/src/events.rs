@@ -130,41 +130,49 @@ impl Runtime {
         }
 
         self.processing = true;
+        self.deliver_parsed_ctx_events();
 
         loop {
-            // Process field events. The tainted BrowserOptions fields run their interests here too.
             loop {
-                self.browser_options.process_events();
+                // Process field events. The tainted BrowserOptions fields run their interests here too.
+                loop {
+                    self.browser_options.process_events();
 
-                if self.browser_options.take_sound_intensity_changed() {
-                    self.sound_set_intensity();
+                    if self.browser_options.take_sound_intensity_changed() {
+                        self.sound_set_intensity();
+                    }
+
+                    let tainted = std::mem::take(&mut self.tainted_fields);
+
+                    for (k, event) in tainted {
+                        self.process_event(k, event);
+                    }
+
+                    if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events() {
+                        break;
+                    }
                 }
 
-                let tainted = std::mem::take(&mut self.tainted_fields);
+                // Process node events.
+                loop {
+                    let tainted = std::mem::take(&mut self.tainted_nodes);
 
-                for (k, event) in tainted {
-                    self.process_event(k, event);
+                    for node in tainted {
+                        self.process_node_event(node);
+                    }
+
+                    if !(self.tainted_fields.is_empty() && !self.tainted_nodes.is_empty()) {
+                        break;
+                    }
                 }
 
-                if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events() {
+                if self.tainted_fields.is_empty() {
                     break;
                 }
             }
 
-            // Process node events.
-            loop {
-                let tainted = std::mem::take(&mut self.tainted_nodes);
-
-                for node in tainted {
-                    self.process_node_event(node);
-                }
-
-                if !(self.tainted_fields.is_empty() && !self.tainted_nodes.is_empty()) {
-                    break;
-                }
-            }
-
-            if self.tainted_fields.is_empty() {
+            // The callbacks of the execution context change fields (X3DField.processEvent) run after the events that set them.
+            if !self.deliver_ctx_events() {
                 break;
             }
         }
@@ -210,6 +218,11 @@ impl Runtime {
         // and the fetches they start run right after the frame, before the next one.
         if name == "finishEvents" {
             self.finish_frame();
+
+            // The change events of the frame's end run their callbacks with the events that follow.
+            if self.release_deferred_ctx_events() {
+                self.process_events();
+            }
         }
     }
 }

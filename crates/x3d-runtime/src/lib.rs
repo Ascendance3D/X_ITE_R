@@ -32,6 +32,7 @@
 pub mod browser_options;
 pub mod browser_load;
 pub mod bullet;
+pub mod ctx_events;
 pub mod geo;
 pub mod events;
 pub mod extern_proto;
@@ -313,6 +314,8 @@ pub struct Runtime {
     /// The browser's private event fields (prepareEvents, timeEvents, …) live on this node.
     pub browser_node: NodeId,
     pub script_host: Option<Box<dyn ScriptHost>>,
+    /// Events of the change fields of execution contexts and scenes ([`ctx_events`]).
+    pub ctx_events: ctx_events::CtxEvents,
     /// The Shaders component: the compiler the renderer installs, parts, links and the Appearance selection.
     pub shaders: nodes::shaders::ShaderHost,
     pub fetcher: Box<dyn Fetcher>,
@@ -517,6 +520,7 @@ impl Runtime {
             tasks: Default::default(),
             browser_node: 0,
             script_host: None,
+            ctx_events: Default::default(),
             shaders: Default::default(),
             fetcher,
             extern_loaded: HashMap::new(),
@@ -872,6 +876,7 @@ impl Runtime {
         for (n, h) in adds {
             self.add_parent(n, h);
         }
+
     }
 
     /// X3DNode.getCloneCount: one per non-private holder; a field of a private node (`setPrivate (true)`,
@@ -914,6 +919,15 @@ impl Runtime {
 
         // A node reference came or went: a runtime-created node may have become unreachable.
         self.dynamic_dirty = true;
+
+        // X3DBaseNode.parentsChanged: `executionContext ._sceneGraph_changed = time` for every node that gained or lost a parent.
+        if self.ctx_events.observed {
+            let moved: Vec<NodeId> = old.iter().filter(|n| !new.contains(n)).chain(new.iter().filter(|n| !old.contains(n))).copied().collect();
+
+            for n in moved {
+                self.ctx_parents_changed(n);
+            }
+        }
 
         for n in old {
             if !new.contains(&n) {
@@ -1047,6 +1061,7 @@ impl Runtime {
 
         self.start();
         self.run_tasks();
+        self.ctx_world_started(false);
 
         // FileLoader.set_loadCount__ awaits `browser .nextFrame ()` once the scene's loadCount is
         // 0, and every Inline in it holds the count until its own scene is attached: one frame,

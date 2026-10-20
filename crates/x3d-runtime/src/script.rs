@@ -36,6 +36,10 @@ pub trait ScriptHost {
     /// X3DBrowser.callBrowserCallbacks (event): the functions registered with `addBrowserCallback` run.
     fn browser_event(&mut self, _rt: &mut Runtime, _event: u32) {}
 
+    /// A change field of an execution context fires (`sceneGraph_changed` = 0, `bbox_changed` = 1, `profile_changed` = 2,
+    /// `metadata_changed` = 3): the callbacks Scripts gave `addFieldCallback` run with the field's value.
+    fn ctx_event(&mut self, _rt: &mut Runtime, _ctx: CtxId, _field: u32) {}
+
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
 
