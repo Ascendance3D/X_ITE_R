@@ -1,0 +1,360 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx print"
+DEF P_Transform_str Transform { }
+DEF P_Transform_xml Transform { }
+DEF P_Transform_expstr Transform { }
+DEF P_Transform_null Transform { }
+DEF P_Transform_true Transform { }
+DEF P_Transform_obj Transform { }
+DEF P_Transform_arr Transform { }
+DEF P_Transform_valueof Transform { }
+DEF P_Transform_mut Transform { }
+DEF P_TextureTransform_str TextureTransform { }
+DEF P_TextureTransform_xml TextureTransform { }
+DEF P_TextureTransform_expstr TextureTransform { }
+DEF P_TextureTransform_null TextureTransform { }
+DEF P_TextureTransform_true TextureTransform { }
+DEF P_TextureTransform_obj TextureTransform { }
+DEF P_TextureTransform_arr TextureTransform { }
+DEF P_TextureTransform_valueof TextureTransform { }
+DEF P_TextureTransform_mut TextureTransform { }
+DEF P_ClipPlane_str ClipPlane { }
+DEF P_ClipPlane_xml ClipPlane { }
+DEF P_ClipPlane_expstr ClipPlane { }
+DEF P_ClipPlane_null ClipPlane { }
+DEF P_ClipPlane_true ClipPlane { }
+DEF P_ClipPlane_obj ClipPlane { }
+DEF P_ClipPlane_arr ClipPlane { }
+DEF P_ClipPlane_valueof ClipPlane { }
+DEF P_ClipPlane_mut ClipPlane { }
+DEF P_Material_str Material { }
+DEF P_Material_xml Material { }
+DEF P_Material_expstr Material { }
+DEF P_Material_null Material { }
+DEF P_Material_true Material { }
+DEF P_Material_obj Material { }
+DEF P_Material_arr Material { }
+DEF P_Material_valueof Material { }
+DEF P_Material_mut Material { }
+DEF P_TextureProperties_str TextureProperties { }
+DEF P_TextureProperties_xml TextureProperties { }
+DEF P_TextureProperties_expstr TextureProperties { }
+DEF P_TextureProperties_null TextureProperties { }
+DEF P_TextureProperties_true TextureProperties { }
+DEF P_TextureProperties_obj TextureProperties { }
+DEF P_TextureProperties_arr TextureProperties { }
+DEF P_TextureProperties_valueof TextureProperties { }
+DEF P_TextureProperties_mut TextureProperties { }
+DEF P Script {
+  inputOutput MFString out [ ]
+  inputOutput SFVec3f p3f_str 1 1 1
+  inputOutput SFVec3f p3f_xml 1 1 1
+  inputOutput SFVec3f p3f_expstr 1 1 1
+  inputOutput SFVec3f p3f_null 1 1 1
+  inputOutput SFVec3f p3f_true 1 1 1
+  inputOutput SFVec3f p3f_obj 1 1 1
+  inputOutput SFVec3f p3f_arr 1 1 1
+  inputOutput SFVec3f p3f_valueof 1 1 1
+  inputOutput SFVec3f p3f_mut 1 1 1
+  inputOutput SFVec2d p2d_str 1 1
+  inputOutput SFVec2d p2d_xml 1 1
+  inputOutput SFVec2d p2d_expstr 1 1
+  inputOutput SFVec2d p2d_null 1 1
+  inputOutput SFVec2d p2d_true 1 1
+  inputOutput SFVec2d p2d_obj 1 1
+  inputOutput SFVec2d p2d_arr 1 1
+  inputOutput SFVec2d p2d_valueof 1 1
+  inputOutput SFVec2d p2d_mut 1 1
+  inputOutput SFVec3d p3d_str 1 1 1
+  inputOutput SFVec3d p3d_xml 1 1 1
+  inputOutput SFVec3d p3d_expstr 1 1 1
+  inputOutput SFVec3d p3d_null 1 1 1
+  inputOutput SFVec3d p3d_true 1 1 1
+  inputOutput SFVec3d p3d_obj 1 1 1
+  inputOutput SFVec3d p3d_arr 1 1 1
+  inputOutput SFVec3d p3d_valueof 1 1 1
+  inputOutput SFVec3d p3d_mut 1 1 1
+  inputOutput SFVec4d p4d_str 1 1 1 1
+  inputOutput SFVec4d p4d_xml 1 1 1 1
+  inputOutput SFVec4d p4d_expstr 1 1 1 1
+  inputOutput SFVec4d p4d_null 1 1 1 1
+  inputOutput SFVec4d p4d_true 1 1 1 1
+  inputOutput SFVec4d p4d_obj 1 1 1 1
+  inputOutput SFVec4d p4d_arr 1 1 1 1
+  inputOutput SFVec4d p4d_valueof 1 1 1 1
+  inputOutput SFVec4d p4d_mut 1 1 1 1
+  inputOutput SFColor pc_str 1 1 1
+  inputOutput SFColor pc_xml 1 1 1
+  inputOutput SFColor pc_expstr 1 1 1
+  inputOutput SFColor pc_null 1 1 1
+  inputOutput SFColor pc_true 1 1 1
+  inputOutput SFColor pc_obj 1 1 1
+  inputOutput SFColor pc_arr 1 1 1
+  inputOutput SFColor pc_valueof 1 1 1
+  inputOutput SFColor pc_mut 1 1 1
+  inputOutput SFColorRGBA pca_str 1 1 1 1
+  inputOutput SFColorRGBA pca_xml 1 1 1 1
+  inputOutput SFColorRGBA pca_expstr 1 1 1 1
+  inputOutput SFColorRGBA pca_null 1 1 1 1
+  inputOutput SFColorRGBA pca_true 1 1 1 1
+  inputOutput SFColorRGBA pca_obj 1 1 1 1
+  inputOutput SFColorRGBA pca_arr 1 1 1 1
+  inputOutput SFColorRGBA pca_valueof 1 1 1 1
+  inputOutput SFColorRGBA pca_mut 1 1 1 1
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+var MO = { t: 'p', toString: function () { return this .t; } };
+var CO = { n: 0, toString: function () { return 'c' + (++ this .n); } };
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+var F_ = 0;
+function prepareEvents () {
+  ++ F_;
+  if (F_ === 3) {
+  T ('Transform str set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_str'); var f = N .translation; f .getValue () .x = 'abc'; N .translation = f; return 'ok'; });
+  T ('Transform xml set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_xml'); var f = N .translation; f .getValue () .x = 'a<b&\"c\\'d'; N .translation = f; return 'ok'; });
+  T ('Transform expstr set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_expstr'); var f = N .translation; f .getValue () .x = '1e3'; N .translation = f; return 'ok'; });
+  T ('Transform null set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_null'); var f = N .translation; f .getValue () .x = null; N .translation = f; return 'ok'; });
+  T ('Transform true set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_true'); var f = N .translation; f .getValue () .x = true; N .translation = f; return 'ok'; });
+  T ('Transform obj set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_obj'); var f = N .translation; f .getValue () .x = ({ }); N .translation = f; return 'ok'; });
+  T ('Transform arr set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_arr'); var f = N .translation; f .getValue () .x = [1, 2]; N .translation = f; return 'ok'; });
+  T ('Transform valueof set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_valueof'); var f = N .translation; f .getValue () .x = ({ valueOf: function () { return 7; } }); N .translation = f; return 'ok'; });
+  T ('Transform mut set', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_mut'); var f = N .translation; f .getValue () .x = MO; N .translation = f; return 'ok'; });
+  T ('TextureTransform str set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_str'); var f = N .translation; f .getValue () .x = 'abc'; N .translation = f; return 'ok'; });
+  T ('TextureTransform xml set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_xml'); var f = N .translation; f .getValue () .x = 'a<b&\"c\\'d'; N .translation = f; return 'ok'; });
+  T ('TextureTransform expstr set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_expstr'); var f = N .translation; f .getValue () .x = '1e3'; N .translation = f; return 'ok'; });
+  T ('TextureTransform null set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_null'); var f = N .translation; f .getValue () .x = null; N .translation = f; return 'ok'; });
+  T ('TextureTransform true set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_true'); var f = N .translation; f .getValue () .x = true; N .translation = f; return 'ok'; });
+  T ('TextureTransform obj set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_obj'); var f = N .translation; f .getValue () .x = ({ }); N .translation = f; return 'ok'; });
+  T ('TextureTransform arr set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_arr'); var f = N .translation; f .getValue () .x = [1, 2]; N .translation = f; return 'ok'; });
+  T ('TextureTransform valueof set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_valueof'); var f = N .translation; f .getValue () .x = ({ valueOf: function () { return 7; } }); N .translation = f; return 'ok'; });
+  T ('TextureTransform mut set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_mut'); var f = N .translation; f .getValue () .x = MO; N .translation = f; return 'ok'; });
+  T ('ClipPlane str set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_str'); var f = N .plane; f .getValue () .x = 'abc'; N .plane = f; return 'ok'; });
+  T ('ClipPlane xml set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_xml'); var f = N .plane; f .getValue () .x = 'a<b&\"c\\'d'; N .plane = f; return 'ok'; });
+  T ('ClipPlane expstr set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_expstr'); var f = N .plane; f .getValue () .x = '1e3'; N .plane = f; return 'ok'; });
+  T ('ClipPlane null set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_null'); var f = N .plane; f .getValue () .x = null; N .plane = f; return 'ok'; });
+  T ('ClipPlane true set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_true'); var f = N .plane; f .getValue () .x = true; N .plane = f; return 'ok'; });
+  T ('ClipPlane obj set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_obj'); var f = N .plane; f .getValue () .x = ({ }); N .plane = f; return 'ok'; });
+  T ('ClipPlane arr set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_arr'); var f = N .plane; f .getValue () .x = [1, 2]; N .plane = f; return 'ok'; });
+  T ('ClipPlane valueof set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_valueof'); var f = N .plane; f .getValue () .x = ({ valueOf: function () { return 7; } }); N .plane = f; return 'ok'; });
+  T ('ClipPlane mut set', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_mut'); var f = N .plane; f .getValue () .x = MO; N .plane = f; return 'ok'; });
+  T ('Material str set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_str'); var f = N .diffuseColor; f .getValue () .r = 'abc'; N .diffuseColor = f; return 'ok'; });
+  T ('Material xml set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_xml'); var f = N .diffuseColor; f .getValue () .r = 'a<b&\"c\\'d'; N .diffuseColor = f; return 'ok'; });
+  T ('Material expstr set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_expstr'); var f = N .diffuseColor; f .getValue () .r = '1e3'; N .diffuseColor = f; return 'ok'; });
+  T ('Material null set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_null'); var f = N .diffuseColor; f .getValue () .r = null; N .diffuseColor = f; return 'ok'; });
+  T ('Material true set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_true'); var f = N .diffuseColor; f .getValue () .r = true; N .diffuseColor = f; return 'ok'; });
+  T ('Material obj set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_obj'); var f = N .diffuseColor; f .getValue () .r = ({ }); N .diffuseColor = f; return 'ok'; });
+  T ('Material arr set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_arr'); var f = N .diffuseColor; f .getValue () .r = [1, 2]; N .diffuseColor = f; return 'ok'; });
+  T ('Material valueof set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_valueof'); var f = N .diffuseColor; f .getValue () .r = ({ valueOf: function () { return 7; } }); N .diffuseColor = f; return 'ok'; });
+  T ('Material mut set', function () { var N = Browser .currentScene .getNamedNode ('P_Material_mut'); var f = N .diffuseColor; f .getValue () .r = MO; N .diffuseColor = f; return 'ok'; });
+  T ('TextureProperties str set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_str'); var f = N .borderColor; f .getValue () .r = 'abc'; N .borderColor = f; return 'ok'; });
+  T ('TextureProperties xml set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_xml'); var f = N .borderColor; f .getValue () .r = 'a<b&\"c\\'d'; N .borderColor = f; return 'ok'; });
+  T ('TextureProperties expstr set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_expstr'); var f = N .borderColor; f .getValue () .r = '1e3'; N .borderColor = f; return 'ok'; });
+  T ('TextureProperties null set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_null'); var f = N .borderColor; f .getValue () .r = null; N .borderColor = f; return 'ok'; });
+  T ('TextureProperties true set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_true'); var f = N .borderColor; f .getValue () .r = true; N .borderColor = f; return 'ok'; });
+  T ('TextureProperties obj set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_obj'); var f = N .borderColor; f .getValue () .r = ({ }); N .borderColor = f; return 'ok'; });
+  T ('TextureProperties arr set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_arr'); var f = N .borderColor; f .getValue () .r = [1, 2]; N .borderColor = f; return 'ok'; });
+  T ('TextureProperties valueof set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_valueof'); var f = N .borderColor; f .getValue () .r = ({ valueOf: function () { return 7; } }); N .borderColor = f; return 'ok'; });
+  T ('TextureProperties mut set', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_mut'); var f = N .borderColor; f .getValue () .r = MO; N .borderColor = f; return 'ok'; });
+  T ('p3f str set', function () { var f = new SFVec3f (); f .getValue () .x = 'abc'; p3f_str = f; return 'ok'; });
+  T ('p3f xml set', function () { var f = new SFVec3f (); f .getValue () .x = 'a<b&\"c\\'d'; p3f_xml = f; return 'ok'; });
+  T ('p3f expstr set', function () { var f = new SFVec3f (); f .getValue () .x = '1e3'; p3f_expstr = f; return 'ok'; });
+  T ('p3f null set', function () { var f = new SFVec3f (); f .getValue () .x = null; p3f_null = f; return 'ok'; });
+  T ('p3f true set', function () { var f = new SFVec3f (); f .getValue () .x = true; p3f_true = f; return 'ok'; });
+  T ('p3f obj set', function () { var f = new SFVec3f (); f .getValue () .x = ({ }); p3f_obj = f; return 'ok'; });
+  T ('p3f arr set', function () { var f = new SFVec3f (); f .getValue () .x = [1, 2]; p3f_arr = f; return 'ok'; });
+  T ('p3f valueof set', function () { var f = new SFVec3f (); f .getValue () .x = ({ valueOf: function () { return 7; } }); p3f_valueof = f; return 'ok'; });
+  T ('p3f mut set', function () { var f = new SFVec3f (); f .getValue () .x = MO; p3f_mut = f; return 'ok'; });
+  T ('p2d str set', function () { var f = new SFVec2d (); f .getValue () .x = 'abc'; p2d_str = f; return 'ok'; });
+  T ('p2d xml set', function () { var f = new SFVec2d (); f .getValue () .x = 'a<b&\"c\\'d'; p2d_xml = f; return 'ok'; });
+  T ('p2d expstr set', function () { var f = new SFVec2d (); f .getValue () .x = '1e3'; p2d_expstr = f; return 'ok'; });
+  T ('p2d null set', function () { var f = new SFVec2d (); f .getValue () .x = null; p2d_null = f; return 'ok'; });
+  T ('p2d true set', function () { var f = new SFVec2d (); f .getValue () .x = true; p2d_true = f; return 'ok'; });
+  T ('p2d obj set', function () { var f = new SFVec2d (); f .getValue () .x = ({ }); p2d_obj = f; return 'ok'; });
+  T ('p2d arr set', function () { var f = new SFVec2d (); f .getValue () .x = [1, 2]; p2d_arr = f; return 'ok'; });
+  T ('p2d valueof set', function () { var f = new SFVec2d (); f .getValue () .x = ({ valueOf: function () { return 7; } }); p2d_valueof = f; return 'ok'; });
+  T ('p2d mut set', function () { var f = new SFVec2d (); f .getValue () .x = MO; p2d_mut = f; return 'ok'; });
+  T ('p3d str set', function () { var f = new SFVec3d (); f .getValue () .x = 'abc'; p3d_str = f; return 'ok'; });
+  T ('p3d xml set', function () { var f = new SFVec3d (); f .getValue () .x = 'a<b&\"c\\'d'; p3d_xml = f; return 'ok'; });
+  T ('p3d expstr set', function () { var f = new SFVec3d (); f .getValue () .x = '1e3'; p3d_expstr = f; return 'ok'; });
+  T ('p3d null set', function () { var f = new SFVec3d (); f .getValue () .x = null; p3d_null = f; return 'ok'; });
+  T ('p3d true set', function () { var f = new SFVec3d (); f .getValue () .x = true; p3d_true = f; return 'ok'; });
+  T ('p3d obj set', function () { var f = new SFVec3d (); f .getValue () .x = ({ }); p3d_obj = f; return 'ok'; });
+  T ('p3d arr set', function () { var f = new SFVec3d (); f .getValue () .x = [1, 2]; p3d_arr = f; return 'ok'; });
+  T ('p3d valueof set', function () { var f = new SFVec3d (); f .getValue () .x = ({ valueOf: function () { return 7; } }); p3d_valueof = f; return 'ok'; });
+  T ('p3d mut set', function () { var f = new SFVec3d (); f .getValue () .x = MO; p3d_mut = f; return 'ok'; });
+  T ('p4d str set', function () { var f = new SFVec4d (); f .getValue () .x = 'abc'; p4d_str = f; return 'ok'; });
+  T ('p4d xml set', function () { var f = new SFVec4d (); f .getValue () .x = 'a<b&\"c\\'d'; p4d_xml = f; return 'ok'; });
+  T ('p4d expstr set', function () { var f = new SFVec4d (); f .getValue () .x = '1e3'; p4d_expstr = f; return 'ok'; });
+  T ('p4d null set', function () { var f = new SFVec4d (); f .getValue () .x = null; p4d_null = f; return 'ok'; });
+  T ('p4d true set', function () { var f = new SFVec4d (); f .getValue () .x = true; p4d_true = f; return 'ok'; });
+  T ('p4d obj set', function () { var f = new SFVec4d (); f .getValue () .x = ({ }); p4d_obj = f; return 'ok'; });
+  T ('p4d arr set', function () { var f = new SFVec4d (); f .getValue () .x = [1, 2]; p4d_arr = f; return 'ok'; });
+  T ('p4d valueof set', function () { var f = new SFVec4d (); f .getValue () .x = ({ valueOf: function () { return 7; } }); p4d_valueof = f; return 'ok'; });
+  T ('p4d mut set', function () { var f = new SFVec4d (); f .getValue () .x = MO; p4d_mut = f; return 'ok'; });
+  T ('pc str set', function () { var f = new SFColor (); f .getValue () .r = 'abc'; pc_str = f; return 'ok'; });
+  T ('pc xml set', function () { var f = new SFColor (); f .getValue () .r = 'a<b&\"c\\'d'; pc_xml = f; return 'ok'; });
+  T ('pc expstr set', function () { var f = new SFColor (); f .getValue () .r = '1e3'; pc_expstr = f; return 'ok'; });
+  T ('pc null set', function () { var f = new SFColor (); f .getValue () .r = null; pc_null = f; return 'ok'; });
+  T ('pc true set', function () { var f = new SFColor (); f .getValue () .r = true; pc_true = f; return 'ok'; });
+  T ('pc obj set', function () { var f = new SFColor (); f .getValue () .r = ({ }); pc_obj = f; return 'ok'; });
+  T ('pc arr set', function () { var f = new SFColor (); f .getValue () .r = [1, 2]; pc_arr = f; return 'ok'; });
+  T ('pc valueof set', function () { var f = new SFColor (); f .getValue () .r = ({ valueOf: function () { return 7; } }); pc_valueof = f; return 'ok'; });
+  T ('pc mut set', function () { var f = new SFColor (); f .getValue () .r = MO; pc_mut = f; return 'ok'; });
+  T ('pca str set', function () { var f = new SFColorRGBA (); f .getValue () .r = 'abc'; pca_str = f; return 'ok'; });
+  T ('pca xml set', function () { var f = new SFColorRGBA (); f .getValue () .r = 'a<b&\"c\\'d'; pca_xml = f; return 'ok'; });
+  T ('pca expstr set', function () { var f = new SFColorRGBA (); f .getValue () .r = '1e3'; pca_expstr = f; return 'ok'; });
+  T ('pca null set', function () { var f = new SFColorRGBA (); f .getValue () .r = null; pca_null = f; return 'ok'; });
+  T ('pca true set', function () { var f = new SFColorRGBA (); f .getValue () .r = true; pca_true = f; return 'ok'; });
+  T ('pca obj set', function () { var f = new SFColorRGBA (); f .getValue () .r = ({ }); pca_obj = f; return 'ok'; });
+  T ('pca arr set', function () { var f = new SFColorRGBA (); f .getValue () .r = [1, 2]; pca_arr = f; return 'ok'; });
+  T ('pca valueof set', function () { var f = new SFColorRGBA (); f .getValue () .r = ({ valueOf: function () { return 7; } }); pca_valueof = f; return 'ok'; });
+  T ('pca mut set', function () { var f = new SFColorRGBA (); f .getValue () .r = MO; pca_mut = f; return 'ok'; });
+  }
+  if (F_ === 5) { MO .t = 'q'; }
+  if (F_ === 7) {
+  T ('Transform str text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_str'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform xml text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_xml'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform expstr text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_expstr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform null text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_null'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform true text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_true'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform obj text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_obj'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform arr text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_arr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform valueof text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_valueof'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('Transform mut text', function () { var N = Browser .currentScene .getNamedNode ('P_Transform_mut'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform str text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_str'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform xml text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_xml'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform expstr text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_expstr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform null text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_null'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform true text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_true'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform obj text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_obj'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform arr text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_arr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform valueof text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_valueof'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('TextureTransform mut text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureTransform_mut'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .translation .toVRMLString (), N .translation .toXMLString (), N .translation .toJSONString ? N .translation .toJSONString () : 'none']; });
+  T ('ClipPlane str text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_str'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane xml text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_xml'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane expstr text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_expstr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane null text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_null'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane true text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_true'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane obj text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_obj'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane arr text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_arr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane valueof text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_valueof'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('ClipPlane mut text', function () { var N = Browser .currentScene .getNamedNode ('P_ClipPlane_mut'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .plane .toVRMLString (), N .plane .toXMLString (), N .plane .toJSONString ? N .plane .toJSONString () : 'none']; });
+  T ('Material str text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_str'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material xml text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_xml'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material expstr text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_expstr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material null text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_null'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material true text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_true'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material obj text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_obj'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material arr text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_arr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material valueof text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_valueof'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('Material mut text', function () { var N = Browser .currentScene .getNamedNode ('P_Material_mut'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .diffuseColor .toVRMLString (), N .diffuseColor .toXMLString (), N .diffuseColor .toJSONString ? N .diffuseColor .toJSONString () : 'none']; });
+  T ('TextureProperties str text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_str'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties xml text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_xml'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties expstr text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_expstr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties null text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_null'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties true text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_true'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties obj text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_obj'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties arr text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_arr'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties valueof text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_valueof'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('TextureProperties mut text', function () { var N = Browser .currentScene .getNamedNode ('P_TextureProperties_mut'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .borderColor .toVRMLString (), N .borderColor .toXMLString (), N .borderColor .toJSONString ? N .borderColor .toJSONString () : 'none']; });
+  T ('p3f str text', function () { return [p3f_str .toVRMLString (), p3f_str .toXMLString (), p3f_str .toJSONString ? p3f_str .toJSONString () : 'none', String (p3f_str)]; });
+  T ('p3f xml text', function () { return [p3f_xml .toVRMLString (), p3f_xml .toXMLString (), p3f_xml .toJSONString ? p3f_xml .toJSONString () : 'none', String (p3f_xml)]; });
+  T ('p3f expstr text', function () { return [p3f_expstr .toVRMLString (), p3f_expstr .toXMLString (), p3f_expstr .toJSONString ? p3f_expstr .toJSONString () : 'none', String (p3f_expstr)]; });
+  T ('p3f null text', function () { return [p3f_null .toVRMLString (), p3f_null .toXMLString (), p3f_null .toJSONString ? p3f_null .toJSONString () : 'none', String (p3f_null)]; });
+  T ('p3f true text', function () { return [p3f_true .toVRMLString (), p3f_true .toXMLString (), p3f_true .toJSONString ? p3f_true .toJSONString () : 'none', String (p3f_true)]; });
+  T ('p3f obj text', function () { return [p3f_obj .toVRMLString (), p3f_obj .toXMLString (), p3f_obj .toJSONString ? p3f_obj .toJSONString () : 'none', String (p3f_obj)]; });
+  T ('p3f arr text', function () { return [p3f_arr .toVRMLString (), p3f_arr .toXMLString (), p3f_arr .toJSONString ? p3f_arr .toJSONString () : 'none', String (p3f_arr)]; });
+  T ('p3f valueof text', function () { return [p3f_valueof .toVRMLString (), p3f_valueof .toXMLString (), p3f_valueof .toJSONString ? p3f_valueof .toJSONString () : 'none', String (p3f_valueof)]; });
+  T ('p3f mut text', function () { return [p3f_mut .toVRMLString (), p3f_mut .toXMLString (), p3f_mut .toJSONString ? p3f_mut .toJSONString () : 'none', String (p3f_mut)]; });
+  T ('p2d str text', function () { return [p2d_str .toVRMLString (), p2d_str .toXMLString (), p2d_str .toJSONString ? p2d_str .toJSONString () : 'none', String (p2d_str)]; });
+  T ('p2d xml text', function () { return [p2d_xml .toVRMLString (), p2d_xml .toXMLString (), p2d_xml .toJSONString ? p2d_xml .toJSONString () : 'none', String (p2d_xml)]; });
+  T ('p2d expstr text', function () { return [p2d_expstr .toVRMLString (), p2d_expstr .toXMLString (), p2d_expstr .toJSONString ? p2d_expstr .toJSONString () : 'none', String (p2d_expstr)]; });
+  T ('p2d null text', function () { return [p2d_null .toVRMLString (), p2d_null .toXMLString (), p2d_null .toJSONString ? p2d_null .toJSONString () : 'none', String (p2d_null)]; });
+  T ('p2d true text', function () { return [p2d_true .toVRMLString (), p2d_true .toXMLString (), p2d_true .toJSONString ? p2d_true .toJSONString () : 'none', String (p2d_true)]; });
+  T ('p2d obj text', function () { return [p2d_obj .toVRMLString (), p2d_obj .toXMLString (), p2d_obj .toJSONString ? p2d_obj .toJSONString () : 'none', String (p2d_obj)]; });
+  T ('p2d arr text', function () { return [p2d_arr .toVRMLString (), p2d_arr .toXMLString (), p2d_arr .toJSONString ? p2d_arr .toJSONString () : 'none', String (p2d_arr)]; });
+  T ('p2d valueof text', function () { return [p2d_valueof .toVRMLString (), p2d_valueof .toXMLString (), p2d_valueof .toJSONString ? p2d_valueof .toJSONString () : 'none', String (p2d_valueof)]; });
+  T ('p2d mut text', function () { return [p2d_mut .toVRMLString (), p2d_mut .toXMLString (), p2d_mut .toJSONString ? p2d_mut .toJSONString () : 'none', String (p2d_mut)]; });
+  T ('p3d str text', function () { return [p3d_str .toVRMLString (), p3d_str .toXMLString (), p3d_str .toJSONString ? p3d_str .toJSONString () : 'none', String (p3d_str)]; });
+  T ('p3d xml text', function () { return [p3d_xml .toVRMLString (), p3d_xml .toXMLString (), p3d_xml .toJSONString ? p3d_xml .toJSONString () : 'none', String (p3d_xml)]; });
+  T ('p3d expstr text', function () { return [p3d_expstr .toVRMLString (), p3d_expstr .toXMLString (), p3d_expstr .toJSONString ? p3d_expstr .toJSONString () : 'none', String (p3d_expstr)]; });
+  T ('p3d null text', function () { return [p3d_null .toVRMLString (), p3d_null .toXMLString (), p3d_null .toJSONString ? p3d_null .toJSONString () : 'none', String (p3d_null)]; });
+  T ('p3d true text', function () { return [p3d_true .toVRMLString (), p3d_true .toXMLString (), p3d_true .toJSONString ? p3d_true .toJSONString () : 'none', String (p3d_true)]; });
+  T ('p3d obj text', function () { return [p3d_obj .toVRMLString (), p3d_obj .toXMLString (), p3d_obj .toJSONString ? p3d_obj .toJSONString () : 'none', String (p3d_obj)]; });
+  T ('p3d arr text', function () { return [p3d_arr .toVRMLString (), p3d_arr .toXMLString (), p3d_arr .toJSONString ? p3d_arr .toJSONString () : 'none', String (p3d_arr)]; });
+  T ('p3d valueof text', function () { return [p3d_valueof .toVRMLString (), p3d_valueof .toXMLString (), p3d_valueof .toJSONString ? p3d_valueof .toJSONString () : 'none', String (p3d_valueof)]; });
+  T ('p3d mut text', function () { return [p3d_mut .toVRMLString (), p3d_mut .toXMLString (), p3d_mut .toJSONString ? p3d_mut .toJSONString () : 'none', String (p3d_mut)]; });
+  T ('p4d str text', function () { return [p4d_str .toVRMLString (), p4d_str .toXMLString (), p4d_str .toJSONString ? p4d_str .toJSONString () : 'none', String (p4d_str)]; });
+  T ('p4d xml text', function () { return [p4d_xml .toVRMLString (), p4d_xml .toXMLString (), p4d_xml .toJSONString ? p4d_xml .toJSONString () : 'none', String (p4d_xml)]; });
+  T ('p4d expstr text', function () { return [p4d_expstr .toVRMLString (), p4d_expstr .toXMLString (), p4d_expstr .toJSONString ? p4d_expstr .toJSONString () : 'none', String (p4d_expstr)]; });
+  T ('p4d null text', function () { return [p4d_null .toVRMLString (), p4d_null .toXMLString (), p4d_null .toJSONString ? p4d_null .toJSONString () : 'none', String (p4d_null)]; });
+  T ('p4d true text', function () { return [p4d_true .toVRMLString (), p4d_true .toXMLString (), p4d_true .toJSONString ? p4d_true .toJSONString () : 'none', String (p4d_true)]; });
+  T ('p4d obj text', function () { return [p4d_obj .toVRMLString (), p4d_obj .toXMLString (), p4d_obj .toJSONString ? p4d_obj .toJSONString () : 'none', String (p4d_obj)]; });
+  T ('p4d arr text', function () { return [p4d_arr .toVRMLString (), p4d_arr .toXMLString (), p4d_arr .toJSONString ? p4d_arr .toJSONString () : 'none', String (p4d_arr)]; });
+  T ('p4d valueof text', function () { return [p4d_valueof .toVRMLString (), p4d_valueof .toXMLString (), p4d_valueof .toJSONString ? p4d_valueof .toJSONString () : 'none', String (p4d_valueof)]; });
+  T ('p4d mut text', function () { return [p4d_mut .toVRMLString (), p4d_mut .toXMLString (), p4d_mut .toJSONString ? p4d_mut .toJSONString () : 'none', String (p4d_mut)]; });
+  T ('pc str text', function () { return [pc_str .toVRMLString (), pc_str .toXMLString (), pc_str .toJSONString ? pc_str .toJSONString () : 'none', String (pc_str)]; });
+  T ('pc xml text', function () { return [pc_xml .toVRMLString (), pc_xml .toXMLString (), pc_xml .toJSONString ? pc_xml .toJSONString () : 'none', String (pc_xml)]; });
+  T ('pc expstr text', function () { return [pc_expstr .toVRMLString (), pc_expstr .toXMLString (), pc_expstr .toJSONString ? pc_expstr .toJSONString () : 'none', String (pc_expstr)]; });
+  T ('pc null text', function () { return [pc_null .toVRMLString (), pc_null .toXMLString (), pc_null .toJSONString ? pc_null .toJSONString () : 'none', String (pc_null)]; });
+  T ('pc true text', function () { return [pc_true .toVRMLString (), pc_true .toXMLString (), pc_true .toJSONString ? pc_true .toJSONString () : 'none', String (pc_true)]; });
+  T ('pc obj text', function () { return [pc_obj .toVRMLString (), pc_obj .toXMLString (), pc_obj .toJSONString ? pc_obj .toJSONString () : 'none', String (pc_obj)]; });
+  T ('pc arr text', function () { return [pc_arr .toVRMLString (), pc_arr .toXMLString (), pc_arr .toJSONString ? pc_arr .toJSONString () : 'none', String (pc_arr)]; });
+  T ('pc valueof text', function () { return [pc_valueof .toVRMLString (), pc_valueof .toXMLString (), pc_valueof .toJSONString ? pc_valueof .toJSONString () : 'none', String (pc_valueof)]; });
+  T ('pc mut text', function () { return [pc_mut .toVRMLString (), pc_mut .toXMLString (), pc_mut .toJSONString ? pc_mut .toJSONString () : 'none', String (pc_mut)]; });
+  T ('pca str text', function () { return [pca_str .toVRMLString (), pca_str .toXMLString (), pca_str .toJSONString ? pca_str .toJSONString () : 'none', String (pca_str)]; });
+  T ('pca xml text', function () { return [pca_xml .toVRMLString (), pca_xml .toXMLString (), pca_xml .toJSONString ? pca_xml .toJSONString () : 'none', String (pca_xml)]; });
+  T ('pca expstr text', function () { return [pca_expstr .toVRMLString (), pca_expstr .toXMLString (), pca_expstr .toJSONString ? pca_expstr .toJSONString () : 'none', String (pca_expstr)]; });
+  T ('pca null text', function () { return [pca_null .toVRMLString (), pca_null .toXMLString (), pca_null .toJSONString ? pca_null .toJSONString () : 'none', String (pca_null)]; });
+  T ('pca true text', function () { return [pca_true .toVRMLString (), pca_true .toXMLString (), pca_true .toJSONString ? pca_true .toJSONString () : 'none', String (pca_true)]; });
+  T ('pca obj text', function () { return [pca_obj .toVRMLString (), pca_obj .toXMLString (), pca_obj .toJSONString ? pca_obj .toJSONString () : 'none', String (pca_obj)]; });
+  T ('pca arr text', function () { return [pca_arr .toVRMLString (), pca_arr .toXMLString (), pca_arr .toJSONString ? pca_arr .toJSONString () : 'none', String (pca_arr)]; });
+  T ('pca valueof text', function () { return [pca_valueof .toVRMLString (), pca_valueof .toXMLString (), pca_valueof .toJSONString ? pca_valueof .toJSONString () : 'none', String (pca_valueof)]; });
+  T ('pca mut text', function () { return [pca_mut .toVRMLString (), pca_mut .toXMLString (), pca_mut .toJSONString ? pca_mut .toJSONString () : 'none', String (pca_mut)]; });
+  T ('scene xml', function () { return Browser .currentScene .toXMLString (); });
+  T ('scene json', function () { return Browser .currentScene .toJSONString (); });
+  T ('count calls', function () { return CO .n; });
+    flush_ ();
+  }
+}
+
+  "
+}

@@ -150,6 +150,74 @@ FI_SCRIPT = [("script sffloat " + vk, f"sf = {v}; return [typeof sf, String (sf)
             [("script sfvec internal " + vk, f"sv = new SFVec3f (1, 1, 1); sv .getValue () .z = {v}; return [typeof sv .z, String (sv .z), String (sv)];") for vk, v in VALUES]
 G.register("fldx-internal", FI_SCRIPT, fields=FI_FIELDS, pre=CHAIN, after=FI_AFTER, nodes="".join(FI_NODES))
 
+# Raw components in the scene's VRML, XML and JSON text (checkpoint after b2e5b9f): node fields with a unit category (Transform
+# translation, length) and without one (SFVec2f, SFVec4f, SFColor, SFColorRGBA), and Script fields of the six vector and color types.
+# MO's text changes after it was assigned (frame 5): X_ITE takes String (raw) when it prints. CO counts its toString calls.
+FP_VALUES = [("str", "'abc'"), ("xml", "'a<b&\"c\\'d'"), ("expstr", "'1e3'"), ("null", "null"), ("true", "true"), ("obj", "({ })"),
+             ("arr", "[1, 2]"), ("valueof", "({ valueOf: function () { return 7; } })"), ("mut", "MO")]
+FP_NODES = [("Transform", "translation", "x"), ("TextureTransform", "translation", "x"), ("ClipPlane", "plane", "x"),
+            ("Material", "diffuseColor", "r"), ("TextureProperties", "borderColor", "r")]
+FP_SCRIPT_FIELDS = [("p3f", "SFVec3f", "1 1 1", "x"), ("p2d", "SFVec2d", "1 1", "x"), ("p3d", "SFVec3d", "1 1 1", "x"),
+                    ("p4d", "SFVec4d", "1 1 1 1", "x"), ("pc", "SFColor", "1 1 1", "r"), ("pca", "SFColorRGBA", "1 1 1 1", "r")]
+FP_PRE = ("var MO = { t: 'p', toString: function () { return this .t; } };\n"
+          "var CO = { n: 0, toString: function () { return 'c' + (++ this .n); } };")
+
+
+def fp_world(name, values):
+    fields = "".join(f"  inputOutput {t} {n}_{vk} {d}\n" for n, t, d, _ in FP_SCRIPT_FIELDS for vk, _ in values)
+    nodes, setp, read = [], [], []
+    for ptype, pfield, comp in FP_NODES:
+        for vk, v in values:
+            a = f"P_{ptype}_{vk}"
+            nodes.append(f"DEF {a} {ptype} {{ }}\n")
+            setp.append(f"  T ('{ptype} {vk} set', function () {{ var N = Browser .currentScene .getNamedNode ('{a}'); var f = N .{pfield}; f .getValue () .{comp} = {v}; N .{pfield} = f; return 'ok'; }});")
+            read.append(f"  T ('{ptype} {vk} text', function () {{ var N = Browser .currentScene .getNamedNode ('{a}'); return [N .toVRMLString (), N .toXMLString (), N .toJSONString (), N .{pfield} .toVRMLString (), N .{pfield} .toXMLString (), N .{pfield} .toJSONString ? N .{pfield} .toJSONString () : 'none']; }});")
+    for n, t, d, comp in FP_SCRIPT_FIELDS:
+        for vk, v in values:
+            setp.append(f"  T ('{n} {vk} set', function () {{ var f = new {t} (); f .getValue () .{comp} = {v}; {n}_{vk} = f; return 'ok'; }});")
+            read.append(f"  T ('{n} {vk} text', function () {{ return [{n}_{vk} .toVRMLString (), {n}_{vk} .toXMLString (), {n}_{vk} .toJSONString ? {n}_{vk} .toJSONString () : 'none', String ({n}_{vk})]; }});")
+    after = ("var F_ = 0;\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 3) {\n" + "\n".join(setp) + "\n  }\n  if (F_ === 5) { MO .t = 'q'; }\n"
+             "  if (F_ === 7) {\n" + "\n".join(read) +
+             "\n  T ('scene xml', function () { return Browser .currentScene .toXMLString (); });"
+             "\n  T ('scene json', function () { return Browser .currentScene .toJSONString (); });"
+             "\n  T ('count calls', function () { return CO .n; });"
+             "\n    flush_ ();\n  }\n}\n")
+    G.register(name, [], fields=fields, pre=CHAIN + "\n" + FP_PRE, after=after, nodes="".join(nodes))
+
+
+fp_world("fldx-print", FP_VALUES)
+# Documented open: X_ITE calls a raw component's toString once per print of it; the port takes the texts of all raw values of a
+# Script when its code has run and before it prints, so a toString with side effects (a counter) is called a different number of times.
+fp_world("fldx-print-count-open", [("count", "CO")])
+
+# Units in standalone prints (checkpoint after b2e5b9f): X3DObject.toXXXString pushes a `null` execution context, so ToUnit leaves
+# values as they are; the scene's own toXXXString converts them. A scene from createX3DFromString with length and angle units.
+FU_SRC = ("#X3D V3.3 utf8\\nPROFILE Immersive\\nUNIT length km 1000\\nUNIT angle deg 0.017453292519943295\\n"
+          "DEF U Transform { translation 1000 2000 3000 rotation 0 1 0 1.5 }\\nDEF V Viewpoint { position 10 20 30 }\\nDEF M Material { diffuseColor 0.5 0.5 0.5 }")
+FU_READ = [
+    ("node vrml", "return u .toVRMLString ();"), ("node xml", "return u .toXMLString ();"), ("node json", "return u .toJSONString ();"),
+    ("viewpoint vrml", "return v .toVRMLString ();"), ("viewpoint xml", "return v .toXMLString ();"), ("viewpoint json", "return v .toJSONString ();"),
+    ("field vrml", "return [u .translation .toVRMLString (), u .rotation .toVRMLString (), String (u .translation)];"),
+    ("field xml", "return [u .translation .toXMLString (), u .rotation .toXMLString ()];"),
+    ("field json", "return [u .translation .toJSONString (), u .rotation .toJSONString ()];"),
+    ("raw node vrml", "var f = u .translation; f .getValue () .x = 'abc'; u .translation = f; return [u .toVRMLString (), u .toXMLString (), u .toJSONString ()];"),
+    ("raw color vrml", "var f = m .diffuseColor; f .getValue () .r = '1e3'; m .diffuseColor = f; return [m .toVRMLString (), m .toXMLString (), m .toJSONString ()];"),
+    ("scene vrml", "return s .toVRMLString ();"), ("scene xml", "return s .toXMLString ();"), ("scene json", "return s .toJSONString ();"),
+]
+FU_JS = ("Browser .createX3DFromString ('" + FU_SRC + "') .then (function (s) {\n"
+         "    var u = s .getNamedNode ('U'), v = s .getNamedNode ('V'), m = s .getNamedNode ('M');\n" +
+         "\n".join(f"    T ({lab!r}, function () {{ {code} }});" for lab, code in FU_READ) + "\n    flush_ ();\n  });\n  return 'ok';")
+G.register("fldx-units", [("start", FU_JS)], pre=CHAIN, nodes=HEAD_NODES)
+
+# A raw value one Script writes, read by another (both Scripts share X_ITE's page realm; the port's Scripts have a realm each).
+FC_NODES = ("DEF CT Transform { }\nDEF CW Script {\n  inputOutput SFNode t USE CT\n  url \"ecmascript:\n"
+            "function initialize () { var f = t .translation; f .getValue () .x = 'abc'; f .getValue () .y = null; t .translation = f; }\n\"\n}\n")
+FC_AFTER = ("var F_ = 0;\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 3) {\n"
+            "  T ('other script raw', function () { var f = Browser .currentScene .getNamedNode ('CT') .translation; "
+            "return [typeof f .getValue () .x, String (f .getValue () .x), typeof f .getValue () .y, String (f), f .toVRMLString ()]; });\n"
+            "    flush_ ();\n  }\n}\n")
+G.register("fldx-cross", [], pre=CHAIN, after=FC_AFTER, nodes=FC_NODES)
+
 if __name__ == "__main__":
     sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith("fldx-")]
     G.main()

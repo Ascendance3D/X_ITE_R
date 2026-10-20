@@ -1061,6 +1061,22 @@ fn with_live_clone_counts<T>(f: impl FnOnce() -> T) -> T {
     r
 }
 
+/// Before a Script prints: the bridge's `String (component)` texts of its raw values, taken now (X3DGenerator.FloatFormat
+/// calls `String (value)` when it prints).
+fn refresh_raw(ctx: &Ctx<'_>) {
+    let cur = CURRENT.get();
+
+    if !rt().scene.raw_tokens.values().any(|r| r.host == cur) {
+        return;
+    }
+
+    if let Ok(f) = ctx.globals().get::<_, Function>("__rawRefresh") {
+        if f.call::<_, ()>(()).is_err() {
+            let _ = ctx.catch();
+        }
+    }
+}
+
 /// `field .toString ()` (X3DObject.toString with the default generator).
 fn to_vrml(v: &FieldValue) -> String {
     let mut g = Generator::default();
@@ -1597,28 +1613,33 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.node(id).name)?.into_value())
         }
         "fprint" => {
+            refresh_raw(ctx);
             let h = handle_at(ctx, a, 0)?;
             let v = read(h);
             let text = if str_arg(ctx, a, 1) == "json" { rt().scene.field_value_to_json_string(&v) } else { rt().scene.field_value_to_xml_string(&v) };
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "strn" => {
+            refresh_raw(ctx);
             let h = handle_at(ctx, a, 0)?;
             let v = read(h);
             let text = if matches!(v, FieldValue::SFNode(_) | FieldValue::MFNode(_)) { rt().scene.node_value_to_string(&v) } else { to_vrml(&v) };
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "nprint" => {
+            refresh_raw(ctx);
             let id = num_arg(ctx, a, 0) as NodeId;
             let v = FieldValue::SFNode(Some(id));
             let text = if str_arg(ctx, a, 1) == "json" { rt().scene.field_value_to_json_string(&v) } else { rt().scene.field_value_to_xml_string(&v) };
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "nstream" => {
+            refresh_raw(ctx);
             let id = num_arg(ctx, a, 0) as NodeId;
             Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_value_to_string(&FieldValue::SFNode(Some(id)))))?.into_value())
         }
         "nstr" => {
+            refresh_raw(ctx);
             let id = num_arg(ctx, a, 0) as NodeId;
             Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_to_vrml_string(id)))?.into_value())
         }
@@ -2066,10 +2087,42 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "frawtok" => {
             let h = handle_at(ctx, a, 0)?;
 
-            match slot_key(h).and_then(|k| rt().scene.raw_tokens.get(&k).map(|r| r.token)) {
+            match slot_key(h).and_then(|k| rt().scene.raw_tokens.get(&k).filter(|r| r.host == CURRENT.get()).map(|r| r.token)) {
                 Some(t) => Ok(Value::new_number(ctx.clone(), t as f64)),
                 None => Ok(undefined),
             }
+        }
+        // The raw-value tokens of this host's realm that a field still holds (the bridge forgets the others).
+        "frawlive" => {
+            let arr = Array::new(ctx.clone())?;
+            let cur = CURRENT.get();
+            let mut live: Vec<u32> = rt().scene.raw_tokens.values().filter(|r| r.host == cur).map(|r| r.token).collect();
+
+            live.sort_unstable();
+            live.dedup();
+
+            for (i, t) in live.into_iter().enumerate() {
+                arr.set(i, t as f64)?;
+            }
+
+            Ok(arr.into_value())
+        }
+        // New `String (component)` texts of a raw value of this host's realm (its components' text changed since).
+        "frawtexts" => {
+            let t = num_arg(ctx, a, 0) as u32;
+            let texts: Vec<Option<String>> = a
+                .get(1)
+                .and_then(|v| v.as_array().cloned())
+                .map(|arr| arr.iter::<Value>().map(|x| x.ok().and_then(|x| x.as_string().and_then(|s| s.to_string().ok()))).collect())
+                .unwrap_or_default();
+            let texts: std::sync::Arc<[Option<String>]> = texts.into();
+            let cur = CURRENT.get();
+
+            for r in rt().scene.raw_tokens.values_mut().filter(|r| r.host == cur && r.token == t) {
+                r.texts = texts.clone();
+            }
+
+            Ok(undefined)
         }
         "fexport" => {
             let h = handle_at(ctx, a, 0)?;
@@ -2091,7 +2144,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     .and_then(|v| v.as_array().cloned())
                     .map(|arr| arr.iter::<Value>().map(|x| x.ok().and_then(|x| x.as_string().and_then(|s| s.to_string().ok()))).collect())
                     .unwrap_or_default();
-                x3d_scene::scene::RawValue { token: t as u32, texts: texts.into() }
+                x3d_scene::scene::RawValue { host: CURRENT.get(), token: t as u32, texts: texts.into() }
             });
 
             if let Some(k) = slot_key(h) {
@@ -2368,6 +2421,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(arr.into_value())
         }
         "sceneString" => {
+            refresh_raw(ctx);
             let script = num_arg(ctx, a, 0);
             let root = rt().scene.scene_root(ctx_of_script(script));
             let format = str_arg(ctx, a, 1);

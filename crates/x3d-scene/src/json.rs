@@ -31,6 +31,7 @@ impl Scene {
         let mut g = JsonGenerator::new(self);
 
         g.base.push_ctx(self.first_node_ctx(value));
+        g.base.unit_base = 1;
         g.field_value_to_json(value);
         g.base.pop_ctx();
         g.base.g.string
@@ -56,7 +57,7 @@ pub fn encode_json_string(s: &str) -> String {
 }
 
 /// JSONGenerator.Number: non-finite numbers are quoted strings.
-fn json_number(text: String) -> String {
+pub(crate) fn json_number(text: String) -> String {
     match text.as_str() {
         "NaN" | "Infinity" | "-Infinity" => format!("\"{text}\""),
         _ => text,
@@ -539,6 +540,7 @@ impl<'a> JsonGenerator<'a> {
 
                 if !matches!(value, FieldValue::SFNode(_) | FieldValue::MFNode(_)) {
                     self.base.unit_field = Some((id, field.name.clone()));
+                    self.base.raw_field = Some((id, FieldLoc::Pre(i)));
                 }
 
                 self.field_value_to_json(&value);
@@ -565,7 +567,7 @@ impl<'a> JsonGenerator<'a> {
                         references.push(FieldLoc::User(k));
                     }
 
-                    if field.is_initializable() && !field.value.is_default_value() {
+                    if field.is_initializable() && (!field.value.is_default_value() || scene.raw_tokens.contains_key(&(id, FieldLoc::User(k)))) {
                         match &field.value {
                             FieldValue::SFNode(n) => {
                                 self.begin_array(Some("-children"), true);
@@ -580,6 +582,7 @@ impl<'a> JsonGenerator<'a> {
                             }
                             value => {
                                 self.begin_value(Some("@value"), true);
+                                self.base.raw_field = Some((id, FieldLoc::User(k)));
                                 self.field_value_to_json(value);
                             }
                         }
@@ -967,6 +970,15 @@ impl<'a> JsonGenerator<'a> {
                 self.g().push("]");
             }
             _ => {
+                if let Some(texts) = self.base.take_raw() {
+                    self.g().push("[");
+                    self.g().tidy_space();
+                    crate::vrml::write_raw(self.g(), &texts, value, true);
+                    self.g().tidy_space();
+                    self.g().push("]");
+                    return;
+                }
+
                 self.base.apply_units();
 
                 match value.elements() {

@@ -201,6 +201,9 @@ pub enum FieldLoc {
 /// prints these (X3DGenerator.FloatFormat: `String (value)` for a value that is not a finite number).
 #[derive(Clone, Debug)]
 pub struct RawValue {
+    /// The script host (one QuickJS realm per world, shared by its Scripts as X_ITE's page realm is) whose realm holds the
+    /// components: tokens are numbered per realm.
+    pub host: u64,
     pub token: u32,
     pub texts: std::sync::Arc<[Option<String>]>,
 }

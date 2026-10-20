@@ -24,11 +24,16 @@ pub struct VrmlGenerator<'a> {
     index: HashMap<CtxId, CtxIndex>,
     /// The predefined field whose value prints next (for its unit category).
     pub(crate) unit_field: Option<(NodeId, String)>,
+    /// The field whose value prints next, for its raw components (Scene::raw_tokens).
+    pub(crate) raw_field: Option<(NodeId, FieldLoc)>,
+    /// Contexts on the stack at or below this depth only name nodes: a node's or a field's own `toXXXString` pushes a `null`
+    /// execution context in X_ITE, so X3DGenerator.ToUnit leaves every value as it is.
+    pub(crate) unit_base: usize,
 }
 
 impl<'a> VrmlGenerator<'a> {
     pub fn new(scene: &'a Scene) -> Self {
-        VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new(), unit_field: None }
+        VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new(), unit_field: None, raw_field: None, unit_base: 0 }
     }
 
     pub fn push_ctx(&mut self, ctx: Option<CtxId>) {
@@ -519,6 +524,11 @@ impl<'a> VrmlGenerator<'a> {
                 }
             },
             _ => {
+                if let Some(texts) = self.take_raw() {
+                    write_raw(&mut self.g, &texts, value, false);
+                    return;
+                }
+
                 self.apply_units();
                 value.to_vrml_stream(&mut self.g);
                 self.g.set_unit_factors(1.0, 1.0);
@@ -526,16 +536,39 @@ impl<'a> VrmlGenerator<'a> {
         }
     }
 
+    /// Does X3DGenerator.ToUnit convert here (an execution context that is not only the naming frame of a standalone print)?
+    pub(crate) fn units_apply(&self) -> bool {
+        self.stack.len() > self.unit_base && self.current().is_some()
+    }
+
+    /// The raw component texts of the value printing next (`raw_field`, taken), when ToUnit leaves the components as they are:
+    /// no execution context, or a field without a unit category. X3DGenerator.FloatFormat then writes `String (value)`.
+    pub(crate) fn take_raw(&mut self) -> Option<std::sync::Arc<[Option<String>]>> {
+        let (id, loc) = self.raw_field.take()?;
+        let raw = self.scene.raw_tokens.get(&(id, loc))?;
+        let unit = match loc {
+            FieldLoc::Pre(i) => self.scene.field_has_unit(id, &self.scene.node(id).fields[i].name),
+            _ => false,
+        };
+
+        if unit && self.units_apply() {
+            return None;
+        }
+
+        self.unit_field = None;
+        Some(raw.texts.clone())
+    }
+
     /// Generator.ToUnit for the next value: `this .ExecutionContext () ?.toUnit (category, value) ?? value`,
     /// with the category of `unit_field` (taken) and the angle unit.
     pub(crate) fn apply_units(&mut self) {
         let unit_field = self.unit_field.take();
         let (unit, angle) = match self.current() {
-            Some(ctx) => match &unit_field {
+            Some(ctx) if self.stack.len() > self.unit_base => match &unit_field {
                 Some((n, name)) => self.scene.unit_factors(ctx, Some(*n), name),
                 None => self.scene.unit_factors(ctx, None, ""),
             },
-            None => (1.0, 1.0),
+            _ => (1.0, 1.0),
         };
 
         self.g.set_unit_factors(unit, angle);
@@ -697,11 +730,8 @@ impl<'a> VrmlGenerator<'a> {
             if field.is_initializable() {
                 self.g.space();
 
-                let loc = FieldLoc::User(self.scene.node(id).user_fields.iter().position(|f| std::ptr::eq(f, field)).unwrap_or(usize::MAX));
-
-                if !raw_value_to_stream(self.scene, &mut self.g, id, loc, &field.value) {
-                    self.value_to_vrml(&field.value);
-                }
+                self.raw_field = self.scene.node(id).user_fields.iter().position(|f| std::ptr::eq(f, field)).map(|k| (id, FieldLoc::User(k)));
+                self.value_to_vrml(&field.value);
             }
         } else {
             let mut initializable_references = false;
@@ -755,7 +785,8 @@ impl<'a> VrmlGenerator<'a> {
                 self.g.indent();
                 self.g.push(&field.name);
                 self.g.space();
-                self.pre_field_value_to_vrml(id, i);
+                self.raw_field = Some((id, FieldLoc::Pre(i)));
+                self.field_value_to_vrml(id, &field.name, &field.value);
             }
         } else {
             let mut initializable_references = false;
@@ -782,20 +813,10 @@ impl<'a> VrmlGenerator<'a> {
                 self.g.indent();
                 self.g.push(&field.name);
                 self.g.space();
-                self.pre_field_value_to_vrml(id, i);
+                self.raw_field = Some((id, FieldLoc::Pre(i)));
+                self.field_value_to_vrml(id, &field.name, &field.value);
             }
         }
-    }
-
-    /// The value of predefined field `i`: raw components (see [`raw_value_to_stream`]) when the field has no unit category.
-    fn pre_field_value_to_vrml(&mut self, id: NodeId, i: usize) {
-        let field = &self.scene.node(id).fields[i];
-
-        if !self.scene.field_has_unit(id, &field.name) && raw_value_to_stream(self.scene, &mut self.g, id, FieldLoc::Pre(i), &field.value) {
-            return;
-        }
-
-        self.field_value_to_vrml(id, &field.name, &field.value);
     }
 
     /// X3DBaseNode.getConvertedFields → OrthoViewpoint.convertFields: for specification versions up to 4.0
@@ -848,6 +869,7 @@ impl Scene {
         let ctx = self.node(node).ctx;
 
         g.push_ctx(Some(ctx));
+        g.unit_base = 1;
         g.node_to_vrml(node);
         g.pop_ctx();
         g.g.string
@@ -869,6 +891,7 @@ impl Scene {
         let mut g = VrmlGenerator::new(self);
 
         g.push_ctx(self.first_node_ctx(value));
+        g.unit_base = 1;
         g.value_to_vrml(value);
         g.pop_ctx();
         g.g.string
@@ -907,14 +930,10 @@ impl Scene {
     }
 }
 
-/// SFVecPrototypeTemplate / SFColor toStream of a value a Script gave with components that are not all numbers, for a field
-/// without a unit category: X3DGenerator.ToUnit returns such a component as it is and FloatFormat writes `String (value)` for
-/// anything that is not a finite number. Returns false (nothing written) when the field holds no such value.
-pub(crate) fn raw_value_to_stream(scene: &Scene, g: &mut Generator, id: NodeId, loc: FieldLoc, value: &FieldValue) -> bool {
-    let Some(raw) = scene.raw_tokens.get(&(id, loc)) else {
-        return false;
-    };
 
+/// SFVecPrototypeTemplate / SFColor toStream (or toJSONStreamValue, `json`) of a value with raw components: `String (raw)` for each
+/// one that is not a number (X3DGenerator.FloatFormat, JSONGenerator.Number), the format of the number for the others.
+pub(crate) fn write_raw(g: &mut Generator, texts: &[Option<String>], value: &FieldValue, json: bool) {
     let (numbers, double): (Vec<f64>, bool) = match value {
         FieldValue::SFColor(c) => (c.components().to_vec(), false),
         FieldValue::SFColorRGBA(c) => (c.components().to_vec(), false),
@@ -924,25 +943,27 @@ pub(crate) fn raw_value_to_stream(scene: &Scene, g: &mut Generator, id: NodeId, 
         FieldValue::SFVec2d(v) => (v.to_array().to_vec(), true),
         FieldValue::SFVec3d(v) => (v.to_array().to_vec(), true),
         FieldValue::SFVec4d(v) => (v.to_array().to_vec(), true),
-        _ => return false,
+        _ => unreachable!("raw components belong to vector and color values"),
     };
-
-    if raw.texts.len() != numbers.len() {
-        return false;
-    }
 
     let last = numbers.len() - 1;
 
     for (i, v) in numbers.iter().enumerate() {
-        match &raw.texts[i] {
-            Some(t) => g.push(t),
-            None => g.push(&if double { g.double_format(*v) } else { g.float_format(*v) }),
-        }
+        let text = match texts.get(i).cloned().flatten() {
+            Some(t) => t,
+            None if double => g.double_format(*v),
+            None => g.float_format(*v),
+        };
+
+        g.push(&if json { crate::json::json_number(text) } else { text });
 
         if i != last {
-            g.space();
+            if json {
+                g.push(",");
+                g.tidy_space();
+            } else {
+                g.space();
+            }
         }
     }
-
-    true
 }
