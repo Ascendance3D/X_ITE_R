@@ -148,3 +148,16 @@ fldx-cross oracle/synthetic-rea-b09-sai/fldx-cross.wrl oracle/synthetic-rea-b09-
 fldx-print oracle/synthetic-rea-b09-sai/fldx-print.wrl oracle/synthetic-rea-b09-sai/sai.json
 fldx-units oracle/synthetic-rea-b09-sai/fldx-units.wrl oracle/synthetic-rea-b09-sai/sai.json
 fldx-internal oracle/synthetic-rea-b09-sai/fldx-internal.wrl oracle/synthetic-rea-b09-sai/sai.json
+scr-url-order-micro oracle/synthetic-rea-b09-sai/scr-url-order-micro.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-rendering oracle/synthetic-rea-b09-sai/node-rendering.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-shape oracle/synthetic-rea-b09-sai/node-shape.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-lighting oracle/synthetic-rea-b09-sai/node-lighting.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-texturing oracle/synthetic-rea-b09-sai/node-texturing.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-texturing3d oracle/synthetic-rea-b09-sai/node-texturing3d.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-text oracle/synthetic-rea-b09-sai/node-text.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-layout oracle/synthetic-rea-b09-sai/node-layout.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-environment oracle/synthetic-rea-b09-sai/node-environment.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-navigation oracle/synthetic-rea-b09-sai/node-navigation.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-hanim oracle/synthetic-rea-b09-sai/node-hanim.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-sound oracle/synthetic-rea-b09-sai/node-sound.wrl oracle/synthetic-rea-b09-sai/sai.json
+node-dis oracle/synthetic-rea-b09-sai/node-dis.wrl oracle/synthetic-rea-b09-sai/sai.json

@@ -503,7 +503,15 @@ impl Runtime {
             Cb::InlineGeometrySolid => self.inline_geometry_set_solid(node),
             Cb::InlineGeometrySmooth => self.inline_geometry_set_smooth(node),
             Cb::FontLibrarySetFamily => self.font_library_set_family(node),
-            Cb::FontStyleReload => self.tasks.push_back(Task::UrlLoad(node, 0)),
+            // set_url__ → requestImmediateLoad: `this ._loadData = time`, a field event, so family and style changed together
+            // load once.
+            Cb::FontStyleReload => {
+                let queued = |t: &Task| matches!(t, Task::UrlLoad(n, 0) if *n == node);
+
+                if !self.tasks.iter().any(queued) && !self.fetches.iter().any(queued) {
+                    self.tasks.push_back(Task::UrlLoad(node, 0));
+                }
+            }
             Cb::SceneLoadCount => self.scene_load_count(node),
             Cb::WorldLoadCount => self.world_check_load_count(),
             Cb::RouteReconnect(id) => self.reconnect_route(id),

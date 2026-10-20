@@ -525,12 +525,14 @@
    "rust": [
     "crates/x3d-runtime/src/nodes/transform_sensor.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-dis"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-dis (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:ReceiverPdu",
@@ -682,12 +684,14 @@
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/release.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-environment"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-environment (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:TextureBackground",
@@ -703,12 +707,14 @@
     "crates/x3d-runtime/src/release.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-environment"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-environment (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:ProximitySensor",
@@ -1957,12 +1963,14 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:HAnimMotion",
@@ -2021,12 +2029,14 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:HAnimSite",
@@ -2043,12 +2053,14 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-hanim"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-hanim (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:ColorInterpolator",
@@ -2487,14 +2499,15 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)"
+    "crates/x3d-render/tests/render_rea_b02.rs (still images MSAA 0+4, plus 640x360 and 300x500), crates/x3d-viewer/tests/rea_batch02.rs (stepped x10 cases MSAA 0+4), crates/x3d-viewer/tests/rea_b02_layers.rs (reload/unload retention, layer slot reuse)",
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-layout"
    ],
-   "missing": "runtime layout/viewport field change not compared",
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "oracle/synthetic-rea-b02/layout-group-root.wrl, layout-nested.wrl (stills)",
-   "notes": "Ported for REA batch 02 rows Layout/LayoutLayer; not one of the 20 selected rows. Still images pass; left NOT_TESTED until a runtime case exists."
+   "notes": "Ported for REA batch 02 rows Layout/LayoutLayer; not one of the 20 selected rows. Still images pass; left NOT_TESTED until a runtime case exists. | b09 cloud checkpoint after b2e5b9f: node-layout (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:LayoutLayer",
@@ -2533,12 +2546,14 @@
     "crates/x3d-runtime/src/nodes/load_sensor.rs",
     "crates/x3d-runtime/src/nodes/mod.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-layout"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-layout (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:ScreenGroup",
@@ -2552,12 +2567,14 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-runtime/src/release.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-layout"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-layout (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:DirectionalLight",
@@ -2572,12 +2589,14 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared."
+   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:EnvironmentLight",
@@ -2613,12 +2632,14 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared."
+   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:SpotLight",
@@ -2633,12 +2654,14 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-lighting"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared."
+   "notes": "REA batch 03: light scope repaired (X3DLightNode.push: global lights light the whole layer, global FALSE lights only their grouping node, incl. Inline, Switch, LOD, Collision, Billboard, Anchor; DirectionalLight starts global TRUE in VRML 2.0 / X3D 3.0 scenes; per-shape list = global lights then local lights, max 8); shadows ported (sub:render.shadows). Tests: oracle/synthetic-rea-b03/light-scope*.wrl and shadow-*.wrl, 0 pixel differences on the scope worlds. Status left as it was: not every field combination is compared. | b09 cloud checkpoint after b2e5b9f: node-lighting (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:Contour2D",
@@ -3030,12 +3053,14 @@
     "crates/x3d-viewer/src/layer.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-navigation"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-navigation (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after (OrthoViewpoint's fieldOfView now printed as X_ITE's SFVec4f of any length)"
   },
   {
    "id": "node:Viewpoint",
@@ -3635,12 +3660,14 @@
     "crates/x3d-parse/src/lexer.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:ColorRGBA",
@@ -3655,12 +3682,14 @@
     "crates/x3d-parse/src/lexer.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:Coordinate",
@@ -3682,12 +3711,14 @@
     "crates/x3d-scene/src/setup.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:CoordinateDouble",
@@ -3708,12 +3739,14 @@
     "crates/x3d-scene/src/setup.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:IndexedLineSet",
@@ -3729,12 +3762,14 @@
     "crates/x3d-runtime/src/nodes/rigid_body_physics/collidable.rs",
     "crates/x3d-viewer/src/picking.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:IndexedTriangleFanSet",
@@ -3834,12 +3869,14 @@
     "crates/x3d-parse/src/formats.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:PointSet",
@@ -3855,12 +3892,14 @@
     "crates/x3d-runtime/src/nodes/rigid_body_physics/collidable.rs",
     "crates/x3d-viewer/src/picking.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:Tangent",
@@ -4483,12 +4522,14 @@
     "crates/x3d-parse/src/formats.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:FillProperties",
@@ -4543,12 +4584,14 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-render/src/volume.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:PhysicalMaterial",
@@ -4607,12 +4650,14 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:TwoSidedMaterial",
@@ -4690,12 +4735,14 @@
     "crates/x3d-runtime/src/nodes/load_sensor.rs",
     "crates/x3d-runtime/src/nodes/mod.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-sound (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:AudioDestination",
@@ -4995,12 +5042,14 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-sound"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-sound (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:SpatialSound",
@@ -5124,12 +5173,14 @@
     "crates/x3d-runtime/src/nodes/load_sensor.rs",
     "crates/x3d-runtime/src/nodes/mod.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-text"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:Text",
@@ -5143,12 +5194,14 @@
     "crates/x3d-parse/src/parser.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-text"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run; the layout outputs origin, textBounds, lineBounds are not sent by the port's runtime (node-text-outputs-open: X_ITE sends them when it rebuilds the text, after its default font has loaded)",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:TextureProjector",
@@ -5211,12 +5264,14 @@
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/nodes/texture_projector.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:MovieTexture",
@@ -5235,12 +5290,14 @@
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/nodes/texture_projector.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:MultiTexture",
@@ -5320,12 +5377,14 @@
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/nodes/texture_projector.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:RenderedTexture",
@@ -5427,12 +5486,14 @@
     "crates/x3d-parse/src/formats.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:ComposedTexture3D",
@@ -5539,12 +5600,14 @@
     "crates/x3d-render/src/nurbs.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing3d"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing3d (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:TextureCoordinate4D",
@@ -5558,12 +5621,14 @@
     "crates/x3d-render/src/nurbs.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "NOT_TESTED",
+   "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
-   "tests": [],
-   "missing": "see behavior",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing3d"
+   ],
+   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing3d (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
   },
   {
    "id": "node:TextureTransform3D",

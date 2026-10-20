@@ -129,6 +129,40 @@ C = {
 }
 
 
+# The NOT_TESTED nodes (checkpoint after b2e5b9f): field and event evidence from oracle/tools/gen_rea_b09_nodes_cloud.py. Each stays
+# PARTIAL: no visual evidence is compared in the cloud (no GPU).
+NODE_WORLDS = {
+    "node-rendering": ["Color", "ColorRGBA", "Coordinate", "CoordinateDouble", "IndexedLineSet", "Normal", "PointSet"],
+    "node-shape": ["Appearance", "Material", "Shape"],
+    "node-lighting": ["DirectionalLight", "PointLight", "SpotLight"],
+    "node-texturing": ["ImageTexture", "PixelTexture", "TextureTransform", "MovieTexture"],
+    "node-texturing3d": ["TextureCoordinate3D", "TextureCoordinate4D"],
+    "node-text": ["FontStyle", "Text"],
+    "node-layout": ["LayoutGroup", "ScreenFontStyle", "ScreenGroup"],
+    "node-environment": ["LocalFog", "TextureBackground"],
+    "node-navigation": ["OrthoViewpoint"],
+    "node-hanim": ["HAnimJoint", "HAnimSegment", "HAnimSite"],
+    "node-sound": ["AudioClip", "Sound"],
+    "node-dis": ["EspduTransform"],
+}
+for _world, _types in NODE_WORLDS.items():
+    for _t in _types:
+        _missing = "visual evidence (rendering) not compared: needs the desktop GPU run"
+        if _t == "Text":
+            _missing += "; the layout outputs origin, textBounds, lineBounds are not sent by the port's runtime (node-text-outputs-open: " \
+                        "X_ITE sends them when it rebuilds the text, after its default font has loaded)"
+        C["node:" + _t] = (
+            "PARTIAL",
+            [f"crates/x3d-viewer/tests/rea_batch09_sai.rs {_world}"],
+            _missing,
+            f"b09 cloud checkpoint after b2e5b9f: {_world} (3 identical X_ITE recordings, exact): field definitions (name, access "
+            "type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field "
+            "that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order "
+            "with their values, the node's text after"
+            + (" (OrthoViewpoint's fieldOfView now printed as X_ITE's SFVec4f of any length)" if _t == "OrthoViewpoint" else ""),
+        )
+
+
 def apply():
     # Each entry of C is rebuilt from the snapshot (its state when the cloud session began) and C: running apply again, or after C
     # changed, gives the same entry (no note is appended twice, a changed `missing` text is taken).

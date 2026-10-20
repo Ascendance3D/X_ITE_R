@@ -819,13 +819,12 @@ impl<'a> VrmlGenerator<'a> {
         }
     }
 
-    /// X3DBaseNode.getConvertedFields → OrthoViewpoint.convertFields: for specification versions up to 4.0
-    /// the field is an MFFloat, but it is written as an SFVec4f (`new Fields .SFVec4f (... this ._fieldOfView)`).
+    /// X3DBaseNode.getConvertedFields → OrthoViewpoint.convertFields: the MFFloat is written as an SFVec4f
+    /// (`new Fields .SFVec4f (... this ._fieldOfView)`, whatever its length; see [`crate::xml::field_of_view_vec4`]).
     fn field_value_to_vrml(&mut self, id: NodeId, name: &str, value: &FieldValue) {
         if let FieldValue::MFFloat(v) = value {
-            if name == "fieldOfView" && v.len() == 4 && self.scene.type_name(id) == "OrthoViewpoint" {
-                let v4 = x3d_fields::math::Vector4::new(v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64);
-                FieldValue::SFVec4f(v4).to_vrml_stream(&mut self.g);
+            if name == "fieldOfView" && self.scene.type_name(id) == "OrthoViewpoint" {
+                FieldValue::SFVec4f(crate::xml::field_of_view_vec4(v)).to_vrml_stream(&mut self.g);
                 return;
             }
         }
