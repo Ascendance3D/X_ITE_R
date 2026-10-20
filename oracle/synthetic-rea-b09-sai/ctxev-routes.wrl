@@ -1,0 +1,60 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "ctxev routes"
+DEF T1 Transform { }
+DEF T2 Transform { translation 100 0 0 }
+DEF T3 Transform { }
+DEF T4 Transform { }
+DEF TS TimeSensor { }
+DEF CI PositionInterpolator { key [0 1] keyValue [0 0 0, 1 1 1] }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + ' '; }
+function recg (s) { if (step >= 2) rec (s); }
+function p (name, f) {
+  var v;
+  try { v = f (); } catch (e) { v = 'ERR:' + e .message; }
+  rec (step + ':' + name + '=' + v);
+}
+function types (s) {
+  return ['namedNodes', 'importedNodes', 'exportedNodes', 'protos', 'externprotos', 'rootNodes', 'routes', 'sceneGraph', 'profile', 'metadata', 'bbox']
+    .map (function (n) { return n + ':' + typeof s ['_' + n + '_changed'] + '/' + typeof s [n + '_changed']; }) .join (',');
+}
+function watch (s, label, gate) {
+  var r = gate ? recg : rec;
+  s .sceneGraph_changed .addFieldCallback ('sg' + label, function () { r ('SG' + label + '@' + step); });
+  s .profile_changed  .addFieldCallback ('pr' + label, function () { r ('PR' + label + '@' + step); });
+  s .metadata_changed .addFieldCallback ('md' + label, function () { r ('MD' + label + '@' + step); });
+}
+
+
+function initialize () {
+  var s = Browser .currentScene;
+
+  watch (s, '', true);
+}
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+
+  var ts = s .getNamedNode ('TS');
+  if (step == 2) p ('add', function () { s .addRoute (ts, 'fraction_changed', s .getNamedNode ('CI'), 'set_fraction'); return s .routes .length; });
+  if (step == 3) p ('addDup', function () { s .addRoute (ts, 'fraction_changed', s .getNamedNode ('CI'), 'set_fraction'); return s .routes .length; });
+  if (step == 4) p ('addOther', function () { s .addRoute (s .getNamedNode ('T1'), 'translation_changed', s .getNamedNode ('T2'), 'translation'); return s .routes .length; });
+  if (step == 5) p ('delete4', function () { s .deleteRoute (ts, 'fraction_changed', s .getNamedNode ('CI'), 'set_fraction'); return s .routes .length; });
+  if (step == 6) p ('deleteObj', function () { s .deleteRoute (s .routes [s .routes .length - 1]); return s .routes .length; });
+  if (step == 7) p ('deleteMissing', function () { s .deleteRoute (ts, 'fraction_changed', s .getNamedNode ('CI'), 'set_fraction'); return s .routes .length; });
+  if (step == 8) p ('routeFromScene', function () { s .addRoute (s, 'sceneGraph_changed', s .getNamedNode ('CI'), 'set_fraction'); return s .routes .length; });
+  if (step == 9) p ('routeToScene', function () { s .addRoute (s .getNamedNode ('TS'), 'fraction_changed', s, 'sceneGraph_changed'); return s .routes .length; });
+  if (step == 10) p ('getFieldScene', function () { return s .getField ('sceneGraph_changed'); });
+
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle

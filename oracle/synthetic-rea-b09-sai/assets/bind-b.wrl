@@ -1,0 +1,57 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+DEF BA Viewpoint { description "ba" position 0 0 7 }
+DEF BB Viewpoint { description "bb" position 0 0 8 }
+DEF BG1 Background { skyColor 0 1 0 }
+DEF BN1 NavigationInfo { type "EXAMINE" }
+DEF BF1 Fog { color 0 1 0 }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool b_BA
+  inputOnly SFTime t_BA
+  inputOnly SFBool b_BB
+  inputOnly SFTime t_BB
+  inputOnly SFBool b_BG1
+  inputOnly SFTime t_BG1
+  inputOnly SFBool b_BN1
+  inputOnly SFTime t_BN1
+  inputOnly SFBool b_BF1
+  inputOnly SFTime t_BF1
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + '@' + step + ' '; }
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }
+function b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }
+function t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }
+function b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }
+function t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }
+function b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }
+function t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }
+function b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }
+function t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }
+function b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }
+function t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }
+
+function initialize () { rec ('init'); }
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });
+}
+  "
+}
+DEF STEPB TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEPB.cycleTime TO P.cycle
+ROUTE BA.isBound TO P.b_BA
+ROUTE BA.bindTime TO P.t_BA
+ROUTE BB.isBound TO P.b_BB
+ROUTE BB.bindTime TO P.t_BB
+ROUTE BG1.isBound TO P.b_BG1
+ROUTE BG1.bindTime TO P.t_BG1
+ROUTE BN1.isBound TO P.b_BN1
+ROUTE BN1.bindTime TO P.t_BN1
+ROUTE BF1.isBound TO P.b_BF1
+ROUTE BF1.bindTime TO P.t_BF1

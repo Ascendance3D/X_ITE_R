@@ -1,0 +1,15 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+DEF LI PositionInterpolator { key [0 1] keyValue [0 0 0, 10 0 0] }
+DEF LT Transform { }
+DEF LS Script {
+  inputOnly SFVec3f set_t
+  inputOutput SFString seen ""
+  url "ecmascript:function set_t (v) { seen = seen + v + ' '; }"
+}
+ROUTE LI.value_changed TO LT.set_translation
+ROUTE LT.translation_changed TO LS.set_t
+EXPORT LI
+EXPORT LT
+EXPORT LI AS LI2
+EXPORT LS

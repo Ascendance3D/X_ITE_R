@@ -1,0 +1,58 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "bind switch"
+DEF A Viewpoint { description "A" position 0 0 10 }
+DEF B Viewpoint { description "B" position 0 0 11 }
+DEF AG Background { skyColor 1 0 0 }
+DEF AN NavigationInfo { type "FLY" }
+DEF AF Fog { color 1 0 0 }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool b_A
+  inputOnly SFTime t_A
+  inputOnly SFBool b_B
+  inputOnly SFTime t_B
+  inputOnly SFBool b_AG
+  inputOnly SFTime t_AG
+  inputOnly SFBool b_AN
+  inputOnly SFTime t_AN
+  inputOnly SFBool b_AF
+  inputOnly SFTime t_AF
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }
+function b_A (v) { rec ('A:' + (v ? 1 : 0)); }
+function t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }
+function b_B (v) { rec ('B:' + (v ? 1 : 0)); }
+function t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }
+function b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }
+function t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }
+function b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }
+function t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }
+function b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }
+function t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });
+  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
+ROUTE A.isBound TO P.b_A
+ROUTE A.bindTime TO P.t_A
+ROUTE B.isBound TO P.b_B
+ROUTE B.bindTime TO P.t_B
+ROUTE AG.isBound TO P.b_AG
+ROUTE AG.bindTime TO P.t_AG
+ROUTE AN.isBound TO P.b_AN
+ROUTE AN.bindTime TO P.t_AN
+ROUTE AF.isBound TO P.b_AF
+ROUTE AF.bindTime TO P.t_AF
