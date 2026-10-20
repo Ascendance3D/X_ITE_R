@@ -1454,7 +1454,7 @@ fn ctx_of_script(x: f64) -> x3d_scene::CtxId {
     if x >= 0.0 {
         rt().scene.node(x as NodeId).ctx
     } else if x == -1.0 {
-        rt().scene.world
+        rt().browser_execution_context()
     } else {
         (-(x + 2.0)) as x3d_scene::CtxId
     }
@@ -1681,6 +1681,42 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 Some(OptionValue::String(v)) => rquickjs::String::from_str(ctx.clone(), v)?.into_value(),
             })
         }
+        // X3DBrowserContext.getBrowserOptions () … .getFieldDefinitions (): name, type, initial value.
+        "browserDefs" => {
+            use x3d_runtime::browser_options::OptionValue;
+
+            let list = Array::new(ctx.clone())?;
+
+            for (i, (name, v)) in x3d_runtime::browser_options::default_fields(&str_arg(ctx, a, 0)).entries().enumerate() {
+                let value = match v {
+                    OptionValue::Bool(b) => Value::new_bool(ctx.clone(), *b),
+                    OptionValue::Int32(x) => Value::new_int(ctx.clone(), *x),
+                    OptionValue::Float(x) | OptionValue::Double(x) => data_number(ctx, *x),
+                    OptionValue::String(s) => rquickjs::String::from_str(ctx.clone(), s)?.into_value(),
+                };
+                let entry = data_array(ctx, [rquickjs::String::from_str(ctx.clone(), name)?.into_value(), rquickjs::String::from_str(ctx.clone(), v.type_name())?.into_value(), value])?;
+
+                list.set(i, entry)?;
+            }
+
+            Ok(list.into_value())
+        }
+        // X3DBrowserContext.getActiveLayer … (`None`: the default node), getCurrentViewer, and the default nodes.
+        "bactive" => {
+            let active = &rt().browser_active;
+            let n = match str_arg(ctx, a, 0).as_str() {
+                "layer" => active.layer,
+                "navigationInfo" => active.navigation_info,
+                _ => active.viewpoint,
+            };
+
+            Ok(node_data(ctx, &n))
+        }
+        "bdefault" => {
+            let n = rt().default_node(&str_arg(ctx, a, 0));
+            Ok(node_data(ctx, &n))
+        }
+        "bviewer" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().browser_active.viewer)?.into_value()),
         "optionType" => {
             let name = str_arg(ctx, a, 0);
 

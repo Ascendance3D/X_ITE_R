@@ -570,7 +570,7 @@ impl Runtime {
     }
 
     /// `new X3DScene (this)` for replaceWorld (null).
-    fn empty_world_scene(&mut self) -> CtxId {
+    pub(crate) fn empty_world_scene(&mut self) -> CtxId {
         let scene = Scene::new(&self.page_url.clone());
         let ctx_count = scene.contexts.len();
         let m = self.scene.merge_extern(scene, ROOT);

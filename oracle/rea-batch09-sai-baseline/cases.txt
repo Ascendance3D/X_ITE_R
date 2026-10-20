@@ -77,7 +77,6 @@ ctxev-replace oracle/synthetic-rea-b09-sai/ctxev-replace.wrl oracle/synthetic-re
 scr-lifecycle oracle/synthetic-rea-b09-sai/scr-lifecycle.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-direct-output oracle/synthetic-rea-b09-sai/scr-direct-output.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-self-events oracle/synthetic-rea-b09-sai/scr-self-events.wrl oracle/synthetic-rea-b09-sai/sai.json
-scr-browser oracle/synthetic-rea-b09-sai/scr-browser.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-errors oracle/synthetic-rea-b09-sai/scr-errors.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-timers oracle/synthetic-rea-b09-sai/scr-timers.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-url oracle/synthetic-rea-b09-sai/scr-url.wrl oracle/synthetic-rea-b09-sai/sai.json
@@ -126,3 +125,8 @@ fldx-value oracle/synthetic-rea-b09-sai/fldx-value.wrl oracle/synthetic-rea-b09-
 fldx-edge oracle/synthetic-rea-b09-sai/fldx-edge.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-field-access oracle/synthetic-rea-b09-sai/scr-field-access.wrl oracle/synthetic-rea-b09-sai/sai.json
 scr-image-events-open oracle/synthetic-rea-b09-sai/scr-image-events-open.wrl oracle/synthetic-rea-b09-sai/sai.json
+scr-browser oracle/synthetic-rea-b09-sai/scr-browser.wrl oracle/synthetic-rea-b09-sai/sai.json
+brx-api oracle/synthetic-rea-b09-sai/brx-api.wrl oracle/synthetic-rea-b09-sai/sai.json
+brx-call oracle/synthetic-rea-b09-sai/brx-call.wrl oracle/synthetic-rea-b09-sai/sai.json
+brx-obj oracle/synthetic-rea-b09-sai/brx-obj.wrl oracle/synthetic-rea-b09-sai/sai.json
+brx-data oracle/synthetic-rea-b09-sai/brx-data.wrl oracle/synthetic-rea-b09-sai/sai.json

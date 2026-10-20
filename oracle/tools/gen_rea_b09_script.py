@@ -724,7 +724,8 @@ P_BROWSER += [
     ("X3DConstants frozen", "X3DConstants .foo = 1; return [typeof X3DConstants .foo, Object .isFrozen (X3DConstants)];"),
 ]
 
-register("scr-browser", P_BROWSER, open_prefixes=("typeof Browser.", "X3DConstants", "Browser ctor", "Browser toString", "createVrmlFromURL", "createX3DFromURL", "getBrowserProperty Initialized", "getRenderingProperty Renderer", "getExecutionContext", "getScriptNode"))
+# X3DConstants of external-component node types: X_ITE numbers them in the order its modules finish loading (OPEN_WORK.md).
+register("scr-browser", P_BROWSER, open_prefixes=("X3DConstants",))
 
 
 

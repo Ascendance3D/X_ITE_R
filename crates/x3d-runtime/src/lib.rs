@@ -299,6 +299,21 @@ pub enum Task {
     BrowserLoad(u64),
 }
 
+/// X3DBrowserContext's active nodes (getActiveLayer, getActiveNavigationInfo, getActiveViewpoint) and getCurrentViewer.
+#[derive(Clone, Debug)]
+pub struct BrowserActive {
+    pub layer: Option<NodeId>,
+    pub navigation_info: Option<NodeId>,
+    pub viewpoint: Option<NodeId>,
+    pub viewer: String,
+}
+
+impl Default for BrowserActive {
+    fn default() -> Self {
+        BrowserActive { layer: None, navigation_info: None, viewpoint: None, viewer: "EXAMINE".into() }
+    }
+}
+
 pub struct Runtime {
     pub scene: Scene,
     pub frt: HashMap<FKey, FieldRt>,
@@ -424,6 +439,18 @@ pub struct Runtime {
     pub description: String,
     /// Requests scripts made of the browser (Browser.nextViewpoint …), drained by the viewer.
     pub browser_requests: Vec<String>,
+    /// X3DBrowserContext's active layer, NavigationInfo and Viewpoint and its viewer type, as the viewer last bound them
+    /// (`None`: the layer's default node is bound, or no frame was drawn yet).
+    pub browser_active: BrowserActive,
+    /// The browser's default nodes a Script was handed (getActiveViewpoint … before a world node is bound), by type, in the
+    /// private context (`default_node`).
+    default_nodes: Vec<(String, NodeId)>,
+    private_ctx: Option<CtxId>,
+    /// The loaded world is the browser's execution context (X3DBrowser.replaceWorld: `this .setExecutionContext (scene)`).
+    /// Until then X3DBrowserContext.getExecutionContext () is the page's first, empty world (`first_world`): the Scripts of
+    /// the world being loaded initialize before it is installed.
+    pub world_installed: bool,
+    first_world: Option<CtxId>,
     /// BrowserOptions, BrowserProperties and RenderingProperties (`getBrowserOption` …).
     pub browser_options: browser_options::BrowserOptions,
     /// Background.initialize: the private ImageTexture of each `xxxUrl` field, per Background.
@@ -584,6 +611,11 @@ impl Runtime {
             prints: vec![],
             description: String::new(),
             browser_requests: vec![],
+            browser_active: BrowserActive::default(),
+            default_nodes: vec![],
+            private_ctx: None,
+            world_installed: false,
+            first_world: None,
             browser_options: browser_options::BrowserOptions::new(512, 512),
             background_textures: HashMap::new(),
             bind_modifications: HashMap::new(),
@@ -1083,7 +1115,24 @@ impl Runtime {
     /// the frames the loads wait for. Returns the scene ready for `toVRMLString`.
     pub fn load_world(&mut self) {
         self.load_scene();
+        self.world_installed = true;
         self.go_live();
+    }
+
+    /// X3DBrowserContext.getExecutionContext (): the world once it is installed, the page's first, empty world before.
+    pub fn browser_execution_context(&mut self) -> CtxId {
+        if self.world_installed {
+            return self.scene.world;
+        }
+
+        if let Some(c) = self.first_world {
+            return c;
+        }
+
+        let c = self.empty_world_scene();
+
+        self.first_world = Some(c);
+        c
     }
 
     /// X3DBrowser.replaceWorld after the scene is loaded: it awaits one more frame (the events of
@@ -1095,6 +1144,7 @@ impl Runtime {
         // `this .shutdown () .processInterests (); this .callBrowserCallbacks (SHUTDOWN_EVENT)` of the empty first world,
         // and the browser's loadCount event for the first events of the next frame (checkLoadCount).
         self.browser_callbacks(browser_load::SHUTDOWN_EVENT);
+        self.world_installed = true;
         self.go_live();
         self.world_state.init = Some(None);
         self.world_load_count_event();
@@ -1393,6 +1443,29 @@ impl Runtime {
             self.register_dynamic(log);
         }
 
+        Some(n)
+    }
+
+    /// A default node of the browser (X_ITE: the bottom of layer 0's bindable stacks, a node of its private scene), created
+    /// once and set up in the browser's private scene: an X3D scene of the latest version with no parent, so no world's
+    /// disposal reaches it.
+    pub fn default_node(&mut self, type_name: &str) -> Option<NodeId> {
+        if let Some((_, n)) = self.default_nodes.iter().find(|(t, _)| t == type_name) {
+            return Some(*n);
+        }
+
+        let ctx = match self.private_ctx {
+            Some(c) => c,
+            None => {
+                let c = self.empty_world_scene();
+                self.private_ctx = Some(c);
+                c
+            }
+        };
+
+        let n = self.create_node_setup(ctx, type_name)?;
+
+        self.default_nodes.push((type_name.to_string(), n));
         Some(n)
     }
 
