@@ -1,0 +1,81 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "cfg comp"
+DEF OUT Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+
+function E (e) { return e instanceof TypeError ? 'TypeError' : (e && e .constructor && e .constructor .name) + ':' + String (e && e .message); }
+function CT (a) { var r = []; for (var i = 0; i < a .length; ++ i) r .push (a [i] .name + ':' + a [i] .level + ':' + typeof a [i] .level + ':' + typeof a [i] .name); return r .join (','); }
+function XL (s) { var t; try { t = s .toXMLString (); } catch (e) { return 'PRINT ' + E (e); } return t .split ('\\n') .filter (function (l) { return /<component/ .test (l); }) .map (function (l) { return l .trim (); }) .join ('|'); }
+function JL (s) { var t; try { t = s .toJSONString (); } catch (e) { return 'PRINT ' + E (e); } var m = t .replace (/\\s+/g, ' ') .match (/\"component\": \\[[^\\]]*\\]/); return m ? m [0] : 'none'; }
+function C (op) {
+  return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) {
+    var r; try { r = 'ok:' + op (s); } catch (e) { r = 'ERR:' + E (e); }
+    return [r, CT (s .components), T (function () { return s .hasComponent ('Geometry3D') + '/' + s .hasComponent ('Geometry3D', 3) + '/' + s .hasComponent ('Nope'); }), VL (s), XL (s), JL (s)] .join (' ## ');
+  }); });
+}
+function U (s) { return String (s) .replace (/^.*?(assets\\/components\\/)/, '$1'); }
+function PI (p) { return p .name + '|' + p .title + '|' + U (p .providerURL) + '|' + p .components .length + '|' + Object .keys (p) .join (','); }
+function CI (c) { return c .name + ':' + c .level + '|' + c .title + '|' + U (c .providerURL) + '|' + c .external + '|' + (c .dependencies ? c .dependencies .join ('+') : c .dependencies) + '|' + Object .keys (c) .join (','); }
+function CL (a) { var r = []; for (var i = 0; i < a .length; ++ i) r .push (a [i] .name + ':' + a [i] .level); return r .join (','); }
+function T (f) { try { return String (f ()); } catch (e) { return 'ERR:' + String (e && e .message) .replace (/http:\\/\\/[^\\/]+/g, 'H'); } }
+function AT (f) { try { return Promise .resolve (f ()) .then (function (v) { return String (v); }, function (e) { return 'REJ:' + String (e && e .message); }); } catch (e) { return 'THROW:' + String (e && e .message); } }
+function VL (s) { var t; try { t = s .toVRMLString (); } catch (e) { return 'PRINT ' + e .message; } return t .split ('\\n') .filter (function (l) { return /^(PROFILE|COMPONENT|UNIT|META|#)/ .test (l); }) .join ('|'); }
+
+var LABELS = ['add.none', 'add.null', 'add.string', 'add.number', 'add.info', 'add.info.twice', 'add.info.max', 'add.obj', 'add.obj.nolevel', 'add.obj.float', 'add.obj.strlevel', 'add.obj.neg', 'add.obj.nan', 'add.obj.unknown', 'add.obj.noname', 'add.obj.numname', 'add.core', 'upd.none', 'upd.null', 'upd.string', 'upd.obj', 'upd.info.new', 'upd.info.replace', 'rem.name', 'rem.unknown', 'rem.none', 'rem.null', 'rem.info', 'get.unknown', 'get.nolevel', 'get.toolevel', 'get.strlevel', 'get.none'];
+var PROBES = [
+function () { return C (function (s) { return s .addComponent (); }); },
+function () { return C (function (s) { return s .addComponent (null); }); },
+function () { return C (function (s) { return s .addComponent ('Core'); }); },
+function () { return C (function (s) { return s .addComponent (5); }); },
+function () { return C (function (s) { return s .addComponent (Browser .getComponent ('Geometry3D', 2)); }); },
+function () { return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .addComponent (Browser .getComponent ('Geometry3D', 3)); }); },
+function () { return C (function (s) { return s .addComponent (Browser .getComponent ('Geometry3D')); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: 2 }); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 'Geometry3D' }); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: 2.5 }); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: '3' }); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: -1 }); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: NaN }); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 'Nope', level: 2 }); }); },
+function () { return C (function (s) { return s .addComponent ({ level: 2 }); }); },
+function () { return C (function (s) { return s .addComponent ({ name: 7, level: 1 }); }); },
+function () { return C (function (s) { return s .addComponent (Browser .getComponent ('Core', 1)); }); },
+function () { return C (function (s) { return s .updateComponent (); }); },
+function () { return C (function (s) { return s .updateComponent (null); }); },
+function () { return C (function (s) { return s .updateComponent ('Core'); }); },
+function () { return C (function (s) { return s .updateComponent ({ name: 'Geometry3D', level: 2 }); }); },
+function () { return C (function (s) { return s .updateComponent (Browser .getComponent ('Geometry3D', 2)); }); },
+function () { return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); s .addComponent (Browser .getComponent ('Grouping', 1)); return s .updateComponent (Browser .getComponent ('Geometry3D', 4)); }); },
+function () { return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent ('Geometry3D'); }); },
+function () { return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent ('Nope'); }); },
+function () { return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent (); }); },
+function () { return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent (null); }); },
+function () { return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent (Browser .getComponent ('Geometry3D', 2)); }); },
+function () { return T (function () { return CT ([Browser .getComponent ('Nope', 2)]); }); },
+function () { return T (function () { return CT ([Browser .getComponent ('Geometry3D')]); }); },
+function () { return T (function () { return CT ([Browser .getComponent ('Geometry3D', 9)]); }); },
+function () { return T (function () { return CT ([Browser .getComponent ('Geometry3D', '2')]); }); },
+function () { return T (function () { return CT ([Browser .getComponent ()]); }); }
+];
+var res = [];
+var step = 0;
+function put (i, v) { res [i] = LABELS [i] + ' = ' + v; }
+function flush () { var o = []; for (var k = 0; k < LABELS .length; ++ k) o .push (k in res ? res [k] : LABELS [k] + ' = ...'); out = new MFString (... o); }
+function cycle () { step = step + 1; if (step == 12) flush (); }
+function initialize () {
+  PROBES .forEach (function (f, i) {
+    var v;
+    try { v = f (); } catch (e) { v = 'THROW ' + e .message; }
+    if (v && typeof v .then === 'function') v .then (function (x) { put (i, x); }, function (e) { put (i, 'REJECT ' + (e && e .message)); });
+    else put (i, v);
+  });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

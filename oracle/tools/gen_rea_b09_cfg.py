@@ -2,9 +2,10 @@
 """Generate the configuration worlds oracle/synthetic-rea-b09-sai/cfg-*.wrl (REA batch 09, step 3, item 4: profiles, components, units).
 Authored; synthetic inputs only.
 
-Not probed, because the two engines word the TypeError differently or X_ITE stores an `undefined` level that the port cannot: addComponent ()
-/ addComponent (null) / updateComponent () (V8: "Cannot read properties of undefined (reading 'name')"), addComponent ('Core') (X_ITE stores
-a ComponentInfo whose name and level are undefined).
+cfg-comp probes the component state X3DScene.addComponent / updateComponent / removeComponent leave (any name and level, missing,
+null and unknown arguments). cfg-scene-odd (documented open, not in cases.txt) shows the TypeError text of addComponent () /
+addComponent (null) / updateComponent (): V8 words it "Cannot read properties of undefined (reading 'name')", QuickJS "cannot read
+property 'name' of undefined"; the state those calls leave is in cfg-comp.
 
 Each world runs a list of probes (functions returning a string, or a promise of one) from its Script's `initialize` and writes them in
 order to the MFString field `out` ("label = value", `...` while pending), so the scene text of every dumped frame carries them. URLs are
@@ -192,7 +193,7 @@ scenes = [
 
 cases = {"cfg-browser": world("cfg browser", browser), "cfg-scene": world("cfg scene", scenes)}
 
-# Documented-open (not in cases.txt): the probes the port cannot answer like V8 / X_ITE (see the header).
+# Documented-open (not in cases.txt): the engine's TypeError text (see the header).
 odd = [
     ("odd.addComponent.undefined", "return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) { return T (function () { s .addComponent (); return CL (s .components); }); }); });"),
     ("odd.addComponent.null", "return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) { return T (function () { s .addComponent (null); return CL (s .components); }); }); });"),
@@ -201,6 +202,59 @@ odd = [
 ]
 cases["cfg-scene-odd"] = world("cfg scene odd", odd)
 
+
+# Component state of a scene (owner decision 2026-10-20: X_ITE's observable component behavior, the engine's TypeError text aside).
+# Each probe makes a Core scene, runs one call and shows: the outcome (a thrown error by its class and, unless it is a TypeError
+# whose text is the engine's, its message), the components (name:level:typeof level), hasComponent, and the COMPONENT lines of the
+# VRML, XML and JSON printouts.
+COMP = """
+function E (e) { return e instanceof TypeError ? 'TypeError' : (e && e .constructor && e .constructor .name) + ':' + String (e && e .message); }
+function CT (a) { var r = []; for (var i = 0; i < a .length; ++ i) r .push (a [i] .name + ':' + a [i] .level + ':' + typeof a [i] .level + ':' + typeof a [i] .name); return r .join (','); }
+function XL (s) { var t; try { t = s .toXMLString (); } catch (e) { return 'PRINT ' + E (e); } return t .split ('\\n') .filter (function (l) { return /<component/ .test (l); }) .map (function (l) { return l .trim (); }) .join ('|'); }
+function JL (s) { var t; try { t = s .toJSONString (); } catch (e) { return 'PRINT ' + E (e); } var m = t .replace (/\\s+/g, ' ') .match (/"component": \\[[^\\]]*\\]/); return m ? m [0] : 'none'; }
+function C (op) {
+  return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) {
+    var r; try { r = 'ok:' + op (s); } catch (e) { r = 'ERR:' + E (e); }
+    return [r, CT (s .components), T (function () { return s .hasComponent ('Geometry3D') + '/' + s .hasComponent ('Geometry3D', 3) + '/' + s .hasComponent ('Nope'); }), VL (s), XL (s), JL (s)] .join (' ## ');
+  }); });
+}
+"""
+comp = [
+    ("add.none", "return C (function (s) { return s .addComponent (); });"),
+    ("add.null", "return C (function (s) { return s .addComponent (null); });"),
+    ("add.string", "return C (function (s) { return s .addComponent ('Core'); });"),
+    ("add.number", "return C (function (s) { return s .addComponent (5); });"),
+    ("add.info", "return C (function (s) { return s .addComponent (Browser .getComponent ('Geometry3D', 2)); });"),
+    ("add.info.twice", "return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .addComponent (Browser .getComponent ('Geometry3D', 3)); });"),
+    ("add.info.max", "return C (function (s) { return s .addComponent (Browser .getComponent ('Geometry3D')); });"),
+    ("add.obj", "return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: 2 }); });"),
+    ("add.obj.nolevel", "return C (function (s) { return s .addComponent ({ name: 'Geometry3D' }); });"),
+    ("add.obj.float", "return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: 2.5 }); });"),
+    ("add.obj.strlevel", "return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: '3' }); });"),
+    ("add.obj.neg", "return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: -1 }); });"),
+    ("add.obj.nan", "return C (function (s) { return s .addComponent ({ name: 'Geometry3D', level: NaN }); });"),
+    ("add.obj.unknown", "return C (function (s) { return s .addComponent ({ name: 'Nope', level: 2 }); });"),
+    ("add.obj.noname", "return C (function (s) { return s .addComponent ({ level: 2 }); });"),
+    ("add.obj.numname", "return C (function (s) { return s .addComponent ({ name: 7, level: 1 }); });"),
+    ("add.core", "return C (function (s) { return s .addComponent (Browser .getComponent ('Core', 1)); });"),
+    ("upd.none", "return C (function (s) { return s .updateComponent (); });"),
+    ("upd.null", "return C (function (s) { return s .updateComponent (null); });"),
+    ("upd.string", "return C (function (s) { return s .updateComponent ('Core'); });"),
+    ("upd.obj", "return C (function (s) { return s .updateComponent ({ name: 'Geometry3D', level: 2 }); });"),
+    ("upd.info.new", "return C (function (s) { return s .updateComponent (Browser .getComponent ('Geometry3D', 2)); });"),
+    ("upd.info.replace", "return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); s .addComponent (Browser .getComponent ('Grouping', 1)); return s .updateComponent (Browser .getComponent ('Geometry3D', 4)); });"),
+    ("rem.name", "return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent ('Geometry3D'); });"),
+    ("rem.unknown", "return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent ('Nope'); });"),
+    ("rem.none", "return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent (); });"),
+    ("rem.null", "return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent (null); });"),
+    ("rem.info", "return C (function (s) { s .addComponent (Browser .getComponent ('Geometry3D', 2)); return s .removeComponent (Browser .getComponent ('Geometry3D', 2)); });"),
+    ("get.unknown", "return T (function () { return CT ([Browser .getComponent ('Nope', 2)]); });"),
+    ("get.nolevel", "return T (function () { return CT ([Browser .getComponent ('Geometry3D')]); });"),
+    ("get.toolevel", "return T (function () { return CT ([Browser .getComponent ('Geometry3D', 9)]); });"),
+    ("get.strlevel", "return T (function () { return CT ([Browser .getComponent ('Geometry3D', '2')]); });"),
+    ("get.none", "return T (function () { return CT ([Browser .getComponent ()]); });"),
+]
+cases["cfg-comp"] = world("cfg comp", comp).replace("function U (s)", vs(COMP) + "function U (s)", 1)
 
 # Statements of the three encodings.
 STRINGS = {

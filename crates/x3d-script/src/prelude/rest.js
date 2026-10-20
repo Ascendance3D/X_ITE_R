@@ -736,11 +736,13 @@ function getComponent (name, level)
 const sceneComponents = new Map ();
 const profileValues = new Map (); // what setProfile () was given when it is not a ProfileInfo
 
-function componentObject (key, name, level)
+// The ComponentInfo of a component of a scene: the one a Script gave (kept as it is, X3DScene.addComponent / updateComponent),
+// else one made from the scene's name and level. `text` is the runtime's `String (level)` of it.
+function componentObject (key, name, level, text = String (level))
 {
    const given = sceneComponents .get (key) ?.get (name);
 
-   if (given && given .level === level)
+   if (given && String (given .level) === text)
       return given;
 
    let list = sceneComponents .get (key);
@@ -762,7 +764,7 @@ function sceneComponentGiven (key, component)
    if (!list)
       sceneComponents .set (key, list = new Map ());
 
-   list .set (component .name, component);
+   list .set (String (component .name), component);
 }
 
 function profileInfo (name)
@@ -889,8 +891,6 @@ function brandClass (typeName, length, test)
    return C;
 }
 
-const X3DExecutionContextClass = brandClass ("X3DExecutionContext", 1, o => contextKeys .has (o));
-const X3DSceneClass            = brandClass ("X3DScene", 1, o => contextKeys .has (o) && o .isScene);
 const X3DBrowserClass          = brandClass ("X3DBrowser", 1, o => o === Browser);
 const X3DRouteClass            = brandClass ("X3DRoute", 5, o => routeIds .has (o));
 
@@ -970,6 +970,23 @@ Object .assign (X3DBaseNodeClass .prototype,
    // A Script has no event of the browser's own fields to add (X3DBaseNode.addEvent taints the node for the next cascade).
    addEvent (field) { },
    isInitialized () { return true; },
+   getBrowser () { return Browser; },
+   // The objects of the port a Script holds are set up and initialized; setup () and initialize () have nothing left to do.
+   setup () { },
+   initialize () { },
+   isLive () { return this [CONTEXT] ? X ("cx", contextKeys .get (this) * -1 - 2, "live") : true; },
+   getLive () { return new Fields .SFBool (this .isLive ()); },
+   // X3DBaseNode.addChildObjects (accessType, name, field, …): `this ._name` is the field.
+   addChildObjects (... args)
+   {
+      for (let i = 0; i + 2 < args .length; i += 3)
+      {
+         const field = args [i + 2];
+
+         field .setName ?.(args [i + 1]);
+         Object .defineProperty (this, "_" + args [i + 1], { get () { return field; }, set (value) { field .setValue (value); }, configurable: true });
+      }
+   },
 });
 
 const BASE_NODE_TYPES  = Symbol ("nodeTypes");
@@ -1116,6 +1133,16 @@ for (const key of Reflect .ownKeys (Browser))
    Object .defineProperty (target, key, descriptor);
 }
 
+// X3DBaseNode.getExecutionContext: the Browser's (the world), or an execution context's own.
+{
+   const browserExecutionContext = X3DBaseNodeClass .prototype .getExecutionContext;
+
+   Object .defineProperty (X3DBaseNodeClass .prototype, "getExecutionContext", {
+      value: { getExecutionContext () { return this [CONTEXT] ? this [CONTEXT] .getExecutionContext () : browserExecutionContext .call (this); } } .getExecutionContext,
+      writable: true, configurable: true,
+   });
+}
+
 for (const C of [X3DBaseNodeClass, X3DBrowserContextClass, X3DBrowserClass])
 {
    for (const key of Object .keys (C .prototype))
@@ -1154,11 +1181,10 @@ function makeExecutionContext (script)
    const protos   = infoArray ("ProtoDeclarationArray", () => X ("cx", script, "protoIds", false) .map (id => protoObject (false, id)), p => p .name, p => protoKeys .get (p)?.[0] === false);
    const externs  = infoArray ("ExternProtoDeclarationArray", () => X ("cx", script, "protoIds", true) .map (id => protoObject (true, id)), p => p .name, p => protoKeys .get (p)?.[0] === true);
    const routes   = infoArray ("RouteArray", () => X ("cx", script, "routeList") .map (r => routeObject (script, r .id)), r => r .getId (), r => routeIds .has (r));
-   const comps    = infoArray ("ComponentInfoArray", () => info () .components .map (([name, level]) => componentObject (script, name, level)), c => c .name, isComponentInfo);
+   const comps    = infoArray ("ComponentInfoArray", () => info () .components .map (([name, level, text]) => componentObject (script, name, level, text)), c => c .name, isComponentInfo);
    const units    = infoArray ("UnitInfoArray", () => info () .units .map (([category, name, conversionFactor]) => { const o = Object .freeze ({ category, name, conversionFactor }); infoObjects .add (o); return o; }), u => u .category, u => infoObjects .has (u));
 
-   return {
-      get constructor ()      { return info () .isScene ? X3DSceneClass : X3DExecutionContextClass; },
+   const impl = {
       get isScene ()          { return info () .isScene; },
       get sceneGraph_changed () { return ctxFieldObject (ctxKey, 0, "sceneGraph_changed"); },
       get bbox_changed ()     { return ctxFieldObject (ctxKey, 1, "bbox_changed"); },
@@ -1169,7 +1195,6 @@ function makeExecutionContext (script)
       get _profile_changed () { return info () .isScene ? ctxFieldObject (ctxKey, 2, "profile_changed") : undefined; },
       get _metadata_changed () { return info () .isScene ? ctxFieldObject (ctxKey, 3, "metadata_changed") : undefined; },
       // A plain property: the real clock, assigned by updateNamedNode and removeNamedNode (and by every DEF); never an event.
-      get _namedNodes_changed () { return namedTouched || named .length ? X ("time") : undefined; },
       get encoding ()         { return info () .encoding; },
       get profile ()          { const given = profileValues .get (script); return given ? given .value : profileInfo (info () .profile); },
       get components ()       { return comps; },
@@ -1223,7 +1248,8 @@ function makeExecutionContext (script)
          const stored = makeComponent (component .name, component);
 
          sceneComponentGiven (script, stored);
-         X ("addComponent", script, String (stored .name), stored .level | 0);
+         X ("addComponent", script, String (stored .name), stored .level | 0, String (stored .level));
+         touchContext (object, "_components_changed");
       },
       updateComponent (component)
       {
@@ -1231,9 +1257,10 @@ function makeExecutionContext (script)
             throw new Error (`Couldn't update value of ComponentInfoArray, value for key '${component .name}' has wrong type.`);
 
          sceneComponentGiven (script, component);
-         X ("updateComponent", script, String (component .name), component .level);
+         X ("updateComponent", script, String (component .name), component .level | 0, String (component .level));
+         touchContext (object, "_components_changed");
       },
-      removeComponent (name)  { X ("removeComponent", script, String (name)); sceneComponents .get (script) ?.delete (String (name)); },
+      removeComponent (name)  { X ("removeComponent", script, String (name)); sceneComponents .get (script) ?.delete (String (name)); touchContext (object, "_components_changed"); },
       getUnits ()             { return units; },
       getUnit (category)      { return units .get (String (category)); },
       fromUnit (category, value) { return unitConversion (units, category, value, true); },
@@ -1245,9 +1272,9 @@ function makeExecutionContext (script)
       removeMetaData (name)   { X ("metaData", script, "remove", String (name)); },
       addRootNode (n)         { rootNodeArgument (n); X ("rootNode", script, "add", A (n)); },
       removeRootNode (n)      { rootNodeArgument (n); X ("rootNode", script, "remove", A (n)); },
-      addNamedNode (name, n)  { X ("cx", script, "named", "add", String (name), A (n)); namedTouched = true; },
-      updateNamedNode (name, n) { X ("cx", script, "named", "update", String (name), A (n)); namedTouched = true; },
-      removeNamedNode (name)  { X ("cx", script, "named", "remove", String (name)); namedTouched = true; },
+      addNamedNode (name, n)  { X ("cx", script, "named", "add", String (name), A (n)); namedTouched = true; touchContext (object, "_namedNodes_changed"); },
+      updateNamedNode (name, n) { X ("cx", script, "named", "update", String (name), A (n)); namedTouched = true; touchContext (object, "_namedNodes_changed"); },
+      removeNamedNode (name)  { X ("cx", script, "named", "remove", String (name)); namedTouched = true; touchContext (object, "_namedNodes_changed"); },
       getUniqueName (name)    { return X ("cx", script, "unique", "named", String (name)); },
       getUniqueImportName (name) { return X ("cx", script, "unique", "imported", String (name)); },
       getUniqueProtoName (name) { return X ("cx", script, "unique", "proto", String (name)); },
@@ -1294,15 +1321,121 @@ function makeExecutionContext (script)
       createProto (type)      { return R (X ("createProto", script, String (type))); },
       getNamedNode (name)     { return R (X ("namedNode", script, String (name))); },
       addRoute (a, b, c, d)   { return routeObject (script, X ("cx", script, "routeAdd", A (a), String (b), A (c), String (d))); },
-      deleteRoute (a, b, c, d)
+      deleteRoute (a)
       {
+         const [, b, c, d] = arguments;
+
          // Case: sourceNode, sourceField, destinationNode, destinationField.
          const route = arguments .length === 4 ? this .getRoute (a, b, c, d) : a;
 
          if (routeIds .has (route))
             X ("cx", script, "routeDelete", routeIds .get (route));
       },
+      // X3DScene.dispose: the port does not tear a scene down from a Script (its nodes stay the runtime's); the object lets go of
+      // its interests and user data (X3DObject.dispose).
+      dispose ()              { X3DObject .prototype .dispose .call (object); },
+      toVRMLStream (generator) { generator .string += this .toVRMLString (); },
+      toXMLStream (generator)  { generator .string += this .toXMLString (); },
+      toJSONStream (generator) { generator .string += this .toJSONString (); },
+      getExecutionContext ()  { const c = X ("cx", script, "parentCtx"); return c === null ? null : executionContext (- (c + 2)); },
+      getLocalScene ()        { return this .isScene ? object : executionContext (- (X ("cx", script, "sceneRoot") + 2)); },
+      getOuterNode ()         { return R (X ("cx", script, "outerNode")); },
    };
+
+   if (script === undefined)
+      return impl;
+
+   // X_ITE's X3DScene / X3DExecutionContext: the members are its classes' (contextClasses); the object owns what X_ITE's does.
+   const object = Object .create (impl .isScene ? X3DSceneClass .prototype : X3DExecutionContextClass .prototype);
+
+   Object .defineProperty (object, CONTEXT, { value: impl });
+   Object .defineProperty (object, BASE_NODE_TYPES, { value: [X3DConstants .X3DExecutionContext, ... impl .isScene ? [X3DConstants .X3DScene] : [ ]] });
+
+   // X3DBaseNode.addChildObjects: the change fields are own, not enumerable, accessors.
+   for (const key of ["_sceneGraph_changed", "_bbox_changed", "_profile_changed", "_metadata_changed"])
+      Object .defineProperty (object, key, { ... Object .getOwnPropertyDescriptor (impl, key), enumerable: false });
+
+   // `this ._namedNodes_changed = …` (a DEF, add/update/removeNamedNode) and `this ._components_changed = …` (a COMPONENT
+   // statement, add/update/removeComponent): plain properties, there once set.
+   if (impl .namedNodes .length || namedTouched)
+      touchContext (object, "_namedNodes_changed");
+
+   if (impl .isScene && info () .components .length)
+      touchContext (object, "_components_changed");
+
+   return object;
+}
+
+const CONTEXT = Symbol ("context");
+
+function touchContext (o, key)
+{
+   if (o && !Object .prototype .hasOwnProperty .call (o, key))
+      Object .defineProperty (o, key, { get () { return X ("time"); }, enumerable: true, configurable: true });
+}
+
+// X3DExecutionContext and X3DScene (X3DScene → X3DExecutionContext → X3DBaseNode → X3DChildObject → X3DObject): each member a
+// Script can use sits on the class X_ITE defines it on (oracle scx-api: the own names of each level of the pin's prototypes);
+// it runs on the context's state. Members X_ITE's classes have that the port does not (engine internals: addLoadingObject,
+// getBBox, setEncoding …) are absent.
+const X3DExecutionContextClass = namedClass ("X3DExecutionContext");
+const X3DSceneClass            = namedClass ("X3DScene");
+
+Object .defineProperty (X3DExecutionContextClass, "length", { value: 1 });
+Object .defineProperty (X3DSceneClass, "length", { value: 1 });
+
+X3DExecutionContextClass .prototype = Object .create (X3DBaseNodeClass .prototype, { constructor: { value: X3DExecutionContextClass, writable: true, configurable: true } });
+X3DSceneClass .prototype = Object .create (X3DExecutionContextClass .prototype, { constructor: { value: X3DSceneClass, writable: true, configurable: true } });
+
+{
+   const EXECUTION_CONTEXT_OWN = ("addExternProtoDeclaration addImportedNode addNamedNode addProtoDeclaration addRoute baseURL components " +
+      "createNode createProto deleteRoute encoding externprotos fromUnit getBaseURL getComponents getEncoding getExternProtoDeclaration " +
+      "getExternProtoDeclarations getImportedNode getImportedNodes getLocalNode getLocalScene getNamedNode getNamedNodes getNodeOrImportedNode " +
+      "getOuterNode getProfile getProtoDeclaration getProtoDeclarations getRootNodes getRoute getRoutes getSpecificationVersion " +
+      "getUniqueExternProtoName getUniqueImportName getUniqueName getUniqueProtoName getUnits getWorldInfos getWorldURL hasComponent importedNodes " +
+      "namedNodes profile protos removeExternProtoDeclaration removeImportedNode removeNamedNode removeProtoDeclaration renameImportedNode " +
+      "rootNodes routes setRootNodes specificationVersion toJSONStream toUnit toVRMLStream toXMLStream units updateExternProtoDeclaration dispose " +
+      "updateImportedNode updateNamedNode updateProtoDeclaration worldURL") .split (" ");
+   const SCENE_OWN = ("addComponent addExportedNode addMetaData addRootNode baseURL bbox_changed components encoding exportedNodes fromUnit " +
+      "getBaseURL getComponents getEncoding getExportedNode getExportedNodes getLocalScene getMetaData getMetaDatas getProfile " +
+      "getSpecificationVersion getUniqueExportName getUnit getUnits getWorldURL hasComponent metadata_changed profile profile_changed " +
+      "removeComponent removeExportedNode removeMetaData removeRootNode rootNodes sceneGraph_changed setMetaData setProfile setRootNodes " +
+      "specificationVersion toJSONStream toUnit toVRMLStream toXMLStream units updateComponent updateExportedNode updateUnit worldURL dispose") .split (" ");
+
+   const template = makeExecutionContext (undefined);
+
+   const install = (target, key) =>
+   {
+      const d = Object .getOwnPropertyDescriptor (template, key);
+
+      if (!d)
+         throw new Error (`X3DExecutionContext: no ${key}`);
+
+      if ("value" in d)
+      {
+         const f = { [key] (... args) { return this [CONTEXT] [key] (... args); } } [key];
+
+         Object .defineProperty (f, "length", { value: d .value .length });
+         Object .defineProperty (target, key, { value: f, writable: true, configurable: true, enumerable: false });
+      }
+      else
+      {
+         // The field accessors are not enumerable (X3DBaseNode.addChildObjects), the others are.
+         const field = key .endsWith ("_changed");
+
+         Object .defineProperty (target, key, {
+            get: d .get && { [key] () { return this [CONTEXT] [key]; } } [key],
+            set: d .set && { [key] (value) { this [CONTEXT] [key] = value; } } [key],
+            enumerable: !field, configurable: true,
+         });
+      }
+   };
+
+   for (const key of EXECUTION_CONTEXT_OWN) install (X3DExecutionContextClass .prototype, key);
+   for (const key of SCENE_OWN) install (X3DSceneClass .prototype, key);
+
+   Object .defineProperty (X3DExecutionContextClass .prototype, "isScene", { value: false, writable: true, configurable: true, enumerable: true });
+   Object .defineProperty (X3DSceneClass .prototype, "isScene", { value: true, writable: true, configurable: true, enumerable: true });
 }
 
 // SFNodeCache .get (X3DCast (X3DNode, node, false)): a value that is no node is no WeakMap key.
@@ -1543,6 +1676,7 @@ const standardGlobals =
    X3DConstants,
    X3DField, X3DArrayField,
    X3DBrowser: X3DBrowserClass, X3DExecutionContext: X3DExecutionContextClass, X3DScene: X3DSceneClass, X3DRoute: X3DRouteClass,
+   X3DBaseNode: X3DBaseNodeClass,
    // Script.js lists neither SFBool, SFInt32, SFFloat, SFDouble nor SFTime as globals; its SFNode is its own function.
    ... Object .fromEntries (Object .entries (Fields) .filter (([k]) => !["SFNode", "SFBool", "SFInt32", "SFFloat", "SFDouble", "SFTime"] .includes (k))),
    SFNode: ScriptSFNode,

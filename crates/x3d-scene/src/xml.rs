@@ -315,7 +315,7 @@ impl<'a> XmlGenerator<'a> {
             for (name, level) in components {
                 self.open_tag("component");
                 self.attribute("name", name);
-                self.attribute("level", &level.to_string());
+                self.attribute("level", &scene.component_level_text(scene_root, name, *level));
                 self.close_tag("component");
                 self.g().tidy_break();
             }

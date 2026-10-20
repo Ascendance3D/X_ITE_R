@@ -6568,11 +6568,12 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "oracle/synthetic-rea/sai-scene.wrl"
+    "oracle/synthetic-rea/sai-scene.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs ctxev-* cfg-scene cfg-comp"
    ],
-   "missing": "addImportedNode/updateImportedNode/removeImportedNode, createX3DFromString returns the current context, change events (namedNodes_changed etc.)",
+   "missing": "X3DExecutionContext / X3DScene class chain (brx-obj-open: the port's scene objects are plain objects); kept PARTIAL by owner decision 2026-10-20 until its full REA requirements pass",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud: timing differences A-C fixed (createX3DFromString parse as a microtask, SFNode creation on a stream's first read, Inline change events after the frame); component state of a scene exact (cfg-comp)"
   },
   {
    "id": "sub:exec.scene",
@@ -6602,12 +6603,14 @@
     "crates/x3d-runtime",
     "crates/x3d-viewer/src/layer.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
-   "tests": [],
-   "missing": "isBound/bindTime events per layer verified only for Viewpoint/Background corpus",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs bind-*"
+   ],
+   "missing": "",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud e62be31+: bind-{Viewpoint,OrthoViewpoint,GeoViewpoint,NavigationInfo,Background,TextureBackground,Fog}, bind-route, bind-inline, bind-read, bind-browser, bind-switch, bind-layers (isBound / bindTime of every node routed to a Script, per layer, activeLayer changes, layers removed and added): 13 cases baselined from X_ITE (3 identical recordings), exact; poses 1e-4"
   },
   {
    "id": "sub:exec.import-export",
@@ -6619,12 +6622,14 @@
     "crates/x3d-scene/src/scene.rs",
     "crates/x3d-runtime/src/inline.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
-   "tests": [],
-   "missing": "SAI addImportedNode/updateImportedNode/removeImportedNode via Script not oracle-tested",
+   "tests": [
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs ie-chain ie-rename ie-direct ie-err-* ie-err-string ie-err-string-frames"
+   ],
+   "missing": "",
    "oracle": "",
-   "notes": ""
+   "notes": "b09 cloud e62be31+: IMPORT -> local node -> EXPORT chains, renameImportedNode / updateImportedNode / removeImportedNode / addImportedNode from a Script, duplicate and missing names, exports of imported nodes, ROUTE before load, failed load, self import, createX3DFromString with IMPORT/EXPORT (incl. the frame its promise settles): 14 cases, each baselined from X_ITE (3 identical recordings), exact (scene text every frame, sorted log)"
   },
   {
    "id": "sub:proto.proto",
@@ -6719,14 +6724,15 @@
    "rust": [
     "crates/x3d-scene/src/nodes.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "",
    "tests": [
-    "oracle/synthetic-rea/sai-scene.wrl"
+    "oracle/synthetic-rea/sai-scene.wrl",
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs cfg-browser cfg-scene cfg-comp cfg-parse-*"
    ],
-   "missing": "ComponentInfo/ProfileInfo title and providerURL (data not in trimmed node table)",
+   "missing": "",
    "oracle": "",
-   "notes": "2026-10-16: node table regenerated from pinned X_ITE with CharLS/dicomParser/jpeg/OpenJPEG globals (oracle/x_ite-pin/src/nodes.html): 284 node types (all components load, failedComponents empty), plus per-version X3D 3.0-3.3 variants (constructor defaults and aliases: Inline/DirectionalLight global, SpotLight beamWidth/cutOffAngle, LoadSensor watchList, Layer isPickable, ComposedCubeMapTexture front.., ParticleSystem colorRamp.., joints, DIS PDUs, HAnimHumanoid version, TextureProperties)."
+   "notes": "2026-10-16: node table regenerated from pinned X_ITE with CharLS/dicomParser/jpeg/OpenJPEG globals (oracle/x_ite-pin/src/nodes.html): 284 node types (all components load, failedComponents empty), plus per-version X3D 3.0-3.3 variants (constructor defaults and aliases: Inline/DirectionalLight global, SpotLight beamWidth/cutOffAngle, LoadSensor watchList, Layer isPickable, ComposedCubeMapTexture front.., ParticleSystem colorRamp.., joints, DIS PDUs, HAnimHumanoid version, TextureProperties). | b09 cloud: supported profiles and components (title, providerURL, external, dependencies, aliases), getProfile / getComponent / loadComponents incl. errors, the add/update/removeSupported* calls, scene profile and components (cfg-comp: any name or level a Script gives is kept and printed as X_ITE does; missing, null and unknown arguments), PROFILE/COMPONENT statements in VRML, XML and JSON: 8 cases baselined from X_ITE (3 identical recordings), exact. Kept documented (cfg-scene-odd): the text of the TypeError addComponent () throws is the JavaScript engine's (QuickJS words it differently from V8); the thrown class and the state are compared"
   },
   {
    "id": "sub:browser.sai-api",

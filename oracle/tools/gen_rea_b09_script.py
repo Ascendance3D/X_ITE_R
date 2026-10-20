@@ -353,6 +353,19 @@ OPEN_GLOBALS = ("X3DBrowser", "X3DExecutionContext", "X3DScene", "X3DBaseNode", 
 register("scr-classes", P_CLASSES, open_prefixes=OPEN_GLOBALS)
 
 
+# Every global X_ITE's Script.js defines (createGlobalObject): what it is, and for a class its statics and prototype chain.
+X_ITE_GLOBALS = ['NULL', 'FALSE', 'TRUE', 'print', 'trace', 'Browser', 'X3DConstants', 'X3DBrowser', 'X3DExecutionContext', 'X3DScene', 'ComponentInfo', 'ComponentInfoArray', 'ProfileInfo', 'ProfileInfoArray', 'ConcreteNodesArray', 'AbstractNodesArray', 'UnitInfo', 'UnitInfoArray', 'NamedNodesArray', 'ImportedNodesArray', 'X3DImportedNode', 'ExportedNodesArray', 'X3DExportedNode', 'ExternProtoDeclarationArray', 'ProtoDeclarationArray', 'X3DExternProtoDeclaration', 'X3DProtoDeclaration', 'X3DProtoDeclarationNode', 'RouteArray', 'X3DRoute', 'X3DBaseNode', 'X3DFieldDefinition', 'FieldDefinitionArray', 'X3DField', 'X3DArrayField', 'SFColor', 'SFColorRGBA', 'SFImage', 'SFMatrix3d', 'SFMatrix3f', 'SFMatrix4d', 'SFMatrix4f', 'SFNode', 'SFQuaternion', 'SFRotation', 'SFString', 'SFVec2d', 'SFVec2f', 'SFVec3d', 'SFVec3f', 'SFVec4d', 'SFVec4f', 'VrmlMatrix', 'MFBool', 'MFColor', 'MFColorRGBA', 'MFDouble', 'MFFloat', 'MFImage', 'MFInt32', 'MFMatrix3d', 'MFMatrix3f', 'MFMatrix4d', 'MFMatrix4f', 'MFNode', 'MFQuaternion', 'MFRotation', 'MFString', 'MFTime', 'MFVec2d', 'MFVec2f', 'MFVec3d', 'MFVec3f', 'MFVec4d', 'MFVec4f']
+P_GLOBALS = []
+for _n in X_ITE_GLOBALS:
+    P_GLOBALS.append((f"{_n}", f"var C = {_n}; if (typeof C !== 'function') return [typeof C, C === null ? 'null' : typeof C === 'object' ? Object .prototype .toString .call (C) : String (C)]; "
+                      f"var p = [], o = C .prototype, k = 0; while (o && k ++ < 8) {{ p .push (Object .prototype .hasOwnProperty .call (o, 'constructor') ? o .constructor .name : '-'); o = Object .getPrototypeOf (o); }} "
+                      f"return [typeof C, C .name, C .length, String (C .typeName), Object .getOwnPropertyNames (C) .sort () .join (','), p .join ('>')];"))
+for _n in X_ITE_GLOBALS:
+    P_GLOBALS.append((f"{_n} new", f"if (typeof {_n} !== 'function') return 'not a function'; var i; try {{ i = new {_n} (); }} catch (e) {{ return 'throws ' + e .name; }} "
+                      f"return [Object .prototype .toString .call (i), i .constructor === {_n}, Object .getPrototypeOf (i) === {_n} .prototype, typeof i .length === 'number' ? i .length : typeof i .length];"))
+register("scr-globals", P_GLOBALS)
+
+
 
 # ---------------------------------------------------------------------------------------------------------------------------
 # 1b. Script lifecycle, events, directOutput / mustEvaluate. Several Scripts append to one list shared through `globalThis .LOG`; the
