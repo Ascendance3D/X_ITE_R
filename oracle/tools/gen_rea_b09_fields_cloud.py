@@ -233,6 +233,19 @@ FS_AFTER = ("var F_ = 0, LOG = [];\nfunction prepareEvents () { ++ F_;\n"
             " if (F_ === 17) { T ('log', function () { return LOG; }); flush_ (); } }\n")
 G.register("fcb-sfnode", [], after=FS_AFTER, nodes="DEF S Shape { }\nDEF G Group { }\n")
 
+# toString / valueOf calls on raw components (checkpoint after 804802d): X_ITE calls them when it prints a component (FloatFormat's
+# String, ToUnit's ToNumber), never when the value is set. Script fields only: they have no node behind them that does math with
+# the value (a Transform or TextureTransform converts its raw components when it builds its matrix: fldx-print-count-open).
+FC_PRE = ("var F_ = 0, LOG = [];\nvar CO = { n: 0, toString: function () { ++ this .n; return 'c' + this .n; } };\n"
+          "var VO = { n: 0, valueOf: function () { ++ this .n; return this .n; }, toString: function () { return 'vo'; } };")
+FC_AFTER = ("function prepareEvents () { ++ F_; LOG .push ('F' + F_ + ' ' + CO .n + ' ' + VO .n);\n"
+            " if (F_ === 10) { var f = new SFVec3f (); f .getValue () .x = CO; sv = f; var g = new SFColor (); g .getValue () .g = VO; sc = g; }\n"
+            " if (F_ === 12) { LOG .push (sv .toVRMLString (), sv .toXMLString (), sv .toJSONString (), String (sv), sc .toVRMLString ()); }\n"
+            " if (F_ === 13) { LOG .push (Browser .currentScene .toXMLString () .length > 0, Browser .currentScene .toJSONString () .length > 0); }\n"
+            " if (F_ === 14) { var f = sv; f .getValue () .y = VO; sv = f; }\n"
+            " if (F_ === 18) { T ('log', function () { return LOG; }); flush_ (); } }\n")
+G.register("fldx-count", [], fields="  inputOutput SFVec3f sv 0 0 0\n  inputOutput SFColor sc 0 0 0\n", pre=FC_PRE, after=FC_AFTER)
+
 if __name__ == "__main__":
     sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith("fldx-") or n == "fcb-sfnode"]
     G.main()

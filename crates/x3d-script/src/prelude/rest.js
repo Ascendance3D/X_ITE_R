@@ -1298,6 +1298,93 @@ engineMembers (X3DRoute,
    destinationField: { get () { return this .getDestinationField (); } },
 });
 
+// X3DRoute / X3DImportedNode to*Stream: printed outside a scene (X3DObject.toXXXString), the generator has not met the nodes
+// they name, so X_ITE throws.
+for (const [C, message] of [[X3DRoute, () => "Source node does not exist in scene graph."],
+                            [X3DImportedNode, (stream) => `X3DImportedNode.${stream}: Inline node does not exist.`]])
+{
+   engineMembers (C,
+   {
+      toVRMLStream (generator) { throw new Error (message ("toVRMLStream")); },
+      toXMLStream (generator) { throw new Error (message ("toXMLStream")); },
+      toJSONStream (generator) { throw new Error (message ("toJSONStream")); },
+   });
+}
+
+// The node an exported node names (X_ITE's getLocalNode hands out the node; the port's an SFNode of its X3DNodeRef).
+function exportedLocalNode (exported)
+{
+   const local = exported .getLocalNode ();
+
+   return local instanceof SFNode ? local .getValue () : local;
+}
+
+// X3DExportedNode.toVRMLStream … (Execution/X3DExportedNode.js).
+engineMembers (X3DExportedNode,
+{
+   toVRMLStream (generator)
+   {
+      const localName = generator .Name (exportedLocalNode (this)), exportedName = this .getExportedName (), description = this .getDescription ();
+
+      generator .Indent ();
+      generator .string += "EXPORT";
+      generator .Space ();
+      generator .string += localName;
+
+      if (exportedName !== localName)
+      {
+         generator .Space ();
+         generator .string += "AS";
+         generator .Space ();
+         generator .string += exportedName;
+      }
+
+      if (description)
+      {
+         generator .Space ();
+         generator .string += "DESCRIPTION";
+         generator .Space ();
+         generator .string += '"';
+         generator .string += description;
+         generator .string += '"';
+      }
+   },
+   toXMLStream (generator)
+   {
+      const localName = generator .Name (exportedLocalNode (this)), exportedName = this .getExportedName (), description = this .getDescription ();
+
+      generator .openTag ("EXPORT");
+      generator .attribute ("localDEF", localName);
+
+      if (exportedName !== localName)
+         generator .attribute ("AS", exportedName);
+
+      if (description)
+         generator .attribute ("DESCRIPTION", description);
+
+      generator .closeTag ("EXPORT");
+   },
+   toJSONStream (generator)
+   {
+      const localName = generator .Name (exportedLocalNode (this)), exportedName = this .getExportedName (), description = this .getDescription ();
+
+      generator .TidyBreak ();
+      generator .Indent ();
+
+      generator .beginObject ("EXPORT", false, true);
+      generator .stringProperty ("@localDEF", localName, false);
+
+      if (exportedName !== localName)
+         generator .stringProperty ("@AS", exportedName);
+
+      if (description)
+         generator .stringProperty ("@DESCRIPTION", description);
+
+      generator .endObject ();
+      generator .endObject ();
+   },
+});
+
 engineMembers (X3DImportedNode,
 {
    getExecutionContext () { return executionContext (this [ENGINE_STATE] .script); },
@@ -1344,8 +1431,23 @@ Object .defineProperty (X3DExternProtoDeclaration .prototype, "isExternProto", {
 
 // X3DExternProtoDeclaration.getAppInfo … read and write the loaded PROTO's, else the declaration's own. The port keeps the
 // declaration's own only (the loaded PROTO's appinfo and documentation are not passed to Scripts).
+// The declarations print through the runtime's printer (Scene::proto_declaration_string), in X3DObject.toXXXString's frame.
+for (const [C, extern] of [[X3DProtoDeclaration, false], [X3DExternProtoDeclaration, true]])
+{
+   engineMembers (C,
+   {
+      toVRMLStream (generator) { generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "vrml"); },
+      toXMLStream (generator) { generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "xml"); },
+      toJSONStream (generator) { generator .string += X ("cx", -1, "protoString", extern, this [ENGINE_STATE] .id, "json"); },
+   });
+}
+
+engineMembers (X3DProtoDeclaration, { getProtoDeclaration () { return this; } });
+
 engineMembers (X3DExternProtoDeclaration,
 {
+   // X3DExternProtoDeclaration.getProtoDeclaration: the PROTO of the loaded scene, null before.
+   getProtoDeclaration () { const p = this [ENGINE_STATE] .info () .loaded; return p === undefined ? null : protoObject (false, p); },
    getAppInfo () { return X3DProtoDeclarationNode .prototype .getAppInfo .call (this); },
    setAppInfo (value) { X3DProtoDeclarationNode .prototype .setAppInfo .call (this, value); },
    getDocumentation () { return X3DProtoDeclarationNode .prototype .getDocumentation .call (this); },

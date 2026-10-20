@@ -1,0 +1,91 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scx print"
+EXTERNPROTO EP [ inputOutput SFVec3f t ] "assets/extern-p.wrl#P"
+DEF EPI EP { }
+PROTO LP [ inputOutput SFFloat f 1 ] { Group { } }
+DEF IN Inline { url "assets/exp.wrl" }
+IMPORT IN.E1 AS IE1
+DEF A Transform { }
+DEF B Transform { }
+ROUTE A.translation_changed TO B.set_translation
+EXPORT A AS XA
+EXPORT B
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+var F_ = 0;
+function prepareEvents () { ++ F_; if (F_ === 12) {
+  T ('route toVRMLString', function () { var o = Browser .currentScene .routes [0]; if (!o) return 'none'; try { return o .toVRMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('route toXMLString', function () { var o = Browser .currentScene .routes [0]; if (!o) return 'none'; try { return o .toXMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('route toJSONString', function () { var o = Browser .currentScene .routes [0]; if (!o) return 'none'; try { return o .toJSONString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('route toString', function () { var o = Browser .currentScene .routes [0]; if (!o) return 'none'; try { return o .toString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('imported toVRMLString', function () { var o = Browser .currentScene .importedNodes [0]; if (!o) return 'none'; try { return o .toVRMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('imported toXMLString', function () { var o = Browser .currentScene .importedNodes [0]; if (!o) return 'none'; try { return o .toXMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('imported toJSONString', function () { var o = Browser .currentScene .importedNodes [0]; if (!o) return 'none'; try { return o .toJSONString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('imported toString', function () { var o = Browser .currentScene .importedNodes [0]; if (!o) return 'none'; try { return o .toString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported toVRMLString', function () { var o = Browser .currentScene .exportedNodes [0]; if (!o) return 'none'; try { return o .toVRMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported toXMLString', function () { var o = Browser .currentScene .exportedNodes [0]; if (!o) return 'none'; try { return o .toXMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported toJSONString', function () { var o = Browser .currentScene .exportedNodes [0]; if (!o) return 'none'; try { return o .toJSONString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported toString', function () { var o = Browser .currentScene .exportedNodes [0]; if (!o) return 'none'; try { return o .toString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported same name toVRMLString', function () { var o = Browser .currentScene .exportedNodes [1]; if (!o) return 'none'; try { return o .toVRMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported same name toXMLString', function () { var o = Browser .currentScene .exportedNodes [1]; if (!o) return 'none'; try { return o .toXMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported same name toJSONString', function () { var o = Browser .currentScene .exportedNodes [1]; if (!o) return 'none'; try { return o .toJSONString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('exported same name toString', function () { var o = Browser .currentScene .exportedNodes [1]; if (!o) return 'none'; try { return o .toString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('externproto toVRMLString', function () { var o = Browser .currentScene .externprotos [0]; if (!o) return 'none'; try { return o .toVRMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('externproto toXMLString', function () { var o = Browser .currentScene .externprotos [0]; if (!o) return 'none'; try { return o .toXMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('externproto toJSONString', function () { var o = Browser .currentScene .externprotos [0]; if (!o) return 'none'; try { return o .toJSONString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('externproto toString', function () { var o = Browser .currentScene .externprotos [0]; if (!o) return 'none'; try { return o .toString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto toVRMLString', function () { var o = Browser .currentScene .protos [0]; if (!o) return 'none'; try { return o .toVRMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto toXMLString', function () { var o = Browser .currentScene .protos [0]; if (!o) return 'none'; try { return o .toXMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto toJSONString', function () { var o = Browser .currentScene .protos [0]; if (!o) return 'none'; try { return o .toJSONString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto toString', function () { var o = Browser .currentScene .protos [0]; if (!o) return 'none'; try { return o .toString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto of extern toVRMLString', function () { var o = Browser .currentScene .externprotos [0] .getProtoDeclaration (); if (!o) return 'none'; try { return o .toVRMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto of extern toXMLString', function () { var o = Browser .currentScene .externprotos [0] .getProtoDeclaration (); if (!o) return 'none'; try { return o .toXMLString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto of extern toJSONString', function () { var o = Browser .currentScene .externprotos [0] .getProtoDeclaration (); if (!o) return 'none'; try { return o .toJSONString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto of extern toString', function () { var o = Browser .currentScene .externprotos [0] .getProtoDeclaration (); if (!o) return 'none'; try { return o .toString (); } catch (e) { return 'ERR ' + e .message; } });
+  T ('proto getProtoDeclaration', function () { var o = Browser .currentScene .protos [0]; return o .getProtoDeclaration () === o; });
+  T ('exported with description', function () { var o = Browser .currentScene .exportedNodes [0]; o .description = 'd e'; var r = [o .toVRMLString (), o .toXMLString (), o .toJSONString ()]; o .description = ''; return r; });
+  flush_ (); } }
+
+  "
+}

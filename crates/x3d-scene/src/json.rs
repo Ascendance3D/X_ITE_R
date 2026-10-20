@@ -970,14 +970,19 @@ impl<'a> JsonGenerator<'a> {
                 self.g().push("]");
             }
             _ => {
-                if let Some(texts) = self.base.take_raw() {
-                    self.g().push("[");
-                    self.g().tidy_space();
-                    crate::vrml::write_raw(self.g(), &texts, value, true);
-                    self.g().tidy_space();
-                    self.g().push("]");
-                    return;
-                }
+                let converted = match self.base.take_raw(value) {
+                    Some(crate::vrml::RawOut::Texts(texts)) => {
+                        self.g().push("[");
+                        self.g().tidy_space();
+                        crate::vrml::write_raw(self.g(), &texts, value, true);
+                        self.g().tidy_space();
+                        self.g().push("]");
+                        return;
+                    }
+                    Some(crate::vrml::RawOut::Value(v)) => Some(v),
+                    None => None,
+                };
+                let value = converted.as_ref().unwrap_or(value);
 
                 self.base.apply_units();
 
@@ -1170,4 +1175,21 @@ fn numbers_of(value: &FieldValue) -> (Vec<f64>, bool) {
         V::SFVec4d(v) => (v.to_array().to_vec(), true),
         _ => unreachable!("not a vector-like value"),
     }
+}
+
+/// See [`Scene::proto_declaration_string`].
+pub(crate) fn proto_declaration_json(scene: &Scene, extern_: bool, id: usize) -> String {
+    let mut g = JsonGenerator::new(scene);
+
+    g.base.push_ctx(None);
+    g.base.unit_base = 1;
+
+    if extern_ {
+        g.extern_proto_to_json(id);
+    } else {
+        g.proto_to_json(id);
+    }
+
+    g.base.pop_ctx();
+    g.base.g.string
 }

@@ -208,6 +208,31 @@ pub struct RawValue {
     pub texts: std::sync::Arc<[Option<String>]>,
 }
 
+/// A print of raw components in two passes (X3DGenerator calls `String (value)` or ToUnit's division on each raw component it
+/// prints, when it prints it): the first pass logs, in print order, the raw values it meets; the Script realm takes each
+/// component's text or number; the second pass prints them.
+#[derive(Debug, Default)]
+pub enum RawPrint {
+    #[default]
+    Off,
+    Log(Vec<RawRequest>),
+    Supply(std::collections::VecDeque<Option<Vec<Option<RawComponent>>>>),
+}
+
+/// A raw value met by a print: its host and token, and whether ToUnit converts it (a number is taken, else a text).
+#[derive(Debug, Clone, Copy)]
+pub struct RawRequest {
+    pub host: u64,
+    pub token: u32,
+    pub number: bool,
+}
+
+#[derive(Debug, Clone)]
+pub enum RawComponent {
+    Text(String),
+    Number(f64),
+}
+
 /// Scene-level data of a scene merged into another (an Inline's scene): what X3DScene keeps
 /// apart from its execution context.
 #[derive(Clone, Debug)]
@@ -302,6 +327,8 @@ pub struct Scene {
     /// Fields whose value a Script gave with components that are not all numbers (X_ITE's Vector3 holds any JavaScript value): the
     /// token of the Script realm's copy. Such a value is never the field's default (X_ITE compares the components with `===`).
     pub raw_tokens: std::collections::HashMap<(NodeId, FieldLoc), RawValue>,
+    /// The print of raw components in progress (see [`RawPrint`]).
+    pub raw_print: std::cell::RefCell<RawPrint>,
     /// Scene data of the Inline scenes merged into this one, by root context (see [`Scene::merge_inline`]).
     pub scene_infos: std::collections::HashMap<CtxId, SceneInfo>,
     pub imported: Vec<ImportedNode>,
@@ -471,6 +498,7 @@ impl Scene {
             clone_counts: None,
             scene_infos: Default::default(),
             raw_tokens: Default::default(),
+            raw_print: Default::default(),
             imported: vec![],
             exported: vec![],
             route_counter: 0,

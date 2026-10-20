@@ -70,9 +70,9 @@ pub fn run_world_as(oracle_root: &Path, file: &Path, scripts: bool, format: Dump
     rt.load_world();
 
     let vrml = match format {
-        DumpFormat::Vrml => rt.scene.to_vrml_string(),
-        DumpFormat::Xml => rt.scene.to_xml_string(),
-        DumpFormat::Json => rt.scene.to_json_string(),
+        DumpFormat::Vrml => rt.print_raw(|s| s.to_vrml_string()),
+        DumpFormat::Xml => rt.print_raw(|s| s.to_xml_string()),
+        DumpFormat::Json => rt.print_raw(|s| s.to_json_string()),
     };
     let mut log = rt.log;
     log.sort();

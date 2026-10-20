@@ -524,13 +524,14 @@ impl<'a> VrmlGenerator<'a> {
                 }
             },
             _ => {
-                if let Some(texts) = self.take_raw() {
-                    write_raw(&mut self.g, &texts, value, false);
-                    return;
-                }
+                let converted = match self.take_raw(value) {
+                    Some(RawOut::Texts(texts)) => return write_raw(&mut self.g, &texts, value, false),
+                    Some(RawOut::Value(v)) => Some(v),
+                    None => None,
+                };
 
                 self.apply_units();
-                value.to_vrml_stream(&mut self.g);
+                converted.as_ref().unwrap_or(value).to_vrml_stream(&mut self.g);
                 self.g.set_unit_factors(1.0, 1.0);
             }
         }
@@ -543,20 +544,36 @@ impl<'a> VrmlGenerator<'a> {
 
     /// The raw component texts of the value printing next (`raw_field`, taken), when ToUnit leaves the components as they are:
     /// no execution context, or a field without a unit category. X3DGenerator.FloatFormat then writes `String (value)`.
-    pub(crate) fn take_raw(&mut self) -> Option<std::sync::Arc<[Option<String>]>> {
+    pub(crate) fn take_raw(&mut self, value: &FieldValue) -> Option<RawOut> {
         let (id, loc) = self.raw_field.take()?;
         let raw = self.scene.raw_tokens.get(&(id, loc))?;
         let unit = match loc {
             FieldLoc::Pre(i) => self.scene.field_has_unit(id, &self.scene.node(id).fields[i].name),
             _ => false,
         };
+        let number = unit && self.units_apply();
+        let supplied = match &mut *self.scene.raw_print.borrow_mut() {
+            RawPrint::Log(log) => {
+                log.push(RawRequest { host: raw.host, token: raw.token, number });
+                None
+            }
+            RawPrint::Supply(queue) => queue.pop_front().flatten(),
+            RawPrint::Off => None,
+        };
 
-        if unit && self.units_apply() {
-            return None;
+        if number {
+            // ToUnit divides each component: a raw one is its ToNumber now.
+            return supplied.map(|components| RawOut::Value(with_numbers(value, &components)));
         }
 
         self.unit_field = None;
-        Some(raw.texts.clone())
+
+        let texts = match supplied {
+            Some(components) => components.into_iter().map(|c| if let Some(RawComponent::Text(t)) = c { Some(t) } else { None }).collect(),
+            None => raw.texts.to_vec(),
+        };
+
+        Some(RawOut::Texts(texts))
     }
 
     /// Generator.ToUnit for the next value: `this .ExecutionContext () ?.toUnit (category, value) ?? value`,
@@ -962,6 +979,57 @@ pub(crate) fn write_raw(g: &mut Generator, texts: &[Option<String>], value: &Fie
                 g.tidy_space();
             } else {
                 g.space();
+            }
+        }
+    }
+}
+
+/// What [`VrmlGenerator::take_raw`] gives a printer: the texts of a value printed without unit conversion, or the value with
+/// the ToNumber of its raw components (it is then printed as any value, through ToUnit).
+pub(crate) enum RawOut {
+    Texts(Vec<Option<String>>),
+    Value(FieldValue),
+}
+
+/// `value` with the raw components that have a number replaced by it.
+fn with_numbers(value: &FieldValue, components: &[Option<RawComponent>]) -> FieldValue {
+    let n = |i: usize, x: f64| match components.get(i) {
+        Some(Some(RawComponent::Number(v))) => *v,
+        _ => x,
+    };
+
+    match value {
+        FieldValue::SFVec2f(v) => FieldValue::SFVec2f(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y))),
+        FieldValue::SFVec2d(v) => FieldValue::SFVec2d(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y))),
+        FieldValue::SFVec3f(v) => FieldValue::SFVec3f(x3d_fields::math::Vector3::new(n(0, v.x), n(1, v.y), n(2, v.z))),
+        FieldValue::SFVec3d(v) => FieldValue::SFVec3d(x3d_fields::math::Vector3::new(n(0, v.x), n(1, v.y), n(2, v.z))),
+        FieldValue::SFVec4f(v) => FieldValue::SFVec4f(x3d_fields::math::Vector4::new(n(0, v.x), n(1, v.y), n(2, v.z), n(3, v.w))),
+        FieldValue::SFVec4d(v) => FieldValue::SFVec4d(x3d_fields::math::Vector4::new(n(0, v.x), n(1, v.y), n(2, v.z), n(3, v.w))),
+        other => other.clone(),
+    }
+}
+
+impl Scene {
+    /// `declaration .toVRMLString ()` / `toXMLString ()` / `toJSONString ()` of a PROTO (`extern_` false) or EXTERNPROTO
+    /// declaration: X3DObject's generator with a `null` execution context, then the declaration's toXXXStream.
+    pub fn proto_declaration_string(&self, extern_: bool, id: usize, format: &str) -> String {
+        match format {
+            "xml" => crate::xml::proto_declaration_xml(self, extern_, id),
+            "json" => crate::json::proto_declaration_json(self, extern_, id),
+            _ => {
+                let mut g = VrmlGenerator::new(self);
+
+                g.push_ctx(None);
+                g.unit_base = 1;
+
+                if extern_ {
+                    g.extern_proto_to_vrml(id);
+                } else {
+                    g.proto_to_vrml(id);
+                }
+
+                g.pop_ctx();
+                g.g.string
             }
         }
     }

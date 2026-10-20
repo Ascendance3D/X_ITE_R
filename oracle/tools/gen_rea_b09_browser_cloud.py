@@ -277,6 +277,29 @@ G.register("scx-members", [], pre=PRE + "\n" + OWNER, after=later(P_MEMBERS, fra
 # Documented open (not baselined): every member of each layer, X_ITE's engine internals included.
 G.register("scx-layers-open", [], pre=PRE + "\n" + LAYERS, after=later(P_LAYERS, frame=12), nodes=MEMBER_NODES)
 
+# toVRMLString / toXMLString / toJSONString of what an execution context hands out (checkpoint after 804802d): X3DObject's
+# generator has no execution context and has met no node, so a route and an imported node throw; an exported node and the
+# declarations print; a loaded EXTERNPROTO hands out its PROTO (getProtoDeclaration).
+SP_NODES = ('EXTERNPROTO EP [ inputOutput SFVec3f t ] "assets/extern-p.wrl#P"\nDEF EPI EP { }\n'
+            'PROTO LP [ inputOutput SFFloat f 1 ] { Group { } }\n'
+            'DEF IN Inline { url "assets/exp.wrl" }\nIMPORT IN.E1 AS IE1\nDEF A Transform { }\nDEF B Transform { }\n'
+            'ROUTE A.translation_changed TO B.set_translation\nEXPORT A AS XA\nEXPORT B\n')
+SP = []
+for what, get in [("route", "var o = Browser .currentScene .routes [0];"),
+                  ("imported", "var o = Browser .currentScene .importedNodes [0];"),
+                  ("exported", "var o = Browser .currentScene .exportedNodes [0];"),
+                  ("exported same name", "var o = Browser .currentScene .exportedNodes [1];"),
+                  ("externproto", "var o = Browser .currentScene .externprotos [0];"),
+                  ("proto", "var o = Browser .currentScene .protos [0];"),
+                  ("proto of extern", "var o = Browser .currentScene .externprotos [0] .getProtoDeclaration ();")]:
+    for m in ["toVRMLString", "toXMLString", "toJSONString", "toString"]:
+        SP.append((f"{what} {m}", f"{get} if (!o) return 'none'; try {{ return o .{m} (); }} catch (e) {{ return 'ERR ' + e .message; }}"))
+SP.append(("proto getProtoDeclaration", "var o = Browser .currentScene .protos [0]; return o .getProtoDeclaration () === o;"))
+SP.append(("exported with description", "var o = Browser .currentScene .exportedNodes [0]; o .description = 'd e'; var r = [o .toVRMLString (), o .toXMLString (), o .toJSONString ()]; o .description = ''; return r;"))
+SP_AFTER = ("var F_ = 0;\nfunction prepareEvents () { ++ F_; if (F_ === 12) {\n" +
+            "\n".join(f"  T ({lab!r}, function () {{ {code} }});" for lab, code in SP) + "\n  flush_ (); } }\n")
+G.register("scx-print", [], after=SP_AFTER, nodes=SP_NODES)
+
 if __name__ == "__main__":
     sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith(("brx-", "scx-"))]
     G.main()

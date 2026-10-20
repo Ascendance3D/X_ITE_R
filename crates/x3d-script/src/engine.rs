@@ -528,6 +528,15 @@ impl ScriptHost for QuickJsHost {
         });
     }
 
+    fn raw_coerce(&mut self, rt: &mut Runtime, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
+        self.enter(rt);
+
+        let supply = self.context.with(|ctx| raw_coerce_js(&ctx, requests));
+
+        self.context.with(|ctx| while ctx.execute_pending_job() {});
+        supply
+    }
+
     fn destroy_context(&mut self, node: NodeId) {
         self.select();
         self.destroy(node);
@@ -739,8 +748,10 @@ fn data_numbers(v: &Value<'_>) -> Vec<f64> {
 
     (0..a.len())
         // The number the engine uses is the component's ToNumber (X_ITE's generator and renderer read `+ value`); a component that
-        // is not a number stays as it is in the Script's objects (bridge.js raw values).
+        // is not a number stays as it is in the Script's objects (bridge.js raw values). An object is not converted here: its
+        // valueOf / toString may have effects, and X_ITE calls them only where it uses the value (a print takes it then).
         .map(|i| match a.get::<Value>(i) {
+            Ok(x) if x.is_object() => f64::NAN,
             Ok(x) => x.as_number().unwrap_or_else(|| {
                 x.get::<Coerced<f64>>().map(|c| c.0).unwrap_or_else(|_| {
                     let _ = x.ctx().catch();
@@ -1061,20 +1072,71 @@ fn with_live_clone_counts<T>(f: impl FnOnce() -> T) -> T {
     r
 }
 
-/// Before a Script prints: the bridge's `String (component)` texts of its raw values, taken now (X3DGenerator.FloatFormat
-/// calls `String (value)` when it prints).
-fn refresh_raw(ctx: &Ctx<'_>) {
+/// Runtime::print_raw for a print a Script asks for: the raw components are coerced in this realm directly.
+fn print_raw_js<R>(ctx: &Ctx<'_>, print: impl Fn(&Scene) -> R) -> R {
+    if rt().scene.raw_tokens.is_empty() {
+        return print(&rt().scene);
+    }
+
+    *rt().scene.raw_print.borrow_mut() = RawPrint::Log(vec![]);
+    print(&rt().scene);
+
+    let requests = match std::mem::take(&mut *rt().scene.raw_print.borrow_mut()) {
+        RawPrint::Log(log) => log,
+        _ => vec![],
+    };
+    let supply = raw_coerce_js(ctx, &requests);
+
+    *rt().scene.raw_print.borrow_mut() = RawPrint::Supply(supply.into());
+
+    let result = print(&rt().scene);
+
+    *rt().scene.raw_print.borrow_mut() = RawPrint::Off;
+    result
+}
+
+/// prelude/bridge.js `__rawCoerce`: for each request of this host, `String (component)` or `+ component` of its raw components.
+fn raw_coerce_js(ctx: &Ctx<'_>, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
     let cur = CURRENT.get();
+    let none = || vec![None; requests.len()];
+    let Ok(f) = ctx.globals().get::<_, Function>("__rawCoerce") else { return none() };
+    let Ok(list) = Array::new(ctx.clone()) else { return none() };
 
-    if !rt().scene.raw_tokens.values().any(|r| r.host == cur) {
-        return;
+    for (i, r) in requests.iter().enumerate() {
+        let token = if r.host == cur { r.token as f64 } else { -1.0 };
+        let _ = list.set(i * 2, token);
+        let _ = list.set(i * 2 + 1, r.number);
     }
 
-    if let Ok(f) = ctx.globals().get::<_, Function>("__rawRefresh") {
-        if f.call::<_, ()>(()).is_err() {
+    let result: Array = match f.call((list,)) {
+        Ok(a) => a,
+        Err(_) => {
             let _ = ctx.catch();
+            return none();
         }
-    }
+    };
+
+    (0..requests.len())
+        .map(|i| {
+            let entry = result.get::<Value>(i).ok()?;
+            let components = entry.as_array()?;
+
+            Some(
+                components
+                    .iter::<Value>()
+                    .map(|c| {
+                        let c = c.ok()?;
+
+                        if let Some(t) = c.as_string() {
+                            return t.to_string().ok().map(RawComponent::Text);
+                        }
+
+                        c.as_number().map(RawComponent::Number)
+                    })
+                    .collect(),
+            )
+        })
+        .collect()
 }
 
 /// `field .toString ()` (X3DObject.toString with the default generator).
@@ -1613,35 +1675,32 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.node(id).name)?.into_value())
         }
         "fprint" => {
-            refresh_raw(ctx);
             let h = handle_at(ctx, a, 0)?;
             let v = read(h);
-            let text = if str_arg(ctx, a, 1) == "json" { rt().scene.field_value_to_json_string(&v) } else { rt().scene.field_value_to_xml_string(&v) };
+            let json = str_arg(ctx, a, 1) == "json";
+            let text = print_raw_js(ctx, |s| if json { s.field_value_to_json_string(&v) } else { s.field_value_to_xml_string(&v) });
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "strn" => {
-            refresh_raw(ctx);
             let h = handle_at(ctx, a, 0)?;
             let v = read(h);
             let text = if matches!(v, FieldValue::SFNode(_) | FieldValue::MFNode(_)) { rt().scene.node_value_to_string(&v) } else { to_vrml(&v) };
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "nprint" => {
-            refresh_raw(ctx);
             let id = num_arg(ctx, a, 0) as NodeId;
             let v = FieldValue::SFNode(Some(id));
-            let text = if str_arg(ctx, a, 1) == "json" { rt().scene.field_value_to_json_string(&v) } else { rt().scene.field_value_to_xml_string(&v) };
+            let json = str_arg(ctx, a, 1) == "json";
+            let text = print_raw_js(ctx, |s| if json { s.field_value_to_json_string(&v) } else { s.field_value_to_xml_string(&v) });
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "nstream" => {
-            refresh_raw(ctx);
             let id = num_arg(ctx, a, 0) as NodeId;
             Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_value_to_string(&FieldValue::SFNode(Some(id)))))?.into_value())
         }
         "nstr" => {
-            refresh_raw(ctx);
             let id = num_arg(ctx, a, 0) as NodeId;
-            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_to_vrml_string(id)))?.into_value())
+            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| print_raw_js(ctx, |s| s.node_to_vrml_string(id))))?.into_value())
         }
         "nfields" => {
             let id = inner_node(num_arg(ctx, a, 0) as NodeId);
@@ -2107,23 +2166,6 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             Ok(arr.into_value())
         }
-        // New `String (component)` texts of a raw value of this host's realm (its components' text changed since).
-        "frawtexts" => {
-            let t = num_arg(ctx, a, 0) as u32;
-            let texts: Vec<Option<String>> = a
-                .get(1)
-                .and_then(|v| v.as_array().cloned())
-                .map(|arr| arr.iter::<Value>().map(|x| x.ok().and_then(|x| x.as_string().and_then(|s| s.to_string().ok()))).collect())
-                .unwrap_or_default();
-            let texts: std::sync::Arc<[Option<String>]> = texts.into();
-            let cur = CURRENT.get();
-
-            for r in rt().scene.raw_tokens.values_mut().filter(|r| r.host == cur && r.token == t) {
-                r.texts = texts.clone();
-            }
-
-            Ok(undefined)
-        }
         "fexport" => {
             let h = handle_at(ctx, a, 0)?;
             value_data(ctx, &read(h))
@@ -2421,17 +2463,18 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(arr.into_value())
         }
         "sceneString" => {
-            refresh_raw(ctx);
             let script = num_arg(ctx, a, 0);
             let root = rt().scene.scene_root(ctx_of_script(script));
             let format = str_arg(ctx, a, 1);
             if format != "xml" {
                 rt().ctx_streamed(root);
             }
-            let text = with_live_clone_counts(|| match format.as_str() {
-                "xml" => rt().scene.to_xml_string_ctx(root),
-                "json" => rt().scene.to_json_string_ctx(root),
-                _ => rt().scene.to_vrml_string_ctx(root),
+            let text = with_live_clone_counts(|| {
+                print_raw_js(ctx, |s| match format.as_str() {
+                    "xml" => s.to_xml_string_ctx(root),
+                    "json" => s.to_json_string_ctx(root),
+                    _ => s.to_vrml_string_ctx(root),
+                })
             });
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
