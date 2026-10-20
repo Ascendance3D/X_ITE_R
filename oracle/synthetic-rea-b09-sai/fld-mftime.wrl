@@ -1,0 +1,85 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld mftime"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('MFTime new ()', function () { return new MFTime (); });
+  T ('MFTime new (elems)', function () { return new MFTime (1.5, 2.25, 0.1); });
+  T ('MFTime length', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m .length, new MFTime () .length]; });
+  T ('MFTime index', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
+  T ('MFTime index write', function () { var m = new MFTime (1.5, 2.25, 0.1); m [1] = -4; return [m, m .length]; });
+  T ('MFTime index write past end', function () { var m = new MFTime (1.5, 2.25, 0.1); m [5] = -4; return [m, m .length]; });
+  T ('MFTime length set', function () { var m = new MFTime (1.5, 2.25, 0.1); m .length = 1; var n = new MFTime (1.5, 2.25, 0.1); n .length = 5; var o = new MFTime (1.5, 2.25, 0.1); o .length = 0; return [m, n, o]; });
+  T ('MFTime length set bad', function () { var m = new MFTime (1.5, 2.25, 0.1); m .length = -1; return m .length; });
+  T ('MFTime keys', function () { var m = new MFTime (1.5, 2.25, 0.1); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
+  T ('MFTime for in', function () { var o = []; for (var k in new MFTime (1.5, 2.25, 0.1)) o .push (k); return o; });
+  T ('MFTime toStrings', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('MFTime toStrings empty', function () { var m = new MFTime (); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('MFTime push', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .push (-4); var q = m .push (1.5, 2.25); return [r, q, m]; });
+  T ('MFTime push none', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m .push (), m .length]; });
+  T ('MFTime pop', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .pop (); var e = new MFTime () .pop (); return [r, e, m, m .length]; });
+  T ('MFTime shift', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .shift (); var e = new MFTime () .shift (); return [r, e, m, m .length]; });
+  T ('MFTime unshift', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .unshift (-4, -4); return [r, m]; });
+  T ('MFTime splice', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .splice (1, 1); return [r, m, m .length]; });
+  T ('MFTime splice insert', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .splice (1, 0, -4, -4); return [r, m, m .length]; });
+  T ('MFTime splice neg/over', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .splice (-1); var n = new MFTime (1.5, 2.25, 0.1); var q = n .splice (1, 100); var o = new MFTime (1.5, 2.25, 0.1); var u = o .splice (); return [r, m, q, n, u, o]; });
+  T ('MFTime reverse', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .reverse (); return [r === m, m]; });
+  T ('MFTime fill', function () { var m = new MFTime (1.5, 2.25, 0.1); m .fill (-4); var n = new MFTime (1.5, 2.25, 0.1); n .fill (-4, 1, 2); return [m, n]; });
+  T ('MFTime concat', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .concat (new MFTime (-4)); var q = m .concat ([-4, -4]); var o = m .concat (-4); return [r, q, o, m, r .constructor === m .constructor]; });
+  T ('MFTime slice', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .slice (1); var q = m .slice (-1); var o = m .slice (0, 2); return [r, q, o, m, r === m, r .constructor === m .constructor]; });
+  T ('MFTime indexOf', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m .indexOf (2.25), m .indexOf (-4), m .includes (2.25), m .lastIndexOf (1.5), m .findIndex (function (x) { return true; }), m .find (function (x) { return false; })]; });
+  T ('MFTime join', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m .join (), m .join ('-'), m .join ('')]; });
+  T ('MFTime forEach', function () { var m = new MFTime (1.5, 2.25, 0.1); var o = []; m .forEach (function (x, i, a) { o .push (i + ':' + (a === m) + ':' + typeof x); }); return o; });
+  T ('MFTime map', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .map (function (x) { return x; }); return [r, r .constructor .name]; });
+  T ('MFTime filter', function () { var m = new MFTime (1.5, 2.25, 0.1); var r = m .filter (function (x, i) { return i != 1; }); return [r, r .length]; });
+  T ('MFTime reduce', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m .reduce (function (a, x, i) { return a + i; }, 0), m .every (function () { return true; }, m .some (function () { return false; }))]; });
+  T ('MFTime sort', function () { var m = new MFTime (1.5, 2.25, 0.1); m .sort (function (a, b) { return 0; }); return m; });
+  T ('MFTime at/entries', function () { var m = new MFTime (1.5, 2.25, 0.1); return [m .at (-1), m .at (5), Array .from (m .keys ()), Array .from (m .entries ()) .length]; });
+  T ('MFTime equals/copy', function () { var m = new MFTime (1.5, 2.25, 0.1); var c = m .copy (); return [m .equals (c), m === c, c .length, m .isDefaultValue (), new MFTime () .isDefaultValue ()]; });
+  T ('MFTime copy independent', function () { var m = new MFTime (1.5, 2.25, 0.1); var c = m .copy (); c [0] = -4; c .push (1.5); return [m, c]; });
+  T ('MFTime setValue', function () { var m = new MFTime (); m .setValue (new MFTime (1.5, 2.25, 0.1)); return m; });
+  T ('MFTime setValue array', function () { var m = new MFTime (); m .setValue ([1.5, 2.25]); return m; });
+  T ('MFTime setValue empty', function () { var m = new MFTime (1.5, 2.25, 0.1); m .setValue ([]); return m; });
+  T ('MFTime setValue self', function () { var m = new MFTime (1.5, 2.25, 0.1); m .setValue (m); return m; });
+  flush_ ();
+}
+
+  "
+}

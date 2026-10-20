@@ -1,0 +1,97 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld sfmatrix4d"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('SFMatrix4d new ()', function () { return new SFMatrix4d (); });
+  T ('SFMatrix4d new (vals)', function () { return new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); });
+  T ('SFMatrix4d new (partial)', function () { return new SFMatrix4d (5, 6); });
+  T ('SFMatrix4d new (bad)', function () { return new SFMatrix4d ('a', null, undefined, NaN); });
+  T ('SFMatrix4d new (matrix)', function () { return new SFMatrix4d (new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0)); });
+  T ('SFMatrix4d get/set [0]', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); var old = m [0]; m [0] = 42.5; return [old, m [0], m]; });
+  T ('SFMatrix4d get/set [1]', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); var old = m [1]; m [1] = 42.5; return [old, m [1], m]; });
+  T ('SFMatrix4d get/set [8]', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); var old = m [8]; m [8] = 42.5; return [old, m [8], m]; });
+  T ('SFMatrix4d get/set [15]', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); var old = m [15]; m [15] = 42.5; return [old, m [15], m]; });
+  T ('SFMatrix4d index out', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); return [m [16], m [-1], m ['0'], m .nope, m .length, Object .keys (m) .length]; });
+  T ('SFMatrix4d index write out', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); m [16] = 1; m .nope = 2; return [m, m [16], m .nope]; });
+  T ('SFMatrix4d set string/null', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); m [0] = 'x'; m [1] = null; m [2] = undefined; m [3] = true; return m; });
+  T ('SFMatrix4d iterate', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); return [Array .from (m) .length, [... m] .join (), JSON .stringify (m) .length]; });
+  T ('SFMatrix4d equals', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); return [m .equals (m .copy ()), m .equals (new SFMatrix4d ()), new SFMatrix4d () .isDefaultValue (), m .isDefaultValue (), m .copy () === m]; });
+  T ('SFMatrix4d toStrings', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('SFMatrix4d toStrings nan', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); m [0] = NaN; m [1] = Infinity; m [2] = -0; m [3] = 1e21; return [m .toString (), m .toXMLString (), m .toJSONString ()]; });
+  T ('SFMatrix4d determinant', function () { return [new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .determinant (), new SFMatrix4d () .determinant (), new SFMatrix4d (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) .determinant (), new SFMatrix4d (1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) .determinant ()]; });
+  T ('SFMatrix4d transpose', function () { return [new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .transpose (), new SFMatrix4d () .transpose (), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .transpose () .transpose () .equals (new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0))]; });
+  T ('SFMatrix4d inverse', function () { return [new SFMatrix4d (2, 0, 0, 1, 0, 3, 0, 2, 0, 0, 4, 3, 0, 0, 0, 1) .inverse (), new SFMatrix4d () .inverse ()]; });
+  T ('SFMatrix4d inverse singular', function () { return [new SFMatrix4d (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) .inverse (), new SFMatrix4d (1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4) .inverse ()]; });
+  T ('SFMatrix4d inverse nan', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); m [0] = NaN; return m .inverse (); });
+  T ('SFMatrix4d inverse product', function () { var m = new SFMatrix4d (2, 1, 0, 5, 0, 3, 1, 2, 1, 0, 4, 3, 0, 0, 0, 1); return m .multLeft (m .inverse ()); });
+  T ('SFMatrix4d multLeft', function () { return [new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multLeft (new SFMatrix4d ()), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multLeft (new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0)), new SFMatrix4d () .multLeft (new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0))]; });
+  T ('SFMatrix4d multRight', function () { return [new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multRight (new SFMatrix4d ()), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multRight (new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0)), new SFMatrix4d () .multRight (new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0))]; });
+  T ('SFMatrix4d mult missing', function () { return new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multLeft (); });
+  T ('SFMatrix4d mult other precision', function () { return new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multRight (new SFMatrix4f (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0)); });
+  T ('SFMatrix4d mult nonassoc', function () { var a = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); var b = new SFMatrix4d (1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); b [1] = 2; return [a .multLeft (b), a .multRight (b)]; });
+  T ('SFMatrix4d translate', function () { return [new SFMatrix4d () .translate (new SFVec3f (1, 2, 3)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .translate (new SFVec3f (1, 2, 3)), new SFMatrix4d () .translate (new SFVec3d (1, 2, 3))]; });
+  T ('SFMatrix4d rotate', function () { return [new SFMatrix4d () .rotate (new SFRotation (0, 1, 0, 0.5)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .rotate (new SFRotation (1, 0, 0, 1)), new SFMatrix4d () .rotate (new SFRotation ())]; });
+  T ('SFMatrix4d scale', function () { return [new SFMatrix4d () .scale (new SFVec3f (2, 3, 4)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .scale (new SFVec3f (2, 3, 4)), new SFMatrix4d () .scale (new SFVec3f ())]; });
+  T ('SFMatrix4d translate missing', function () { return new SFMatrix4d () .translate (); });
+  T ('SFMatrix4d rotate missing', function () { return new SFMatrix4d () .rotate (); });
+  T ('SFMatrix4d multVecMatrix', function () { return [new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multVecMatrix (new SFVec3f (1, 2, 3)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multMatrixVec (new SFVec3f (1, 2, 3)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multDirMatrix (new SFVec3f (1, 2, 3)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multMatrixDir (new SFVec3f (1, 2, 3))]; });
+  T ('SFMatrix4d multVecMatrix d', function () { return [new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multVecMatrix (new SFVec3d (1, 2, 3)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multMatrixDir (new SFVec3d (1, 2, 3))]; });
+  T ('SFMatrix4d multVecMatrix 4', function () { return [new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multVecMatrix (new SFVec4f (1, 2, 3, 1)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multMatrixVec (new SFVec4f (1, 2, 3, 1)), new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multDirMatrix (new SFVec4f (1, 2, 3, 1))]; });
+  T ('SFMatrix4d multVecMatrix missing', function () { return new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multVecMatrix (); });
+  T ('SFMatrix4d multVecMatrix nan', function () { return new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0) .multVecMatrix (new SFVec3f (NaN, 0, 0)); });
+  T ('SFMatrix4d perspective w', function () { var m = new SFMatrix4d (); m [11] = 1; m [15] = 0; return [m .multVecMatrix (new SFVec3f (1, 2, 3)), m .multMatrixVec (new SFVec3f (1, 2, 3))]; });
+  T ('SFMatrix4d setTransform', function () { var m = new SFMatrix4d (); m .setTransform (new SFVec3f (1, 2, 3), new SFRotation (0, 1, 0, 0.5), new SFVec3f (2, 3, 4), new SFRotation (1, 0, 0, 0.25), new SFVec3f (1, 1, 1)); return m; });
+  T ('SFMatrix4d setTransform partial', function () { var m = new SFMatrix4d (); m .setTransform (new SFVec3f (1, 2, 3)); var n = new SFMatrix4d (); n .setTransform (undefined, new SFRotation (0, 1, 0, 1)); var o = new SFMatrix4d (); o .setTransform (); var q = new SFMatrix4d (); q .setTransform (undefined, undefined, new SFVec3f (2, 3, 4)); return [m, n, o, q]; });
+  T ('SFMatrix4d setTransform zero scale', function () { var m = new SFMatrix4d (); m .setTransform (undefined, undefined, new SFVec3f (0, 1, 1)); return m; });
+  T ('SFMatrix4d setTransform bad', function () { var m = new SFMatrix4d (); m .setTransform (5); return m; });
+  T ('SFMatrix4d getTransform', function () { var m = new SFMatrix4d (); m .setTransform (new SFVec3f (1, 2, 3), new SFRotation (0, 1, 0, 0.5), new SFVec3f (2, 3, 4), new SFRotation (1, 0, 0, 0.25), new SFVec3f (1, 1, 1)); var t = new SFVec3f (), r = new SFRotation (), s = new SFVec3f (), so = new SFRotation (); m .getTransform (t, r, s, so); return [t, r, s, so]; });
+  T ('SFMatrix4d getTransform partial', function () { var m = new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0); var t = new SFVec3f (); m .getTransform (t); var r = new SFRotation (); m .getTransform (undefined, r); var s = new SFVec3f (); m .getTransform (undefined, undefined, s); return [t, r, s]; });
+  T ('SFMatrix4d getTransform singular', function () { var m = new SFMatrix4d (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); var t = new SFVec3f (9, 9, 9), r = new SFRotation (), s = new SFVec3f (9, 9, 9); m .getTransform (t, r, s); return [t, r, s]; });
+  T ('SFMatrix4d getTransform identity', function () { var m = new SFMatrix4d (); var t = new SFVec3f (9, 9, 9), r = new SFRotation (1, 0, 0, 1), s = new SFVec3f (9, 9, 9), so = new SFRotation (1, 0, 0, 1); m .getTransform (t, r, s, so); return [t, r, s, so]; });
+  T ('SFMatrix4d getTransform center', function () { var m = new SFMatrix4d (); m .setTransform (new SFVec3f (1, 2, 3), new SFRotation (0, 1, 0, 0.5), new SFVec3f (2, 3, 4), new SFRotation (1, 0, 0, 0.25), new SFVec3f (1, 1, 1)); var t = new SFVec3f (), r = new SFRotation (), s = new SFVec3f (), so = new SFRotation (); m .getTransform (t, r, s, so, new SFVec3f (1, 1, 1)); return [t, r, s, so]; });
+  T ('SFMatrix4d setValue', function () { var m = new SFMatrix4d (); m .setValue (new SFMatrix4d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0)); return m; });
+  T ('SFMatrix4d setValue other precision', function () { var m = new SFMatrix4d (); m .setValue (new SFMatrix4f (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5, 5.0, 6.5, 6.0, 6.5, 7.0, 7.5, 9.0)); return m; });
+  T ('SFMatrix4d float rounding', function () { var m = new SFMatrix4d (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9); return [m [0], m .toString (), m .toVRMLString ()]; });
+  flush_ ();
+}
+
+  "
+}

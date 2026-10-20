@@ -1,0 +1,26 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "meta parse"
+DEF OUT Script {
+  inputOutput MFString out [ ]
+  url "ecmascript:
+    var SNIPPETS = [\"#X3D V3.3 utf8\\nPROFILE Immersive\\nPROTO P [ inputOutput SFNode meta NULL ] { Group { metadata IS meta } }\\nP { meta MetadataString { name \\\"pm\\\" } }\"];
+    var res = [];
+    function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+    function put (i, v) { res [i] = i + ': ' + v; var o = []; for (var k = 0; k < SNIPPETS .length; ++ k) o .push (k in res ? res [k] : k + ': ...'); out = new MFString (... o); }
+    function initialize () {
+      SNIPPETS .forEach (function (src, i) {
+        var p;
+        try { p = Browser .createX3DFromString (src); } catch (e) { put (i, 'THROW ' + strip (e .message)); return; }
+        p .then (function (sc) {
+          var a, b, c;
+          try { a = sc .toVRMLString (); } catch (e) { a = 'VRML ERR ' + e .message; }
+          try { b = sc .toXMLString (); } catch (e) { b = 'XML ERR ' + e .message; }
+          try { c = sc .toJSONString (); } catch (e) { c = 'JSON ERR ' + e .message; }
+          put (i, a + '\\n--XML--\\n' + b + '\\n--JSON--\\n' + c);
+        }, function (e) { put (i, 'REJ ' + strip (e && e .message)); });
+      });
+    }
+  "
+}

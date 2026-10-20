@@ -1,0 +1,66 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr timers"
+DEF A Script {
+  inputOnly SFTime tick
+  outputOnly SFInt32 outI
+  inputOnly SFInt32 inI
+  url "ecmascript:
+var NAME = 'A';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0, ids = [];
+function stamp () { return Math .round (Date .now () - globalThis .T0) + 'ms/' + Math .round ((Browser .getCurrentTime () - globalThis .T0 / 1000) * 1000) + 'ms'; }
+function tick (v, t) {
+  n++;
+  if (n == 2) {
+    globalThis .T0 = Date .now ();
+    ids .push (setTimeout (function () { log ('t30 ' + stamp ()); }, 30));
+    ids .push (setTimeout (function (a, b) { log ('t10 args ' + a + ',' + b + ' ' + stamp ()); }, 10, 'x', 2));
+    ids .push (setTimeout (function () { log ('t0 ' + stamp ()); }));
+    ids .push (setTimeout (function () { log ('t10b ' + stamp ()); }, 10));
+    ids .push (setTimeout (function () { log ('cleared'); }, 20));
+    clearTimeout (ids [4]);
+    clearTimeout (999);
+    clearTimeout (undefined);
+    clearTimeout ('x');
+    log ('ids ' + ids .join (','));
+    log ('typeof id ' + typeof ids [0]);
+  }
+  if (n == 3) {
+    setTimeout (function () {
+      log ('outer ' + stamp ());
+      setTimeout (function () { log ('inner ' + stamp ()); }, 5);
+      outI = 7;
+    }, 40);
+    setTimeout (function () { throw new Error ('timer boom'); }, 15);
+    setTimeout (function () { log ('after throw ' + stamp ()); }, 16);
+  }
+  if (n == 5) {
+    setTimeout (function () { log ('negative ' + stamp ()); }, -50);
+    setTimeout (function () { log ('NaN ' + stamp ()); }, NaN);
+    setTimeout (function () { log ('string delay ' + stamp ()); }, '25');
+    setTimeout (function () { log ('big ' + stamp ()); }, 1e9);
+  }
+  if (n == 7) { log ('now ' + stamp ()); }
+}
+function inI (v) { log ('inI ' + v + ' ' + stamp ()); }
+
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE A.outI TO A.inI
+ROUTE STEP.cycleTime TO A.tick
+ROUTE STEP.cycleTime TO R.tick

@@ -1,0 +1,99 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "meta events"
+DEF MB MetadataBoolean { name "b" }
+DEF MD MetadataDouble { name "d" }
+DEF MF MetadataFloat { name "f" }
+DEF MI MetadataInteger { name "i" }
+DEF MS MetadataString { name "s" }
+DEF MSET MetadataSet { name "set" }
+DEF MSET2 MetadataSet { name "set2" value [ DEF MC MetadataString { name "child" value "c0" } ] }
+DEF HOLDER Group { metadata USE MSET }
+DEF D Script {
+  inputOnly SFTime tick
+  outputOnly MFBool outB
+  outputOnly MFDouble outD
+  outputOnly MFFloat outF
+  outputOnly MFInt32 outI
+  outputOnly MFString outS
+  outputOnly MFNode outN
+  outputOnly SFNode outMeta
+  url "ecmascript:
+var NAME = 'D';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function tick () {
+  n++;
+  var sc = Browser .currentScene;
+  if (n == 2) { outB = [true, false]; outD = [1.5, 2.5]; outF = [0.1]; outI = [7, 8, 9]; outS = ['x', 'y']; log ('sent values'); }
+  if (n == 3) { outN = [sc .getNamedNode ('MC')]; outMeta = sc .getNamedNode ('MC'); log ('sent nodes'); }
+  if (n == 4) { sc .getNamedNode ('MS') .value = ['direct']; sc .getNamedNode ('MB') .name = 'renamed'; log ('direct writes'); }
+  if (n == 5) { sc .getNamedNode ('MSET2') .value = []; log ('MSET2 cleared'); }
+  if (n == 6) { sc .getNamedNode ('MI') .value .push (10); sc .getNamedNode ('MSET2') .value .push (sc .getNamedNode ('MS')); log ('pushes'); }
+  if (n == 7) { sc .getNamedNode ('HOLDER') .metadata = sc .getNamedNode ('MSET2'); log ('holder metadata'); }
+}
+
+  "
+}
+DEF A Script {
+  inputOnly MFBool inB
+  inputOnly MFDouble inD
+  inputOnly MFFloat inF
+  inputOnly MFInt32 inI
+  inputOnly MFString inS
+  inputOnly MFNode inSetValue
+  inputOnly SFNode inMeta
+  inputOnly SFString inName
+  inputOnly SFString inRef
+  url "ecmascript:
+var NAME = 'A';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+function inB (v) { log ('inB ' + v .length + ' ' + v); }
+function inD (v) { log ('inD ' + v); }
+function inF (v) { log ('inF ' + v); }
+function inI (v) { log ('inI ' + v); }
+function inS (v) { log ('inS ' + v); }
+function inSetValue (v) { log ('inSetValue ' + v .length + ' ' + (v .length ? v [0] .name : '')); }
+function inMeta (v) { log ('inMeta ' + (v ? v .name : v)); }
+function inName (v) { log ('inName ' + v); }
+function inRef (v) { log ('inRef ' + v); }
+
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE D.outB TO MB.set_value
+ROUTE D.outD TO MD.set_value
+ROUTE D.outF TO MF.set_value
+ROUTE D.outI TO MI.set_value
+ROUTE D.outS TO MS.set_value
+ROUTE D.outN TO MSET.set_value
+ROUTE D.outMeta TO MSET.set_metadata
+ROUTE MB.value_changed TO A.inB
+ROUTE MD.value_changed TO A.inD
+ROUTE MF.value_changed TO A.inF
+ROUTE MI.value_changed TO A.inI
+ROUTE MS.value_changed TO A.inS
+ROUTE MSET.value_changed TO A.inSetValue
+ROUTE MSET2.value_changed TO A.inSetValue
+ROUTE MSET.metadata_changed TO A.inMeta
+ROUTE MB.name_changed TO A.inName
+ROUTE MB.reference_changed TO A.inRef
+ROUTE STEP.cycleTime TO D.tick
+ROUTE STEP.cycleTime TO R.tick

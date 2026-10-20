@@ -1,0 +1,53 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld mfvec2f open"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('MFVec2f new (array)', function () { return new MFVec2f ([new SFVec2f (1, 2), new SFVec2f (3, 4)]); });
+  T ('MFVec2f new (bad)', function () { return new MFVec2f (null, undefined, 'x', {}); });
+  T ('MFVec2f index write bad', function () { var m = new MFVec2f (new SFVec2f (1, 2), new SFVec2f (3, 4), new SFVec2f (5, 6)); m [1] = null; m [0] = undefined; return [m, m .length]; });
+  T ('MFVec2f length set nan', function () { var m = new MFVec2f (new SFVec2f (1, 2), new SFVec2f (3, 4), new SFVec2f (5, 6)); m .length = 'x'; return m .length; });
+  T ('MFVec2f element alias', function () { var m = new MFVec2f (new SFVec2f (1, 2), new SFVec2f (3, 4), new SFVec2f (5, 6)); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (new SFVec2f (7, 8)); } return [e, m]; });
+  T ('MFVec2f resize', function () { var m = new MFVec2f (new SFVec2f (1, 2), new SFVec2f (3, 4), new SFVec2f (5, 6)); var r = typeof m .resize; return r; });
+  flush_ ();
+}
+
+  "
+}

@@ -1,0 +1,97 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr lifecycle"
+DEF A Script {
+  inputOnly SFTime tick
+  inputOnly SFInt32 evIn
+  outputOnly SFInt32 evOut
+  inputOutput SFInt32 io 0
+  initializeOnly SFInt32 init 4
+  outputOnly SFTime t_out
+  url "ecmascript:
+var NAME = 'A';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function initialize (t) {
+  log ('initialize init=' + init + ' io=' + io + ' typeof t=' + typeof t + ' this=' + (this && this .getNodeTypeName ()));
+  evOut = 1;
+  io = 2;
+  log ('initialize end');
+}
+function prepareEvents (t) { if (first ('pre', 3)) log ('prepareEvents'); }
+function eventsProcessed (t) { if (first ('ep', 8)) log ('eventsProcessed'); }
+function tick (v, t) {
+  n++;
+  if (n > 8) return;
+  log ('tick ' + n + ' arg=' + typeof v + '/' + typeof t);
+  if (n == 2) { evOut = 20; log ('after evOut=20'); }
+  if (n == 3) { io = 30; log ('after io=30'); }
+  if (n == 4) { evOut = 41; evOut = 42; log ('after evOut 41 42'); }
+  if (n == 5) { io = 50; io = 50; log ('after io=50 twice'); }
+  if (n == 6) { t_out = t; }
+}
+function evIn (v, t) { log ('evIn ' + v + ' ' + typeof t); }
+function set_io (v, t) { log ('set_io ' + v); }
+function shutdown (t) { log ('shutdown'); }
+
+  "
+}
+DEF B Script {
+  inputOnly SFInt32 evIn
+  inputOnly SFTime tick
+  outputOnly SFInt32 evOut
+  inputOutput SFInt32 io 0
+  url "ecmascript:
+var NAME = 'B';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+function initialize () { log ('initialize io=' + io); }
+function prepareEvents () { if (first ('pre', 3)) log ('prepareEvents'); }
+function eventsProcessed () { if (first ('ep', 8)) log ('eventsProcessed'); }
+function evIn (v, t) { log ('evIn ' + v); evOut = v + 100; }
+function set_io (v, t) { log ('set_io ' + v); }
+function tick (v, t) { if (first ('tick', 3)) log ('tick'); }
+
+  "
+}
+DEF C Script {
+  inputOnly SFInt32 evIn
+  inputOnly SFInt32 other
+  url "ecmascript:
+var NAME = 'C';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+function initialize () { log ('initialize'); }
+function eventsProcessed () { if (first ('ep', 8)) log ('eventsProcessed'); }
+function evIn (v) { log ('evIn ' + v); }
+function other (v) { log ('other ' + v); }
+
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE A.evOut TO B.evIn
+ROUTE B.evOut TO C.evIn
+ROUTE A.io_changed TO B.set_io
+ROUTE A.io_changed TO C.other
+ROUTE STEP.cycleTime TO A.tick
+ROUTE STEP.cycleTime TO B.tick
+ROUTE STEP.cycleTime TO R.tick

@@ -1,0 +1,90 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr direct output"
+DEF TA Transform { }
+DEF TB Transform { }
+DEF TC Transform { }
+DEF A Script {
+  inputOnly SFTime tick
+  initializeOnly SFNode target USE TA
+  directOutput TRUE
+  mustEvaluate TRUE
+  initializeOnly SFNode other NULL
+  url "ecmascript:
+var NAME = 'A';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function initialize () { log ('initialize directOutput=' + this .directOutput + ' mustEvaluate=' + this .mustEvaluate + ' target=' + (target ? target .getNodeTypeName () : target)); }
+function tick () {
+  n++;
+  if (n == 2 && target) { target .translation = new SFVec3f (n, n, n); log ('wrote translation'); }
+  if (n == 3 && target) { log ('read ' + target .translation + ' ' + target .children .length); }
+  if (n == 4) { try { this .directOutput = !this .directOutput; log ('wrote directOutput ' + this .directOutput); } catch (e) { log ('ERR ' + e .name); } }
+}
+
+  "
+}
+DEF B Script {
+  inputOnly SFTime tick
+  initializeOnly SFNode target USE TB
+  directOutput FALSE
+  mustEvaluate FALSE
+  initializeOnly SFNode other NULL
+  url "ecmascript:
+var NAME = 'B';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function initialize () { log ('initialize directOutput=' + this .directOutput + ' mustEvaluate=' + this .mustEvaluate + ' target=' + (target ? target .getNodeTypeName () : target)); }
+function tick () {
+  n++;
+  if (n == 2 && target) { target .translation = new SFVec3f (n, n, n); log ('wrote translation'); }
+  if (n == 3 && target) { log ('read ' + target .translation + ' ' + target .children .length); }
+  if (n == 4) { try { this .directOutput = !this .directOutput; log ('wrote directOutput ' + this .directOutput); } catch (e) { log ('ERR ' + e .name); } }
+}
+
+  "
+}
+DEF C Script {
+  inputOnly SFTime tick
+  initializeOnly SFNode target USE TC
+  initializeOnly SFNode other NULL
+  url "ecmascript:
+var NAME = 'C';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function initialize () { log ('initialize directOutput=' + this .directOutput + ' mustEvaluate=' + this .mustEvaluate + ' target=' + (target ? target .getNodeTypeName () : target)); }
+function tick () {
+  n++;
+  if (n == 2 && target) { target .translation = new SFVec3f (n, n, n); log ('wrote translation'); }
+  if (n == 3 && target) { log ('read ' + target .translation + ' ' + target .children .length); }
+  if (n == 4) { try { this .directOutput = !this .directOutput; log ('wrote directOutput ' + this .directOutput); } catch (e) { log ('ERR ' + e .name); } }
+}
+
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO A.tick
+ROUTE STEP.cycleTime TO B.tick
+ROUTE STEP.cycleTime TO C.tick
+ROUTE STEP.cycleTime TO R.tick

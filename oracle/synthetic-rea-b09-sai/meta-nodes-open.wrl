@@ -1,0 +1,74 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "meta nodes open"
+
+DEF G Group {
+  metadata DEF MS MetadataSet {
+    name "root"
+    reference "http://example.org/ref"
+    value [
+      DEF MB MetadataBoolean { name "b" reference "rb" value [ TRUE FALSE TRUE ] }
+      DEF MD MetadataDouble { name "d" value [ 1.5 2.25 -0.125 1e300 ] }
+      DEF MF MetadataFloat { name "f" value [ 0.1 0.2 3.4e38 ] }
+      DEF MI MetadataInteger { name "i" value [ 1 -2 2147483647 ] }
+      DEF MST MetadataString { name "s" value [ "hello" "wor\"ld" "" ] }
+      DEF MNEST MetadataSet {
+        name "nested"
+        value [
+          DEF MNB MetadataBoolean { name "nb" value TRUE }
+          USE MB
+          MetadataSet { name "empty" }
+        ]
+        metadata MetadataString { name "meta of meta" value "m" }
+      }
+    ]
+  }
+}
+DEF T Transform { metadata USE MS }
+DEF W WorldInfo { title "t" metadata MetadataString { name "w" value [ "x" ] } }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+var META_TYPES = ['MetadataBoolean', 'MetadataDouble', 'MetadataFloat', 'MetadataInteger', 'MetadataString', 'MetadataSet'];
+function initialize () {
+  SELF = this;
+  T ('instanceof', function () { var x = Browser .currentScene .getNamedNode ('MB'); return [x instanceof SFNode, x .getNodeType () .length > 0]; });
+  T ('getNodeType values', function () { return Browser .currentScene .getNamedNode ('MB') .getNodeType (); });
+  flush_ ();
+}
+
+  "
+}
