@@ -53,6 +53,27 @@ fn mf_fields_grow_and_shrink_through_index_and_length() {
     assert_fv(field(&rt, "S", "v"), FieldValue::MFVec3f(vec![1.0, 0.0, 7.0, 0.0, 2.0, 0.0]));
 }
 
+/// A length or index near 2^32 must not allocate: it is a RangeError and the field keeps its value.
+/// (Before, `a .length = -1` grew the array until the kernel killed the process.)
+#[test]
+fn huge_mf_length_or_index_is_a_range_error_not_an_allocation() {
+    let rt = run(r#"DEF S Script { field MFInt32 a [ 1 2 3 ] field MFVec3f v [ ] field SFString r ""
+        url "javascript:
+          function initialize () {
+            var o = [];
+            try { a .length = -1; } catch (e) { o .push (e .name); }
+            try { a .length = 4294967295; } catch (e) { o .push (e .name); }
+            try { a [4294967295] = 1; } catch (e) { o .push (e .name); }
+            try { v [1e12] = new SFVec3f (1, 2, 3); } catch (e) { o .push (e .name); }
+            try { a .length = 1.5; } catch (e) { o .push (e .name); }
+            r = o .join ();
+          }" }"#);
+
+    assert_fv(field(&rt, "S", "r"), FieldValue::SFString("RangeError,RangeError,RangeError,RangeError,RangeError".into()));
+    assert_fv(field(&rt, "S", "a"), FieldValue::MFInt32(vec![1, 2, 3]));
+    assert_fv(field(&rt, "S", "v"), FieldValue::MFVec3f(vec![]));
+}
+
 #[test]
 fn node_fields_are_live_and_events_reach_routes() {
     let rt = run(r#"DEF A Transform { } DEF B Transform { }

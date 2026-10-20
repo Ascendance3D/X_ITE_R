@@ -310,6 +310,11 @@ pub struct Runtime {
     /// console.error / console.warn output, formatted like dump.html (`error: …`, first line).
     pub log: Vec<String>,
     pub now: f64,
+    /// Script timers (oracle page `runTimers`): the browser time of the previous frame and the date (`Date .now ()`) of the frame
+    /// being started, both in seconds. `date_override` is the date a running timer callback sees.
+    pub timer_prev_time: f64,
+    pub timer_date: f64,
+    pub date_override: Option<f64>,
     pub tasks: std::collections::VecDeque<Task>,
     /// The browser's private event fields (prepareEvents, timeEvents, …) live on this node.
     pub browser_node: NodeId,
@@ -517,6 +522,9 @@ impl Runtime {
             parents: HashMap::new(),
             log: vec![],
             now: FROZEN_TIME,
+            timer_prev_time: FROZEN_TIME,
+            timer_date: FROZEN_TIME,
+            date_override: None,
             tasks: Default::default(),
             browser_node: 0,
             script_host: None,
@@ -1143,8 +1151,12 @@ impl Runtime {
             Ok(scene) => scene,
             Err(e) => {
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
+                for w in x3d_parse::take_error_warnings() {
+                    self.log_warn(w);
+                }
+
                 self.log_error(format!("Error: {}", e.message));
-                return Err(format!("Error: \n{e}"));
+                return Err(x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}")));
             }
         };
         let simple = scene.contexts.len() == 1

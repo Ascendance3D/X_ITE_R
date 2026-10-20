@@ -456,6 +456,33 @@ impl Runtime {
             let inline_timer = self.inline_next_timer(now).map(|(due, n)| (due, None, n));
             let url_timer = [extern_timer, inline_timer].into_iter().flatten().min_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
 
+            // The Scripts' setTimeout / setInterval timers run in due order with the others; the callback sees the browser time of the
+            // previous frame (or the due time, if later) and the date of this frame (or the due time).
+            if let Some(mut host) = self.script_host.take() {
+                let due = host.next_timer(self, now * 1000.0);
+
+                self.script_host = Some(host);
+
+                if let Some(due) = due {
+                    let earlier_than_nodes = node_timeout.is_none_or(|i| due < self.timeouts[i].time * 1000.0);
+                    let earlier_than_urls = url_timer.is_none_or(|(u, _, _)| due < u);
+
+                    if earlier_than_nodes && earlier_than_urls {
+                        self.now = self.timer_prev_time.max(due / 1000.0);
+                        self.date_override = Some(self.timer_date.max(due / 1000.0));
+
+                        if let Some(mut host) = self.script_host.take() {
+                            host.fire_timer(self);
+                            self.script_host = Some(host);
+                        }
+
+                        self.date_override = None;
+                        self.now = now;
+                        continue;
+                    }
+                }
+            }
+
             if let Some((due, extern_id, inline_node)) = url_timer {
                 if node_timeout.is_none_or(|i| due < self.timeouts[i].time * 1000.0) {
                     self.now = now;

@@ -40,6 +40,14 @@ pub trait ScriptHost {
     /// `metadata_changed` = 3): the callbacks Scripts gave `addFieldCallback` run with the field's value.
     fn ctx_event(&mut self, _rt: &mut Runtime, _ctx: CtxId, _field: u32) {}
 
+    /// The due time (ms) of the earliest `setTimeout` / `setInterval` timer of the Scripts, if it is due at `until_ms`.
+    fn next_timer(&mut self, _rt: &mut Runtime, _until_ms: f64) -> Option<f64> {
+        None
+    }
+
+    /// Run the timer `next_timer` named (it is removed, or rearmed for an interval).
+    fn fire_timer(&mut self, _rt: &mut Runtime) {}
+
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
 
@@ -250,13 +258,18 @@ impl Runtime {
         self.dynamic_dirty = true;
 
         if let Err(e) = result {
-            let name = self.scene.node(node).name.clone();
-            let world = self.scene.world_url_of(self.scene.node(node).ctx).to_string();
-            let world = if world.starts_with("data:") { "data:".to_string() } else { world };
-
-            self.log_error(format!("JavaScript Error in Script '{name}', in function '{reason_name}'\nworld url is '{world}':"));
-            self.log_error(&e.0);
+            self.report_script_error(node, reason_name, &e.0);
         }
+    }
+
+    /// Script.setError: the header (script name, reason, world url) and the error itself.
+    pub fn report_script_error(&mut self, node: NodeId, reason_name: &str, error: &str) {
+        let name = self.scene.node(node).name.clone();
+        let world = self.scene.world_url_of(self.scene.node(node).ctx).to_string();
+        let world = if world.starts_with("data:") { "data:".to_string() } else { world };
+
+        self.log_error(format!("JavaScript Error in Script '{name}', in function '{reason_name}'\nworld url is '{world}':"));
+        self.log_error(error);
     }
 
     pub(crate) fn script_interest(&mut self, node: NodeId, cb: Cb, _k: FKey) {

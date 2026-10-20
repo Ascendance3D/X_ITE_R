@@ -98,7 +98,7 @@ const HANDLE = { };
 
 function wrap (type, h)
 {
-   const C = classes [type];
+   const C = type === "SFNode" ? SFNodeField : classes [type];
 
    if (!C)
       return undefined;
@@ -134,13 +134,21 @@ class X3DField
    assign (value)       { X ("set", this [H], A (value)); }
    getValue ()          { return R (X ("fv", this [H])); }
    valueOf ()           { return this; }
-   toString ()          { return X ("str", this [H]); }
+   toString ()          { return X ("strn", this [H]); }
    toVRMLString ()      { return X ("str", this [H]); }
+   toXMLString ()       { return X ("fprint", this [H], "xml"); }
+   toJSONString ()      { return X ("fprint", this [H], "json"); }
    addFieldCallback ()  { }
    removeFieldCallback () { }
    addReferencesCallback () { }
    addRouteCallback ()  { }
 }
+
+// The field object of an SFNode field (the global `SFNode` is the constructor of node objects, not of fields).
+const SFNodeField = { SFNode: class extends X3DField { } } .SFNode;
+
+Object .defineProperty (SFNodeField, "typeName", { value: "SFNode" });
+SFNodeField .prototype .valueOf = function () { return R (X ("fv", this [H])); };
 
 function method (name)
 {
@@ -177,12 +185,14 @@ function define (typeName, base, names, methods, statics = { })
    const C = { [typeName]: class extends base { } } [typeName];
 
    Object .defineProperty (C, "typeName", { value: typeName });
+   // The JavaScript class names of X_ITE: one class serves the f and d variants, and most MF types share ArrayField.
+   Object .defineProperty (C, "name", { value: typeName === "VrmlMatrix" ? "SFMatrix4" : /^(SFMatrix[34]|SFVec[234]|SFQuaternion)[df]?$/ .test (typeName) ? typeName .replace (/[df]$/, "") : /^MF/ .test (typeName) && !["MFImage", "MFNode", "MFString"] .includes (typeName) ? "ArrayField" : typeName, configurable: true });
 
    if (names)
       props (C, names);
 
    for (const m of methods)
-      C .prototype [m] = method (m);
+      Object .defineProperty (C .prototype, m, { value: method (m), writable: true, configurable: true, enumerable: false });
 
    Object .assign (C, statics);
 
@@ -202,12 +212,23 @@ for (const [name, comps] of [["SFVec2d", 2], ["SFVec2f", 2], ["SFVec3d", 3], ["S
 define ("SFColor", X3DField, ["r", "g", "b"], ["getHSV", "setHSV", "lerp", "linearToSRGB", "sRGBToLinear"]);
 define ("SFColorRGBA", X3DField, ["r", "g", "b", "a"], ["getHSVA", "setHSVA", "lerp", "linearToSRGB", "sRGBToLinear"]);
 define ("SFRotation", X3DField, ["x", "y", "z", "angle"], ["getAxis", "getMatrix", "getQuaternion", "inverse", "multiply", "multVec", "setAxis", "setMatrix", "setQuaternion", "slerp", "straighten"]);
-define ("SFQuaternion", X3DField, ["x", "y", "z", "w"], ["conjugate", "dot", "inverse", "multiply", "multVec", "negate", "normalize", "slerp", "squad", "length", "add", "subtract", "divide"]);
+define ("SFQuaternion", X3DField, ["x", "y", "z", "w"], ["add", "conjugate", "divide", "dot", "getMatrix", "inverse", "length", "multiply", "multLeft", "multQuatVec", "multRight", "multVecQuat", "negate", "normalize", "setMatrix", "slerp", "subtract"]);
+
+// SFQuaternion: i, j, k and real are non-enumerable aliases of x, y, z and w.
+for (const [alias, name] of [["i", "x"], ["j", "y"], ["k", "z"], ["real", "w"]])
+{
+   Object .defineProperty (classes .SFQuaternion .prototype, alias,
+   {
+      get () { return X ("g", this [H], name); },
+      set (v) { X ("s", this [H], name, +v); },
+      configurable: true,
+   });
+}
 
 const matrixMethods = ["setTransform", "getTransform", "determinant", "transpose", "inverse", "multLeft", "multRight", "multVecMatrix", "multMatrixVec", "multDirMatrix", "multMatrixDir", "translate", "rotate", "scale"];
 
 for (const name of ["SFMatrix3d", "SFMatrix3f"])
-   define (name, X3DField, null, matrixMethods);
+   define (name, X3DField, null, matrixMethods .concat (["skewX", "skewY"]));
 
 for (const name of ["SFMatrix4d", "SFMatrix4f", "VrmlMatrix"])
    define (name, X3DField, null, matrixMethods);
@@ -314,6 +335,9 @@ const mfHandler =
    },
 };
 
+// X3DObjectArrayField.concat spreads any iterable; X3DTypedArrayField.concat needs fields.
+const OBJECT_MF = new Set (["MFString", "MFNode", "MFImage"]);
+
 class X3DArrayField extends X3DField
 {
    constructor (... args)
@@ -323,41 +347,35 @@ class X3DArrayField extends X3DField
       return new Proxy (this, mfHandler);
    }
    get length ()         { return X ("len", this [H]); }
-   set length (value)    { X ("setlen", this [H], value >>> 0); }
-   toArray ()            { const a = [ ]; for (let i = 0, l = this .length; i < l; ++ i) a .push (this [i]); return a; }
+   // push, pop, … : X3DTypedArrayField / X3DObjectArrayField convert element by element (`valueType (arg)`, `arg [c]`), not like setValue.
+   setElements (a)       { X ("setel", this [H], A (a)); }
+   set length (value)    { const n = +value; if (!(n >= 0 && n <= 4294967295 && Number .isInteger (n))) throw new RangeError ("Invalid array length"); X ("setlen", this [H], n); }
+   // Elements that are field objects are copied: a view of index i is not the value that was there once the array shrinks.
+   toArray ()            { const a = [ ]; const copy = ! OBJECT_MF .has (this .constructor .typeName); for (let i = 0, l = this .length; i < l; ++ i) { const e = this [i]; a .push (copy && e !== null && typeof e === "object" && typeof e .copy === "function" ? e .copy () : e); } return a; }
    *[Symbol .iterator] () { for (let i = 0, l = this .length; i < l; ++ i) yield this [i]; }
-   push (... args)       { const a = this .toArray (); const r = a .push (... args); this .setValue (a); return r; }
-   pop ()                { const a = this .toArray (); const r = a .pop (); this .setValue (a); return r; }
-   shift ()              { const a = this .toArray (); const r = a .shift (); this .setValue (a); return r; }
-   unshift (... args)    { const a = this .toArray (); const r = a .unshift (... args); this .setValue (a); return r; }
-   splice (... args)     { const a = this .toArray (); const r = a .splice (... args); this .setValue (a); return new this .constructor (... r); }
-   reverse ()            { const a = this .toArray (); a .reverse (); this .setValue (a); return this; }
-   sort (f)              { const a = this .toArray (); a .sort (f); this .setValue (a); return this; }
-   fill (v, s, e)        { const a = this .toArray (); a .fill (v, s, e); this .setValue (a); return this; }
-   resize (n, v)         { const a = this .toArray (); while (a .length < n) a .push (v); a .length = n; this .setValue (a); }
-   indexOf (v, s)        { return this .toArray () .indexOf (v, s); }
-   lastIndexOf (... a)   { return this .toArray () .lastIndexOf (... a); }
-   includes (v, s)       { return this .toArray () .includes (v, s); }
-   find (f, t)           { return this .toArray () .find (f, t); }
-   findIndex (f, t)      { return this .toArray () .findIndex (f, t); }
-   findLast (f, t)       { return this .toArray () .findLast (f, t); }
-   findLastIndex (f, t)  { return this .toArray () .findLastIndex (f, t); }
-   forEach (f, t)        { this .toArray () .forEach (f, t); }
-   every (f, t)          { return this .toArray () .every (f, t); }
-   some (f, t)           { return this .toArray () .some (f, t); }
-   reduce (... a)        { return this .toArray () .reduce (... a); }
-   reduceRight (... a)   { return this .toArray () .reduceRight (... a); }
-   join (s)              { return this .toArray () .join (s); }
-   at (i)                { return this .toArray () .at (i); }
-   entries ()            { return this .toArray () .entries (); }
-   keys ()               { return this .toArray () .keys (); }
-   values ()             { return this .toArray () .values (); }
+   push (... args)       { const a = this .toArray (); const r = a .push (... args); this .setElements (a); return r; }
+   pop ()                { const a = this .toArray (); const r = a .pop (); this .setElements (a); return r; }
+   shift ()              { const a = this .toArray (); const r = a .shift (); this .setElements (a); return r; }
+   unshift (... args)    { const a = this .toArray (); const r = a .unshift (... args); this .setElements (a); return r; }
+   splice (... args)     { const a = this .toArray (); const r = a .splice (... args); this .setElements (a); return new this .constructor (... r); }
+   reverse ()            { const a = this .toArray (); a .reverse (); this .setElements (a); return this; }
+   sort (f)              { const a = this .toArray (); a .sort (f); this .setElements (a); return this; }
+   fill (v, s, e)        { const a = this .toArray (); a .fill (v, s, e); this .setElements (a); return this; }
+   resize (n, v)         { const a = this .toArray (); while (a .length < n) a .push (v); a .length = n; this .setElements (a); }
    filter (f, t)         { return new this .constructor (... this .toArray () .filter (f, t)); }
    map (f, t)            { return new this .constructor (... this .toArray () .map (f, t)); }
    slice (s, e)          { return new this .constructor (... this .toArray () .slice (s, e)); }
-   concat (... args)     { let a = this .toArray (); for (const x of args) a = a .concat (x instanceof X3DArrayField ? x .toArray () : x); return new this .constructor (... a); }
+   concat (... args)     { let a = this .toArray (); for (const x of args) { if (x instanceof X3DArrayField) a = a .concat (x .toArray ()); else if (OBJECT_MF .has (this .constructor .typeName)) a .push (... x); else throw new TypeError ("arg.shrinkToFit is not a function"); } return new this .constructor (... a); }
+   toReversed ()         { return this .copy () .reverse (); }
+   toSorted (... args)   { return this .copy () .sort (... args); }
+   toSpliced (... args)  { const c = this .copy (); c .splice (... args); return c; }
+   with (index, value)   { const c = this .copy (); c [index] = value; return c; }
    valueOf ()            { return this; }
 }
+
+// X3DArrayField takes these straight from Array.prototype: they run on the field itself, so callbacks receive the field.
+for (const name of ["at", "entries", "every", "find", "findIndex", "findLast", "findLastIndex", "flat", "flatMap", "forEach", "includes", "indexOf", "join", "keys", "lastIndexOf", "reduce", "reduceRight", "some", "values"])
+   Object .defineProperty (X3DArrayField .prototype, name, { value: Array .prototype [name], writable: true, configurable: true, enumerable: false });
 
 for (const name of ["MFBool", "MFColor", "MFColorRGBA", "MFDouble", "MFFloat", "MFImage", "MFInt32", "MFMatrix3d", "MFMatrix3f",
                     "MFMatrix4d", "MFMatrix4f", "MFNode", "MFQuaternion", "MFRotation", "MFString", "MFTime", "MFVec2d", "MFVec2f",
@@ -406,6 +424,7 @@ const nodeHandler =
 };
 
 const NOFIELD = X ("nofield");
+let getFieldWarned = false; // SFNode.js: the deprecation warning is logged once per page
 
 class SFNodeBase { }
 
@@ -415,7 +434,8 @@ const SFNodeProto =
    getNodeName ()       { return X ("nname", this [N]); },
    getNodeDisplayName () { return X ("nname", this [N]) .replace (/_\d+$/, ""); },
    getNodeType ()       { return [ ]; },
-   getField (name)      { const r = X ("nfield", this [N], String (name)); if (r === NOFIELD) throw new Error (`Unknown field '${name}' in node class ${this .getNodeTypeName ()}.`); return R (r); },
+   getField (name)      { if (! getFieldWarned) { getFieldWarned = true; X ("console", "warn", "The use of sfnode.getField(name) is deprecated. Future versions of X_ITE may remove this feature. Instead, use the sfnode.{fieldName} property syntax or sfnode.addFieldCallback(key, fieldName, callback). Error"); } const r = X ("nfield", this [N], String (name)); if (r === NOFIELD) throw new Error (`Unknown field '${name}' in node class ${this .getNodeTypeName ()}.`); return R (r); },
+   getFieldQuiet (name) { const r = X ("nfield", this [N], String (name)); if (r === NOFIELD) throw new Error (`Unknown field '${name}' in node class ${this .getNodeTypeName ()}.`); return R (r); },
    getFieldDefinitions () { return X ("nfields", this [N]) .map (f => ({ ... f, dataType: X3DConstants [f .dataType] })); },
    addFieldCallback ()  { },
    removeFieldCallback () { },
@@ -423,8 +443,10 @@ const SFNodeProto =
    setNodeUserData ()   { },
    removeNodeUserData () { },
    valueOf ()           { return this; },
-   toString ()          { return X ("nstr", this [N]); },
+   toString ()          { return X ("nstream", this [N]); },
    toVRMLString ()      { return X ("nstr", this [N]); },
+   toXMLString ()       { return X ("nprint", this [N], "xml"); },
+   toJSONString ()      { return X ("nprint", this [N], "json"); },
    getValue ()          { return this; },
    copy ()              { return this; },
    equals (other)       { return other === this; },
@@ -460,6 +482,7 @@ function SFNode (vrmlSyntax)
 }
 
 SFNode .prototype = SFNodeBase .prototype;
+Object .defineProperty (SFNodeBase .prototype, "constructor", { value: SFNode, writable: true, configurable: true });
 Object .defineProperty (SFNode, "typeName", { value: "SFNode" });
 classes .SFNode = SFNode;
 
@@ -708,7 +731,7 @@ const Browser =
    get currentScene ()         { return executionContext (currentScript); },
    getExecutionContext ()      { return executionContext (-1); },
    get baseURL ()              { return X ("baseURL", currentScript); },
-   get currentFrameRate ()     { return 0; },
+   get currentFrameRate ()     { return X ("framerate"); },
    get currentSpeed ()         { return 0; },
    getName ()                  { return X ("bname"); },
    getVersion ()               { return X ("bversion"); },
@@ -716,7 +739,7 @@ const Browser =
    setDescription (v)          { X ("bsetdescription", String (v)); },
    getCurrentTime ()           { return X ("time"); },
    getCurrentSpeed ()          { return 0; },
-   getCurrentFrameRate ()      { return 0; },
+   getCurrentFrameRate ()      { return X ("framerate"); },
    getWorldURL ()              { return X ("worldURL", currentScript); },
    getBaseURL ()               { return X ("baseURL", currentScript); },
    print (... args)            { println (... args); },
@@ -784,7 +807,7 @@ const Browser =
       if (!node)
          throw new Error ("Browser.createVrmlFromURL: node must be of type X3DNode.");
 
-      const field = node .getField (event);
+      const field = node .getFieldQuiet (event); // X_ITE reads the target node here: no deprecation warning
 
       if (!field .isInput ())
          throw new Error (`Browser.createVrmlFromURL: event named '${event}' must be a input field.`);
@@ -1076,6 +1099,7 @@ function infoClass (typeName, methods)
 {
    const f = function () { };
 
+   Object .defineProperty (f, "name", { value: typeName });
    Object .defineProperty (f, "typeName", { value: typeName, enumerable: true });
    Object .defineProperties (f .prototype, {
       [Symbol .toStringTag]: { get () { return typeName; } },
@@ -1354,6 +1378,22 @@ global .__ctxEvent = function (ctx, index)
    }
 };
 
+// The classes a Script sees as globals (Script.js createGlobalObject): their instances are the objects made here.
+function brandClass (typeName, length, test)
+{
+   const C = { [typeName]: function () { } } [typeName];
+
+   Object .defineProperty (C, "length", { value: length });
+   Object .defineProperty (C, "typeName", { value: typeName, enumerable: true });
+   Object .defineProperty (C, Symbol .hasInstance, { value: test });
+   return C;
+}
+
+const X3DExecutionContextClass = brandClass ("X3DExecutionContext", 1, o => contextKeys .has (o));
+const X3DSceneClass            = brandClass ("X3DScene", 1, o => contextKeys .has (o) && o .isScene);
+const X3DBrowserClass          = brandClass ("X3DBrowser", 1, o => o === Browser);
+const X3DRouteClass            = brandClass ("X3DRoute", 5, o => routeIds .has (o));
+
 function makeExecutionContext (script)
 {
    const ctxKey = - (script + 2);
@@ -1373,6 +1413,7 @@ function makeExecutionContext (script)
    const units    = infoArray ("UnitInfoArray", () => info () .units .map (([category, name, conversionFactor]) => { const o = Object .freeze ({ category, name, conversionFactor }); infoObjects .add (o); return o; }), u => u .category, u => infoObjects .has (u));
 
    return {
+      get constructor ()      { return info () .isScene ? X3DSceneClass : X3DExecutionContextClass; },
       get isScene ()          { return info () .isScene; },
       get sceneGraph_changed () { return ctxFieldObject (ctxKey, 0, "sceneGraph_changed"); },
       get bbox_changed ()     { return ctxFieldObject (ctxKey, 1, "bbox_changed"); },
@@ -1668,18 +1709,84 @@ const scriptConsole =
    log: (... args) => { X ("console", "log", consoleText (args)); },
    warn: (... args) => { X ("console", "warn", consoleText (args)); },
    error: (... args) => { X ("console", "error", consoleText (args)); },
+   // The page's other console methods are not hooked by the oracle page and never reach its recorder.
+   info: () => { }, debug: () => { }, trace: () => { }, assert: () => { }, dir: () => { }, dirxml: () => { }, table: () => { },
+   group: () => { }, groupCollapsed: () => { }, groupEnd: () => { }, count: () => { }, countReset: () => { }, time: () => { },
+   timeEnd: () => { }, timeLog: () => { }, clear: () => { },
+};
+
+// Timers: the oracle page keeps one virtual queue, fired in due order at the start of a frame (`runTimers`) while the browser time and
+// Date.now () stand at the due time. setInterval is rearmed after each run.
+let timerSeq = 0, timerList = [];
+
+function addTimer (fn, ms, args, repeat)
+{
+   const id = ++ timerSeq, delay = Math .max (+ms || 0, 0);
+
+   timerList .push ({ id, due: X ("datenow") + delay, delay, seq: id, fn: () => fn (... args), repeat, script: currentScript });
+   return id;
+}
+
+const timerGlobals =
+{
+   setTimeout (fn, ms = 0, ... args)  { return addTimer (fn, ms, args, false); },
+   setInterval (fn, ms = 0, ... args) { return addTimer (fn, ms, args, true); },
+   clearTimeout (id)                  { timerList = timerList .filter (t => t .id !== id); },
+   clearInterval (id)                 { timerList = timerList .filter (t => t .id !== id); },
+};
+
+Date .now = () => X ("datenow");
+
+global .__nextTimer = function (untilMs)
+{
+   timerList .sort ((a, b) => a .due - b .due || a .seq - b .seq);
+
+   const t = timerList [0];
+
+   return !t || t .due > untilMs ? undefined : t .due;
+};
+
+global .__fireTimer = function ()
+{
+   const t = timerList .shift ();
+
+   if (t .repeat)
+   {
+      t .due += Math .max (t .delay, 1);
+      timerList .push (t);
+   }
+
+   const previous = currentScript;
+
+   currentScript = t .script;
+
+   try
+   {
+      t .fn ();
+   }
+   catch (error)
+   {
+      X ("console", "error", v8String (error, sources .get (t .script)));
+   }
+   finally
+   {
+      currentScript = previous;
+   }
 };
 
 const standardGlobals =
 {
+   ... timerGlobals,
    NULL: null, FALSE: false, TRUE: true,
    console: scriptConsole,
    print: println, trace: println,
    Browser,
    X3DConstants,
    X3DField, X3DArrayField,
+   X3DBrowser: X3DBrowserClass, X3DExecutionContext: X3DExecutionContextClass, X3DScene: X3DSceneClass, X3DRoute: X3DRouteClass,
    SFNode,
-   ... Object .fromEntries (Object .entries (classes) .filter (([k]) => k !== "SFNode")),
+   // Script.js lists neither SFBool, SFInt32, SFFloat, SFDouble nor SFTime as globals.
+   ... Object .fromEntries (Object .entries (classes) .filter (([k]) => !["SFNode", "SFBool", "SFInt32", "SFFloat", "SFDouble", "SFTime"] .includes (k))),
 };
 
 // Script.createGlobalObject + createContext + evaluate.js (`with (globalObject) eval (…)`).
@@ -1726,40 +1833,76 @@ function calleeAt (stack, source)
 
    -- i;
 
-   const ws = () => { while (i >= 0 && /\s/ .test (line [i])) -- i; };
-   const ident = () => { const end = i; while (i >= 0 && /[\w$]/ .test (line [i])) -- i; return line .slice (i + 1, end + 1); };
+   const word = /[\w$]/;
 
-   ws ();
-
-   const parts = [ident ()];
-
-   if (!parts [0])
-      return undefined;
-
-   for (;;)
+   // The text V8 prints for the expression that ends at index `e`, and the index before its first character.
+   const expr = e =>
    {
-      const save = i;
+      while (e >= 0 && /\s/ .test (line [e]))
+         -- e;
 
-      ws ();
-
-      if (line [i] !== ".")
+      if (line [e] === ")")
       {
-         i = save;
-         break;
+         let depth = 0, k = e;
+
+         for (; k >= 0; -- k)
+         {
+            if (line [k] === ")")
+               ++ depth;
+            else if (line [k] === "(" && -- depth === 0)
+               break;
+         }
+
+         if (k < 0)
+            return undefined;
+
+         let before = k - 1;
+
+         while (before >= 0 && /\s/ .test (line [before]))
+            -- before;
+
+         if (before < 0 || !word .test (line [before]))
+            return ["(intermediate value)", before];
+
+         const callee = expr (before);
+
+         if (!callee)
+            return undefined;
+
+         // `new X (…)`: no name.
+         const prefix = line .slice (0, callee [1] + 1) .replace (/\s+$/, "");
+
+         if (/\bnew$/ .test (prefix))
+            return ["(intermediate value)", prefix .length - 4];
+
+         return [`${callee [0]}(...)`, callee [1]];
       }
 
-      -- i;
-      ws ();
-
-      const id = ident ();
-
-      if (!id)
+      if (e < 0 || !word .test (line [e]))
          return undefined;
 
-      parts .unshift (id);
-   }
+      const end = e;
 
-   return parts .join (".");
+      while (e >= 0 && word .test (line [e]))
+         -- e;
+
+      const name = line .slice (e + 1, end + 1);
+      let d = e;
+
+      while (d >= 0 && /\s/ .test (line [d]))
+         -- d;
+
+      if (line [d] === ".")
+      {
+         const receiver = expr (d - 1);
+
+         return receiver ? [`${receiver [0]}.${name}`, receiver [1]] : undefined;
+      }
+
+      return [name, e];
+   };
+
+   return expr (i) ?.[0];
 }
 
 function v8String (error, source)
@@ -1773,6 +1916,10 @@ function v8String (error, source)
       message = `Cannot read properties of ${m [2]} (reading '${m [1]}')`;
    else if ((m = /^cannot set property '(.*)' of (null|undefined)$/ .exec (message)))
       message = `Cannot set properties of ${m [2]} (setting '${m [1]}')`;
+   else if (message === "invalid array length")
+      message = "Invalid array length";
+   else if (message === "expecting hex digit" || message === "expecting %hh")
+      message = "URI malformed";
    else if (message === "not a function" && source !== undefined)
    {
       const callee = calleeAt (error .stack, source);
@@ -1851,7 +1998,7 @@ global .__create = function (script, sourceText, callbacks, fields)
 };
 
 // Script.call__ / set_field__: returns the thrown value as a string, or undefined.
-global .__call = function (script, name, value, time, hasValue)
+global .__call = function (script, name, value, time, hasValue, reason)
 {
    const callback = contexts .get (script) ?.get (name);
 
@@ -1864,10 +2011,17 @@ global .__call = function (script, name, value, time, hasValue)
 
    try
    {
-      if (hasValue)
-         callback .call (nodeWrapper (script), R (value), time);
-      else
-         callback .call (nodeWrapper (script), time);
+      const result = hasValue
+         ? callback .call (nodeWrapper (script), R (value), time)
+         : callback .call (nodeWrapper (script), time);
+
+      // call__ is async: `await callback .call (…)` throws a rejection into the same catch.
+      if (result !== null && (typeof result === "object" || typeof result === "function") && typeof result .then === "function")
+      {
+         const source = sources .get (script);
+
+         result .then (undefined, error => X ("asyncError", script, String (reason), v8String (error, source)));
+      }
 
       return undefined;
    }

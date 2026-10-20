@@ -25,6 +25,16 @@ impl Scene {
     pub fn to_json_string_ctx(&self, root: CtxId) -> String {
         JsonGenerator::new(self).scene_to_json(root)
     }
+
+    /// `field .toJSONString ()`: the field's `toJSONStream` outside any execution context.
+    pub fn field_value_to_json_string(&self, value: &FieldValue) -> String {
+        let mut g = JsonGenerator::new(self);
+
+        g.base.push_ctx(self.first_node_ctx(value));
+        g.field_value_to_json(value);
+        g.base.pop_ctx();
+        g.base.g.string
+    }
 }
 
 /// JSONGenerator.EncodeString: the escapes of a JSON string.

@@ -28,6 +28,22 @@ impl Scene {
     pub fn to_xml_string_ctx(&self, root: CtxId) -> String {
         XmlGenerator::new(self).scene_to_xml(root)
     }
+
+    /// `field .toXMLString ()`: the field's `toXMLStream` outside any execution context.
+    pub fn field_value_to_xml_string(&self, value: &FieldValue) -> String {
+        let mut g = XmlGenerator::new(self);
+
+        g.base.push_ctx(self.first_node_ctx(value));
+
+        match value {
+            FieldValue::SFNode(n) => g.sfnode_to_xml(*n),
+            FieldValue::MFNode(nodes) => g.mfnode_to_xml(nodes),
+            _ => g.value_field_to_xml(value, false),
+        }
+
+        g.base.pop_ctx();
+        g.base.g.string
+    }
 }
 
 /// XMLGenerator.EncodeString: the escapes of a value printed inside a `'`-quoted attribute or an
