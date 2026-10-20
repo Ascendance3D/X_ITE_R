@@ -142,3 +142,18 @@ and items answer keys were used unchanged (hashes match). The three time-depende
 87-weaver_anime_final_fixed2, `new Date ()` in a Script) are documented in `_batch09_context/cloud/OPEN_WORK.md` and
 `crates/x3d-script/tests/x1-known.tsv`; they are not Rust defects. Ledger unchanged: 346 entries, 232 COMPLETE, 54 PARTIAL,
 25 DIFFERENT, 33 NOT_TESTED, 2 MISSING (231 → 232 COMPLETE is node:MetadataSet).
+
+## Owner decision round 2026-10-20 (after e62be31)
+
+- cfg-scene-odd: the component state a scene keeps now matches X_ITE for every argument probed (cfg-comp, 33 probes: missing,
+  null, string, number, plain objects with integer, fractional, string, negative, NaN and missing levels, unknown and missing
+  names, add twice, update, remove; VRML, XML and JSON printing). Only the engine's TypeError text stays documented (QuickJS
+  words it differently from V8); the thrown class is compared.
+- Ledger (exact IDs, evidence in the notes): sub:exec.import-export, sub:exec.bindable-stacks, sub:config.components-profiles
+  COMPLETE; sub:exec.context-api PARTIAL (owner decision); totals 235 COMPLETE, 51 PARTIAL, 25 DIFFERENT, 33 NOT_TESTED,
+  2 MISSING, 346 entries, the 25 DIFFERENT unchanged (ledger_b09_cloud.py check).
+- Script / SAI: X3DScene / X3DExecutionContext class chain (scx-api), the objects a context hands out (scx-members), every
+  global X_ITE's Script.js defines (scr-globals), X_ITE's info classes generated from the pin (prelude/config.js).
+- Parser and timing: live clone counts in a Script's prints (meta-parse-proto), SVG fieldOfView SFVec4f (parse-formats), XML
+  MFString warning field name (parse-xml-mfstring), synchronous data URLs for Scripts (scr-url-order-sync).
+- Still open, documented: see _batch09_context/cloud/OPEN_WORK.md.
