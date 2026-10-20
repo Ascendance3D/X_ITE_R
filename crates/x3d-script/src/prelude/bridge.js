@@ -465,7 +465,13 @@ __bridge .fieldCallbackAdded = function (field)
       X ("fobserve", entry .h, true);
 };
 
-// X3DField.processEvent of an observed node field: `callback (this .valueOf ())` for each field callback.
+// X3DField.processEvent of an observed node field: `callback (this .valueOf ())` for each field callback, after the value was set
+// and the routes were given the event.
+//
+// A callback that throws ends the loop, as in X_ITE, where the exception leaves processEvent and the remaining callbacks of the
+// event do not run. X_ITE's event loop does not catch it either, and its browser stops advancing (oracle fcb-throw.wrl). Owner
+// decision 2026-10-20: the port reports it at error level and the runtime goes on; the field keeps its value, its routes their
+// event, and the next event runs every callback again.
 global .__fieldEvent = function (id)
 {
    const entry = entryOf (id);
@@ -482,10 +488,12 @@ global .__fieldEvent = function (id)
       for (const callback of field .getFieldCallbacks () .values ())
       {
          currentScript = callbackScripts .get (callback) ?? previous;
-
-         try { callback (field .valueOf ()); }
-         catch (error) { scriptConsole .error (error); }
+         callback (field .valueOf ());
       }
+   }
+   catch (error)
+   {
+      scriptConsole .error (error);
    }
    finally
    {
