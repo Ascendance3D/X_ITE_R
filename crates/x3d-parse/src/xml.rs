@@ -924,11 +924,22 @@ impl<'a> XmlParser<'a> {
     fn container_field_of(&self, node: NodeId) -> Option<String> {
         let scene = &self.p.scene;
 
+        // The Metadata nodes: `if (specificationVersion <= 3.3) return "metadata"` (Metadata*.getContainerField).
+        let of_type = |t: usize| {
+            let ty = &scene.table.types[t];
+
+            if ty.name.starts_with("Metadata") && scene.specification_version.parse::<f64>().is_ok_and(|v| v <= 3.3) {
+                return "metadata".to_string();
+            }
+
+            ty.container_field.clone()
+        };
+
         match &scene.node(node).kind {
-            NodeKind::Builtin(t) => Some(scene.table.types[*t].container_field.clone()),
+            NodeKind::Builtin(t) => Some(of_type(*t)),
             NodeKind::Instance(_) => Some("children".into()),
             NodeKind::Placeholder => match self.placeholder_types.get(&node) {
-                Some(UseType::Concrete(t)) => Some(scene.table.types[*t].container_field.clone()),
+                Some(UseType::Concrete(t)) => Some(of_type(*t)),
                 Some(UseType::Instance) => Some("children".into()),
                 _ => None,
             },

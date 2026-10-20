@@ -821,6 +821,8 @@ impl Viewer3d {
 
         self.forget_released();
 
+        let prev_time = self.last_time.unwrap_or(now);
+
         self.last_time = Some(now);
         self.time = now;
         self.date_now = self.date_now.max(now);
@@ -828,7 +830,13 @@ impl Viewer3d {
         self.frame_count += 1;
 
         // Timeouts that fired between frames (setTimeout).
-        self.for_each_rt(&mut |rt| rt.fire_timeouts(now));
+        let date_now = self.date_now;
+
+        self.for_each_rt(&mut |rt| {
+            rt.timer_prev_time = prev_time;
+            rt.timer_date = date_now;
+            rt.fire_timeouts(now);
+        });
 
         // Scripts' requests of the browser made between frames (Browser.nextViewpoint ...).
         self.browser_requests();

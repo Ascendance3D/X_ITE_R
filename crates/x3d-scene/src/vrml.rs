@@ -837,6 +837,45 @@ impl Scene {
         g.g.string
     }
 
+    /// The execution context of the first node a node-valued field holds (what a field's `toXXXString` prints names against).
+    pub(crate) fn first_node_ctx(&self, value: &FieldValue) -> Option<CtxId> {
+        let first = match value {
+            FieldValue::SFNode(n) => *n,
+            FieldValue::MFNode(list) => list.iter().flatten().next().copied(),
+            _ => None,
+        };
+
+        first.map(|n| self.node(n).ctx)
+    }
+
+    /// `field .toVRMLString ()` of a node-valued field: the nodes in full, named by their own execution context.
+    pub fn node_value_to_vrml_string(&self, value: &FieldValue) -> String {
+        let mut g = VrmlGenerator::new(self);
+
+        g.push_ctx(self.first_node_ctx(value));
+        g.value_to_vrml(value);
+        g.pop_ctx();
+        g.g.string
+    }
+
+    /// `field .toString ()` of a node-valued field: X3DNode.toStream prints only `TypeName { }`.
+    pub fn node_value_to_string(&self, value: &FieldValue) -> String {
+        let one = |n: &Option<NodeId>| match n {
+            Some(n) => format!("{} {{ }}", self.type_name(*n)),
+            None => "NULL".to_string(),
+        };
+
+        match value {
+            FieldValue::SFNode(n) => one(n),
+            FieldValue::MFNode(list) => match list.len() {
+                0 => "[ ]".to_string(),
+                1 => one(&list[0]),
+                _ => format!("[\n{}\n]", list.iter().map(|n| format!("  {}", one(n))).collect::<Vec<_>>().join("\n")),
+            },
+            _ => String::new(),
+        }
+    }
+
     /// Remove a route (X3DExecutionContext.deleteRoute); the removed route, if any.
     pub fn delete_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Option<Route> {
         let src = self.get_field(source, source_field)?;
