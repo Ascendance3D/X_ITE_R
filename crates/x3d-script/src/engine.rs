@@ -738,10 +738,15 @@ fn data_numbers(v: &Value<'_>) -> Vec<f64> {
     let Some(a) = v.as_array() else { return vec![] };
 
     (0..a.len())
+        // The number the engine uses is the component's ToNumber (X_ITE's generator and renderer read `+ value`); a component that
+        // is not a number stays as it is in the Script's objects (bridge.js raw values).
         .map(|i| match a.get::<Value>(i) {
-            Ok(x) if x.is_undefined() => jsmath::JS_UNDEFINED,
-            Ok(x) if x.is_null() => jsmath::JS_NULL,
-            Ok(x) => x.as_number().unwrap_or(f64::NAN),
+            Ok(x) => x.as_number().unwrap_or_else(|| {
+                x.get::<Coerced<f64>>().map(|c| c.0).unwrap_or_else(|_| {
+                    let _ = x.ctx().catch();
+                    f64::NAN
+                })
+            }),
             Err(_) => f64::NAN,
         })
         .collect()
@@ -2057,6 +2062,15 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(undefined)
         }
         // prelude/bridge.js: field data in and out, node fields mirrored by the Script's objects.
+        // The raw-value token of a node field's current value (see "fpush"), or undefined.
+        "frawtok" => {
+            let h = handle_at(ctx, a, 0)?;
+
+            match slot_key(h).and_then(|k| rt().scene.raw_tokens.get(&k).map(|r| r.token)) {
+                Some(t) => Ok(Value::new_number(ctx.clone(), t as f64)),
+                None => Ok(undefined),
+            }
+        }
         "fexport" => {
             let h = handle_at(ctx, a, 0)?;
             value_data(ctx, &read(h))
@@ -2071,6 +2085,14 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         "fpush" => {
             let h = handle_at(ctx, a, 0)?;
             let event = a.get(2).and_then(|v| v.as_bool()).unwrap_or(true);
+            let raw = a.get(3).and_then(|v| v.as_number()).map(|t| {
+                let texts: Vec<Option<String>> = a
+                    .get(4)
+                    .and_then(|v| v.as_array().cloned())
+                    .map(|arr| arr.iter::<Value>().map(|x| x.ok().and_then(|x| x.as_string().and_then(|s| s.to_string().ok()))).collect())
+                    .unwrap_or_default();
+                x3d_scene::scene::RawValue { token: t as u32, texts: texts.into() }
+            });
 
             if let Some(k) = slot_key(h) {
                 let v = data_value(rt().field(k).ty(), a.get(1).unwrap_or(&undefined));
@@ -2079,6 +2101,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     rt().set_value(k, v);
                 } else {
                     rt().set_raw(k, v);
+                }
+
+                // The Script's value held components that are not numbers: their token goes with the value (Scene::raw_tokens).
+                if let Some(r) = raw {
+                    rt().scene.raw_tokens.insert(k, r);
                 }
 
                 rt().js_clean(k);

@@ -80,17 +80,22 @@ C = {
         ["crates/x3d-viewer/tests/rea_batch09_sai.rs fld-* fldx-* fcb-* scr-field-access scr-field-defaults",
          "crates/x3d-script/tests/script.rs"],
         "X3DConstants of external-component node types (X_ITE order varies run to run); IterableWeakSet members held strongly "
-        "(QuickJS); a non-number SF component stored as NaN by the runtime; engine-level Intl/Error.stack",
+        "(QuickJS); engine-level Intl/Error.stack; XML/JSON printing of raw (non-number) SF components not compared",
         "b09 cloud: Script field objects are X_ITE's own classes (prelude generated from the pin). Owner decision 2026-10-20 "
         "(approved safety difference, kept within this entry): a length or index near 2^32 is a RangeError and the field keeps its "
         "prior value; X_ITE allocates and runs out of memory (script.rs huge_mf_length_or_index_is_a_range_error_not_an_allocation, "
-        "huge_length_on_a_node_field_keeps_its_prior_value)",
+        "huge_length_on_a_node_field_keeps_its_prior_value). Owner decision 2026-10-20 (Decision 2, no string-to-NaN difference): "
+        "fldx-internal (strings, numeric strings, '', null, undefined, NaN, true, objects, '1e3' written into Vector3 / Color3 "
+        "through getValue (), the setters, constructors, Rotation4, MFFloat, MFVec3f elements, SFFloat; node fields with routes and "
+        "Script fields) baselined from X_ITE (3 identical recordings), exact: raw components kept with the value and along routes, "
+        "never default, printed String (raw) without a unit and ToNumber / factor with one",
     ),
     "node:Script": (
         "PARTIAL",
         ["crates/x3d-script/tests/script.rs a_throwing_field_callback_ends_its_event_and_the_runtime_goes_on",
          "crates/x3d-viewer/tests/rea_batch09_sai.rs scr-globals scr-classes scr-url-order-sync scr-image-events"],
-        "scr-classes-open: the page's own globals (window, document, XMLHttpRequest, fetch; owner decision pending); "
+        "scr-classes-open: the page's own globals (window, document, XMLHttpRequest, fetch) are not provided (owner decision "
+        "2026-10-20, Decision 1: no DOM, no stand-in objects); "
         "scr-url-order-open: initialize order of Scripts whose URL candidates fail or need a fetch (Chrome's task order); "
         "scr-browser-open: X3DConstants of external-component node types (X_ITE's load order)",
         "b09 cloud: owner decision 2026-10-20: a field callback that throws is reported at error level and ends the callbacks of "

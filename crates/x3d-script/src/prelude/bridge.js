@@ -342,6 +342,16 @@ function fieldFromData (type, data)
       return field;
    }
 
+   // Components that are not numbers (raw values, see rawToken) go into the internal value object as they are.
+   if (data .some (x => typeof x !== "number"))
+   {
+      const field = new C (), value = field .getValue ();
+      const keys  = typeof value [0] === "number" ? data .map ((_, i) => i) : ["x", "y", "z", "w"];
+
+      data .forEach ((x, i) => value [keys [i]] = x);
+      return field;
+   }
+
    return new C (... data);
 }
 
@@ -390,7 +400,7 @@ function attachedField (h, type)
    if (entry)
       return entry .field;
 
-   const data  = X ("fexport", h);
+   const data  = rawData (h, X ("fexport", h));
    const field = fieldFromData (type, data);
    const unit  = X ("funit", h);
 
@@ -422,7 +432,53 @@ function pushField (field, event)
       return;
 
    entry .data = fieldData (field);
-   X ("fpush", entry .h, entry .data, event);
+   X ("fpush", entry .h, entry .data, event, rawToken (field, entry .data), rawTexts (field, entry .data));
+}
+
+// X_ITE's Vector3 (and the other internal value objects) hold any JavaScript value a Script puts there; the runtime uses each
+// component's ToNumber. The data with its components as they are is kept here under a token that goes with the runtime's value
+// (to the fields a route passes it on to), so the Script objects of those fields hold the same components.
+const rawValues = new Map ();
+let rawSeq = 0;
+
+// The field types whose internal value object (Vector2/3/4, Color3/4) a Script can fill with any value.
+const rawTypes = new Set (["SFColor", "SFColorRGBA", "SFVec2d", "SFVec2f", "SFVec3d", "SFVec3f", "SFVec4d", "SFVec4f"]);
+
+function hasRaw (field, data)
+{
+   return rawTypes .has (field .getTypeName ()) && Array .isArray (data) && !data .every (x => typeof x === "number");
+}
+
+function rawToken (field, data)
+{
+   if (!hasRaw (field, data))
+      return undefined;
+
+   rawValues .set (++ rawSeq, data .slice ());
+   return rawSeq;
+}
+
+// `String (component)` of each raw component (null for a number): how a field without a unit prints it (X3DGenerator.FloatFormat).
+function rawTexts (field, data)
+{
+   if (!hasRaw (field, data))
+      return undefined;
+
+   return data .map (x =>
+   {
+      if (typeof x === "number")
+         return null;
+
+      try { return String (x); } catch { return null; }
+   });
+}
+
+// The data of a node field from the runtime, with the Script's raw components when they went with the value.
+function rawData (h, data)
+{
+   const token = X ("frawtok", h);
+
+   return token === undefined ? data : rawValues .get (token) ?? data;
 }
 
 // Before a Script runs: the node fields the runtime changed since.
@@ -437,7 +493,7 @@ function enter ()
       if (!entry)
          continue;
 
-      entry .data = dirty [i + 1];
+      entry .data = rawData (entry .h, dirty [i + 1]);
       setFieldData (entry .field, entry .data);
    }
 }
@@ -453,7 +509,7 @@ function leave ()
          continue;
 
       entry .data = data;
-      X ("fpush", entry .h, data, false);
+      X ("fpush", entry .h, data, false, rawToken (entry .field, data), rawTexts (entry .field, data));
    }
 }
 

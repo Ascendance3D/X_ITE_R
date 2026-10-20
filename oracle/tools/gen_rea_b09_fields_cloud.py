@@ -111,6 +111,45 @@ G.register("fldx-from", P_FROM, pre=CHAIN, nodes=HEAD_NODES)
 G.register("fldx-value", P_VALUE, pre=CHAIN, nodes=HEAD_NODES)
 G.register("fldx-edge", P_EDGE, pre=CHAIN, nodes=HEAD_NODES)
 
+
+# Values that are not numbers in a numeric field component (owner decision 2026-10-20: X_ITE's representation, compared): each value
+# goes in through a path, at frame 3; at frame 6 the Script reads the field back, and the scene text (dumped every frame) shows what
+# the node holds and what reached the routed destination.
+VALUES = [("num", "2.5"), ("numstr", "'2'"), ("str", "'abc'"), ("empty", "''"), ("null", "null"), ("undef", "undefined"),
+          ("nan", "NaN"), ("true", "true"), ("obj", "({ })"), ("expstr", "'1e3'")]
+PATHS = [
+    # SFVec3f: the internal Vector3 (getValue), then an event so the value is sent on.
+    ("vec-internal", "Transform", "translation", "var f = N .translation; f .getValue () .x = V; N .translation = f;"),
+    # SFVec3f: the component setter.
+    ("vec-setter", "Transform", "translation", "var f = N .translation; f .x = V; N .translation = f;"),
+    # SFVec3f: the constructor.
+    ("vec-new", "Transform", "translation", "N .translation = new SFVec3f (V, 1, 1);"),
+    # SFColor: the internal Color3 (getValue).
+    ("color-internal", "Material", "diffuseColor", "var f = N .diffuseColor; f .getValue () .r = V; N .diffuseColor = f;"),
+    # SFRotation: the internal Rotation4 axis component through its setter.
+    ("rot-setter", "Transform", "rotation", "var f = N .rotation; f .angle = V; N .rotation = f;"),
+    # MFFloat element (typed array), MFVec3f element's internal value.
+    ("mffloat-index", "ScalarInterpolator", "key", "var f = new MFFloat (0, 1); f [1] = V; N .key = f;"),
+    ("mfvec-internal", "Coordinate", "point", "var f = new MFVec3f (new SFVec3f (1, 1, 1)); f [0] .getValue () .y = V; N .point = f;"),
+    # SFFloat node field.
+    ("sffloat", "Material", "transparency", "N .transparency = V;"),
+]
+FI_NODES, FI_SET, FI_READ = [], [], []
+for pk, ptype, pfield, code in PATHS:
+    for vk, v in VALUES:
+        a, b = f"A_{pk}_{vk}".replace("-", "_"), f"B_{pk}_{vk}".replace("-", "_")
+        FI_NODES.append(f"DEF {a} {ptype} {{ }}\nDEF {b} {ptype} {{ }}\nROUTE {a}.{pfield}_changed TO {b}.set_{pfield}\n")
+        FI_SET.append(f"  T ('{pk} {vk} set', function () {{ var N = Browser .currentScene .getNamedNode ('{a}'); var V = {v}; {code} return 'ok'; }});")
+        FI_READ.append(f"  T ('{pk} {vk} read', function () {{ var N = Browser .currentScene .getNamedNode ('{a}'), M = Browser .currentScene .getNamedNode ('{b}'); var f = N .{pfield}, g = M .{pfield}; "
+                       f"var c = f .getValue ? f .getValue () : f; var first = typeof f === 'object' && f .length !== undefined && f [Symbol .iterator] ? f [f .length - 1] : f; "
+                       f"return [String (f), String (g), f .toVRMLString ? f .toVRMLString () : String (f), JSON .stringify (Array .from (typeof first === 'object' && first && first [Symbol .iterator] ? first : [first]) .map (function (x) {{ return typeof x + ':' + String (x); }}))]; }});")
+FI_AFTER = ("var F_ = 0;\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 3) {\n" + "\n".join(FI_SET) + "\n  }\n  if (F_ === 6) {\n" + "\n".join(FI_READ) + "\n    flush_ ();\n  }\n}\n")
+# A Script SFFloat field and a Script SFVec3f field.
+FI_FIELDS = "  inputOutput SFFloat sf 1\n  inputOutput SFVec3f sv 1 1 1\n"
+FI_SCRIPT = [("script sffloat " + vk, f"sf = {v}; return [typeof sf, String (sf)];") for vk, v in VALUES] + \
+            [("script sfvec internal " + vk, f"sv = new SFVec3f (1, 1, 1); sv .getValue () .z = {v}; return [typeof sv .z, String (sv .z), String (sv)];") for vk, v in VALUES]
+G.register("fldx-internal", FI_SCRIPT, fields=FI_FIELDS, pre=CHAIN, after=FI_AFTER, nodes="".join(FI_NODES))
+
 if __name__ == "__main__":
     sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith("fldx-")]
     G.main()

@@ -100,3 +100,17 @@ ctxev-inline, ctxev-stream-vrml, ctxev-stream-xml, ctxev-stream-json. cases.txt:
 - Script URLs: a data URL that is not base64 initializes the Script in its load microtask, as an `ecmascript:` URL does
   (FileLoader.loadDocumentAsync before its first await). New scr-url-order-sync (unsorted initialize order), exact.
 - scr-image-events (was baselined as scr-image-events-open): renamed; it has matched since the field object model.
+
+## Owner decisions 1-2 (2026-10-20, after 1bd58cb)
+
+- Decision 1 (no DOM): `window`, `document`, `XMLHttpRequest`, `fetch` and the page's `globalThis` stay outside the Script
+  environment; no stand-in objects; Browser methods that hand out page objects keep returning null. scr-classes-open and
+  brx-call-open stay documented open; node:Script stays PARTIAL.
+- Decision 2 (no string-to-NaN difference): new fldx-internal, 3 identical X_ITE recordings, exact. X_ITE's internal value
+  objects keep any JavaScript value written through `getValue ()`; the port keeps the Script realm's raw components with the
+  runtime value (Scene::raw_tokens, token and `String (component)` texts), passes them along routes, drops them on any other
+  set or on release, treats such a value as not default, and prints `String (raw)` for a field without a unit category and
+  ToNumber (raw) / factor for one with it. Only SFVec2/3/4 f/d, SFColor and SFColorRGBA carry raw components (an MFString
+  value is not raw: picking-groups, picking-layers, vpick-layers caught that). data_numbers uses ToNumber for every
+  component (null → 0, "" → 0, true → 1).
+  sub:fields.types stays PARTIAL. Ledger notes only; totals unchanged.

@@ -90,6 +90,10 @@ impl Runtime {
             // relations require equal types.
             if v.field_type() == self.field(k).ty() {
                 self.set_raw(k, v);
+
+                if let Some(t) = self.scene.raw_tokens.get(&event.origin).cloned() {
+                    self.scene.raw_tokens.insert(k, t);
+                }
             }
         }
 

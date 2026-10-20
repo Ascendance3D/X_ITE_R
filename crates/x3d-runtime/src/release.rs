@@ -376,6 +376,7 @@ impl Runtime {
 
         self.tainted_fields.retain(|(k, e)| !dead.contains(&k.0) && !dead.contains(&e.origin.0));
         self.tainted_nodes.retain(|n| !dead.contains(n));
+        self.scene.raw_tokens.retain(|k, _| !dead.contains(&k.0));
         self.decoded_images.retain(|(n, ..)| !dead.contains(n));
         self.rendered_now.retain(|n| !dead.contains(n));
 

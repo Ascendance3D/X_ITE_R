@@ -196,6 +196,15 @@ pub enum FieldLoc {
     Priv(usize),
 }
 
+/// A field value a Script gave with components that are not all numbers (see [`Scene::raw_tokens`]): the token of the Script
+/// realm's copy and, per component, `String (component)` of each one that is not a number. A field without a unit category
+/// prints these (X3DGenerator.FloatFormat: `String (value)` for a value that is not a finite number).
+#[derive(Clone, Debug)]
+pub struct RawValue {
+    pub token: u32,
+    pub texts: std::sync::Arc<[Option<String>]>,
+}
+
 /// Scene-level data of a scene merged into another (an Inline's scene): what X3DScene keeps
 /// apart from its execution context.
 #[derive(Clone, Debug)]
@@ -287,6 +296,9 @@ pub struct Scene {
     pub setup_order: Vec<NodeId>,
     /// Clone counts > 1 (X3DNode.getCloneCount), filled in by the runtime before printing.
     pub clone_counts: Option<std::collections::HashMap<NodeId, usize>>,
+    /// Fields whose value a Script gave with components that are not all numbers (X_ITE's Vector3 holds any JavaScript value): the
+    /// token of the Script realm's copy. Such a value is never the field's default (X_ITE compares the components with `===`).
+    pub raw_tokens: std::collections::HashMap<(NodeId, FieldLoc), RawValue>,
     /// Scene data of the Inline scenes merged into this one, by root context (see [`Scene::merge_inline`]).
     pub scene_infos: std::collections::HashMap<CtxId, SceneInfo>,
     pub imported: Vec<ImportedNode>,
@@ -455,6 +467,7 @@ impl Scene {
             setup_order: vec![],
             clone_counts: None,
             scene_infos: Default::default(),
+            raw_tokens: Default::default(),
             imported: vec![],
             exported: vec![],
             route_counter: 0,
@@ -549,6 +562,19 @@ impl Scene {
         });
 
         (unit.map(|u| unit_factor(units, &u)).unwrap_or(1.0), unit_factor(units, "angle"))
+    }
+
+    /// Has predefined field `field_name` of `node` a unit category X3DScene.toUnit converts (the categories of
+    /// [`unit_factor`]; its switch spells "acceleration:", so an acceleration field prints as it is)?
+    pub fn field_has_unit(&self, node: NodeId, field_name: &str) -> bool {
+        match self.node(node).kind {
+            NodeKind::Builtin(t) => {
+                let spec = self.spec_version_of(self.node(node).ctx);
+                self.table.types[t].variant(spec).fields.iter().find(|d| d.name == field_name).and_then(|d| d.unit.as_deref())
+                    .is_some_and(|u| matches!(u, "angle" | "force" | "length" | "mass" | "angularRate" | "area" | "speed" | "volume"))
+            }
+            _ => false,
+        }
     }
 
     /// X3DScene.updateUnit: only the four known categories, position kept.
@@ -1087,6 +1113,10 @@ impl Scene {
 
     /// X3DBaseNode.isDefaultValue (node-level: compares with the field definition).
     pub fn is_default_value(&self, id: NodeId, loc: FieldLoc) -> bool {
+        if self.raw_tokens.contains_key(&(id, loc)) {
+            return false;
+        }
+
         let node = self.node(id);
         let field = self.field(id, loc);
 
