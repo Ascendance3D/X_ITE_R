@@ -124,6 +124,16 @@ impl<'a> Sg<'a> {
         }
     }
 
+    /// OrthoViewpoint.fieldOfView: an SFVec4f in an X3D 4.1 scene, an MFFloat of four values up to 4.0.
+    /// Anything else (including an MFFloat of another length) is the default extents.
+    pub fn ortho_field_of_view(&self, n: NodeId) -> [f64; 4] {
+        match self.value(n, "fieldOfView") {
+            Some(FieldValue::SFVec4f(v) | FieldValue::SFVec4d(v)) => [v.x, v.y, v.z, v.w],
+            Some(FieldValue::MFFloat(v)) if v.len() == 4 => [v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64],
+            _ => [-1.0, -1.0, 1.0, 1.0],
+        }
+    }
+
     pub fn string(&self, n: NodeId, name: &str, default: &str) -> String {
         match self.value(n, name) {
             Some(FieldValue::SFString(s)) => s.clone(),

@@ -3110,10 +3110,7 @@ impl<'a> Builder<'a> {
                     }
                     None => (0.125, far_max_val),
                 };
-                let ortho = is_ortho.then(|| {
-                    let f = sg.f64s(v, "fieldOfView");
-                    if f.len() == 4 { [f[0], f[1], f[2], f[3]] } else { [-1.0, -1.0, 1.0, 1.0] }
-                });
+                let ortho = is_ortho.then(|| sg.ortho_field_of_view(v));
                 let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
                 let fov = if fov > 0.0 && fov < std::f64::consts::PI { fov } else { std::f64::consts::FRAC_PI_4 };
                 (camera_space, fov, near, far, ortho)
@@ -3313,12 +3310,7 @@ impl<'a> Builder<'a> {
             Some((v, m)) => {
                 let ty = sg.type_name(v).unwrap_or("Viewpoint");
                 if ty == "OrthoViewpoint" {
-                    let fov = sg.f64s(v, "fieldOfView");
-                    let fov = if fov.len() == 4 {
-                        [fov[0], fov[1], fov[2], fov[3]]
-                    } else {
-                        [-1.0, -1.0, 1.0, 1.0]
-                    };
+                    let fov = sg.ortho_field_of_view(v);
                     (sg.vec3(v, "position", Vector3::new(0.0, 0.0, 10.0)), sg.rotation(v, "orientation"), std::f64::consts::FRAC_PI_4, m, true, fov)
                 } else {
                     let fov = sg.f64(v, "fieldOfView", std::f64::consts::FRAC_PI_4);
