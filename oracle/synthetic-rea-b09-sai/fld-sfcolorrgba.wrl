@@ -64,6 +64,7 @@ function initialize () {
   T ('SFColorRGBA linearToSRGB', function () { return [new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .linearToSRGB (), new SFColorRGBA (0, 1, 2, 0.5) .linearToSRGB ()]; });
   T ('SFColorRGBA sRGBToLinear', function () { return [new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .sRGBToLinear (), new SFColorRGBA (0, 1, 2, 0.5) .sRGBToLinear ()]; });
   T ('SFColorRGBA setValue', function () { var v = new SFColorRGBA (); v .setValue (new SFColorRGBA (0.2, 0.4, 0.6, 0.8)); return v; });
+  T ('SFColorRGBA setValue other', function () { var v = new SFColorRGBA (); v .setValue (new SFColor (0.1, 0.2, 0.3, 0.4)); return v; });
   flush_ ();
 }
 

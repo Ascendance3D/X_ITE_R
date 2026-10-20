@@ -1,0 +1,36 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fcb throw"
+DEF T Transform { }
+DEF U Transform { }
+DEF D Script {
+  directOutput TRUE
+  mustEvaluate TRUE
+  inputOutput MFString out [ ]
+  url "ecmascript:
+
+var F = 0;
+function L (s) { var a = globalThis .LOG_ = globalThis .LOG_ || []; a .push (F + ':' + s); out = new MFString (... a); }
+function show (v) {
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'number') return Object .is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON .stringify (v);
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (typeof v === 'function') return 'fn';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v);
+}
+function E (e) { return 'ERR ' + (e && e .name) + ': ' + (e && e .message); }
+function S (n) { return Browser .currentScene .getNamedNode (n); }
+
+
+function prepareEvents () {
+  ++ F;
+  if (F === 1) { try { var t = S ('T'), u = S ('U'); t .addFieldCallback ('a', 'translation', function (v) { L ('a ' + show (v)); }); t .addFieldCallback ('b', 'translation', function (v) { L ('b throws'); throw new Error ('boom'); }); t .addFieldCallback ('c', 'translation', function (v) { L ('c ' + show (v)); }); u .addFieldCallback ('u', 'translation', function (v) { L ('U ' + show (v)); }); t .translation = new SFVec3f (1, 0, 0); u .translation = new SFVec3f (2, 0, 0); L ('set both'); } catch (e) { L ('step 1 ' + E (e)); } }
+  if (F === 2) { try { S ('U') .translation = new SFVec3f (3, 0, 0); L ('set U'); } catch (e) { L ('step 2 ' + E (e)); } }
+  if (F === 3) { try { S ('T') .translation = new SFVec3f (4, 0, 0); L ('set T'); } catch (e) { L ('step 3 ' + E (e)); } }
+}
+
+  "
+}

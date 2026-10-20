@@ -88,12 +88,17 @@ function initialize () {
   T ('write io_changed', function () { io_changed = 10; return io; });
   T ('write ioV', function () { ioV = new SFVec3f (4, 5, 6); return ioV; });
   T ('write ioV member', function () { ioV .y = 50; return ioV; });
+  T ('write ioV array', function () { ioV = [7, 8, 9]; return ioV; });
   T ('write ioV SFVec3d', function () { ioV = new SFVec3d (1, 1, 1); return ioV; });
+  T ('write ioV SFVec2f', function () { ioV = new SFVec2f (1, 1); return ioV; });
+  T ('write ioV number', function () { ioV = 5; return ioV; });
+  T ('write ioV string', function () { ioV = 'x'; return ioV; });
   T ('write ioV null', function () { ioV = null; return ioV; });
   T ('write ioV undefined', function () { ioV = undefined; return ioV; });
   T ('write ioM array', function () { ioM = [3, 4, 5]; return ioM; });
   T ('write ioM MFFloat', function () { ioM = new MFFloat (7, 8); return ioM; });
   T ('write ioM MFDouble', function () { ioM = new MFDouble (7, 8); return ioM; });
+  T ('write ioM number', function () { ioM = 5; return ioM; });
   T ('write ioM string', function () { ioM = 'abc'; return ioM; });
   T ('write ioM null', function () { ioM = null; return ioM; });
   T ('ioM push', function () { ioM .push (9); return ioM; });
@@ -162,12 +167,18 @@ function initialize () {
   T ('ioR = SFVec4', function () { ioR = new SFVec4f (0, 0, 1, 1); return ioR; });
   T ('ioR = array', function () { ioR = [0, 1, 0, 1]; return ioR; });
   T ('ioR = SFRotation', function () { ioR = new SFRotation (0, 1, 0, 1); return ioR; });
+  T ('ioC = SFVec3f', function () { ioC = new SFVec3f (1, 1, 1); return ioC; });
   T ('ioC = SFColor', function () { ioC = new SFColor (0.5, 0.5, 0.5); return ioC; });
+  T ('ioC = SFColorRGBA', function () { ioC = new SFColorRGBA (0.5, 0.5, 0.5, 1); return ioC; });
+  T ('ioC member r', function () { ioC .r = 0.25; return ioC; });
+  T ('ioC member x', function () { ioC .x = 1; return ioC + ':' + ioC .x; });
   T ('this', function () { return SELF; });
   T ('nested this', function () { return (function () { return SELF; }) (); });
   T ('this ctor', function () { return SELF .constructor .name; });
   T ('this typeof', function () { return typeof SELF; });
   T ('this.getNodeName', function () { return SELF .getNodeName (); });
+  T ('this.getNodeTypeName', function () { return SELF .getNodeTypeName (); });
+  T ('this.getNodeType', function () { return SELF .getNodeType (); });
   T ('this.getType', function () { return SELF .getType (); });
   T ('this.getTypeName', function () { return SELF .getTypeName (); });
   T ('this.getFieldDefinitions length', function () { return SELF .getFieldDefinitions () .length; });
@@ -199,8 +210,16 @@ function initialize () {
   T ('getField init setValue', function () { var f = SELF .getField ('init'); f .setValue (4); return init + ':' + f .getValue (); });
   T ('getField valueOf', function () { var f = SELF .getField ('ioV'); return [typeof f .valueOf (), f .valueOf () === f]; });
   T ('getField equals', function () { var f = SELF .getField ('ioV'); return [f .equals (new SFVec3f (7, 8, 9)), f .equals (f)]; });
+  T ('getField toString', function () { return SELF .getField ('ioV') .toString (); });
+  T ('getField toVRMLString', function () { return SELF .getField ('ioV') .toVRMLString (); });
+  T ('getField toXMLString', function () { return SELF .getField ('ioV') .toXMLString (); });
+  T ('getField toJSONString', function () { return SELF .getField ('ioV') .toJSONString (); });
+  T ('getField clone', function () { var f = SELF .getField ('ioV'); var c = f .copy (); return [c === f, String (c)]; });
   T ('getField isDefaultValue', function () { return [SELF .getField ('ioV') .isDefaultValue (), SELF .getField ('io') .isDefaultValue ()]; });
   T ('getField getTainted', function () { return typeof SELF .getField ('io') .getTainted; });
+  T ('getField setName', function () { return typeof SELF .getField ('io') .setName; });
+  T ('field proto names', function () { return Object .getOwnPropertyNames (Object .getPrototypeOf (SELF .getField ('ioV'))) .sort () .join (','); });
+  T ('fieldDefinitions', function () { var d = SELF .getFieldDefinitions () [0]; return [d .name, d .accessType, d .dataType, d .value, typeof d .getName]; });
   flush_ ();
 }
 

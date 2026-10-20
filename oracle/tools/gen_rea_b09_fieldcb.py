@@ -136,6 +136,23 @@ function inF (v) { os = 'got ' + v; }
 }, fields="  inputOutput SFInt32 loc 0\n")
 
 
+# 5. A callback that throws: X3DField.processEvent does not catch it. What still runs after it: the next callback of the same field,
+# the other events of the same frame, the next frame. (The exception itself is an uncaught page error, which the oracle page
+# does not record; only its effects are compared.)
+W["fcb-throw"] = world("fcb throw", """DEF T Transform { }
+DEF U Transform { }
+""", {
+    1: "var t = S ('T'), u = S ('U');"
+       " t .addFieldCallback ('a', 'translation', function (v) { L ('a ' + show (v)); });"
+       " t .addFieldCallback ('b', 'translation', function (v) { L ('b throws'); throw new Error ('boom'); });"
+       " t .addFieldCallback ('c', 'translation', function (v) { L ('c ' + show (v)); });"
+       " u .addFieldCallback ('u', 'translation', function (v) { L ('U ' + show (v)); });"
+       " t .translation = new SFVec3f (1, 0, 0); u .translation = new SFVec3f (2, 0, 0); L ('set both');",
+    2: "S ('U') .translation = new SFVec3f (3, 0, 0); L ('set U');",
+    3: "S ('T') .translation = new SFVec3f (4, 0, 0); L ('set T');",
+})
+
+
 if __name__ == "__main__":
     for name, text in W.items():
         with open(os.path.join(out_dir, name + ".wrl"), "w") as f:

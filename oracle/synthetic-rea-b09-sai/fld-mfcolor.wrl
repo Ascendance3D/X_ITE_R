@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFColor new ()', function () { return new MFColor (); });
   T ('MFColor new (elems)', function () { return new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); });
+  T ('MFColor new (array)', function () { return new MFColor ([new SFColor (1, 0, 0), new SFColor (0, 1, 0)]); });
+  T ('MFColor new (bad)', function () { return new MFColor (null, undefined, 'x', {}); });
   T ('MFColor length', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .length, new MFColor () .length]; });
   T ('MFColor index', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFColor index write', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m [1] = new SFColor (0.5, 0.5, 0.5); return [m, m .length]; });
   T ('MFColor index write past end', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m [5] = new SFColor (0.5, 0.5, 0.5); return [m, m .length]; });
+  T ('MFColor index write bad', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFColor length set', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .length = 1; var n = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); n .length = 5; var o = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); o .length = 0; return [m, n, o]; });
   T ('MFColor length set bad', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .length = -1; return m .length; });
+  T ('MFColor length set nan', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .length = 'x'; return m .length; });
   T ('MFColor keys', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFColor for in', function () { var o = []; for (var k in new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1))) o .push (k); return o; });
   T ('MFColor toStrings', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFColor setValue array', function () { var m = new MFColor (); m .setValue ([new SFColor (1, 0, 0), new SFColor (0, 1, 0)]); return m; });
   T ('MFColor setValue empty', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .setValue ([]); return m; });
   T ('MFColor setValue self', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); m .setValue (m); return m; });
+  T ('MFColor element alias', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (new SFColor (0.5, 0.5, 0.5)); } return [e, m]; });
+  T ('MFColor resize', function () { var m = new MFColor (new SFColor (1, 0, 0), new SFColor (0, 1, 0), new SFColor (0, 0, 1)); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

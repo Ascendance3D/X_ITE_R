@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFVec4f new ()', function () { return new MFVec4f (); });
   T ('MFVec4f new (elems)', function () { return new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); });
+  T ('MFVec4f new (array)', function () { return new MFVec4f ([new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8)]); });
+  T ('MFVec4f new (bad)', function () { return new MFVec4f (null, undefined, 'x', {}); });
   T ('MFVec4f length', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); return [m .length, new MFVec4f () .length]; });
   T ('MFVec4f index', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFVec4f index write', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m [1] = new SFVec4f (1, 1, 1, 1); return [m, m .length]; });
   T ('MFVec4f index write past end', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m [5] = new SFVec4f (1, 1, 1, 1); return [m, m .length]; });
+  T ('MFVec4f index write bad', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFVec4f length set', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m .length = 1; var n = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); n .length = 5; var o = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); o .length = 0; return [m, n, o]; });
   T ('MFVec4f length set bad', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m .length = -1; return m .length; });
+  T ('MFVec4f length set nan', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m .length = 'x'; return m .length; });
   T ('MFVec4f keys', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFVec4f for in', function () { var o = []; for (var k in new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1))) o .push (k); return o; });
   T ('MFVec4f toStrings', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFVec4f setValue array', function () { var m = new MFVec4f (); m .setValue ([new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8)]); return m; });
   T ('MFVec4f setValue empty', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m .setValue ([]); return m; });
   T ('MFVec4f setValue self', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); m .setValue (m); return m; });
+  T ('MFVec4f element alias', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (new SFVec4f (1, 1, 1, 1)); } return [e, m]; });
+  T ('MFVec4f resize', function () { var m = new MFVec4f (new SFVec4f (1, 2, 3, 4), new SFVec4f (5, 6, 7, 8), new SFVec4f (0, 0, 0, 1)); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

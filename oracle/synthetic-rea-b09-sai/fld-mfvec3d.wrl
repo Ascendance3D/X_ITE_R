@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFVec3d new ()', function () { return new MFVec3d (); });
   T ('MFVec3d new (elems)', function () { return new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); });
+  T ('MFVec3d new (array)', function () { return new MFVec3d ([new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6)]); });
+  T ('MFVec3d new (bad)', function () { return new MFVec3d (null, undefined, 'x', {}); });
   T ('MFVec3d length', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); return [m .length, new MFVec3d () .length]; });
   T ('MFVec3d index', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFVec3d index write', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m [1] = new SFVec3d (1, 0, 0); return [m, m .length]; });
   T ('MFVec3d index write past end', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m [5] = new SFVec3d (1, 0, 0); return [m, m .length]; });
+  T ('MFVec3d index write bad', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFVec3d length set', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m .length = 1; var n = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); n .length = 5; var o = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); o .length = 0; return [m, n, o]; });
   T ('MFVec3d length set bad', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m .length = -1; return m .length; });
+  T ('MFVec3d length set nan', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m .length = 'x'; return m .length; });
   T ('MFVec3d keys', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFVec3d for in', function () { var o = []; for (var k in new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9))) o .push (k); return o; });
   T ('MFVec3d toStrings', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFVec3d setValue array', function () { var m = new MFVec3d (); m .setValue ([new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6)]); return m; });
   T ('MFVec3d setValue empty', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m .setValue ([]); return m; });
   T ('MFVec3d setValue self', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); m .setValue (m); return m; });
+  T ('MFVec3d element alias', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (new SFVec3d (1, 0, 0)); } return [e, m]; });
+  T ('MFVec3d resize', function () { var m = new MFVec3d (new SFVec3d (1, 2, 3), new SFVec3d (4, 5, 6), new SFVec3d (7, 8, 9)); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFBool new ()', function () { return new MFBool (); });
   T ('MFBool new (elems)', function () { return new MFBool (true, false, 0); });
+  T ('MFBool new (array)', function () { return new MFBool ([true, false]); });
+  T ('MFBool new (bad)', function () { return new MFBool (null, undefined, 'x', {}); });
   T ('MFBool length', function () { var m = new MFBool (true, false, 0); return [m .length, new MFBool () .length]; });
   T ('MFBool index', function () { var m = new MFBool (true, false, 0); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFBool index write', function () { var m = new MFBool (true, false, 0); m [1] = 'x'; return [m, m .length]; });
   T ('MFBool index write past end', function () { var m = new MFBool (true, false, 0); m [5] = 'x'; return [m, m .length]; });
+  T ('MFBool index write bad', function () { var m = new MFBool (true, false, 0); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFBool length set', function () { var m = new MFBool (true, false, 0); m .length = 1; var n = new MFBool (true, false, 0); n .length = 5; var o = new MFBool (true, false, 0); o .length = 0; return [m, n, o]; });
   T ('MFBool length set bad', function () { var m = new MFBool (true, false, 0); m .length = -1; return m .length; });
+  T ('MFBool length set nan', function () { var m = new MFBool (true, false, 0); m .length = 'x'; return m .length; });
   T ('MFBool keys', function () { var m = new MFBool (true, false, 0); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFBool for in', function () { var o = []; for (var k in new MFBool (true, false, 0)) o .push (k); return o; });
   T ('MFBool toStrings', function () { var m = new MFBool (true, false, 0); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFBool setValue array', function () { var m = new MFBool (); m .setValue ([true, false]); return m; });
   T ('MFBool setValue empty', function () { var m = new MFBool (true, false, 0); m .setValue ([]); return m; });
   T ('MFBool setValue self', function () { var m = new MFBool (true, false, 0); m .setValue (m); return m; });
+  T ('MFBool element alias', function () { var m = new MFBool (true, false, 0); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue ('x'); } return [e, m]; });
+  T ('MFBool resize', function () { var m = new MFBool (true, false, 0); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

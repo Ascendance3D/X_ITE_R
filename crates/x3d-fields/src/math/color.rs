@@ -26,6 +26,11 @@ impl Color3 {
         Self { r: clamp(r, 0.0, 1.0), g: clamp(g, 0.0, 1.0), b: clamp(b, 0.0, 1.0) }
     }
 
+    /// Exactly these components (Color3.assign: a Script's color object holds what it holds, unclamped).
+    pub fn from_raw(r: f64, g: f64, b: f64) -> Self {
+        Self { r, g, b }
+    }
+
     pub fn set(&mut self, r: f64, g: f64, b: f64) -> &mut Self {
         *self = Self::new(r, g, b);
         self
@@ -98,6 +103,11 @@ impl Color3 {
 impl Color4 {
     pub fn new(r: f64, g: f64, b: f64, a: f64) -> Self {
         Self { r: clamp(r, 0.0, 1.0), g: clamp(g, 0.0, 1.0), b: clamp(b, 0.0, 1.0), a: clamp(a, 0.0, 1.0) }
+    }
+
+    /// Exactly these components (Color4.assign).
+    pub fn from_raw(r: f64, g: f64, b: f64, a: f64) -> Self {
+        Self { r, g, b, a }
     }
 
     pub fn set(&mut self, r: f64, g: f64, b: f64, a: f64) -> &mut Self {

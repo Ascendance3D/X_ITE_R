@@ -166,6 +166,18 @@ impl Rotation4 {
         self.quaternion
     }
 
+    /// The whole state of the JS object (`[_x]`, `[_y]`, `[_z]`, `[_angle]`, `[_tainted]`, `[_quaternion]`), for a Script's
+    /// Rotation4 that must hold exactly what the field holds.
+    pub fn state(&self) -> ([f64; 4], bool, Quaternion) {
+        ([self.x, self.y, self.z, self.angle], self.tainted, self.quaternion)
+    }
+
+    /// A rotation with exactly this state (see [`Rotation4::state`]).
+    pub fn from_state(axis_angle: [f64; 4], tainted: bool, quaternion: Quaternion) -> Self {
+        let [x, y, z, angle] = axis_angle;
+        Self { x, y, z, angle, tainted, quaternion }
+    }
+
     pub fn equals(&self, other: &Self) -> bool {
         self.quaternion.equals(&other.quaternion)
     }

@@ -76,8 +76,10 @@ function initialize () {
   T ('SFQuaternion slerp opposite', function () { return new SFQuaternion (0, 0.6, 0, 0.8) .slerp (new SFQuaternion (0, 0.6, 0, 0.8) .negate (), 0.5); });
   T ('SFQuaternion slerp zero', function () { return new SFQuaternion () .slerp (new SFQuaternion (), 0.5); });
   T ('SFQuaternion setMatrix', function () { var v = new SFQuaternion (); v .setMatrix (new SFMatrix3f (0, 1, 0, -1, 0, 0, 0, 0, 1)); return v; });
+  T ('SFQuaternion setMatrix 4', function () { var v = new SFQuaternion (); v .setMatrix (new SFMatrix4f ()); return v; });
   T ('SFQuaternion equals/copy', function () { var v = new SFQuaternion (0, 0.6, 0, 0.8); var w = v .copy (); return [v .equals (w), v === w, v .isDefaultValue (), new SFQuaternion () .isDefaultValue (), new SFQuaternion (0, 0, 0, 1) .isDefaultValue ()]; });
   T ('SFQuaternion setValue', function () { var v = new SFQuaternion (); v .setValue (new SFQuaternion (0, 0.6, 0, 0.8)); return v; });
+  T ('SFQuaternion static', function () { return [typeof SFQuaternion .ZERO, typeof SFQuaternion .IDENTITY, typeof SFQuaternion .fromMatrix]; });
   flush_ ();
 }
 

@@ -1,0 +1,417 @@
+{
+ "components": [
+  {
+   "name": "CADGeometry",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Core",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "CubeMapTexturing",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "DIS",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "EnvironmentalEffects",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "EnvironmentalSensor",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "EventUtilities",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Followers",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "GaussianSplats",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Geometry2D",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Geometry3D",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Geospatial",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Grouping",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "HAnim",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Interpolation",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "KeyDeviceSensor",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Layering",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Layout",
+   "external": true,
+   "dependencies": [
+    "Text"
+   ]
+  },
+  {
+   "name": "Lighting",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Navigation",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Networking",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "NURBS",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "ParticleSystems",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Picking",
+   "external": true,
+   "dependencies": [
+    "RigidBodyPhysics"
+   ]
+  },
+  {
+   "name": "PointingDeviceSensor",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Shaders",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "TextureProjection",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Rendering",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "RigidBodyPhysics",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Scripting",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Shape",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Sound",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Text",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Texturing",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "Texturing3D",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "Time",
+   "external": false,
+   "dependencies": []
+  },
+  {
+   "name": "VolumeRendering",
+   "external": true,
+   "dependencies": [
+    "CADGeometry",
+    "Texturing3D"
+   ]
+  },
+  {
+   "name": "WebXR",
+   "external": true,
+   "dependencies": []
+  },
+  {
+   "name": "X_ITE",
+   "external": true,
+   "dependencies": []
+  }
+ ],
+ "constants": {
+  "CADGeometry": [
+   "CADAssembly",
+   "CADFace",
+   "CADLayer",
+   "CADPart",
+   "IndexedQuadSet",
+   "QuadSet",
+   "X3DProductStructureChildNode"
+  ],
+  "CubeMapTexturing": [
+   "ComposedCubeMapTexture",
+   "GeneratedCubeMapTexture",
+   "ImageCubeMapTexture",
+   "X3DEnvironmentTextureNode"
+  ],
+  "DIS": [
+   "DISEntityManager",
+   "DISEntityTypeMapping",
+   "EspduTransform",
+   "ReceiverPdu",
+   "SignalPdu",
+   "TransmitterPdu"
+  ],
+  "EventUtilities": [
+   "BooleanFilter",
+   "BooleanSequencer",
+   "BooleanToggle",
+   "BooleanTrigger",
+   "IntegerSequencer",
+   "IntegerTrigger",
+   "TimeTrigger",
+   "X3DSequencerNode",
+   "X3DTriggerNode"
+  ],
+  "GaussianSplats": [
+   "GaussianSplats",
+   "X3DGaussianSplatsNode"
+  ],
+  "Geometry2D": [
+   "Arc2D",
+   "ArcClose2D",
+   "Circle2D",
+   "Disk2D",
+   "Polyline2D",
+   "Polypoint2D",
+   "Rectangle2D",
+   "TriangleSet2D"
+  ],
+  "Geospatial": [
+   "GeoCoordinate",
+   "GeoElevationGrid",
+   "GeoLOD",
+   "GeoLocation",
+   "GeoMetadata",
+   "GeoOrigin",
+   "GeoPositionInterpolator",
+   "GeoProximitySensor",
+   "GeoTouchSensor",
+   "GeoTransform",
+   "GeoViewpoint",
+   "X3DGeospatialObject"
+  ],
+  "HAnim": [
+   "HAnimDisplacer",
+   "HAnimHumanoid",
+   "HAnimJoint",
+   "HAnimMotion",
+   "HAnimPose",
+   "HAnimSegment",
+   "HAnimSite"
+  ],
+  "KeyDeviceSensor": [
+   "KeySensor",
+   "StringSensor",
+   "X3DKeyDeviceSensorNode"
+  ],
+  "Layout": [
+   "Layout",
+   "LayoutGroup",
+   "LayoutLayer",
+   "ScreenFontStyle",
+   "ScreenGroup",
+   "X3DLayoutNode"
+  ],
+  "NURBS": [
+   "Contour2D",
+   "ContourPolyline2D",
+   "NurbsCurve",
+   "NurbsCurve2D",
+   "NurbsOrientationInterpolator",
+   "NurbsPatchSurface",
+   "NurbsPositionInterpolator",
+   "NurbsSet",
+   "NurbsSurfaceInterpolator",
+   "NurbsSweptSurface",
+   "NurbsSwungSurface",
+   "NurbsTextureCoordinate",
+   "NurbsTrimmedSurface",
+   "X3DNurbsControlCurveNode",
+   "X3DNurbsSurfaceGeometryNode",
+   "X3DParametricGeometryNode"
+  ],
+  "ParticleSystems": [
+   "BoundedPhysicsModel",
+   "ConeEmitter",
+   "ExplosionEmitter",
+   "ForcePhysicsModel",
+   "ParticleSystem",
+   "PointEmitter",
+   "PolylineEmitter",
+   "SurfaceEmitter",
+   "VolumeEmitter",
+   "WindPhysicsModel",
+   "X3DParticleEmitterNode",
+   "X3DParticlePhysicsModelNode"
+  ],
+  "Picking": [
+   "LinePickSensor",
+   "PickableGroup",
+   "PointPickSensor",
+   "PrimitivePickSensor",
+   "VolumePickSensor",
+   "X3DPickSensorNode",
+   "X3DPickableObject"
+  ],
+  "TextureProjection": [
+   "TextureProjector",
+   "TextureProjectorParallel",
+   "X3DTextureProjectorNode"
+  ],
+  "RigidBodyPhysics": [
+   "BallJoint",
+   "CollidableOffset",
+   "CollidableShape",
+   "CollisionCollection",
+   "CollisionSensor",
+   "CollisionSpace",
+   "Contact",
+   "DoubleAxisHingeJoint",
+   "MotorJoint",
+   "RigidBody",
+   "RigidBodyCollection",
+   "SingleAxisHingeJoint",
+   "SliderJoint",
+   "UniversalJoint",
+   "X3DNBodyCollidableNode",
+   "X3DNBodyCollisionSpaceNode",
+   "X3DRigidJointNode"
+  ],
+  "Scripting": [
+   "Script",
+   "X3DScriptNode"
+  ],
+  "Text": [
+   "FontLibrary",
+   "FontStyle",
+   "Text",
+   "X3DFontStyleNode"
+  ],
+  "Texturing3D": [
+   "ComposedTexture3D",
+   "ImageTexture3D",
+   "ImageTextureAtlas",
+   "PixelTexture3D",
+   "TextureCoordinate3D",
+   "TextureCoordinate4D",
+   "TextureTransform3D",
+   "TextureTransformMatrix3D",
+   "X3DTexture3DNode"
+  ],
+  "VolumeRendering": [
+   "BlendedVolumeStyle",
+   "BoundaryEnhancementVolumeStyle",
+   "CartoonVolumeStyle",
+   "ComposedVolumeStyle",
+   "EdgeEnhancementVolumeStyle",
+   "IsoSurfaceVolumeData",
+   "OpacityMapVolumeStyle",
+   "ProjectionVolumeStyle",
+   "SegmentedVolumeData",
+   "ShadedVolumeStyle",
+   "SilhouetteEnhancementVolumeStyle",
+   "ToneMappedVolumeStyle",
+   "VolumeData",
+   "X3DComposableVolumeRenderStyleNode",
+   "X3DVolumeDataNode",
+   "X3DVolumeRenderStyleNode"
+  ],
+  "WebXR": [],
+  "X_ITE": [
+   "AnisotropyMaterialExtension",
+   "BlendMode",
+   "ClearcoatMaterialExtension",
+   "DepthMode",
+   "DiffuseTransmissionMaterialExtension",
+   "DispersionMaterialExtension",
+   "EmissiveStrengthMaterialExtension",
+   "InstancedShape",
+   "IORMaterialExtension",
+   "IridescenceMaterialExtension",
+   "RetroreflectionMaterialExtension",
+   "SheenMaterialExtension",
+   "SpecularGlossinessMaterial",
+   "SpecularMaterialExtension",
+   "TransmissionMaterialExtension",
+   "VolumeMaterialExtension",
+   "VolumeScatterMaterialExtension",
+   "X3DMaterialExtensionNode"
+  ]
+ }
+}
