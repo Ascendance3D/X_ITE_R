@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFRotation new ()', function () { return new MFRotation (); });
   T ('MFRotation new (elems)', function () { return new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); });
+  T ('MFRotation new (array)', function () { return new MFRotation ([new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2)]); });
+  T ('MFRotation new (bad)', function () { return new MFRotation (null, undefined, 'x', {}); });
   T ('MFRotation length', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); return [m .length, new MFRotation () .length]; });
   T ('MFRotation index', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFRotation index write', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m [1] = new SFRotation (0, 0, 1, 3); return [m, m .length]; });
   T ('MFRotation index write past end', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m [5] = new SFRotation (0, 0, 1, 3); return [m, m .length]; });
+  T ('MFRotation index write bad', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFRotation length set', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m .length = 1; var n = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); n .length = 5; var o = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); o .length = 0; return [m, n, o]; });
   T ('MFRotation length set bad', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m .length = -1; return m .length; });
+  T ('MFRotation length set nan', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m .length = 'x'; return m .length; });
   T ('MFRotation keys', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFRotation for in', function () { var o = []; for (var k in new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ())) o .push (k); return o; });
   T ('MFRotation toStrings', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFRotation setValue array', function () { var m = new MFRotation (); m .setValue ([new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2)]); return m; });
   T ('MFRotation setValue empty', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m .setValue ([]); return m; });
   T ('MFRotation setValue self', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); m .setValue (m); return m; });
+  T ('MFRotation element alias', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (new SFRotation (0, 0, 1, 3)); } return [e, m]; });
+  T ('MFRotation resize', function () { var m = new MFRotation (new SFRotation (0, 1, 0, 1), new SFRotation (1, 0, 0, 2), new SFRotation ()); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

@@ -63,6 +63,7 @@ function initialize () {
   T ('SFColor linearToSRGB', function () { return [new SFColor (0.2, 0.4, 0.6) .linearToSRGB (), new SFColor (0, 1, 2) .linearToSRGB ()]; });
   T ('SFColor sRGBToLinear', function () { return [new SFColor (0.2, 0.4, 0.6) .sRGBToLinear (), new SFColor (0, 1, 2) .sRGBToLinear ()]; });
   T ('SFColor setValue', function () { var v = new SFColor (); v .setValue (new SFColor (0.2, 0.4, 0.6)); return v; });
+  T ('SFColor setValue other', function () { var v = new SFColor (); v .setValue (new SFColorRGBA (0.1, 0.2, 0.3, 0.4)); return v; });
   flush_ ();
 }
 

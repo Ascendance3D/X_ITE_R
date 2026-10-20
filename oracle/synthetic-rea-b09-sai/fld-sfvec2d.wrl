@@ -48,6 +48,7 @@ function initialize () {
   T ('SFVec2d new (bad)', function () { return new SFVec2d ('a', null, undefined, true); });
   T ('SFVec2d new (NaN)', function () { return new SFVec2d (NaN, Infinity, -Infinity, -0); });
   T ('SFVec2d new (object)', function () { return new SFVec2d ({ x: 1 }); });
+  T ('SFVec2d call without new', function () { return SFVec2d (1, 2); });
   T ('SFVec2d float rounding', function () { var v = new SFVec2d (0.1, 0.2, 0.3, 0.4); return [v .x, v [0], String (v), v .toString (), v .toVRMLString ()]; });
   T ('SFVec2d big', function () { return new SFVec2d (1e300, 1e-300, 123456789.123456789, 5e-324); });
   T ('SFVec2d get x', function () { return [new SFVec2d (1, 2) .x, new SFVec2d (1, 2) [0]]; });
@@ -67,6 +68,7 @@ function initialize () {
   T ('SFVec2d getName/Type', function () { var v = new SFVec2d (1, 2); return [v .getTypeName (), v .getType (), v .getName (), v .getAccessType (), v .isDefaultValue (), new SFVec2d () .isDefaultValue ()]; });
   T ('SFVec2d toStrings', function () { var v = new SFVec2d (2.5, 5.0); return [v .toString (), v .toVRMLString (), v .toXMLString (), v .toJSONString ()]; });
   T ('SFVec2d toStrings nan', function () { var v = new SFVec2d (NaN, Infinity, -Infinity, 1e21); return [v .toString (), v .toXMLString (), v .toJSONString ()]; });
+  T ('SFVec2d fromVRMLString', function () { var v = new SFVec2d (); return typeof v .fromString; });
   T ('SFVec2d add', function () { return new SFVec2d (1, 2) .add (new SFVec2d (2.5, 5.0)); });
   T ('SFVec2d add zero', function () { return new SFVec2d (1, 2) .add (new SFVec2d ()); });
   T ('SFVec2d add nan', function () { return new SFVec2d (1, 2) .add (new SFVec2d (NaN)); });
@@ -158,6 +160,7 @@ function initialize () {
   T ('SFVec2d add other precision', function () { return new SFVec2d (1, 2) .add (new SFVec2f (2.5, 5.0)); });
   T ('SFVec2d add array', function () { return new SFVec2d (1, 2) .add ([2.5, 5.0]); });
   T ('SFVec2d add object', function () { return new SFVec2d (1, 2) .add ({ x: 1, y: 2, z: 3, w: 4 }); });
+  T ('SFVec2d getValue', function () { var v = new SFVec2d (1, 2); var g = v .getValue (); return [typeof g, g === v, g && g .constructor && g .constructor .name]; });
   T ('SFVec2d setValue', function () { var v = new SFVec2d (1, 2); v .setValue (new SFVec2d (2.5, 5.0)); return v; });
   T ('SFVec2d assign', function () { var v = new SFVec2d (1, 2); v .assign (new SFVec2d (2.5, 5.0)); return v; });
   T ('SFVec2d setValue other precision', function () { var v = new SFVec2d (1, 2); v .setValue (new SFVec2f (2.5, 5.0)); return v; });

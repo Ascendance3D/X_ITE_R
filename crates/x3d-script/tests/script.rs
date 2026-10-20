@@ -54,7 +54,9 @@ fn mf_fields_grow_and_shrink_through_index_and_length() {
 }
 
 /// A length or index near 2^32 must not allocate: it is a RangeError and the field keeps its value.
-/// (Before, `a .length = -1` grew the array until the kernel killed the process.)
+/// (Before, `a .length = -1` grew the array until the kernel killed the process.) The pinned X_ITE allocates the typed array
+/// for 2^32 - 1 and the page runs out of memory: the RangeError here is a kept safety difference. A fractional length is not
+/// an error in X_ITE (X3DTypedArrayField.resize stores it); oracle case fldx-edge compares that with X_ITE.
 #[test]
 fn huge_mf_length_or_index_is_a_range_error_not_an_allocation() {
     let rt = run(r#"DEF S Script { field MFInt32 a [ 1 2 3 ] field MFVec3f v [ ] field SFString r ""
@@ -65,11 +67,10 @@ fn huge_mf_length_or_index_is_a_range_error_not_an_allocation() {
             try { a .length = 4294967295; } catch (e) { o .push (e .name); }
             try { a [4294967295] = 1; } catch (e) { o .push (e .name); }
             try { v [1e12] = new SFVec3f (1, 2, 3); } catch (e) { o .push (e .name); }
-            try { a .length = 1.5; } catch (e) { o .push (e .name); }
             r = o .join ();
           }" }"#);
 
-    assert_fv(field(&rt, "S", "r"), FieldValue::SFString("RangeError,RangeError,RangeError,RangeError,RangeError".into()));
+    assert_fv(field(&rt, "S", "r"), FieldValue::SFString("RangeError,RangeError,RangeError,RangeError".into()));
     assert_fv(field(&rt, "S", "a"), FieldValue::MFInt32(vec![1, 2, 3]));
     assert_fv(field(&rt, "S", "v"), FieldValue::MFVec3f(vec![]));
 }

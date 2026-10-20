@@ -65,6 +65,7 @@ function initialize () {
   T ('SFMatrix3d multLeft', function () { return [new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .multLeft (new SFMatrix3d ()), new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .multLeft (new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5)), new SFMatrix3d () .multLeft (new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5))]; });
   T ('SFMatrix3d multRight', function () { return [new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .multRight (new SFMatrix3d ()), new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .multRight (new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5)), new SFMatrix3d () .multRight (new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5))]; });
   T ('SFMatrix3d mult missing', function () { return new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .multLeft (); });
+  T ('SFMatrix3d mult wrongtype', function () { return new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .multRight (new SFVec3f (1, 2, 3)); });
   T ('SFMatrix3d mult other precision', function () { return new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .multRight (new SFMatrix3f (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5)); });
   T ('SFMatrix3d mult nonassoc', function () { var a = new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5); var b = new SFMatrix3d (1, 0, 0, 0, 1, 0, 0, 0, 1); b [1] = 2; return [a .multLeft (b), a .multRight (b)]; });
   T ('SFMatrix3d rotate', function () { return [new SFMatrix3d () .rotate (0.5), new SFMatrix3d () .rotate (0), new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5) .rotate (1), new SFMatrix3d () .rotate (NaN), new SFMatrix3d () .rotate ('1')]; });
@@ -76,6 +77,7 @@ function initialize () {
   T ('SFMatrix3d setTransform', function () { var m = new SFMatrix3d (); m .setTransform (new SFVec2f (3, 4), 0.5, new SFVec2f (2, 3), 0.25, new SFVec2f (1, 1)); return m; });
   T ('SFMatrix3d setTransform partial', function () { var m = new SFMatrix3d (); m .setTransform (new SFVec2f (3, 4)); var n = new SFMatrix3d (); n .setTransform (undefined, 1); var o = new SFMatrix3d (); o .setTransform (); return [m, n, o]; });
   T ('SFMatrix3d setTransform scale only', function () { var m = new SFMatrix3d (); m .setTransform (undefined, undefined, new SFVec2f (2, 3)); return m; });
+  T ('SFMatrix3d getTransform', function () { var m = new SFMatrix3d (); m .setTransform (new SFVec2f (3, 4), 0.5, new SFVec2f (2, 3), 0.25, new SFVec2f (1, 1)); var t = new SFVec2f (), r = 0, s = new SFVec2f (), so = 0; return [m .getTransform (t, undefined, s), t, s]; });
   T ('SFMatrix3d setValue', function () { var m = new SFMatrix3d (); m .setValue (new SFMatrix3d (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5)); return m; });
   T ('SFMatrix3d setValue other precision', function () { var m = new SFMatrix3d (); m .setValue (new SFMatrix3f (1.5, 1.0, 1.5, 2.0, 2.5, 4.0, 3.5, 4.0, 4.5)); return m; });
   T ('SFMatrix3d float rounding', function () { var m = new SFMatrix3d (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9); return [m [0], m .toString (), m .toVRMLString ()]; });

@@ -312,12 +312,9 @@ P_ACCESS = [
 ]
 
 
-# X_ITE keeps JavaScript `undefined` / NaN in a vector, color or array that is given a value of the wrong shape; these assignments are
-# not modeled (a number cannot hold undefined). They run in scr-field-access-open, which is never baselined.
-register("scr-field-access", P_ACCESS, fields=ACCESS_FIELDS,
-         open_prefixes=("write ioV array", "write ioV SFVec2f", "write ioV number", "write ioV string", "write ioM number", "ioC = SFVec3f", "ioC = SFColorRGBA",
-                        "ioC member", "getField toString", "getField toVRMLString", "getField toXMLString", "getField toJSONString", "getField clone",
-                        "field proto names", "fieldDefinitions", "this.getNodeType", "getField setName"))
+# X_ITE keeps JavaScript `undefined` / NaN in a vector, color or array that is given a value of the wrong shape. The port runs X_ITE's
+# own field objects (batch 09 cloud), so these assignments are compared like the others.
+register("scr-field-access", P_ACCESS, fields=ACCESS_FIELDS)
 
 
 # typed defaults of all fields, plus per-type read forms
@@ -973,7 +970,7 @@ class _Meta:  # the META_TYPES list is a JavaScript global of the probes
     pass
 
 
-register("meta-nodes", P_META, open_prefixes=("instanceof", "getNodeType values"), pre="var META_TYPES = " + str(META_TYPES) + ";", nodes=META_NODES)
+register("meta-nodes", P_META, pre="var META_TYPES = " + str(META_TYPES) + ";", nodes=META_NODES)
 
 
 # getNodeType () returns X3DConstants numbers that depend on the order in which X_ITE registered the node types while loading components.
@@ -1232,7 +1229,7 @@ def vec_probes(T, n):
 VEC_OPEN = ()
 for _T, _n in [("SFVec2f", 2), ("SFVec3f", 3), ("SFVec4f", 4), ("SFVec2d", 2), ("SFVec3d", 3), ("SFVec4d", 4)]:
     # Open: a class called without `new` returns undefined in X_ITE (a TypeError here); `fromString` and the internal `Vector` class of getValue are not modeled.
-    register(f"fld-{_T.lower()}", vec_probes(_T, _n), open_prefixes=tuple(f"{_T} {s}" for s in ("call without new", "fromVRMLString", "getValue")))
+    register(f"fld-{_T.lower()}", vec_probes(_T, _n))
 
 
 
@@ -1272,8 +1269,8 @@ def color_probes(T, n):
 
 
 # Open: X_ITE stores JavaScript undefined for a color set from the other color class.
-register("fld-sfcolor", color_probes("SFColor", 3), open_prefixes=("SFColor setValue other",))
-register("fld-sfcolorrgba", color_probes("SFColorRGBA", 4), open_prefixes=("SFColorRGBA setValue other",))
+register("fld-sfcolor", color_probes("SFColor", 3))
+register("fld-sfcolorrgba", color_probes("SFColorRGBA", 4))
 
 
 def rot_probes():
@@ -1336,7 +1333,7 @@ def rot_probes():
 
 
 # Open: X_ITE builds new SFRotation (matrix) with NaN (it reads the matrix as the first number); setMatrix takes a 4x4 matrix too; straighten and multVec of a foreign vector are not ported.
-register("fld-sfrotation", rot_probes(), open_prefixes=("SFRotation static", "SFRotation new (matrix", "SFRotation setMatrix 4", "SFRotation multVec wrong", "SFRotation straighten"))
+register("fld-sfrotation", rot_probes())
 
 
 def quat_probes():
@@ -1373,7 +1370,7 @@ def quat_probes():
     return P
 
 
-register("fld-sfquaternion", quat_probes(), open_prefixes=("SFQuaternion static", "SFQuaternion setMatrix 4"))
+register("fld-sfquaternion", quat_probes())
 
 
 
@@ -1456,7 +1453,7 @@ def matrix_probes(T, n):
 
 for _T, _n in [("SFMatrix3f", 3), ("SFMatrix3d", 3), ("SFMatrix4f", 4), ("SFMatrix4d", 4)]:
     # Open: SFMatrix3.getTransform (Matrix3.factor) is not ported; a matrix multiplied by a foreign field gives NaN in X_ITE, a TypeError here.
-    register(f"fld-{_T.lower()}", matrix_probes(_T, _n), open_prefixes=tuple(f"{_T} {s}" for s in ("mult wrongtype", "scale wrong") + (("getTransform",) if _n == 3 else ())))
+    register(f"fld-{_T.lower()}", matrix_probes(_T, _n))
 
 
 
@@ -1536,7 +1533,7 @@ def mf_probes(T):
 
 for _T in MF_SAMPLES:
     # Open: garbage elements (null, wrong shape): X_ITE throws a TypeError or stores NaN, the port stores defaults; `length = 'x'` leaves the string in X_ITE (resize is handed the string); whether a retrieved element aliases the array (X_ITE returns the stored object; the port a view), and `resize`.
-    register(f"fld-{_T.lower()}", mf_probes(_T), open_prefixes=(f"{_T} element alias", f"{_T} resize", f"{_T} length set nan", f"{_T} new (array)", f"{_T} new (bad)", f"{_T} index write bad"))
+    register(f"fld-{_T.lower()}", mf_probes(_T))
 
 
 

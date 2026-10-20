@@ -150,7 +150,8 @@ impl Runtime {
 
         self.release_queue.extend(loose);
 
-        // Runtime-created nodes that no Script holds are candidates too (see the module header).
+        // Runtime-created nodes are candidates too (see the module header); the Script host is asked about those that
+        // nothing else keeps, below.
         let dynamic = self.dynamic_candidates();
 
         if self.release_queue.is_empty() && dynamic.is_empty() {
@@ -272,41 +273,25 @@ impl Runtime {
         // `createVrmlFromString` made (their own roots and routes are not roots) until nothing changes.
         let transient_nodes: Vec<(CtxId, Vec<NodeId>)> = transient.iter().map(|&c| (c, ctx_map[&c].clone())).collect();
 
-        loop {
-            let mut grew = false;
+        self.close_transient(&candidates, &by_ctx, &transient_nodes, &mut keep, &mut work);
 
-            for (c, nodes) in &transient_nodes {
-                if nodes.iter().any(|n| keep.contains(n)) {
-                    for &n in nodes {
-                        if keep.insert(n) {
-                            work.push(n);
-                            grew = true;
-                        }
-                    }
+        // A runtime-created node that would go stays while a Script holds it (X_ITE: until the garbage collector frees it). The
+        // host is asked only now, so that it looks only at what nothing else keeps.
+        let ask: Vec<NodeId> = {
+            let mut ask: Vec<NodeId> = dynamic.iter().copied().filter(|n| !keep.contains(n)).collect();
+            ask.sort_unstable();
+            ask
+        };
+
+        if !ask.is_empty() {
+            for n in self.script_held(&ask) {
+                if keep.insert(n) {
+                    work.push(n);
                 }
-
-                for r in &self.scene.contexts[*c].routes {
-                    let (a, b) = (r.source_node, r.destination_node);
-                    let a_live = !candidates.contains(&a) || keep.contains(&a);
-                    let b_live = !candidates.contains(&b) || keep.contains(&b);
-
-                    if a_live && !b_live && keep.insert(b) {
-                        work.push(b);
-                        grew = true;
-                    }
-
-                    if b_live && !a_live && keep.insert(a) {
-                        work.push(a);
-                        grew = true;
-                    }
-                }
-            }
-
-            if !grew {
-                break;
             }
 
             self.close_keep(&candidates, &by_ctx, &mut keep, &mut work);
+            self.close_transient(&candidates, &by_ctx, &transient_nodes, &mut keep, &mut work);
         }
 
         // --- the release --------------------------------------------------------------------------
@@ -445,6 +430,7 @@ impl Runtime {
         self.world_infos.retain(|_, list| !list.is_empty());
         self.scripts.retain(|n| !dead.contains(n));
         self.field_observed.retain(|k| !dead.contains(&k.0));
+        self.js_mirror.retain(|k, _| !dead.contains(&k.0));
         self.pending_field_events.retain(|k| !dead.contains(&k.0));
         self.pending_scenes.retain(|p| !dead.contains(&p.node) && !dead.contains(&p.scene_node));
         self.frame_waiters.retain(|w| !dead.contains(&w.node));
@@ -533,8 +519,7 @@ impl Runtime {
         map
     }
 
-    /// The runtime-created nodes that no Script holds and that are due for a look. A Script that cannot
-    /// say what it holds ([`ScriptHost::held_nodes`] returns `None`) holds them all.
+    /// The runtime-created nodes that are due for a look.
     fn dynamic_candidates(&mut self) -> HashSet<NodeId> {
         let live: Vec<NodeId> = self.dynamic_nodes.iter().copied().filter(|&n| self.scene.is_live(n) && !matches!(self.scene.node(n).kind, NodeKind::Internal(_))).collect();
 
@@ -557,33 +542,78 @@ impl Runtime {
         self.dynamic_idle = 0;
         self.dynamic_dirty = false;
 
-        let mut held: HashSet<NodeId> = HashSet::new();
+        live.into_iter().collect()
+    }
 
-        if !self.scripts.is_empty() {
-            let Some(mut host) = self.script_host.take() else {
-                return HashSet::new();
-            };
+    /// Which of `nodes` a Script holds: the host's answer, and the scene of a node it holds. A host that cannot say holds them
+    /// all ([`ScriptHost::held_nodes`]).
+    fn script_held(&mut self, nodes: &[NodeId]) -> HashSet<NodeId> {
+        if self.scripts.is_empty() {
+            return HashSet::new();
+        }
 
-            let answer = host.held_nodes(self);
+        let Some(mut host) = self.script_host.take() else {
+            return nodes.iter().copied().collect();
+        };
 
-            self.script_host = Some(host);
+        let answer = host.held_nodes(self, nodes);
 
-            match answer {
-                Some(list) => held.extend(list),
-                None => return HashSet::new(),
+        self.script_host = Some(host);
+
+        let Some(list) = answer else {
+            return nodes.iter().copied().collect();
+        };
+
+        let mut held: HashSet<NodeId> = list.into_iter().collect();
+
+        for list in self.dynamic_ctx_map().values() {
+            if list.iter().any(|n| held.contains(n)) {
+                held.extend(list.iter().copied());
             }
         }
 
-        // The Script holds the scene of a node it holds.
-        let ctx_map = self.dynamic_ctx_map();
+        held
+    }
 
-        for nodes in ctx_map.values() {
-            if nodes.iter().any(|n| held.contains(n)) {
-                held.extend(nodes.iter().copied());
+    /// A node keeps its scene, and a route keeps both of its ends: for the scenes that `createVrmlFromString` made (their own
+    /// roots and routes are not roots) until nothing changes.
+    fn close_transient(&self, candidates: &HashSet<NodeId>, by_ctx: &HashMap<CtxId, Vec<NodeId>>, transient_nodes: &[(CtxId, Vec<NodeId>)], keep: &mut HashSet<NodeId>, work: &mut Vec<NodeId>) {
+        loop {
+            let mut grew = false;
+
+            for (c, nodes) in transient_nodes {
+                if nodes.iter().any(|n| keep.contains(n)) {
+                    for &n in nodes {
+                        if keep.insert(n) {
+                            work.push(n);
+                            grew = true;
+                        }
+                    }
+                }
+
+                for r in &self.scene.contexts[*c].routes {
+                    let (a, b) = (r.source_node, r.destination_node);
+                    let a_live = !candidates.contains(&a) || keep.contains(&a);
+                    let b_live = !candidates.contains(&b) || keep.contains(&b);
+
+                    if a_live && !b_live && keep.insert(b) {
+                        work.push(b);
+                        grew = true;
+                    }
+
+                    if b_live && !a_live && keep.insert(a) {
+                        work.push(a);
+                        grew = true;
+                    }
+                }
             }
-        }
 
-        live.into_iter().filter(|n| !held.contains(n)).collect()
+            if !grew {
+                break;
+            }
+
+            self.close_keep(candidates, by_ctx, keep, work);
+        }
     }
 
     /// Everything a node that stays refers to stays too: its children, the body of an instance.

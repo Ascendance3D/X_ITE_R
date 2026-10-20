@@ -1,0 +1,26 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr shutdown inline"
+# REA batch 09 cloud (node:Script): which Script shutdown () calls X_ITE makes when an Inline's scene is replaced, the Inline is
+# removed from the scene graph, its load is switched off, and a Script is removed from the scene graph.
+DEF I Inline { url "assets/shut-a.wrl" }
+DEF G Group { children [ DEF R Script { url "ecmascript:
+function initialize () { console .log ('R initialize'); }
+function shutdown () { console .log ('R shutdown'); }
+" } ] }
+DEF D Script {
+  inputOnly SFTime tick
+  url "ecmascript:
+var n = 0;
+function prepareEvents () {
+  ++ n;
+  var s = Browser .currentScene;
+  if (n === 10) { console .log ('-- url b'); s .getNamedNode ('I') .url = new MFString ('assets/shut-b.wrl'); }
+  if (n === 20) { console .log ('-- url a'); s .getNamedNode ('I') .url = new MFString ('assets/shut-a.wrl'); }
+  if (n === 30) { console .log ('-- load false'); s .getNamedNode ('I') .load = false; }
+  if (n === 40) { console .log ('-- load true'); s .getNamedNode ('I') .load = true; }
+  if (n === 50) { console .log ('-- remove R'); s .getNamedNode ('G') .children = new MFNode (); }
+}
+"
+}

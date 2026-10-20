@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFColorRGBA new ()', function () { return new MFColorRGBA (); });
   T ('MFColorRGBA new (elems)', function () { return new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); });
+  T ('MFColorRGBA new (array)', function () { return new MFColorRGBA ([new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5)]); });
+  T ('MFColorRGBA new (bad)', function () { return new MFColorRGBA (null, undefined, 'x', {}); });
   T ('MFColorRGBA length', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); return [m .length, new MFColorRGBA () .length]; });
   T ('MFColorRGBA index', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFColorRGBA index write', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m [1] = new SFColorRGBA (1, 1, 1, 1); return [m, m .length]; });
   T ('MFColorRGBA index write past end', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m [5] = new SFColorRGBA (1, 1, 1, 1); return [m, m .length]; });
+  T ('MFColorRGBA index write bad', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFColorRGBA length set', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m .length = 1; var n = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); n .length = 5; var o = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); o .length = 0; return [m, n, o]; });
   T ('MFColorRGBA length set bad', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m .length = -1; return m .length; });
+  T ('MFColorRGBA length set nan', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m .length = 'x'; return m .length; });
   T ('MFColorRGBA keys', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFColorRGBA for in', function () { var o = []; for (var k in new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0))) o .push (k); return o; });
   T ('MFColorRGBA toStrings', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFColorRGBA setValue array', function () { var m = new MFColorRGBA (); m .setValue ([new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5)]); return m; });
   T ('MFColorRGBA setValue empty', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m .setValue ([]); return m; });
   T ('MFColorRGBA setValue self', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); m .setValue (m); return m; });
+  T ('MFColorRGBA element alias', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (new SFColorRGBA (1, 1, 1, 1)); } return [e, m]; });
+  T ('MFColorRGBA resize', function () { var m = new MFColorRGBA (new SFColorRGBA (1, 0, 0, 1), new SFColorRGBA (0, 1, 0, 0.5), new SFColorRGBA (0, 0, 1, 0)); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

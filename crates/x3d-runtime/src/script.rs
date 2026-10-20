@@ -59,13 +59,13 @@ pub trait ScriptHost {
     /// that a Script still holds points to `tombstone` from now on.
     fn release_nodes(&mut self, _rt: &mut Runtime, _nodes: &[NodeId], _tombstone: NodeId) {}
 
-    /// The nodes that JavaScript can still reach: live wrappers (`SFNode`), field objects of node
-    /// fields, and values (`MFNode`, `SFNode`) that live JavaScript objects hold. The host collects
-    /// garbage first, so an object nothing refers to is not counted (X_ITE: WeakRef, `SFNodeCache`).
+    /// Which of `candidates` (nodes only JavaScript could still hold) JavaScript can still reach: through
+    /// an `SFNode` object, an `MFNode` element, a field object of the node. The host collects garbage
+    /// first, so an object nothing refers to does not count (X_ITE: the garbage collector).
     ///
     /// `None` means the host cannot say. The runtime then treats every runtime-created node as held
     /// as long as a Script exists (conservative: nothing is released that a Script might use).
-    fn held_nodes(&mut self, _rt: &mut Runtime) -> Option<Vec<NodeId>> {
+    fn held_nodes(&mut self, _rt: &mut Runtime, _candidates: &[NodeId]) -> Option<Vec<NodeId>> {
         None
     }
 }

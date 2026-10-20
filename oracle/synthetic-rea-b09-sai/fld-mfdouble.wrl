@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFDouble new ()', function () { return new MFDouble (); });
   T ('MFDouble new (elems)', function () { return new MFDouble (1.5, 2.25, 0.1); });
+  T ('MFDouble new (array)', function () { return new MFDouble ([1.5, 2.25]); });
+  T ('MFDouble new (bad)', function () { return new MFDouble (null, undefined, 'x', {}); });
   T ('MFDouble length', function () { var m = new MFDouble (1.5, 2.25, 0.1); return [m .length, new MFDouble () .length]; });
   T ('MFDouble index', function () { var m = new MFDouble (1.5, 2.25, 0.1); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFDouble index write', function () { var m = new MFDouble (1.5, 2.25, 0.1); m [1] = -4; return [m, m .length]; });
   T ('MFDouble index write past end', function () { var m = new MFDouble (1.5, 2.25, 0.1); m [5] = -4; return [m, m .length]; });
+  T ('MFDouble index write bad', function () { var m = new MFDouble (1.5, 2.25, 0.1); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFDouble length set', function () { var m = new MFDouble (1.5, 2.25, 0.1); m .length = 1; var n = new MFDouble (1.5, 2.25, 0.1); n .length = 5; var o = new MFDouble (1.5, 2.25, 0.1); o .length = 0; return [m, n, o]; });
   T ('MFDouble length set bad', function () { var m = new MFDouble (1.5, 2.25, 0.1); m .length = -1; return m .length; });
+  T ('MFDouble length set nan', function () { var m = new MFDouble (1.5, 2.25, 0.1); m .length = 'x'; return m .length; });
   T ('MFDouble keys', function () { var m = new MFDouble (1.5, 2.25, 0.1); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFDouble for in', function () { var o = []; for (var k in new MFDouble (1.5, 2.25, 0.1)) o .push (k); return o; });
   T ('MFDouble toStrings', function () { var m = new MFDouble (1.5, 2.25, 0.1); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFDouble setValue array', function () { var m = new MFDouble (); m .setValue ([1.5, 2.25]); return m; });
   T ('MFDouble setValue empty', function () { var m = new MFDouble (1.5, 2.25, 0.1); m .setValue ([]); return m; });
   T ('MFDouble setValue self', function () { var m = new MFDouble (1.5, 2.25, 0.1); m .setValue (m); return m; });
+  T ('MFDouble element alias', function () { var m = new MFDouble (1.5, 2.25, 0.1); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (-4); } return [e, m]; });
+  T ('MFDouble resize', function () { var m = new MFDouble (1.5, 2.25, 0.1); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

@@ -118,6 +118,8 @@ function initialize () {
   T ('scene setMetaData string', function () { var s = Browser .currentScene; s .setMetaData ('t/k', 'v'); return [s .getMetaData ('t/k'), s .getMetaDatas () .length]; });
   T ('this.metadata', function () { return SELF .metadata; });
   T ('getField metadata', function () { return SELF .getField ('metadata') .getTypeName (); });
+  T ('instanceof', function () { var x = Browser .currentScene .getNamedNode ('MB'); return [x instanceof SFNode, x .getNodeType () .length > 0]; });
+  T ('getNodeType values', function () { return Browser .currentScene .getNamedNode ('MB') .getNodeType (); });
   T ('USE count', function () { var s = Browser .currentScene; return s .getNamedNode ('MS') === s .getNamedNode ('T') .metadata; });
   T ('name conflicts', function () { var n = Browser .createVrmlFromString ('DEF MB MetadataBoolean { }'); return [n .length, n [0] .getNodeName ()]; });
   flush_ ();

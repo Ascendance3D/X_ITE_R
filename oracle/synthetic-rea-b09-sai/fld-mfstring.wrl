@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFString new ()', function () { return new MFString (); });
   T ('MFString new (elems)', function () { return new MFString ('a', 'bb', ''); });
+  T ('MFString new (array)', function () { return new MFString (['a', 'bb']); });
+  T ('MFString new (bad)', function () { return new MFString (null, undefined, 'x', {}); });
   T ('MFString length', function () { var m = new MFString ('a', 'bb', ''); return [m .length, new MFString () .length]; });
   T ('MFString index', function () { var m = new MFString ('a', 'bb', ''); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFString index write', function () { var m = new MFString ('a', 'bb', ''); m [1] = 'd e'; return [m, m .length]; });
   T ('MFString index write past end', function () { var m = new MFString ('a', 'bb', ''); m [5] = 'd e'; return [m, m .length]; });
+  T ('MFString index write bad', function () { var m = new MFString ('a', 'bb', ''); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFString length set', function () { var m = new MFString ('a', 'bb', ''); m .length = 1; var n = new MFString ('a', 'bb', ''); n .length = 5; var o = new MFString ('a', 'bb', ''); o .length = 0; return [m, n, o]; });
   T ('MFString length set bad', function () { var m = new MFString ('a', 'bb', ''); m .length = -1; return m .length; });
+  T ('MFString length set nan', function () { var m = new MFString ('a', 'bb', ''); m .length = 'x'; return m .length; });
   T ('MFString keys', function () { var m = new MFString ('a', 'bb', ''); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFString for in', function () { var o = []; for (var k in new MFString ('a', 'bb', '')) o .push (k); return o; });
   T ('MFString toStrings', function () { var m = new MFString ('a', 'bb', ''); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFString setValue array', function () { var m = new MFString (); m .setValue (['a', 'bb']); return m; });
   T ('MFString setValue empty', function () { var m = new MFString ('a', 'bb', ''); m .setValue ([]); return m; });
   T ('MFString setValue self', function () { var m = new MFString ('a', 'bb', ''); m .setValue (m); return m; });
+  T ('MFString element alias', function () { var m = new MFString ('a', 'bb', ''); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue ('d e'); } return [e, m]; });
+  T ('MFString resize', function () { var m = new MFString ('a', 'bb', ''); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

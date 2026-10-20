@@ -131,6 +131,49 @@ impl<'a> Parser<'a> {
         (parser.scene, result)
     }
 
+    /// X3DField.fromVRMLString (value, scene) (VRMLParser.fieldValue) and X3DField.fromXMLString (value, scene)
+    /// (XMLParser.fieldValue, attribute grammar: `xml`) on a field of type `ty`, the nodes of an SFNode or MFNode value
+    /// parsed into `ctx` of `scene`. With a scene the field's `unit` converts the values (`parser .setUnits (!!scene)`).
+    /// Returns the scene back, and `Ok(Some(value))` for a parsed value, `Ok(None)` when nothing could be read (X_ITE:
+    /// "Couldn't read value for field '<name>'."). The XML grammar's MFString warning names the field: `name`.
+    pub fn parse_field_into(scene: Scene, ctx: CtxId, ty: FieldType, text: &str, xml: bool, unit: Option<String>, name: &str) -> (Scene, Result<Option<FieldValue>, ParseError>) {
+        let mut parser = Parser::new(text, "");
+
+        parser.scene = scene;
+        parser.contexts = vec![ctx];
+        parser.field_unit = unit;
+
+        let current = FieldValue::default_for(ty);
+
+        let result = if xml {
+            match ty {
+                FieldType::SFNode => Ok(Some(FieldValue::SFNode(None))),
+                FieldType::MFNode => Ok(Some(FieldValue::MFNode(vec![]))),
+                FieldType::SFString => Ok(Some(FieldValue::SFString(x3d_fields::value::unescape(text)))),
+                FieldType::MFString => {
+                    let v = parser.string_values();
+
+                    if v.is_empty() && !text.is_empty() {
+                        parser.warn(format!("XML Parser: Field '{name}' is an MFString array and can have multiple values, so make sure to separate each individual string with double quotation marks!"));
+                        Ok(Some(FieldValue::MFString(vec![text.to_string()])))
+                    } else {
+                        Ok(Some(FieldValue::MFString(v)))
+                    }
+                }
+                _ if ty.name().starts_with("MF") => parser.sf_values(ty).map(Some),
+                _ => parser.field_value(ty, &current),
+            }
+        } else {
+            parser.field_value(ty, &current)
+        };
+
+        if result.is_ok() {
+            parser.setup_nodes();
+        }
+
+        (parser.scene, result)
+    }
+
     // --- helpers ---------------------------------------------------------------------------
 
     fn err<T>(&self, message: impl Into<String>) -> R<T> {
@@ -1769,6 +1812,12 @@ impl<'a> Parser<'a> {
                 let n = array.len() - array.len() % 4;
                 array.truncate(n);
             }
+        }
+
+        // `field .setValue (array)` (sfcolorValues, sfvecValues, sfmatrixValues): X3DTypedArrayField.set warns and drops an
+        // incomplete last element.
+        if array.len() % components != 0 && !matches!(ty, FieldType::MFRotation | FieldType::MFQuaternion) {
+            self.warn(format!("Array length must be multiple of components size, which is {components}."));
         }
 
         let array = self.mf_units(ty, colors, array);

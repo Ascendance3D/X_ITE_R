@@ -42,12 +42,16 @@ function initialize () {
   SELF = this;
   T ('MFMatrix3f new ()', function () { return new MFMatrix3f (); });
   T ('MFMatrix3f new (elems)', function () { return new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); });
+  T ('MFMatrix3f new (array)', function () { return new MFMatrix3f ([new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9)]); });
+  T ('MFMatrix3f new (bad)', function () { return new MFMatrix3f (null, undefined, 'x', {}); });
   T ('MFMatrix3f length', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); return [m .length, new MFMatrix3f () .length]; });
   T ('MFMatrix3f index', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); return [m [0], m [2], m [3], m [-1], m ['1'], m [1.5], m .nope]; });
   T ('MFMatrix3f index write', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m [1] = new SFMatrix3f (); return [m, m .length]; });
   T ('MFMatrix3f index write past end', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m [5] = new SFMatrix3f (); return [m, m .length]; });
+  T ('MFMatrix3f index write bad', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m [1] = null; m [0] = undefined; return [m, m .length]; });
   T ('MFMatrix3f length set', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m .length = 1; var n = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); n .length = 5; var o = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); o .length = 0; return [m, n, o]; });
   T ('MFMatrix3f length set bad', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m .length = -1; return m .length; });
+  T ('MFMatrix3f length set nan', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m .length = 'x'; return m .length; });
   T ('MFMatrix3f keys', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); return [Object .keys (m), JSON .stringify (m), Array .from (m) .length, [... m] .length, Array .isArray (m), typeof m, m instanceof X3DArrayField]; });
   T ('MFMatrix3f for in', function () { var o = []; for (var k in new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2))) o .push (k); return o; });
   T ('MFMatrix3f toStrings', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); return [m .toString (), m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
@@ -78,6 +82,8 @@ function initialize () {
   T ('MFMatrix3f setValue array', function () { var m = new MFMatrix3f (); m .setValue ([new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9)]); return m; });
   T ('MFMatrix3f setValue empty', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m .setValue ([]); return m; });
   T ('MFMatrix3f setValue self', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); m .setValue (m); return m; });
+  T ('MFMatrix3f element alias', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); var e = m [0]; if (e && typeof e === 'object' && e .getTypeName) { e .setValue (new SFMatrix3f ()); } return [e, m]; });
+  T ('MFMatrix3f resize', function () { var m = new MFMatrix3f (new SFMatrix3f (), new SFMatrix3f (1, 2, 3, 4, 5, 6, 7, 8, 9), new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); var r = typeof m .resize; return r; });
   flush_ ();
 }
 

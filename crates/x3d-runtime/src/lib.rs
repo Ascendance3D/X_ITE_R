@@ -325,6 +325,10 @@ pub struct Runtime {
     pub field_observed: std::collections::HashSet<FKey>,
     /// Field callbacks due while the host was busy; they run when it is back.
     pub(crate) pending_field_events: Vec<FKey>,
+    /// Node fields a Script holds as JavaScript objects (X_ITE's own field objects, which hold their value), and whether the
+    /// value changed since the objects were last refreshed ([`Runtime::take_js_dirty`]).
+    pub js_mirror: HashMap<FKey, bool>,
+    js_dirty: Vec<FKey>,
     /// The Shaders component: the compiler the renderer installs, parts, links and the Appearance selection.
     pub shaders: nodes::shaders::ShaderHost,
     pub fetcher: Box<dyn Fetcher>,
@@ -535,6 +539,8 @@ impl Runtime {
             ctx_events: Default::default(),
             field_observed: Default::default(),
             pending_field_events: vec![],
+            js_mirror: HashMap::new(),
+            js_dirty: vec![],
             shaders: Default::default(),
             fetcher,
             extern_loaded: HashMap::new(),
@@ -927,6 +933,14 @@ impl Runtime {
         self.scene.field_mut(k.0, k.1).value = value;
         self.touch(k.0);
 
+        // A field a Script holds as a JavaScript object: its object is refreshed before the Script runs again.
+        if let Some(dirty) = self.js_mirror.get_mut(&k) {
+            if !*dirty {
+                *dirty = true;
+                self.js_dirty.push(k);
+            }
+        }
+
         if old.is_empty() && new.is_empty() {
             return;
         }
@@ -953,6 +967,25 @@ impl Runtime {
 
         for n in new {
             self.add_parent(n, Holder::Field(k));
+        }
+    }
+
+    /// The mirrored fields whose value changed since the last call (the Script's objects of them are stale).
+    pub fn take_js_dirty(&mut self) -> Vec<FKey> {
+        let keys = std::mem::take(&mut self.js_dirty);
+
+        keys.into_iter()
+            .filter(|k| match self.js_mirror.get_mut(k) {
+                Some(dirty) => std::mem::replace(dirty, false),
+                None => false,
+            })
+            .collect()
+    }
+
+    /// The Script's object of `k` holds the field's current value (it wrote it): not stale.
+    pub fn js_clean(&mut self, k: FKey) {
+        if let Some(dirty) = self.js_mirror.get_mut(&k) {
+            *dirty = false;
         }
     }
 
@@ -1239,6 +1272,62 @@ impl Runtime {
             Ok(None) => Err("Couldn't read value for field ''.".into()),
             Err(e) => Err(e.message),
         }
+    }
+
+    /// X3DField.fromVRMLString / fromXMLString (value, scene) for a field of type `ty`: with a scene (`ctx`), the nodes of the
+    /// value are made in it and set up, and `unit` converts the values; without one, a value that needs nodes cannot be made
+    /// (X_ITE: the parser has no execution context, a TypeError, `Err(None)`). `Ok(None)`: nothing could be read.
+    pub fn field_from_string(&mut self, ty: x3d_fields::FieldType, text: &str, ctx: Option<CtxId>, xml: bool, unit: Option<String>, name: &str) -> Result<Option<FieldValue>, Option<String>> {
+        let Some(ctx) = ctx else {
+            let (scene, result) = x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+
+            // Without an execution context, the parser of a node value fails on the first node statement it reads (NULL and
+            // [ ] read none): only a value that needed no node and no warning stands.
+            let node_type = matches!(ty, x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode) && !xml;
+
+            if !scene.nodes.is_empty() || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_))))) {
+                return Err(None);
+            }
+
+            for w in scene.warnings {
+                self.log_warn(w);
+            }
+
+            return result.map_err(|e| Some(e.message));
+        };
+
+        let first_new = self.scene.nodes.len() as NodeId;
+        let first_setup = self.scene.setup_order.len();
+        let mut scene = std::mem::replace(&mut self.scene, Scene::new(""));
+
+        // The nodes it creates are found as the range `first_new..`: none goes into a released slot.
+        scene.append_only = true;
+
+        let (mut scene, result) = x3d_parse::Parser::parse_field_into(scene, ctx, ty, text, xml, unit, name);
+
+        scene.append_only = false;
+        self.scene = scene;
+
+        for w in std::mem::take(&mut self.scene.warnings) {
+            self.log_warn(w);
+        }
+
+        for n in first_new..self.scene.nodes.len() as NodeId {
+            self.nrt_mut(n);
+            self.construct_node(n);
+        }
+
+        self.rebuild_parents();
+
+        let setup: Vec<NodeId> = self.scene.setup_order.drain(first_setup..).collect();
+
+        for n in setup {
+            self.setup_node(n);
+        }
+
+        self.register_dynamic(first_new..self.scene.nodes.len() as NodeId);
+
+        result.map_err(|e| Some(e.message))
     }
 
     /// X3DExecutionContext.deleteRoute (route): the route with this id leaves `ctx`; whether there was one.
