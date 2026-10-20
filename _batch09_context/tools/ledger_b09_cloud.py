@@ -149,17 +149,26 @@ for _world, _types in NODE_WORLDS.items():
     for _t in _types:
         _missing = "visual evidence (rendering) not compared: needs the desktop GPU run"
         if _t == "Text":
-            _missing += "; the layout outputs origin, textBounds, lineBounds are not sent by the port's runtime (node-text-outputs-open: " \
-                        "X_ITE sends them when it rebuilds the text, after its default font has loaded)"
+            _missing += "; origin / textBounds / lineBounds during the oracle's warm-up frames (node-text-outputs-open: anim.html " \
+                        "loads the world on wall-clock animation frames, so the frame the default font arrives in is not X_ITE's logic); " \
+                        "ScreenFontStyle's ScreenText outputs"
+        if _t in ("Text", "FontStyle"):
+            _tests_extra = ["crates/x3d-viewer/tests/rea_batch09_sai.rs text-events text-fontstyle text-family"]
+        else:
+            _tests_extra = []
         C["node:" + _t] = (
             "PARTIAL",
-            [f"crates/x3d-viewer/tests/rea_batch09_sai.rs {_world}"],
+            [f"crates/x3d-viewer/tests/rea_batch09_sai.rs {_world}"] + _tests_extra,
             _missing,
             f"b09 cloud checkpoint after b2e5b9f: {_world} (3 identical X_ITE recordings, exact): field definitions (name, access "
             "type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field "
             "that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order "
             "with their values, the node's text after"
-            + (" (OrthoViewpoint's fieldOfView now printed as X_ITE's SFVec4f of any length)" if _t == "OrthoViewpoint" else ""),
+            + (" (OrthoViewpoint's fieldOfView now printed as X_ITE's SFVec4f of any length)" if _t == "OrthoViewpoint" else "")
+            + (". Checkpoint after 804802d: Text's rebuild cascade in the runtime (X3DGeometryNode setup / requestRebuild / _rebuild, "
+               "Text.set_live__ / set_fontStyle__, X3DTextGeometry.configure): origin, textBounds, lineBounds events in X_ITE's order; "
+               "FontStyle loadData copies family and style when it begins, waits for its sleep (0) timer and an uncached font file "
+               "(text-events, text-fontstyle, text-family, 3 identical X_ITE recordings, exact)" if _t in ("Text", "FontStyle") else ""),
         )
 
 

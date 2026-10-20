@@ -1,0 +1,58 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fcb sfnode"
+DEF S Shape { }
+DEF G Group { }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+var F_ = 0, LOG = [];
+function prepareEvents () { ++ F_;
+ if (F_ === 10) { var s = Browser .currentScene .getNamedNode ('S'), g = Browser .currentScene .getNamedNode ('G');  s .addFieldCallback ('w', 'appearance', function (v) { LOG .push ('F' + F_ + ' appearance=' + String (v)); });  g .addFieldCallback ('w', 'children', function (v) { LOG .push ('F' + F_ + ' children=' + v .length); });  s .addFieldCallback ('w', 'visible', function (v) { LOG .push ('F' + F_ + ' visible=' + v); });  s .getField ('geometry') .addFieldCallback ('k', function (v) { LOG .push ('F' + F_ + ' geometry=' + String (v)); }); }
+ if (F_ === 12) { var s = Browser .currentScene .getNamedNode ('S'); s .appearance = Browser .currentScene .createNode ('Appearance'); s .visible = false; }
+ if (F_ === 13) { var g = Browser .currentScene .getNamedNode ('G'); g .children = new MFNode (Browser .currentScene .createNode ('Group')); }
+ if (F_ === 14) { var s = Browser .currentScene .getNamedNode ('S'); s .appearance = null; s .geometry = Browser .currentScene .createNode ('Box'); }
+ if (F_ === 15) { var s = Browser .currentScene .getNamedNode ('S'); s .removeFieldCallback ('w', 'appearance'); s .appearance = Browser .currentScene .createNode ('Appearance'); }
+ if (F_ === 17) { T ('log', function () { return LOG; }); flush_ (); } }
+
+  "
+}

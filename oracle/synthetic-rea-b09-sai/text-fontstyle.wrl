@@ -1,0 +1,66 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "text fontstyle"
+Shape { geometry DEF T1 Text { string "ab" } }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+var F_ = 0, LOG = [];
+function watch (name, n) {
+  [\"origin\", \"textBounds\", \"lineBounds\", \"string\", \"length\", \"maxExtent\", \"fontStyle\"] .forEach (function (f) { n .addFieldCallback ('w', f, function (v) { LOG .push ('F' + F_ + ' ' + name + '.' + f + '=' + String (v) .replace (/\\s+/g, ' ')); }); });
+}
+
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+function prepareEvents () {
+  ++ F_;
+  if (F_ === 10) { watch ('T1', Browser .currentScene .getNamedNode ('T1')); }
+  if (F_ === 12) { var t = Browser .currentScene .getNamedNode ('T1'); var f = Browser .currentScene .createNode ('FontStyle'); f .size = 2; t .fontStyle = f; }
+  if (F_ === 15) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .spacing = 1.5; }
+  if (F_ === 17) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .justify = new MFString ('MIDDLE', 'MIDDLE'); }
+  if (F_ === 19) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .horizontal = false; }
+  if (F_ === 21) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .leftToRight = false; t .fontStyle .topToBottom = false; }
+  if (F_ === 23) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle = null; }
+  if (F_ === 25) { var s = Browser .currentScene .createNode ('Shape'), t2 = Browser .currentScene .createNode ('Text'); t2 .string = new MFString ('q'); watch ('T2', t2); s .geometry = t2; Browser .currentScene .addRootNode (s); }
+  if (F_ === 29) { T ('log', function () { return LOG; }); flush_ (); }
+}
+
+  "
+}

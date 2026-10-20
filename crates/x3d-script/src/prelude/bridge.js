@@ -421,6 +421,19 @@ function attachedField (h, type)
    if (field instanceof X3DArrayField)
       attachedOf .set (field .getTarget (), entry);
 
+   // So is an SFNode: SFNode.addFieldCallback (key, callback) adds the callback to its target (X3DField.prototype .call (target)).
+   // The proxy lists the target's own symbols; the target is the one that is not the proxy.
+   if (field instanceof SFNode)
+   {
+      for (const symbol of Object .getOwnPropertySymbols (field))
+      {
+         const value = field [symbol];
+
+         if (value instanceof SFNode && value !== field)
+            attachedOf .set (value, entry);
+      }
+   }
+
    return field;
 }
 
