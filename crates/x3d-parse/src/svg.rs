@@ -2738,13 +2738,16 @@ impl<'a> Svg<'a> {
         set_node(&mut self.scene, viewpoint, "navigationInfo", Some(navigation_info));
         set(&mut self.scene, viewpoint, "position", FieldValue::SFVec3f(Vector3::new(x, y, 10.0)));
         set(&mut self.scene, viewpoint, "centerOfRotation", FieldValue::SFVec3f(Vector3::new(x, y, 0.0)));
-        set(
-            &mut self.scene,
-            viewpoint,
-            "fieldOfView",
-            // `viewpoint .fieldOfView = new Vector4 (...)`: the field is an MFFloat (SFVec4f only when printed).
-            FieldValue::MFFloat([-width / 2.0 * PIXEL, -height / 2.0 * PIXEL, width / 2.0 * PIXEL, height / 2.0 * PIXEL].iter().map(|v| *v as f32).collect()),
-        );
+        // `viewpoint .fieldOfView = new Vector4 (...)`: an SFVec4f in an X3D 4.1 scene (the SVG parser's), an MFFloat in a scene up to
+        // 4.0 (OrthoViewpoint's legacy changeField).
+        let fov = [-width / 2.0 * PIXEL, -height / 2.0 * PIXEL, width / 2.0 * PIXEL, height / 2.0 * PIXEL];
+        let i = self.scene.get_predefined_field(viewpoint, "fieldOfView").unwrap();
+        let value = match self.scene.node(viewpoint).fields[i].value {
+            FieldValue::SFVec4f(_) => FieldValue::SFVec4f(x3d_fields::math::Vector4::new(fov[0], fov[1], fov[2], fov[3])),
+            _ => FieldValue::MFFloat(fov.iter().map(|v| *v as f32).collect()),
+        };
+
+        set(&mut self.scene, viewpoint, "fieldOfView", value);
 
         self.scene.ctx_mut(ROOT).root_nodes.push(Some(viewpoint));
 

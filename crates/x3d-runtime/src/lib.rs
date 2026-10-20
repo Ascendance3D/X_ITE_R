@@ -1070,7 +1070,9 @@ impl Runtime {
                 match task {
                     Task::ScriptLoad(node) => {
                         let first = self.url_strings(node).into_iter().find(|u| !u.is_empty()).unwrap_or_default();
-                        let inline = ["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| first.trim_start().starts_with(s));
+                        // FileLoader.loadDocumentAsync handles a Script URL and (dataAsString) a data URL that is not base64 before its
+                        // first await: the Script initializes in this microtask.
+                        let inline = ["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| first.trim_start().starts_with(s)) || loader::data_url_text(&first).is_some();
 
                         if inline || first.is_empty() {
                             self.script_load(node);

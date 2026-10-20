@@ -87,3 +87,16 @@ ctxev-inline, ctxev-stream-vrml, ctxev-stream-xml, ctxev-stream-json. cases.txt:
   `exportedDescription`). The full layers, engine internals included, are scx-layers-open (documented open).
 - Ledger: sub:exec.import-export, sub:exec.bindable-stacks, sub:config.components-profiles COMPLETE on their evidence (14, 13 and
   8 cases); sub:exec.context-api PARTIAL (owner decision). 235 COMPLETE, 51 PARTIAL, 25 DIFFERENT, 33 NOT_TESTED, 2 MISSING.
+
+## Parser and timing (after aeb2d36)
+
+- A Script's toVRMLString / toXMLString / toJSONString, a node's and a node field's string read each node's clone count as it is
+  then (X3DGenerator.NeedsName): a PROTO instance's node field value that its body also holds is named (`meta DEF _1 …`).
+  engine.rs `with_live_clone_counts`. meta-parse-proto (was meta-parse-open), exact.
+- SVG: the OrthoViewpoint's fieldOfView is an SFVec4f in the SVG parser's X3D 4.1 scene (an MFFloat only up to 4.0, X_ITE's
+  legacy changeField), so it keeps double precision. parse-formats (was documented open), exact.
+- XML: the MFString warning names the field object (`field .getName ()`, "" for a `<field>` definition's value). New
+  parse-xml-mfstring (node field, Script and ProtoInterface field definitions, fieldValue, the GeoViewpoint navType alias), exact.
+- Script URLs: a data URL that is not base64 initializes the Script in its load microtask, as an `ecmascript:` URL does
+  (FileLoader.loadDocumentAsync before its first await). New scr-url-order-sync (unsorted initialize order), exact.
+- scr-image-events (was baselined as scr-image-events-open): renamed; it has matched since the field object model.

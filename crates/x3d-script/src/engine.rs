@@ -1046,12 +1046,22 @@ fn is_scalar(t: FieldType) -> bool {
     matches!(t, FieldType::SFBool | FieldType::SFInt32 | FieldType::SFFloat | FieldType::SFDouble | FieldType::SFTime | FieldType::SFString)
 }
 
+/// A Script prints with each node's clone count as it is now (X3DGenerator.NeedsName: X3DNode.getCloneCount); what the host
+/// published for its own dumps is kept.
+fn with_live_clone_counts<T>(f: impl FnOnce() -> T) -> T {
+    let saved = rt().scene.clone_counts.take();
+    rt().publish_clone_counts();
+    let r = f();
+    rt().scene.clone_counts = saved;
+    r
+}
+
 /// `field .toString ()` (X3DObject.toString with the default generator).
 fn to_vrml(v: &FieldValue) -> String {
     let mut g = Generator::default();
 
     match v {
-        FieldValue::SFNode(_) | FieldValue::MFNode(_) => rt().scene.node_value_to_vrml_string(v),
+        FieldValue::SFNode(_) | FieldValue::MFNode(_) => with_live_clone_counts(|| rt().scene.node_value_to_vrml_string(v)),
         _ => {
             v.to_vrml_stream(&mut g);
             g.string
@@ -1601,11 +1611,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "nstream" => {
             let id = num_arg(ctx, a, 0) as NodeId;
-            Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.node_value_to_string(&FieldValue::SFNode(Some(id))))?.into_value())
+            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_value_to_string(&FieldValue::SFNode(Some(id)))))?.into_value())
         }
         "nstr" => {
             let id = num_arg(ctx, a, 0) as NodeId;
-            Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.node_to_vrml_string(id))?.into_value())
+            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_to_vrml_string(id)))?.into_value())
         }
         "nfields" => {
             let id = inner_node(num_arg(ctx, a, 0) as NodeId);
@@ -2337,11 +2347,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             if format != "xml" {
                 rt().ctx_streamed(root);
             }
-            let text = match format.as_str() {
+            let text = with_live_clone_counts(|| match format.as_str() {
                 "xml" => rt().scene.to_xml_string_ctx(root),
                 "json" => rt().scene.to_json_string_ctx(root),
                 _ => rt().scene.to_vrml_string_ctx(root),
-            };
+            });
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "worldInfos" => {
