@@ -1,0 +1,107 @@
+{
+ "ok": true,
+ "poses": {
+  "40": {
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nPROTO MyClip [\n  inputOutput SFTime   startTime 0\n  inputOutput MFString url \"media/tone48k-stereo.wav\"\n  inputOutput SFBool   loop TRUE\n  inputOutput SFTime   stopTime 1\n  outputOnly  SFBool   isActive\n  outputOnly  SFTime   duration_changed\n]\n{\n  AudioClip {\n    url IS url\n    loop IS loop\n    startTime IS startTime\n    stopTime IS stopTime\n    isActive IS isActive\n    duration_changed IS duration_changed\n  }\n}\n\nViewpoint {\n  position 0 0 0\n}\n\nSound {\n  location -3 0 0\n  minBack 20\n  minFront 20\n  maxBack 40\n  maxFront 40\n  source DEF O MyClip {\n    startTime 946684800.048\n    url [\n      \"media/bad.mid\",\n      \"media/tone48k-stereo.wav\"\n    ]\n  }\n}\n\nDEF PO Script {\n  inputOnly SFBool a\n  inputOnly SFTime d\n\n  url \"javascript:\nfunction a (v, t) { print ('O active ' + v + ' ' + t); }\nfunction d (v, t) { print ('O duration ' + v + ' ' + t); }\n\"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime  set_time\n  outputOnly     SFTime  start\n  initializeOnly SFInt32 n 49\n\n  url \"javascript:\nfunction set_time (value) { if (++ n === 12) start = value; }\n\"\n}\n\nROUTE O.isActive TO PO.a\nROUTE O.duration_changed TO PO.d\nROUTE T.time TO S.set_time\nROUTE S.start TO O.set_startTime\n"
+ },
+ "prints": [],
+ "log": [
+  "warn: AudioClip: Couldn't load URL 'http://oracle/synthetic-rea-b05/media/bad.mid', trying URL 2 of 2. EncodingError: Unable to decode audio data"
+ ],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "audioSuspend": [
+  768,
+  1536,
+  2304,
+  3072,
+  3840,
+  4608,
+  5376,
+  6144,
+  6912,
+  7680,
+  8448,
+  9216,
+  9984,
+  10752,
+  11520,
+  12288,
+  13056,
+  13824,
+  14592,
+  15360,
+  16128,
+  16896,
+  17664,
+  18432,
+  19200,
+  19968,
+  20736,
+  21504,
+  22272,
+  23040,
+  23808,
+  24576,
+  25344,
+  26112,
+  26880,
+  27648,
+  28416,
+  29184,
+  29952,
+  30720
+ ],
+ "console": [
+  "log: O duration 0.25 946684800",
+  "log: O active true 946684800.048"
+ ],
+ "audio": {
+  "sampleRate": 48000,
+  "length": 31232,
+  "channels": 2,
+  "file": "js.audio.f32"
+ }
+}

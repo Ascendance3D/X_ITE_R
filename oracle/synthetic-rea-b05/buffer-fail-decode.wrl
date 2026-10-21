@@ -1,0 +1,34 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+AudioDestination { children DEF O BufferAudioSource { url [ "media/bad.mid" "media/bad2.mid" ] } }
+DEF P Script { inputOnly SFBool a inputOnly SFInt32 nc inputOnly SFTime bd url "ecmascript:
+function a (v, t) { print ('active ' + v + ' ' + t); }
+function nc (v, t) { print ('channels ' + v + ' ' + t); }
+function bd (v, t) { print ('duration ' + v + ' ' + t); }
+" }
+ROUTE O.isActive TO P.a
+ROUTE O.numberOfChannels TO P.nc
+ROUTE O.bufferDuration TO P.bd
+DEF L LoadSensor { children USE O }
+DEF PL Script { inputOnly SFBool a inputOnly SFBool l inputOnly SFFloat p inputOnly SFTime t url "ecmascript:
+function a (v, t) { print ('L isActive ' + v + ' ' + t); }
+function l (v, t) { print ('L isLoaded ' + v + ' ' + t); }
+function p (v, t) { print ('L progress ' + v + ' ' + t); }
+function t (v, t) { print ('L loadTime ' + v + ' ' + t); }
+" }
+ROUTE L.isActive TO PL.a
+ROUTE L.isLoaded TO PL.l
+ROUTE L.progress TO PL.p
+ROUTE L.loadTime TO PL.t
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  inputOnly SFTime set_time
+  outputOnly SFTime start
+  initializeOnly SFInt32 n 0
+  url "javascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
