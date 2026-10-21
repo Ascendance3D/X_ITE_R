@@ -1,0 +1,94 @@
+{
+ "settle": true,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 108,
+ "capture": [
+  4,
+  9,
+  17,
+  25,
+  33,
+  41,
+  49,
+  57,
+  65,
+  73
+ ],
+ "dump": [
+  4,
+  9,
+  17,
+  25,
+  33,
+  41,
+  49,
+  57,
+  65,
+  73,
+  107
+ ],
+ "events": [
+  {
+   "frame": 6,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 14,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 22,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 30,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 38,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 46,
+   "type": "key",
+   "key": "f"
+  },
+  {
+   "frame": 54,
+   "type": "key",
+   "key": "g"
+  },
+  {
+   "frame": 62,
+   "type": "key",
+   "key": "h"
+  },
+  {
+   "frame": 70,
+   "type": "key",
+   "key": "i"
+  },
+  {
+   "frame": 84,
+   "type": "resize",
+   "width": 640,
+   "height": 360
+  },
+  {
+   "frame": 94,
+   "type": "resize",
+   "width": 300,
+   "height": 500
+  }
+ ]
+}

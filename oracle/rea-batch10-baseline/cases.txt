@@ -15,3 +15,9 @@ sg-camera oracle/synthetic-rea-b10-stepped/sg-camera.wrl oracle/synthetic-rea-b1
 sg-camera oracle/synthetic-rea-b10-stepped/sg-camera.wrl oracle/synthetic-rea-b10-stepped/sg-camera.json 4
 sfs-plain oracle/synthetic-rea-b10-stepped/sfs-plain.wrl oracle/synthetic-rea-b10-stepped/sfs-plain.json 0
 sfs-plain oracle/synthetic-rea-b10-stepped/sfs-plain.wrl oracle/synthetic-rea-b10-stepped/sfs-plain.json 4
+lg-runtime oracle/synthetic-rea-b10-secondary/lg-runtime.wrl oracle/synthetic-rea-b10-secondary/lg-runtime.json 0
+lg-runtime oracle/synthetic-rea-b10-secondary/lg-runtime.wrl oracle/synthetic-rea-b10-secondary/lg-runtime.json 4
+ov-view oracle/synthetic-rea-b10-secondary/ov-view.wrl oracle/synthetic-rea-b10-secondary/ov-view.json 0
+ov-view oracle/synthetic-rea-b10-secondary/ov-view.wrl oracle/synthetic-rea-b10-secondary/ov-view.json 4
+lf-volume oracle/synthetic-rea-b10-secondary/lf-volume.wrl oracle/synthetic-rea-b10-secondary/lf-volume.json 0
+lf-volume oracle/synthetic-rea-b10-secondary/lf-volume.wrl oracle/synthetic-rea-b10-secondary/lf-volume.json 4

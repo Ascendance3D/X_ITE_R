@@ -1,0 +1,39 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+Viewpoint { position 0 0 8 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 1.5 } } }
+Transform { translation 1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.9 } } }
+DEF LG1 LayoutGroup { layout DEF LAY1 Layout { align [ "LEFT" "BOTTOM" ] offsetUnits [ "PIXEL" "PIXEL" ] offset [ 10 10 ] size [ 100 50 ] sizeUnits [ "PIXEL" "PIXEL" ] scaleMode [ "PIXEL" "PIXEL" ] } children [ Shape { appearance Appearance { material Material { emissiveColor 1 0.4 0.1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -50.0 -25.0 0, 50.0 -25.0 0, 50.0 25.0 0, -50.0 25.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] }
+DEF LG2 LayoutGroup { layout DEF LAY2 Layout { align [ "CENTER" "CENTER" ] size [ 120 60 ] sizeUnits [ "PIXEL" "PIXEL" ] scaleMode [ "PIXEL" "PIXEL" ] } viewport DEF VP Viewport { clipBoundary [ 0.4 0.6 0.4 0.6 ] } children [ Shape { appearance Appearance { material Material { emissiveColor 0.9 0.9 0.2 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -30.0 -15.0 0, 30.0 -15.0 0, 30.0 15.0 0, -30.0 15.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } Shape { appearance Appearance { material Material { emissiveColor 0.1 0.1 0.1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -10.0 -10.0 0, 10.0 -10.0 0, 10.0 10.0 0, -10.0 10.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] }
+DEF LG3 LayoutGroup { layout Layout { align [ "RIGHT" "TOP" ] offset [ -10 -10 ] offsetUnits [ "PIXEL" "PIXEL" ] size [ 80 80 ] sizeUnits [ "PIXEL" "PIXEL" ] scaleMode [ "PIXEL" "PIXEL" ] } children [ DEF CH1 Transform { children Shape { appearance Appearance { material Material { emissiveColor 0.2 0.9 0.4 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -40.0 -40.0 0, 40.0 -40.0 0, 40.0 40.0 0, -40.0 40.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } } ] }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode lay1 USE LAY1
+  initializeOnly SFNode lay2 USE LAY2
+  initializeOnly SFNode vp USE VP
+  initializeOnly SFNode lg2 USE LG2
+  initializeOnly SFNode lg3 USE LG3
+  initializeOnly SFNode ch1 USE CH1
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') lay1 .align = new MFString ('RIGHT', 'BOTTOM');
+   if (k == 'b') lay1 .offset = new MFFloat (10, 40);
+   if (k == 'c') lay1 .size = new MFFloat (160, 80);
+   if (k == 'd') lay1 .scaleMode = new MFString ('STRETCH', 'STRETCH');
+   if (k == 'e') lg2 .addChildren = Browser .createVrmlFromString ('Shape { appearance Appearance { material Material { emissiveColor 0.9 0.2 0.9 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -20 -20 0, 20 -20 0, 20 20 0, -20 20 0 ] } coordIndex [ 0 1 2 3 -1 ] } }');
+   if (k == 'f') vp .clipBoundary = new MFFloat (0.2, 0.8, 0.2, 0.8);
+   if (k == 'g') ch1 .translation = new SFVec3f (-40, -20, 0);
+   if (k == 'h') lay2 .align = new MFString ('CENTER', 'TOP');
+   if (k == 'i') lg3 .visible = false;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
