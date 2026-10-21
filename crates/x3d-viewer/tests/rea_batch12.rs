@@ -10,11 +10,24 @@
 //!
 //! KNOWN_GAPS lists cases the renderer cannot match yet; the test requires them to keep failing.
 //!
+//! The cases are split by prefix into two tests (before 2026-10-21 both were one test, rea_batch12_cases_match_x_ite):
+//! rea_batch12_pick_cases_match_x_ite (pk-*) needs a GPU: without one x3d-drive picks with the ray cast, whose float64 hits
+//! differ from the GPU pointing buffer. rea_batch12_view_billboard_cases_match_x_ite (vw-*, bbb-*) also runs without a GPU
+//! (images skipped, scene text, log and poses still compared). A case with another prefix fails both tests.
+//!
 //! `REA_ONLY=<substring>` restricts the cases.
 
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::sync::Mutex;
+
+/// One GPU at a time: the two tests run their cases in order, never together.
+static GPU: Mutex<()> = Mutex::new(());
+
+/// Case name prefixes of each test.
+const PICK: &[&str] = &["pk-"];
+const VIEW_BILLBOARD: &[&str] = &["vw-", "bbb-"];
 
 /// (case name, why Rust differs).
 const KNOWN_GAPS: &[(&str, &str)] = &[
@@ -214,12 +227,12 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
     let _ = std::fs::remove_dir_all(&out);
 }
 
-#[test]
-fn rea_batch12_cases_match_x_ite() {
+/// Runs the cases.txt cases whose name starts with one of `prefixes`.
+fn check_cases(prefixes: &[&str]) {
+    let _gpu = GPU.lock().unwrap_or_else(|e| e.into_inner());
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
     let cases = std::fs::read_to_string(root.join("oracle/rea-batch12-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
-    // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();
     let mut failures = vec![];
     let mut checked = 0;
@@ -229,7 +242,12 @@ fn rea_batch12_cases_match_x_ite() {
         let (name, world, script, msaa) = (f[0], f[1], f[2], f[3].parse::<u32>().unwrap());
         let text_tol = f.get(4).map_or(0.0, |t| t.parse::<f64>().unwrap());
 
-        if only.as_deref().is_some_and(|o| !name.contains(o)) {
+        if !PICK.iter().chain(VIEW_BILLBOARD).any(|p| name.starts_with(p)) {
+            failures.push(format!("{name} MSAA {msaa}: no test owns this case prefix"));
+            continue;
+        }
+
+        if !prefixes.iter().any(|p| name.starts_with(p)) || only.as_deref().is_some_and(|o| !name.contains(o)) {
             continue;
         }
 
@@ -250,5 +268,18 @@ fn rea_batch12_cases_match_x_ite() {
     }
 
     eprintln!("{checked} cases checked (images: {gpu})");
+    assert!(only.is_some() || checked > 0, "no case starts with {prefixes:?}");
     assert!(failures.is_empty(), "{} failures:\n{}", failures.len(), failures.join("\n"));
+}
+
+/// pk-*: needs a GPU (the CI runner skips it by name).
+#[test]
+fn rea_batch12_pick_cases_match_x_ite() {
+    check_cases(PICK);
+}
+
+/// vw-*, bbb-*: runs with or without a GPU.
+#[test]
+fn rea_batch12_view_billboard_cases_match_x_ite() {
+    check_cases(VIEW_BILLBOARD);
 }
