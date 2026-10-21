@@ -684,14 +684,15 @@
     "crates/x3d-runtime/src/nodes/mod.rs",
     "crates/x3d-runtime/src/release.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-environment"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-environment",
+    "crates/x3d-viewer/tests/rea_batch10_screen.rs::rea_batch10_screen_cases_match_x_ite (lf-geom, lf-vol-types, lf-vol-global, lf-volume: color, visibilityRange, visibilityStart, fogType, enabled, nesting, VolumeData / IsoSurfaceVolumeData / SegmentedVolumeData, bound Fog, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-environment (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-environment (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 11 2026-10-21: PASS. Volume draws now use the render context's fog node (innermost LocalFog, else the layer's Fog) like other shapes; images against pinned X_ITE (recorded twice, identical; 0.5% limit unchanged), no KNOWN_GAPS left."
   },
   {
    "id": "node:TextureBackground",
@@ -1825,11 +1826,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-others, bb-dynamic). Billboard's own bboxDisplay is not covered."
   },
   {
    "id": "node:StaticGroup",
@@ -1897,11 +1899,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl"
+    "oracle/synthetic-rea-verify/{switch-lod-billboard,collision-children,proximity-visibility}.wrl",
+    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)"
    ],
    "missing": "",
    "oracle": "x10_compare exact",
-   "notes": ""
+   "notes": "Batch 11 2026-10-21: bboxDisplay matches X_ITE (bb-static, bb-dynamic)."
   },
   {
    "id": "node:HAnimDisplacer",
@@ -2572,15 +2575,17 @@
     "crates/x3d-runtime/src/nodes/transform_sensor.rs",
     "crates/x3d-runtime/src/release.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-layout",
-    "crates/x3d-viewer/tests/rea_batch10_screen.rs::rea_batch10_screen_cases_match_x_ite (sg-runtime, sg-viewpoint, sg-resize, sg-camera, MSAA 0/4; sg-bbox and sg-viewpoint-degenerate are KNOWN_GAPS)"
+    "crates/x3d-viewer/tests/rea_batch10_screen.rs::rea_batch10_screen_cases_match_x_ite (sg-runtime, sg-viewpoint, sg-resize, sg-camera, MSAA 0/4; sg-bbox and sg-viewpoint-degenerate are KNOWN_GAPS)",
+    "crates/x3d-viewer/tests/rea_batch11_bbox.rs (bb-static, bb-others, bb-screen, bb-dynamic, MSAA 0/4)",
+    "crates/x3d-viewer/tests/rea_batch10_screen.rs::rea_batch10_screen_cases_match_x_ite (sg-bbox, sg-viewpoint-degenerate, MSAA 0/4; no KNOWN_GAPS left)"
    ],
-   "missing": "bboxDisplay of a ScreenGroup is not drawn (the renderer draws bboxDisplay only for the DIS PDU nodes; the Group / Transform bboxDisplay lane is unscheduled); a Viewpoint at the ScreenGroup's origin (X_ITE's matrix feedback goes singular and draws black)",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-layout (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 10 review 2026-10-20: HOLD. Verified against X_ITE: screen-space scaling, translation / rotation / scale of parents, child geometry changes, nesting, Viewpoint and OrthoViewpoint and GeoViewpoint, Viewpoints inside (also nested) a ScreenGroup (poses and pictures), ContentScale 0.5 / 1 / 2, canvas resize, visible. Rust defects fixed: the viewer did not walk ScreenGroup children (Viewpoints never bound), the previous frame's screen matrix did not feed the CAMERA pass, frames were not built at drawing-buffer size. Open: bboxDisplay."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-layout (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 10 review 2026-10-20: HOLD. Verified against X_ITE: screen-space scaling, translation / rotation / scale of parents, child geometry changes, nesting, Viewpoint and OrthoViewpoint and GeoViewpoint, Viewpoints inside (also nested) a ScreenGroup (poses and pictures), ContentScale 0.5 / 1 / 2, canvas resize, visible. Rust defects fixed: the viewer did not walk ScreenGroup children (Viewpoints never bound), the previous frame's screen matrix did not feed the CAMERA pass, frames were not built at drawing-buffer size. Open: bboxDisplay. Batch 11 2026-10-21: PASS. bboxDisplay (default and explicit bbox, nested, rotated parent, empty, Text, perspective and ortho, ContentScale 2) matches X_ITE. A Viewpoint at the ScreenGroup's origin: X_ITE's screen-matrix feedback makes the camera matrix zero and the Background rotation NaN (traced per traversal with an instrumented copy of the pin, 2 identical runs); Background now takes the rotation with Matrix4.factor as getTransform does, so Rust draws the same black frames from the same cause."
   },
   {
    "id": "node:DirectionalLight",
@@ -3062,11 +3067,13 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-navigation"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-navigation",
+    "crates/x3d-viewer/tests/rea_batch10_screen.rs::rea_batch10_screen_cases_match_x_ite (ov-view, MSAA 0/4)",
+    "crates/x3d-viewer/tests/rea_batch10_screen.rs::rea_batch10_screen_cases_match_x_ite (ov-view2, ov-lookat, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "pose events (position_changed and similar) recorded three times; Browser.viewAll and layer-level viewAll through the SAI; the StraightenHorizon option; Geo / perspective LookAt variants",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-navigation (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after (OrthoViewpoint's fieldOfView now printed as X_ITE's SFVec4f of any length)"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-navigation (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after (OrthoViewpoint's fieldOfView now printed as X_ITE's SFVec4f of any length) Batch 11 2026-10-21: HOLD. Rendering and per-frame poses for viewAll (scaled and rotated parents, resize, fieldOfView change, retainUserOffsets, empty scene) and LookAt match X_ITE. Rust defect fixed: a run-time viewAll = true on a bound viewpoint did not send set_bind (X3DViewpointNode.set_viewAll__)."
   },
   {
    "id": "node:Viewpoint",
@@ -5213,11 +5220,12 @@
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-text",
     "crates/x3d-viewer/tests/rea_batch09_sai.rs text-events text-fontstyle text-family",
     "crates/x3d-viewer/tests/rea_batch10_screen.rs::rea_batch10_screen_cases_match_x_ite (text-runtime: FontStyle / Text field changes, family fallback, MSAA 0/4, settle)",
-    "crates/x3d-viewer/tests/rea_batch10_sai.rs::rea_batch10_sai_cases_match_x_ite (text-screen-scale)"
+    "crates/x3d-viewer/tests/rea_batch10_sai.rs::rea_batch10_sai_cases_match_x_ite (text-screen-scale)",
+    "crates/x3d-viewer/tests/rea_batch11_text.rs (tb-fallback, tb-layout, tb-align, tb-late)"
    ],
    "missing": "origin / textBounds / lineBounds during the oracle's warm-up frames (node-text-outputs-open): X_ITE itself is not repeatable there (one or two default-font rebuilds, depending on the machine's load; 3 quiet runs gave one pair, a fourth quiet run two, runs under CPU load one pair and a later load frame), so it cannot be exact evidence",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after. Checkpoint after 804802d: Text's rebuild cascade in the runtime (X3DGeometryNode setup / requestRebuild / _rebuild, Text.set_live__ / set_fontStyle__, X3DTextGeometry.configure): origin, textBounds, lineBounds events in X_ITE's order; FontStyle loadData copies family and style when it begins, waits for its sleep (0) timer and an uncached font file (text-events, text-fontstyle, text-family, 3 identical X_ITE recordings, exact) Batch 10 review 2026-10-20: HOLD. Rendering (vis-text-font, vis-text-layout), run-time FontStyle and Text changes with pictures (text-runtime), events (text-events, text-fontstyle, text-family, text-screen-scale) are exact. The warm-up frames stay open because the oracle is not deterministic there."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after. Checkpoint after 804802d: Text's rebuild cascade in the runtime (X3DGeometryNode setup / requestRebuild / _rebuild, Text.set_live__ / set_fontStyle__, X3DTextGeometry.configure): origin, textBounds, lineBounds events in X_ITE's order; FontStyle loadData copies family and style when it begins, waits for its sleep (0) timer and an uncached font file (text-events, text-fontstyle, text-family, 3 identical X_ITE recordings, exact) Batch 10 review 2026-10-20: HOLD. Rendering (vis-text-font, vis-text-layout), run-time FontStyle and Text changes with pictures (text-runtime), events (text-events, text-fontstyle, text-family, text-screen-scale) are exact. The warm-up frames stay open because the oracle is not deterministic there. Batch 11 2026-10-21: HOLD stays. Run-time changes, family fallback, layout inputs, stale alignments and late-made Texts now have exact evidence (3 identical X_ITE runs each). Rust defects fixed: FontStyle alignments kept from setup / last justify change; font-file cache keyed by resolved file. Warm-up frames: 30 X_ITE runs gave several patterns (first build at frame 1 empty, font arrives frame 2-5, 1-3 rebuilds), so no exact evidence is possible."
   },
   {
    "id": "node:TextureProjector",
