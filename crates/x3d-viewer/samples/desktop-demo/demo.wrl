@@ -1,0 +1,75 @@
+#VRML V2.0 utf8
+# X_ITE_R desktop demo: a small world written for this repository (no historical assets).
+# It exercises what the desktop check covers: textures and lights, viewpoints, a TimeSensor
+# animation, a TouchSensor that a Script answers through ROUTEs, and a looping Sound.
+
+WorldInfo { title "X_ITE_R desktop demo" }
+NavigationInfo { type [ "EXAMINE" "ANY" ] headlight FALSE }
+Background { skyColor [ 0.05 0.07 0.15 0.20 0.30 0.55 ] skyAngle [ 1.4 ] groundColor [ 0.10 0.08 0.06 ] }
+
+Viewpoint { position 0 1.5 9 description "Front" }
+Viewpoint { position 7 4 7 orientation -0.58 0.79 0.20 0.82 description "Corner" }
+Viewpoint { position 0 11 0.01 orientation -1 0 0 1.5708 description "Top" }
+
+DirectionalLight { direction -0.4 -1 -0.6 intensity 0.8 }
+PointLight { location 0 3 3 color 1 0.9 0.7 intensity 0.6 }
+
+# Floor
+Transform {
+  translation 0 -1 0
+  children Shape {
+    appearance Appearance { material Material { diffuseColor 0.35 0.35 0.38 } }
+    geometry Box { size 12 0.1 12 }
+  }
+}
+
+# Textured cube, turned by a TimeSensor
+DEF Spinner Transform {
+  translation -2 0.5 0
+  children Shape {
+    appearance Appearance {
+      material Material { diffuseColor 1 1 1 }
+      texture ImageTexture { url "checker.png" }
+    }
+    geometry Box { size 1.5 1.5 1.5 }
+  }
+}
+DEF Clock TimeSensor { cycleInterval 6 loop TRUE }
+DEF Turn OrientationInterpolator {
+  key [ 0 0.5 1 ]
+  keyValue [ 0 1 0 0  0 1 0 3.14159  0 1 0 6.28318 ]
+}
+ROUTE Clock.fraction_changed TO Turn.set_fraction
+ROUTE Turn.value_changed TO Spinner.set_rotation
+
+# Click the sphere: the Script switches its colour
+Transform {
+  translation 2 0.5 0
+  children [
+    DEF Button TouchSensor { }
+    Shape {
+      appearance Appearance { material DEF ButtonMaterial Material { diffuseColor 0.8 0.1 0.1 specularColor 0.6 0.6 0.6 shininess 0.4 } }
+      geometry Sphere { radius 0.9 }
+    }
+  ]
+}
+DEF Toggle Script {
+  eventIn SFTime touched
+  eventOut SFColor color
+  field SFBool on FALSE
+  url "vrmlscript:
+    function touched (value, time) {
+      on = !on;
+      color = on ? new SFColor (0.1, 0.8, 0.2) : new SFColor (0.8, 0.1, 0.1);
+      print ('button ' + (on ? 'on' : 'off'));
+    }"
+}
+ROUTE Button.touchTime TO Toggle.touched
+ROUTE Toggle.color TO ButtonMaterial.set_diffuseColor
+
+# A soft chime at the centre, heard within 15 m
+Sound {
+  location 0 0.5 0
+  minFront 4 minBack 4 maxFront 15 maxBack 15
+  source AudioClip { url "chime.wav" loop TRUE description "chime" }
+}
