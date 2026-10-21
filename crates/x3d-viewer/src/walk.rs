@@ -68,6 +68,11 @@ pub struct ShapeInst {
     /// renderObject.getHAnimNode (): the skin tables and joint matrices of the HAnimHumanoid or
     /// HAnimSegment around the shape (the pointing shader skins it; collision does not).
     pub skin: Option<Rc<(x3d_render::hanim::SkinTables, Vec<f32>)>>,
+    /// Appearance.getStyleProperties (geometryType) with ContentScale 1 (PointProperties for points, an applied
+    /// LineProperties for lines): the pointing pass draws points and lines with it.
+    pub style: Option<x3d_render::traverse::StyleParams>,
+    /// X3D_TEXTURE and X3D_MATERIAL_TEXTURES of the pointing shader (appearance and material texture nodes).
+    pub textures: (bool, bool),
 }
 
 /// The layer a walk covers (X3DLayerNode.traverse): its children, its viewport rectangle, and the
@@ -792,6 +797,25 @@ impl<'a> Walker<'a> {
                     vec![(*mv, None)]
                 };
 
+                let appearance = sg.node(n, "appearance").filter(|a| sg.type_name(*a) == Some("Appearance"));
+                let style = sg.node(n, "geometry").and_then(|g| {
+                    let geometry_type = match sg.type_name(g) {
+                        Some("PointSet") => 0,
+                        Some("IndexedLineSet" | "LineSet" | "Polyline2D" | "Arc2D" | "Circle2D" | "ArcClose2D") => 1,
+                        _ => 2,
+                    };
+                    appearance.and_then(|a| x3d_render::traverse::style_params(sg, a, geometry_type))
+                });
+                let textures = appearance.map_or((false, false), |a| {
+                    let material = sg.node(a, "material");
+                    let material_texture = material.is_some_and(|m| {
+                        ["ambientTexture", "diffuseTexture", "specularTexture", "emissiveTexture", "shininessTexture", "occlusionTexture", "normalTexture", "baseTexture", "metallicRoughnessTexture"]
+                            .iter()
+                            .any(|field| sg.node(m, field).is_some())
+                    });
+                    (sg.node(a, "texture").is_some(), material_texture)
+                });
+
                 for (model_view, instance) in instance_matrices.iter().filter(|_| sg.node(n, "geometry").is_some()) {
                     let g = sg.node(n, "geometry").unwrap();
                     self.scan.shapes.push(ShapeInst {
@@ -809,6 +833,8 @@ impl<'a> Walker<'a> {
                         clip_planes: self.clip_planes.clone(),
                         viewport: self.viewport(),
                         skin: self.hanim.last().cloned().flatten(),
+                        style,
+                        textures,
                     });
                 }
             }

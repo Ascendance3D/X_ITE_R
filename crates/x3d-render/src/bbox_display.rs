@@ -20,5 +20,5 @@ const POINTS: [f32; 24] = [0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 
 
 /// IndexedLineSet.build of the bbox shape.
 pub fn unit_box_lines() -> Geometry {
-    geometry::indexed_line_set(Some(&POINTS), &COORD_INDEX, None, &[], true, &Default::default())
+    geometry::indexed_line_set(Some(&POINTS), &COORD_INDEX, None, &[], true, None, &Default::default())
 }

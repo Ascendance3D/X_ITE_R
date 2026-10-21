@@ -3552,7 +3552,7 @@ const STIPPLE_FLOATS_PER_VERTEX: usize = FLOATS_PER_VERTEX + 4;
 
 /// ALIASED_LINE_WIDTH_RANGE [1] of the oracle GPU (ANGLE on OpenGL, NVIDIA): wider lines are
 /// transformed into triangles (LineProperties.transformLines), narrower ones use gl.lineWidth.
-const MAX_LINE_WIDTH: f64 = 10.0;
+pub const MAX_LINE_WIDTH: f64 = 10.0;
 
 /// The vertices of a line geometry with LineProperties, in the stipple layout. `projection` is the
 /// GL projection, window coordinates have their origin at the lower left (gl_FragCoord).
@@ -3671,6 +3671,15 @@ fn line_style_vertices(g: &crate::geometry::Geometry, model_view: &Matrix4, proj
     }
 
     (out, triangles)
+}
+
+/// LineProperties.getTransformLines (a width above ALIASED_LINE_WIDTH_RANGE [1]): the triangles X3DLineGeometryNode
+/// draws instead of gl.LINES, also in the pointing pass (displaySimpleThick), as object-space positions, three per
+/// triangle, two triangles per segment. `viewport` and `projection` are those of the DISPLAY pass that made them.
+pub fn transformed_line_positions(g: &crate::geometry::Geometry, model_view: &Matrix4, projection: &Matrix4, viewport: [f64; 4], l: &LineParams) -> Vec<[f32; 4]> {
+    let (verts, _) = line_style_vertices(g, model_view, projection, viewport, l, 1);
+
+    verts.chunks_exact(STIPPLE_FLOATS_PER_VERTEX).map(|v| [v[0], v[1], v[2], 1.0]).collect()
 }
 
 trait IntoCorners {

@@ -2523,13 +2523,15 @@ impl<'a> Builder<'a> {
                     colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }),
                     sg.i32s(n, "colorIndex"),
                     sg.bool(n, "colorPerVertex", true),
+                    sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector")),
                     &ex.view(),
                 )
             }
             "PointSet" => {
                 let coord = self.coord(sg, n);
                 let colors = self.colors(sg, n);
-                geometry::point_set(coord.as_deref(), colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }))
+                let normal = sg.node(n, "normal").filter(|t| sg.type_name(*t) == Some("Normal")).map(|t| sg.f32s(t, "vector"));
+                geometry::point_set(coord.as_deref(), colors.as_ref().map(|(v, c)| Colors { values: v, components: *c }), normal)
             }
             "TriangleSet" | "TriangleFanSet" | "TriangleStripSet" | "QuadSet" | "IndexedTriangleSet" | "IndexedTriangleFanSet" | "IndexedTriangleStripSet" | "IndexedQuadSet" => {
                 use crate::composed::{composed_geometry, ComposedInput, Kind};
@@ -4593,7 +4595,7 @@ fn depth_params(sg: &Sg, d: NodeId) -> DepthParams {
 
 /// Appearance.getStyleProperties (geometryType) with ContentScale 1: the PointProperties for
 /// points, an applied LineProperties for lines, the FillProperties for 2D and 3D geometry.
-fn style_params(sg: &Sg, appearance: NodeId, geometry_type: u8) -> Option<StyleParams> {
+pub fn style_params(sg: &Sg, appearance: NodeId, geometry_type: u8) -> Option<StyleParams> {
     match geometry_type {
         0 => {
             let p = sg.node(appearance, "pointProperties").filter(|p| sg.type_name(*p) == Some("PointProperties"))?;
