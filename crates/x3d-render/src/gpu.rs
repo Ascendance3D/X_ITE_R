@@ -2765,7 +2765,7 @@ impl Renderer {
             if let Some(v) = &item.volume {
                 used_textures.extend(v.textures.iter().cloned());
                 let lights = item.lights.iter().copied().filter(|l| (*l as usize) < MAX_FRAME_LIGHTS).take(MAX_LIGHTS).collect();
-                volume_inputs.push(crate::volume_gpu::VolumeInput { draw: v, lights, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect() });
+                volume_inputs.push(crate::volume_gpu::VolumeInput { draw: v, lights, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), fog: item.fog.as_ref().or(frame.fog.as_ref()) });
                 calls.push(Call {
                     key: PipelineKey::new(Topology::Triangles, Cull::Back, true, true, false, true),
                     blend_constant: None,
