@@ -1,0 +1,10 @@
+#X3D V4.0 utf8
+PROFILE Full
+DEF V1 Viewpoint { position 0 4 12 orientation 1 0 0 -0.3 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+DirectionalLight { direction -0.4 -1 -0.3 shadows TRUE shadowIntensity 0.8 }
+NavigationInfo { headlight FALSE }
+Transform { translation 0 1.5 0 children Billboard { bboxDisplay TRUE children [ Transform { translation 1 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Box { size 3 2 0.1 } } } ] } }
+Transform { translation -3 1 1 children Billboard { axisOfRotation 0 0 0 children [ Transform { translation 0.5 0.3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 0.1 } } } ] } }
+Transform { translation 0 -1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } } geometry Box { size 14 0.2 10 } } }
