@@ -475,6 +475,11 @@ try
             case "wheel":     await page .mouse .move (e .x, H - e .y); await page .mouse .wheel (0, e .deltaY); break;
             case "dblclick":  await page .mouse .dblclick (e .x, H - e .y); break; // move, down/up (clickCount 1), down/up (clickCount 2): the browser fires "dblclick"
             case "viewer":    await page .evaluate (n => window .setViewer (n), e .name); break;
+            // REA batch 10: the canvas is resized (CSS size); X_ITE's ResizeObserver runs reshape () on the next rendering opportunity.
+            case "resize":
+               await page .evaluate (([ w, h ]) => { const c = document .getElementById ("c"); c .style .width = w + "px"; c .style .height = h + "px"; }, [ e .width, e .height ]);
+               await page .evaluate (() => new Promise (r => requestAnimationFrame (() => requestAnimationFrame (r))));
+               break;
             case "key":       await page .keyboard .press (e .key); break;
             case "keydown":   await page .keyboard .down (e .key); break;
             case "keyup":     await page .keyboard .up (e .key); break;

@@ -120,6 +120,36 @@ keyscript("sg-viewpoint", "abc", build_each=True)
 write("sg-viewpoint-degenerate", vw)
 keyscript("sg-viewpoint-degenerate", "abcde", build_each=True)
 
+# ---- ScreenGroup / ScreenFontStyle with the canvas resized (the script's "resize" events) and under each camera type -----------
+rz = HEAD + "DEF V1 Viewpoint { position 0 0 8 }\n" + BG + BASE
+rz += "Transform { translation -2.5 1.5 0 children ScreenGroup { children [ " + rect(60, 40, "1 0.4 0.1") + " ] } }\n"
+rz += "Transform { translation 2.5 1.5 0 children ScreenGroup { children [ " + rect(30, 30, "0.2 0.9 0.4") + " ] } }\n"
+rz += ("Transform { translation -2.5 -2 0 children ScreenGroup { children [ Shape { appearance " + EMIT("1 1 1")
+       + " geometry Text { string [ \"Resize\" \"me\" ] fontStyle ScreenFontStyle { pointSize 20 } solid FALSE } } ] } }\n")
+write("sg-resize", rz)
+rev = [{"frame": 6, "type": "resize", "width": 800, "height": 400}, {"frame": 14, "type": "resize", "width": 300, "height": 600},
+       {"frame": 22, "type": "resize", "width": 512, "height": 512}]
+script("sg-resize", 30, rev, [4, 10, 18, 26], settle=True)
+
+cam = HEAD + "COMPONENT Geospatial:1\nNavigationInfo { type \"EXAMINE\" transitionType [ \"TELEPORT\" ] }\nDEF V1 Viewpoint { position 0 0 8 fieldOfView 0.9 }\n"
+cam += "DEF O1 OrthoViewpoint { position 0 0 10 fieldOfView [ -5 -4 5 4 ] }\nDEF G1 GeoViewpoint { position 0 0 8 fieldOfView 0.9 }\n" + BG + BASE
+cam += "Transform { translation -2.5 1.5 0 children ScreenGroup { children [ " + rect(60, 40, "1 0.4 0.1") + " ] } }\n"
+cam += "Transform { translation 2.5 1.5 -3 children ScreenGroup { children [ " + rect(30, 30, "0.2 0.9 0.4") + " ] } }\n"
+cam += ("Transform { translation -2.5 -2 0 children ScreenGroup { children [ Shape { appearance " + EMIT("1 1 1")
+        + " geometry Text { string [ \"Camera\" ] fontStyle ScreenFontStyle { pointSize 20 } solid FALSE } } ] } }\n")
+cam += script_node(refs(["V1", "O1", "G1"]), """function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') o1 .set_bind = true;
+   if (k == 'b') g1 .set_bind = true;
+   if (k == 'c') o1 .fieldOfView = new MFFloat (-3, -3, 3, 3);
+   if (k == 'd') v1 .set_bind = true;
+   if (k == 'e') v1 .fieldOfView = 0.4;
+   if (k == 'f') o1 .set_bind = true;
+}""")
+write("sg-camera", cam)
+keyscript("sg-camera", "abcdef", build_each=True)
+
 # ---- ScreenFontStyle: run-time font changes ----------------------------------------------------------
 def stext(tr, defs, strings, fs):
     s = " ".join(f'"{x}"' for x in strings)

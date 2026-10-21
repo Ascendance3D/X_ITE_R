@@ -17,7 +17,7 @@
 //! (position, contactNormal, depth, geometry1, geometry2, body1, body2 of every Contact). A script with
 //! "physics" pins `currentFrameRate` to 1 / dt, like the oracle page does.
 //! Event types: mousedown, mouseup, mousemove, wheel (deltaY), dblclick, key (Home, End, PageUp,
-//! PageDown), mods (shift, ctrl, alt), viewer (name). Pointer coordinates are pixels with the
+//! PageDown), mods (shift, ctrl, alt), viewer (name), resize (width, height: the canvas CSS size). Pointer coordinates are pixels with the
 //! origin at the bottom left of the canvas. "t" (seconds) offsets the event's Date.now ().
 
 use serde_json::{Value, json};
