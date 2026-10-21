@@ -109,6 +109,12 @@ Esc / `q` quit. Mouse: left drag rotates (EXAMINE), middle drag pans, wheel zoom
 X_ITE. Environment: `X3D_VIEW_NOVSYNC=1` (do not wait for vsync), `X3D_VIEW_STATS=1` (adapter, surface
 format, alpha mode, and per-frame CPU/GPU averages on exit).
 
+Desktop use: `tools/x3d-view-launch.sh [world] [options]` finds the release binary and opens the
+world (no world: `samples/desktop-demo/demo.wrl`, a small world written for this repository with a
+texture, lights, three viewpoints, an animation, a TouchSensor + Script and a looping Sound).
+`tools/package-desktop.sh <dir>` builds the release binary and packs it with the launcher, the
+sample and a README listing the runtime packages (Vulkan driver, ALSA, X11 or Wayland libraries).
+
 ## Benchmark
 
 `x3d-bench <file.wrl> [--oracle dir] [--size 1024x768] [--frames 100] [--readback]` runs an EXAMINE
