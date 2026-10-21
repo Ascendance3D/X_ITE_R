@@ -1486,11 +1486,54 @@ impl<'a> Builder<'a> {
         self.bbox_shape(n, bbox, mv);
     }
 
+    /// LineProperties.set_linewidthScaleFactor__ / setShaderUniforms: the line width is `max (1, linewidthScaleFactor) * ContentScale`,
+    /// and `ContentScale` alone for a line geometry without applied LineProperties (gl.lineWidth). Rust's solid linetype is 1.
+    fn content_scale_lines(&self, style: Option<StyleParams>, geometry_type: u8) -> Option<StyleParams> {
+        let scale = self.layout_camera.content_scale;
+
+        if geometry_type != 1 || scale == 1.0 {
+            return style;
+        }
+
+        match style {
+            Some(StyleParams::Line(l)) => Some(StyleParams::Line(LineParams { width: l.width * scale, ..l })),
+            None => Some(StyleParams::Line(LineParams { linetype: 1, width: scale })),
+            other => other,
+        }
+    }
+
+    /// X3DGroupingNode.set_objects__: a child that is an X3DBoundedObject with bboxDisplay TRUE adds `childNode .getBBoxNode ()` to
+    /// the visible objects right after the child itself, whatever the child's `visible`; the bbox node draws the shape in the
+    /// parent's space with the child's getBBox (a Transform's includes its matrix, a ScreenGroup's its screen matrix).
+    fn child_bbox_display(&mut self, sg: &Sg, c: NodeId, m: &Matrix4, depth: usize) {
+        let Some(ty) = sg.type_name(c) else { return };
+
+        // The DIS nodes and GaussianSplats draw their own box (bbox_display, splats).
+        let bounded = ty == "Shape" || ty == "InstancedShape" || ty == "Inline" || ty == "StaticGroup" || ty == "Viewport" || ty == "LayoutGroup" || GROUPS.contains(&ty);
+
+        if !bounded || !sg.bool(c, "bboxDisplay", false) {
+            return;
+        }
+
+        let bbox = self.node_bbox_unfiltered(sg, c, depth + 1);
+        self.bbox_shape(c, bbox, m);
+    }
+
+    /// getBBox (bbox) of `n` with the `visible` test of the node itself skipped (the bbox node is a visible object even when the
+    /// bounded object is not), shadows FALSE.
+    fn node_bbox_unfiltered(&mut self, sg: &Sg, n: NodeId, depth: usize) -> Box3 {
+        self.node_bbox_inner(sg, n, depth, false)
+    }
+
     /// X3DBBoxNode.traverse: the shared bbox shape in `bbox`'s box.
     pub(super) fn bbox_shape(&mut self, n: NodeId, bbox: Box3, mv: &Matrix4) {
         let (min, max) = bbox.extents();
         let mut extent = max;
         extent.subtract(&min);
+        // X3DBBoxNode.getMatrix: `bboxSize = bbox .size .max (ContentScale === 1 ? 0 : 1e-6)`.
+        if self.layout_camera.content_scale != 1.0 {
+            extent.max(&Vector3::new(1e-6, 1e-6, 1e-6));
+        }
         let center = bbox.center();
         let mut local = Matrix4::IDENTITY;
         local.set_transform(Some(&center), None, Some(&extent), None, None);
@@ -1503,6 +1546,8 @@ impl<'a> Builder<'a> {
         };
         let mut distance = Vector3::ZERO;
         m.mult_vec_matrix3(&mut distance);
+        let style = self.content_scale_lines(None, 1);
+        let style_texture = style.map(|_| crate::style::linetype_texture());
 
         self.items.push(DrawItem {
             geometry_node: n,
@@ -1519,8 +1564,8 @@ impl<'a> Builder<'a> {
             blend: None,
             depth: None,
             clip_planes: self.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(),
-            style: None,
-            style_texture: None,
+            style,
+            style_texture,
             distance: distance.z,
             viewport: (self.viewports.len() > 1).then(|| self.viewport()),
             volume: None,
@@ -1549,6 +1594,7 @@ impl<'a> Builder<'a> {
             .partition(|c| matches!(sg.type_name(*c), Some("DirectionalLight" | "PointLight" | "SpotLight" | "EnvironmentLight" | "TextureProjector" | "TextureProjectorParallel")));
         for c in lights.into_iter().chain(rest) {
             self.display(sg, c, m, depth + 1);
+            self.child_bbox_display(sg, c, m, depth);
         }
         // X3DLightNode.pop: the group's local lights end with the group.
         self.local_lights.truncate(local);
@@ -2011,15 +2057,16 @@ impl<'a> Builder<'a> {
             }
             ShadowGroup::Roots(r) => r.clone(),
         };
-        self.bbox_of(sg, &kids, 0)
+        self.bbox_of(sg, &kids, 0, true)
     }
 
-    /// X3DBoundedObject.getBBox (nodes, bbox, shadows TRUE).
-    fn bbox_of(&mut self, sg: &Sg, nodes: &[NodeId], depth: usize) -> Box3 {
+    /// X3DBoundedObject.getBBox (nodes, bbox, shadows): `shadows` TRUE for the shadow bounds (a Shape only when it casts
+    /// shadows), FALSE for bboxDisplay (X3DBBoxNode.getMatrix calls getBBox (bbox)).
+    fn bbox_of(&mut self, sg: &Sg, nodes: &[NodeId], depth: usize, shadows: bool) -> Box3 {
         let mut bbox = Box3::EMPTY;
 
         for &c in nodes {
-            bbox.add(&self.node_bbox(sg, c, depth + 1));
+            bbox.add(&self.node_bbox(sg, c, depth + 1, shadows));
         }
 
         bbox
@@ -2027,8 +2074,16 @@ impl<'a> Builder<'a> {
 
     /// getBBox (bbox, true) of one child: a Shape only when it casts shadows; a grouping node its
     /// children (in its own matrix) or its bboxSize.
-    fn node_bbox(&mut self, sg: &Sg, n: NodeId, depth: usize) -> Box3 {
+    fn node_bbox(&mut self, sg: &Sg, n: NodeId, depth: usize, shadows: bool) -> Box3 {
         if depth > 256 || !sg.bool(n, "visible", true) {
+            return Box3::EMPTY;
+        }
+
+        self.node_bbox_inner(sg, n, depth, shadows)
+    }
+
+    fn node_bbox_inner(&mut self, sg: &Sg, n: NodeId, depth: usize, shadows: bool) -> Box3 {
+        if depth > 256 {
             return Box3::EMPTY;
         }
 
@@ -2038,7 +2093,7 @@ impl<'a> Builder<'a> {
 
         match ty {
             "Shape" => {
-                if !sg.bool(n, "castShadow", true) {
+                if shadows && !sg.bool(n, "castShadow", true) {
                     return Box3::EMPTY;
                 }
                 if !default_size(sg) {
@@ -2051,7 +2106,7 @@ impl<'a> Builder<'a> {
             }
             // InstancedShape.set_bbox__ (an empty instance list is not enabled: no bounded object).
             "InstancedShape" => {
-                if !sg.bool(n, "castShadow", true) {
+                if shadows && !sg.bool(n, "castShadow", true) {
                     return Box3::EMPTY;
                 }
                 let instances = instance_data(sg, n);
@@ -2068,18 +2123,18 @@ impl<'a> Builder<'a> {
                     return own(sg);
                 }
                 match sg.inline_scene(n).filter(|_| sg.bool(n, "load", true)) {
-                    Some(ctx) => self.bbox_of(sg, &sg.roots_of(ctx), depth),
+                    Some(ctx) => self.bbox_of(sg, &sg.roots_of(ctx), depth, shadows),
                     None => Box3::EMPTY,
                 }
             }
-            "StaticGroup" => self.bbox_of(sg, &sg.nodes(n, "children"), depth),
+            "StaticGroup" => self.bbox_of(sg, &sg.nodes(n, "children"), depth, shadows),
             _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => {
                 if !default_size(sg) {
                     return own(sg);
                 }
                 let kids = children_of(sg, n, ty);
                 let kids = if ty == "LOD" { self.lod_kids(sg, n, &Matrix4::IDENTITY, kids) } else { kids };
-                let mut bbox = self.bbox_of(sg, &kids, depth);
+                let mut bbox = self.bbox_of(sg, &kids, depth, shadows);
                 if let Some(m) = sg.group_matrix(n, ty) {
                     bbox.mult_right(&m);
                 } else if let Some(m) = self.screen_matrix(sg, n) {
@@ -2880,7 +2935,7 @@ impl<'a> Builder<'a> {
         };
 
         // Appearance.set_pointProperties__ / set_lineProperties__ / set_fillProperties__.
-        let style = appearance.and_then(|a| style_params(sg, a, geometry.geometry_type));
+        let style = self.content_scale_lines(appearance.and_then(|a| style_params(sg, a, geometry.geometry_type)), geometry.geometry_type);
         let style_texture = match style {
             Some(StyleParams::Fill(f)) if f.hatched => Some(crate::style::hatch_texture(f.hatch_style)),
             Some(StyleParams::Line(_)) => Some(crate::style::linetype_texture()),
