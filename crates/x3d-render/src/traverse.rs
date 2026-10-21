@@ -883,6 +883,9 @@ pub struct RenderCache {
     /// ScreenGroup.matrix: the screen matrix of each ScreenGroup's last DISPLAY traversal. The CAMERA pass (and picking) of the next
     /// frame uses it, as ScreenGroup.traverse leaves `this .matrix` alone for them.
     screen_matrices: HashMap<(u64, NodeId), Matrix4>,
+    /// Billboard.matrix: the rotation of each Billboard's last DISPLAY traversal (Billboard.rotate), which getBBox and the SHADOW
+    /// pass use.
+    billboard_matrices: HashMap<(u64, NodeId), Matrix4>,
     /// HAnimHumanoid.jointMatricesArray and the unlock count it was made at (the update Lock).
     joint_matrices: HashMap<(u64, NodeId), (u64, Rc<Vec<f32>>)>,
     /// Skinned copies of geometries, reused while their source, tables and matrices are the same.
@@ -1030,6 +1033,8 @@ pub struct Builder<'a> {
     pub camera: Option<CameraOverride>,
     /// Results kept between frames (interactive viewer); `None` rebuilds everything per frame.
     cache: Option<&'a mut RenderCache>,
+    /// A query between frames (with_cache_query): the frame's built / reused counts stay.
+    cache_query: bool,
     /// renderObject.getLocalObjects (): the clip planes pushed by the enclosing grouping nodes.
     clip_planes: Vec<[f64; 4]>,
     /// GeneratedCubeMapTexture.traverse: the textures to render this frame (update not NONE, a
@@ -1061,6 +1066,8 @@ pub struct Builder<'a> {
     projection: Matrix4,
     /// ScreenGroup.matrix: set by the DISPLAY pass, kept for the passes that do not set it (CAMERA, SHADOW).
     screen_matrices: HashMap<NodeId, Matrix4>,
+    /// Billboard.matrix: set by the DISPLAY pass (Billboard.rotate), kept for getBBox and the passes that do not rotate (SHADOW).
+    billboard_matrices: HashMap<NodeId, Matrix4>,
     /// renderObject.getInvHumanoidMatrix (): starts with the identity.
     inv_humanoid: Vec<Matrix4>,
     /// renderObject.getHAnimNode (): the skin source around the current shape, indices into `skins`.
@@ -1201,6 +1208,7 @@ impl<'a> Builder<'a> {
             local_fogs: vec![],
             camera: None,
             cache: None,
+            cache_query: false,
             clip_planes: vec![],
             generated: vec![],
             rendered: vec![],
@@ -1216,6 +1224,7 @@ impl<'a> Builder<'a> {
             layout_camera: LayoutCamera { ortho: None, fov: std::f64::consts::FRAC_PI_4, near: 0.125, content_scale: 1.0 },
             projection: Matrix4::IDENTITY,
             screen_matrices: HashMap::new(),
+            billboard_matrices: HashMap::new(),
             inv_humanoid: vec![Matrix4::IDENTITY],
             hanim: vec![None],
             skins: vec![],
@@ -1231,6 +1240,25 @@ impl<'a> Builder<'a> {
         cache.reused = 0;
         self.cache = Some(cache);
         self
+    }
+
+    /// Like [`Builder::with_cache`] for a query between frames (X3DLayerNode.getBBox): the frame count stays.
+    pub fn with_cache_query(mut self, cache: &'a mut RenderCache) -> Self {
+        self.cache = Some(cache);
+        self.cache_query = true;
+        self
+    }
+
+    /// X3DLayerNode.getBBox: X3DGroupingNode.getBBox of the layer's group (its children, shadows FALSE) in the layer's space,
+    /// with the Billboard and ScreenGroup matrices of the last DISPLAY traversal (the cache). The Box3 matrix (its axes are the
+    /// half extents, its origin the center; a box of a single transformed child keeps its orientation, as X_ITE's Box3 .add
+    /// of an empty box does), or None for an empty box.
+    pub fn layer_bbox(&mut self, key: crate::layer::LayerKey) -> Option<Matrix4> {
+        let sg = Sg::new(self.root);
+        let roots = crate::layer::layer_children(&sg, key);
+        let bbox = self.bbox_of(&sg, &roots, 0, false);
+
+        (!bbox.is_empty()).then_some(bbox.0)
     }
 
     /// ClipPlane.push for the ClipPlane children of a grouping node; returns how many were pushed.
@@ -1427,6 +1455,12 @@ impl<'a> Builder<'a> {
                     }
                 } else if ty == "Billboard" {
                     let b = self.billboard_matrix(sg, n, &m);
+                    self.billboard_matrices.insert(n, b);
+
+                    if let Some(c) = self.cache.as_deref_mut() {
+                        c.billboard_matrices.insert((sg.rt.uid, n), b);
+                    }
+
                     m.mult_left(&b);
                 } else if ty == "ScreenGroup" {
                     let s = self.screen_scale_matrix(&m, self.layout_camera.content_scale, false);
@@ -1601,6 +1635,15 @@ impl<'a> Builder<'a> {
         self.local_fogs.truncate(fogs);
         self.local_projectors.truncate(local_projectors);
         self.clip_planes.truncate(self.clip_planes.len() - pushed);
+    }
+
+    /// Billboard.matrix: this build's DISPLAY rotation, else the last frame's (the cache), else the identity it starts with.
+    fn stored_billboard_matrix(&self, sg: &Sg, n: NodeId) -> Matrix4 {
+        self.billboard_matrices
+            .get(&n)
+            .copied()
+            .or_else(|| self.cache.as_deref().and_then(|c| c.billboard_matrices.get(&(sg.rt.uid, n)).copied()))
+            .unwrap_or(Matrix4::IDENTITY)
     }
 
     /// ScreenGroup.matrix: this build's DISPLAY value, else the last frame's (the cache), else the identity (none: the caller adds nothing).
@@ -2137,6 +2180,9 @@ impl<'a> Builder<'a> {
                 let mut bbox = self.bbox_of(sg, &kids, depth, shadows);
                 if let Some(m) = sg.group_matrix(n, ty) {
                     bbox.mult_right(&m);
+                } else if ty == "Billboard" {
+                    // Billboard.getBBox: `getSubBBox (bbox, shadows) .multRight (this .matrix)`.
+                    bbox.mult_right(&self.stored_billboard_matrix(sg, n));
                 } else if let Some(m) = self.screen_matrix(sg, n) {
                     bbox.mult_right(&m);
                 }
@@ -2217,8 +2263,8 @@ impl<'a> Builder<'a> {
                 if let Some(t) = sg.group_matrix(n, ty) {
                     m.mult_left(&t);
                 } else if ty == "Billboard" {
-                    let b = self.billboard_matrix(sg, n, &m);
-                    m.mult_left(&b);
+                    // Billboard.traverse (SHADOW): `modelViewMatrix .multLeft (this .matrix)`, no rotation towards the light.
+                    m.mult_left(&self.stored_billboard_matrix(sg, n));
                 } else if let Some(t) = self.screen_matrix(sg, n) {
                     m.mult_left(&t);
                 }
@@ -2359,7 +2405,7 @@ impl<'a> Builder<'a> {
             if let Some(e) = c.geometries.get_mut(&ckey) {
                 if e.fingerprint == fp {
                     e.used = frame;
-                    c.reused += 1;
+                    c.reused += usize::from(!self.cache_query);
                     let g = e.value.clone();
                     self.geometries.insert(key(sg, n), g.clone());
                     return g;
@@ -2370,7 +2416,10 @@ impl<'a> Builder<'a> {
         let g = self.build_geometry(sg, n).filter(|g| g.vertex_count() > 0).map(Rc::new);
         self.geometries.insert(key(sg, n), g.clone());
 
-        if let Some(c) = self.cache.as_deref_mut() {
+        // A query reads the cache; only a frame's build fills it.
+        let query = self.cache_query;
+
+        if let Some(c) = self.cache.as_deref_mut().filter(|_| !query) {
             let frame = c.frame;
             c.built += 1;
             c.geometries.insert(ckey, CacheEntry { fingerprint: fp, value: g.clone(), used: frame });

@@ -287,7 +287,18 @@ const Browser =
    nextViewpoint ()            { X ("brequest", "nextViewpoint"); },
    previousViewpoint ()        { X ("brequest", "previousViewpoint"); },
    changeViewpoint (name)      { X ("brequest", "changeViewpoint:" + String (name)); },
-   viewAll ()                  { },
+   // X3DBrowser.viewAll (layerNode, transitionTime = 1): one number argument is the time; the layer is X3DCast or the active
+   // layer. The viewer runs X3DLayerNode.viewAll with the StraightenHorizon option.
+   viewAll (layerNode, transitionTime = 1)
+   {
+      if (arguments .length === 1 && typeof layerNode === "number")
+         transitionTime = layerNode;
+
+      const ref = layerNode instanceof SFNode ? layerNode .getValue () : layerNode;
+      const layer = ref instanceof X3DNodeRef && ref .getType () .includes (X3DConstants .X3DLayerNode) ? ref .getNodeId () : -1;
+
+      X ("brequest", `viewAll:${layer},${+transitionTime}`);
+   },
    // X3DBrowserContext.getScriptNode: X_ITE's Script node itself (here its X3DNodeRef), not an SFNode.
    getScriptNode ()            { return currentScript >= 0 ? nodeRef (currentScript) : null; },
    // X3DBrowser: the supported profiles and components, getProfile, getComponent and loadComponents.

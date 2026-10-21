@@ -4,7 +4,7 @@
 //! deterministic.
 
 use crate::collision::{CShape, World};
-use crate::layer::{BBox, DEFAULT, Layer, NavInfo, VpBase, bbox_transform, is_default};
+use crate::layer::{DEFAULT, Layer, NavInfo, VpBase, is_default};
 use crate::lookat::Box3;
 use crate::nav::{Cx, Env, Input, LookAtRequest, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
@@ -572,23 +572,12 @@ impl Viewer3d {
         String::new()
     }
 
-    /// The scene bounding box in world space (X3DLayerNode.getBBox), from shape bounding boxes.
-    fn scene_bbox(&mut self) -> Option<BBox> {
-        let s = scan_screens(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true, &self.screen_matrices());
-        let mut min = Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
-        let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
-        let mut any = false;
+    /// The current layer's bounding box in its space (X3DLayerNode.getBBox: the grouping nodes' boxes nested as X_ITE builds
+    /// them), None when it is empty.
+    fn scene_bbox(&mut self) -> Option<Box3> {
+        let matrix = Builder::new(&self.rt).with_cache_query(&mut self.render_cache).layer_bbox(self.current)?;
 
-        for sh in &s.shapes {
-            if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, sh) {
-                let b = bbox_transform(&BBox { min: g.min, max: g.max }, &sh.model_view);
-                min.min(&b.min);
-                max.max(&b.max);
-                any = true;
-            }
-        }
-
-        any.then_some(BBox { min, max })
+        Some(Box3 { matrix })
     }
 
     /// X3DWorld.bindBindables: layer 0 and every layer of the LayerSet bind their first bindables.
@@ -611,7 +600,7 @@ impl Viewer3d {
             self.scan_cam = scan_screens(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true, &self.screen_matrices());
             let bbox = self.scene_bbox();
             let scan_cam = std::mem::take(&mut self.scan_cam);
-            self.layer.bind_bindables(&mut self.rt, &scan_cam, fragment.as_deref(), &move || bbox);
+            self.layer.bind_bindables(&mut self.rt, &scan_cam, fragment.as_deref(), &move || bbox.clone());
             self.scan_cam = scan_cam;
         }
 
@@ -760,6 +749,32 @@ impl Viewer3d {
                 "lastViewpoint" => self.last_viewpoint(),
                 // Browser.changeViewpoint (name), and loadURL (url) with a fragment of the world's own URL.
                 r if r.starts_with("changeViewpoint:") => self.change_viewpoint(&r["changeViewpoint:".len()..]),
+                // BrowserOptions.set_StraightenHorizon__: TRUE straightens the active layer's view; the ExamineViewer's interest
+                // disconnects it on every set.
+                r if r.starts_with("straightenHorizon:") => {
+                    if r.ends_with("true") {
+                        let home = self.current;
+                        let date_now = self.date_now;
+
+                        self.swap_to(self.home_layer());
+
+                        let vp_node = self.layer.viewpoint();
+                        let base = self.base();
+
+                        self.layer.straighten_view(&mut self.rt, vp_node, &base, date_now);
+                        self.swap_to(home);
+                    }
+
+                    if let Viewer::Examine(e) = &mut self.nav {
+                        e.disconnect(self.date_now);
+                    }
+                }
+                // Browser.viewAll (layerNode, transitionTime): the layer's node id (-1: the active layer) and the time.
+                r if r.starts_with("viewAll:") => {
+                    let (layer, time) = r["viewAll:".len()..].split_once(',').unwrap_or(("-1", "1"));
+                    let layer = layer.parse::<NodeId>().ok().filter(|&n| self.rt.scene.is_live(n));
+                    self.browser_view_all(layer, time.parse().unwrap_or(f64::NAN));
+                }
                 // Browser.bindViewpoint (layerNode, viewpointNode): the Script checked both types.
                 r if r.starts_with("bindViewpoint:") => {
                     if let Ok(n) = r["bindViewpoint:".len()..].parse::<NodeId>() {
@@ -1012,7 +1027,7 @@ impl Viewer3d {
             };
 
             let scan_cam = std::mem::take(&mut self.scan_cam);
-            self.layer.camera(&mut self.rt, &scan_cam, &move || bbox);
+            self.layer.camera(&mut self.rt, &scan_cam, &move || bbox.clone());
             self.scan_cam = scan_cam;
         }
 
@@ -1723,6 +1738,25 @@ impl Viewer3d {
         self.bind_viewpoint(list[target as usize]);
     }
 
+    /// X3DBrowser.viewAll → X3DLayerNode.viewAll ({ transitionTime, straighten: StraightenHorizon }): the layer's viewpoint
+    /// looks at the layer's bounding box (lookAtBBox, factor 1). `layer` None: the active layer.
+    pub fn browser_view_all(&mut self, layer: Option<NodeId>, transition_time: f64) {
+        let home = self.current;
+
+        self.swap_to(layer.map_or(self.home_layer(), Some));
+
+        if let Some(bbox) = self.scene_bbox() {
+            let vp_node = self.layer.viewpoint();
+            let base = self.base();
+            let straighten = self.rt.browser_options.straighten_horizon();
+            let date_now = self.date_now;
+
+            self.layer.look_at_bbox(&mut self.rt, vp_node, &base, &bbox, 1.0, transition_time, straighten, date_now);
+        }
+
+        self.swap_to(home);
+    }
+
     pub fn first_viewpoint(&mut self) {
         if let Some(n) = self.user_viewpoints().first().copied() {
             self.bind_viewpoint(n);
@@ -1843,7 +1877,7 @@ impl Viewer3d {
             let camera_space = self.layer.vp(vp_node).camera_space;
             let mut bbox = Box3::from_extents(&min, &max);
             bbox.mult_right(&mv).mult_right(&camera_space);
-            self.layer.look_at_bbox(&mut self.rt, vp_node, &base, &bbox, r.straighten, date_now);
+            self.layer.look_at_bbox(&mut self.rt, vp_node, &base, &bbox, 0.8, 1.0, r.straighten, date_now);
         }
     }
 
@@ -1974,6 +2008,9 @@ impl Viewer3d {
         }
 
         self.rt.key_event(down, &e);
+        // The Scripts ran in that processEvents: their requests of the browser (Browser.viewAll ...) run now, at the time of
+        // the event, as X_ITE calls the browser from inside the Script.
+        self.browser_requests();
     }
 
     fn mouse_down(&mut self, button: u8, x: f64, y: f64) {
@@ -1995,6 +2032,7 @@ impl Viewer3d {
             }
 
             self.collect_pointer_output();
+            self.browser_requests();
 
             if pressed {
                 // PointingDevice.mousedown → onverifymotion: motion after the next frame.
@@ -2013,6 +2051,7 @@ impl Viewer3d {
             self.pointing_layer = None;
             self.pointer.button_release(&mut self.rt, &cam, now);
             self.collect_pointer_output();
+            self.browser_requests();
             // PointingDevice.onverifymotion: motion after the next frame.
             self.verify_motion = Some((x, y));
         }
@@ -2035,6 +2074,7 @@ impl Viewer3d {
         let now = if self.advance_only_time { self.date_now } else { self.time };
         self.pointer.motion(&mut self.rt, hit, &cam, now);
         self.collect_pointer_output();
+        self.browser_requests();
     }
 
     // --- rendering ---------------------------------------------------------------------------

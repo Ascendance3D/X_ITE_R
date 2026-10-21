@@ -163,6 +163,12 @@ impl Runtime {
                     self.browser_options.process_events();
                     self.content_scale_events();
 
+                    // set_StraightenHorizon__ (`getActiveLayer () ?.straightenView ()` when TRUE) and the ExamineViewer's
+                    // `disconnect` interest: the viewer runs them, after the requests the Scripts made before.
+                    if let Some(on) = self.browser_options.straighten_set.take() {
+                        self.browser_requests.push(format!("straightenHorizon:{on}"));
+                    }
+
                     if self.browser_options.take_sound_intensity_changed() {
                         self.sound_set_intensity();
                     }

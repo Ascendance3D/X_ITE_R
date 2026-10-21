@@ -686,27 +686,6 @@ pub fn max_far() -> f64 {
     x3d_render::traverse::far_max()
 }
 
-/// An axis-aligned box in some space (Box3 reduced to what viewAll / lookAt need).
-#[derive(Clone, Copy, Debug)]
-pub struct BBox {
-    pub min: Vector3,
-    pub max: Vector3,
-}
-
-impl BBox {
-    pub fn size(&self) -> Vector3 {
-        let mut s = self.max;
-        s.subtract(&self.min);
-        s
-    }
-
-    pub fn center(&self) -> Vector3 {
-        let mut c = self.min;
-        c.add(&self.max).divide(2.0);
-        c
-    }
-}
-
 /// The layer: four bindable stacks and lists, the viewpoint states.
 pub struct Layer {
     pub nav_stack: Vec<NodeId>,
@@ -954,7 +933,7 @@ impl Layer {
     }
 
     /// X3DLayerNode.bindBindables: the first CAMERA pass binds the first bindables.
-    pub fn bind_bindables(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, viewpoint_name: Option<&str>, bbox: &dyn Fn() -> Option<BBox>) {
+    pub fn bind_bindables(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, viewpoint_name: Option<&str>, bbox: &dyn Fn() -> Option<crate::lookat::Box3>) {
         let _ = self.lists_update(rt, scan);
 
         let nav = Self::get_bound(rt, &self.nav_list, None);
@@ -979,7 +958,7 @@ impl Layer {
 
     /// X3DLayerNode.camera after the traversal: lists, stacks, viewpoint transitions,
     /// `getViewpoint () .update ()`.
-    pub fn camera(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, bbox: &dyn Fn() -> Option<BBox>) {
+    pub fn camera(&mut self, rt: &mut Runtime, scan: &crate::walk::Scan, bbox: &dyn Fn() -> Option<crate::lookat::Box3>) {
         let [nav, vp, bg, fog] = self.lists_update(rt, scan);
 
         Self::stack_update(&mut self.nav_stack, rt, &nav.0, &nav.1);
@@ -1045,7 +1024,7 @@ impl Layer {
     }
 
     /// X3DViewpointNode.transitionStart.
-    fn transition_start(&mut self, rt: &mut Runtime, top: NodeId, from: NodeId, bbox: &dyn Fn() -> Option<BBox>) {
+    fn transition_start(&mut self, rt: &mut Runtime, top: NodeId, from: NodeId, bbox: &dyn Fn() -> Option<crate::lookat::Box3>) {
         let base = VpBase::read(rt, top);
         let from_base = VpBase::read(rt, from);
         let from_view = self.vp(from).view;
@@ -1157,8 +1136,8 @@ impl Layer {
         scale * VIEW_ALL_SCALE_FACTOR
     }
 
-    /// X3DViewpointNode.viewAll with the scene bounding box in world space.
-    pub fn view_all(&mut self, rt: &Runtime, n: NodeId, base: &VpBase, bbox: Option<BBox>) {
+    /// X3DViewpointNode.viewAll with the layer's bounding box (X3DLayerNode.getBBox, a Box3) in world space.
+    pub fn view_all(&mut self, rt: &Runtime, n: NodeId, base: &VpBase, bbox: Option<crate::lookat::Box3>) {
         let Some(bbox) = bbox else {
             let vp = self.vp(n);
             vp.near_override = None;
@@ -1179,8 +1158,9 @@ impl Layer {
         let vp = self.vp(n).clone();
         let mut inv_model = vp.model;
         inv_model.inverse();
-        let center = bbox_transform(&bbox, &inv_model).center();
-        let local = bbox_transform(&bbox, &vp.view);
+        let center = bbox.clone().mult_right(&inv_model).center();
+        let mut local = bbox.clone();
+        local.mult_right(&vp.view);
         let mut direction = vp.user_position(base);
         direction.subtract(&center).normalize();
         let distance = self.look_at_distance(base, &vp, viewport, &local.size());
@@ -1218,22 +1198,6 @@ impl Layer {
         }
     }
 }
-
-/// Transform a box by a matrix and take the axis-aligned extents of its corners.
-pub fn bbox_transform(b: &BBox, m: &Matrix4) -> BBox {
-    let mut min = Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
-    let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
-
-    for i in 0..8 {
-        let mut p = Vector3::new(if i & 1 == 0 { b.min.x } else { b.max.x }, if i & 2 == 0 { b.min.y } else { b.max.y }, if i & 4 == 0 { b.min.z } else { b.max.z });
-        m.mult_vec_matrix3(&mut p);
-        min.min(&p);
-        max.max(&p);
-    }
-
-    BBox { min, max }
-}
-
 
 /// Matrix4.getTransform (translation, rotation, scale, scaleOrientation) without X_ITE's eigen
 /// decomposition: exact for translation + rotation + non-negative axis-aligned scale (every
