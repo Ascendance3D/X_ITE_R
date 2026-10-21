@@ -19,7 +19,6 @@ use std::process::Command;
 /// (case name, why Rust differs).
 const KNOWN_GAPS: &[(&str, &str)] = &[
     ("sg-viewpoint-degenerate", "a Viewpoint at the ScreenGroup's origin: X_ITE's matrix feedback goes singular (screen scale 0) and it draws black frames, NaN pose orientation; Rust draws the Background (poses match)"),
-    ("ov-view", "OrthoViewpoint viewAll set at run time (and a LookAt click): X_ITE moves the viewpoint, rotates it and sets fieldOfViewOffset; Rust keeps the pose (secondary lane, no fix)"),
     ("lf-volume", "LocalFog does not fog volume draws (VolumeData inside a LocalFog): the Rust volume pass draws them unfogged (secondary lane, no fix)"),
 ];
 
