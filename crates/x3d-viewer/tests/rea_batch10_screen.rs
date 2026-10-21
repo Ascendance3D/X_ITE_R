@@ -18,7 +18,6 @@ use std::process::Command;
 
 /// (case name, why Rust differs).
 const KNOWN_GAPS: &[(&str, &str)] = &[
-    ("sg-viewpoint-degenerate", "a Viewpoint at the ScreenGroup's origin: X_ITE's matrix feedback goes singular (screen scale 0) and it draws black frames, NaN pose orientation; Rust draws the Background (poses match)"),
 ];
 
 fn quat(r: &[f64]) -> [f64; 4] {
