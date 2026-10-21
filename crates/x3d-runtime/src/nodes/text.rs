@@ -265,13 +265,20 @@ impl Runtime {
             _ => vec![],
         };
 
+        // ScreenFontStyle.getScale: pointSize × PixelsPerPoint × ContentScale (pixels); getContentScale: ContentScale.
+        let screen = self.builtin_name(f) == Some("ScreenFontStyle");
+        let rendering = |name: &str| self.browser_options.rendering.get(name).map_or(1.0, |v| v.as_f64());
+        let content_scale = if screen { rendering("ContentScale") } else { 1.0 };
+
         FontStyleParams {
-            size: num("size", 1.0),
+            size: if screen { num("pointSize", 12.0) * rendering("PixelsPerPoint") * content_scale } else { num("size", 1.0) },
             spacing: num("spacing", 1.0),
             horizontal: flag("horizontal"),
             left_to_right: flag("leftToRight"),
             top_to_bottom: flag("topToBottom"),
             justify,
+            content_scale,
+            screen,
         }
     }
 
@@ -279,10 +286,7 @@ impl Runtime {
     pub(crate) fn text_rebuild(&mut self, node: NodeId) {
         let fs = self.text_font_styles.get(&node).copied().flatten();
 
-        // ScreenText (ScreenFontStyle) sizes its glyphs in pixels of the current view: not modelled here.
-        if fs.is_some_and(|f| self.builtin_name(f) == Some("ScreenFontStyle")) {
-            return;
-        }
+        let screen = fs.is_some_and(|f| self.builtin_name(f) == Some("ScreenFontStyle"));
 
         let strings = match self.pre_value(node, "string") {
             Some(FieldValue::MFString(v)) => v.clone(),
@@ -309,8 +313,29 @@ impl Runtime {
         let font = self.text_font(node);
 
         if num_lines == 0 || font.is_none() {
-            self.set_value(origin, FieldValue::SFVec3f(x3d_fields::math::Vector3::ZERO));
-            self.set_value(text_bounds, FieldValue::SFVec2f(x3d_fields::math::Vector2::ZERO));
+            // ScreenText.configure goes on after X3DTextGeometry.configure: the box rounded to whole pixels around the empty one, and
+            // every line bound assigned (an event when there are lines).
+            let (o, b) = if screen {
+                let layout = x3d_text::layout(None, &TextParams::default(), &self.text_font_style_params(fs), PrimitiveQuality::Medium, TextCompression::CharSpacing);
+
+                (layout.origin, layout.text_bounds)
+            } else {
+                ([0.0; 3], [0.0; 2])
+            };
+
+            self.set_value(origin, FieldValue::SFVec3f(x3d_fields::math::Vector3::new(o[0], o[1], o[2])));
+            self.set_value(text_bounds, FieldValue::SFVec2f(x3d_fields::math::Vector2::new(b[0], b[1])));
+
+            if screen && num_lines != 0 {
+                let content_scale = self.text_font_style_params(fs).content_scale;
+                let bounds = match self.value(line_bounds) {
+                    FieldValue::MFVec2f(v) => v.iter().map(|x| (*x as f64 / content_scale) as f32).collect(),
+                    _ => vec![],
+                };
+
+                self.set_value(line_bounds, FieldValue::MFVec2f(bounds));
+            }
+
             return;
         }
 

@@ -12,7 +12,7 @@ use crate::texture::{self, TextureImage};
 use std::collections::{BTreeSet, HashMap};
 use std::rc::Rc;
 use x3d_fields::{FieldValue, NodeId};
-use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3};
+use x3d_fields::math::{Matrix3, Matrix4, Rotation4, Vector2, Vector3, Vector4};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Shading {
@@ -1052,6 +1052,8 @@ pub struct Builder<'a> {
     layouts: LayoutStack,
     /// The layer's viewpoint and navigation info as Layout.push reads them.
     layout_camera: LayoutCamera,
+    /// The layer's projection matrix (ScreenText snaps its origin to a whole pixel).
+    projection: Matrix4,
     /// ScreenGroup.matrix: set by the DISPLAY pass, kept for the passes that do not set it (CAMERA, SHADOW).
     screen_matrices: HashMap<NodeId, Matrix4>,
     /// renderObject.getInvHumanoidMatrix (): starts with the identity.
@@ -1207,6 +1209,7 @@ impl<'a> Builder<'a> {
             viewports: vec![],
             layouts: LayoutStack::default(),
             layout_camera: LayoutCamera { ortho: None, fov: std::f64::consts::FRAC_PI_4, near: 0.125, content_scale: 1.0 },
+            projection: Matrix4::IDENTITY,
             screen_matrices: HashMap::new(),
             inv_humanoid: vec![Matrix4::IDENTITY],
             hanim: vec![None],
@@ -1421,7 +1424,7 @@ impl<'a> Builder<'a> {
                     let b = self.billboard_matrix(sg, n, &m);
                     m.mult_left(&b);
                 } else if ty == "ScreenGroup" {
-                    let s = self.screen_scale_matrix(&m);
+                    let s = self.screen_scale_matrix(&m, self.layout_camera.content_scale, false);
                     self.screen_matrices.insert(n, s);
                     m.mult_left(&s);
                 }
@@ -1544,12 +1547,14 @@ impl<'a> Builder<'a> {
         self.clip_planes.truncate(self.clip_planes.len() - pushed);
     }
 
-    /// X3DLayoutContext.getScreenScaleMatrix (renderObject, matrix, ContentScale, snap = false), used by ScreenGroup: the
-    /// model-view matrix's axes scaled to one pixel (viewpoint.getScreenScale, in meter / pixel) at its origin, as a matrix
-    /// relative to the model-view matrix.
-    fn screen_scale_matrix(&self, model_view: &Matrix4) -> Matrix4 {
+    /// X3DLayoutContext.getScreenScaleMatrix (renderObject, matrix, contentScale, snap): the model-view matrix's axes scaled to
+    /// one pixel (viewpoint.getScreenScale, in meter / pixel) at its origin, as a matrix relative to the model-view matrix.
+    /// With `snap` the origin is moved to a whole pixel of the viewport. ScreenGroup uses ContentScale and no snap, ScreenText
+    /// 1 and snap.
+    fn screen_scale_matrix(&self, model_view: &Matrix4, content_scale: f64, snap: bool) -> Matrix4 {
         let mv = &model_view.0;
-        let [_, _, width, height] = self.viewport();
+        let viewport = self.viewport();
+        let [_, _, width, height] = viewport;
         let scale = match self.layout_camera.ortho {
             // OrthoViewpoint.getScreenScale
             Some((size_x, size_y)) => {
@@ -1560,7 +1565,7 @@ impl<'a> Builder<'a> {
                 let size = mv[14].abs() * (self.layout_camera.fov / 2.0).tan() * 2.0;
                 if width > height { size / height } else { size / width }
             }
-        } * self.layout_camera.content_scale;
+        } * content_scale;
         let axis = |i: usize| {
             let mut v = Vector3::new(mv[i], mv[i + 1], mv[i + 2]);
             v.normalize();
@@ -1568,7 +1573,28 @@ impl<'a> Builder<'a> {
             v
         };
         let (x, y, z) = (axis(0), axis(4), axis(8));
-        let screen = Matrix4([x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, mv[12], mv[13], mv[14], 1.0]);
+        let mut screen = Matrix4([x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, mv[12], mv[13], mv[14], 1.0]);
+
+        // Snap to whole pixel: ViewVolume.projectPoint, round, ViewVolume.unProjectPoint.
+        if snap {
+            let mut p = Vector4::new(0.0, 0.0, 0.0, 1.0);
+            screen.mult_vec_matrix4(&mut p);
+            self.projection.mult_vec_matrix4(&mut p);
+            let d = 1.0 / (2.0 * p.w);
+            let win = [(p.x * d + 0.5) * viewport[2] + viewport[0], (p.y * d + 0.5) * viewport[3] + viewport[1], p.z * d + 0.5];
+            let (win_x, win_y) = ((win[0] + 0.5).floor(), (win[1] + 0.5).floor());
+
+            let mut inv = screen;
+            inv.mult_right(&self.projection);
+            inv.inverse();
+
+            let mut v = Vector4::new((win_x - viewport[0]) / viewport[2] * 2.0 - 1.0, (win_y - viewport[1]) / viewport[3] * 2.0 - 1.0, win[2] * 2.0 - 1.0, 1.0);
+            inv.mult_vec_matrix4(&mut v);
+            let d = 1.0 / v.w;
+
+            screen.translate(&Vector3::new(v.x * d, v.y * d, 0.0));
+        }
+
         let mut matrix = *model_view;
         matrix.inverse();
         matrix.mult_left(&screen);
@@ -2657,6 +2683,16 @@ impl<'a> Builder<'a> {
         let Some(gnode) = sg.node(n, "geometry") else { return };
         let Some(geometry) = self.geometry(sg, gnode) else { return };
 
+        // ScreenText.traverseBefore: the model-view matrix with getScreenScaleMatrix (renderObject, matrix, 1, true) around the shape.
+        let screen_text_mv = geometry.texture.as_ref().map(|_| {
+            let mut m = *mv;
+            let s = self.screen_scale_matrix(mv, 1.0, true);
+
+            m.mult_left(&s);
+            m
+        });
+        let mv = screen_text_mv.as_ref().unwrap_or(mv);
+
         // InstancedShape: isEnabled () needs instances (numInstances) and a geometry.
         let instances = (sg.type_name(n) == Some("InstancedShape")).then(|| Rc::new(instance_data(sg, n)));
 
@@ -2802,6 +2838,13 @@ impl<'a> Builder<'a> {
                 (textures, multi_texture)
             }
             None => (textures, multi_texture),
+        };
+
+        // Text.display: renderContext .textureNode, the ScreenText's canvas, replaces the appearance's texture; the text is
+        // transparent (setTransparent (true)).
+        let (textures, multi_texture, texture_transparent) = match &geometry.texture {
+            Some(t) => (vec![t.clone()], None, true),
+            None => (textures, multi_texture, texture_transparent),
         };
 
         // Appearance.set_textureTransform__: X3DCast (X3DTextureTransformNode) ?? the default
@@ -3429,6 +3472,7 @@ impl<'a> Builder<'a> {
             None => (view, projection, headlight, near, far),
         };
 
+        self.projection = projection;
         let mut camera_space = view;
         camera_space.inverse();
         self.camera_space = camera_space;

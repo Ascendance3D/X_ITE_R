@@ -143,6 +143,18 @@ pub fn apply_texture_properties(t: &mut TextureImage, sg: &Sg, texture: NodeId, 
 }
 
 impl TextureImage {
+    /// ScreenText's canvas as a PixelTexture: transparent whatever its alpha, TextureProperties NEAREST_PIXEL both ways,
+    /// CLAMP_TO_EDGE, no mipmaps (X3DLayoutContext.getScreenTextureProperties).
+    pub fn screen_text(width: u32, height: u32, rgba: Vec<u8>) -> Self {
+        let mut t = finish(width, height, rgba, false, false, false, String::new(), false);
+
+        t.transparent = true;
+        t.nearest = true;
+        t.no_mipmaps = true;
+        t.sampler = Sampler::new(Filter::Nearest, Filter::Nearest, None, false, false);
+        t
+    }
+
     /// X3DTexture2DNode.clearTexture: 1×1 opaque white.
     pub fn white() -> Self {
         TextureImage {
