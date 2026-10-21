@@ -1,0 +1,4 @@
+sg-runtime oracle/synthetic-rea-b10-stepped/sg-runtime.wrl oracle/synthetic-rea-b10-stepped/sg-runtime.json
+sg-viewpoint oracle/synthetic-rea-b10-stepped/sg-viewpoint.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint.json
+sfs-runtime oracle/synthetic-rea-b10-stepped/sfs-runtime.wrl oracle/synthetic-rea-b10-stepped/sfs-runtime.json
+text-runtime oracle/synthetic-rea-b10-stepped/text-runtime.wrl oracle/synthetic-rea-b10-stepped/text-runtime.json
