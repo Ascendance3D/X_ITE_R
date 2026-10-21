@@ -155,6 +155,9 @@ impl SoundState {
     }
 }
 
+/// The DOMException of a rejected decodeAudioData in Chrome.
+const DECODE_ERROR: &str = "EncodingError: Unable to decode audio data";
+
 const SOURCES: &[&str] = &["AudioClip", "BufferAudioSource", "ListenerPointSource", "MicrophoneSource", "OscillatorSource", "StreamAudioSource"];
 const PROCESSING: &[&str] = &["Analyser", "BiquadFilter", "Convolver", "Delay", "DynamicsCompressor", "Gain", "WaveShaper"];
 const CHANNELS: &[&str] = &["ChannelMerger", "ChannelSelector", "ChannelSplitter"];
@@ -1029,15 +1032,13 @@ impl Runtime {
         self.set_media_element(node, None);
     }
 
-    /// The FileLoader callback with an ArrayBuffer: setArrayBuffer (decodeAudioData), then
-    /// COMPLETE_STATE. A decode error rejects: the load state stays IN_PROGRESS.
+    /// BufferAudioSource.setArrayBuffer: decodeAudioData, the buffer outputs, an AudioElement over the buffer.
+    /// A decode error rejects the FileLoader callback (the next URL is tried, see `buffer_load`).
     pub(crate) fn buffer_set_array_buffer(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
         let buffer = match self.audio().decode(bytes) {
             Ok(b) => b,
-            Err(e) => {
-                self.log_error(format!("EncodingError: Unable to decode audio data ({e})"));
-                return Err(String::new());
-            }
+            // The rejection of decodeAudioData, reported by FileLoader with the candidate (Chrome's message).
+            Err(_) => return Err(DECODE_ERROR.to_string()),
         };
 
         let channels = buffer.number_of_channels();
@@ -1085,14 +1086,12 @@ impl Runtime {
     }
 
     /// AudioClip.setArrayBuffer: decodeAudioData, an AudioElement over the buffer, `duration_changed`,
-    /// setMediaElement, set_pitch__. A decode error rejects: the load state stays IN_PROGRESS.
+    /// setMediaElement, set_pitch__. A decode error rejects the FileLoader callback (the next URL is tried).
     pub(crate) fn audio_clip_set_array_buffer(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
         let buffer = match self.audio().decode(bytes) {
             Ok(b) => b,
-            Err(e) => {
-                self.log_error(format!("EncodingError: Unable to decode audio data ({e})"));
-                return Err(String::new());
-            }
+            // The rejection of decodeAudioData, reported by FileLoader with the candidate (Chrome's message).
+            Err(_) => return Err(DECODE_ERROR.to_string()),
         };
 
         let audio_source = self.snd(node).audio_source.unwrap();

@@ -405,11 +405,12 @@ pub struct Runtime {
     /// Scenes that were parsed and set up but are not attached yet (FileLoader.setScene waits for
     /// their loadCount to reach 0 and then for the next frame).
     pub pending_scenes: Vec<inline::PendingScene>,
-    /// When set (x3d-drive's offline audio frames), a BufferAudioSource's decodeAudioData result
-    /// waits in `pending_audio_decodes` until [`Runtime::flush_audio_decodes`] at the start of
-    /// the next frame, like oracle/x_ite-anim.mjs gates the browser's decoder thread.
+    /// A BufferAudioSource's or AudioClip's decodeAudioData result waits in `pending_audio_decodes` until the
+    /// pending events of the next prepareEvents are processed. When set (x3d-drive's offline audio frames), it
+    /// waits until [`Runtime::flush_audio_decodes`] at the start of the next frame instead, like
+    /// oracle/x_ite-anim.mjs gates the browser's decoder thread.
     pub defer_audio_decodes: bool,
-    pub pending_audio_decodes: Vec<(NodeId, Vec<u8>)>,
+    pub pending_audio_decodes: Vec<loader::PendingAudioDecode>,
     /// `await browser .nextFrame ()` continuations, resolved after the finishEvents of a frame.
     pub frame_waiters: Vec<inline::FrameWaiter>,
     /// createX3DFromURL requests that have not been fetched (by request id).

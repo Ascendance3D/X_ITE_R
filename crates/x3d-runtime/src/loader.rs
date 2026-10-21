@@ -206,6 +206,20 @@ pub fn loader_target(parameters: &[String]) -> String {
     String::new()
 }
 
+/// A fetched BufferAudioSource / AudioClip candidate whose decodeAudioData result is still pending, with what
+/// FileLoader needs to go on if it rejects.
+pub struct PendingAudioDecode {
+    pub node: NodeId,
+    pub bytes: Vec<u8>,
+    /// The candidate as written and as resolved (for the warning).
+    pub candidate: String,
+    pub resolved: url::Url,
+    /// The candidates after this one.
+    pub rest: Vec<String>,
+    /// The candidates before this one, all failed.
+    pub attempts: usize,
+}
+
 /// A FileLoader instance: node type name for messages (`""` for the world) and the attempts.
 pub struct FileLoader {
     pub type_name: String,
@@ -229,7 +243,13 @@ impl Runtime {
     /// [`Runtime::load_document`] with the two callbacks X3DBrowser.loadURL and Anchor hand FileLoader.createX3DFromURL
     /// (`bindViewpoint` and `foreign`, see [`LoadHooks`]).
     pub fn load_document_hooks(&mut self, loader: &FileLoader, urls: &[String], hooks: &LoadHooks, mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> LoadResult {
-        let mut attempts = 0usize;
+        self.load_document_from(loader, urls, hooks, 0, |rt, _, loaded| accept(rt, loaded))
+    }
+
+    /// [`Runtime::load_document_hooks`] from a later point of the fallback chain: `attempts` candidates before
+    /// `urls` have already failed (and were reported). `accept` also gets the candidate's index in `urls`.
+    pub(crate) fn load_document_from(&mut self, loader: &FileLoader, urls: &[String], hooks: &LoadHooks, attempts: usize, mut accept: impl FnMut(&mut Runtime, usize, Loaded) -> Result<(), String>) -> LoadResult {
+        let mut attempts = attempts;
         let mut special: Option<LoadResult> = None;
 
         if urls.is_empty() {
@@ -251,7 +271,7 @@ impl Runtime {
                 for scheme in ["ecmascript:", "javascript:", "vrmlscript:"] {
                     if trimmed.starts_with(scheme) {
                         let source = &trimmed[scheme.len()..];
-                        return accept(self, Loaded::Script(source.to_string()));
+                        return accept(self, i, Loaded::Script(source.to_string()));
                     }
                 }
 
@@ -262,7 +282,7 @@ impl Runtime {
                 // `if (this .dataAsString)`: a data URL that is not base64 is decoded here and handed to the callback as text.
                 if loader.data_as_string {
                     if let Some(text) = data_url_text(candidate) {
-                        return accept(self, Loaded::Data(text.into_bytes(), r));
+                        return accept(self, i, Loaded::Data(text.into_bytes(), r));
                     }
                 }
 
@@ -302,7 +322,7 @@ impl Runtime {
 
                 // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
                 let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" { nodes::shaders::fetch_data_url(candidate)? } else { self.fetcher.fetch(&r)? };
-                accept(self, Loaded::Data(x3d_parse::gunzip(&data), r))
+                accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r))
             })();
 
             match result {
@@ -432,60 +452,87 @@ impl Runtime {
         self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
     }
 
-    /// BufferAudioSource.loadData and AudioClip.loadData: the FileLoader's ArrayBuffer is decoded
-    /// (decodeAudioData) before COMPLETE_STATE; no URL: unloadData, FAILED_STATE. A file that does not
-    /// decode rejects the async callback: the state stays IN_PROGRESS.
+    /// BufferAudioSource.loadData and AudioClip.loadData. `await this .setArrayBuffer (data)` (decodeAudioData)
+    /// runs inside the FileLoader callback, so a file that does not decode rejects the candidate like a failed
+    /// fetch: FileLoader reports it and tries the next URL. COMPLETE_STATE after the decode; no URL left:
+    /// unloadData (AudioClip) or `setMediaElement (null)` (BufferAudioSource), FAILED_STATE.
     fn buffer_load(&mut self, node: NodeId) {
-        let clip = self.builtin_name(node) == Some("AudioClip");
-        let loader = FileLoader { type_name: self.type_name(node), base: self.base_url(node), data_as_string: false };
         let urls = self.url_strings(node);
-        let mut decoded = None;
+        self.buffer_load_from(node, &urls, 0);
+    }
 
-        let ok = self.load_document(&loader, &urls, |_, loaded| match loaded {
+    /// The fallback chain of [`Runtime::buffer_load`] from `urls`, after `attempts` failed candidates.
+    ///
+    /// decodeAudioData ends on the browser's decoder thread: the result of a fetched candidate waits in
+    /// `pending_audio_decodes`, and the chain goes on from there. It is resolved after the events that are
+    /// pending at the next prepareEvents (like an image decode, [`Runtime::apply_decoded_images`]), or, with
+    /// `defer_audio_decodes`, at the start of the next frame ([`Runtime::flush_audio_decodes`]).
+    fn buffer_load_from(&mut self, node: NodeId, urls: &[String], attempts: usize) {
+        let loader = FileLoader { type_name: self.type_name(node), base: self.base_url(node), data_as_string: false };
+        let mut pending = None;
+
+        let result = self.load_document_from(&loader, urls, &LoadHooks::default(), attempts, |_, i, loaded| match loaded {
             Loaded::Script(_) => Err("Error: No suitable file handler found.".into()),
-            Loaded::Data(data, _) => {
-                decoded = Some(data.to_vec());
+            Loaded::Data(bytes, resolved) => {
+                // Every candidate before `i` failed.
+                pending = Some(PendingAudioDecode { node, bytes, candidate: urls[i].clone(), resolved, rest: urls[i + 1..].to_vec(), attempts: attempts + i });
                 Ok(())
             }
         });
 
-        if !ok {
-            if clip {
-                self.audio_clip_unload_data(node);
-            } else {
-                self.buffer_load_start(node);
-            }
-            self.set_load_state(node, nodes::LoadState::Failed);
-            return;
-        }
-
-        if let Some(bytes) = decoded {
-            if self.defer_audio_decodes {
-                self.pending_audio_decodes.push((node, bytes));
-            } else {
-                self.buffer_decoded(node, bytes);
-            }
+        match (pending, result) {
+            (Some(p), _) => self.pending_audio_decodes.push(p),
+            (None, LoadResult::Failed) => self.buffer_load_failed(node),
+            (None, _) => {}
         }
     }
 
-    /// The end of `await setArrayBuffer (data)`: COMPLETE_STATE unless decoding rejected.
-    fn buffer_decoded(&mut self, node: NodeId, bytes: Vec<u8>) {
-        let set = if self.builtin_name(node) == Some("AudioClip") { self.audio_clip_set_array_buffer(node, bytes) } else { self.buffer_set_array_buffer(node, bytes) };
-
-        if set.is_ok() {
-            self.set_load_state(node, nodes::LoadState::Complete);
-        }
+    /// `setArrayBuffer (data)` of the node; an error is the rejection of decodeAudioData.
+    fn buffer_set_data(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
+        if self.builtin_name(node) == Some("AudioClip") { self.audio_clip_set_array_buffer(node, bytes) } else { self.buffer_set_array_buffer(node, bytes) }
     }
 
-    /// The decodes held by `defer_audio_decodes`, resolved in request order.
+    /// The FileLoader callback with `data === null`: every candidate failed.
+    fn buffer_load_failed(&mut self, node: NodeId) {
+        if self.builtin_name(node) == Some("AudioClip") {
+            self.audio_clip_unload_data(node);
+        } else {
+            self.buffer_load_start(node);
+        }
+
+        self.set_load_state(node, nodes::LoadState::Failed);
+    }
+
+    /// The decodes held by `defer_audio_decodes`, resolved in request order at the start of a frame, then
+    /// the tasks they queued.
     pub fn flush_audio_decodes(&mut self) {
-        for (node, bytes) in std::mem::take(&mut self.pending_audio_decodes) {
-            if self.sound_has_source(node) {
-                self.buffer_decoded(node, bytes);
+        self.resolve_audio_decodes();
+        self.run_tasks();
+    }
+
+    /// The end of `await this .setArrayBuffer (data)` for every pending decode, in request order: COMPLETE_STATE, or
+    /// a rejection, which is FileLoader.loadDocumentError: the warning, then the next URL (whose decode is pending in
+    /// turn), or FAILED_STATE when none is left.
+    pub(crate) fn resolve_audio_decodes(&mut self) {
+        for p in std::mem::take(&mut self.pending_audio_decodes) {
+            if !self.sound_has_source(p.node) {
+                continue;
+            }
+
+            match self.buffer_set_data(p.node, p.bytes) {
+                Ok(()) => self.set_load_state(p.node, nodes::LoadState::Complete),
+                Err(error) => {
+                    let loader = FileLoader { type_name: self.type_name(p.node), base: self.base_url(p.node), data_as_string: false };
+                    self.print_load_error(&loader, &p.candidate, Some(&p.resolved), &error, p.attempts + 1, p.rest.len());
+
+                    if p.rest.is_empty() {
+                        self.buffer_load_failed(p.node);
+                    } else {
+                        self.buffer_load_from(p.node, &p.rest, p.attempts + 1);
+                    }
+                }
             }
         }
-
-        self.run_tasks();
     }
 
     /// MovieTexture.loadData: one attempt per URL, each with its own FileLoader (GIF/PNG) or a
