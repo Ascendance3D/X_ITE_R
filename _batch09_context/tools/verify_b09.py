@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Batch 09 ledger check: python3 -I verify_b09.py [ledger.json]
+"""Batch 09 ledger check: python3 -I -B verify_b09.py [ledger.json]
 Every entry outside tools/ledger_b09.py's P equals ledger/before/ledger.json (the 25 DIFFERENT included), the changed ones keep
-earlier notes as a prefix, the set of IDs is unchanged, and the total is 346."""
+earlier notes as a prefix, the set of IDs is unchanged, and the total is 346.
+
+This checks the Batch 09 step only. Its default input is ledger/before-cloud/ledger.json, the ledger that step produced:
+ledger_b09.AUTH names the ledger of another tree (xite-rust-full-port-rea-completion), which this repository does not have.
+Later batches change the authoritative ledger on purpose, so run verify_ledger.py for it (verify_ledger.py replays this step
+and every later one up to ledger.json); with an explicit path this tool still checks that file against ledger/before."""
 import collections, json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
-from ledger_b09 import P, BEFORE, AUTH
+from ledger_b09 import P, BEFORE
+AUTH = os.path.join(HERE, "..", "ledger", "before-cloud", "ledger.json")
 after = {i["id"]: i for i in json.load(open(sys.argv[1] if len(sys.argv) > 1 else AUTH))["items"]}
 before = {i["id"]: i for i in json.load(open(BEFORE))["items"]}
 bad = []
