@@ -4,11 +4,16 @@
 //! the x3d-text port the renderer uses; the renderer builds the geometry on its own.
 //!
 //! A font is the one the FontStyle's last loadData chose (X3DFontStyleNode.font, kept until the next load completes); the
-//! browser's default FontStyle loads its font once, as a fetch (`await $.sleep (0)`, then `loadFont`).
+//! browser's default FontStyle loads its font once, with the steps of any other loadData (`await $.sleep (0)`, then `loadFont`).
+//! It is a node of the browser's private scene, so the world's load does not wait for it: a Text that uses it builds once
+//! without a font in the first frame, as in every X_ITE run (oracle/synthetic-rea-b11-text/warm-stamp.wrl).
 
 use crate::*;
 use std::rc::Rc;
 use x3d_text::{Font, FontStyleParams, PrimitiveQuality, TextCompression, TextParams};
+
+/// The font file of the default FontStyle (getDefaultFont ("SERIF", "PLAIN")), the key of browser.loadFont's cache.
+const DEFAULT_FONT_FILE: &str = "Droid/DroidSerif-Regular.woff2";
 
 /// The browser's default FontStyle (X3DTextContext.getDefaultFontStyle): its font is loading or loaded.
 #[derive(Debug, Default, Clone, Copy, PartialEq)]
@@ -31,8 +36,9 @@ pub struct FontStyleLoad {
     pub stage: LoadStage,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 pub enum LoadStage {
+    #[default]
     /// `await $.sleep (0)`: the timer fires at the start of the next frame.
     Timer,
     /// The timer fired; the continuation runs after that frame (a microtask of the timer).
@@ -42,19 +48,11 @@ pub enum LoadStage {
 }
 
 impl Runtime {
-    /// X3DFontStyleNode: requestImmediateLoad → loadData (setup) or `_loadData` (a change of `family` or `style`). Before
-    /// the first frame the load runs with the world's other loads (see Runtime::run_tasks).
+    /// X3DFontStyleNode: requestImmediateLoad → loadData (setup) or `_loadData` (a change of `family` or `style`). The load
+    /// of setup takes the same steps (its `sleep (0)` timer fires with the first frame): the world's load does not wait for
+    /// it, so a Text builds once without a font in the first frame, as in every X_ITE run
+    /// (oracle/synthetic-rea-b11-text/warm-stamp-fs.wrl).
     pub(crate) fn font_style_request(&mut self, node: NodeId, reload: bool) {
-        if !self.frames_started {
-            let queued = |t: &Task| matches!(t, Task::UrlLoad(n, 0) if *n == node);
-
-            if !reload || !(self.tasks.iter().any(queued) || self.fetches.iter().any(queued)) {
-                self.tasks.push_back(Task::UrlLoad(node, 0));
-            }
-
-            return;
-        }
-
         let (family, style) = self.font_style_families(node);
 
         if reload {
@@ -83,6 +81,34 @@ impl Runtime {
         (family, style)
     }
 
+    /// Is a FontStyle (or the default FontStyle) still loading its font? x_ite-shot.mjs waits for these during its settle time.
+    pub fn fonts_loading(&self) -> bool {
+        !self.font_style_loads.is_empty() || !self.pending_font_styles.is_empty() || self.default_font == DefaultFont::Loading
+    }
+
+    /// A harness without frames (the corpus dump) waits for the font loads as the oracle page does: the `sleep (0)` timers fire,
+    /// the fetches complete, the warnings of failed families are logged.
+    pub fn finish_font_loads(&mut self) {
+        for _ in 0..4 {
+            if !self.fonts_loading() {
+                break;
+            }
+
+            for l in &mut self.font_style_loads {
+                if l.stage == LoadStage::Timer {
+                    l.stage = LoadStage::Fired;
+                }
+            }
+
+            if self.default_font == DefaultFont::Loading && self.default_font_stage == LoadStage::Timer {
+                self.default_font_stage = LoadStage::Fired;
+            }
+
+            self.font_style_continuations();
+            self.run_tasks();
+        }
+    }
+
     /// The start of a frame (the harness runs the due timers first): the `sleep (0)` timers fire.
     pub(crate) fn font_style_timers(&mut self) {
         self.frames_started = true;
@@ -92,6 +118,10 @@ impl Runtime {
             if l.stage == LoadStage::Timer {
                 l.stage = LoadStage::Fired;
             }
+        }
+
+        if self.default_font == DefaultFont::Loading && self.default_font_stage == LoadStage::Timer {
+            self.default_font_stage = LoadStage::Fired;
         }
     }
 
@@ -122,6 +152,18 @@ impl Runtime {
 
         keep.extend(std::mem::take(&mut self.font_style_loads));
         self.font_style_loads = keep;
+
+        // The default FontStyle (family SERIF, style PLAIN) takes the same steps.
+        if self.default_font == DefaultFont::Loading {
+            match self.default_font_stage {
+                LoadStage::Timer => {}
+                LoadStage::Fired if !self.loaded_font_files.contains(DEFAULT_FONT_FILE) => {
+                    self.loaded_font_files.insert(DEFAULT_FONT_FILE.into());
+                    self.default_font_stage = LoadStage::Fetch;
+                }
+                LoadStage::Fired | LoadStage::Fetch => self.default_font_loaded(),
+            }
+        }
     }
 
     /// The rest of loadData with the families it copied: the font is chosen (X3DFontStyleNode.font, addNodeEvent).
@@ -222,16 +264,15 @@ impl Runtime {
                 // getDefaultFontStyle: the FontStyle is set up (requestImmediateLoad) the first time a Text asks for it.
                 if self.default_font == DefaultFont::NotStarted {
                     self.default_font = DefaultFont::Loading;
-                    self.fetches.push_back(Task::DefaultFontLoad);
+                    self.default_font_stage = LoadStage::Timer;
                 }
             }
         }
     }
 
     /// The default FontStyle's loadData completed: `this .addNodeEvent ()`, so its Texts ask for a rebuild.
-    pub(crate) fn default_font_loaded(&mut self) {
+    fn default_font_loaded(&mut self) {
         self.default_font = DefaultFont::Loaded;
-        self.loaded_font_files.insert("Droid/DroidSerif-Regular.woff2".into());
 
         for node in self.default_font_texts.clone() {
             self.text_request_rebuild(node);
