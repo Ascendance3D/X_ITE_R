@@ -1,0 +1,58 @@
+#X3D V4.0 utf8
+PROFILE Full
+Background { skyColor 0.12 0.14 0.2 }
+DEF LS LayerSet { activeLayer 1 order [ 1 2 ] layers [ DEF L1 Layer { children [ DEF V1 OrthoViewpoint { position 0 0 10 fieldOfView [ -3 -3 3 3 ] }
+  Transform { translation 1 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Box { size 1 2 1 } } }
+  Transform { translation -2 -1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.5 } } } ] }
+ DEF L2 Layer { children [ DEF V2 OrthoViewpoint { position 0 0 10 fieldOfView [ -3 -3 3 3 ] }
+  Transform { translation 1 0.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1 2 1 } } }
+  Transform { translation -2 -1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Sphere { radius 0.5 } } } DEF PS ProximitySensor { size 10000 10000 10000 }
+ ] } ] }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFVec3f pos
+  inputOnly SFRotation ori
+  inputOnly SFVec3f cor
+  inputOnly SFBool b_V1
+  inputOnly SFTime t_V1
+  inputOnly SFBool b_V2
+  inputOnly SFTime t_V2
+  initializeOnly SFNode v1 USE V1
+  initializeOnly SFNode v2 USE V2
+  initializeOnly SFNode ls USE LS
+  inputOutput MFString out [ ]
+  url "javascript:
+var K_ = -1, F_ = 0, R_ = [], L_ = { };
+function nums (v) { return String (v) .split (/\\s+/) .map (Number); }
+function rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }
+function prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }
+function pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }
+function pos (v) { pose ('position', v); }
+function ori (v) { pose ('orientation', v); }
+function cor (v) { pose ('centerOfRotation', v); }
+function b_V1 (v) { rec ('V1.isBound', v); }
+function t_V1 (v) { rec ('V1.bindTime', 'T'); }
+function b_V2 (v) { rec ('V2.isBound', v); }
+function t_V2 (v) { rec ('V2.bindTime', 'T'); }
+function on_key (k)
+{
+   ++ K_; F_ = 0;
+   rec ('key', k);
+   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);
+   if (k == 'b') Browser .viewAll (0.4);
+   if (k == 'c') { ls .activeLayer = 2; }
+   if (k == 'd') Browser .viewAll (0.4);
+   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE PS.position_changed TO R.pos
+ROUTE PS.orientation_changed TO R.ori
+ROUTE PS.centerOfRotation_changed TO R.cor
+ROUTE V1.isBound TO R.b_V1
+ROUTE V1.bindTime TO R.t_V1
+ROUTE V2.isBound TO R.b_V2
+ROUTE V2.bindTime TO R.t_V2
