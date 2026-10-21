@@ -117,3 +117,84 @@ fn unconnected_analyser_pulls_its_input() {
     let out = render(false, true, true, &[(188, Op::AnalyserOut)]);
     assert_eq!(probe(&out, 0), (24064, Some(24064)));
 }
+
+// --- OscillatorNode (OscillatorSource) -------------------------------------------------------
+//
+// OscillatorSource.set_start connects a new OscillatorNode to the same `audioSource` GainNode.
+// Chrome 156 (oracle/webaudio-pull/chrome-oscillator.json, 441 Hz sine): an unpulled oscillator
+// keeps its phase. Connected at quantum 94, its output from frame 12032 equals the output of
+// one that is connected all the time from frame 0, sample for sample; connected again at 188
+// after a gap from 94, its output from 24064 equals that output from 12032. One that is told to
+// stop while unpulled stays silent once connected.
+
+const N: usize = 512;
+
+fn render_oscillator(connected: bool, stop: Option<f64>, events: &[(usize, Op)]) -> Vec<f32> {
+    let mut e = AudioEngine::new(AudioMode::Offline { channels: 1, sample_rate: SR as f32, length: SR });
+    let osc = e.oscillator();
+    let gain = e.gain(1.0);
+    let sink = e.gain(1.0);
+    let destination = e.destination;
+
+    e.set_param(osc, "frequency", 441.0);
+    e.connect(osc, gain);
+    e.connect(sink, destination);
+
+    if connected {
+        e.connect(gain, sink);
+    }
+
+    e.oscillator_start(osc);
+
+    if let Some(when) = stop {
+        e.oscillator_stop(osc, when);
+    }
+
+    let quanta: Vec<usize> = events.iter().map(|(q, _)| *q).collect();
+    e.arm(&quanta);
+
+    for (_, op) in events {
+        e.wait();
+
+        match op {
+            Op::Connect => e.connect(gain, sink),
+            Op::Disconnect => {
+                e.disconnect_dest(gain, sink);
+            }
+            Op::AnalyserOut => unreachable!(),
+        }
+
+        e.resume();
+    }
+
+    e.finish().expect("rendered").get_channel_data(0).to_vec()
+}
+
+fn max_diff(a: &[f32], at: usize, b: &[f32], b_at: usize) -> f32 {
+    (0..N).map(|i| (a[at + i] - b[b_at + i]).abs()).fold(0.0, f32::max)
+}
+
+#[test]
+fn late_connected_oscillator_keeps_its_phase() {
+    let reference = render_oscillator(true, None, &[]);
+    let late = render_oscillator(false, None, &[(94, Op::Connect)]);
+
+    assert!(late[..12032].iter().all(|v| *v == 0.0));
+    assert!(reference[1] != 0.0);
+    assert_eq!(max_diff(&late, 12032, &reference, 0), 0.0, "plays on from the phase where it was last pulled");
+}
+
+#[test]
+fn reconnected_oscillator_goes_on_from_where_it_was_pulled() {
+    let reference = render_oscillator(true, None, &[]);
+    let again = render_oscillator(true, None, &[(94, Op::Disconnect), (188, Op::Connect)]);
+
+    assert!(again[12032..24064].iter().all(|v| *v == 0.0));
+    assert_eq!(max_diff(&again, 24064, &reference, 12032), 0.0);
+}
+
+#[test]
+fn oscillator_stopped_while_unpulled_stays_silent() {
+    let out = render_oscillator(false, Some(0.1), &[(188, Op::Connect)]);
+    assert!(out.iter().all(|v| *v == 0.0));
+}
