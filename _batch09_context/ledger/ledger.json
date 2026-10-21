@@ -707,14 +707,16 @@
     "crates/x3d-runtime/src/release.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-environment"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-environment",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-texturebackground-front/-corner/-sky/-partial, MSAA 0/4)",
+    "crates/x3d-viewer/tests/rea_batch09_inputs.rs::rea_batch09_inputs_cases_match_x_ite (background-runtime, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-environment (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-environment (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): six textures, partial faces, transparency, sky and ground colors with angles, viewpoint rotation compared; run-time bind and a replaced frontTexture node compared (background-runtime); field and event evidence exact (node-environment)."
   },
   {
    "id": "node:ProximitySensor",
@@ -3660,14 +3662,15 @@
     "crates/x3d-parse/src/lexer.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-rendering, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): per-vertex with colorIndex, per-face, PointSet and IndexedLineSet per-vertex all compared; field and event evidence exact (node-rendering). 0.019% at MSAA 0 (49 aliased line px)."
   },
   {
    "id": "node:ColorRGBA",
@@ -3711,14 +3714,15 @@
     "crates/x3d-scene/src/setup.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-rendering, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): IndexedFaceSet, IndexedLineSet and PointSet consumers compared; field and event evidence exact (node-rendering)."
   },
   {
    "id": "node:CoordinateDouble",
@@ -5173,15 +5177,16 @@
     "crates/x3d-runtime/src/nodes/load_sensor.rs",
     "crates/x3d-runtime/src/nodes/mod.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-text",
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs text-events text-fontstyle text-family"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs text-events text-fontstyle text-family",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-text-font, vis-text-layout, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after. Checkpoint after 804802d: Text's rebuild cascade in the runtime (X3DGeometryNode setup / requestRebuild / _rebuild, Text.set_live__ / set_fontStyle__, X3DTextGeometry.configure): origin, textBounds, lineBounds events in X_ITE's order; FontStyle loadData copies family and style when it begins, waits for its sleep (0) timer and an uncached font file (text-events, text-fontstyle, text-family, 3 identical X_ITE recordings, exact)"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-text (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after. Checkpoint after 804802d: Text's rebuild cascade in the runtime (X3DGeometryNode setup / requestRebuild / _rebuild, Text.set_live__ / set_fontStyle__, X3DTextGeometry.configure): origin, textBounds, lineBounds events in X_ITE's order; FontStyle loadData copies family and style when it begins, waits for its sleep (0) timer and an uncached font file (text-events, text-fontstyle, text-family, 3 identical X_ITE recordings, exact) | Promotion review 2026-10-20 (combined 0023b6b): family list and fallback, style, size, spacing, justify (BEGIN/FIRST/MIDDLE/END), horizontal, leftToRight, topToBottom compared; field and event evidence exact (node-text, text-fontstyle, text-family, text-events)."
   },
   {
    "id": "node:Text",
@@ -5488,14 +5493,15 @@
     "crates/x3d-parse/src/formats.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-texturing, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): translation, rotation with center, scale, and all three together compared (vis-texturing); field and event evidence exact (node-texturing)."
   },
   {
    "id": "node:ComposedTexture3D",
@@ -5602,14 +5608,15 @@
     "crates/x3d-render/src/nurbs.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing3d"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing3d",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-texturing3d, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing3d (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing3d (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): 3-component texture coordinates into a PixelTexture3D compared; field and event evidence exact (node-texturing3d)."
   },
   {
    "id": "node:TextureCoordinate4D",
@@ -5623,14 +5630,15 @@
     "crates/x3d-render/src/nurbs.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing3d"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-texturing3d",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-texturing3d, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing3d (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-texturing3d (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): 4-component texture coordinates with w != 1 into a PixelTexture3D compared; field and event evidence exact (node-texturing3d)."
   },
   {
    "id": "node:TextureTransform3D",

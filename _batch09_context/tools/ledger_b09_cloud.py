@@ -16,6 +16,8 @@ for each entry of C its status, its earlier notes kept and its earlier tests kep
 import collections, json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from ledger_b09_promote import P as PROMOTED  # entries promoted after this tool ran
 AUTH = os.path.join(HERE, "..", "ledger", "ledger.json")
 SNAP = os.path.join(HERE, "..", "ledger", "before-cloud", "ledger.json")
 
@@ -190,8 +192,8 @@ def apply():
     snap = {i["id"]: i for i in json.load(open(SNAP))["items"]}
     for i in d["items"]:
         p = C.get(i["id"])
-        if not p:
-            continue
+        if not p or i["id"] in PROMOTED:
+            continue  # promoted later by ledger_b09_promote.py: this tool must not undo that
         st, tests, missing, note = p
         b = snap[i["id"]]
         i["status"] = st
@@ -214,6 +216,11 @@ def verify():
         if k not in C:
             if a != b:
                 bad.append(f"unrelated entry changed: {k}")
+            continue
+        if k in PROMOTED:
+            # ledger_b09_promote.py owns these (COMPLETE); here only the cloud layer must still be in place.
+            if a["status"] != "COMPLETE" or not a["notes"].startswith(b.get("notes", "")) or any(t not in a.get("tests", []) for t in b.get("tests", [])):
+                bad.append(f"{k}: promoted entry lost its cloud layer")
             continue
         if b["status"] == "DIFFERENT":
             bad.append(f"DIFFERENT entry in C: {k}")
