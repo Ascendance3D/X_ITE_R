@@ -15,6 +15,9 @@ events only). Each world is a grid of cells that vary one node's fields side by 
   vis-texturing3d   TextureCoordinate3D, TextureCoordinate4D (with a PixelTexture3D)
   vis-text-font     Text, FontStyle: family, style, size, spacing
   vis-text-layout   Text, FontStyle: justify, direction, length, maxExtent, several strings
+  vis-colorrgba     ColorRGBA: alpha per face, per vertex, on lines, with Material transparency
+  vis-linecolor     IndexedLineSet: colorPerVertex FALSE, colorIndex, ColorRGBA, index boundaries
+  vis-material-ambient   Material ambientIntensity under ambient light (Directional, Point, Spot)
   vis-layout        LayoutGroup (Layout, Viewport)
   vis-screen        ScreenGroup, ScreenFontStyle
   vis-screen-text   ScreenFontStyle: size, direction, justify, length, maxExtent, family, style, spacing
@@ -159,6 +162,77 @@ worlds["vis-light-spot.wrl"] = world([
     lit(S("location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.3 cutOffAngle 0.6 color 1 0.3 0.3"), GRID),
     lit(S("location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.3 cutOffAngle 0.6 on FALSE"), GRID),
     lit(S("location 0 0 1.5 direction 0 0 -1 radius 10 beamWidth 0.3 cutOffAngle 0.6 intensity 0 ambientIntensity 0.6"), GRID),
+], nav=NOHEAD)
+
+# --- ColorRGBA: alpha per face, per vertex, on lines, with Material transparency -----------------
+# A two-tone backdrop (white left, dark right) shows the alpha of what is drawn in front of it.
+BD = ("Transform { translation 0 0 -0.4 children [ Shape { appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 1 1 1 } } "
+      "geometry IndexedFaceSet { coord Coordinate { point [ -1.05 -1.05 0, 0 -1.05 0, 0 1.05 0, -1.05 1.05 0 ] } coordIndex [ 0 1 2 3 -1 ] } } "
+      "Shape { appearance Appearance { material Material { diffuseColor 0 0 0 emissiveColor 0.15 0.15 0.15 } } "
+      "geometry IndexedFaceSet { coord Coordinate { point [ 0 -1.05 0, 1.05 -1.05 0, 1.05 1.05 0, 0 1.05 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] }")
+def over(body):
+    return BD + "\n" + body
+LINES2 = "coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, -0.9 -0.3 0, 0.9 -0.3 0, -0.9 0.3 0, 0.9 0.3 0, -0.9 0.9 0, 0.9 0.9 0 ] }"
+LIDX = "coordIndex [ 0 1 -1 2 3 -1 4 5 -1 6 7 -1 ]"
+GRID4 = ("ElevationGrid { solid FALSE xDimension 3 zDimension 3 xSpacing 0.9 zSpacing 0.9 height [ 0 0 0 0 0 0 0 0 0 ] colorPerVertex TRUE "
+         "color ColorRGBA { color [ 1 0 0 0.2, 1 0 0 0.6, 1 0 0 1, 0 1 0 0.2, 0 1 0 0.6, 0 1 0 1, 0 0 1 0.2, 0 0 1 0.6, 0 0 1 1 ] } }")
+GRID4 = f"Transform {{ translation -0.9 0.9 0 rotation 1 0 0 1.5708 children Shape {{ appearance Appearance {{ material {MAT} }} geometry {GRID4} }} }}"
+worlds["vis-colorrgba.wrl"] = world([
+    over(ifs("colorPerVertex FALSE color ColorRGBA { color [ 1 0 0 1, 0 0 1 0.5 ] }", coord=TWO, index=TWO_IDX)),
+    over(ifs("colorPerVertex FALSE color ColorRGBA { color [ 0.9 0.2 0.2 0.1, 0.2 0.2 0.9 0.9 ] }", coord=TWO, index=TWO_IDX)),
+    over(ifs("colorPerVertex FALSE color ColorRGBA { color [ 1 0 0 0, 0 0 1 1 ] }", coord=TWO, index=TWO_IDX)),
+    over(ifs("colorPerVertex TRUE color ColorRGBA { color [ 1 0 0 1, 1 0 0 0.66, 1 0 0 0.33, 1 0 0 0 ] }")),
+    over(ifs("colorPerVertex TRUE color ColorRGBA { color [ 1 0 0 0.2, 0 1 0 0.5, 0 0 1 0.8 ] } colorIndex [ 2 0 1 0 -1 ]")),
+    over(ifs("colorPerVertex TRUE color ColorRGBA { color [ 1 0 0 0.5, 0 1 0 0.5, 0 0 1 0.5, 1 1 0 0.5 ] }", appearance=f"Appearance {{ material Material {{ diffuseColor 0.8 0.8 0.8 transparency 0.5 }} }}")),
+    over(ifs("colorPerVertex TRUE color ColorRGBA { color [ 1 0 0 0.5, 0 1 0 0.5, 0 0 1 0.5, 1 1 0 0.5 ] }", appearance=f"Appearance {{ material Material {{ diffuseColor 0.8 0.8 0.8 specularColor 1 1 1 shininess 0.6 }} }}")),
+    over(ifs("colorPerVertex FALSE color ColorRGBA { color [ 1 0 0 0.5, 0 0 1 0.5 ] }", appearance=UNLIT, coord=TWO, index=TWO_IDX)),
+    over(shape(f"IndexedLineSet {{ {LINES2} {LIDX} colorPerVertex TRUE color ColorRGBA {{ color [ 1 0 0 1, 1 0 0 0.5, 0 0 1 1, 0 0 1 0.5, 0 1 0 1, 0 1 0 0.5, 1 1 0 1, 1 1 0 0.5 ] }} }}", UNLIT)),
+    over(shape(f"IndexedLineSet {{ {LINES2} {LIDX} colorPerVertex FALSE color ColorRGBA {{ color [ 1 0 0 1, 1 0 0 0.6, 0 0 1 0.3, 0 0 1 0 ] }} }}", UNLIT)),
+    over(GRID4),
+    over(shape("IndexedTriangleSet { coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0 0.9 0, 0.9 0.9 0.2, -0.9 0.9 0.2 ] } index [ 0 1 2, 2 3 4 ] "
+               "color ColorRGBA { color [ 1 0 0 0.7, 0 1 0 0.4, 0 0 1 0.7, 1 1 0 0.3, 0 1 1 0.3 ] } }", f"Appearance {{ material {MAT} }}")),
+])
+
+# --- IndexedLineSet colors: colorPerVertex FALSE, explicit colorIndex, RGBA, index boundaries ----
+FAN = "coord Coordinate { point [ " + ", ".join(f"{-0.9 + 0.45 * (i % 5):.2f} {-0.9 + 0.9 * (i // 5):.2f} 0" for i in range(15)) + " ] }"
+# rows of 5 points; each row is one polyline of 5 vertices
+ROWS = "coordIndex [ 0 1 2 3 4 -1 5 6 7 8 9 -1 10 11 12 13 14 -1 ]"
+CX = "color Color { color [ 1 0 0, 0 1 0, 0 0 1, 1 1 0, 1 0 1 ] }"
+CA = "color ColorRGBA { color [ 1 0 0 1, 0 1 0 0.5, 0 0 1 0.25, 1 1 0 0.75, 1 0 1 1 ] }"
+def ils(fields, coord=FAN, idx=ROWS, ap=UNLIT):
+    return over(shape(f"IndexedLineSet {{ {coord} {idx} {fields} }}", ap))
+worlds["vis-linecolor.wrl"] = world([
+    ils(f"colorPerVertex FALSE color Color {{ color [ 1 0 0, 0 1 0, 0 0 1 ] }}"),
+    ils(f"colorPerVertex FALSE color Color {{ color [ 1 0 0, 0 1 0, 0 0 1 ] }} colorIndex [ 2 0 1 ]"),
+    ils(f"colorPerVertex FALSE {CX} colorIndex [ 4 4 0 ]"),
+    ils(f"colorPerVertex TRUE {CX} colorIndex [ 0 1 2 3 4 -1 4 3 2 1 0 -1 0 0 4 4 2 -1 ]"),
+    ils(f"colorPerVertex TRUE {CX}"),
+    ils(f"colorPerVertex TRUE {CX} colorIndex [ 0 0 0 0 0 -1 4 4 4 4 4 -1 0 1 2 3 4 -1 ]"),
+    ils(f"colorPerVertex TRUE {CA}"),
+    ils(f"colorPerVertex FALSE color ColorRGBA {{ color [ 1 0 0 1, 0 1 0 0.5, 0 0 1 0.2 ] }}"),
+    ils(f"colorPerVertex FALSE color ColorRGBA {{ color [ 1 0 0 1, 0 1 0 0.5, 0 0 1 0.2 ] }} colorIndex [ 1 2 0 ]"),
+    ils(f"colorPerVertex TRUE {CA} colorIndex [ 4 3 2 1 0 -1 0 1 2 3 4 -1 2 2 2 2 2 -1 ]"),
+    ils(f"colorPerVertex TRUE {CX}", idx="coordIndex [ 0 1 2 3 4 -1 5 -1 6 7 -1 8 9 10 11 12 13 14 ]"),
+    ils(f"colorPerVertex FALSE {CX} colorIndex [ 0 1 2 ]", idx="coordIndex [ 0 1 2 3 4 -1 5 6 7 8 9 -1 10 11 12 13 14 ]"),
+])
+
+# --- Material ambientIntensity under ambient light ---------------------------------------------
+AM = lambda f, c="0.9 0.9 0.9": mat(f"diffuseColor {c} {f}")
+# the light shines away from the camera (+z), so the lit side gets no diffuse light: what shows is ambient
+DA = lambda a, extra="": D(f"direction 0 0 1 intensity 0.5 ambientIntensity {a} {extra}")
+worlds["vis-material-ambient.wrl"] = world([
+    lit(DA(0.7), AM("ambientIntensity 0")),
+    lit(DA(0.7), AM("ambientIntensity 0.2")),
+    lit(DA(0.7), AM("ambientIntensity 0.5")),
+    lit(DA(0.7), AM("ambientIntensity 1")),
+    lit(DA(0.7, "color 0.4 0.8 1"), AM("ambientIntensity 1", "0.9 0.5 0.3")),
+    lit(D("direction 0 0 -1 intensity 0.6 ambientIntensity 0.5"), AM("ambientIntensity 0.5", "0.8 0.4 0.8")),
+    lit(P("location 0 0 -2 radius 10 intensity 0.5 ambientIntensity 0.8"), AM("ambientIntensity 0.5")),
+    lit(S("location 0 0 -2 direction 0 0 1 radius 10 beamWidth 0.3 cutOffAngle 0.6 intensity 0.5 ambientIntensity 0.8"), AM("ambientIntensity 1")),
+    lit(DA(0.3) + "\n" + DA(0.3, "color 1 0.2 0.2"), AM("ambientIntensity 1")),
+    lit(DA(0), AM("ambientIntensity 1")),
+    lit(DA(0.7), mat("diffuseColor 0.3 0.6 0.3 emissiveColor 0.4 0 0 specularColor 1 1 1 shininess 0.5 ambientIntensity 0.6")),
+    lit(DA(0.7), mat("diffuseColor 0.8 0.8 0.8 ambientIntensity 0.8 transparency 0.5")),
 ], nav=NOHEAD)
 
 # --- ImageTexture, PixelTexture, TextureTransform ------------------------------------------------
