@@ -254,6 +254,8 @@ pub enum Message {
     Stop(f64),
     /// `frequency .value = …` (true) or `detune .value = …` (false): setValueAtTime (v, time).
     ParamEvent(bool, f64),
+    /// Whether the render graph pulls the node (AudioEngine::update_pull).
+    Pulled(bool),
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -268,6 +270,7 @@ pub struct Processor {
     wave: Option<Arc<WaveTables>>,
     virtual_read_index: f64,
     state: State,
+    pulled: bool,
     start_time: f64,
     end_time: Option<f64>,
     phase_increments: Vec<f32>,
@@ -288,7 +291,7 @@ impl AudioWorkletProcessor for Processor {
     type ProcessorOptions = Arc<WaveTables>;
 
     fn constructor(wave: Arc<WaveTables>) -> Self {
-        Processor { wave: Some(wave), virtual_read_index: 0.0, state: State::Unscheduled, start_time: 0.0, end_time: None, phase_increments: vec![0.0; 128], detune_values: vec![0.0; 128], frequency_timeline: Timeline::default(), detune_timeline: Timeline::default(), param_events: vec![] }
+        Processor { wave: Some(wave), virtual_read_index: 0.0, state: State::Unscheduled, pulled: false, start_time: 0.0, end_time: None, phase_increments: vec![0.0; 128], detune_values: vec![0.0; 128], frequency_timeline: Timeline::default(), detune_timeline: Timeline::default(), param_events: vec![] }
     }
 
     fn parameter_descriptors() -> Vec<AudioParamDescriptor> {
@@ -310,6 +313,7 @@ impl AudioWorkletProcessor for Processor {
                 }
                 Some(Message::Stop(t)) => self.end_time = Some(t),
                 Some(Message::ParamEvent(frequency, time)) => self.param_events.push((frequency, time)),
+                Some(Message::Pulled(v)) => self.pulled = v,
                 None => {}
             }
         }
@@ -323,6 +327,12 @@ impl AudioWorkletProcessor for Processor {
         for (frequency, time) in std::mem::take(&mut self.param_events) {
             let tl = if frequency { &mut self.frequency_timeline } else { &mut self.detune_timeline };
             tl.insert(time, scope.current_frame, scope.sample_rate as f64);
+        }
+
+        // Chromium processes a node only when the graph pulls it: an unpulled oscillator keeps
+        // its phase and its state.
+        if !self.pulled {
+            return self.state != State::Finished;
         }
 
         let Some(wave) = self.wave.clone() else { return self.state != State::Finished };

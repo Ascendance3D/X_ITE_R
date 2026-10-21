@@ -167,7 +167,7 @@ pub struct AudioEngine {
     /// The MediaStreamAudioDestinationNodes: the graph pulls them (the oracle page connects its
     /// stand-in to the destination).
     stream_destinations: std::collections::HashSet<usize>,
-    /// The buffer sources told that the graph pulls them.
+    /// The buffer sources and oscillators told that the graph pulls them.
     pulled: std::collections::HashSet<usize>,
 }
 
@@ -307,8 +307,8 @@ impl AudioEngine {
     /// Chromium processes a node only when a node it feeds is processed, from the destination
     /// and the automatic pull nodes (an AnalyserNode whose output is not connected); a
     /// MediaStreamAudioDestinationNode is pulled as well. `web-audio-api` renders every node, so
-    /// each buffer source is told whether the graph pulls it: an unpulled one keeps its read
-    /// position, as in Chromium. Called after every change of the connections.
+    /// each buffer source and oscillator is told whether the graph pulls it: an unpulled one keeps
+    /// its read position or phase, as in Chromium. Called after every change of the connections.
     fn update_pull(&mut self) {
         let mut reached: std::collections::HashSet<usize> = (0..self.nodes.len())
             .filter(|&i| match &self.nodes[i] {
@@ -329,12 +329,22 @@ impl AudioEngine {
         }
 
         for i in 0..self.nodes.len() {
-            if let Some(ANode::BufferSource(n)) = &self.nodes[i] {
-                let pulled = reached.contains(&i);
+            let pulled = reached.contains(&i);
 
-                if pulled != self.pulled.contains(&i) {
-                    n.port().post_message(Some(buffer_source::Message::Pulled(pulled)));
+            if pulled != self.pulled.contains(&i) {
+                let source = match &self.nodes[i] {
+                    Some(ANode::BufferSource(n)) => {
+                        n.port().post_message(Some(buffer_source::Message::Pulled(pulled)));
+                        true
+                    }
+                    Some(ANode::Oscillator(n)) => {
+                        n.port().post_message(Some(oscillator::Message::Pulled(pulled)));
+                        true
+                    }
+                    _ => false,
+                };
 
+                if source {
                     if pulled {
                         self.pulled.insert(i);
                     } else {
