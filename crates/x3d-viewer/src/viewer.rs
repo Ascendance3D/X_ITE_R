@@ -8,7 +8,7 @@ use crate::layer::{BBox, DEFAULT, Layer, NavInfo, VpBase, bbox_transform, is_def
 use crate::lookat::Box3;
 use crate::nav::{Cx, Env, Input, LookAtRequest, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
-use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan};
+use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan, scan_screens};
 use std::collections::HashMap;
 use std::path::Path;
 use std::rc::Rc;
@@ -574,7 +574,7 @@ impl Viewer3d {
 
     /// The scene bounding box in world space (X3DLayerNode.getBBox), from shape bounding boxes.
     fn scene_bbox(&mut self) -> Option<BBox> {
-        let s = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
+        let s = scan_screens(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true, &self.screen_matrices());
         let mut min = Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
         let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
         let mut any = false;
@@ -608,7 +608,7 @@ impl Viewer3d {
 
         for key in all {
             self.swap_to(key);
-            self.scan_cam = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
+            self.scan_cam = scan_screens(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true, &self.screen_matrices());
             let bbox = self.scene_bbox();
             let scan_cam = std::mem::take(&mut self.scan_cam);
             self.layer.bind_bindables(&mut self.rt, &scan_cam, fragment.as_deref(), &move || bbox);
@@ -1000,7 +1000,7 @@ impl Viewer3d {
         // LayerSet.traverse (CAMERA): each layer drawn, in order.
         for key in self.drawn.clone() {
             self.swap_to(key);
-            self.scan_cam = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
+            self.scan_cam = scan_screens(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true, &self.screen_matrices());
 
             let bbox = if self.scan_cam.viewpoints.iter().any(|(n, _)| {
                 let b = VpBase::read(&self.rt, n.node);
@@ -1290,7 +1290,7 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
-            self.scan_display = scan(&self.rt, &self.layer_walk(), &view, false);
+            self.scan_display = scan_screens(&self.rt, &self.layer_walk(), &view, false, &self.screen_matrices());
         }
 
         self.clear_undrawn_scans();
@@ -2040,6 +2040,11 @@ impl Viewer3d {
     // --- rendering ---------------------------------------------------------------------------
 
     /// The frame for the renderer: the bound viewpoint's camera and bindables.
+    /// ScreenGroup.matrix of each ScreenGroup's last DISPLAY traversal (the last `build_frame`).
+    fn screen_matrices(&self) -> std::collections::HashMap<NodeId, Matrix4> {
+        Builder::screen_matrices_of(&self.render_cache, self.rt.uid)
+    }
+
     pub fn build_frame(&mut self) -> Frame {
         let mut cameras = vec![(self.current, self.camera_override(&self.layer, &self.scan_cam, self.current))];
 
@@ -2047,10 +2052,13 @@ impl Viewer3d {
             cameras.push((s.key, self.camera_override(&s.layer, &s.scan_cam, s.key)));
         }
 
+        let (width, height) = self.framebuffer_size();
         let mut b = Builder::new(&self.rt).with_cache(&mut self.render_cache);
         b.camera = cameras.iter().find(|(k, _)| k.is_none()).map(|(_, c)| c.clone());
         b.layer_cameras = cameras.into_iter().filter(|(k, _)| k.is_some()).collect();
-        b.build(self.width, self.height)
+        // X3DRenderingContext.reshape: the viewport, projection and ScreenGroup / ScreenText scale are in drawing-buffer pixels
+        // (the canvas size × ContentScale).
+        b.build(width, height)
     }
 
     /// The bound viewpoint's camera and the bindables of a layer for the renderer.
