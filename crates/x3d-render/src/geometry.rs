@@ -1642,8 +1642,9 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
             let triangles: Vec<usize> = if e.convex {
                 tess::triangulate_convex(&idx)
             } else {
-                let pts: Vec<Vector3> = idx.iter().map(|i| points[*i]).collect();
-                tess::triangulate_polygon(&pts).into_iter().map(|k| idx[k]).collect()
+                // Triangle3.triangulatePolygon (libtess, ODD) of the cap points with their indices, as IndexedFaceSet.
+                let pts: Vec<([f64; 3], usize)> = idx.iter().map(|&i| (points[i].to_array(), i)).collect();
+                x3d_text::libtess::triangulate_indexed(&pts)
             };
 
             if triangles.len() >= 3 {
