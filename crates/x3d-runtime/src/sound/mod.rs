@@ -164,6 +164,11 @@ pub struct AudioEngine {
     waves: std::collections::HashMap<oscillator::Shape, Arc<oscillator::WaveTables>>,
     convolver_normalize: std::collections::HashMap<usize, bool>,
     listener_values: [f32; 9],
+    /// The MediaStreamAudioDestinationNodes: the graph pulls them (the oracle page connects its
+    /// stand-in to the destination).
+    stream_destinations: std::collections::HashSet<usize>,
+    /// The buffer sources told that the graph pulls them.
+    pulled: std::collections::HashSet<usize>,
 }
 
 /// The render quantum size of Web Audio.
@@ -208,7 +213,7 @@ impl AudioEngine {
             },
         };
 
-        let mut engine = AudioEngine { ctx, mode, nodes: vec![], connections: vec![], destination: AId(0), stepping: None, rendered: None, waves: Default::default(), convolver_normalize: Default::default(), listener_values: [0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0] };
+        let mut engine = AudioEngine { ctx, mode, nodes: vec![], connections: vec![], destination: AId(0), stepping: None, rendered: None, waves: Default::default(), convolver_normalize: Default::default(), listener_values: [0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0], stream_destinations: Default::default(), pulled: Default::default() };
         let destination = engine.base().destination();
         engine.destination = engine.add(ANode::Destination(destination));
         engine
@@ -235,6 +240,8 @@ impl AudioEngine {
 
     pub fn add(&mut self, node: ANode) -> AId {
         if let Some(i) = self.nodes.iter().position(Option::is_none) {
+            self.stream_destinations.remove(&i);
+            self.pulled.remove(&i);
             self.nodes[i] = Some(node);
             return AId(i);
         }
@@ -281,6 +288,7 @@ impl AudioEngine {
 
         self.nodes[id.0] = None;
         self.convolver_normalize.remove(&id.0);
+        self.update_pull();
     }
 
     /// Drop the handle of a node and forget its connections without undoing them: a source that
@@ -293,6 +301,48 @@ impl AudioEngine {
         self.connections.retain(|c| c.0 != id && c.2 != id);
         self.nodes[id.0] = None;
         self.convolver_normalize.remove(&id.0);
+        self.update_pull();
+    }
+
+    /// Chromium processes a node only when a node it feeds is processed, from the destination
+    /// and the automatic pull nodes (an AnalyserNode whose output is not connected); a
+    /// MediaStreamAudioDestinationNode is pulled as well. `web-audio-api` renders every node, so
+    /// each buffer source is told whether the graph pulls it: an unpulled one keeps its read
+    /// position, as in Chromium. Called after every change of the connections.
+    fn update_pull(&mut self) {
+        let mut reached: std::collections::HashSet<usize> = (0..self.nodes.len())
+            .filter(|&i| match &self.nodes[i] {
+                Some(ANode::Destination(_)) => true,
+                Some(ANode::Analyser(..)) => !self.connections.iter().any(|c| c.0 .0 == i),
+                Some(_) => self.stream_destinations.contains(&i),
+                None => false,
+            })
+            .collect();
+        let mut stack: Vec<usize> = reached.iter().copied().collect();
+
+        while let Some(to) = stack.pop() {
+            for c in self.connections.iter().filter(|c| c.2 .0 == to) {
+                if reached.insert(c.0 .0) {
+                    stack.push(c.0 .0);
+                }
+            }
+        }
+
+        for i in 0..self.nodes.len() {
+            if let Some(ANode::BufferSource(n)) = &self.nodes[i] {
+                let pulled = reached.contains(&i);
+
+                if pulled != self.pulled.contains(&i) {
+                    n.port().post_message(Some(buffer_source::Message::Pulled(pulled)));
+
+                    if pulled {
+                        self.pulled.insert(i);
+                    } else {
+                        self.pulled.remove(&i);
+                    }
+                }
+            }
+        }
     }
 
     // --- connections (AudioNode.connect / disconnect) -----------------------------------------
@@ -315,6 +365,7 @@ impl AudioEngine {
 
         if !self.connections.contains(&(from, output, to, input)) {
             self.connections.push((from, output, to, input));
+            self.update_pull();
         }
     }
 
@@ -327,6 +378,7 @@ impl AudioEngine {
         }
 
         self.connections.retain(|c| c.0 != from);
+        self.update_pull();
     }
 
     /// `from .disconnect (to)`: false where Web Audio throws (no such connection).
@@ -340,6 +392,7 @@ impl AudioEngine {
         }
 
         self.connections.retain(|c| !(c.0 == from && c.2 == to));
+        self.update_pull();
         true
     }
 
@@ -354,6 +407,7 @@ impl AudioEngine {
         }
 
         self.connections.retain(|c| *c != (from, output, to, input));
+        self.update_pull();
         true
     }
 
@@ -897,11 +951,15 @@ impl AudioEngine {
                 self.connect(id, destination);
             }
 
+            self.stream_destinations.insert(id.0);
+            self.update_pull();
             return id;
         }
 
         let node = MediaStreamAudioDestinationNode::new(self.base(), AudioNodeOptions { channel_count: 2, channel_count_mode: ChannelCountMode::Explicit, channel_interpretation: ChannelInterpretation::Speakers });
-        self.add(ANode::StreamDestination(node))
+        let id = self.add(ANode::StreamDestination(node));
+        self.stream_destinations.insert(id.0);
+        id
     }
 
     /// The microphone: `new MediaStreamAudioSourceNode (audioContext, { mediaStream })` for the
