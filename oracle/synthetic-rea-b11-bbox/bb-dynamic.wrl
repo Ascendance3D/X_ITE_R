@@ -1,0 +1,39 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+DEF V1 Viewpoint { position 0 0 14 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+DEF T1 Transform { translation -3 2 0 children DEF G1 Group { children [ Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1 1 } } DEF M1 Transform { translation 1 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.5 0.2 } } geometry Sphere { radius 0.4 } } } ] } }
+DEF T2 Transform { translation 3 2 0 children DEF G2 Transform { bboxDisplay TRUE children [ Shape { appearance Appearance { material Material { diffuseColor 0.4 0.8 0.4 } } geometry Box { size 1 1 1 } } ] } }
+DEF T3 Transform { translation -3 -2 0 children DEF G3 Group { bboxDisplay TRUE children [ ] } }
+DEF T4 Transform { translation 3 -2 0 children DEF G4 ScreenGroup { bboxDisplay TRUE children [ Shape { appearance Appearance { material Material { emissiveColor 0.8 0.3 0.8 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -40 -30 0, 40 -30 0, 40 30 0, -40 30 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode t1 USE T1
+  initializeOnly SFNode g1 USE G1
+  initializeOnly SFNode m1 USE M1
+  initializeOnly SFNode g2 USE G2
+  initializeOnly SFNode g3 USE G3
+  initializeOnly SFNode g4 USE G4
+
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') g1 .bboxDisplay = true;
+   if (k == 'b') m1 .translation = new SFVec3f (2, 1, 0);
+   if (k == 'c') t1 .scale = new SFVec3f (1, 2, 1);
+   if (k == 'd') g2 .rotation = new SFRotation (0, 0, 1, 0.7);
+   if (k == 'e') g2 .scale = new SFVec3f (2, 1, 1);
+   if (k == 'f') g3 .children = new MFNode (m1);
+   if (k == 'g') g1 .bboxDisplay = false;
+   if (k == 'h') Browser .setBrowserOption ('ContentScale', 2);
+   if (k == 'i') Browser .setBrowserOption ('ContentScale', 1);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

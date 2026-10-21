@@ -1,0 +1,12 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+DEF V1 Viewpoint { position 0 0 14 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -4 2 0 children Switch { bboxDisplay TRUE whichChoice 1 children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Box { size 1 1 1 } } Transform { translation 0.3 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.9 0.2 } } geometry Sphere { radius 0.5 } } } ] } }
+Transform { translation 0 2 0 children Collision { bboxDisplay TRUE children [ Transform { translation 0.2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.3 0.9 } } geometry Box { size 1 1.4 1 } } } ] } }
+Transform { translation 4 2 0 children Anchor { bboxDisplay TRUE url "x.wrl" children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.2 } } geometry Box { size 1 1 1 } } ] } }
+Transform { translation -4 -2 0 children LOD { bboxDisplay TRUE range [ 100 ] children [ Shape { appearance Appearance { material Material { diffuseColor 0.5 0.9 0.9 } } geometry Box { size 1.2 0.6 0.6 } } Shape { appearance Appearance { material Material { diffuseColor 0.2 0.2 0.2 } } geometry Box { size 2 2 2 } } ] } }
+Transform { translation 0 -2 0 children Group { bboxDisplay TRUE children [ Shape { castShadow FALSE appearance Appearance { material Material { diffuseColor 0.9 0.5 0.1 } } geometry Box { size 1 1 2 } } ] } }
+Transform { translation 4 -2 0 children Group { bboxDisplay TRUE children [ Transform { visible FALSE translation 2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry Box { size 1 1 1 } } } Shape { appearance Appearance { material Material { diffuseColor 0.4 0.8 0.4 } } geometry Box { size 0.5 0.5 0.5 } } ] } }

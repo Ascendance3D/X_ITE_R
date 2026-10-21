@@ -4,6 +4,7 @@ sfs-runtime oracle/synthetic-rea-b10-stepped/sfs-runtime.wrl oracle/synthetic-re
 text-runtime oracle/synthetic-rea-b10-stepped/text-runtime.wrl oracle/synthetic-rea-b10-stepped/text-runtime.json 4
 sg-runtime oracle/synthetic-rea-b10-stepped/sg-runtime.wrl oracle/synthetic-rea-b10-stepped/sg-runtime.json 0
 sg-runtime oracle/synthetic-rea-b10-stepped/sg-runtime.wrl oracle/synthetic-rea-b10-stepped/sg-runtime.json 4
+sg-bbox oracle/synthetic-rea-b10-stepped/sg-bbox.wrl oracle/synthetic-rea-b10-stepped/sg-bbox.json 0
 sg-bbox oracle/synthetic-rea-b10-stepped/sg-bbox.wrl oracle/synthetic-rea-b10-stepped/sg-bbox.json 4
 sg-viewpoint oracle/synthetic-rea-b10-stepped/sg-viewpoint.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint.json 0
 sg-viewpoint oracle/synthetic-rea-b10-stepped/sg-viewpoint.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint.json 4
