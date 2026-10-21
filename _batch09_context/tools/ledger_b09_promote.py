@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Batch 09 promotion review: 7 of the 13 reviewed node entries become COMPLETE (owner-approved review, 2026-10-20).
+"""Batch 09 promotion review: 7 of the 13 reviewed node entries become COMPLETE (owner-approved review, 2026-10-20),
+then ColorRGBA, IndexedLineSet and Material after their extra pictures (6af2e78, 4d38cb2).
 
   python3 -I ledger_b09_promote.py check     # verify only (exit 1 on a problem)
   python3 -I ledger_b09_promote.py apply     # rebuild the entries of P from the snapshot, then verify
@@ -20,6 +21,9 @@ P = {
  "node:TextureCoordinate3D": [VIS + " (vis-texturing3d, MSAA 0/4)"],
  "node:TextureCoordinate4D": [VIS + " (vis-texturing3d, MSAA 0/4)"],
  "node:FontStyle": [VIS + " (vis-text-font, vis-text-layout, MSAA 0/4)"],
+ "node:ColorRGBA": [VIS + " (vis-rendering, vis-colorrgba, MSAA 0/4)"],
+ "node:IndexedLineSet": [VIS + " (vis-rendering, vis-linecolor, vis-linecolor-invalid, MSAA 0/4; no warning in X_ITE or Rust)"],
+ "node:Material": [VIS + " (vis-shape, vis-material-ambient, vis-material-ambient-tex, MSAA 0/4)"],
  "node:TextureBackground": [VIS + " (vis-texturebackground-front/-corner/-sky/-partial, MSAA 0/4)", ST + " (background-runtime, MSAA 0/4)"],
 }
 WHY = {
@@ -29,6 +33,9 @@ WHY = {
  "node:TextureCoordinate3D": "3-component texture coordinates into a PixelTexture3D compared; field and event evidence exact (node-texturing3d).",
  "node:TextureCoordinate4D": "4-component texture coordinates with w != 1 into a PixelTexture3D compared; field and event evidence exact (node-texturing3d).",
  "node:FontStyle": "family list and fallback, style, size, spacing, justify (BEGIN/FIRST/MIDDLE/END), horizontal, leftToRight, topToBottom compared; field and event evidence exact (node-text, text-fontstyle, text-family, text-events).",
+ "node:ColorRGBA": "alpha per face (0, 0.1, 0.5, 0.9, 1), per vertex, with colorIndex, with Material transparency, specular and unlit, on lines (per vertex and per polyline), ElevationGrid and IndexedTriangleSet compared; field and event evidence exact (node-rendering).",
+ "node:IndexedLineSet": "colorPerVertex FALSE and TRUE, explicit colorIndex, empty colorIndex, boundary indexes, RGBA, negative (not -1) and above-range color and coord indexes compared against X_ITE, which logs no warning; field and event evidence exact (node-rendering).",
+ "node:Material": "ambientIntensity 0 to 1 under Directional, Point and Spot ambient light, colored ambient, two lights, textured surfaces (ImageTexture, PixelTexture, TextureTransform), emissive, specular, transparency compared; field and event evidence exact (node-shape).",
  "node:TextureBackground": "six textures, partial faces, transparency, sky and ground colors with angles, viewpoint rotation compared; run-time bind and a replaced frontTexture node compared (background-runtime); field and event evidence exact (node-environment).",
 }
 
