@@ -1,0 +1,4 @@
+tb-fallback oracle/synthetic-rea-b11-text/tb-fallback.wrl oracle/synthetic-rea-b11-text/tb-fallback.json
+tb-layout oracle/synthetic-rea-b11-text/tb-layout.wrl oracle/synthetic-rea-b11-text/tb-layout.json
+tb-late oracle/synthetic-rea-b11-text/tb-late.wrl oracle/synthetic-rea-b11-text/tb-late.json
+tb-align oracle/synthetic-rea-b11-text/tb-align.wrl oracle/synthetic-rea-b11-text/tb-align.json

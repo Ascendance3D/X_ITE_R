@@ -1,0 +1,28 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "text warm-up frame stamps"
+Shape { geometry DEF T1 Text { string [ "ab", "c" ] fontStyle FontStyle { family "SANS" } } }
+DEF P Script {
+  inputOutput MFString out [ ]
+  inputOnly SFVec3f  origin
+  inputOnly SFVec2f  textBounds
+  inputOnly MFVec2f  lineBounds
+  inputOnly MFFloat  len
+  url "ecmascript:
+var F_ = 0, R_ = [];
+function prepareEvents () { ++ F_; if (F_ === 30) out = new MFString (... R_); }
+function rec (n, v) { R_ .push ('f' + F_ + ' ' + n + '=' + String (v) .replace (/\\s+/g, ' ')); }
+function origin (v) { rec ('origin', v); }
+function textBounds (v) { rec ('textBounds', v); }
+function lineBounds (v) { rec ('lineBounds', v); }
+function len (v) { rec ('length', v); }
+function initialize () { rec ('init', ''); }
+"
+}
+
+
+
+ROUTE T1.origin TO P.origin
+ROUTE T1.textBounds TO P.textBounds
+ROUTE T1.lineBounds TO P.lineBounds
