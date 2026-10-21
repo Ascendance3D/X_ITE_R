@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "poses": {
+    "54": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"tb layout\"\n\nShape {\n  geometry DEF T1 Text {\n    string [\n      \"A\",\n      \"B\"\n    ]\n    maxExtent 0.5\n    fontStyle FontStyle {\n      size 2\n      spacing 0.5\n      leftToRight FALSE\n      topToBottom FALSE\n      justify [\n        \"MIDDLE\",\n        \"MIDDLE\"\n      ]\n    }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out \"000 log = A[s:\\\"F12 T1.fontStyle=FontStyle { }\\\",s:\\\"F12 T1.origin=0 0 0\\\",s:\\\"F12 T1.textBounds=0 0\\\",s:\\\"F14 T1.lineBounds=[\\\\n  1.235107 0.90625,\\\\n  3.393066 2,\\\\n  0 2,\\\\n  0.2866211 2\\\\n]\\\",s:\\\"F14 T1.textBounds=3.393066 3.379883\\\",s:\\\"F14 T1.origin=0 0.3798828 0\\\",s:\\\"F16 T1.lineBounds=[\\\\n  1.216064 0.90625,\\\\n  3.392578 2,\\\\n  0 2,\\\\n  0.2841797 2\\\\n]\\\",s:\\\"F16 T1.textBounds=3.392578 3.379883\\\",s:\\\"F16 T1.origin=-3.392578 0.3798828 0\\\",s:\\\"F18 T1.lineBounds=[\\\\n  1.216064 0.90625,\\\\n  3.392578 2,\\\\n  0 2,\\\\n  0.2841797 2\\\\n]\\\",s:\\\"F18 T1.textBounds=3.392578 3.379883\\\",s:\\\"F18 T1.origin=-1.696289 0 0\\\",s:\\\"F20 T1.lineBounds=[\\\\n  1.235107 0.90625,\\\\n  3.393066 2,\\\\n  0 2,\\\\n  0.2866211 2\\\\n]\\\",s:\\\"F20 T1.textBounds=3.393066 3.379883\\\",s:\\\"F20 T1.origin=0 3.379883 0\\\",s:\\\"F22 T1.lineBounds=[\\\\n  1.235107 0.90625,\\\\n  3.393066 2,\\\\n  0 2,\\\\n  0.2866211 2\\\\n]\\\",s:\\\"F22 T1.textBounds=3.393066 3.379883\\\",s:\\\"F22 T1.origin=0 0.3798828 0\\\",s:\\\"F24 T1.lineBounds=[\\\\n  1.235107 0.90625,\\\\n  3.393066 2,\\\\n  0 2,\\\\n  0.2866211 2\\\\n]\\\",s:\\\"F24 T1.textBounds=3.393066 3.379883\\\",s:\\\"F24 T1.origin=0 0.3798828 0\\\",s:\\\"F26 T1.length=[\\\\n  1,\\\\n  0,\\\\n  3\\\\n]\\\",s:\\\"F26 T1.lineBounds=[\\\\n  1 0.90625,\\\\n  3.393066 2,\\\\n  3 2,\\\\n  0.2866211 2\\\\n]\\\",s:\\\"F26 T1.textBounds=3.393066 3.379883\\\",s:\\\"F26 T1.origin=0 0.3798828 0\\\",s:\\\"F28 T1.maxExtent=2\\\",s:\\\"F28 T1.lineBounds=[\\\\n  0.5894373 0.90625,\\\\n  2 2,\\\\n  1.768312 2,\\\\n  0.1689452 2\\\\n]\\\",s:\\\"F28 T1.textBounds=2 3.379883\\\",s:\\\"F28 T1.origin=0 0.3798828 0\\\",s:\\\"F30 T1.maxExtent=0.5\\\",s:\\\"F30 T1.length=[ ]\\\",s:\\\"F30 T1.lineBounds=[\\\\n  0.1820046 0.90625,\\\\n  0.5 2,\\\\n  0 2,\\\\n  0.04223629 2\\\\n]\\\",s:\\\"F30 T1.textBounds=0.5 3.379883\\\",s:\\\"F30 T1.origin=0 0.3798828 0\\\",s:\\\"F32 T1.lineBounds=[\\\\n  0.1820046 0.8330078,\\\\n  0.5 2,\\\\n  0 2,\\\\n  0.04223629 2\\\\n]\\\",s:\\\"F32 T1.textBounds=0.5 1.689941\\\",s:\\\"F32 T1.origin=0 0.1899414 0\\\",s:\\\"F34 T1.lineBounds=[\\\\n  -2.470215 0.4667969,\\\\n  -6.786133 2,\\\\n  -0 2,\\\\n  -0.5732422 2\\\\n]\\\",s:\\\"F34 T1.textBounds=6.786133 6.759766\\\",s:\\\"F34 T1.origin=-6.786133 6 0\\\",s:\\\"F36 T1.lineBounds=[\\\\n  0.1820046 1.345703,\\\\n  0.5 0.5,\\\\n  0 0.5,\\\\n  0.04223629 0.5\\\\n]\\\",s:\\\"F36 T1.textBounds=0.5 4.519531\\\",s:\\\"F36 T1.origin=0 1.519531 0\\\",s:\\\"F38 T1.lineBounds=[\\\\n  1.216797 0.1743566,\\\\n  1 0.5,\\\\n  1 0,\\\\n  1 0.01978949\\\\n]\\\",s:\\\"F38 T1.textBounds=4.251953 0.5\\\",s:\\\"F38 T1.origin=0 0 0\\\",s:\\\"F40 T1.lineBounds=[\\\\n  1.216797 0.1743566,\\\\n  1 0.5,\\\\n  1 0,\\\\n  1 0.01978949\\\\n]\\\",s:\\\"F40 T1.textBounds=4.318359 0.5\\\",s:\\\"F40 T1.origin=0 0 0\\\",s:\\\"F42 T1.lineBounds=[\\\\n  1.216797 0.1677961,\\\\n  1 0.5,\\\\n  1 0,\\\\n  1 0.01978949\\\\n]\\\",s:\\\"F42 T1.textBounds=4.318359 0.5\\\",s:\\\"F42 T1.origin=-2.15918 0.25 0\\\",s:\\\"F44 T1.string=[\\\\n  \\\\\\\"A\\\\\\\",\\\\n  \\\\\\\"B\\\\\\\"\\\\n]\\\",s:\\\"F44 T1.lineBounds=[\\\\n  0.5 0.5,\\\\n  0.3933518 1.299805\\\\n]\\\",s:\\\"F44 T1.textBounds=0.5 2.427734\\\",s:\\\"F44 T1.origin=-0.25 1.213867 0\\\"]\"\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\n\nvar F_ = 0, LOG = [];\nfunction watch (name, n) {\n  [\\\"origin\\\", \\\"textBounds\\\", \\\"lineBounds\\\", \\\"string\\\", \\\"length\\\", \\\"maxExtent\\\", \\\"fontStyle\\\"] .forEach (function (f) { n .addFieldCallback ('w', f, function (v) { LOG .push ('F' + F_ + ' ' + name + '.' + f + '=' + String (v) .replace (/\\\\\\\\s+/g, ' ')); }); });\n}\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 10) { watch ('T1', Browser .currentScene .getNamedNode ('T1')); }\n  if (F_ === 12) { var t = Browser .currentScene .getNamedNode ('T1'); var f = Browser .currentScene .createNode ('FontStyle'); f .size = 0.5; t .fontStyle = f; }\n  if (F_ === 14) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .spacing = 2; }\n  if (F_ === 16) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .justify = new MFString ('END'); }\n  if (F_ === 18) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .justify = new MFString ('MIDDLE', 'BEGIN'); }\n  if (F_ === 20) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .justify = new MFString ('BEGIN', 'END'); }\n  if (F_ === 22) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .justify = new MFString ('FIRST', 'FIRST'); }\n  if (F_ === 24) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .justify = new MFString (); }\n  if (F_ === 26) { var t = Browser .currentScene .getNamedNode ('T1'); t .length = new MFFloat (1, 0, 3); }\n  if (F_ === 28) { var t = Browser .currentScene .getNamedNode ('T1'); t .maxExtent = 2; }\n  if (F_ === 30) { var t = Browser .currentScene .getNamedNode ('T1'); t .maxExtent = 0.5; t .length = new MFFloat (); }\n  if (F_ === 32) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .size = 0.25; }\n  if (F_ === 34) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .size = -1; }\n  if (F_ === 36) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .size = 2; t .fontStyle .spacing = 0.5; }\n  if (F_ === 38) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .horizontal = false; }\n  if (F_ === 40) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .leftToRight = false; }\n  if (F_ === 42) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .topToBottom = false; t .fontStyle .justify = new MFString ('MIDDLE', 'MIDDLE'); }\n  if (F_ === 44) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .horizontal = true; t .string = new MFString ('A', 'B'); }\n  if (F_ === 50) { T ('log', function () { return LOG; }); flush_ (); }\n}\n\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

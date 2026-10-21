@@ -1,0 +1,53 @@
+{
+  "ok": true,
+  "poses": {
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"tb late\"\n\nShape {\n  geometry DEF T1 Text {\n    string [\n      \"ab\",\n      \"c\"\n    ]\n    fontStyle FontStyle {\n      family \"TYPEWRITER\"\n      style \"ITALIC\"\n      size 3\n    }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out \"000 log = A[s:\\\"F12 T2.origin=0 0.5458984 0\\\",s:\\\"F12 T2.textBounds=0.5961914 0.7861328\\\",s:\\\"F12 T2.string=\\\\\\\"q\\\\\\\"\\\",s:\\\"F12 T2.lineBounds=0.5961914 0.8388672\\\",s:\\\"F12 T2.lineBounds=0.5961914 0.8388672\\\",s:\\\"F12 T2.textBounds=0.5961914 0.7861328\\\",s:\\\"F12 T2.origin=0 0.5458984 0\\\",s:\\\"F16 T2.maxExtent=0.5\\\",s:\\\"F16 T2.length=0.5\\\",s:\\\"F16 T2.lineBounds=0.5 0.8388672\\\",s:\\\"F16 T2.textBounds=0.5 0.7861328\\\",s:\\\"F16 T2.origin=0 0.5458984 0\\\",s:\\\"F20 T3.origin=0 0.5361328 0\\\",s:\\\"F20 T3.textBounds=0.9663086 1.776367\\\",s:\\\"F20 T3.fontStyle=FontStyle { }\\\",s:\\\"F20 T3.string=[\\\\n  \\\\\\\"zz\\\\\\\",\\\\n  \\\\\\\"y\\\\\\\"\\\\n]\\\",s:\\\"F20 T3.lineBounds=[\\\\n  0.9663086 0.8291016,\\\\n  0.5649414 1\\\\n]\\\",s:\\\"F20 T3.origin=0 0 0\\\",s:\\\"F20 T3.textBounds=0 0\\\",s:\\\"F22 T3.lineBounds=[\\\\n  0.9663086 0.8291016,\\\\n  0.5649414 1\\\\n]\\\",s:\\\"F22 T3.textBounds=0.9663086 1.776367\\\",s:\\\"F22 T3.origin=0 0.5361328 0\\\",s:\\\"F23 T3.lineBounds=[\\\\n  1.009 0.634,\\\\n  0.536 1\\\\n]\\\",s:\\\"F23 T3.textBounds=1.009 1.632\\\",s:\\\"F23 T3.origin=0 0.464 0\\\",s:\\\"F26 T1.fontStyle=FontStyle { }\\\",s:\\\"F26 T1.lineBounds=[\\\\n  1.005 0.863,\\\\n  0.511 1\\\\n]\\\",s:\\\"F26 T1.textBounds=1.005 1.705\\\",s:\\\"F26 T1.origin=0 0.693 0\\\",s:\\\"F30 T3.lineBounds=[\\\\n  3.027 0.974,\\\\n  1.608 1\\\\n]\\\",s:\\\"F30 T3.textBounds=3.027 4.896\\\",s:\\\"F30 T3.origin=0 1.392 0\\\",s:\\\"F30 T1.lineBounds=[\\\\n  3.015 1.203,\\\\n  1.533 1\\\\n]\\\",s:\\\"F30 T1.textBounds=3.015 5.115\\\",s:\\\"F30 T1.origin=0 2.079 0\\\",s:\\\"F34 T3.fontStyle=FontStyle { }\\\",s:\\\"F34 T3.origin=0 0 0\\\",s:\\\"F34 T3.textBounds=0 0\\\",s:\\\"F36 T3.lineBounds=[\\\\n  1.932617 1.12207,\\\\n  1.129883 1\\\\n]\\\",s:\\\"F36 T3.textBounds=1.932617 3.552734\\\",s:\\\"F36 T3.origin=0 1.072266 0\\\",s:\\\"F37 T3.lineBounds=[\\\\n  1.94 0.904,\\\\n  1.074 1\\\\n]\\\",s:\\\"F37 T3.textBounds=1.94 3.422\\\",s:\\\"F37 T3.origin=0 1.052 0\\\"]\"\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\n\nvar F_ = 0, LOG = [];\nfunction watch (name, n) {\n  [\\\"origin\\\", \\\"textBounds\\\", \\\"lineBounds\\\", \\\"string\\\", \\\"length\\\", \\\"maxExtent\\\", \\\"fontStyle\\\"] .forEach (function (f) { n .addFieldCallback ('w', f, function (v) { LOG .push ('F' + F_ + ' ' + name + '.' + f + '=' + String (v) .replace (/\\\\\\\\s+/g, ' ')); }); });\n}\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 10) { watch ('T1', Browser .currentScene .getNamedNode ('T1')); }\n  if (F_ === 12) { var s = Browser .currentScene .createNode ('Shape'), t2 = Browser .currentScene .createNode ('Text'); t2 .string = new MFString ('q'); watch ('T2', t2); s .geometry = t2; Browser .currentScene .addRootNode (s); Browser .currentScene .updateNamedNode ('T2', t2); }\n  if (F_ === 16) { var t2 = Browser .currentScene .getNamedNode ('T2'); t2 .maxExtent = 0.5; t2 .length = new MFFloat (0.5); }\n  if (F_ === 20) { var s = Browser .currentScene .createNode ('Shape'), t3 = Browser .currentScene .createNode ('Text'), f = Browser .currentScene .createNode ('FontStyle'); f .family = new MFString ('TYPEWRITER'); f .style = 'ITALIC'; t3 .fontStyle = f; t3 .string = new MFString ('zz', 'y'); watch ('T3', t3); s .geometry = t3; Browser .currentScene .addRootNode (s); Browser .currentScene .updateNamedNode ('T3', t3); }\n  if (F_ === 26) { var t3 = Browser .currentScene .getNamedNode ('T3'), t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle = t3 .fontStyle; }\n  if (F_ === 30) { var t3 = Browser .currentScene .getNamedNode ('T3'); t3 .fontStyle .size = 3; }\n  if (F_ === 34) { var t3 = Browser .currentScene .getNamedNode ('T3'), g = Browser .currentScene .createNode ('FontStyle'); g .family = new MFString ('SANS'); g .style = 'BOLD'; t3 .fontStyle = g; g .size = 2; }\n  if (F_ === 42) { T ('log', function () { return LOG; }); flush_ (); }\n}\n\n  \"\n}\n\nShape {\n  geometry DEF T2 Text {\n    string \"q\"\n    length 0.5\n    maxExtent 0.5\n  }\n}\n\nShape {\n  geometry DEF T3 Text {\n    string [\n      \"zz\",\n      \"y\"\n    ]\n    fontStyle FontStyle {\n      family \"SANS\"\n      style \"BOLD\"\n      size 2\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
