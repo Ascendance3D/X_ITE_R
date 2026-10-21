@@ -1938,7 +1938,8 @@ impl Runtime {
 
         // MovieTexture is an X3DSoundSourceNode too; its sound is not part of this port, so it only counts.
         let is_source = |n: &str| (SOURCES.contains(&n) && n != "ListenerPointSource") || n == "MovieTexture";
-        let mut children: Vec<NodeId> = self.get_sfnode(node, "source").filter(|&n| self.builtin_name(n).is_some_and(is_source)).into_iter().collect();
+        // X3DCast sees through a PROTO instance to its inner node, as for `children`.
+        let mut children: Vec<NodeId> = self.get_sfnode(node, "source").and_then(|n| self.inner_node(n)).filter(|&n| self.builtin_name(n).is_some_and(is_source)).into_iter().collect();
         children.extend(self.audio_children(node, "children", is_audio_child));
 
         for &child in &children {
