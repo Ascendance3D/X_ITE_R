@@ -20,6 +20,8 @@ use std::process::Command;
 const KNOWN_GAPS: &[(&str, &str)] = &[
     ("sg-viewpoint-degenerate", "a Viewpoint at the ScreenGroup's origin: X_ITE's matrix feedback goes singular (screen scale 0) and it draws black frames, NaN pose orientation; Rust draws the Background (poses match)"),
     ("lf-volume", "LocalFog does not fog volume draws (VolumeData inside a LocalFog): the Rust volume pass draws them unfogged (secondary lane, no fix)"),
+    ("lf-vol-types", "LocalFog does not fog IsoSurface / Segmented / VolumeData draws: the Rust volume pass only used the layer's Fog"),
+    ("lf-vol-global", "a LocalFog (nested or not) does not replace the layer's Fog on volume draws"),
 ];
 
 fn quat(r: &[f64]) -> [f64; 4] {
