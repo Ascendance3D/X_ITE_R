@@ -331,6 +331,8 @@ pub struct Runtime {
     pub nrt: Vec<NodeRt>,
     tainted_fields: Vec<(FKey, Event)>,
     tainted_nodes: Vec<NodeId>,
+    /// A ContentScale change waits for the next processEvents to reach the ScreenFontStyles (see `content_scale_events`).
+    content_scale_armed: bool,
     processing: bool,
     pub parents: HashMap<NodeId, Vec<Holder>>,
     /// console.error / console.warn output, formatted like dump.html (`error: …`, first line).
@@ -581,6 +583,7 @@ impl Runtime {
             nrt: vec![],
             tainted_fields: vec![],
             tainted_nodes: vec![],
+            content_scale_armed: false,
             processing: false,
             parents: HashMap::new(),
             log: vec![],

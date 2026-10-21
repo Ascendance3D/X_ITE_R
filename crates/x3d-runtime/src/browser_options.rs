@@ -175,6 +175,8 @@ pub struct BrowserOptions {
     pub canvas: (f64, f64),
     /// The frame buffer size reshape () computed (canvas.width, canvas.height).
     pub framebuffer: (u32, u32),
+    /// The ContentScale rendering property changed since the runtime last took this flag.
+    pub content_scale_changed: bool,
     /// BrowserOptions.shading (getShading ()).
     pub shading: ShadingMode,
     /// Options set since the last [`BrowserOptions::process_events`], in order, without repeats
@@ -328,6 +330,7 @@ impl BrowserOptions {
             limits: RenderingLimits::default(),
             canvas: (width as f64, height as f64),
             framebuffer: (width.max(1), height.max(1)),
+            content_scale_changed: false,
             shading: ShadingMode::Gouraud,
             tainted: vec![],
             sound_intensity_changed: false,
@@ -436,8 +439,15 @@ impl BrowserOptions {
 
     /// The browser processes the tainted option fields: their interests, in order.
     pub fn process_events(&mut self) {
+        let before = self.rendering.get("ContentScale").map(|v| v.as_f64());
+
         for name in std::mem::take(&mut self.tainted) {
             self.interest(name);
+        }
+
+        // RenderingProperties ._ContentScale changed (ScreenFontStyle.initialize has an interest on it).
+        if self.rendering.get("ContentScale").map(|v| v.as_f64()) != before {
+            self.content_scale_changed = true;
         }
     }
 

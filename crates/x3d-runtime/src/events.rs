@@ -161,6 +161,7 @@ impl Runtime {
                 // Process field events. The tainted BrowserOptions fields run their interests here too.
                 loop {
                     self.browser_options.process_events();
+                    self.content_scale_events();
 
                     if self.browser_options.take_sound_intensity_changed() {
                         self.sound_set_intensity();

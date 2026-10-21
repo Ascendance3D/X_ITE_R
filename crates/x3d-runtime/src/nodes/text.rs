@@ -86,6 +86,7 @@ impl Runtime {
     /// The start of a frame (the harness runs the due timers first): the `sleep (0)` timers fire.
     pub(crate) fn font_style_timers(&mut self) {
         self.frames_started = true;
+        self.content_scale_fire();
 
         for l in &mut self.font_style_loads {
             if l.stage == LoadStage::Timer {
@@ -162,20 +163,25 @@ impl Runtime {
         }
     }
 
-    /// `browser .setBrowserOption (name, value)`. ScreenFontStyle.initialize: `getRenderingProperties () ._ContentScale .addInterest
-    /// ("addNodeEvent", this)`, so a changed ContentScale makes every ScreenFontStyle's Texts rebuild (their size is in pixels × ContentScale).
-    pub fn set_browser_option(&mut self, name: &str, value: crate::browser_options::OptionValue) {
-        let scale = |rt: &Runtime| rt.browser_options.rendering.get("ContentScale").map(|v| v.as_f64());
-        let before = scale(self);
+    /// ScreenFontStyle.initialize: `getRenderingProperties () ._ContentScale .addInterest ("addNodeEvent", this)`, so a changed
+    /// ContentScale makes every ScreenFontStyle's Texts rebuild (their size is in pixels × ContentScale). X_ITE's Texts report the
+    /// new origin, textBounds and lineBounds in the frame after the one that applied the option (text-screen-scale).
+    pub(crate) fn content_scale_events(&mut self) {
+        if std::mem::take(&mut self.browser_options.content_scale_changed) {
+            self.content_scale_armed = true;
+        }
+    }
 
-        self.browser_options.set_option(name, value);
+    /// The start of a frame: the ContentScale change of the frame before reaches the ScreenFontStyles.
+    fn content_scale_fire(&mut self) {
+        if !std::mem::take(&mut self.content_scale_armed) {
+            return;
+        }
 
-        if scale(self) != before {
-            let styles: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| self.builtin_name(n) == Some("ScreenFontStyle")).collect();
+        let styles: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| self.builtin_name(n) == Some("ScreenFontStyle")).collect();
 
-            for n in styles {
-                self.add_node_event(n);
-            }
+        for n in styles {
+            self.add_node_event(n);
         }
     }
 
