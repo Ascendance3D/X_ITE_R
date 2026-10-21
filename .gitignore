@@ -23,3 +23,6 @@
 /oracle/items2-baseline.json
 /oracle/render-items2-baseline/
 /oracle/render-msaa4-items2-baseline/
+# Python bytecode caches. Python writes these when it imports a tool; never commit them.
+__pycache__/
+*.py[cod]
