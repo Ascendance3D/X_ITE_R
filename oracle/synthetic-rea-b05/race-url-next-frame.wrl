@@ -1,0 +1,19 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 0 0 }
+# A url change in the frame after another one, while the first load can still be pending: in X_ITE the
+# older load is not cancelled, and the load that finishes last sets the media.
+Sound { minFront 20 minBack 20 maxFront 40 maxBack 40 location 0 0 -5 source DEF O AudioClip { url "media/tone22k-mono.wav" } }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF K Script { directOutput TRUE field SFNode o USE O eventIn SFTime set_time field SFInt32 n 0 url "javascript:
+function set_time (value) { ++ n;
+   if (n === 20) o.url = new MFString ('media/tone48k-stereo.wav');
+   if (n === 21) o.url = new MFString ('media/tone22k-mono.wav');
+}
+" }
+ROUTE T.time TO K.set_time
+DEF PO Script { eventIn SFBool a eventIn SFTime d url "javascript:
+function a (v) { print ('O active ' + v); }
+function d (v) { print ('O duration ' + v); }
+" }
+ROUTE O.isActive TO PO.a
+ROUTE O.duration_changed TO PO.d
