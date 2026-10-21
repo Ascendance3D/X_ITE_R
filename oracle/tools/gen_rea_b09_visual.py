@@ -235,6 +235,43 @@ worlds["vis-material-ambient.wrl"] = world([
     lit(DA(0.7), mat("diffuseColor 0.8 0.8 0.8 ambientIntensity 0.8 transparency 0.5")),
 ], nav=NOHEAD)
 
+# --- IndexedLineSet: invalid and out-of-range indexes (X_ITE decides what is drawn) -----------------
+def ilsx(fields, idx=ROWS, coord=FAN):
+    return ils(fields, coord=coord, idx=idx)
+worlds["vis-linecolor-invalid.wrl"] = world([
+    ilsx(f"colorPerVertex TRUE {CX} colorIndex [ 0 1 -5 3 4 -1 4 3 2 1 0 -1 0 1 2 3 4 -1 ]"),
+    ilsx(f"colorPerVertex TRUE {CX} colorIndex [ 0 1 2 3 99 -1 4 3 2 1 0 -1 0 1 2 3 4 -1 ]"),
+    ilsx(f"colorPerVertex FALSE {CX} colorIndex [ ]"),
+    ilsx(f"colorPerVertex TRUE {CX} colorIndex [ ]"),
+    ilsx(f"colorPerVertex FALSE {CX} colorIndex [ 2 99 1 ]"),
+    ilsx(f"colorPerVertex FALSE {CX} colorIndex [ 2 -3 1 ]"),
+    ilsx("colorPerVertex TRUE color Color { color [ ] }"),
+    ilsx(f"colorPerVertex TRUE {CX}", idx="coordIndex [ 0 1 -2 3 4 -1 5 6 7 8 9 -1 10 11 12 13 14 -1 ]"),
+    ilsx(f"colorPerVertex TRUE {CX}", idx="coordIndex [ 0 1 2 99 4 -1 5 6 7 8 9 -1 10 11 12 13 14 -1 ]"),
+    ilsx(f"colorPerVertex TRUE {CX} colorIndex [ 0 1 2 -1 ]"),
+    ilsx(f"colorPerVertex TRUE {CX} colorIndex [ 0 1 2 3 4 -1 0 1 2 3 4 -1 0 1 2 3 4 -1 4 4 4 -1 3 3 3 3 3 -1 ]"),
+    ilsx(f"colorPerVertex TRUE color ColorRGBA {{ color [ 1 0 0 1, 0 1 0 0.5, 0 0 1 0.2 ] }} colorIndex [ 0 1 2 3 4 -1 2 1 0 7 7 -1 ]"),
+])
+
+# --- Material ambientIntensity with textured surfaces ------------------------------------------
+TXT = "texture ImageTexture { url \"../synthetic-rea-b03/proj-checker.png\" }"
+def tmat(fields, light, geometry=SPHERE, tex=TXT, extra=""):
+    return lit(light, shape(geometry, f"Appearance {{ material Material {{ diffuseColor 0.9 0.9 0.9 {fields} }} {tex} {extra} }}"))
+worlds["vis-material-ambient-tex.wrl"] = world([
+    tmat("ambientIntensity 0", DA(0.7)),
+    tmat("ambientIntensity 0.2", DA(0.7)),
+    tmat("ambientIntensity 0.5", DA(0.7)),
+    tmat("ambientIntensity 1", DA(0.7)),
+    tmat("ambientIntensity 1", DA(0.7, "color 0.4 0.8 1")),
+    tmat("diffuseColor 0.9 0.4 0.3 ambientIntensity 1", DA(0.7)),
+    tmat("ambientIntensity 0.5", P("location 0 0 -2 radius 10 intensity 0.5 ambientIntensity 0.8")),
+    tmat("ambientIntensity 1", S("location 0 0 -2 direction 0 0 1 radius 10 beamWidth 0.3 cutOffAngle 0.6 intensity 0.5 ambientIntensity 0.8")),
+    tmat("ambientIntensity 1", DA(0.7), geometry="Box { size 1.4 1.4 1.4 }"),
+    tmat("ambientIntensity 1", DA(0.7), tex="texture PixelTexture { image 2 2 3 0xff0000 0x00ff00 0x0000ff 0xffff00 }"),
+    tmat("ambientIntensity 1 transparency 0.5", DA(0.7)),
+    tmat("ambientIntensity 1", DA(0.7), tex="texture ImageTexture { url \"../synthetic-rea-b03/proj-checker.png\" } textureTransform TextureTransform { scale 2 2 }"),
+], nav=NOHEAD)
+
 # --- ImageTexture, PixelTexture, TextureTransform ------------------------------------------------
 def rgba(r, g, b, a):
     return ((r << 24) | (g << 16) | (b << 8) | a) - (1 << 32 if r >= 128 else 0)

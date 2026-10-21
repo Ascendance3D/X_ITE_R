@@ -390,6 +390,28 @@
    "pngSha256": "951a47322e4151f3c2fe1be64ce4fdf4bea8146c4f9e137c5ec5b735575e6edd",
    "splashVisible": false,
    "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-linecolor-invalid.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ef1a0f759dfa9ef2ad21ee7fb976a16decaeb67c11d9511a0432212d6ea96e1b",
+   "pngSha256": "7287704dc2e8ffa7ac43f22b636a457db9d62ab2b723fc9cf70f5ca9703f92fa",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-material-ambient-tex.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "22d19bd244f793dee7af17fc5a185a2f86bc8a54265a49437d88fc753b9759ea",
+   "pngSha256": "e28785144eb3c66184ad42acd614782b1b7e1bc933fc953d1c7bc60763986ff8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
   }
  ]
 }
