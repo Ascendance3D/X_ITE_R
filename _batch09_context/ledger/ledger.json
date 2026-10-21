@@ -3685,14 +3685,15 @@
     "crates/x3d-parse/src/lexer.rs",
     "crates/x3d-render/src/traverse.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-rendering, vis-colorrgba, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): alpha per face (0, 0.1, 0.5, 0.9, 1), per vertex, with colorIndex, with Material transparency, specular and unlit, on lines (per vertex and per polyline), ElevationGrid and IndexedTriangleSet compared; field and event evidence exact (node-rendering)."
   },
   {
    "id": "node:Coordinate",
@@ -3766,14 +3767,15 @@
     "crates/x3d-runtime/src/nodes/rigid_body_physics/collidable.rs",
     "crates/x3d-viewer/src/picking.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-rendering, vis-linecolor, vis-linecolor-invalid, MSAA 0/4; no warning in X_ITE or Rust)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): colorPerVertex FALSE and TRUE, explicit colorIndex, empty colorIndex, boundary indexes, RGBA, negative (not -1) and above-range color and coord indexes compared against X_ITE, which logs no warning; field and event evidence exact (node-rendering)."
   },
   {
    "id": "node:IndexedTriangleFanSet",
@@ -4588,14 +4590,15 @@
     "crates/x3d-render/src/traverse.rs",
     "crates/x3d-render/src/volume.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-shape",
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-shape, vis-material-ambient, vis-material-ambient-tex, MSAA 0/4)"
    ],
-   "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
+   "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-shape (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): ambientIntensity 0 to 1 under Directional, Point and Spot ambient light, colored ambient, two lights, textured surfaces (ImageTexture, PixelTexture, TextureTransform), emissive, specular, transparency compared; field and event evidence exact (node-shape)."
   },
   {
    "id": "node:PhysicalMaterial",
