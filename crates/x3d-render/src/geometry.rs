@@ -43,6 +43,8 @@ pub struct Geometry {
     pub ccw: bool,
     pub min: Vector3,
     pub max: Vector3,
+    /// Text.display's `renderContext .textureNode`: a ScreenText's canvas, drawn instead of the appearance's texture.
+    pub texture: Option<std::rc::Rc<crate::texture::TextureImage>>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]

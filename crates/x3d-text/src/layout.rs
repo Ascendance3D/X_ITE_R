@@ -4,6 +4,7 @@
 //! `getAlignment`). Variable names follow the JavaScript; the module-level scratch vectors of the
 //! JS files are locals here, assigned at the same points.
 
+use crate::font::Cmd;
 use crate::font::{Font, PrimitiveQuality};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -31,11 +32,16 @@ pub struct FontStyleParams {
     pub left_to_right: bool,
     pub top_to_bottom: bool,
     pub justify: Vec<String>,
+    /// `fontStyle .getContentScale ()`: 1 for a FontStyle, the ContentScale rendering property for a ScreenFontStyle.
+    pub content_scale: f64,
+    /// A ScreenFontStyle: `size` is its `getScale ()` (pointSize × PixelsPerPoint × ContentScale, in pixels), the glyph extents
+    /// are the font's own (ScreenText.getGlyphExtents).
+    pub screen: bool,
 }
 
 impl Default for FontStyleParams {
     fn default() -> Self {
-        FontStyleParams { size: 1.0, spacing: 1.0, horizontal: true, left_to_right: true, top_to_bottom: true, justify: vec!["BEGIN".into()] }
+        FontStyleParams { size: 1.0, spacing: 1.0, horizontal: true, left_to_right: true, top_to_bottom: true, justify: vec!["BEGIN".into()], content_scale: 1.0, screen: false }
     }
 }
 
@@ -110,6 +116,8 @@ pub struct TextLayout {
     pub origin: [f64; 3],
     pub text_bounds: [f64; 2],
     pub line_bounds: Vec<[f64; 2]>,
+    /// ScreenText: the canvas as the texture (width, height, RGBA8 rows from the bottom of the text up).
+    pub texture: Option<(u32, u32, Vec<u8>)>,
 }
 
 // --- Box2 / Matrix3 (standard/Math/Geometry/Box2.js) ------------------------------------------
@@ -224,9 +232,23 @@ struct State<'a> {
     origin: [f64; 3],
     bbox_min: [f64; 3],
     bbox_max: [f64; 3],
+    /// ScreenText: glyph extents from the glyph header.
+    screen: bool,
 }
 
 impl State<'_> {
+    /// getGlyphExtents: PolygonText takes the extents of the glyph's triangles, ScreenText the glyph header's box.
+    fn extents(&self, glyph: u16) -> ([f64; 2], [f64; 2]) {
+        if self.screen {
+            let [x_min, y_min, x_max, y_max] = self.font.glyph_bounds(glyph);
+            let u = self.font.units_per_em;
+
+            return ([x_min / u, y_min / u], [x_max / u, y_max / u]);
+        }
+
+        glyph_extents(self.font, glyph, self.quality)
+    }
+
     /// X3DTextGeometry.stringToGlyphs
     fn string_to_glyphs(&mut self, line: &[u16], normal: bool, line_number: usize) -> Vec<u16> {
         while self.glyphs.len() <= line_number {
@@ -260,7 +282,7 @@ impl State<'_> {
         for g in 0..num_glyphs {
             let glyph = glyphs[g];
             let kerning = if g + 1 < num_glyphs { self.font.kerning(glyph, glyphs[g + 1]) } else { 0.0 };
-            let (gmin, gmax) = glyph_extents(self.font, glyph, self.quality);
+            let (gmin, gmax) = self.extents(glyph);
 
             x_max += if g + 1 < num_glyphs { self.font.advance_width(glyph) + kerning } else { gmax[0] * self.font.units_per_em };
             y_min = y_min.min(gmin[1]);
@@ -268,7 +290,7 @@ impl State<'_> {
         }
 
         if !glyphs.is_empty() {
-            let (gmin, _) = glyph_extents(self.font, glyphs[0], self.quality);
+            let (gmin, _) = self.extents(glyphs[0]);
 
             x_min = gmin[0];
         } else {
@@ -291,7 +313,7 @@ impl State<'_> {
         let max_extent = text.max_extent.max(0.0);
         let top_to_bottom = fs.top_to_bottom;
         let scale = fs.size;
-        let content_scale = 1.0;
+        let content_scale = fs.content_scale;
         let spacing = fs.spacing;
         let mut bbox = Box2::zero();
 
@@ -403,7 +425,7 @@ impl State<'_> {
         let max_extent = text.max_extent.max(0.0);
         let (left_to_right, top_to_bottom) = (fs.left_to_right, fs.top_to_bottom);
         let scale = fs.size;
-        let content_scale = 1.0;
+        let content_scale = fs.content_scale;
         let spacing = fs.spacing;
         let num_chars: usize = text.string.iter().map(|s| s.len()).sum();
         let mut bbox = Box2::zero();
@@ -430,7 +452,7 @@ impl State<'_> {
 
             while g != last_g {
                 let glyph = glyphs[g as usize];
-                let (gmin, gmax) = glyph_extents(self.font, glyph, self.quality);
+                let (gmin, gmax) = self.extents(glyph);
                 let size = [gmax[0] - gmin[0], gmax[1] - gmin[1]];
                 let glyph_number = if top_to_bottom { g } else { num_chars_line as isize - g - 1 };
 
@@ -583,11 +605,19 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
     let num_lines = text.string.len();
     let mut out = TextLayout { line_bounds: vec![[0.0; 2]; num_lines], ..Default::default() };
 
-    let Some(font) = font else { return out };
+    // X3DTextGeometry.configure with no lines or no font: origin and textBounds zero, an empty bbox. ScreenText.configure goes on.
+    let Some(font) = font.filter(|_| num_lines != 0) else {
+        if fs.screen {
+            let (min, max, bounds) = screen_box([0.0; 2], [0.0; 2], [0.0; 2], fs);
 
-    if num_lines == 0 {
+            out.min = [min[0], min[1], 0.0];
+            out.max = [max[0], max[1], 0.0];
+            out.origin = [min[0] / fs.content_scale, max[1] / fs.content_scale, 0.0];
+            out.text_bounds = [bounds[0] / fs.content_scale, bounds[1] / fs.content_scale];
+        }
+
         return out;
-    }
+    };
 
     let (major, minor) = fs.alignments();
     let mut st = State {
@@ -605,12 +635,17 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
         origin: [0.0; 3],
         bbox_min: [0.0; 3],
         bbox_max: [0.0; 3],
+        screen: fs.screen,
     };
 
     if fs.horizontal {
         st.horizontal(text, fs, major, minor);
     } else {
         st.vertical(text, fs, major, minor);
+    }
+
+    if fs.screen {
+        return screen_text(st, text, fs);
     }
 
     out.min = st.bbox_min;
@@ -689,4 +724,253 @@ pub fn layout(font: Option<&Font>, text: &TextParams, fs: &FontStyleParams, qual
     }
 
     out
+}
+
+/// ScreenText.configure: the box `min`..`max` and size `text_bounds` X3DTextGeometry.configure made, rounded to whole pixels with
+/// a 1 pixel border on the bottom and right: (min, max, the size in pixels).
+fn screen_box(min: [f64; 2], max: [f64; 2], text_bounds: [f64; 2], fs: &FontStyleParams) -> ([f64; 2], [f64; 2], [f64; 2]) {
+    let offset = 1.0;
+
+    // text ._textBounds is an SFVec2f: its components are single precision.
+    let bounds = [(text_bounds[0] as f32).ceil() as f64 + offset, (text_bounds[1] as f32).ceil() as f64 + offset];
+    let (mut min, mut max) = (min, max);
+
+    min[0] -= offset;
+    min[1] -= offset;
+
+    let (major, minor) = fs.alignments();
+
+    match major {
+        Alignment::Begin | Alignment::First => {
+            min[0] = min[0].floor();
+            max[0] = min[0] + bounds[0];
+        }
+        Alignment::Middle => {
+            min[0] = js_round(min[0]);
+            max[0] = min[0] + bounds[0];
+        }
+        Alignment::End => {
+            max[0] = max[0].ceil();
+            min[0] = max[0] - bounds[0];
+        }
+    }
+
+    match minor {
+        Alignment::Begin | Alignment::First => {
+            max[1] = max[1].ceil();
+            min[1] = max[1] - bounds[1];
+        }
+        Alignment::Middle => {
+            max[1] = js_round(max[1]);
+            min[1] = max[1] - bounds[1];
+        }
+        Alignment::End => {
+            min[1] = min[1].floor();
+            max[1] = min[1] + bounds[1];
+        }
+    }
+
+    (min, max, bounds)
+}
+
+/// JS `Math .round`: halves go up.
+fn js_round(x: f64) -> f64 {
+    (x + 0.5).floor()
+}
+
+/// ScreenText.configure and ScreenText.build for the layout `st` (X3DTextGeometry.configure) made: the text box rounded to whole
+/// pixels with a 1 pixel border on the bottom and right, and the glyph outlines filled into a canvas of that size.
+fn screen_text(st: State, text: &TextParams, fs: &FontStyleParams) -> TextLayout {
+    let content_scale = fs.content_scale;
+    let (min, max, bounds) = screen_box([st.bbox_min[0], st.bbox_min[1]], [st.bbox_max[0], st.bbox_max[1]], st.text_bounds, fs);
+    let mut out = TextLayout::default();
+
+    out.min = [min[0], min[1], 0.0];
+    out.max = [max[0], max[1], 0.0];
+
+    // The box in the Text's fields is in units of the ContentScale.
+    out.origin = [min[0] / content_scale, max[1] / content_scale, 0.0];
+    let canvas = [(bounds[0]).trunc() as usize, (bounds[1]).trunc() as usize];
+
+    out.text_bounds = [bounds[0] / content_scale, bounds[1] / content_scale];
+    out.line_bounds = st.line_bounds.iter().map(|b| [b[0] / content_scale, b[1] / content_scale]).collect();
+
+    // ScreenText.build: the quad.
+    let (x0, y0, x1, y1) = (min[0], min[1], max[0], max[1]);
+
+    out.vertices = vec![x0, y0, 0.0, 1.0, x1, y0, 0.0, 1.0, x1, y1, 0.0, 1.0, x0, y0, 0.0, 1.0, x1, y1, 0.0, 1.0, x0, y1, 0.0, 1.0];
+    out.tex_coords = vec![0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0];
+    out.normals = [0.0, 0.0, 1.0].repeat(6);
+
+    // The canvas has the size of the text box, so a pixel is a unit of the text space: pixel (i, k) covers x from min.x + i,
+    // y from min.y + k, and the first row is the bottom of the text (the canvas is flipped, then read from its top).
+    let (width, height) = (canvas[0], canvas[1]);
+
+    if width == 0 || height == 0 {
+        return out;
+    }
+
+    // The canvas' alpha: every glyph is its own path, filled with white and composited source-over.
+    let mut canvas_alpha = vec![0u8; width * height];
+    let size = fs.size;
+    let size_units_per_em = size / st.font.units_per_em;
+    let mut add = |glyph: u16, x: f64, y: f64, sx: f64, sy: f64| {
+        let mut contours: Vec<Vec<[f64; 2]>> = vec![];
+        let mut contour: Vec<[f64; 2]> = vec![];
+        let at = |gx: f64, gy: f64| [x + sx * gx * size - min[0], y + sy * gy * size - min[1]];
+
+        for c in st.font.glyph_commands(glyph) {
+            match c {
+                Cmd::M(gx, gy) => {
+                    if !contour.is_empty() {
+                        contours.push(std::mem::take(&mut contour));
+                    }
+
+                    contour.push(at(gx, gy));
+                }
+                Cmd::L(gx, gy) => contour.push(at(gx, gy)),
+                Cmd::Q(cx, cy, gx, gy) => {
+                    let from = *contour.last().unwrap_or(&[0.0, 0.0]);
+
+                    skia_quad(from, at(cx, cy), at(gx, gy), &mut contour);
+                }
+            }
+        }
+
+        if !contour.is_empty() {
+            contours.push(contour);
+        }
+
+        let coverage = crate::raster::fill(width, height, &contours);
+
+        for (dst, src) in canvas_alpha.iter_mut().zip(coverage) {
+            let src = (src * 255.0).round() as u32;
+
+            if src != 0 {
+                let (d, s) = (*dst as u32, src);
+
+                *dst = (s + (d * (255 - s) + 127) / 255) as u8;
+            }
+        }
+    };
+
+    if fs.horizontal {
+        for l in 0..st.glyphs.len() {
+            let line = &st.glyphs[l];
+            let translation = st.translations[l];
+            let char_spacing = st.char_spacings[l];
+            let scale = st.scales[l];
+            let mut advance_width = 0.0;
+
+            for g in 0..line.len() {
+                let glyph = line[g];
+                let x = st.minor_alignment[0] + translation[0] + advance_width * scale + g as f64 * char_spacing;
+                let y = st.minor_alignment[1] + translation[1];
+
+                add(glyph, x, y, scale, 1.0);
+
+                let kerning = if g + 1 < line.len() { st.font.kerning(glyph, line[g + 1]) } else { 0.0 };
+
+                advance_width += (st.font.advance_width(glyph) + kerning) * size_units_per_em;
+            }
+        }
+    } else {
+        let (left_to_right, top_to_bottom) = (fs.left_to_right, fs.top_to_bottom);
+        let n = text.string.len() as isize;
+        let (first, last, step): (isize, isize, isize) = if left_to_right { (0, n, 1) } else { (n - 1, -1, -1) };
+        let mut l = first;
+        let mut t = 0usize;
+
+        while l != last {
+            let line = &st.glyphs[l as usize];
+            let num_chars = line.len() as isize;
+            let (first_g, last_g, step_g): (isize, isize, isize) = if top_to_bottom { (0, num_chars, 1) } else { (num_chars - 1, -1, -1) };
+            let char_spacing = st.char_spacings[l as usize];
+            let scale = st.scales[l as usize];
+            let mut g = first_g;
+
+            while g != last_g {
+                let translation = st.translations[t];
+                let glyph_number = if top_to_bottom { g } else { num_chars - g - 1 };
+                let x = st.minor_alignment[0] + translation[0];
+                let y = st.minor_alignment[1] + translation[1] * scale - glyph_number as f64 * char_spacing;
+
+                add(line[g as usize], x, y, 1.0, scale);
+
+                g += step_g;
+                t += 1;
+            }
+
+            l += step;
+        }
+    }
+
+    let mut rgba = vec![0u8; width * height * 4];
+
+    for (i, a) in canvas_alpha.iter().enumerate() {
+        if *a != 0 {
+            // Canvas pixels are premultiplied; getImageData un-premultiplies white back to white.
+            rgba[i * 4..i * 4 + 4].copy_from_slice(&[255, 255, 255, *a]);
+        }
+    }
+
+    out.texture = Some((width as u32, height as u32, rgba));
+    out
+}
+
+/// How Skia cuts a quadratic curve into lines (SkEdgeBuilder: SkChopQuadAtYExtrema, then SkQuadraticEdge: 1 << shift lines
+/// by `diff_to_shift`, with the AA scale of 2): the canvas fills the polylines, not the curves. Appends the points after `p0`.
+fn skia_quad(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], out: &mut Vec<[f64; 2]>) {
+    // SkChopQuadAtYExtrema
+    let (a, b, c) = (p0[1], p1[1], p2[1]);
+
+    if (b - a) * (c - b) < 0.0 {
+        let t = (a - b) / (a - 2.0 * b + c);
+
+        if t > 0.0 && t < 1.0 {
+            let lerp = |p: [f64; 2], q: [f64; 2]| [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+            let (ab, bc) = (lerp(p0, p1), lerp(p1, p2));
+            let mut mid = lerp(ab, bc);
+            let y = mid[1];
+            let (mut ab, mut bc) = (ab, bc);
+
+            ab[1] = y;
+            bc[1] = y;
+            mid[1] = y;
+            quad_edge(p0, ab, mid, out);
+            quad_edge(mid, bc, p2, out);
+            return;
+        }
+    }
+
+    quad_edge(p0, p1, p2, out);
+}
+
+/// SkQuadraticEdge.setQuadraticWithoutUpdate: the number of lines of one Y-monotonic quad.
+fn quad_edge(p0: [f64; 2], p1: [f64; 2], p2: [f64; 2], out: &mut Vec<[f64; 2]>) {
+    // The points as SkFDot6 scaled up by the AA shift (2): 26.6 fixed point times 4.
+    let f = |v: f64| (v * 256.0) as i32;
+    let (x0, y0, x1, y1, x2, y2) = (f(p0[0]), f(p0[1]), f(p1[0]), f(p1[1]), f(p2[0]), f(p2[1]));
+    let dx = (((x1 << 1) - x0 - x2) >> 2).abs();
+    let dy = (((y1 << 1) - y0 - y2) >> 2).abs();
+    // cheap_distance, then diff_to_shift
+    let dist = if dx > dy { dx + (dy >> 1) } else { dy + (dx >> 1) };
+    let dist = (dist + (1 << 4)) >> (3 + 2);
+    let mut shift = (32 - (dist as u32).leading_zeros()) >> 1;
+
+    // At least 1 subdivision, at most MAX_COEFF_SHIFT (6).
+    if shift == 0 {
+        shift = 1;
+    } else if shift > 6 {
+        shift = 6;
+    }
+
+    let n = 1usize << shift;
+
+    for i in 1..=n {
+        let t = i as f64 / n as f64;
+        let u = 1.0 - t;
+
+        out.push([u * u * p0[0] + 2.0 * u * t * p1[0] + t * t * p2[0], u * u * p0[1] + 2.0 * u * t * p1[1] + t * t * p2[1]]);
+    }
 }
