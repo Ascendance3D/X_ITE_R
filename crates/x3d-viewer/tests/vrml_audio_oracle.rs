@@ -53,10 +53,9 @@ const CASES: &[&str] = &[
 // .224). The case is checked for its outcome in `vrml_audio_clip_url_change_falls_back`.
 
 /// Measured differences that stay open (the same list as rea_b05.py KNOWN): the audio may differ from the given
-/// sample on (the frame of the scene change, 768 samples a frame), everything else must match.
-const KNOWN: &[(&str, usize, &str)] = &[("sound-lifecycle", 17664, FINDING_C), ("sound-source-change", 11520, FINDING_C)];
-
-const FINDING_C: &str = "a clip connected to a Sound late (sound-source-change) or again (sound-lifecycle): in X_ITE its output goes on from the position where it was last connected, or from 0; in Rust from its running position. Plausible cause (from the sample positions, not proven): Chromium does not advance an AudioBufferSourceNode that has no path to the destination; the Rust audio engine does";
+/// sample on (the frame of the scene change, 768 samples a frame), everything else must match. Finding C
+/// (`sound-lifecycle`, `sound-source-change`) is repaired: tests/audio_pull.rs in x3d-runtime.
+const KNOWN: &[(&str, usize, &str)] = &[];
 
 fn audio(result: &Value, dir: &Path) -> Vec<Vec<f32>> {
     let a = &result["audio"];
