@@ -1,0 +1,16 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+DEF V1 Viewpoint { position 0 0 14 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -4 3 0 children Group { bboxDisplay TRUE children [ Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1 1 } } ] } }
+Transform { translation 0 3 0 children Transform { bboxDisplay TRUE translation 0.5 0 0 rotation 0 0 1 0.5 scale 1 2 1 children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Box { size 1 1 1 } } ] } }
+Transform { translation 4 3 0 children Group { bboxDisplay TRUE children [ Transform { translation -0.6 0 0 rotation 0 1 0 0.7 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.9 0.4 } } geometry Sphere { radius 0.6 } } } Transform { translation 0.9 0.5 0.3 children Group { bboxDisplay TRUE children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.3 0.3 } } geometry Box { size 0.5 0.5 0.5 } } ] } } ] } }
+Transform { translation -4 0 0 children Group { bboxDisplay TRUE } }
+Transform { translation -4 0 0 children Transform { bboxDisplay TRUE translation 0 -0.7 0 } }
+Transform { translation 0 0 0 children Group { bboxDisplay TRUE bboxSize 3 1 2 bboxCenter 0.5 0.5 0 children [ Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.2 } } geometry Box { size 1 1 1 } } ] } }
+Transform { translation 4 0 0 children Transform { bboxDisplay TRUE bboxSize 2 2 1 bboxCenter 0 0 0.5 rotation 1 0 0 0.6 scale 1.5 1 1 children [ Shape { appearance Appearance { material Material { diffuseColor 0.2 0.7 0.9 } } geometry Box { size 0.5 0.5 0.5 } } ] } }
+Transform { translation -4 -3 0 children Group { bboxDisplay TRUE visible FALSE children [ Shape { appearance Appearance { material Material { diffuseColor 0.9 0.9 0.9 } } geometry Box { size 1 1 1 } } ] } }
+Transform { translation 0 -3 0 children Group { bboxDisplay FALSE children [ Shape { appearance Appearance { material Material { diffuseColor 0.5 0.5 0.5 } } geometry Box { size 1 1 1 } } ] } }
+Transform { translation 4 -3 0 children Shape { bboxDisplay TRUE appearance Appearance { material Material { diffuseColor 0.9 0.4 0.7 } } geometry Cone { height 1.5 bottomRadius 0.6 } } }

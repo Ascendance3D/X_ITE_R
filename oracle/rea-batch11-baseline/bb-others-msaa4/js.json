@@ -1,0 +1,118 @@
+{
+  "ok": true,
+  "poses": {
+    "8": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        14
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -4 2 0\n  children Switch {\n    whichChoice 1\n    bboxDisplay TRUE\n    children [\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.2 0.2\n          }\n        }\n        geometry Box {\n          size 1 1 1\n        }\n      }\n      Transform {\n        translation 0.3 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 0.9 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Collision {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.2 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.3 0.9\n          }\n        }\n        geometry Box {\n          size 1 1.4 1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 2 0\n  children Anchor {\n    url \"x.wrl\"\n    bboxDisplay TRUE\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.9 0.2\n        }\n      }\n      geometry Box {\n        size 1 1 1\n      }\n    }\n  }\n}\n\nTransform {\n  translation -4 -2 0\n  children LOD {\n    range 100\n    bboxDisplay TRUE\n    children [\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.5 0.9 0.9\n          }\n        }\n        geometry Box {\n          size 1.2 0.6 0.6\n        }\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.2 0.2\n          }\n        }\n        geometry Box { }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Group {\n    bboxDisplay TRUE\n    children Shape {\n      castShadow FALSE\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.5 0.1\n        }\n      }\n      geometry Box {\n        size 1 1 2\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 -2 0\n  children Group {\n    bboxDisplay TRUE\n    children [\n      Transform {\n        translation 2 0 0\n        visible FALSE\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.9 0.9\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.4 0.8 0.4\n          }\n        }\n        geometry Box {\n          size 0.5 0.5 0.5\n        }\n      }\n    ]\n  }\n}\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -4 2 0\n  children Switch {\n    whichChoice 1\n    bboxDisplay TRUE\n    children [\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.2 0.2\n          }\n        }\n        geometry Box {\n          size 1 1 1\n        }\n      }\n      Transform {\n        translation 0.3 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 0.9 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Collision {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.2 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.3 0.9\n          }\n        }\n        geometry Box {\n          size 1 1.4 1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 2 0\n  children Anchor {\n    url \"x.wrl\"\n    bboxDisplay TRUE\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.9 0.2\n        }\n      }\n      geometry Box {\n        size 1 1 1\n      }\n    }\n  }\n}\n\nTransform {\n  translation -4 -2 0\n  children LOD {\n    range 100\n    bboxDisplay TRUE\n    children [\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.5 0.9 0.9\n          }\n        }\n        geometry Box {\n          size 1.2 0.6 0.6\n        }\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.2 0.2\n          }\n        }\n        geometry Box { }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Group {\n    bboxDisplay TRUE\n    children Shape {\n      castShadow FALSE\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.5 0.1\n        }\n      }\n      geometry Box {\n        size 1 1 2\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 -2 0\n  children Group {\n    bboxDisplay TRUE\n    children [\n      Transform {\n        translation 2 0 0\n        visible FALSE\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.9 0.9\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.4 0.8 0.4\n          }\n        }\n        geometry Box {\n          size 0.5 0.5 0.5\n        }\n      }\n    ]\n  }\n}\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint {\n  position 0 0 14\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -4 2 0\n  children Switch {\n    whichChoice 1\n    bboxDisplay TRUE\n    children [\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.2 0.2\n          }\n        }\n        geometry Box {\n          size 1 1 1\n        }\n      }\n      Transform {\n        translation 0.3 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.2 0.9 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.5\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0 2 0\n  children Collision {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.2 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.3 0.9\n          }\n        }\n        geometry Box {\n          size 1 1.4 1\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 2 0\n  children Anchor {\n    url \"x.wrl\"\n    bboxDisplay TRUE\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.9 0.2\n        }\n      }\n      geometry Box {\n        size 1 1 1\n      }\n    }\n  }\n}\n\nTransform {\n  translation -4 -2 0\n  children LOD {\n    range 100\n    bboxDisplay TRUE\n    children [\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.5 0.9 0.9\n          }\n        }\n        geometry Box {\n          size 1.2 0.6 0.6\n        }\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.2 0.2 0.2\n          }\n        }\n        geometry Box { }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 0 -2 0\n  children Group {\n    bboxDisplay TRUE\n    children Shape {\n      castShadow FALSE\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.5 0.1\n        }\n      }\n      geometry Box {\n        size 1 1 2\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 -2 0\n  children Group {\n    bboxDisplay TRUE\n    children [\n      Transform {\n        translation 2 0 0\n        visible FALSE\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.9 0.9\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n      Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.4 0.8 0.4\n          }\n        }\n        geometry Box {\n          size 0.5 0.5 0.5\n        }\n      }\n    ]\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}
