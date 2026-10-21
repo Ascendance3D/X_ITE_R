@@ -1,6 +1,9 @@
 //! REA batch 12: stepped cases against pinned X_ITE 16.5.0 (oracle/rea-batch12-baseline, made by `oracle/tools/rea_b12.py record`,
 //! three identical runs each, MSAA 0 and 4). Worlds and scripts: oracle/synthetic-rea-b12-* (generators oracle/tools/gen_rea_b12_*.py):
 //! vw-* Browser.viewAll, StraightenHorizon, pose and bind events, LookAt on Ortho / perspective / Geo viewpoints and layers.
+//! bbb-* Billboard bboxDisplay, camera moves, run-time changes and the SHADOW pass.
+//! pk-* the pointing buffer: points, lines, stacked and coincident targets (script key pickProbes, compared bit for bit: id,
+//! point, normal, texCoord of every probe) and TouchSensor event order (pk-events, through the scene text).
 //!
 //! Same comparison as rea_batch10_screen.rs: scene text exact, poses within 1e-4, the sorted log exact, captured frames with at most
 //! 0.5% of the pixels more than 8 off (the limit is not widened). Without a GPU adapter the image part is skipped.
@@ -14,7 +17,19 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 /// (case name, why Rust differs).
-const KNOWN_GAPS: &[(&str, &str)] = &[];
+const KNOWN_GAPS: &[(&str, &str)] = &[
+    (
+        "pk-points-style",
+        "PointProperties points: hit ids, points and normals are bit-exact, but gl_PointCoord (the hit texCoord) differs by 1 to 3 \
+         float32 ulps at some pixels (584 of 2479 probes): the oracle GPU's GL point sprite coordinate is not reproduced exactly",
+    ),
+    (
+        "pk-lines",
+        "lines: every probe hits the same line, but the interpolated hit point differs by up to 63 float32 ulps on aliased lines \
+         (GL line rasterization vs. the quad emulation) and up to 398 ulps on a transformed thick line (X_ITE makes its \
+         triangles by transform feedback in float32, Rust on the CPU in double)",
+    ),
+];
 
 fn quat(r: &[f64]) -> [f64; 4] {
     let n = (r[0] * r[0] + r[1] * r[1] + r[2] * r[2]).sqrt();
@@ -83,6 +98,17 @@ fn text_equal(a: &str, b: &str, tol: f64) -> bool {
     ta == tb && na.iter().zip(&nb).all(|(x, y)| (x - y).abs() / x.abs().max(1.0) <= tol)
 }
 
+/// JSON equality with numbers compared by value, exactly (X_ITE writes `0` and `-10` where serde writes `0.0` and `-10.0`;
+/// Python's x10_compare.py treats them as equal too).
+fn same_value(a: &Value, b: &Value) -> bool {
+    match (a, b) {
+        (Value::Number(x), Value::Number(y)) => x.as_f64() == y.as_f64(),
+        (Value::Array(x), Value::Array(y)) => x.len() == y.len() && x.iter().zip(y).all(|(p, q)| same_value(p, q)),
+        (Value::Object(x), Value::Object(y)) => x.len() == y.len() && x.iter().all(|(k, p)| y.get(k).is_some_and(|q| same_value(p, q))),
+        _ => a == b,
+    }
+}
+
 fn nums(v: &Value) -> Vec<f64> {
     v.as_array().map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default()
 }
@@ -134,6 +160,17 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
 
     if js.get("log") != rs.get("log") {
         fail(format!("log differs: {} / {}", js["log"], rs["log"]));
+    }
+
+    // Script key "pickProbes": the pointing buffer's hit at each probe, bit for bit (x10_compare.py).
+    if let Some(want) = js.get("pickProbes").and_then(Value::as_array) {
+        let got = rs.get("pickProbes").and_then(Value::as_array).cloned().unwrap_or_default();
+        let differ: Vec<usize> = (0..want.len().max(got.len())).filter(|&i| !matches!((want.get(i), got.get(i)), (Some(a), Some(b)) if same_value(a, b))).collect();
+
+        if !differ.is_empty() {
+            let i = differ[0];
+            fail(format!("pickProbes: {} of {} differ; first #{i}: X_ITE {} / Rust {}", differ.len(), want.len(), want.get(i).unwrap_or(&Value::Null), got.get(i).unwrap_or(&Value::Null)));
+        }
     }
 
     for (k, a) in js["poses"].as_object().unwrap() {

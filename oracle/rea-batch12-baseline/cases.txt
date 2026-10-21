@@ -14,3 +14,13 @@ bbb-dynamic oracle/synthetic-rea-b12-billboard/bbb-dynamic.wrl oracle/synthetic-
 bbb-dynamic oracle/synthetic-rea-b12-billboard/bbb-dynamic.wrl oracle/synthetic-rea-b12-billboard/bbb-dynamic.json 4
 bbb-shadow oracle/synthetic-rea-b12-billboard/bbb-shadow.wrl oracle/synthetic-rea-b12-billboard/bbb-shadow.json 0
 bbb-shadow oracle/synthetic-rea-b12-billboard/bbb-shadow.wrl oracle/synthetic-rea-b12-billboard/bbb-shadow.json 4
+pk-events oracle/synthetic-rea-b12-pick/pk-events.wrl oracle/synthetic-rea-b12-pick/pk-events.json 0
+pk-overlap oracle/synthetic-rea-b12-pick/pk-overlap.wrl oracle/synthetic-rea-b12-pick/pk-overlap.json 0
+pk-points oracle/synthetic-rea-b12-pick/pk-points.wrl oracle/synthetic-rea-b12-pick/pk-points.json 0
+pk-points-style oracle/synthetic-rea-b12-pick/pk-points-style.wrl oracle/synthetic-rea-b12-pick/pk-points-style.json 0
+pk-lines oracle/synthetic-rea-b12-pick/pk-lines.wrl oracle/synthetic-rea-b12-pick/pk-lines.json 0
+pk-points oracle/synthetic-rea-b12-pick/pk-points.wrl oracle/synthetic-rea-b12-pick/pk-points.json 4
+pk-points-style oracle/synthetic-rea-b12-pick/pk-points-style.wrl oracle/synthetic-rea-b12-pick/pk-points-style.json 4
+pk-overlap oracle/synthetic-rea-b12-pick/pk-overlap.wrl oracle/synthetic-rea-b12-pick/pk-overlap.json 4
+pk-lines oracle/synthetic-rea-b12-pick/pk-lines.wrl oracle/synthetic-rea-b12-pick/pk-lines.json 4
+pk-events oracle/synthetic-rea-b12-pick/pk-events.wrl oracle/synthetic-rea-b12-pick/pk-events.json 4

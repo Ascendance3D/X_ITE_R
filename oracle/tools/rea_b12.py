@@ -5,8 +5,10 @@
       X_ITE side only, run three times: the event cases need three identical recordings and the images two, so every case is
       recorded three times. All runs (js.json and every PNG) must be identical, then the first is kept as
       oracle/rea-batch12-baseline/NAME-msaaMSAA and the case line is added to cases.txt. A baseline is never taken from Rust.
+      (`loadFrames`, the frame the load finished in, follows Chrome's I/O; like rea_b10.py and rea_b11_text.py, it is left out of
+      the identity check, and rea_batch12.rs does not compare it.)
 """
-import filecmp, os, shutil, subprocess, sys
+import filecmp, json, os, shutil, subprocess, sys
 
 root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 mode, name, world, script, msaa = sys.argv[1:6]
@@ -26,7 +28,8 @@ for i in (1, 2, 3):
     runs.append(out)
 a = runs[0]
 pngs = sorted(os.listdir(os.path.join(a, "js")))
-same = all(pngs == sorted(os.listdir(os.path.join(b, "js"))) and filecmp.cmp(os.path.join(a, "js.json"), os.path.join(b, "js.json"), shallow=False)
+view = lambda d: {k: v for k, v in json.load(open(os.path.join(d, "js.json"))).items() if k != "loadFrames"}
+same = all(pngs == sorted(os.listdir(os.path.join(b, "js"))) and view(a) == view(b)
            and all(filecmp.cmp(os.path.join(a, "js", f), os.path.join(b, "js", f), shallow=False) for f in pngs) for b in runs[1:])
 print(f"{name} MSAA {msaa}: three X_ITE runs {'identical' if same else 'DIFFER'} ({len(pngs)} images)")
 if not same:
