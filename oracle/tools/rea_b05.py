@@ -31,6 +31,7 @@ KNOWN = {
 # Cases whose X_ITE reference is not reliable: compared and printed, reported as BLOCKED, never PASS or FAIL.
 BLOCKED = {
     "clip-url-change": "the url changes while the frames run; X_ITE delivered the fallback clip at 946684800.224 (two runs) and .24 (under CPU load): its frame depends on real time",
+    "race-url-next-frame": "X_ITE printed 'O duration 0.25' then '0.272…' (parallel and serial runs), but only '0.272…' under CPU load: both decodes resolved in one frame and the route carries the last value; the newer clip wins in every run",
 }
 
 args = sys.argv[1:]

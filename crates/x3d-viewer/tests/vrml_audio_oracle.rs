@@ -24,6 +24,10 @@ const CASES: &[&str] = &[
     "clip-loadsensor-fail",
     "buffer-fallback-decode",
     "buffer-fail-decode",
+    // Loading races: two url changes in one cascade, removal while a load is pending, LoadSensor order.
+    "race-url-twice",
+    "race-remove-pending",
+    "race-loadsensor-url-twice",
     // A PROTO instance as Sound.source.
     "sound-proto-source",
     "sound-proto-fallback",
@@ -48,6 +52,8 @@ const CASES: &[&str] = &[
     "sound-lifecycle",
 ];
 
+// Not compared: `race-url-next-frame` (BLOCKED in rea_b05.py: under CPU load X_ITE resolved both decodes in one
+// frame, so the route carried only the last duration).
 // Not compared: `clip-url-change`. Its url changes while the frames run, so the fetch of the second candidate
 // is not gated, and X_ITE delivered the decoded clip one frame later under CPU load (946684800.24 instead of
 // .224). The case is checked for its outcome in `vrml_audio_clip_url_change_falls_back`.
