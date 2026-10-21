@@ -26,3 +26,9 @@ ov-view2 oracle/synthetic-rea-b11-ortho/ov-view2.wrl oracle/synthetic-rea-b11-or
 ov-view2 oracle/synthetic-rea-b11-ortho/ov-view2.wrl oracle/synthetic-rea-b11-ortho/ov-view2.json 4
 ov-lookat oracle/synthetic-rea-b11-ortho/ov-lookat.wrl oracle/synthetic-rea-b11-ortho/ov-lookat.json 0
 ov-lookat oracle/synthetic-rea-b11-ortho/ov-lookat.wrl oracle/synthetic-rea-b11-ortho/ov-lookat.json 4
+lf-geom oracle/synthetic-rea-b11-fog/lf-geom.wrl oracle/synthetic-rea-b11-fog/lf-geom.json 0
+lf-geom oracle/synthetic-rea-b11-fog/lf-geom.wrl oracle/synthetic-rea-b11-fog/lf-geom.json 4
+lf-vol-types oracle/synthetic-rea-b11-fog/lf-vol-types.wrl oracle/synthetic-rea-b11-fog/lf-vol-types.json 0
+lf-vol-global oracle/synthetic-rea-b11-fog/lf-vol-global.wrl oracle/synthetic-rea-b11-fog/lf-vol-global.json 0
+lf-vol-types oracle/synthetic-rea-b11-fog/lf-vol-types.wrl oracle/synthetic-rea-b11-fog/lf-vol-types.json 4
+lf-vol-global oracle/synthetic-rea-b11-fog/lf-vol-global.wrl oracle/synthetic-rea-b11-fog/lf-vol-global.json 4
