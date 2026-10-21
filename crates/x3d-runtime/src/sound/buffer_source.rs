@@ -38,6 +38,8 @@ pub enum Message {
     Loop(bool),
     LoopStart(f64),
     LoopEnd(f64),
+    /// Whether the render graph pulls the node (AudioEngine::update_pull).
+    Pulled(bool),
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -80,6 +82,7 @@ pub struct Processor {
     state: State,
     start_time: f64,
     end_time: Option<f64>,
+    pulled: bool,
 }
 
 impl Processor {
@@ -461,6 +464,7 @@ impl AudioWorkletProcessor for Processor {
             state: State::Unscheduled,
             start_time: 0.0,
             end_time: None,
+            pulled: false,
         };
 
         p.update_effective_loop_points();
@@ -503,6 +507,7 @@ impl AudioWorkletProcessor for Processor {
                 self.loop_end = v;
                 self.update_effective_loop_points();
             }
+            Some(Message::Pulled(v)) => self.pulled = v,
             None => {}
         }
     }
@@ -521,8 +526,10 @@ impl AudioWorkletProcessor for Processor {
         let frames = dest.first().map_or(128, |d| d.len());
         let sample_rate = scope.sample_rate as f64;
 
-        // Process.
+        // Process. Chromium processes a node only when the graph pulls it: an unpulled source
+        // keeps its read position and its state (HandleStoppableSourceNode still runs).
         let rendered = match self.buffer.clone() {
+            _ if !self.pulled => false,
             None => {
                 if self.state != State::Unscheduled {
                     self.finish();
