@@ -243,6 +243,11 @@ impl Runtime {
 
         if name == "prepareEvents" {
             self.apply_decoded_images();
+
+            // Audio decodes end after the pending events too, unless x3d-drive gates them to the frame start.
+            if !self.defer_audio_decodes {
+                self.resolve_audio_decodes();
+            }
         }
 
         // The `nextFrame ()` promises resolve on finishEvents; their continuations (Inline.setInternalScene)
