@@ -1064,7 +1064,9 @@ pub fn make_cylinder(height: f64, radius: f64, side: bool, top: bool, bottom: bo
 // Lines and points.
 
 /// IndexedLineSet.build.
-pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Option<Colors>, color_index: &[i32], color_per_vertex: bool, extras: &crate::extras::Extras) -> Geometry {
+/// `normal`: the Normal node's vectors, indexed by the coord index (IndexedLineSet.build: `normalNode ?.addVector (index, normalArray)`;
+/// normalIndex and normalPerVertex are not read).
+pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Option<Colors>, color_index: &[i32], color_per_vertex: bool, normal: Option<&[f32]>, extras: &crate::extras::Extras) -> Geometry {
     let mut g = Geometry { geometry_type: 1, solid: false, ccw: true, ..Default::default() };
     extras.init(&mut g);
 
@@ -1101,6 +1103,10 @@ pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Optio
                             c.add_color(ci, &mut g.colors);
                         }
 
+                        if let Some(nv) = normal {
+                            add_vector(nv, index, &mut g.normals);
+                        }
+
                         coord.add_point(index, &mut g.vertices);
                     }
                 }
@@ -1114,7 +1120,8 @@ pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Optio
 }
 
 /// PointSet.build.
-pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>) -> Geometry {
+/// `normal`: the Normal node's vectors (PointSet.build: `normalNode ?.addVectors (normalArray, numPoints)`).
+pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>, normal: Option<&[f32]>) -> Geometry {
     let mut g = Geometry { geometry_type: 0, solid: false, ccw: true, ..Default::default() };
 
     if let Some(points) = coord.filter(|c| c.len() >= 3) {
@@ -1122,6 +1129,13 @@ pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>) -> Geometry {
 
         if let Some(c) = &color {
             c.add_colors(&mut g.colors, n);
+        }
+
+        // Normal.addVectors: every point's vector, or zeros for an empty Normal node.
+        if let Some(nv) = normal {
+            for i in 0..n {
+                add_vector(nv, if nv.len() >= 3 { i as i64 } else { -1 }, &mut g.normals);
+            }
         }
 
         for (i, p) in points.chunks_exact(3).enumerate() {
