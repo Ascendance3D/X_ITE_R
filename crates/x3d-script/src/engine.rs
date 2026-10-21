@@ -1835,7 +1835,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 OptionValue::String(_) => OptionValue::String(str_arg(ctx, a, 1)),
             };
 
-            rt().set_browser_option(&name, value);
+            rt().browser_options.set_option(&name, value);
             Ok(undefined)
         }
         "time" => Ok(Value::new_number(ctx.clone(), rt().now)),
