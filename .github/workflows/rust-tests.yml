@@ -1,9 +1,10 @@
 # Rust tests for pull requests, on a standard GitHub-hosted Linux runner (no GPU).
 #
 # The runner has no GPU, so the eight GPU tests are skipped here by name, and so is
-# rea_batch12_cases_match_x_ite: its pk-* cases compare the GPU pointing buffer (pickProbes and
-# TouchSensor order), which differs without a GPU (first CI run, 2026-10-21). They all stay in
-# the local process, run on the RTX machine:
+# rea_batch12_pick_cases_match_x_ite: its pk-* cases compare the GPU pointing buffer (pickProbes and
+# TouchSensor order), which differs without a GPU (first CI run, 2026-10-21). The other rea_batch12
+# cases (vw-*, bbb-*) are in rea_batch12_view_billboard_cases_match_x_ite and run here. The nine
+# skipped tests all stay in the local process, run on the RTX machine:
 #
 #   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
 #     cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view -j 16 --no-fail-fast
@@ -38,7 +39,7 @@ env:
     --skip rea_batch09_nav_shard3_match_x_ite
     --skip rea_batch09_inputs_cases_match_x_ite
     --skip rea_batch08_net_cases_match_x_ite
-    --skip rea_batch12_cases_match_x_ite
+    --skip rea_batch12_pick_cases_match_x_ite
 
 jobs:
   test:
