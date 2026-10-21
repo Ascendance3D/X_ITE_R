@@ -1,7 +1,9 @@
 # Rust tests for pull requests, on a standard GitHub-hosted Linux runner (no GPU).
 #
-# The runner has no GPU, so the eight GPU tests are skipped here by name. They stay in the
-# local process, run on the RTX machine:
+# The runner has no GPU, so the eight GPU tests are skipped here by name, and so is
+# rea_batch12_cases_match_x_ite: its pk-* cases compare the GPU pointing buffer (pickProbes and
+# TouchSensor order), which differs without a GPU (first CI run, 2026-10-21). They all stay in
+# the local process, run on the RTX machine:
 #
 #   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
 #     cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view -j 16 --no-fail-fast
@@ -36,6 +38,7 @@ env:
     --skip rea_batch09_nav_shard3_match_x_ite
     --skip rea_batch09_inputs_cases_match_x_ite
     --skip rea_batch08_net_cases_match_x_ite
+    --skip rea_batch12_cases_match_x_ite
 
 jobs:
   test:
@@ -66,15 +69,18 @@ jobs:
           grep '^test result' suite.log | awk '{p+=$4; f+=$6; i+=$8; s+=$12} END {printf "passed %d, failed %d, ignored %d, filtered out %d\n", p, f, i, s}' | tee -a "$GITHUB_STEP_SUMMARY"
           grep -E '^test .* FAILED$' suite.log | tee -a "$GITHUB_STEP_SUMMARY" || true
 
-      - name: Audio oracle (rea_b05, 97 worlds against the X_ITE 16.5.0 baselines)
+      - name: Audio oracle (rea_b05, X_ITE 16.5.0 baselines)
+        if: success() || failure()
         run: |
           cargo build --release -p x3d-viewer --bin x3d-drive
           python3 -I -B oracle/tools/rea_b05.py check --target target/release --jobs 2 | tee rea_b05.log
           test "${PIPESTATUS[0]}" -eq 0
           tail -1 rea_b05.log >> "$GITHUB_STEP_SUMMARY"
 
+      # The account's artifact storage can be full; the logs are then only in the job log.
       - uses: actions/upload-artifact@v4
         if: always()
+        continue-on-error: true
         with:
           name: test-logs
           path: |
