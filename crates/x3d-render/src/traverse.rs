@@ -1052,6 +1052,8 @@ pub struct Builder<'a> {
     layouts: LayoutStack,
     /// The layer's viewpoint and navigation info as Layout.push reads them.
     layout_camera: LayoutCamera,
+    /// ScreenGroup.matrix: set by the DISPLAY pass, kept for the passes that do not set it (CAMERA, SHADOW).
+    screen_matrices: HashMap<NodeId, Matrix4>,
     /// renderObject.getInvHumanoidMatrix (): starts with the identity.
     inv_humanoid: Vec<Matrix4>,
     /// renderObject.getHAnimNode (): the skin source around the current shape, indices into `skins`.
@@ -1167,7 +1169,7 @@ fn children_of(sg: &Sg, n: NodeId, ty: &str) -> Vec<NodeId> {
 
 const GROUPS: &[&str] = &[
     "Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "GeoLocation", "GeoTransform", "GeoLOD", "CADAssembly", "CADLayer", "CADPart", "CADFace", "PickableGroup", "GroupAnnotation", "HAnimHumanoid",
-    "HAnimJoint", "HAnimSegment", "HAnimSite",
+    "HAnimJoint", "HAnimSegment", "HAnimSite", "ScreenGroup",
 ];
 
 impl<'a> Builder<'a> {
@@ -1205,6 +1207,7 @@ impl<'a> Builder<'a> {
             viewports: vec![],
             layouts: LayoutStack::default(),
             layout_camera: LayoutCamera { ortho: None, fov: std::f64::consts::FRAC_PI_4, near: 0.125, content_scale: 1.0 },
+            screen_matrices: HashMap::new(),
             inv_humanoid: vec![Matrix4::IDENTITY],
             hanim: vec![None],
             skins: vec![],
@@ -1332,6 +1335,8 @@ impl<'a> Builder<'a> {
                 let mut mm = *m;
                 if let Some(t) = sg.group_matrix(n, ty) {
                     mm.mult_left(&t);
+                } else if let Some(t) = self.screen_matrices.get(&n) {
+                    mm.mult_left(t);
                 }
                 let kids = children_of(sg, n, ty);
                 let kids = if ty == "LOD" { self.lod_kids(sg, n, &mm, kids) } else { kids };
@@ -1415,6 +1420,10 @@ impl<'a> Builder<'a> {
                 } else if ty == "Billboard" {
                     let b = self.billboard_matrix(sg, n, &m);
                     m.mult_left(&b);
+                } else if ty == "ScreenGroup" {
+                    let s = self.screen_scale_matrix(&m);
+                    self.screen_matrices.insert(n, s);
+                    m.mult_left(&s);
                 }
                 let kids = children_of(sg, n, ty);
                 let kids = if ty == "LOD" { self.lod_kids(sg, n, &m, kids) } else { kids };
@@ -1533,6 +1542,37 @@ impl<'a> Builder<'a> {
         self.local_fogs.truncate(fogs);
         self.local_projectors.truncate(local_projectors);
         self.clip_planes.truncate(self.clip_planes.len() - pushed);
+    }
+
+    /// X3DLayoutContext.getScreenScaleMatrix (renderObject, matrix, ContentScale, snap = false), used by ScreenGroup: the
+    /// model-view matrix's axes scaled to one pixel (viewpoint.getScreenScale, in meter / pixel) at its origin, as a matrix
+    /// relative to the model-view matrix.
+    fn screen_scale_matrix(&self, model_view: &Matrix4) -> Matrix4 {
+        let mv = &model_view.0;
+        let [_, _, width, height] = self.viewport();
+        let scale = match self.layout_camera.ortho {
+            // OrthoViewpoint.getScreenScale
+            Some((size_x, size_y)) => {
+                if width / height > size_x / size_y { size_y / height } else { size_x / width }
+            }
+            // Viewpoint.getScreenScale (also GeoViewpoint): meter / pixel at the depth of the origin.
+            None => {
+                let size = mv[14].abs() * (self.layout_camera.fov / 2.0).tan() * 2.0;
+                if width > height { size / height } else { size / width }
+            }
+        } * self.layout_camera.content_scale;
+        let axis = |i: usize| {
+            let mut v = Vector3::new(mv[i], mv[i + 1], mv[i + 2]);
+            v.normalize();
+            v.multiply(scale);
+            v
+        };
+        let (x, y, z) = (axis(0), axis(4), axis(8));
+        let screen = Matrix4([x.x, x.y, x.z, 0.0, y.x, y.y, y.z, 0.0, z.x, z.y, z.z, 0.0, mv[12], mv[13], mv[14], 1.0]);
+        let mut matrix = *model_view;
+        matrix.inverse();
+        matrix.mult_left(&screen);
+        matrix
     }
 
     /// The current viewport rectangle (renderObject .getViewVolumes () .at (-1) .getViewport ()).
@@ -1996,6 +2036,8 @@ impl<'a> Builder<'a> {
                 let mut bbox = self.bbox_of(sg, &kids, depth);
                 if let Some(m) = sg.group_matrix(n, ty) {
                     bbox.mult_right(&m);
+                } else if let Some(m) = self.screen_matrices.get(&n) {
+                    bbox.mult_right(m);
                 }
                 bbox
             }
@@ -2076,6 +2118,8 @@ impl<'a> Builder<'a> {
                 } else if ty == "Billboard" {
                     let b = self.billboard_matrix(sg, n, &m);
                     m.mult_left(&b);
+                } else if let Some(t) = self.screen_matrices.get(&n) {
+                    m.mult_left(t);
                 }
                 let kids = children_of(sg, n, ty);
                 let kids = if ty == "LOD" { self.lod_kids(sg, n, &m, kids) } else { kids };
