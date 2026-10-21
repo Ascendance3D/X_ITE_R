@@ -182,7 +182,7 @@ impl Runtime {
             // The SpecularGlossinessMaterial constructor.
             "SpecularGlossinessMaterial" => self.log_warn("SpecularGlossinessMaterial is deprecated, please use PhysicalMaterial instead."),
             "ComposedShader" => self.composed_shader_construct(node),
-            "ImageTexture" | "MovieTexture" | "AudioClip" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" | "ShaderPart" => {
+            "ImageTexture" | "MovieTexture" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" | "ShaderPart" => {
                 self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
                 self.nrt_mut(node).state = State::UrlObject(Default::default())
             }
@@ -285,7 +285,7 @@ impl Runtime {
                 self.set_texture_2d_size(node, 1, 1);
                 self.inline_initialize(node)
             }
-            "Inline" | "InlineGeometry" | "AudioClip" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" => self.inline_initialize(node),
+            "Inline" | "InlineGeometry" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" => self.inline_initialize(node),
             "FontLibrary" => self.font_library_initialize(node),
             "ShaderPart" => self.shader_part_initialize(node),
             "ComposedShader" => self.composed_shader_initialize(node),
