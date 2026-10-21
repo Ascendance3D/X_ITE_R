@@ -122,7 +122,7 @@ pub struct Scan {
 }
 
 const GROUPS: &[&str] =
-    &["Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "GeoLocation", "GeoTransform", "GeoLOD", "CADAssembly", "CADLayer", "CADPart", "CADFace", "PickableGroup", "GroupAnnotation", "HAnimHumanoid", "HAnimJoint", "HAnimSegment", "HAnimSite"];
+    &["Group", "Transform", "Anchor", "Collision", "Billboard", "Switch", "LOD", "GeoLocation", "GeoTransform", "GeoLOD", "CADAssembly", "CADLayer", "CADPart", "CADFace", "PickableGroup", "GroupAnnotation", "ScreenGroup", "HAnimHumanoid", "HAnimJoint", "HAnimSegment", "HAnimSite"];
 /// X3DCast (X3DChildNode, node) for the node types that can be a Collision's `proxy`: everything but the
 /// geometry, appearance, material, texture and property nodes.
 fn is_child_node(sg: &Sg, n: NodeId) -> bool {
@@ -416,6 +416,8 @@ struct Walker<'a> {
     hanim: Vec<Option<Rc<(x3d_render::hanim::SkinTables, Vec<f32>)>>>,
     /// HAnimJoint model-view matrices of this walk.
     joint_model_views: std::collections::HashMap<NodeId, Matrix4>,
+    /// ScreenGroup.matrix of the last DISPLAY traversal (ScreenGroup.traverse multiplies it in for every pass).
+    screens: std::collections::HashMap<NodeId, Matrix4>,
     /// renderObject .getCollisions (): the enabled Collision nodes around the walk's position.
     collision_stack: Vec<NodeId>,
 }
@@ -423,8 +425,14 @@ struct Walker<'a> {
 /// Walk the world starting with `start` as the model-view matrix (identity for the CAMERA
 /// pass, the view matrix for POINTER / COLLISION / DISPLAY).
 pub fn scan(root: &Runtime, layer: &LayerWalk, start: &Matrix4, camera: bool) -> Scan {
+    scan_screens(root, layer, start, camera, &Default::default())
+}
+
+/// [`scan`] with the ScreenGroup.matrix values of the last DISPLAY traversal (identity for a ScreenGroup that has none).
+pub fn scan_screens(root: &Runtime, layer: &LayerWalk, start: &Matrix4, camera: bool, screens: &std::collections::HashMap<NodeId, Matrix4>) -> Scan {
     let mut scan = Scan::default();
     let mut w = Walker::new(&mut scan, None, None, camera, layer);
+    w.screens = screens.clone();
     w.runtime(root, &Rc::new(vec![]), start, &[], &[], true, 0);
     scan
 }
@@ -470,7 +478,7 @@ pub fn scan_display(root: &Runtime, layer: &LayerWalk, start: &Matrix4, lod: &mu
 
 impl<'a> Walker<'a> {
     fn new(scan: &'a mut Scan, lod: Option<&'a mut LodPass>, picking: Option<&'a std::collections::HashSet<NodeId>>, camera: bool, layer: &LayerWalk) -> Walker<'a> {
-        Walker { scan, lod, picking, pick: None, camera, clip_planes: vec![], layer: *layer, viewports: vec![layer.viewport], layouts: LayoutStack::default(), viewpoint_groups: vec![], inv_humanoid: vec![Matrix4::IDENTITY], hanim: vec![None], joint_model_views: Default::default(), collision_stack: vec![] }
+        Walker { scan, lod, picking, pick: None, camera, clip_planes: vec![], layer: *layer, viewports: vec![layer.viewport], layouts: LayoutStack::default(), viewpoint_groups: vec![], inv_humanoid: vec![Matrix4::IDENTITY], hanim: vec![None], joint_model_views: Default::default(), screens: Default::default(), collision_stack: vec![] }
     }
 
     fn viewport(&self) -> [f64; 4] {
@@ -924,6 +932,11 @@ impl<'a> Walker<'a> {
                     "Billboard" if !self.camera => {
                         let b = billboard_matrix(sg, n, &m);
                         m.mult_left(&b);
+                    }
+                    "ScreenGroup" => {
+                        if let Some(s) = self.screens.get(&n) {
+                            m.mult_left(s);
+                        }
                     }
                     _ => {}
                 }

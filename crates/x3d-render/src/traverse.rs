@@ -880,6 +880,9 @@ pub struct RenderCache {
     bbox_box: Option<Rc<Geometry>>,
     /// HAnimJoint.modelViewMatrix: the model-view of each joint's last DISPLAY traversal.
     joint_model_views: HashMap<(u64, NodeId), Matrix4>,
+    /// ScreenGroup.matrix: the screen matrix of each ScreenGroup's last DISPLAY traversal. The CAMERA pass (and picking) of the next
+    /// frame uses it, as ScreenGroup.traverse leaves `this .matrix` alone for them.
+    screen_matrices: HashMap<(u64, NodeId), Matrix4>,
     /// HAnimHumanoid.jointMatricesArray and the unlock count it was made at (the update Lock).
     joint_matrices: HashMap<(u64, NodeId), (u64, Rc<Vec<f32>>)>,
     /// Skinned copies of geometries, reused while their source, tables and matrices are the same.
@@ -970,6 +973,8 @@ fn fingerprint(sg: &Sg, n: NodeId) -> u64 {
     // A Text finds its font in the FontLibrary table, which a FontLibrary load changes.
     if sg.type_name(n) == Some("Text") {
         mix(&mut h, sg.rt.font_epoch);
+        // A ScreenFontStyle's size and glyph canvas are in pixels × ContentScale (ScreenFontStyle.getScale).
+        mix(&mut h, sg.rt.browser_options.rendering.get("ContentScale").map_or(1.0, |v| v.as_f64()).to_bits());
     }
     walk(sg, n, 0, &mut h);
     h
@@ -1338,8 +1343,8 @@ impl<'a> Builder<'a> {
                 let mut mm = *m;
                 if let Some(t) = sg.group_matrix(n, ty) {
                     mm.mult_left(&t);
-                } else if let Some(t) = self.screen_matrices.get(&n) {
-                    mm.mult_left(t);
+                } else if let Some(t) = self.screen_matrix(sg, n) {
+                    mm.mult_left(&t);
                 }
                 let kids = children_of(sg, n, ty);
                 let kids = if ty == "LOD" { self.lod_kids(sg, n, &mm, kids) } else { kids };
@@ -1426,6 +1431,11 @@ impl<'a> Builder<'a> {
                 } else if ty == "ScreenGroup" {
                     let s = self.screen_scale_matrix(&m, self.layout_camera.content_scale, false);
                     self.screen_matrices.insert(n, s);
+
+                    if let Some(c) = self.cache.as_deref_mut() {
+                        c.screen_matrices.insert((sg.rt.uid, n), s);
+                    }
+
                     m.mult_left(&s);
                 }
                 let kids = children_of(sg, n, ty);
@@ -1545,6 +1555,16 @@ impl<'a> Builder<'a> {
         self.local_fogs.truncate(fogs);
         self.local_projectors.truncate(local_projectors);
         self.clip_planes.truncate(self.clip_planes.len() - pushed);
+    }
+
+    /// ScreenGroup.matrix: this build's DISPLAY value, else the last frame's (the cache), else the identity (none: the caller adds nothing).
+    fn screen_matrix(&self, sg: &Sg, n: NodeId) -> Option<Matrix4> {
+        self.screen_matrices.get(&n).copied().or_else(|| self.cache.as_deref().and_then(|c| c.screen_matrices.get(&(sg.rt.uid, n)).copied()))
+    }
+
+    /// The screen matrices of the last DISPLAY traversals of the runtime `uid` (ScreenGroup.matrix), for the viewer's CAMERA walk.
+    pub fn screen_matrices_of(cache: &RenderCache, uid: u64) -> HashMap<NodeId, Matrix4> {
+        cache.screen_matrices.iter().filter(|((u, _), _)| *u == uid).map(|((_, n), m)| (*n, *m)).collect()
     }
 
     /// X3DLayoutContext.getScreenScaleMatrix (renderObject, matrix, contentScale, snap): the model-view matrix's axes scaled to
@@ -2062,8 +2082,8 @@ impl<'a> Builder<'a> {
                 let mut bbox = self.bbox_of(sg, &kids, depth);
                 if let Some(m) = sg.group_matrix(n, ty) {
                     bbox.mult_right(&m);
-                } else if let Some(m) = self.screen_matrices.get(&n) {
-                    bbox.mult_right(m);
+                } else if let Some(m) = self.screen_matrix(sg, n) {
+                    bbox.mult_right(&m);
                 }
                 bbox
             }
@@ -2144,8 +2164,8 @@ impl<'a> Builder<'a> {
                 } else if ty == "Billboard" {
                     let b = self.billboard_matrix(sg, n, &m);
                     m.mult_left(&b);
-                } else if let Some(t) = self.screen_matrices.get(&n) {
-                    m.mult_left(t);
+                } else if let Some(t) = self.screen_matrix(sg, n) {
+                    m.mult_left(&t);
                 }
                 let kids = children_of(sg, n, ty);
                 let kids = if ty == "LOD" { self.lod_kids(sg, n, &m, kids) } else { kids };
