@@ -1,0 +1,83 @@
+# Rust tests for pull requests, on a standard GitHub-hosted Linux runner (no GPU).
+#
+# The runner has no GPU, so the eight GPU tests are skipped here by name. They stay in the
+# local process, run on the RTX machine:
+#
+#   systemd-run --user --scope -p MemoryMax=8G -p MemorySwapMax=0 \
+#     cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view -j 16 --no-fail-fast
+#
+# Tests that find no wgpu adapter skip their GPU part on their own (they print a message).
+# The audio tests need no GPU and no audio device: they render with an OfflineAudioContext.
+
+name: Rust tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: never
+  CARGO_INCREMENTAL: "0"
+  # Two jobs keep the release link step inside the runner's memory.
+  CARGO_BUILD_JOBS: "2"
+  GPU_TESTS: >-
+    --skip x1_runtime_matches_x_ite
+    --skip items_runtime_matches_x_ite
+    --skip rea_batch09_nav_shard0_match_x_ite
+    --skip rea_batch09_nav_shard1_match_x_ite
+    --skip rea_batch09_nav_shard2_match_x_ite
+    --skip rea_batch09_nav_shard3_match_x_ite
+    --skip rea_batch09_inputs_cases_match_x_ite
+    --skip rea_batch08_net_cases_match_x_ite
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends pkg-config libasound2-dev libwayland-dev libxkbcommon-dev libudev-dev clang
+
+      - uses: dtolnay/rust-toolchain@1.95.0
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+
+      - name: Rust suite (GPU tests skipped)
+        run: |
+          cargo test --workspace --release --exclude cm-core --exclude cm-modes --exclude cm-view --no-fail-fast -- $GPU_TESTS 2>&1 | tee suite.log
+          test "${PIPESTATUS[0]}" -eq 0
+
+      - name: Test counts
+        if: always()
+        run: |
+          grep '^test result' suite.log | awk '{p+=$4; f+=$6; i+=$8; s+=$12} END {printf "passed %d, failed %d, ignored %d, filtered out %d\n", p, f, i, s}' | tee -a "$GITHUB_STEP_SUMMARY"
+          grep -E '^test .* FAILED$' suite.log | tee -a "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Audio oracle (rea_b05, 97 worlds against the X_ITE 16.5.0 baselines)
+        run: |
+          cargo build --release -p x3d-viewer --bin x3d-drive
+          python3 -I -B oracle/tools/rea_b05.py check --target target/release --jobs 2 | tee rea_b05.log
+          test "${PIPESTATUS[0]}" -eq 0
+          tail -1 rea_b05.log >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-logs
+          path: |
+            suite.log
+            rea_b05.log
+          if-no-files-found: ignore
