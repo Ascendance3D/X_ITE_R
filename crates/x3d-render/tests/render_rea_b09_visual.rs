@@ -12,9 +12,10 @@
 use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 
-/// (world, why the renderer differs). The renderer reports ScreenGroup and ScreenFontStyle as unsupported
-/// (`x3d-shot`: "not rendered: ScreenGroup"; text.rs: ScreenFontStyle), so their children and text are not drawn.
-const KNOWN_GAPS: &[(&str, &str)] = &[("vis-screen.wrl", "ScreenFontStyle text is not rendered (ScreenGroup is)")];
+/// (world, why the renderer differs): worlds the renderer is known not to match. A world listed here must stay over the
+/// bound; the test fails once it matches, so its entry is removed then. None now (vis-screen matched with ScreenGroup and
+/// ScreenFontStyle rendering).
+const KNOWN_GAPS: &[(&str, &str)] = &[];
 
 #[test]
 fn rea_b09_visual_renders_match_x_ite() {

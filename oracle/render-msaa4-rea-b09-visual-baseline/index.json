@@ -213,6 +213,41 @@
    "canvasDisplay": "block"
   },
   {
+   "file": "vis-screen-ortho.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "786734188f2269bf9cb98988edb49226d014de80981b151d0c4a86e819165cc0",
+   "pngSha256": "bd998905516c3b3fb528802937814b165da1e40f213e739778660b8ce5a23e4c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-screen-text.wrl",
+   "ok": true,
+   "log": [
+    "warn: Couldn't find font family 'NoSuchFont' with style 'BOLDITALIC'."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7062efb26a6bbc6822ccfdfd9b4139b2a4f0609ec0b9fd1152f10b771967be5f",
+   "pngSha256": "2781edb6880fe3d375d947a3cce074329c0507c76bbeec2746424395cc953802",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-screen-view.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "414a12cf04c7555c2122f4a45cd1b0b8f8cff593a02791b9973feab5e30e43e4",
+   "pngSha256": "860dd22b3df4f8ee376a7fe8a407264547d691e18f81f90fae7f156719453f45",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
    "file": "vis-screen.wrl",
    "ok": true,
    "log": [],

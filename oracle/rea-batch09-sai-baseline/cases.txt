@@ -167,3 +167,4 @@ text-family oracle/synthetic-rea-b09-sai/text-family.wrl oracle/synthetic-rea-b0
 fcb-sfnode oracle/synthetic-rea-b09-sai/fcb-sfnode.wrl oracle/synthetic-rea-b09-sai/sai.json
 fldx-count oracle/synthetic-rea-b09-sai/fldx-count.wrl oracle/synthetic-rea-b09-sai/sai.json
 scx-print oracle/synthetic-rea-b09-sai/scx-print.wrl oracle/synthetic-rea-b09-sai/sai.json
+text-screen oracle/synthetic-rea-b09-sai/text-screen.wrl oracle/synthetic-rea-b09-sai/sai.json
