@@ -1752,14 +1752,16 @@
     "crates/x3d-viewer/src/pointer.rs",
     "crates/x3d-viewer/src/walk.rs"
    ],
-   "status": "PARTIAL",
+   "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "oracle/synthetic-rea/geo-touch.wrl (FAILS, kept as is)"
+    "oracle/synthetic-rea/geo-touch.wrl (FAILS, kept as is)",
+    "crates/x3d-viewer/tests/rea_batch09_nav.rs (geo-touch, touch-hit-events, pick-hits, pick-instanced; bit-exact pickProbes)",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
-   "missing": "Own behavior done (hitGeoCoord_changed = getGeoCoord(hitPoint), GD+UTM+GeoOrigin). Oracle still fails from 2 inherited pointer.picking gaps, same with plain TouchSensor: hit point differs ~1e-5 (float precision), and X_ITE re-sends hitPoint/hitNormal/hitTexCoord on mousedown and mouseup at the same position; Rust does not.",
+   "missing": "",
    "oracle": "",
-   "notes": ""
+   "notes": "Batch 12 2026-10-21: PASS. The two inherited gaps of the old missing text are closed: the hit values come from the GPU pointing pass and are bit-exact (since batch 09), and the hit events re-sent on a press and a release at the same position match X_ITE (geo-touch, touch-hit-events, pk-events: press and release without movement, repeated presses, nested and stacked sensors, a drag off the shape, exact event order). hitGeoCoord_changed in GD and UTM with and without a GeoOrigin matches (geo-touch). The stale test note 'geo-touch.wrl (FAILS, kept as is)' predates batch 09: the case runs in rea_batch09_nav and passes. A GeoTouchSensor over lines or PointProperties points inherits the sub:pointer.picking ulp gaps listed there."
   },
   {
    "id": "node:GeoTransform",
@@ -3661,11 +3663,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-render/tests/render_rea2.rs; crates/x3d-viewer/tests/rea_batch01.rs (clip-pick, clip-walk)"
+    "crates/x3d-render/tests/render_rea2.rs; crates/x3d-viewer/tests/rea_batch01.rs (clip-pick, clip-walk)",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
    "missing": "",
    "oracle": "render2 clipplane MSAA 0/4 within tolerance; x10_compare clip-pick and clip-walk exact",
-   "notes": "REA batch 01"
+   "notes": "REA batch 01 Batch 12 2026-10-21: Clip planes discard point and line fragments in the pointing pass (pk-points exact, pk-lines)."
   },
   {
    "id": "node:Color",
@@ -3789,11 +3792,12 @@
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
     "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
-    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-rendering, vis-linecolor, vis-linecolor-invalid, MSAA 0/4; no warning in X_ITE or Rust)"
+    "crates/x3d-render/tests/render_rea_b09_visual.rs::rea_b09_visual_renders_match_x_ite (vis-rendering, vis-linecolor, vis-linecolor-invalid, MSAA 0/4; no warning in X_ITE or Rust)",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
    "missing": "",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): colorPerVertex FALSE and TRUE, explicit colorIndex, empty colorIndex, boundary indexes, RGBA, negative (not -1) and above-range color and coord indexes compared against X_ITE, which logs no warning; field and event evidence exact (node-rendering)."
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after | Promotion review 2026-10-20 (combined 0023b6b): colorPerVertex FALSE and TRUE, explicit colorIndex, empty colorIndex, boundary indexes, RGBA, negative (not -1) and above-range color and coord indexes compared against X_ITE, which logs no warning; field and event evidence exact (node-rendering). Batch 12 2026-10-21: Rust defect fixed: the Normal node was not read (IndexedLineSet.build adds normalNode.addVector (coordIndex) per vertex, normalIndex and normalPerVertex are not read); lines are picked (pk-lines: same line at every probe, hit point ulps listed under sub:pointer.picking)."
   },
   {
    "id": "node:IndexedTriangleFanSet",
@@ -3896,11 +3900,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
    "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 12 2026-10-21: PointSet and IndexedLineSet now read their Normal node (pk-points, pk-lines normals)."
   },
   {
    "id": "node:PointSet",
@@ -3919,11 +3924,12 @@
    "status": "PARTIAL",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering"
+    "crates/x3d-viewer/tests/rea_batch09_sai.rs node-rendering",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
    "missing": "visual evidence (rendering) not compared: needs the desktop GPU run",
    "oracle": "",
-   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after"
+   "notes": "b09 cloud checkpoint after b2e5b9f: node-rendering (3 identical X_ITE recordings, exact): field definitions (name, access type, data type, default value), a created node's VRML / XML / JSON text, and on a live node a callback on every field that sends events, every inputOnly / inputOutput field (not node fields) set to a sample value, the callbacks in order with their values, the node's text after Batch 12 2026-10-21: Rust defect fixed: the Normal node was not read (PointSet.build: normalNode.addVectors); hit normals now match (pk-points). Points are picked like X_ITE (pk-points exact; PointProperties texCoord ulps in pk-points-style). The visual evidence item stays open."
   },
   {
    "id": "node:Tangent",
@@ -4589,11 +4595,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-render/tests/render_rea2.rs"
+    "crates/x3d-render/tests/render_rea2.rs",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
    "missing": "",
    "oracle": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4",
-   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console)"
+   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console) Batch 12 2026-10-21: The pointing pass uses the aliased width (gl.lineWidth) and the transformed thick-line triangles above width 10 (pk-lines: same line at every probe; hit point ulps under sub:pointer.picking)."
   },
   {
    "id": "node:Material",
@@ -4652,11 +4659,12 @@
    "status": "COMPLETE",
    "behavior": "fields, events and observable behavior of the upstream class",
    "tests": [
-    "crates/x3d-render/tests/render_rea2.rs"
+    "crates/x3d-render/tests/render_rea2.rs",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
    "missing": "",
    "oracle": "x_ite-shot.mjs / x_ite-shot-msaa.mjs baselines oracle/render-rea2-baseline and render-msaa4-rea2-baseline: 10 worlds within threshold 8 / 0.5% at MSAA 0 and MSAA 4",
-   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console)"
+   "notes": "REA batch 01; TwoSidedMaterial deprecation warning equal (rea_batch01 twosided-console) Batch 12 2026-10-21: The pointing pass uses it like X_ITE: gl_PointSize = max (getPointSize, 2), the round point mask without textures, gl_PointCoord texCoord (pk-points-style: ids, points and normals exact; texCoord 1 to 3 ulps at some pixels, KNOWN_GAP)."
   },
   {
    "id": "node:Shape",
@@ -7347,11 +7355,13 @@
    "status": "PARTIAL",
    "behavior": "",
    "tests": [
-    "x10 suites, pointer_slot_reuse"
+    "x10 suites, pointer_slot_reuse",
+    "crates/x3d-viewer/tests/rea_batch09_nav.rs (geo-touch, touch-hit-events, pick-hits, pick-instanced; bit-exact pickProbes)",
+    "crates/x3d-viewer/tests/rea_batch12.rs::rea_batch12_cases_match_x_ite (pk-points, pk-overlap, pk-events exact; pk-points-style and pk-lines KNOWN_GAPS; MSAA 0/4, 3 identical X_ITE recordings each; pickProbes bit for bit)"
    ],
-   "missing": "hit point/normal/texCoord differ ~1e-5 from X_ITE; X_ITE re-sends hit events on mousedown/mouseup at the same position (Rust skips them). Shown by oracle/synthetic-rea/geo-touch.wrl",
+   "missing": "lines: every probe hits the same line, but the hit point differs from X_ITE by up to 63 float32 ulps on aliased lines and up to 398 ulps on transformed thick lines (width above 10; X_ITE makes those triangles by transform feedback in float32, Rust on the CPU in double) (pk-lines, KNOWN_GAP); PointProperties points: gl_PointCoord (hit texCoord) differs by 1 to 3 ulps at some pixels (pk-points-style, KNOWN_GAP); an appearance's DepthMode is not applied in the pointing pass; touch input (touchstart / touchend) is not driven by the harness",
    "oracle": "",
-   "notes": ""
+   "notes": "Batch 12 2026-10-21: Rust defects fixed: points and lines were never picked (the ray cast skipped geometry types 0 and 1); a point or line in front of a shape did not hide it; the pointing pass drew only the ray cast's nearest shape, so coincident faces went to the wrong shape (X_ITE draws every pointing shape in order into DEPTH_COMPONENT24 with LEQUAL: the last drawn wins a tie); fractional scripted mouse positions reached the viewer unrounded (Chrome gives MouseEvent pageX / pageY whole pixels, cut toward zero; X_ITE reads those). Measured on the oracle GPU and reproduced: gl_PointSize in 1/32 px steps rounded down, point centres on a 1/256 px grid, GL line varyings at the fragment's major-axis coordinate. pk-points (plain, colored, transformed, with normals, ClipPlane), pk-overlap (coplanar boxes, points on a face, USE at two depths, a ring with a hole, ClipPlane) and pk-events (TouchSensor order) are exact; X_ITE's picks are identical at MSAA 0 and 4. The old missing text (~1e-5 values, no re-sent hit events) was closed in batch 09 (GPU pointing pass, touch-hit-events)."
   }
  ]
 }
