@@ -162,6 +162,23 @@ impl Runtime {
         }
     }
 
+    /// `browser .setBrowserOption (name, value)`. ScreenFontStyle.initialize: `getRenderingProperties () ._ContentScale .addInterest
+    /// ("addNodeEvent", this)`, so a changed ContentScale makes every ScreenFontStyle's Texts rebuild (their size is in pixels × ContentScale).
+    pub fn set_browser_option(&mut self, name: &str, value: crate::browser_options::OptionValue) {
+        let scale = |rt: &Runtime| rt.browser_options.rendering.get("ContentScale").map(|v| v.as_f64());
+        let before = scale(self);
+
+        self.browser_options.set_option(name, value);
+
+        if scale(self) != before {
+            let styles: Vec<NodeId> = (0..self.scene.nodes.len() as NodeId).filter(|&n| self.builtin_name(n) == Some("ScreenFontStyle")).collect();
+
+            for n in styles {
+                self.add_node_event(n);
+            }
+        }
+    }
+
     /// X3DGeometryNode.requestRebuild: `this ._rebuild = Date .now () / 1000`.
     pub(crate) fn text_request_rebuild(&mut self, node: NodeId) {
         if let Some(k) = self.private_field(node, "rebuild") {
