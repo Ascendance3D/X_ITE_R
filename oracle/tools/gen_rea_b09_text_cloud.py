@@ -71,6 +71,24 @@ world("text-family", SCENE, {
     30: GET + " t .fontStyle .family = new MFString ('SANS'); t .fontStyle .style = 'ITALIC';",
 }, 40)
 
+# A ScreenFontStyle (ScreenText: the layout in pixels, the box rounded to whole pixels), changed, replaced.
+world("text-screen", SCENE, {
+    12: GET + " var f = Browser .currentScene .createNode ('ScreenFontStyle'); f .pointSize = 24; t .fontStyle = f;",
+    15: GET + " t .fontStyle .spacing = 1.5;",
+    17: GET + " t .fontStyle .justify = new MFString ('MIDDLE', 'MIDDLE');",
+    19: GET + " t .string = new MFString ('Ab', 'cde');",
+    21: GET + " t .fontStyle .horizontal = false;",
+    23: GET + " t .fontStyle .leftToRight = false; t .fontStyle .topToBottom = false;",
+    25: GET + " t .fontStyle .pointSize = 10;",
+    27: GET + " t .fontStyle .family = new MFString ('SANS'); t .fontStyle .style = 'BOLD';",
+    32: GET + " t .fontStyle = null;",
+}, 36)
+
 if __name__ == "__main__":
     sys.argv = [sys.argv[0]] + [n for n in G.defs if n.startswith("text-")]
     G.main()
+    # ScreenFontStyle is a Layout node: text-screen needs the component (the other worlds are the cloud's, unchanged).
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "synthetic-rea-b09-sai", "text-screen.wrl")
+    text = open(p).read()
+    if "COMPONENT Layout:2" not in text:
+        open(p, "w").write(text.replace("COMPONENT Scripting:1\n", "COMPONENT Layout:2\nCOMPONENT Scripting:1\n", 1))

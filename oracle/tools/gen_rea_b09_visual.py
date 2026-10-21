@@ -17,6 +17,9 @@ events only). Each world is a grid of cells that vary one node's fields side by 
   vis-text-layout   Text, FontStyle: justify, direction, length, maxExtent, several strings
   vis-layout        LayoutGroup (Layout, Viewport)
   vis-screen        ScreenGroup, ScreenFontStyle
+  vis-screen-text   ScreenFontStyle: size, direction, justify, length, maxExtent, family, style, spacing
+  vis-screen-ortho  ScreenGroup, ScreenFontStyle under an OrthoViewpoint
+  vis-screen-view   ScreenGroup, ScreenFontStyle with a rotated, scaled, distant parent and a non-default viewpoint
   vis-localfog      LocalFog
   vis-texturebackground-*   TextureBackground (front, corner, sky + transparency, partial)
   vis-ortho-40-* / -41-*    OrthoViewpoint with an MFFloat (4.0) and an SFVec4f (4.1) fieldOfView
@@ -276,6 +279,38 @@ worlds["vis-screen.wrl"] = (
     + SG("2.5 -2 0", stext(["Screen", "Text"], 'pointSize 12 justify [ "MIDDLE" "MIDDLE" ] spacing 1.5')) + "\n"
     + SG("0 -2.8 0", stext(["Bold"], 'family "SANS" style "BOLD" pointSize 18')) + "\n"
     + "Transform { translation 0 2.8 -3 children ScreenGroup { children [ " + rect(60, 40, "0.5 0.5 0.5") + " ] } }\n"
+)
+
+# --- ScreenFontStyle layout and ScreenGroup in other views ----------------------------------------
+STX = lambda strings, f: SG("0 0 0", stext(strings, f))
+worlds["vis-screen-text.wrl"] = world([
+    STX(["Abc"], "pointSize 8"),
+    STX(["Abc"], "pointSize 36"),
+    STX(["Ab", "Cd"], "pointSize 16 horizontal FALSE"),
+    STX(["Ab", "Cd"], "pointSize 16 horizontal FALSE leftToRight FALSE topToBottom FALSE"),
+    STX(["Ab", "Cd"], 'pointSize 14 justify [ "END" "END" ]'),
+    STX(["Ab", "Cdefg"], 'pointSize 14 justify [ "BEGIN" "FIRST" ] spacing 1.4'),
+    STX(["Abcd"], "pointSize 14").replace("solid FALSE", "length [ 90 ] solid FALSE"),
+    STX(["Abcdefgh"], "pointSize 14").replace("solid FALSE", "maxExtent 40 solid FALSE"),
+    STX(["Mono"], 'family "TYPEWRITER" pointSize 16'),
+    STX(["Italic"], 'family "SERIF" style "ITALIC" pointSize 20'),
+    STX(["Sans"], 'family [ "NoSuchFont" "SANS" ] style "BOLDITALIC" pointSize 16'),
+    STX(["A", "", "B"], "pointSize 14 spacing 2"),
+], head=LAYOUT_HEAD, vp="Viewpoint { position 0 0 12 }")
+worlds["vis-screen-ortho.wrl"] = (
+    "#X3D V4.1 utf8\nPROFILE Full\nCOMPONENT Layout:2\nOrthoViewpoint { position 0 0 10 fieldOfView -5 -4 5 4 }\n" + BG + "\n" + SCENE + "\n"
+    + SG("-2.5 2 0", rect(60, 40, "1 0.4 0.1")) + "\n"
+    + SG("2.5 2 -3", rect(60, 40, "0.2 0.9 0.4")) + "\n"
+    + SG("-2.5 -2 0", stext(["Screen"], "pointSize 24")) + "\n"
+    + SG("2.5 -2 0", stext(["Ortho", "Text"], 'pointSize 14 justify [ "MIDDLE" "MIDDLE" ]')) + "\n"
+)
+worlds["vis-screen-view.wrl"] = (
+    LAYOUT_HEAD + "Viewpoint { position 1 0.5 9 orientation 0 1 0 0.2 fieldOfView 0.6 }\n" + BG + "\n" + SCENE + "\n"
+    + "Transform { translation -2 1.5 0 rotation 0 0 1 0.5 scale 2 1 1 children ScreenGroup { children [ " + rect(60, 40, "1 0.4 0.1") + " ] } }\n"
+    + "Transform { translation 2 1.5 -2 rotation 0 1 0 0.8 children ScreenGroup { children [ " + rect(60, 40, "0.2 0.9 0.4") + " ] } }\n"
+    + "Transform { translation -2 -2 0 rotation 0 0 1 0.4 children ScreenGroup { children [ " + stext(["Turned"], "pointSize 20") + " ] } }\n"
+    + "Transform { translation 2 -2 -4 children ScreenGroup { children [ " + stext(["Far", "away"], "pointSize 14") + " ] } }\n"
+    + "Transform { translation 0 0 3 children ScreenGroup { children [ Transform { translation 40 0 0 children " + rect(20, 20, "0.9 0.2 0.9") + " } ] } }\n"
 )
 
 # --- LocalFog, TextureBackground -----------------------------------------------------------------
