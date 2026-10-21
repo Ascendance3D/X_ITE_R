@@ -1,0 +1,54 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "ctxev stream xml"
+PROTO PA [ ] { Group { children Transform { } } }
+PROTO PB [ ] { PROTO PC [ ] { Transform { } } Group { } }
+PROTO PE [ ] { }
+DEF T1 Transform { }
+DEF T2 Transform { translation 100 0 0 }
+DEF T3 Transform { }
+DEF T4 Transform { }
+DEF PI PA { }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + ' '; }
+function recg (s) { if (step >= 2) rec (s); }
+function p (name, f) {
+  var v;
+  try { v = f (); } catch (e) { v = 'ERR:' + e .message; }
+  rec (step + ':' + name + '=' + v);
+}
+function types (s) {
+  return ['namedNodes', 'importedNodes', 'exportedNodes', 'protos', 'externprotos', 'rootNodes', 'routes', 'sceneGraph', 'profile', 'metadata', 'bbox']
+    .map (function (n) { return n + ':' + typeof s ['_' + n + '_changed'] + '/' + typeof s [n + '_changed']; }) .join (',');
+}
+function watch (s, label, gate) {
+  var r = gate ? recg : rec;
+  s .sceneGraph_changed .addFieldCallback ('sg' + label, function () { r ('SG' + label + '@' + step); });
+  s .profile_changed  .addFieldCallback ('pr' + label, function () { r ('PR' + label + '@' + step); });
+  s .metadata_changed .addFieldCallback ('md' + label, function () { r ('MD' + label + '@' + step); });
+}
+
+
+function initialize () {
+  var s = Browser .currentScene;
+
+  watch (s, '', true);
+}
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+
+  if (step == 4) p ('first', function () { return s .toXMLString () .length > 0; });
+  if (step == 8) p ('again', function () { return s .toXMLString () .length > 0; });
+
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle

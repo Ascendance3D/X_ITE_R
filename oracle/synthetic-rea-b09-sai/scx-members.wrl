@@ -1,0 +1,99 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scx members"
+DEF I1 Inline { url "assets/ie-mid.wrl" }
+IMPORT I1.MI AS IMI
+DEF T1 Transform { }
+DEF T2 Transform { }
+ROUTE T1.translation_changed TO T2.set_translation
+EXPORT T1 AS ET
+PROTO PA [ inputOutput SFFloat f 1 ] { Group { } }
+EXTERNPROTO EP [ inputOutput SFFloat g ] "assets/nope.wrl"
+DEF PI PA { }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function desc (o) { if (o === null || typeof o !== 'object' && typeof o !== 'function') return show (o); var n = [], p = o, k = 0; while (p && k ++ < 10) { n .push (p .constructor && Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : '-'); p = Object .getPrototypeOf (p); } return [Object .prototype .toString .call (o), n .join ('>'), Object .keys (o) .sort () .join (',')]; }
+function owner (o, n) { var p = o, k = 0; while (p && k ++ < 10) { var d = Object .getOwnPropertyDescriptor (p, n); if (d) return (p === o ? 'OWN' : Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : '-') + ':' + ('value' in d ? (typeof d .value === 'function' ? 'm' : 'v') : (d .get ? 'g' : '') + (d .set ? 's' : '')) + (d .enumerable ? '+' : ''); p = Object .getPrototypeOf (p); } return 'none'; }
+function initialize () {
+  SELF = this;
+
+  flush_ ();
+}
+var F_ = 0;
+function prepareEvents () {
+  if (++ F_ !== 12) return;
+  T ('route keys', function () { return Object .keys (Browser .currentScene .routes [0]); });
+  T ('imported keys', function () { return Object .keys (Browser .currentScene .importedNodes [0]); });
+  T ('exported keys', function () { return Object .keys (Browser .currentScene .exportedNodes [0]); });
+  T ('proto keys', function () { return Object .keys (Browser .currentScene .protos [0]); });
+  T ('externproto keys', function () { return Object .keys (Browser .currentScene .externprotos [0]); });
+  T ('component keys', function () { return Object .keys (Browser .currentScene .components [0]); });
+  T ('profile keys', function () { return Object .keys (Browser .currentScene .profile); });
+  T ('unit keys', function () { return Object .keys (Browser .currentScene .units [0]); });
+  T ('fieldDefinition keys', function () { return Object .keys (Browser .currentScene .getNamedNode ('T1') .getFieldDefinitions () [0]); });
+  T ('namedNodes keys', function () { return Object .keys (Browser .currentScene .namedNodes); });
+  T ('routes keys', function () { return Object .keys (Browser .currentScene .routes); });
+  T ('components keys', function () { return Object .keys (Browser .currentScene .components); });
+  T ('units keys', function () { return Object .keys (Browser .currentScene .units); });
+  T ('protos keys', function () { return Object .keys (Browser .currentScene .protos); });
+  T ('supportedProfiles keys', function () { return Object .keys (Browser .supportedProfiles); });
+  T ('route owners', function () { var o = Browser .currentScene .routes [0]; return ['sourceNode', 'sourceField', 'destinationNode', 'destinationField', 'getSourceNode', 'getSourceField', 'getDestinationNode', 'getDestinationField', 'getExecutionContext', 'getTypeName', 'toString', 'getId'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('route values', function () { var o = Browser .currentScene .routes [0]; return [o .getTypeName (), String (o)] .concat (['sourceNode', 'sourceField', 'destinationNode', 'destinationField'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('imported owners', function () { var o = Browser .currentScene .importedNodes [0]; return ['inlineNode', 'exportedName', 'exportedNode', 'importedName', 'description', 'getInlineNode', 'getExportedName', 'getExportedNode', 'getImportedName', 'getDescription', 'setDescription', 'getExecutionContext', 'getTypeName', 'toString'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('imported values', function () { var o = Browser .currentScene .importedNodes [0]; return [o .getTypeName (), String (o)] .concat (['inlineNode', 'exportedName', 'exportedNode', 'importedName', 'description'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('exported owners', function () { var o = Browser .currentScene .exportedNodes [0]; return ['exportedName', 'localNode', 'description', 'getExportedName', 'getLocalNode', 'getDescription', 'setDescription', 'getExecutionContext', 'getTypeName', 'toString'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('exported values', function () { var o = Browser .currentScene .exportedNodes [0]; return [o .getTypeName (), String (o)] .concat (['exportedName', 'localNode', 'description'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('proto owners', function () { var o = Browser .currentScene .protos [0]; return ['name', 'fields', 'isExternProto', 'appInfo', 'documentation', 'getAppInfo', 'setAppInfo', 'getDocumentation', 'setDocumentation', 'getTypeName', 'toString', 'urls', 'loadState'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('proto values', function () { var o = Browser .currentScene .protos [0]; return [o .getTypeName (), String (o)] .concat (['name', 'fields', 'isExternProto', 'appInfo', 'documentation', 'urls', 'loadState'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('externproto owners', function () { var o = Browser .currentScene .externprotos [0]; return ['name', 'fields', 'isExternProto', 'appInfo', 'documentation', 'getAppInfo', 'setAppInfo', 'getDocumentation', 'setDocumentation', 'getTypeName', 'toString', 'urls', 'loadState'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('externproto values', function () { var o = Browser .currentScene .externprotos [0]; return [o .getTypeName (), String (o)] .concat (['name', 'fields', 'isExternProto', 'appInfo', 'documentation', 'urls', 'loadState'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('component owners', function () { var o = Browser .currentScene .components [0]; return ['name', 'level', 'title', 'providerURL', 'providerUrl', 'external', 'dependencies', 'getTypeName', 'toString', 'toVRMLString', 'toXMLString', 'toJSONString'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('component values', function () { var o = Browser .currentScene .components [0]; return [o .getTypeName (), String (o)] .concat (['name', 'level', 'title', 'providerURL', 'providerUrl', 'external', 'dependencies'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('profile owners', function () { var o = Browser .currentScene .profile; return ['name', 'title', 'providerURL', 'providerUrl', 'components', 'getTypeName', 'toString', 'toVRMLString', 'toXMLString', 'toJSONString'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('profile values', function () { var o = Browser .currentScene .profile; return [o .getTypeName (), String (o)] .concat (['name', 'title', 'providerURL', 'providerUrl', 'components'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('unit owners', function () { var o = Browser .currentScene .units [0]; return ['category', 'name', 'conversionFactor', 'conversion_factor', 'getTypeName', 'toString', 'toVRMLString', 'toXMLString', 'toJSONString'] .map (function (n) { return n + '=' + owner (o, n); }); });
+  T ('unit values', function () { var o = Browser .currentScene .units [0]; return [o .getTypeName (), String (o)] .concat (['category', 'name', 'conversionFactor', 'conversion_factor'] .map (function (n) { var v = o [n]; return n + '=' + (v === null || typeof v !== 'object' ? String (v) : Object .prototype .toString .call (v)); })); });
+  T ('exported setDescription', function () { var o = Browser .currentScene .exportedNodes [0]; o .setDescription ('d1'); var a = o .description; o .description = 'd2'; return [a, o .getDescription ()]; });
+  T ('imported setDescription', function () { var o = Browser .currentScene .importedNodes [0]; o .description = 'i1'; return o .getDescription (); });
+  T ('proto appInfo', function () { var o = Browser .currentScene .protos [0]; var a = [o .appInfo, o .documentation]; o .setAppInfo ('a'); o .documentation = 7; return a .concat ([o .getAppInfo (), o .getDocumentation ()]); });
+  T ('route getExecutionContext', function () { return Browser .currentScene .routes [0] .getExecutionContext () === Browser .currentScene; });
+  flush_ ();
+}
+
+  "
+}

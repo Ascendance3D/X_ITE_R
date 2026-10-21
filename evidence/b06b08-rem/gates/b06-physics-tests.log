@@ -1,0 +1,161 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: function `default_unit` is never used
+   --> crates/x3d-render/src/shader_gpu.rs:304:4
+    |
+304 | fn default_unit(dim: SamplerDim) -> u32 {
+    |    ^^^^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 5 warnings
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-viewer)
+    Finished `release` profile [optimized] target(s) in 1.20s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/physics_b06_baseline.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/physics_b06_baseline-7a9f03c9877170eb)
+
+running 48 tests
+test fields_roundtrip ... ok
+test center_of_mass ... ok
+test fall_sphere ... ok
+test finite_rotation ... ok
+test joint_motor ... ok
+test gravity_flags ... ok
+test inertia_ignored ... ok
+test forces_torques ... ok
+test damping ... ok
+test joint_universal ... ok
+test joint_ball ... ok
+test rt_collection ... ok
+test joint_slider_gravity ... ok
+test reload_inline ... ok
+test fall_masses ... ok
+test joint_slider ... ok
+test joint_hinge_single_all ... ok
+test joint_hinge_double ... ok
+test joint_ball_offaxis ... ok
+test joint_hinge_single ... ok
+test joint_hinge_double_rate ... ok
+test rt_joint ... ok
+test joint_chain ... ok
+test prefer_accuracy ... ok
+test shape_cone ... ok
+test collision_space ... ok
+test rt_sensor ... ok
+test shape_elevation_origin ... ok
+test shape_elevation ... ok
+test shape_box ... ok
+test sensor_partial ... ok
+test shape_cylinder ... ok
+test shape_ifs_floor ... ok
+test shape_sphere ... ok
+test quirks_of_x_ite_are_in_the_baselines_and_in_ours ... ok
+test shape_box_box ... ok
+test shape_cone_open ... ok
+test shape_thickness ... ok
+test shape_ifs_dynamic ... ok
+test velocities ... ok
+test collider_friction ... ok
+test rt_collider ... ok
+test rt_body ... ok
+test collidable_offset ... ok
+test collider_bounce ... ok
+test sleep_rest ... ok
+test shape_cylinder_open ... ok
+test sleep_wake ... ok
+
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/physics_b06_lifecycle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/physics_b06_lifecycle-d7c36a9b5d03c4f0)
+
+running 6 tests
+test reused_node_ids_inherit_nothing ... ok
+test a_joint_removed_from_joints_leaves_the_bullet_world ... ok
+MEM	physics-joint-churn	10	constraint_slots=3	body_slots=6	shape_slots=18
+test a_body_removed_from_bodies_leaves_the_bullet_world ... ok
+MEM	physics-inline-cycle	10	physics_nodes=20	update_interests=2	live_watchers=3	live_nodes=35	arena=35	nrt=35	frt=465	body_slots=6	shape_slots=18	constraint_slots=3	rss_kib=21448
+test a_removed_body_no_longer_affects_the_world ... ok
+MEM	physics-joint-churn	100	constraint_slots=3	body_slots=6	shape_slots=18
+test repeated_body_and_joint_create_remove_stay_flat ... ok
+MEM	physics-inline-cycle	50	physics_nodes=20	update_interests=2	live_watchers=3	live_nodes=35	arena=35	nrt=35	frt=465	body_slots=6	shape_slots=18	constraint_slots=3	rss_kib=21304
+MEM	physics-inline-cycle	100	physics_nodes=20	update_interests=2	live_watchers=3	live_nodes=35	arena=35	nrt=35	frt=465	body_slots=6	shape_slots=18	constraint_slots=3	rss_kib=21320
+test physics_worlds_come_and_go_with_their_inline_100_cycles ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+

@@ -1,0 +1,417 @@
+{
+ "pinned": "34cdf9f97",
+ "chrome": "155.0.8059.84",
+ "size": [
+  512,
+  512
+ ],
+ "frames": 10,
+ "settleMs": 400,
+ "gl": {
+  "vendor": "Google Inc. (NVIDIA Corporation)",
+  "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+  "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+  "contextAttributes": {
+   "alpha": true,
+   "antialias": false,
+   "depth": true,
+   "desynchronized": false,
+   "failIfMajorPerformanceCaveat": false,
+   "powerPreference": "default",
+   "premultipliedAlpha": true,
+   "preserveDrawingBuffer": true,
+   "stencil": false,
+   "xrCompatible": false
+  },
+  "multisampling": 0,
+  "antialiased": true,
+  "splashVisible": false,
+  "canvasDisplay": "inline",
+  "drawingBuffer": [
+   512,
+   512
+  ],
+  "x_ite": "16.5.0"
+ },
+ "results": [
+  {
+   "file": "vis-layout.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "57b67394ccc42a5355d30470cc92da8a5ad035e3d1756146de17f9b970f5d863",
+   "pngSha256": "b8dcbd080c6d3eb7682b6457b84d7b5e267919200f87f83a9b20bc719a2138a3",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-light-dir.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5add8987319642fc9adae9f079993d8c6e7be236309d2343d33fefbbef7e2b43",
+   "pngSha256": "0bed79b5dab64721e254bc07d717fd1f2581860ca864083389d28db8c6b69a49",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-light-point.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "26375b4e095179619f562bfe912f71551d78c8028684dd1d97e854183d2c6332",
+   "pngSha256": "3cf68127cb2fc3fdbe409a16ff1b3a7db34902bdab91d6cb638e7c4b96c80cc0",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-light-spot.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ac362bdee295afa42b60d47a9f607d481d354af5ff069fe519d72d7b7420329d",
+   "pngSha256": "3c9fa9ef389d36b9778df679eb3623fd8b894c900740d1a916b6366408bbdedf",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-localfog.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "902004a19a116695a2ead4e1a77aa3210df9c306c748a08ad35ec4a851328ba9",
+   "pngSha256": "a6095ea9aab2a5f0e38cf5781ee6ebb0729fd0c932c7a10487961975e93ac7fb",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-40-default.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "01804e2e84482c907b552cda7c6cec937e923914520b17dc6a3127d6bc9eee34",
+   "pngSha256": "562481bfba16302292ef5a792a756336e7e852f28ac4e393e052fd94445a1f0c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-40-offset.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "337a297267d196ad79f24fc4c1e22a83eea8bb571e27efbe8514206a52769fa4",
+   "pngSha256": "b02a72ad61b6833fdb4e0983f378819ce9f3d31fcc095576d67140b8006210e5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-40-rotated.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8e0dd4b80eff1a996b37c6392517cc65a46faea17decde67424e69cb3e2db813",
+   "pngSha256": "6796b4cc71791bcdcd896721dfb53aeed46e58e6e1e3bc99bd90a44542149d0e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-40-tall.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "adc0c6296fbce5194fd0616a20162a66267749764b27b5e9a5dbe67ae56ab41f",
+   "pngSha256": "76959a03f2d46f481b5c3b9a1ff2eb63b0a2d6b79060b654e99371d79ec4818a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-40-wide.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "adc0c6296fbce5194fd0616a20162a66267749764b27b5e9a5dbe67ae56ab41f",
+   "pngSha256": "76959a03f2d46f481b5c3b9a1ff2eb63b0a2d6b79060b654e99371d79ec4818a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-41-default.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "01804e2e84482c907b552cda7c6cec937e923914520b17dc6a3127d6bc9eee34",
+   "pngSha256": "562481bfba16302292ef5a792a756336e7e852f28ac4e393e052fd94445a1f0c",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-41-offset.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "337a297267d196ad79f24fc4c1e22a83eea8bb571e27efbe8514206a52769fa4",
+   "pngSha256": "b02a72ad61b6833fdb4e0983f378819ce9f3d31fcc095576d67140b8006210e5",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-41-rotated.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "8e0dd4b80eff1a996b37c6392517cc65a46faea17decde67424e69cb3e2db813",
+   "pngSha256": "6796b4cc71791bcdcd896721dfb53aeed46e58e6e1e3bc99bd90a44542149d0e",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-41-tall.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "adc0c6296fbce5194fd0616a20162a66267749764b27b5e9a5dbe67ae56ab41f",
+   "pngSha256": "76959a03f2d46f481b5c3b9a1ff2eb63b0a2d6b79060b654e99371d79ec4818a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-ortho-41-wide.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "adc0c6296fbce5194fd0616a20162a66267749764b27b5e9a5dbe67ae56ab41f",
+   "pngSha256": "76959a03f2d46f481b5c3b9a1ff2eb63b0a2d6b79060b654e99371d79ec4818a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-rendering.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4212e8ea0a6d803d473c663dda565d0944d99550ccdc0eb394119f2bccbfb118",
+   "pngSha256": "514d9916555fd51f06636bf54d61e5cce05afa538a16876c5be156b9189b07d1",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-screen-ortho.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "59911b661fb67d4eb9bd2e7c843a9c08d2a77dc9c20bf67b7e275ff4e111679e",
+   "pngSha256": "7f4fcec408d402eeeb2c0f63c4a7457da106da142353ea8b5c43bf3cc3b1878a",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-screen-text.wrl",
+   "ok": true,
+   "log": [
+    "warn: Couldn't find font family 'NoSuchFont' with style 'BOLDITALIC'."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7062efb26a6bbc6822ccfdfd9b4139b2a4f0609ec0b9fd1152f10b771967be5f",
+   "pngSha256": "2781edb6880fe3d375d947a3cce074329c0507c76bbeec2746424395cc953802",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-screen-view.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "5a12fda91a6182af8f55298d20896950261bb6d753232bb24944de454cf11f26",
+   "pngSha256": "317ea9ae0fdeb36e650914ef038adb4f2959944db1ac93cf60fa6aa8137607ef",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-screen.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "3d3b8913d1dd9acab7bd77ae2bd9270da6e7f5f94371e91c0f1dace4800d280b",
+   "pngSha256": "e82150817cca4fc671b54f764f079bdcb1f0e21986c7b9ba6543402f4463b735",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-shape.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ba358a23188d51ddc52485c7d0fdb5deb2b174dc4b0e084bfbe58f16a6961043",
+   "pngSha256": "127a385d1c8a6bb9d9ae8b47256b2a1b4ee25df3902cfc480d057bc65f31a5c2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-text-font.wrl",
+   "ok": true,
+   "log": [
+    "warn: Couldn't find font family 'Arial' with style 'PLAIN'.",
+    "warn: Couldn't find font family 'NoSuchFont' with style 'PLAIN'."
+   ],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e5e4910975c94ad0a1e53b6009adfcc230ca91a5f226c3a0bc056a839678d105",
+   "pngSha256": "80b5cb0b3c28d3aa444af14a83c672e666d28018c5ee31d75953e917e43775ef",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-text-layout.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "a8d59f7fdd76e0af99c0b42ecfde58bf37a509605f3f35dc4d59b676fee432fd",
+   "pngSha256": "91345f8e4c975a15ae1de2109ae1f3cc229c13b1e80fa621f4593e4ec6ee5130",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturebackground-corner.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "0c56986d1a6056ee418394cf84c71c253bb22f890042aa92e51cf04d6ea40e2f",
+   "pngSha256": "780b1e495b6f675e5dc425bddf9b628ef9354bf8cb1b055cbf85356aee489c33",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturebackground-front.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "97894e304df4d9923353b1db13061d20be7b379369d996ba332cbfb9be68ae00",
+   "pngSha256": "a8d199cedf4f3ff29a7f47571734a6550e80e26517c9950d9e3d1617a0e4e2f2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturebackground-partial.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "65ac227fe990143ac89ea6ab2ffc12229f9f601d7745c05cb1d787912f3e01d2",
+   "pngSha256": "440d73b8866efcd05bf5d486505e2118a9fee16a2b4aeff0b6d77baf6522d594",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturebackground-sky.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "028534d991def30904a961f048e664054eb7466c1b30375992ed658ee267d6bc",
+   "pngSha256": "8b0712495eea11fd6e866a14a6fd0bc446731adc62a5b3ddd41dbc7364b56d4b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturing.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "bff48f60ca9ffb52eecc5d38cbca2a1db45cb5365034065c92f614a47b317350",
+   "pngSha256": "3e178274f677561ce157c5d0380911dc9c4960845cf77fdc8e069931a5f1a49d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-texturing3d.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "bcca673502a7f58f2e883ff94d237b5fea6f0037981eb4e0993e83f45d65c40f",
+   "pngSha256": "02324bd7aa4ed1ae43d253d2dce2dd5e9c792d639c9bbb3513719c0f4d457feb",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-colorrgba.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b0a615497e66f3ca561d99ae5ad0d633cd5014b71f87a64a987d361159a87ce6",
+   "pngSha256": "999107c2bf990bc986bce55ea94d9d4377f1e053106f1003ac1e7c80cf30e312",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-linecolor.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b79d5a36322e0dce8af87628ef7a4de283d22bc639677e54baee3608c0f53995",
+   "pngSha256": "ad313eee8b43ece5656cefae73299074564f203216ba14f56308b23df9daaff7",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-material-ambient.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "21f3ebd02f2ac4246b3a6dbae8f1ced6608aee333dedb91219fba18bca7374de",
+   "pngSha256": "951a47322e4151f3c2fe1be64ce4fdf4bea8146c4f9e137c5ec5b735575e6edd",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-linecolor-invalid.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "ef1a0f759dfa9ef2ad21ee7fb976a16decaeb67c11d9511a0432212d6ea96e1b",
+   "pngSha256": "7287704dc2e8ffa7ac43f22b636a457db9d62ab2b723fc9cf70f5ca9703f92fa",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-material-ambient-tex.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "22d19bd244f793dee7af17fc5a185a2f86bc8a54265a49437d88fc753b9759ea",
+   "pngSha256": "e28785144eb3c66184ad42acd614782b1b7e1bc933fc953d1c7bc60763986ff8",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  }
+ ]
+}

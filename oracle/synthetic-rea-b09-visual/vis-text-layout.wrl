@@ -1,0 +1,54 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Ab" "Xy" ] fontStyle FontStyle { justify [ "BEGIN" "BEGIN" ] }  solid FALSE } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Ab" "Xy" ] fontStyle FontStyle { justify [ "MIDDLE" "MIDDLE" ] }  solid FALSE } }
+] }
+Transform { translation 1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Ab" "Xy" ] fontStyle FontStyle { justify [ "END" "END" ] }  solid FALSE } }
+] }
+Transform { translation 3.300 2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Ab" "Xy" ] fontStyle FontStyle { justify [ "BEGIN" "FIRST" ] }  solid FALSE } }
+] }
+Transform { translation -3.300 0.000 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Abc" ] fontStyle FontStyle { horizontal FALSE }  solid FALSE } }
+] }
+Transform { translation -1.100 0.000 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Abc" ] fontStyle FontStyle { horizontal FALSE leftToRight FALSE topToBottom FALSE }  solid FALSE } }
+] }
+Transform { translation 1.100 0.000 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Abc" ] fontStyle FontStyle { leftToRight FALSE }  solid FALSE } }
+] }
+Transform { translation 3.300 0.000 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Ab" "Xy" ] fontStyle FontStyle { topToBottom FALSE }  solid FALSE } }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Ab" ]  length [ 3 ] solid FALSE } }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Abcdefg" ]  maxExtent 1 solid FALSE } }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "Ab" "Xyz" ]  length [ 1 2 ] maxExtent 2.5 solid FALSE } }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Shape { appearance Appearance { material Material { emissiveColor 1 0.2 0.2 diffuseColor 0 0 0 } } geometry Box { size 0.08 0.08 0.08 } }
+Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry Text { string [ "A" "" "B" ] fontStyle FontStyle { spacing 1.5 }  solid FALSE } }
+] }

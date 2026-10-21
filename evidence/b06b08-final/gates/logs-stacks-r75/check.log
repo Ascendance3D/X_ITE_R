@@ -1,0 +1,21 @@
+PASS pile-mixed-sensor
+PASS pile-mixed
+PASS pyramid-grid
+PASS pyramid321
+PASS stack12-aligned
+PASS stack12
+PASS stack5-aligned
+PASS stack5-sensor
+PASS stack5
+PASS stack8
+PASS wall3x3
+max abs error per quantity over all cases (tolerance default 0):
+  CollisionSensor.contacts.contactNormal       0.000000e+00
+  CollisionSensor.contacts.depth               0.000000e+00
+  CollisionSensor.contacts.position            0.000000e+00
+  RigidBody.angularVelocity                    0.000000e+00
+  RigidBody.linearVelocity                     0.000000e+00
+  RigidBody.orientation                        0.000000e+00
+  RigidBody.position                           0.000000e+00
+  dt                                           0.000000e+00
+suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds

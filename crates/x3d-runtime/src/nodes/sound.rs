@@ -8,7 +8,9 @@
 //! MediaStreamAudioDestinationNode, whose stream an `<audio>` element plays in X_ITE, is a stereo
 //! GainNode that feeds the context's output here (see `AudioEngine::stream_destination`).
 //!
-//! Not the Sound and AudioClip nodes (they are not part of this port yet).
+//! The VRML97 Sound and AudioClip nodes (Sound.js, AudioClip.js) run on the same graph: AudioClip is an
+//! X3DSoundSourceNode with BufferAudioSource's url loading, Sound keeps X_ITE's stereo / four-gain pan network
+//! and its min/max ellipsoid attenuation (`Runtime::sound_traverse`).
 
 use super::State;
 use crate::sound::{AId, ANode, AudioEngine};
@@ -68,8 +70,10 @@ pub enum SoundCb {
     ReferenceDistance,
     EnableHrtf,
     TrackCurrentView,
-    /// SpatialSound: the browser's sensorEvents (`update`).
+    /// SpatialSound and Sound: the browser's sensorEvents (`update`).
     Update,
+    /// AudioClip.set_pitch__.
+    Pitch,
 }
 
 /// AudioElement.create (Browser/Sound/AudioElement.js): a media element over an AudioBuffer.
@@ -109,8 +113,10 @@ pub struct SoundState {
     pub media: Option<AudioElement>,
     /// MicrophoneSource.restore.
     pub restore: bool,
-    /// SpatialSound.currentTraversed.
+    /// SpatialSound.currentTraversed (Sound too).
     pub current_traversed: bool,
+    /// Sound: the Web Audio nodes beside `gain_node` and `sound_destination`.
+    pub vrml: Option<VrmlSound>,
     /// PeriodicWave.real / imag (Float32Array, kept between createPeriodicWave calls).
     pub real: Vec<f32>,
     pub imag: Vec<f32>,
@@ -118,9 +124,28 @@ pub struct SoundState {
     pub byte_bins: usize,
 }
 
+/// Sound.initialize: gainStereoNode, splitterNode, the four pan gains and mergerNode.
+pub struct VrmlSound {
+    pub stereo: AId,
+    pub splitter: AId,
+    pub front_left: AId,
+    pub front_right: AId,
+    pub back_left: AId,
+    pub back_right: AId,
+    pub merger: AId,
+    /// The closure variables of Sound.getEllipsoidParameter (`sphereMatrix`, `enterPoint`), which keep their
+    /// values between calls. X_ITE shares them between all Sound nodes; here each node has its own.
+    sphere_matrix: x3d_fields::math::Matrix4,
+    enter_point: x3d_fields::math::Vector3,
+}
+
 impl SoundState {
     fn ids(&self) -> Vec<AId> {
         let mut v: Vec<AId> = [self.audio_source, self.audio_destination, self.sound_destination, self.node, self.gain_node].into_iter().flatten().collect();
+
+        if let Some(s) = &self.vrml {
+            v.extend([s.stereo, s.splitter, s.front_left, s.front_right, s.back_left, s.back_right, s.merger]);
+        }
 
         if let Some(m) = &self.media {
             v.push(m.source);
@@ -130,14 +155,17 @@ impl SoundState {
     }
 }
 
-const SOURCES: &[&str] = &["BufferAudioSource", "ListenerPointSource", "MicrophoneSource", "OscillatorSource", "StreamAudioSource"];
+/// The DOMException of a rejected decodeAudioData in Chrome.
+const DECODE_ERROR: &str = "EncodingError: Unable to decode audio data";
+
+const SOURCES: &[&str] = &["AudioClip", "BufferAudioSource", "ListenerPointSource", "MicrophoneSource", "OscillatorSource", "StreamAudioSource"];
 const PROCESSING: &[&str] = &["Analyser", "BiquadFilter", "Convolver", "Delay", "DynamicsCompressor", "Gain", "WaveShaper"];
 const CHANNELS: &[&str] = &["ChannelMerger", "ChannelSelector", "ChannelSplitter"];
 const DESTINATIONS: &[&str] = &["AudioDestination", "StreamAudioDestination"];
 
 /// The Sound component nodes this module runs.
 pub fn is_sound_node(name: &str) -> bool {
-    SOURCES.contains(&name) || PROCESSING.contains(&name) || CHANNELS.contains(&name) || DESTINATIONS.contains(&name) || matches!(name, "SpatialSound" | "PeriodicWave")
+    SOURCES.contains(&name) || PROCESSING.contains(&name) || CHANNELS.contains(&name) || DESTINATIONS.contains(&name) || matches!(name, "Sound" | "SpatialSound" | "PeriodicWave")
 }
 
 /// X3DSoundSourceNode or X3DSoundProcessingNode: an X3DTimeDependentNode.
@@ -266,7 +294,7 @@ impl Runtime {
             self.snd(node).audio_source = Some(a);
         }
 
-        if name == "BufferAudioSource" {
+        if name == "BufferAudioSource" || name == "AudioClip" {
             // X3DUrlObject constructor.
             self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
             self.add_private_field(node, "loadData", access::OUTPUT_ONLY, FieldValue::SFTime(0.0));
@@ -324,7 +352,7 @@ impl Runtime {
                 self.audio().connect(sound_destination, stream);
                 self.snd(node).node = Some(stream);
             }
-            "SpatialSound" => {
+            "SpatialSound" | "Sound" => {
                 self.add_private_field(node, "traversed", access::OUTPUT_ONLY, FieldValue::SFBool(false));
                 self.snd(node).current_traversed = true;
             }
@@ -390,6 +418,20 @@ impl Runtime {
                 self.sound_interest(node, "loopStart", SoundCb::LoopStart);
                 self.sound_interest(node, "loopEnd", SoundCb::LoopEnd);
                 self.buffer_set_buffer(node);
+                self.request_immediate_load(node);
+            }
+            "AudioClip" => {
+                // X3DUrlObject.initialize (set_live__ is registered by X3DTimeDependentNode.initialize, as for
+                // BufferAudioSource).
+                self.interest(node, "load", Cb::UrlSetLoad);
+                self.interest(node, "url", Cb::UrlSetUrl);
+                if let Some(k) = self.private_field(node, "loadData") {
+                    self.add_interest(k, node, Cb::UrlLoadData);
+                }
+                self.interest(node, "autoRefresh", Cb::UrlSetAutoRefresh);
+                self.interest(node, "autoRefreshTimeLimit", Cb::UrlSetAutoRefresh);
+
+                self.sound_interest(node, "pitch", SoundCb::Pitch);
                 self.request_immediate_load(node);
             }
             "MicrophoneSource" => self.sound_interest(node, "mediaDeviceID", SoundCb::MediaDeviceId),
@@ -475,6 +517,7 @@ impl Runtime {
                 self.destination_set_media_device_id(node);
             }
             "SpatialSound" => self.spatial_initialize(node),
+            "Sound" => self.vrml_sound_initialize(node),
             "ListenerPointSource" => {
                 self.sound_interest(node, "enabled", SoundCb::TrackCurrentView);
                 self.sound_interest(node, "trackCurrentView", SoundCb::TrackCurrentView);
@@ -521,6 +564,8 @@ impl Runtime {
                     self.channel_set_children(node)
                 } else if name == "SpatialSound" {
                     self.spatial_set_children(node)
+                } else if name == "Sound" {
+                    self.vrml_sound_set_children(node)
                 } else {
                     self.bus_set_children(node)
                 }
@@ -532,7 +577,7 @@ impl Runtime {
                     self.channel_set_enabled(node)
                 } else if DESTINATIONS.contains(&name) {
                     self.destination_set_enabled(node)
-                } else if name == "SpatialSound" {
+                } else if name == "SpatialSound" || name == "Sound" {
                     self.spatial_set_enabled(node)
                 }
             }
@@ -570,6 +615,11 @@ impl Runtime {
                 } else {
                     self.buffer_set_buffer(node)
                 }
+            }
+            // AudioClip.set_pitch__: `media .playbackRate = Math .max (pitch, 0)`.
+            SoundCb::Pitch => {
+                let v = self.get_f64(node, "pitch").max(0.0);
+                self.media_set(node, |e, m| m.set_playback_rate(e, v));
             }
             SoundCb::PlaybackRate => {
                 let v = self.get_f64(node, "playbackRate");
@@ -637,6 +687,8 @@ impl Runtime {
                     self.destination_set_media_device_id(node)
                 }
             }
+            SoundCb::Spatialize if name == "Sound" => self.vrml_sound_set_spatialize(node),
+            SoundCb::Intensity if name == "Sound" => self.vrml_sound_set_intensity(node),
             SoundCb::Spatialize => self.spatial_set_spatialize(node),
             SoundCb::Intensity => self.spatial_set_intensity(node),
             SoundCb::ConeOuterGain | SoundCb::ConeInnerAngle | SoundCb::ConeOuterAngle | SoundCb::DistanceModel | SoundCb::MaxDistance | SoundCb::ReferenceDistance | SoundCb::EnableHrtf => {
@@ -980,15 +1032,13 @@ impl Runtime {
         self.set_media_element(node, None);
     }
 
-    /// The FileLoader callback with an ArrayBuffer: setArrayBuffer (decodeAudioData), then
-    /// COMPLETE_STATE. A decode error rejects: the load state stays IN_PROGRESS.
+    /// BufferAudioSource.setArrayBuffer: decodeAudioData, the buffer outputs, an AudioElement over the buffer.
+    /// A decode error rejects the FileLoader callback (the next URL is tried, see `buffer_load`).
     pub(crate) fn buffer_set_array_buffer(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
         let buffer = match self.audio().decode(bytes) {
             Ok(b) => b,
-            Err(e) => {
-                self.log_error(format!("EncodingError: Unable to decode audio data ({e})"));
-                return Err(String::new());
-            }
+            // The rejection of decodeAudioData, reported by FileLoader with the candidate (Chrome's message).
+            Err(_) => return Err(DECODE_ERROR.to_string()),
         };
 
         let channels = buffer.number_of_channels();
@@ -1025,6 +1075,32 @@ impl Runtime {
                 s.timer = None;
             }
         }
+    }
+
+    // --- AudioClip ------------------------------------------------------------------------------
+
+    /// AudioClip.unloadData: `setMediaElement (null)`, `duration_changed = -1`.
+    pub(crate) fn audio_clip_unload_data(&mut self, node: NodeId) {
+        self.set_media_element(node, None);
+        self.sound_emit(node, "duration_changed", FieldValue::SFTime(-1.0));
+    }
+
+    /// AudioClip.setArrayBuffer: decodeAudioData, an AudioElement over the buffer, `duration_changed`,
+    /// setMediaElement, set_pitch__. A decode error rejects the FileLoader callback (the next URL is tried).
+    pub(crate) fn audio_clip_set_array_buffer(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
+        let buffer = match self.audio().decode(bytes) {
+            Ok(b) => b,
+            // The rejection of decodeAudioData, reported by FileLoader with the candidate (Chrome's message).
+            Err(_) => return Err(DECODE_ERROR.to_string()),
+        };
+
+        let audio_source = self.snd(node).audio_source.unwrap();
+        let element = AudioElement::create(self.audio(), audio_source, Some(buffer));
+
+        self.sound_emit(node, "duration_changed", FieldValue::SFTime(element.duration));
+        self.set_media_element(node, Some(element));
+        self.sound_call(node, SoundCb::Pitch);
+        Ok(())
     }
 
     // --- MicrophoneSource -----------------------------------------------------------------------
@@ -1770,6 +1846,253 @@ impl Runtime {
         self.snd(node).child_nodes = children;
     }
 
+    // --- Sound ----------------------------------------------------------------------------------
+
+    /// Sound.initialize.
+    fn vrml_sound_initialize(&mut self, node: NodeId) {
+        let e = self.audio();
+        let gain = e.gain(0.0);
+        let stereo = e.gain(0.0);
+        let splitter = e.splitter(2);
+        let front_left = e.gain(0.0);
+        let front_right = e.gain(0.0);
+        let back_left = e.gain(0.0);
+        let back_right = e.gain(0.0);
+        let merger = e.merger(2);
+        let sound_destination = e.gain(0.0);
+
+        e.set_channel_count(gain, 2);
+        e.set_channel_count_mode(gain, "explicit");
+        e.set_channel_interpretation(gain, "speakers");
+
+        e.connect(stereo, sound_destination);
+        e.connect_io(splitter, front_left, 0, 0);
+        e.connect_io(splitter, front_right, 1, 0);
+        e.connect_io(splitter, back_right, 0, 0);
+        e.connect_io(splitter, back_left, 1, 0);
+        e.connect_io(front_left, merger, 0, 0);
+        e.connect_io(front_right, merger, 0, 1);
+        e.connect_io(back_left, merger, 0, 0);
+        e.connect_io(back_right, merger, 0, 1);
+        e.connect(merger, sound_destination);
+        let out = e.destination;
+        e.connect(sound_destination, out);
+
+        let s = self.snd(node);
+        s.gain_node = Some(gain);
+        s.sound_destination = Some(sound_destination);
+        s.vrml = Some(VrmlSound {
+            stereo,
+            splitter,
+            front_left,
+            front_right,
+            back_left,
+            back_right,
+            merger,
+            sphere_matrix: x3d_fields::math::Matrix4::IDENTITY,
+            enter_point: x3d_fields::math::Vector3::ZERO,
+        });
+
+        self.watch_live(node);
+        if let Some(k) = self.private_field(node, "traversed") {
+            self.add_interest(k, node, Cb::Sound(SoundCb::Enabled));
+        }
+        self.sound_interest(node, "enabled", SoundCb::Enabled);
+        self.sound_interest(node, "spatialize", SoundCb::Spatialize);
+        self.sound_interest(node, "intensity", SoundCb::Intensity);
+        self.sound_interest(node, "source", SoundCb::Children);
+        self.sound_interest(node, "children", SoundCb::Children);
+
+        self.spatial_set_enabled(node);
+        self.vrml_sound_set_spatialize(node);
+        self.vrml_sound_set_intensity(node);
+        self.vrml_sound_set_children(node);
+    }
+
+    /// Sound.set_spatialize__.
+    fn vrml_sound_set_spatialize(&mut self, node: NodeId) {
+        let s = self.snd(node);
+        let (gain, splitter, stereo) = (s.gain_node.unwrap(), s.vrml.as_ref().unwrap().splitter, s.vrml.as_ref().unwrap().stereo);
+        let spatialize = self.get_bool(node, "spatialize");
+        let e = self.audio();
+        e.disconnect(gain);
+        e.connect(gain, if spatialize { splitter } else { stereo });
+    }
+
+    /// Sound.set_intensity__.
+    fn vrml_sound_set_intensity(&mut self, node: NodeId) {
+        let v = clamp(self.get_f64(node, "intensity"), 0.0, 1.0);
+        let gain = self.snd(node).gain_node.unwrap();
+        self.audio().set_param(gain, "gain", v);
+    }
+
+    /// Sound.set_children__: the `source` node if it is an X3DSoundSourceNode, then the sound children.
+    fn vrml_sound_set_children(&mut self, node: NodeId) {
+        let gain = self.snd(node).gain_node.unwrap();
+
+        for child in std::mem::take(&mut self.snd(node).child_nodes) {
+            if let Some(a) = self.snd_ref(child).and_then(|s| s.audio_source) {
+                self.audio().disconnect_dest(a, gain);
+            }
+        }
+
+        // MovieTexture is an X3DSoundSourceNode too; its sound is not part of this port, so it only counts.
+        let is_source = |n: &str| (SOURCES.contains(&n) && n != "ListenerPointSource") || n == "MovieTexture";
+        // X3DCast sees through a PROTO instance to its inner node, as for `children`.
+        let mut children: Vec<NodeId> = self.get_sfnode(node, "source").and_then(|n| self.inner_node(n)).filter(|&n| self.builtin_name(n).is_some_and(is_source)).into_iter().collect();
+        children.extend(self.audio_children(node, "children", is_audio_child));
+
+        for &child in &children {
+            if let Some(a) = self.snd_ref(child).and_then(|s| s.audio_source) {
+                self.audio().connect(a, gain);
+            }
+        }
+
+        // setVisibleObject (this .childNodes .length)
+        self.snd(node).child_nodes = children;
+    }
+
+    /// Sound.setGain (gain, pan = 0.5, rotation = 0).
+    fn vrml_sound_set_gain(&mut self, node: NodeId, gain: f64, pan: f64, rotation: f64) {
+        let pan_left = 1.0 - pan.powi(2);
+        let pan_right = 1.0 - (1.0 - pan).powi(2);
+        let rotation_front = 1.0 - rotation;
+        let rotation_back = rotation;
+        let Some(v) = self.snd_ref(node).and_then(|s| s.vrml.as_ref()).map(|v| (v.stereo, v.front_left, v.front_right, v.back_left, v.back_right)) else { return };
+        let e = self.audio();
+
+        for (id, value) in [(v.0, gain), (v.1, gain * rotation_front * pan_left), (v.2, gain * rotation_front * pan_right), (v.3, gain * rotation_back * pan_left), (v.4, gain * rotation_back * pan_right)] {
+            e.set_param(id, "gain", value);
+        }
+    }
+
+    /// Sound.getEllipsoidParameter: the viewer's distance in the space where the ellipsoid is the unit sphere,
+    /// and the point where the line from the viewer to the centre enters it, in view space.
+    fn vrml_sound_ellipsoid(&mut self, node: NodeId, model_view: &x3d_fields::math::Matrix4, back: f64, front: f64) -> (f64, x3d_fields::math::Vector3) {
+        use x3d_fields::math::{Matrix4, Rotation4, Vector3};
+
+        let location = match self.pre_value(node, "location") {
+            Some(FieldValue::SFVec3f(v)) => *v,
+            _ => Vector3::ZERO,
+        };
+        let direction = match self.pre_value(node, "direction") {
+            Some(FieldValue::SFVec3f(v)) => *v,
+            _ => Vector3::new(0.0, 0.0, 1.0),
+        };
+        let Some(state) = self.sound.get_mut(&node).and_then(|s| s.vrml.as_mut()) else { return (1.0, Vector3::ZERO) };
+
+        if back == 0.0 || front == 0.0 {
+            let mut intersection = location;
+            state.sphere_matrix.mult_vec_matrix3(&mut intersection);
+            return (1.0, intersection);
+        }
+
+        let a = (back + front) / 2.0;
+        let e = a - back;
+        let b = (a * a - e * e).sqrt();
+
+        let mut centre = Vector3::new(0.0, 0.0, e);
+        let scale = Vector3::new(b, b, a);
+        let mut rotation = Rotation4::default();
+        rotation.set_vectors(&Vector3::new(0.0, 0.0, 1.0), &direction);
+
+        let mut sphere_matrix = *model_view;
+        sphere_matrix.translate(&location).rotate(&rotation).translate(&centre).scale(&scale);
+        state.sphere_matrix = sphere_matrix;
+
+        let mut inv: Matrix4 = sphere_matrix;
+        inv.inverse();
+
+        let viewer = Vector3::new(inv.0[12], inv.0[13], inv.0[14]);
+        centre.negate().div_vec(&scale);
+
+        let mut normal = centre;
+        normal.subtract(&viewer).normalize();
+
+        // Sphere3 (1, Vector3 .ZERO) .intersectsLine (new Line3 (viewer, normal), enterPoint, exitPoint): no
+        // intersection leaves enterPoint as it was.
+        let bq = 2.0 * viewer.dot(&normal);
+        let c = viewer.x * viewer.x + viewer.y * viewer.y + viewer.z * viewer.z - 1.0;
+        let core = bq * bq - 4.0 * c;
+
+        if core >= 0.0 {
+            let t1 = (-bq + core.sqrt()) / 2.0;
+            let t2 = (-bq - core.sqrt()) / 2.0;
+            let t = t1.min(t2);
+            let mut enter = normal;
+            enter.multiply(t).add(&viewer);
+            state.enter_point = enter;
+        }
+
+        let mut intersection = state.enter_point;
+        state.sphere_matrix.mult_vec_matrix3(&mut intersection);
+
+        (viewer.norm(), intersection)
+    }
+
+    /// Sound.getPan: pan 0 (left) … 1 (right) and rotation 0 (front) … 1 (back) of the source's x axis.
+    fn vrml_sound_pan(&self, node: NodeId, model_view: &x3d_fields::math::Matrix4) -> (f64, f64) {
+        use x3d_fields::math::{Rotation4, Vector3};
+
+        if !self.get_bool(node, "spatialize") {
+            return (0.5, 0.0);
+        }
+
+        let mut location = match self.pre_value(node, "location") {
+            Some(FieldValue::SFVec3f(v)) => *v,
+            _ => Vector3::ZERO,
+        };
+        let direction = match self.pre_value(node, "direction") {
+            Some(FieldValue::SFVec3f(v)) => *v,
+            _ => Vector3::new(0.0, 0.0, 1.0),
+        };
+        let mut rotation = Rotation4::default();
+        rotation.set_vectors(&Vector3::new(0.0, 0.0, 1.0), &direction);
+        straighten(&mut rotation);
+        let mut x_axis = Vector3::new(1.0, 0.0, 0.0);
+        rotation.mult_vec_rot(&mut x_axis);
+
+        model_view.mult_vec_matrix3(&mut location);
+        location.normalize();
+        model_view.mult_dir_matrix(&mut x_axis);
+        x_axis.normalize();
+
+        let pan = 1.0 - clamp(location.x, -1.0, 1.0).acos() / std::f64::consts::PI;
+        let rotation = clamp(x_axis.x, -1.0, 1.0).acos() / std::f64::consts::PI;
+
+        (pan, rotation)
+    }
+
+    /// Sound.traverse.
+    fn vrml_sound_traverse(&mut self, node: NodeId, model_view: &x3d_fields::math::Matrix4) {
+        self.spatial_set_traversed(node, true);
+
+        let max_back = self.get_f64(node, "maxBack").max(0.0);
+        let max_front = self.get_f64(node, "maxFront").max(0.0);
+        let (max_distance, max_intersection) = self.vrml_sound_ellipsoid(node, model_view, max_back, max_front);
+
+        // Radius of normalized sphere is 1.
+        if max_distance < 1.0 {
+            let min_back = self.get_f64(node, "minBack").max(0.0);
+            let min_front = self.get_f64(node, "minFront").max(0.0);
+            let (min_distance, min_intersection) = self.vrml_sound_ellipsoid(node, model_view, min_back, min_front);
+            let (pan, rotation) = self.vrml_sound_pan(node, model_view);
+
+            if min_distance < 1.0 {
+                self.vrml_sound_set_gain(node, 1.0, pan, rotation);
+            } else {
+                // Viewer is here at (0, 0, 0).
+                let d1 = max_intersection.norm();
+                let d2 = max_intersection.distance(&min_intersection);
+                let d = (d1 / d2).min(1.0);
+
+                self.vrml_sound_set_gain(node, d, pan, rotation);
+            }
+        } else {
+            self.vrml_sound_set_gain(node, 0.0, 0.5, 0.0);
+        }
+    }
+
     /// SpatialSound is a visible object while it has sound children.
     pub fn spatial_sound_visible(&self, node: NodeId) -> bool {
         self.snd_ref(node).is_some_and(|s| !s.child_nodes.is_empty())
@@ -1781,6 +2104,11 @@ impl Runtime {
         use x3d_fields::math::{Rotation4, Vector3};
 
         match self.builtin_name(node) {
+            Some("Sound") => {
+                if self.spatial_sound_visible(node) {
+                    self.vrml_sound_traverse(node, model_view);
+                }
+            }
             Some("SpatialSound") => {
                 if !self.spatial_sound_visible(node) {
                     return;
@@ -1870,7 +2198,7 @@ impl Runtime {
     /// `getLive () .addInterest ("set_enabled__")` of a destination node or SpatialSound.
     pub(crate) fn sound_set_live(&mut self, node: NodeId) {
         match self.builtin_name(node) {
-            Some("SpatialSound") => self.spatial_set_enabled(node),
+            Some("SpatialSound" | "Sound") => self.spatial_set_enabled(node),
             Some(n) if DESTINATIONS.contains(&n) => self.destination_set_enabled(node),
             _ => {}
         }
@@ -1899,6 +2227,34 @@ impl Runtime {
                 s.periodic_wave = None;
             }
         }
+    }
+}
+
+/// Rotation4.straighten (upVector = Vector3 .Y_AXIS).
+fn straighten(r: &mut x3d_fields::math::Rotation4) {
+    use x3d_fields::math::{Rotation4, Vector3};
+
+    let mut up = Vector3::new(0.0, 1.0, 0.0);
+    up.normalize();
+    let mut local_x = Vector3::new(-1.0, 0.0, 0.0);
+    r.mult_vec_rot(&mut local_x);
+    let mut local_z = Vector3::new(0.0, 0.0, 1.0);
+    r.mult_vec_rot(&mut local_z);
+
+    // If viewer looks along up vector.
+    if local_z.dot(&up).abs() >= 1.0 {
+        return;
+    }
+
+    let mut new_x = local_z;
+    new_x.cross(&up).normalize();
+
+    if new_x.dot(&local_x) <= -1.0 {
+        r.mult_left(&Rotation4::new(0.0, 0.0, 1.0, std::f64::consts::PI));
+    } else {
+        let mut rotation = Rotation4::default();
+        rotation.set_vectors(&local_x, &new_x);
+        r.mult_right(&rotation);
     }
 }
 

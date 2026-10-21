@@ -1,0 +1,11 @@
+PASS arrays: 611 checks passed, 0 failed, max pose delta 0.00e+00
+PASS chasers: 651 checks passed, 0 failed, max pose delta 0.00e+00
+PASS dampers: 651 checks passed, 0 failed, max pose delta 0.00e+00
+PASS dampers30: 326 checks passed, 0 failed, max pose delta 0.00e+00
+PASS edge: 528 checks passed, 0 failed, max pose delta 0.00e+00
+PASS frames-24: 206 checks passed, 0 failed, max pose delta 0.00e+00
+PASS frames-coarse: 206 checks passed, 0 failed, max pose delta 0.00e+00
+PASS frames-quarter: 206 checks passed, 0 failed, max pose delta 0.00e+00
+PASS initial: 408 checks passed, 0 failed, max pose delta 0.00e+00
+PASS order: 649 checks passed, 0 failed, max pose delta 0.00e+00
+followers suite: 10 of 10 worlds pass

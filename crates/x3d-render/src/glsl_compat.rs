@@ -122,6 +122,8 @@ pub struct Program {
     pub attributes: Vec<AttrDecl>,
     /// Deprecation warnings X3DProgrammableShaderObject.getDefaultUniformsAndAttributes prints.
     pub warnings: Vec<String>,
+    /// The vertex stage's outputs (name, is an array), what `transformFeedbackVaryings` can name.
+    pub vertex_outputs: Vec<(String, bool)>,
 }
 
 /// Slot 0 of every program: x = height of the render target, y = 1 with reversed depth,
@@ -510,7 +512,8 @@ fn resolve_conditionals(s: &str, defines: &mut Defines) -> Result<(String, Optio
             }
             "version" if active => version = arg.split_whitespace().next().and_then(|v| v.parse().ok()),
             "extension" if active => {}
-            "error" if active => return Err(format!("ERROR: 0:{}: '#error' : {}", n + 1, arg)),
+            // ANGLE: `'' :  message` (two spaces).
+            "error" if active => return Err(format!("ERROR: 0:{}: '' :  {}", n + 1, arg)),
             "line" | "pragma" => {}
             "define" | "undef" | "version" | "extension" | "error" => {}
             _ => {
@@ -564,6 +567,8 @@ struct Scan {
     decls: Vec<Decl>,
     structs: HashMap<String, StructDef>,
     has_main: bool,
+    /// `precision mediump float;`: the default precision by type (`float`, `int`, `sampler2D` ...).
+    default_precision: HashMap<String, String>,
     /// Ranges of function bodies are not needed; `main`'s `void` and name tokens are:
     main_rename: Option<(usize, usize)>,
     /// How the declared floats are qualified (for the wrapper's helper declarations).
@@ -634,6 +639,8 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
     let mut has_main = false;
     let mut struct_ranges = vec![];
     let mut main_rename = None;
+    let mut globals: HashSet<String> = HashSet::new();
+    let mut default_precision: HashMap<String, String> = HashMap::new();
     let mut i = 0;
 
     while i < toks.len() {
@@ -680,8 +687,8 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
         }
 
         let Some(last) = end else {
-            let t = &toks[first];
-            return Err(format!("ERROR: 0:{}: '{}' : syntax error", line_of(t.start), text_of(text, t)));
+            // ANGLE reports the end of the source (the line after the last one), no token.
+            return Err(format!("ERROR: 0:{}: '' : syntax error", line_of(text.len())));
         };
 
         let item: Vec<&Tok> = toks[first..=last].iter().collect();
@@ -701,6 +708,10 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
         }
 
         if words[0] == "precision" {
+            if let (Some(q), Some(t)) = (words.get(1), words.get(2)) {
+                default_precision.insert(t.to_string(), q.to_string());
+            }
+
             continue;
         }
 
@@ -798,7 +809,24 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
             }
         }
 
-        let Some(storage) = storage else { continue };
+        let Some(storage) = storage else {
+            // A plain global (`float a;`, `const float a = 1.0;`): only the name matters, for the redefinition check.
+            let mut k = k;
+
+            while words.get(k).is_some_and(|w| matches!(*w, "const" | "highp" | "mediump" | "lowp")) {
+                k += 1;
+            }
+
+            if let (Some(ty), Some(name)) = (words.get(k), words.get(k + 1)) {
+                let known = parse_scalar_ty(ty, &structs).is_some() || sampler_dim(ty).is_some();
+
+                if known && name.as_bytes().first().is_some_and(|c| is_ident_start(*c)) && matches!(words.get(k + 2), Some(&";" | &"[" | &"=" | &",")) && !globals.insert(name.to_string()) {
+                    return Err(format!("ERROR: 0:{}: '{name}' : redefinition", line_of(item[k + 1].start)));
+                }
+            }
+
+            continue;
+        };
 
         let type_name = words.get(k).copied().unwrap_or("").to_string();
         k += 1;
@@ -837,10 +865,16 @@ fn scan(text: &str, defines: &Defines, es3: bool) -> Result<Scan, String> {
             }
         }
 
+        for n in &names {
+            if !globals.insert(n.name.clone()) {
+                return Err(format!("ERROR: 0:{}: '{}' : redefinition", line_of(item[0].start), n.name));
+            }
+        }
+
         decls.push(Decl { range, storage, qualifiers, layout, type_name, names });
     }
 
-    Ok(Scan { text: text_full.to_string(), masked: masked.clone(), decls, structs, struct_ranges, has_main, main_rename, es3 })
+    Ok(Scan { text: text_full.to_string(), masked: masked.clone(), decls, structs, struct_ranges, has_main, default_precision, main_rename, es3 })
 }
 
 fn text_of<'a>(s: &'a str, t: &Tok) -> &'a str {
@@ -950,6 +984,9 @@ struct Analysis {
     es3: bool,
     /// Names the code uses (a uniform the code never reads is inactive: WebGL has no location for it).
     used: Used,
+    /// The precision of each float / int uniform (explicit, else the default of the stage): ANGLE refuses a
+    /// uniform whose precision differs between the stages.
+    uniform_precision: HashMap<String, String>,
 }
 
 /// Identifier uses in the user's code outside declarations.
@@ -1057,6 +1094,59 @@ pub const CUSTOM_OPTIONS: &[&str] = &[
 /// X3D_SHADOWS, X3D_USE_IBL and the *_TEXTURE ones are not).
 const TYPES: &str = include_str!("glsl_types.glsl");
 
+/// The `#define`s in the head of a source: X_ITE's `ShaderSource.getSource` keeps everything up to the
+/// first line that is not white space, a comment, `#version`, `#extension` or one of the other directives
+/// in front of the options and the X_ITE types (so a `#define X3D_PHYSICAL_MATERIAL` there selects the types
+/// the part sees; one further down does not). Only unconditional object-like ones are followed.
+fn head_defines(source: &str) -> Defines {
+    let stripped = strip_comments(source);
+    let mut out = Defines::new();
+    let mut depth = 0i32;
+    let mut lines = stripped.split('\n');
+
+    while let Some(line) = lines.next() {
+        let t = line.trim();
+
+        if t.is_empty() {
+            continue;
+        }
+
+        let Some(rest) = t.strip_prefix('#') else { break };
+        let rest = rest.trim_start();
+        let word: String = rest.chars().take_while(|c| c.is_ascii_alphabetic()).collect();
+        let mut full = rest.to_string();
+
+        while full.ends_with('\\') {
+            full.pop();
+
+            match lines.next() {
+                Some(next) => full.push_str(next.trim()),
+                None => break,
+            }
+        }
+
+        match word.as_str() {
+            "if" | "ifdef" | "ifndef" => depth += 1,
+            "endif" => depth -= 1,
+            "define" if depth == 0 => {
+                let body = full["define".len()..].trim_start();
+                let name: String = body.chars().take_while(|c| c.is_ascii() && is_ident(*c as u8)).collect();
+
+                if !name.is_empty() && !body[name.len()..].starts_with('(') {
+                    out.insert(name.clone(), body[name.len()..].trim().to_string());
+                }
+            }
+            "undef" if depth == 0 => {
+                out.remove(full["undef".len()..].trim());
+            }
+            "line" | "elif" | "else" | "define" | "undef" | "pragma" | "version" | "extension" => {}
+            _ => break,
+        }
+    }
+
+    out
+}
+
 fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, String> {
     let es3 = {
         // `#version 300 es` after comments.
@@ -1066,7 +1156,8 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
             t.starts_with("#version") && t.split_whitespace().nth(1).is_some_and(|v| v == "300")
         })
     };
-    let mut defines = base_defines(stage, es3, options);
+    let mut defines = head_defines(source);
+    defines.extend(base_defines(stage, es3, options));
     // The injected types come first: their constants are macros the user's conditions can see.
     let (types, _) = resolve_conditionals(&strip_comments(TYPES), &mut defines)?;
     let (user, _version) = resolve_conditionals(&strip_comments(source), &mut defines)?;
@@ -1078,7 +1169,7 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
     let boundary_at = types.len() + 1;
     let skip: Vec<(usize, usize)> = s.decls.iter().filter(|d| d.range.0 >= boundary_at).map(|d| (d.range.0 - boundary_at, d.range.1 - boundary_at)).collect();
     let used = used_names(&s.text[boundary_at.min(s.text.len())..], &skip);
-    let mut a = Analysis { stage, scan: s, uniforms: vec![], samplers: vec![], attributes: vec![], varyings: vec![], outputs: vec![], prefix_lines, es3, used };
+    let mut a = Analysis { stage, scan: s, uniforms: vec![], samplers: vec![], attributes: vec![], varyings: vec![], outputs: vec![], prefix_lines, es3, used, uniform_precision: HashMap::new() };
 
     // Only the user's declarations count: those after the injected types.
     let boundary = types.len() + 1;
@@ -1099,7 +1190,25 @@ fn analyze(stage: Stage, source: &str, options: &[String]) -> Result<Analysis, S
                         return Err(err(format!("unsupported uniform type '{}'", d.type_name)));
                     };
 
+                    // float and int based types: explicit precision, else the stage's default.
+                    let category = match d.type_name.as_str() {
+                        "float" | "vec2" | "vec3" | "vec4" | "mat2" | "mat3" | "mat4" | "mat2x2" | "mat2x3" | "mat2x4" | "mat3x2" | "mat3x3" | "mat3x4" | "mat4x2" | "mat4x3" | "mat4x4" => Some("float"),
+                        "int" | "ivec2" | "ivec3" | "ivec4" | "uint" | "uvec2" | "uvec3" | "uvec4" => Some("int"),
+                        _ => None,
+                    };
+                    let precision = category.and_then(|c| {
+                        d.qualifiers.iter().find(|q| is_precision(q)).cloned().or_else(|| a.scan.default_precision.get(c).cloned()).or_else(|| match (stage, c) {
+                            (Stage::Vertex, _) => Some("highp".to_string()),
+                            (Stage::Fragment, "int") => Some("mediump".to_string()),
+                            _ => None,
+                        })
+                    });
+
                     for n in &d.names {
+                        if let Some(p) = &precision {
+                            a.uniform_precision.insert(n.name.clone(), p.clone());
+                        }
+
                         a.uniforms.push((n.name.clone(), ty.clone(), n.array));
                     }
                 }
@@ -1306,6 +1415,12 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
     let in_decl = |pos: usize| a.scan.decls.iter().any(|d| pos >= d.range.0 && pos < d.range.1);
     let sampler_names: HashSet<&str> = info.samplers.iter().map(|s| s.name.as_str()).collect();
     let mut used_frag_output = false;
+
+    // Arrays declared with a literal size (`float a [2];`), by name.
+    let array_sizes: HashMap<&str, u32> = (1..toks.len().saturating_sub(4))
+        .filter(|&k| toks[k].kind == Kind::Ident && toks[k - 1].kind == Kind::Ident && text_of(masked, &toks[k + 1]) == "[" && toks[k + 2].kind == Kind::Number && text_of(masked, &toks[k + 3]) == "]" && matches!(text_of(masked, &toks[k + 4]), ";" | "," | "="))
+        .filter_map(|k| Some((text_of(masked, &toks[k]), text_of(masked, &toks[k + 2]).parse::<u32>().ok()?)))
+        .collect();
     let mut i = 0;
 
     while i < toks.len() {
@@ -1318,8 +1433,31 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
 
         let word = text_of(masked, &t);
         let user_line = || line_of(t.start);
+        let tok = |k: usize| toks.get(k).map(|x| text_of(masked, x));
+        let prev = i.checked_sub(1).and_then(tok);
+
+        // Two ANGLE checks naga does not make (it accepts both): a statement that assigns to a uniform, and a
+        // constant index past the end of an array declared with a constant size.
+        if prev.is_none_or(|p| matches!(p, ";" | "{" | "}")) && tok(i + 1) == Some("=") && tok(i + 2) != Some("=") && a.uniforms.iter().any(|(n, ..)| n == word) {
+            return Err(format!("ERROR: 0:{}: 'assign' : l-value required (can't modify a uniform \"{word}\")", user_line()));
+        }
+
+        if tok(i + 1) == Some("[") && tok(i + 3) == Some("]") && prev.is_none_or(|p| p == "return" || !p.as_bytes().first().is_some_and(|c| is_ident_start(*c))) {
+            if let (Some(index), Some(size)) = (tok(i + 2).and_then(|n| n.parse::<u32>().ok()), array_sizes.get(word)) {
+                if index >= *size {
+                    return Err(format!("ERROR: 0:{}: '[]' : array index out of range", user_line()));
+                }
+            }
+        }
 
         match word {
+            // GLSL ES 1.00 / 3.00 `const in` parameter (read-only); naga takes `in` and `const` alone.
+            "const" if toks.get(i + 1).is_some_and(|x| x.kind == Kind::Ident && text_of(masked, x) == "in") => {
+                edits.push((t.start, toks[i + 1].end, "in".into()));
+                i += 2;
+                continue;
+            }
+            "gl_Position" | "gl_PointSize" if a.stage == Stage::Fragment => return Err(format!("ERROR: 0:{}: '{word}' : undeclared identifier", user_line())),
             "gl_FragColor" if a.stage == Stage::Fragment => {
                 edits.push((t.start, t.end, "_x3d_FragColor".into()));
                 used_frag_output = true;
@@ -1338,6 +1476,8 @@ fn emit(a: &Analysis, info: &LinkInfo) -> Result<Emitted, String> {
                 continue;
             }
             "gl_FragCoord" if a.stage == Stage::Fragment => edits.push((t.start, t.end, "_x3d_FragCoord()".into())),
+            // wgpu draws a point as one pixel (no point size): the centre of a one pixel sprite.
+            "gl_PointCoord" if a.stage == Stage::Fragment => edits.push((t.start, t.end, "vec2 (0.5)".into())),
             "gl_PointSize" if a.stage == Stage::Vertex => edits.push((t.start, t.end, "_x3d_PointSize".into())),
             w if BUILTIN_SAMPLING.iter().any(|(n, _)| *n == w) || BUILTIN_FETCH.contains(&w) => {
                 // name ( sampler , …
@@ -1546,6 +1686,161 @@ fn ty_components(ty: &str) -> u32 {
 
 // ---- naga -------------------------------------------------------------------------------------
 
+/// The functions a block calls (indices into the function arena).
+fn calls_in(block: &naga::Block, out: &mut Vec<usize>) {
+    use naga::Statement as S;
+
+    for st in block.iter() {
+        match st {
+            S::Call { function, .. } => out.push(function.index()),
+            S::Block(b) => calls_in(b, out),
+            S::If { accept, reject, .. } => {
+                calls_in(accept, out);
+                calls_in(reject, out);
+            }
+            S::Switch { cases, .. } => cases.iter().for_each(|c| calls_in(&c.body, out)),
+            S::Loop { body, continuing, .. } => {
+                calls_in(body, out);
+                calls_in(continuing, out);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn remap_calls(block: &mut naga::Block, map: &[naga::Handle<naga::Function>]) {
+    use naga::Statement as S;
+
+    for st in block.iter_mut() {
+        match st {
+            S::Call { function, .. } => *function = map[function.index()],
+            S::Block(b) => remap_calls(b, map),
+            S::If { accept, reject, .. } => {
+                remap_calls(accept, map);
+                remap_calls(reject, map);
+            }
+            S::Switch { cases, .. } => cases.iter_mut().for_each(|c| remap_calls(&mut c.body, map)),
+            S::Loop { body, continuing, .. } => {
+                remap_calls(body, map);
+                remap_calls(continuing, map);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn remap_function(f: &mut naga::Function, map: &[naga::Handle<naga::Function>]) {
+    for (_, e) in f.expressions.iter_mut() {
+        if let naga::Expression::CallResult(h) = e {
+            *h = map[h.index()];
+        }
+    }
+
+    remap_calls(&mut f.body, map);
+}
+
+/// Whether control never reaches the end of `block` (it ends in return / break / continue / discard, also
+/// through a nested block or an if whose branches both end so).
+fn ends_in_terminator(block: &naga::Block) -> bool {
+    use naga::Statement as S;
+
+    match block.iter().last() {
+        Some(S::Return { .. } | S::Break | S::Continue | S::Kill) => true,
+        Some(S::Block(b)) => ends_in_terminator(b),
+        Some(S::If { accept, reject, .. }) => ends_in_terminator(accept) && ends_in_terminator(reject),
+        _ => false,
+    }
+}
+
+/// naga's GLSL front end marks a case whose body ends in `return` (not in `break`) as falling through, and
+/// the WGSL writer refuses such a case. A case that cannot reach its end does not fall through.
+fn fix_fall_through(block: &mut naga::Block) {
+    use naga::Statement as S;
+
+    for st in block.iter_mut() {
+        match st {
+            S::Block(b) => fix_fall_through(b),
+            S::If { accept, reject, .. } => {
+                fix_fall_through(accept);
+                fix_fall_through(reject);
+            }
+            S::Switch { cases, .. } => {
+                for c in cases.iter_mut() {
+                    fix_fall_through(&mut c.body);
+
+                    if c.fall_through && ends_in_terminator(&c.body) {
+                        c.fall_through = false;
+                    }
+                }
+            }
+            S::Loop { body, continuing, .. } => {
+                fix_fall_through(body);
+                fix_fall_through(continuing);
+            }
+            _ => {}
+        }
+    }
+}
+
+/// naga numbers functions in the order the front end finishes them and its validator wants a callee before
+/// its caller. GLSL allows `float f ();` before the use and the definition after it (X_ITE's own Fragment
+/// include does that for `getMaterialColor`), which gives the opposite order: callees first, original
+/// order otherwise.
+fn sort_functions(module: &mut naga::Module) {
+    let n = module.functions.len();
+    let deps: Vec<Vec<usize>> = module
+        .functions
+        .iter()
+        .map(|(_, f)| {
+            let mut d = vec![];
+            calls_in(&f.body, &mut d);
+            d
+        })
+        .collect();
+
+    fn visit(i: usize, deps: &[Vec<usize>], state: &mut [u8], order: &mut Vec<usize>) {
+        if state[i] != 0 {
+            return;
+        }
+
+        state[i] = 1;
+
+        for &d in &deps[i] {
+            visit(d, deps, state, order);
+        }
+
+        order.push(i);
+    }
+
+    let (mut state, mut order) = (vec![0u8; n], Vec::with_capacity(n));
+
+    for i in 0..n {
+        visit(i, &deps, &mut state, &mut order);
+    }
+
+    if order.iter().enumerate().all(|(k, &i)| k == i) {
+        return;
+    }
+
+    let mut old: Vec<Option<(naga::Function, naga::Span)>> = module.functions.drain().map(|(_, f, s)| Some((f, s))).collect();
+    let mut map = vec![None; n];
+
+    for &i in &order {
+        let (f, s) = old[i].take().expect("each function once");
+        map[i] = Some(module.functions.append(f, s));
+    }
+
+    let map: Vec<naga::Handle<naga::Function>> = map.into_iter().map(|h| h.expect("mapped")).collect();
+
+    for (_, f) in module.functions.iter_mut() {
+        remap_function(f, &map);
+    }
+
+    for ep in module.entry_points.iter_mut() {
+        remap_function(&mut ep.function, &map);
+    }
+}
+
 /// naga GLSL -> validated module -> WGSL, then WGSL -> module again with the capabilities wgpu
 /// gives a default device, so the pipeline creation cannot fail on it later.
 fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
@@ -1567,9 +1862,19 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
             let line = line.saturating_sub(e.line_base).max(1);
             let message = err.kind.to_string();
 
+            if std::env::var_os("X3D_GLSL_DEBUG").is_some() {
+                eprintln!("naga ({stage:?}) line {line}: {message}");
+            }
+
             // The compiler of the pinned X_ITE is ANGLE: its texts for the two commonest mistakes.
             if let Some(name) = message.strip_prefix("Unknown variable: ") {
                 out.push(format!("ERROR: 0:{line}: '{name}' : undeclared identifier"));
+            } else if let Some(name) = message.strip_prefix("Unknown function '").and_then(|m| m.strip_suffix('\'')) {
+                out.push(format!("ERROR: 0:{line}: '{name}' : no matching overloaded function found"));
+            } else if let Some(sel) = message.strip_prefix("Invalid swizzle for vector \"").and_then(|m| m.strip_suffix('"')) {
+                let sets = ["xyzw", "rgba", "stpq"];
+                let known = sets.iter().any(|s| sel.chars().all(|c| s.contains(c)));
+                out.push(format!("ERROR: 0:{line}: '{sel}' : {}", if known || sets.iter().any(|s| sel.chars().any(|c| s.contains(c))) { "vector field selection out of range" } else { "illegal vector field selection" }));
             } else if message.starts_with("Expected ") && message.contains(", found ") {
                 let token = err.meta.to_range().and_then(|r| e.text.get(r)).map(str::trim).filter(|t| !t.is_empty() && t.len() < 40).map(str::to_string).or_else(|| {
                     let found = message.rsplit(", found ").next()?;
@@ -1583,6 +1888,17 @@ fn to_wgsl(stage: Stage, e: &Emitted) -> Result<String, String> {
 
         out.join("\n")
     })?;
+    let mut module = module;
+    sort_functions(&mut module);
+
+    for (_, f) in module.functions.iter_mut() {
+        fix_fall_through(&mut f.body);
+    }
+
+    for ep in module.entry_points.iter_mut() {
+        fix_fall_through(&mut ep.function.body);
+    }
+
     let info = naga::valid::Validator::new(naga::valid::ValidationFlags::all(), naga::valid::Capabilities::empty())
         .validate(&module)
         .map_err(|err| format!("ERROR: 0:1: {}", err.as_inner()))?;
@@ -1639,7 +1955,13 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         for (name, ty, array) in &p.uniforms {
             if let Some(u) = uniforms.iter().find(|u| u.name == *name) {
                 if u.ty != *ty || u.array != *array {
-                    return Err(format!("ERROR: Uniform '{name}' is declared with different types in the shaders."));
+                    return Err(format!("Types of uniform '{name}' differ between VERTEX and FRAGMENT shaders."));
+                }
+
+                let precisions: Vec<&String> = parts.iter().filter_map(|q| q.uniform_precision.get(name)).collect();
+
+                if precisions.len() > 1 && precisions.windows(2).any(|w| w[0] != w[1]) {
+                    return Err(format!("Precisions of uniform '{name}' differ between VERTEX and FRAGMENT shaders."));
                 }
 
                 continue;
@@ -1680,7 +2002,7 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         for (name, array, dim) in &p.samplers {
             if let Some((d, a)) = seen.get(name) {
                 if d != dim || a != array {
-                    return Err(format!("ERROR: Uniform '{name}' is declared with different types in the shaders."));
+                    return Err(format!("Types of uniform '{name}' differ between VERTEX and FRAGMENT shaders."));
                 }
 
                 continue;
@@ -1766,8 +2088,8 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
         for (name, ty, ..) in &f.varyings {
             match v.varyings.iter().find(|(n, ..)| n == name) {
                 Some((_, vty, ..)) if vty == ty => {}
-                Some(_) => return Err(format!("ERROR: Varying '{name}' has different types in the vertex and fragment shaders.")),
-                None => return Err(format!("ERROR: Fragment shader input varying '{name}' has no matching output in the vertex shader.")),
+                Some(_) => return Err(format!("Types of varying '{name}' differ between VERTEX and FRAGMENT shaders.")),
+                None => return Err(format!("FRAGMENT varying {name} does not match any VERTEX varying")),
             }
         }
     } else {
@@ -1797,7 +2119,9 @@ fn link_analyses(parts: &[&Analysis], both: bool) -> Result<Program, String> {
 
     let warnings = deprecated_warnings(parts, &leaves, &samplers, &attributes);
 
-    Ok(Program { key: h.finish(), vs_wgsl, fs_wgsl, slots: next, uniforms, leaves, samplers, attributes, warnings })
+    let vertex_outputs = parts.iter().filter(|p| p.stage == Stage::Vertex).flat_map(|p| p.varyings.iter().map(|(n, _, _, a)| (n.clone(), a.is_some()))).collect();
+
+    Ok(Program { key: h.finish(), vs_wgsl, fs_wgsl, slots: next, uniforms, leaves, samplers, attributes, warnings, vertex_outputs })
 }
 
 // ---- helpers for the host ---------------------------------------------------------------------
@@ -1914,6 +2238,40 @@ fn deprecated_warnings(parts: &[&Analysis], leaves: &HashMap<String, Leaf>, samp
     }
 
     warnings
+}
+
+/// `gl.transformFeedbackVaryings (program, varyings, INTERLEAVED_ATTRIBS)` before the link: ComposedShader
+/// .setTransformFeedbackVaryings (only X_ITE's own shaders set it; there is no field). The program links
+/// and then the names are checked as the driver does (ANGLE texts, measured through `browser .createShader`):
+/// an empty list does nothing, `gl_Position` and `gl_PointSize` and the vertex outputs can be captured, an
+/// array or an element of one cannot, a name twice is refused.
+pub fn check_transform_feedback(program: &Program, varyings: &[String]) -> Result<(), String> {
+    let mut seen: Vec<&str> = vec![];
+
+    for name in varyings {
+        if name.is_empty() {
+            continue;
+        }
+
+        if name.contains('[') {
+            return Err("Capture of array elements is undefined and not supported.".into());
+        }
+
+        if seen.contains(&name.as_str()) {
+            return Err(format!("Two transform feedback varyings specify the same output variable ({name})."));
+        }
+
+        seen.push(name);
+
+        match program.vertex_outputs.iter().find(|(n, _)| n == name) {
+            Some((_, true)) => return Err("Capture of arrays is undefined and not supported.".into()),
+            Some(_) => {}
+            None if matches!(name.as_str(), "gl_Position" | "gl_PointSize") => {}
+            None => return Err(format!("Transform feedback varying {name} does not exist in the vertex shader.")),
+        }
+    }
+
+    Ok(())
 }
 
 /// Memoized link (the node link and the renderer ask for the same program).

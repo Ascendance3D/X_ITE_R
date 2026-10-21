@@ -1,0 +1,112 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: function `default_unit` is never used
+   --> crates/x3d-render/src/shader_gpu.rs:304:4
+    |
+304 | fn default_unit(dim: SamplerDim) -> u32 {
+    |    ^^^^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 5 warnings
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-viewer)
+    Finished `release` profile [optimized] target(s) in 1.07s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/rea_batch08_shaders.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch08_shaders-1dd38b57a9063c87)
+
+running 1 test
+26 cases checked (images: true)
+test rea_batch08_shader_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.48s
+
+     Running tests/svg_b08_lifecycle.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/svg_b08_lifecycle-33524781a9f1926e)
+
+running 2 tests
+MEM	svg-inline-cycle	10	live_nodes=49	arena=50	nrt=49	frt=521	contexts=2	heap_bytes=3175665	rss_kib=17968
+MEM	svg-inline-cycle	50	live_nodes=49	arena=50	nrt=49	frt=521	contexts=2	heap_bytes=3175697	rss_kib=17968
+MEM	svg-inline-cycle	100	live_nodes=49	arena=50	nrt=49	frt=521	contexts=2	heap_bytes=3175697	rss_kib=17968
+test an_svg_inline_comes_and_goes_100_cycles ... ok
+MEM	svg-parse-cycle	10	heap_bytes=2837971	rss_kib=18732
+MEM	svg-parse-cycle	50	heap_bytes=2838003	rss_kib=18756
+MEM	svg-parse-cycle	100	heap_bytes=2838003	rss_kib=18760
+test parsing_svg_100_times_keeps_nothing ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.45s
+

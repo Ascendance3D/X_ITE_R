@@ -21,7 +21,7 @@ fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
 
 fn worlds() -> Vec<PathBuf> {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-b08-shaders");
-    ["basic.wrl", "es300.wrl", "lights.wrl", "texture-field.wrl", "texture-appearance.wrl", "attrib-float.wrl", "geometries.wrl", "fog.wrl", "bad-syntax.wrl", "select-first-valid.wrl", "file-fallback.wrl", "stub-nodes.wrl"].iter().map(|n| dir.join(n)).collect()
+    ["basic.wrl", "es300.wrl", "lights.wrl", "texture-field.wrl", "texture-appearance.wrl", "attrib-float.wrl", "geometries.wrl", "fog.wrl", "bad-syntax.wrl", "select-first-valid.wrl", "file-fallback.wrl", "stub-nodes.wrl", "ctx-phong-light.wrl", "ctx-pbr.wrl", "ctx-fog.wrl", "ctx-texture.wrl"].iter().map(|n| dir.join(n)).collect()
 }
 
 fn shot(v: &mut EmbeddedViewer, device: &wgpu::Device, queue: &wgpu::Queue, now: f64) -> Vec<u8> {
@@ -70,9 +70,12 @@ fn rea_b08_shaders_survive_reload_and_are_released() {
             }
             let first = shot(&mut v, &device, &queue, now);
             let counts = v.renderer().shader_resources();
+            // The previous world's objects stay up to KEEP_FRAMES frames, so whether this world draws
+            // with its shader is read from the draws of the last frame.
+            let draws = v.renderer().shader_draws();
             let invalid = name.starts_with("bad-");
-            assert!(invalid || counts[1] > 0, "{name}: no shader pipeline {counts:?}");
-            assert!(!invalid || counts == [0; 5], "{name}: an invalid shader drew {counts:?}");
+            assert!(invalid || (counts[1] > 0 && draws > 0), "{name}: no shader draw {counts:?}, {draws} draws");
+            assert!(!invalid || draws == 0, "{name}: an invalid shader drew ({draws} draws)");
 
             for round in 0..5 {
                 v.reload().unwrap();

@@ -1,0 +1,3 @@
+error: no test target named `svg_b08_lifecycle` in `x3d-parse` package
+help: available test in `x3d-viewer` package:
+    svg_b08_lifecycle

@@ -1,0 +1,48 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  8,
+  20,
+  35,
+  62,
+  70,
+  90,
+  110,
+  130,
+  150
+ ],
+ "dump": [],
+ "frames": 150,
+ "events": [
+  {
+   "frame": 5,
+   "type": "key",
+   "key": "PageDown"
+  },
+  {
+   "frame": 60,
+   "type": "key",
+   "key": "PageDown"
+  },
+  {
+   "frame": 80,
+   "type": "key",
+   "key": "PageDown"
+  },
+  {
+   "frame": 100,
+   "type": "key",
+   "key": "Home"
+  },
+  {
+   "frame": 120,
+   "type": "key",
+   "key": "End"
+  }
+ ]
+}

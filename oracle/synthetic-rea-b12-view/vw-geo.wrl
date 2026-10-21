@@ -1,0 +1,60 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Geospatial:1
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+DEF PT Transform { translation 0.5 0.2 0 rotation 0 1 0 0.3 children DEF VP GeoViewpoint { position 0 0 10 orientation 1 0 0 -1.4 fieldOfView 0.7 } }
+GeoLocation { geoCoords 0 0 0 children [
+DEF G Transform { rotation 0 1 0 0.4 children [
+  Transform { translation -1.5 0 0 rotation 1 0 0 0.5 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 1.5 } } }
+  Transform { translation 1.5 0.3 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.9 } } }
+  Transform { translation 0 2.5 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.9 0.4 } } geometry Box { size 1 1 1 } } }
+] }
+DEF PS ProximitySensor { size 10000 10000 10000 }
+] }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOnly SFVec3f pos
+  inputOnly SFRotation ori
+  inputOnly SFVec3f cor
+  inputOnly SFBool b_VP
+  inputOnly SFTime t_VP
+  initializeOnly SFNode vp USE VP
+  initializeOnly SFNode pt USE PT
+  inputOutput MFString out [ ]
+  url "javascript:
+var K_ = -1, F_ = 0, R_ = [], L_ = { };
+function nums (v) { return String (v) .split (/\\s+/) .map (Number); }
+function rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }
+function prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }
+function pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }
+function pos (v) { pose ('position', v); }
+function ori (v) { pose ('orientation', v); }
+function cor (v) { pose ('centerOfRotation', v); }
+function b_VP (v) { rec ('VP.isBound', v); }
+function t_VP (v) { rec ('VP.bindTime', 'T'); }
+function on_key (k)
+{
+   ++ K_; F_ = 0;
+   rec ('key', k);
+   if (k == 'a') Browser .viewAll ();
+   if (k == 'b') Browser .viewAll (0.5);
+   if (k == 'c') Browser .viewAll (0);
+   if (k == 'd') { Browser .setBrowserOption ('StraightenHorizon', false); Browser .viewAll (0.4); }
+   if (k == 'e') { vp .orientation = new SFRotation (0.2, 0.1, 1, 0.5); }
+   if (k == 'f') Browser .viewAll (null, 0.4);
+   if (k == 'g') { Browser .setBrowserOption ('StraightenHorizon', true); Browser .viewAll (0.4); }
+   if (k == 'h') { pt .rotation = new SFRotation (0, 0, 1, -0.3); pt .translation = new SFVec3f (0.4, -0.2, 0); Browser .viewAll (0.3); }
+   if (k == 'i') Browser .viewAll ('x', 0.2);
+   if (k == 'j') Browser .viewAll (Browser .currentScene .getNamedNode ('G'), 0.2);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE PS.position_changed TO R.pos
+ROUTE PS.orientation_changed TO R.ori
+ROUTE PS.centerOfRotation_changed TO R.cor
+ROUTE VP.isBound TO R.b_VP
+ROUTE VP.bindTime TO R.t_VP

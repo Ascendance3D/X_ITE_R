@@ -1,0 +1,43 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Abc" ] fontStyle ScreenFontStyle { pointSize 8 } solid FALSE } } ] } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Abc" ] fontStyle ScreenFontStyle { pointSize 36 } solid FALSE } } ] } }
+] }
+Transform { translation 1.100 2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Ab" "Cd" ] fontStyle ScreenFontStyle { pointSize 16 horizontal FALSE } solid FALSE } } ] } }
+] }
+Transform { translation 3.300 2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Ab" "Cd" ] fontStyle ScreenFontStyle { pointSize 16 horizontal FALSE leftToRight FALSE topToBottom FALSE } solid FALSE } } ] } }
+] }
+Transform { translation -3.300 0.000 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Ab" "Cd" ] fontStyle ScreenFontStyle { pointSize 14 justify [ "END" "END" ] } solid FALSE } } ] } }
+] }
+Transform { translation -1.100 0.000 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Ab" "Cdefg" ] fontStyle ScreenFontStyle { pointSize 14 justify [ "BEGIN" "FIRST" ] spacing 1.4 } solid FALSE } } ] } }
+] }
+Transform { translation 1.100 0.000 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Abcd" ] fontStyle ScreenFontStyle { pointSize 14 } length [ 90 ] solid FALSE } } ] } }
+] }
+Transform { translation 3.300 0.000 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Abcdefgh" ] fontStyle ScreenFontStyle { pointSize 14 } maxExtent 40 solid FALSE } } ] } }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Mono" ] fontStyle ScreenFontStyle { family "TYPEWRITER" pointSize 16 } solid FALSE } } ] } }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Italic" ] fontStyle ScreenFontStyle { family "SERIF" style "ITALIC" pointSize 20 } solid FALSE } } ] } }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Sans" ] fontStyle ScreenFontStyle { family [ "NoSuchFont" "SANS" ] style "BOLDITALIC" pointSize 16 } solid FALSE } } ] } }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Transform { translation 0 0 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "A" "" "B" ] fontStyle ScreenFontStyle { pointSize 14 spacing 2 } solid FALSE } } ] } }
+] }

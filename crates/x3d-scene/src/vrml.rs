@@ -24,11 +24,16 @@ pub struct VrmlGenerator<'a> {
     index: HashMap<CtxId, CtxIndex>,
     /// The predefined field whose value prints next (for its unit category).
     pub(crate) unit_field: Option<(NodeId, String)>,
+    /// The field whose value prints next, for its raw components (Scene::raw_tokens).
+    pub(crate) raw_field: Option<(NodeId, FieldLoc)>,
+    /// Contexts on the stack at or below this depth only name nodes: a node's or a field's own `toXXXString` pushes a `null`
+    /// execution context in X_ITE, so X3DGenerator.ToUnit leaves every value as it is.
+    pub(crate) unit_base: usize,
 }
 
 impl<'a> VrmlGenerator<'a> {
     pub fn new(scene: &'a Scene) -> Self {
-        VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new(), unit_field: None }
+        VrmlGenerator { g: Generator::default(), scene, stack: vec![], index: HashMap::new(), unit_field: None, raw_field: None, unit_base: 0 }
     }
 
     pub fn push_ctx(&mut self, ctx: Option<CtxId>) {
@@ -256,7 +261,7 @@ impl<'a> VrmlGenerator<'a> {
                 g.tidy_space();
                 g.push(":");
                 g.tidy_space();
-                g.push(&level.to_string());
+                g.push(&scene.component_level_text(root, name, *level));
                 g.brk();
             }
 
@@ -519,11 +524,56 @@ impl<'a> VrmlGenerator<'a> {
                 }
             },
             _ => {
+                let converted = match self.take_raw(value) {
+                    Some(RawOut::Texts(texts)) => return write_raw(&mut self.g, &texts, value, false),
+                    Some(RawOut::Value(v)) => Some(v),
+                    None => None,
+                };
+
                 self.apply_units();
-                value.to_vrml_stream(&mut self.g);
+                converted.as_ref().unwrap_or(value).to_vrml_stream(&mut self.g);
                 self.g.set_unit_factors(1.0, 1.0);
             }
         }
+    }
+
+    /// Does X3DGenerator.ToUnit convert here (an execution context that is not only the naming frame of a standalone print)?
+    pub(crate) fn units_apply(&self) -> bool {
+        self.stack.len() > self.unit_base && self.current().is_some()
+    }
+
+    /// The raw component texts of the value printing next (`raw_field`, taken), when ToUnit leaves the components as they are:
+    /// no execution context, or a field without a unit category. X3DGenerator.FloatFormat then writes `String (value)`.
+    pub(crate) fn take_raw(&mut self, value: &FieldValue) -> Option<RawOut> {
+        let (id, loc) = self.raw_field.take()?;
+        let raw = self.scene.raw_tokens.get(&(id, loc))?;
+        let unit = match loc {
+            FieldLoc::Pre(i) => self.scene.field_has_unit(id, &self.scene.node(id).fields[i].name),
+            _ => false,
+        };
+        let number = unit && self.units_apply();
+        let supplied = match &mut *self.scene.raw_print.borrow_mut() {
+            RawPrint::Log(log) => {
+                log.push(RawRequest { host: raw.host, token: raw.token, number });
+                None
+            }
+            RawPrint::Supply(queue) => queue.pop_front().flatten(),
+            RawPrint::Off => None,
+        };
+
+        if number {
+            // ToUnit divides each component: a raw one is its ToNumber now.
+            return supplied.map(|components| RawOut::Value(with_numbers(value, &components)));
+        }
+
+        self.unit_field = None;
+
+        let texts = match supplied {
+            Some(components) => components.into_iter().map(|c| if let Some(RawComponent::Text(t)) = c { Some(t) } else { None }).collect(),
+            None => raw.texts.to_vec(),
+        };
+
+        Some(RawOut::Texts(texts))
     }
 
     /// Generator.ToUnit for the next value: `this .ExecutionContext () ?.toUnit (category, value) ?? value`,
@@ -531,11 +581,11 @@ impl<'a> VrmlGenerator<'a> {
     pub(crate) fn apply_units(&mut self) {
         let unit_field = self.unit_field.take();
         let (unit, angle) = match self.current() {
-            Some(ctx) => match &unit_field {
+            Some(ctx) if self.stack.len() > self.unit_base => match &unit_field {
                 Some((n, name)) => self.scene.unit_factors(ctx, Some(*n), name),
                 None => self.scene.unit_factors(ctx, None, ""),
             },
-            None => (1.0, 1.0),
+            _ => (1.0, 1.0),
         };
 
         self.g.set_unit_factors(unit, angle);
@@ -696,6 +746,8 @@ impl<'a> VrmlGenerator<'a> {
 
             if field.is_initializable() {
                 self.g.space();
+
+                self.raw_field = self.scene.node(id).user_fields.iter().position(|f| std::ptr::eq(f, field)).map(|k| (id, FieldLoc::User(k)));
                 self.value_to_vrml(&field.value);
             }
         } else {
@@ -750,6 +802,7 @@ impl<'a> VrmlGenerator<'a> {
                 self.g.indent();
                 self.g.push(&field.name);
                 self.g.space();
+                self.raw_field = Some((id, FieldLoc::Pre(i)));
                 self.field_value_to_vrml(id, &field.name, &field.value);
             }
         } else {
@@ -777,18 +830,18 @@ impl<'a> VrmlGenerator<'a> {
                 self.g.indent();
                 self.g.push(&field.name);
                 self.g.space();
+                self.raw_field = Some((id, FieldLoc::Pre(i)));
                 self.field_value_to_vrml(id, &field.name, &field.value);
             }
         }
     }
 
-    /// X3DBaseNode.getConvertedFields → OrthoViewpoint.convertFields: for specification versions up to 4.0
-    /// the field is an MFFloat, but it is written as an SFVec4f (`new Fields .SFVec4f (... this ._fieldOfView)`).
+    /// X3DBaseNode.getConvertedFields → OrthoViewpoint.convertFields: the MFFloat is written as an SFVec4f
+    /// (`new Fields .SFVec4f (... this ._fieldOfView)`, whatever its length; see [`crate::xml::field_of_view_vec4`]).
     fn field_value_to_vrml(&mut self, id: NodeId, name: &str, value: &FieldValue) {
         if let FieldValue::MFFloat(v) = value {
-            if name == "fieldOfView" && v.len() == 4 && self.scene.type_name(id) == "OrthoViewpoint" {
-                let v4 = x3d_fields::math::Vector4::new(v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64);
-                FieldValue::SFVec4f(v4).to_vrml_stream(&mut self.g);
+            if name == "fieldOfView" && self.scene.type_name(id) == "OrthoViewpoint" {
+                FieldValue::SFVec4f(crate::xml::field_of_view_vec4(v)).to_vrml_stream(&mut self.g);
                 return;
             }
         }
@@ -812,6 +865,10 @@ fn is_underscore_number(name: &str) -> bool {
 impl Scene {
     /// `scene .toVRMLString ()` with X_ITE's default (TIDY) generator options.
     pub fn to_vrml_string(&self) -> String {
+        if self.world != ROOT {
+            return self.to_vrml_string_ctx(self.world);
+        }
+
         VrmlGenerator::new(self).scene_to_vrml()
     }
 
@@ -828,9 +885,50 @@ impl Scene {
         let ctx = self.node(node).ctx;
 
         g.push_ctx(Some(ctx));
+        g.unit_base = 1;
         g.node_to_vrml(node);
         g.pop_ctx();
         g.g.string
+    }
+
+    /// The execution context of the first node a node-valued field holds (what a field's `toXXXString` prints names against).
+    pub(crate) fn first_node_ctx(&self, value: &FieldValue) -> Option<CtxId> {
+        let first = match value {
+            FieldValue::SFNode(n) => *n,
+            FieldValue::MFNode(list) => list.iter().flatten().next().copied(),
+            _ => None,
+        };
+
+        first.map(|n| self.node(n).ctx)
+    }
+
+    /// `field .toVRMLString ()` of a node-valued field: the nodes in full, named by their own execution context.
+    pub fn node_value_to_vrml_string(&self, value: &FieldValue) -> String {
+        let mut g = VrmlGenerator::new(self);
+
+        g.push_ctx(self.first_node_ctx(value));
+        g.unit_base = 1;
+        g.value_to_vrml(value);
+        g.pop_ctx();
+        g.g.string
+    }
+
+    /// `field .toString ()` of a node-valued field: X3DNode.toStream prints only `TypeName { }`.
+    pub fn node_value_to_string(&self, value: &FieldValue) -> String {
+        let one = |n: &Option<NodeId>| match n {
+            Some(n) => format!("{} {{ }}", self.type_name(*n)),
+            None => "NULL".to_string(),
+        };
+
+        match value {
+            FieldValue::SFNode(n) => one(n),
+            FieldValue::MFNode(list) => match list.len() {
+                0 => "[ ]".to_string(),
+                1 => one(&list[0]),
+                _ => format!("[\n{}\n]", list.iter().map(|n| format!("  {}", one(n))).collect::<Vec<_>>().join("\n")),
+            },
+            _ => String::new(),
+        }
     }
 
     /// Remove a route (X3DExecutionContext.deleteRoute); the removed route, if any.
@@ -845,5 +943,94 @@ impl Scene {
         self.field_mut(source, src).output_routes -= 1;
         self.field_mut(destination, dst).input_routes -= 1;
         Some(r)
+    }
+}
+
+
+/// SFVecPrototypeTemplate / SFColor toStream (or toJSONStreamValue, `json`) of a value with raw components: `String (raw)` for each
+/// one that is not a number (X3DGenerator.FloatFormat, JSONGenerator.Number), the format of the number for the others.
+pub(crate) fn write_raw(g: &mut Generator, texts: &[Option<String>], value: &FieldValue, json: bool) {
+    let (numbers, double): (Vec<f64>, bool) = match value {
+        FieldValue::SFColor(c) => (c.components().to_vec(), false),
+        FieldValue::SFColorRGBA(c) => (c.components().to_vec(), false),
+        FieldValue::SFVec2f(v) => (v.to_array().to_vec(), false),
+        FieldValue::SFVec3f(v) => (v.to_array().to_vec(), false),
+        FieldValue::SFVec4f(v) => (v.to_array().to_vec(), false),
+        FieldValue::SFVec2d(v) => (v.to_array().to_vec(), true),
+        FieldValue::SFVec3d(v) => (v.to_array().to_vec(), true),
+        FieldValue::SFVec4d(v) => (v.to_array().to_vec(), true),
+        _ => unreachable!("raw components belong to vector and color values"),
+    };
+
+    let last = numbers.len() - 1;
+
+    for (i, v) in numbers.iter().enumerate() {
+        let text = match texts.get(i).cloned().flatten() {
+            Some(t) => t,
+            None if double => g.double_format(*v),
+            None => g.float_format(*v),
+        };
+
+        g.push(&if json { crate::json::json_number(text) } else { text });
+
+        if i != last {
+            if json {
+                g.push(",");
+                g.tidy_space();
+            } else {
+                g.space();
+            }
+        }
+    }
+}
+
+/// What [`VrmlGenerator::take_raw`] gives a printer: the texts of a value printed without unit conversion, or the value with
+/// the ToNumber of its raw components (it is then printed as any value, through ToUnit).
+pub(crate) enum RawOut {
+    Texts(Vec<Option<String>>),
+    Value(FieldValue),
+}
+
+/// `value` with the raw components that have a number replaced by it.
+fn with_numbers(value: &FieldValue, components: &[Option<RawComponent>]) -> FieldValue {
+    let n = |i: usize, x: f64| match components.get(i) {
+        Some(Some(RawComponent::Number(v))) => *v,
+        _ => x,
+    };
+
+    match value {
+        FieldValue::SFVec2f(v) => FieldValue::SFVec2f(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y))),
+        FieldValue::SFVec2d(v) => FieldValue::SFVec2d(x3d_fields::math::Vector2::new(n(0, v.x), n(1, v.y))),
+        FieldValue::SFVec3f(v) => FieldValue::SFVec3f(x3d_fields::math::Vector3::new(n(0, v.x), n(1, v.y), n(2, v.z))),
+        FieldValue::SFVec3d(v) => FieldValue::SFVec3d(x3d_fields::math::Vector3::new(n(0, v.x), n(1, v.y), n(2, v.z))),
+        FieldValue::SFVec4f(v) => FieldValue::SFVec4f(x3d_fields::math::Vector4::new(n(0, v.x), n(1, v.y), n(2, v.z), n(3, v.w))),
+        FieldValue::SFVec4d(v) => FieldValue::SFVec4d(x3d_fields::math::Vector4::new(n(0, v.x), n(1, v.y), n(2, v.z), n(3, v.w))),
+        other => other.clone(),
+    }
+}
+
+impl Scene {
+    /// `declaration .toVRMLString ()` / `toXMLString ()` / `toJSONString ()` of a PROTO (`extern_` false) or EXTERNPROTO
+    /// declaration: X3DObject's generator with a `null` execution context, then the declaration's toXXXStream.
+    pub fn proto_declaration_string(&self, extern_: bool, id: usize, format: &str) -> String {
+        match format {
+            "xml" => crate::xml::proto_declaration_xml(self, extern_, id),
+            "json" => crate::json::proto_declaration_json(self, extern_, id),
+            _ => {
+                let mut g = VrmlGenerator::new(self);
+
+                g.push_ctx(None);
+                g.unit_base = 1;
+
+                if extern_ {
+                    g.extern_proto_to_vrml(id);
+                } else {
+                    g.proto_to_vrml(id);
+                }
+
+                g.pop_ctx();
+                g.g.string
+            }
+        }
     }
 }

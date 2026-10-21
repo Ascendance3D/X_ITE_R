@@ -1,0 +1,338 @@
+   Compiling bitflags v2.13.2
+   Compiling bytemuck v1.25.2
+   Compiling smallvec v1.16.3
+   Compiling ttf-parser v0.25.1
+   Compiling symphonia-core v0.5.5
+   Compiling symphonia-core v0.6.1
+   Compiling spirv v0.4.0+sdk-1.4.341.0
+   Compiling symphonia-metadata v0.6.1
+   Compiling symphonia-metadata v0.5.5
+   Compiling symphonia-common v0.6.1
+   Compiling symphonia-utils-xiph v0.5.5
+   Compiling symphonia-format-isomp4 v0.5.5
+   Compiling symphonia-format-mkv v0.5.5
+   Compiling symphonia-format-ogg v0.5.5
+   Compiling symphonia-codec-vorbis v0.5.5
+   Compiling symphonia-bundle-flac v0.5.5
+   Compiling symphonia-bundle-mp3 v0.5.5
+   Compiling symphonia-format-riff v0.5.5
+   Compiling symphonia-codec-adpcm v0.5.5
+   Compiling symphonia-codec-alac v0.5.5
+   Compiling symphonia-codec-aac v0.5.5
+   Compiling symphonia-codec-pcm v0.5.5
+   Compiling symphonia v0.5.5
+   Compiling naga v30.0.1
+   Compiling wgpu-types v30.0.1
+   Compiling icu_normalizer v2.3.0
+   Compiling parking_lot_core v0.9.12
+   Compiling parking_lot v0.12.5
+   Compiling idna_adapter v1.2.2
+   Compiling creek-decode-symphonia v0.3.3
+   Compiling symphonia-codec-aac v0.6.1
+   Compiling symphonia-format-ogg v0.6.1
+   Compiling symphonia-codec-vorbis v0.6.1
+   Compiling symphonia-format-caf v0.6.1
+   Compiling symphonia-codec-alac v0.6.1
+   Compiling symphonia-bundle-flac v0.6.1
+   Compiling symphonia-format-isomp4 v0.6.1
+   Compiling symphonia-format-mkv v0.6.1
+   Compiling symphonia-format-riff v0.6.1
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling symphonia-codec-pcm v0.6.1
+   Compiling symphonia-bundle-mp3 v0.6.1
+   Compiling symphonia-codec-adpcm v0.6.1
+   Compiling alsa v0.11.0
+   Compiling wgpu-hal v30.0.1
+   Compiling cpal v0.18.2
+   Compiling symphonia v0.6.1
+   Compiling creek v1.2.3
+   Compiling idna v1.1.0
+   Compiling x3d-text v0.1.0 (/home/user/x_ite_r/crates/x3d-text)
+   Compiling png v0.18.1
+   Compiling web-audio-api v1.7.0
+   Compiling image v0.25.10
+   Compiling x3d-parse v0.1.0 (/home/user/x_ite_r/crates/x3d-parse)
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+   Compiling wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling url v2.5.8
+   Compiling x3d-runtime v0.1.0 (/home/user/x_ite_r/crates/x3d-runtime)
+   Compiling wgpu-core v30.0.1
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+   Compiling x3d-script v0.1.0 (/home/user/x_ite_r/crates/x3d-script)
+   Compiling wgpu v30.0.1
+   Compiling x3d-render v0.1.0 (/home/user/x_ite_r/crates/x3d-render)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: `x3d-render` (lib) generated 4 warnings
+    Finished `release` profile [optimized] target(s) in 1m 46s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/glsl_compat_b08.rs (target/release/deps/glsl_compat_b08-130f1c7c047d10a4)
+
+running 11 tests
+test matrix_attribute_is_assembled_from_columns ... ok
+test es300_in_out_structs_arrays_bool ... ok
+test conditionals_and_macros ... ok
+test missing_stage_message ... ok
+test es100_pair_links ... ok
+test several_parts_of_one_stage_link_the_first ... ok
+test precision_statement_for_a_sampler_type_is_accepted ... ok
+test varying_without_vertex_output_is_a_link_error ... ok
+test syntax_error_names_the_user_line ... ok
+test undeclared_gl_fragcolor_in_vertex_is_an_error ... ok
+test max_lights_macro_sizes_arrays_and_loops ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/render_rea_b08_shaders.rs (target/release/deps/render_rea_b08_shaders-a5a4cb790cb7d0c7)
+
+running 1 test
+MSAA 0 attrib-color.wrl: over 0 (0.000%), max 1
+MSAA 0 attrib-float.wrl: over 0 (0.000%), max 1
+MSAA 0 attrib-matrix3.wrl: over 0 (0.000%), max 1
+MSAA 0 attrib-missing.wrl: over 0 (0.000%), max 0
+MSAA 0 attrib-nocolor.wrl: over 0 (0.000%), max 0
+MSAA 0 bad-empty-url.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-link-varying.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-load-false.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-missing-file-3.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-missing-file.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-missing-fragment.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-missing-vertex.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-no-parts.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-syntax-late.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-syntax.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-tess-type.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-type-swapped.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-undeclared.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-unknown-type.wrl: over 0 (0.000%), max 1
+MSAA 0 bad-wrong-type.wrl: over 0 (0.000%), max 1
+MSAA 0 basic.wrl: over 0 (0.000%), max 0
+MSAA 0 blendmode.wrl: over 0 (0.000%), max 0
+MSAA 0 clip.wrl: over 0 (0.000%), max 1
+MSAA 0 created-runtime.wrl: over 0 (0.000%), max 0
+MSAA 0 data-base64.wrl: over 0 (0.000%), max 0
+MSAA 0 depth-order.wrl: over 0 (0.000%), max 1
+MSAA 0 depthmode.wrl: over 0 (0.000%), max 1
+MSAA 0 discard.wrl: over 0 (0.000%), max 1
+MSAA 0 environment-runtime.wrl: over 0 (0.000%), max 1
+MSAA 0 es300.wrl: over 0 (0.000%), max 1
+MSAA 0 events-runtime.wrl: over 0 (0.000%), max 1
+MSAA 0 fields-mf.wrl: over 0 (0.000%), max 0
+MSAA 0 fields-mismatch.wrl: over 0 (0.000%), max 0
+MSAA 0 fields-runtime.wrl: over 0 (0.000%), max 1
+MSAA 0 fields-sf.wrl: over 0 (0.000%), max 0
+MSAA 0 fields-sfd.wrl: over 0 (0.000%), max 0
+MSAA 0 file-fallback.wrl: over 0 (0.000%), max 1
+MSAA 0 file-preproc.wrl: over 0 (0.000%), max 1
+MSAA 0 file-url.wrl: over 0 (0.000%), max 1
+MSAA 0 fog-none.wrl: over 0 (0.000%), max 0
+MSAA 0 fog.wrl: over 0 (0.000%), max 1
+MSAA 0 fragcoord.wrl: over 0 (0.000%), max 1
+MSAA 0 geometries.wrl: over 0 (0.000%), max 1
+MSAA 0 layers.wrl: over 0 (0.000%), max 1
+MSAA 0 legacy-texcoord-name.wrl: over 0 (0.000%), max 1
+MSAA 0 lights-headlight.wrl: over 0 (0.000%), max 1
+MSAA 0 lights-local.wrl: over 0 (0.000%), max 1
+MSAA 0 lights.wrl: over 0 (0.000%), max 1
+MSAA 0 lines-points.wrl: over 0 (0.000%), max 0
+MSAA 0 material-legacy-names.wrl: over 0 (0.000%), max 1
+MSAA 0 material-none.wrl: over 0 (0.000%), max 1
+MSAA 0 material-physical.wrl: over 0 (0.000%), max 0
+MSAA 0 material-unlit.wrl: over 0 (0.000%), max 1
+MSAA 0 multitexture.wrl: over 0 (0.000%), max 3
+MSAA 0 parts-runtime.wrl: over 0 (0.000%), max 0
+MSAA 0 select-all-invalid.wrl: over 0 (0.000%), max 1
+MSAA 0 select-first-valid.wrl: over 0 (0.000%), max 1
+MSAA 0 select-language.wrl: over 0 (0.000%), max 1
+MSAA 0 select-nolang.wrl: over 0 (0.000%), max 1
+MSAA 0 select-none.wrl: over 0 (0.000%), max 1
+MSAA 0 select-second.wrl: over 0 (0.000%), max 1
+MSAA 0 select-two-vertex.wrl: over 0 (0.000%), max 0
+MSAA 0 select-use.wrl: over 0 (0.000%), max 1
+MSAA 0 stub-nodes.wrl: over 0 (0.000%), max 1
+MSAA 0 texcoord-multi.wrl: over 0 (0.000%), max 1
+MSAA 0 texmatrix.wrl: over 0 (0.000%), max 2
+MSAA 0 texture-3d-unset.wrl: over 0 (0.000%), max 0
+MSAA 0 texture-appearance.wrl: over 0 (0.000%), max 2
+MSAA 0 texture-array-field.wrl: over 0 (0.000%), max 1
+MSAA 0 texture-cube-field.wrl: over 172 (0.066%), max 37
+MSAA 0 texture-cube-unset.wrl: over 0 (0.000%), max 0
+MSAA 0 texture-cube.wrl: over 202 (0.077%), max 46
+MSAA 0 texture-dim-mismatch.wrl: over 0 (0.000%), max 0
+MSAA 0 texture-field.wrl: over 0 (0.000%), max 1
+MSAA 0 texture-lod.wrl: over 0 (0.000%), max 2
+MSAA 0 texture-missing.wrl: over 0 (0.000%), max 0
+MSAA 0 texture-none.wrl: over 0 (0.000%), max 1
+MSAA 0 texture-pixel.wrl: over 0 (0.000%), max 0
+MSAA 0 texture-unset.wrl: over 0 (0.000%), max 0
+MSAA 0 textures-runtime.wrl: over 0 (0.000%), max 2
+MSAA 0 transform-scale.wrl: over 0 (0.000%), max 1
+MSAA 0 transparent.wrl: over 0 (0.000%), max 1
+MSAA 0 two-sided-rotated.wrl: over 0 (0.000%), max 0
+MSAA 0 two-sided.wrl: over 0 (0.000%), max 0
+MSAA 4 attrib-color.wrl: over 0 (0.000%), max 1
+MSAA 4 attrib-float.wrl: over 0 (0.000%), max 1
+MSAA 4 attrib-matrix3.wrl: over 0 (0.000%), max 1
+MSAA 4 attrib-missing.wrl: over 0 (0.000%), max 0
+MSAA 4 attrib-nocolor.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-empty-url.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-link-varying.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-load-false.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-missing-file-3.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-missing-file.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-missing-fragment.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-missing-vertex.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-no-parts.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-syntax-late.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-syntax.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-tess-type.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-type-swapped.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-undeclared.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-unknown-type.wrl: over 0 (0.000%), max 1
+MSAA 4 bad-wrong-type.wrl: over 0 (0.000%), max 1
+MSAA 4 basic.wrl: over 0 (0.000%), max 0
+MSAA 4 blendmode.wrl: over 0 (0.000%), max 1
+MSAA 4 clip.wrl: over 0 (0.000%), max 1
+MSAA 4 created-runtime.wrl: over 0 (0.000%), max 1
+MSAA 4 data-base64.wrl: over 0 (0.000%), max 1
+MSAA 4 depth-order.wrl: over 0 (0.000%), max 1
+MSAA 4 depthmode.wrl: over 0 (0.000%), max 1
+MSAA 4 discard.wrl: over 0 (0.000%), max 1
+MSAA 4 environment-runtime.wrl: over 0 (0.000%), max 1
+MSAA 4 es300.wrl: over 0 (0.000%), max 1
+MSAA 4 events-runtime.wrl: over 0 (0.000%), max 1
+MSAA 4 fields-mf.wrl: over 0 (0.000%), max 1
+MSAA 4 fields-mismatch.wrl: over 0 (0.000%), max 0
+MSAA 4 fields-runtime.wrl: over 0 (0.000%), max 1
+MSAA 4 fields-sf.wrl: over 0 (0.000%), max 1
+MSAA 4 fields-sfd.wrl: over 0 (0.000%), max 1
+MSAA 4 file-fallback.wrl: over 0 (0.000%), max 1
+MSAA 4 file-preproc.wrl: over 0 (0.000%), max 1
+MSAA 4 file-url.wrl: over 0 (0.000%), max 1
+MSAA 4 fog-none.wrl: over 0 (0.000%), max 0
+MSAA 4 fog.wrl: over 0 (0.000%), max 1
+MSAA 4 fragcoord.wrl: over 0 (0.000%), max 1
+MSAA 4 geometries.wrl: over 0 (0.000%), max 2
+MSAA 4 layers.wrl: over 0 (0.000%), max 2
+MSAA 4 legacy-texcoord-name.wrl: over 0 (0.000%), max 1
+MSAA 4 lights-headlight.wrl: over 0 (0.000%), max 1
+MSAA 4 lights-local.wrl: over 0 (0.000%), max 1
+MSAA 4 lights.wrl: over 1 (0.000%), max 59
+MSAA 4 lines-points.wrl: over 0 (0.000%), max 1
+MSAA 4 material-legacy-names.wrl: over 0 (0.000%), max 1
+MSAA 4 material-none.wrl: over 0 (0.000%), max 1
+MSAA 4 material-physical.wrl: over 0 (0.000%), max 1
+MSAA 4 material-unlit.wrl: over 0 (0.000%), max 1
+MSAA 4 multitexture.wrl: over 0 (0.000%), max 3
+MSAA 4 parts-runtime.wrl: over 0 (0.000%), max 1
+MSAA 4 select-all-invalid.wrl: over 0 (0.000%), max 1
+MSAA 4 select-first-valid.wrl: over 0 (0.000%), max 1
+MSAA 4 select-language.wrl: over 0 (0.000%), max 1
+MSAA 4 select-nolang.wrl: over 0 (0.000%), max 1
+MSAA 4 select-none.wrl: over 0 (0.000%), max 1
+MSAA 4 select-second.wrl: over 0 (0.000%), max 1
+MSAA 4 select-two-vertex.wrl: over 0 (0.000%), max 1
+MSAA 4 select-use.wrl: over 0 (0.000%), max 1
+MSAA 4 stub-nodes.wrl: over 0 (0.000%), max 1
+MSAA 4 texcoord-multi.wrl: over 0 (0.000%), max 1
+MSAA 4 texmatrix.wrl: over 0 (0.000%), max 2
+MSAA 4 texture-3d-unset.wrl: over 0 (0.000%), max 0
+MSAA 4 texture-appearance.wrl: over 0 (0.000%), max 2
+MSAA 4 texture-array-field.wrl: over 0 (0.000%), max 1
+MSAA 4 texture-cube-field.wrl: over 156 (0.060%), max 35
+MSAA 4 texture-cube-unset.wrl: over 0 (0.000%), max 0
+MSAA 4 texture-cube.wrl: over 195 (0.074%), max 43
+MSAA 4 texture-dim-mismatch.wrl: over 0 (0.000%), max 0
+MSAA 4 texture-field.wrl: over 0 (0.000%), max 1
+MSAA 4 texture-lod.wrl: over 0 (0.000%), max 2
+MSAA 4 texture-missing.wrl: over 0 (0.000%), max 0
+MSAA 4 texture-none.wrl: over 0 (0.000%), max 1
+MSAA 4 texture-pixel.wrl: over 0 (0.000%), max 0
+MSAA 4 texture-unset.wrl: over 0 (0.000%), max 0
+MSAA 4 textures-runtime.wrl: over 0 (0.000%), max 2
+MSAA 4 transform-scale.wrl: over 0 (0.000%), max 2
+MSAA 4 transparent.wrl: over 0 (0.000%), max 1
+MSAA 4 two-sided-rotated.wrl: over 0 (0.000%), max 1
+MSAA 4 two-sided.wrl: over 5 (0.002%), max 62
+168 shots checked
+test rea_b08_shaders_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.14s
+
+exit=0

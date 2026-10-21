@@ -1,0 +1,72 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld sfcolorrgba"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('SFColorRGBA new ()', function () { return new SFColorRGBA (); });
+  T ('SFColorRGBA new (vals)', function () { return new SFColorRGBA (0.2, 0.4, 0.6, 0.8); });
+  T ('SFColorRGBA new (out of range)', function () { return new SFColorRGBA (2, -1, 1e10, NaN); });
+  T ('SFColorRGBA new (strings)', function () { return new SFColorRGBA ('0.5', 'x', null, undefined); });
+  T ('SFColorRGBA get/set r', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); v .r = 0.9; v [1] = -3; return [v .r, v [0], v]; });
+  T ('SFColorRGBA get/set g', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); v .g = 0.9; v [2] = -3; return [v .g, v [1], v]; });
+  T ('SFColorRGBA get/set b', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); v .b = 0.9; v [3] = -3; return [v .b, v [2], v]; });
+  T ('SFColorRGBA get/set a', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); v .a = 0.9; v [0] = -3; return [v .a, v [3], v]; });
+  T ('SFColorRGBA index out', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); return [v [4], v ['r'], v .nope, v .x]; });
+  T ('SFColorRGBA keys', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); return [Object .keys (v), JSON .stringify (v), Array .from (v), [... v]]; });
+  T ('SFColorRGBA for in', function () { var o = []; for (var k in new SFColorRGBA (0.2, 0.4, 0.6, 0.8)) o .push (k); return o; });
+  T ('SFColorRGBA equals/copy', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); var w = v .copy (); return [v .equals (w), v === w, w .constructor .name, v .isDefaultValue (), new SFColorRGBA () .isDefaultValue ()]; });
+  T ('SFColorRGBA toStrings', function () { var v = new SFColorRGBA (0.2, 0.4, 0.6, 0.8); return [v .toString (), v .toVRMLString (), v .toXMLString (), v .toJSONString ()]; });
+  T ('SFColorRGBA getHSV', function () { return [new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .getHSVA (), new SFColorRGBA (1, 0, 0, 1) .getHSVA (), new SFColorRGBA (0, 0, 0, 0) .getHSVA (), new SFColorRGBA (0.5, 0.5, 0.5, 0.5) .getHSVA ()]; });
+  T ('SFColorRGBA setHSV', function () { var v = new SFColorRGBA (); v .setHSVA (1, 0.5, 0.5); return v; });
+  T ('SFColorRGBA setHSV edge', function () { var v = new SFColorRGBA (); v .setHSVA (7, 2, -1); var w = new SFColorRGBA (); w .setHSVA (0, 0, 0.7); var u = new SFColorRGBA (); u .setHSVA (NaN, 0.5, 0.5); return [v, w, u]; });
+  T ('SFColorRGBA setHSV partial', function () { var v = new SFColorRGBA (); v .setHSVA (1); return v; });
+  T ('SFColorRGBA setHSV roundtrip', function () { var o = []; for (var h = 0; h < 6.3; h += 0.7) { var v = new SFColorRGBA (); v .setHSVA (h, 0.6, 0.8); o .push (v .toString ()); } return o; });
+  T ('SFColorRGBA lerp', function () { return [new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .lerp (new SFColorRGBA (0.9, 0.1, 0.5, 0.3), 0.3), new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .lerp (new SFColorRGBA (0.2, 0.4, 0.6, 0.8), 0.5), new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .lerp (new SFColorRGBA (), 1)]; });
+  T ('SFColorRGBA lerp missing', function () { return new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .lerp (); });
+  T ('SFColorRGBA lerp t range', function () { var b = new SFColorRGBA (0.9, 0.1, 0.5, 0.3); return [new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .lerp (b, -1), new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .lerp (b, 2), new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .lerp (b, NaN)]; });
+  T ('SFColorRGBA linearToSRGB', function () { return [new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .linearToSRGB (), new SFColorRGBA (0, 1, 2, 0.5) .linearToSRGB ()]; });
+  T ('SFColorRGBA sRGBToLinear', function () { return [new SFColorRGBA (0.2, 0.4, 0.6, 0.8) .sRGBToLinear (), new SFColorRGBA (0, 1, 2, 0.5) .sRGBToLinear ()]; });
+  T ('SFColorRGBA setValue', function () { var v = new SFColorRGBA (); v .setValue (new SFColorRGBA (0.2, 0.4, 0.6, 0.8)); return v; });
+  T ('SFColorRGBA setValue other', function () { var v = new SFColorRGBA (); v .setValue (new SFColor (0.1, 0.2, 0.3, 0.4)); return v; });
+  flush_ ();
+}
+
+  "
+}

@@ -35,6 +35,105 @@
  },
  "results": [
   {
+   "file": "ctx-fog.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "4ecd16617d8d2f236e8609a7afd1f3ab52f3118c6da467c61e4f0917e84c78ee",
+   "pngSha256": "4da73976482302958d4849e1fd109dd73ad622e15ffb79d82f863f89509c2161",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-lines.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "741ae977baa2be66b59390090c981a9877f1483b33194849a874728c18291849",
+   "pngSha256": "fd598ce1dae2d56ad41397467249fbde1a98cdaf5c0c4885dc3e76c90e335ba2",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-pbr.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "746069ed805328bb3a753a7624dba8f6db5a7d24bd5871002728cdbbb7285c74",
+   "pngSha256": "602dd8b3af3b46aa2a05cd28e5c02abb7c59cf3971ffba80cd72bf2464de6f17",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-phong-light.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "cd70bdbcdabf97d7d776e18ba2b1c4d8583b838439974c7179b9ef19ccd2b735",
+   "pngSha256": "ed0b0cbf6d806f43c4559a4708995452830030a06e102eb72ddd30f64b664a2b",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-phong-lights2.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "b41eef8b5411d1bea55f26912466f0bf8cf3328a311e67d70b5699bb045079e3",
+   "pngSha256": "60f493fd2e9294802edf8a3163c83ce53c0a88cb5697249545cc9f260af1d285",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-phong.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "52140e3ce635ce4ac6ddf8b0eb6558c86a353a9cabaee54c1ef89f20214595d7",
+   "pngSha256": "424676214cb542404958c12e34433547824b0fccf1db0ebebe061b3b231afeb4",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-points.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "15a0c5b90b2e5cf4294cce4135ca7bd3f0821fd4a3151a8e85970b9da2be8dc8",
+   "pngSha256": "eb11695dc83a9ce479f534a9305adc013d40c01a0bc62159f440f01d4fc5447d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-texture.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "d65ef49374b703e2fa6095d8c834df34b589d9b1ff058b202b4ddd7ac312f65d",
+   "pngSha256": "2f7c2151d5b646949f506c9c7d769ae0f740d1535715b3d2541b05a625783024",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "ctx-unlit.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "7ff3c74b21768f3930c44394826c6b74ec2d96f03fa38cec19b6c644b9ea5f03",
+   "pngSha256": "5f7cb760900c8d785537d90b060a884d777ac7d858178b195eb5f1d8598d6811",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
    "file": "select-two-vertex.wrl",
    "ok": true,
    "log": [],

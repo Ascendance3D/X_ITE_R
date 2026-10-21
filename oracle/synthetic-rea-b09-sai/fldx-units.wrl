@@ -1,0 +1,67 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx units"
+DEF T Transform { }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function initialize () {
+  SELF = this;
+  T ('start', function () { Browser .createX3DFromString ('#X3D V3.3 utf8\\nPROFILE Immersive\\nUNIT length km 1000\\nUNIT angle deg 0.017453292519943295\\nDEF U Transform { translation 1000 2000 3000 rotation 0 1 0 1.5 }\\nDEF V Viewpoint { position 10 20 30 }\\nDEF M Material { diffuseColor 0.5 0.5 0.5 }') .then (function (s) {
+    var u = s .getNamedNode ('U'), v = s .getNamedNode ('V'), m = s .getNamedNode ('M');
+    T ('node vrml', function () { return u .toVRMLString (); });
+    T ('node xml', function () { return u .toXMLString (); });
+    T ('node json', function () { return u .toJSONString (); });
+    T ('viewpoint vrml', function () { return v .toVRMLString (); });
+    T ('viewpoint xml', function () { return v .toXMLString (); });
+    T ('viewpoint json', function () { return v .toJSONString (); });
+    T ('field vrml', function () { return [u .translation .toVRMLString (), u .rotation .toVRMLString (), String (u .translation)]; });
+    T ('field xml', function () { return [u .translation .toXMLString (), u .rotation .toXMLString ()]; });
+    T ('field json', function () { return [u .translation .toJSONString (), u .rotation .toJSONString ()]; });
+    T ('raw node vrml', function () { var f = u .translation; f .getValue () .x = 'abc'; u .translation = f; return [u .toVRMLString (), u .toXMLString (), u .toJSONString ()]; });
+    T ('raw color vrml', function () { var f = m .diffuseColor; f .getValue () .r = '1e3'; m .diffuseColor = f; return [m .toVRMLString (), m .toXMLString (), m .toJSONString ()]; });
+    T ('scene vrml', function () { return s .toVRMLString (); });
+    T ('scene xml', function () { return s .toXMLString (); });
+    T ('scene json', function () { return s .toJSONString (); });
+    flush_ ();
+  });
+  return 'ok'; });
+  flush_ ();
+}
+
+  "
+}

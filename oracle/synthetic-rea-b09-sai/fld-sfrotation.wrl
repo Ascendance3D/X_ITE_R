@@ -1,0 +1,100 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld sfrotation"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('SFRotation new ()', function () { return new SFRotation (); });
+  T ('SFRotation new (xyza)', function () { return new SFRotation (0, 1, 0, 1.2); });
+  T ('SFRotation new (partial)', function () { return [new SFRotation (1), new SFRotation (1, 2), new SFRotation (1, 2, 3)]; });
+  T ('SFRotation new (unnormalized)', function () { return new SFRotation (0, 3, 4, 1); });
+  T ('SFRotation new (zero axis)', function () { return new SFRotation (0, 0, 0, 1); });
+  T ('SFRotation new (vec, angle)', function () { return new SFRotation (new SFVec3f (1, 0, 0), 0.5); });
+  T ('SFRotation new (vec, angle unnorm)', function () { return new SFRotation (new SFVec3f (0, 0, 2), 0.5); });
+  T ('SFRotation new (vec, vec)', function () { return new SFRotation (new SFVec3f (1, 0, 0), new SFVec3f (0, 1, 0)); });
+  T ('SFRotation new (vec, vec parallel)', function () { return [new SFRotation (new SFVec3f (1, 0, 0), new SFVec3f (1, 0, 0)), new SFRotation (new SFVec3f (1, 0, 0), new SFVec3f (-1, 0, 0))]  ; });
+  T ('SFRotation new (vec, vec zero)', function () { return new SFRotation (new SFVec3f (), new SFVec3f (0, 1, 0)); });
+  T ('SFRotation new (vec3d)', function () { return new SFRotation (new SFVec3d (0, 1, 0), new SFVec3d (0, 0, 1)); });
+  T ('SFRotation new (matrix)', function () { return new SFRotation (new SFMatrix3f (0, 1, 0, -1, 0, 0, 0, 0, 1)); });
+  T ('SFRotation new (matrix d)', function () { return new SFRotation (new SFMatrix3d (0, 1, 0, -1, 0, 0, 0, 0, 1)); });
+  T ('SFRotation new (NaN)', function () { return new SFRotation (NaN, 0, 1, Infinity); });
+  T ('SFRotation new (strings)', function () { return new SFRotation ('0', '1', '0', '0.5'); });
+  T ('SFRotation new (bad vec)', function () { return new SFRotation ({x: 1}, 2); });
+  T ('SFRotation set x', function () { var v = new SFRotation (0, 1, 0, 1.2); v .x = 0.25; v [1] = 0.75; return [v, v .x, v [0]]; });
+  T ('SFRotation set y', function () { var v = new SFRotation (0, 1, 0, 1.2); v .y = 0.25; v [2] = 0.75; return [v, v .y, v [1]]; });
+  T ('SFRotation set z', function () { var v = new SFRotation (0, 1, 0, 1.2); v .z = 0.25; v [3] = 0.75; return [v, v .z, v [2]]; });
+  T ('SFRotation set angle', function () { var v = new SFRotation (0, 1, 0, 1.2); v .angle = 0.25; v [0] = 0.75; return [v, v .angle, v [3]]; });
+  T ('SFRotation index', function () { var v = new SFRotation (0, 1, 0, 1.2); return [v [4], v .w, v .nope, Object .keys (v), JSON .stringify (v), Array .from (v)]; });
+  T ('SFRotation toStrings', function () { var v = new SFRotation (0, 1, 0, 1.2); return [v .toString (), v .toVRMLString (), v .toXMLString (), v .toJSONString ()]; });
+  T ('SFRotation getAxis', function () { return [new SFRotation (0, 1, 0, 1.2) .getAxis (), new SFRotation (0, 3, 4, 1) .getAxis (), new SFRotation (0, 0, 0, 1) .getAxis ()]; });
+  T ('SFRotation setAxis', function () { var v = new SFRotation (0, 1, 0, 1.2); v .setAxis (new SFVec3f (0, 0, 2)); return v; });
+  T ('SFRotation setAxis bad', function () { var v = new SFRotation (0, 1, 0, 1.2); v .setAxis ({x: 1, y: 2, z: 3}); return v; });
+  T ('SFRotation setAxis missing', function () { var v = new SFRotation (0, 1, 0, 1.2); v .setAxis (); return v; });
+  T ('SFRotation getMatrix', function () { return [new SFRotation (0, 1, 0, 1.2) .getMatrix (), new SFRotation () .getMatrix (), new SFRotation (0, 0, 1, 3.14159265358979) .getMatrix ()]; });
+  T ('SFRotation setMatrix', function () { var v = new SFRotation (); v .setMatrix (new SFMatrix3f (0, 1, 0, -1, 0, 0, 0, 0, 1)); return v; });
+  T ('SFRotation setMatrix 4', function () { var v = new SFRotation (); v .setMatrix (new SFMatrix4f ()); return v; });
+  T ('SFRotation setMatrix missing', function () { var v = new SFRotation (); v .setMatrix (); return v; });
+  T ('SFRotation setMatrix zero', function () { var v = new SFRotation (); v .setMatrix (new SFMatrix3f (0, 0, 0, 0, 0, 0, 0, 0, 0)); return v; });
+  T ('SFRotation setMatrix scaled', function () { var v = new SFRotation (); v .setMatrix (new SFMatrix3f (2, 0, 0, 0, 2, 0, 0, 0, 2)); return v; });
+  T ('SFRotation getQuaternion', function () { var q = new SFRotation (0, 1, 0, 1.2) .getQuaternion (); return [q .constructor .name, q .toString (), q .x, q .w]; });
+  T ('SFRotation setQuaternion', function () { var v = new SFRotation (); v .setQuaternion (new SFQuaternion (0, 0.5, 0, 0.5)); return v; });
+  T ('SFRotation setQuaternion identity', function () { var v = new SFRotation (0, 1, 0, 1.2); v .setQuaternion (new SFQuaternion (0, 0, 0, 1)); return v; });
+  T ('SFRotation setQuaternion missing', function () { var v = new SFRotation (); v .setQuaternion (); return v; });
+  T ('SFRotation inverse', function () { return [new SFRotation (0, 1, 0, 1.2) .inverse (), new SFRotation () .inverse (), new SFRotation (0, 0, 0, 1) .inverse ()]; });
+  T ('SFRotation multiply', function () { return [new SFRotation (0, 1, 0, 1.2) .multiply (new SFRotation (1, 0, 0, 0.7)), new SFRotation (0, 1, 0, 1.2) .multiply (new SFRotation (0, 1, 0, 1.2) .inverse ()), new SFRotation (0, 1, 0, 1.2) .multiply (new SFRotation ())]; });
+  T ('SFRotation multiply missing', function () { return new SFRotation (0, 1, 0, 1.2) .multiply (); });
+  T ('SFRotation multiply vec', function () { return new SFRotation (0, 1, 0, 1.2) .multiply (new SFVec3f (1, 2, 3)); });
+  T ('SFRotation multVec', function () { return [new SFRotation (0, 1, 0, 1.2) .multVec (new SFVec3f (1, 2, 3)), new SFRotation (0, 1, 0, 1.2) .multVec (new SFVec3d (1, 2, 3)), new SFRotation () .multVec (new SFVec3f (4, 5, 6))]; });
+  T ('SFRotation multVec missing', function () { return new SFRotation (0, 1, 0, 1.2) .multVec (); });
+  T ('SFRotation multVec wrong', function () { return new SFRotation (0, 1, 0, 1.2) .multVec (new SFVec2f (1, 2)); });
+  T ('SFRotation slerp', function () { var b = new SFRotation (1, 0, 0, 2.5); return [new SFRotation (0, 1, 0, 1.2) .slerp (b, 0), new SFRotation (0, 1, 0, 1.2) .slerp (b, 0.5), new SFRotation (0, 1, 0, 1.2) .slerp (b, 1), new SFRotation (0, 1, 0, 1.2) .slerp (b, 2), new SFRotation (0, 1, 0, 1.2) .slerp (b, -1), new SFRotation (0, 1, 0, 1.2) .slerp (b, NaN)]; });
+  T ('SFRotation slerp opposite', function () { return [new SFRotation (0, 1, 0, 1.2) .slerp (new SFRotation (0, -1, 0, -1.2), 0.5), new SFRotation (0, 1, 0, 1.2) .slerp (new SFRotation (0, 1, 0, 1.2) .inverse (), 0.5), new SFRotation (0, 1, 0, 1.2) .slerp (new SFRotation (0, 1, 0, 1.2 + 6.283185307179586), 0.5)]; });
+  T ('SFRotation slerp missing', function () { return new SFRotation (0, 1, 0, 1.2) .slerp (); });
+  T ('SFRotation slerp no t', function () { return new SFRotation (0, 1, 0, 1.2) .slerp (new SFRotation (1, 0, 0, 1)); });
+  T ('SFRotation straighten', function () { return [new SFRotation (0, 1, 0, 1.2) .straighten (new SFVec3f (0, 1, 0)), new SFRotation (1, 0, 0, 0.3) .straighten (new SFVec3f (0, 1, 0)), new SFRotation (0, 0, 1, 1) .straighten (new SFVec3f (0, 0, 1))]; });
+  T ('SFRotation straighten missing', function () { return new SFRotation (0, 1, 0, 1.2) .straighten (); });
+  T ('SFRotation equals/copy', function () { var v = new SFRotation (0, 1, 0, 1.2); var w = v .copy (); return [v .equals (w), v .equals (new SFRotation (0, 1, 0, 1.2 + 1e-12)), v .isDefaultValue (), new SFRotation () .isDefaultValue (), new SFRotation (0, 0, 1, 0) .isDefaultValue (), new SFRotation (1, 0, 0, 0) .isDefaultValue ()]; });
+  T ('SFRotation static', function () { return [typeof SFRotation .typeName, SFRotation .typeName, typeof SFRotation .fromMatrix]; });
+  T ('SFRotation setValue', function () { var v = new SFRotation (); v .setValue (new SFRotation (0, 1, 0, 1.2)); return v; });
+  T ('SFRotation setValue quaternion', function () { var v = new SFRotation (); v .setValue (new SFQuaternion (0, 0.5, 0, 0.5)); return v; });
+  flush_ ();
+}
+
+  "
+}

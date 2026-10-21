@@ -6,23 +6,36 @@
 //! CPU against the triangles (both faces, like `gl .disable (gl .CULL_FACE)`), which gives the
 //! same depth up to rasterization coverage.
 
-use crate::geom::{Camera, Plane3};
+use crate::geom::{Camera, Plane3, ViewVolume};
 use crate::layer::{NavInfo, Vp, VpBase};
+use std::cell::RefCell;
 use std::rc::Rc;
-use x3d_fields::math::{Matrix4, Rotation4, Vector3};
+use x3d_fields::math::{Matrix4, Rotation4, Vector3, Vector4};
+use x3d_render::depth_gpu::{DepthGpu, DepthShape};
 use x3d_render::geometry::Geometry;
 
 const DEPTH_BUFFER_SIZE: usize = 16;
 
 pub struct CShape {
     pub geometry: Rc<Geometry>,
-    /// Shape model-view matrix (view space of the active viewpoint).
+    /// Shape model-view matrix (view space of the active viewpoint); for an InstancedShape
+    /// instance, the instance matrix folded in.
     pub model_view: Matrix4,
+    /// The shape's own model-view matrix and the instance matrix an InstancedShape applies
+    /// first (the depth shader applies them separately).
+    pub base_model_view: Matrix4,
+    pub instance: Option<Matrix4>,
     /// The ClipPlanes in scope, in the same view space (renderContext .clipPlanes).
     pub clip_planes: Vec<[f64; 4]>,
+    /// The Collision nodes the COLLISION traversal was inside of when it reached the shape
+    /// (renderContext .collisions), outermost first.
+    pub collisions: Vec<x3d_fields::NodeId>,
 }
 
 pub struct Closest {
+    /// The collision shape (index into [`World::shapes`]) the depth pass found; `None` without a hit
+    /// and on the CPU stand-in.
+    pub shape: Option<usize>,
     pub distance: f64,
     /// Normal in the frame the translation lives in (None when nothing was hit).
     pub normal: Vector3,
@@ -43,6 +56,9 @@ pub enum Fill {
 pub struct World {
     pub shapes: Vec<CShape>,
     pub fill: Fill,
+    /// The depth buffer on the GPU (X_ITE's own rasterization); without it, or while the polygon
+    /// mode is not FILL, the CPU sampling below stands in.
+    pub gpu: Option<Rc<RefCell<DepthGpu>>>,
 }
 
 /// The collision camera: `viewpoint model · translate (userPosition) · rotate (rotation)`,
@@ -57,8 +73,86 @@ fn camera_matrix(vp: &Vp, base: &VpBase, rotation: &Rotation4) -> Matrix4 {
 }
 
 impl World {
+    /// X3DRenderObject.getCollisionShape on the GPU: the collision shapes drawn into the 16x16
+    /// buffer with `view · ortho` as projection, then TextureBuffer.readDepth: the pixel with the
+    /// smallest window z, unprojected with the orthographic matrix. Returns the distance and, if a
+    /// shape was hit, its normal in the frame of the translation (`closestObject .modelViewMatrix
+    /// .multRight (viewMatrix) .submatrix .inverse () .multMatrixVec (normal)`).
+    fn depth_gpu(&self, gpu: &Rc<RefCell<DepthGpu>>, view: &Matrix4, ortho: &Matrix4) -> (f64, Option<(Vector3, usize)>) {
+        let mut view_projection = *view;
+        view_projection.mult_right(ortho);
+
+        let f32x16 = |m: &Matrix4| m.0.map(|v| v as f32);
+        let shapes: Vec<DepthShape> = self
+            .shapes
+            .iter()
+            .map(|s| {
+                let g = &s.geometry;
+
+                DepthShape {
+                    geometry: g,
+                    empty: g.geometry_type < 2 || g.vertices.is_empty(),
+                    model_view: f32x16(&s.base_model_view),
+                    instance: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY, f32x16),
+                    instance_normal: s.instance.as_ref().map_or(x3d_render::pointing_gpu::IDENTITY3, |m| {
+                        // `matrix .submatrix .transpose () .inverse ()`
+                        let mut n = m.submatrix();
+                        n.transpose();
+                        n.inverse();
+                        n.0.map(|v| v as f32)
+                    }),
+                    clip_planes: &s.clip_planes,
+                }
+            })
+            .collect();
+        let pixels = gpu.borrow_mut().draw(&f32x16(&view_projection), &shapes);
+
+        // TextureBuffer.readDepth
+        let (mut win_x, mut win_y, mut win_z, mut index) = (0usize, 0usize, f64::INFINITY, 0usize);
+
+        for wy in 0..DEPTH_BUFFER_SIZE {
+            for wx in 0..DEPTH_BUFFER_SIZE {
+                let wz = pixels.data0[wy * DEPTH_BUFFER_SIZE + wx][0] as f64;
+
+                if wz < win_z {
+                    (win_x, win_y, win_z, index) = (wx, wy, wz, wy * DEPTH_BUFFER_SIZE + wx);
+                }
+            }
+        }
+
+        let mut inverse = *ortho;
+        inverse.inverse();
+        let mut point = Vector3::ZERO;
+        let size = DEPTH_BUFFER_SIZE as f64;
+        ViewVolume::unproject_point_matrix(win_x as f64, win_y as f64, win_z, &inverse, &Vector4::new(0.0, 0.0, size, size), &mut point);
+        let distance = -point.z;
+        let id = pixels.data0[index][1];
+
+        if id < 0.0 || id as usize >= self.shapes.len() {
+            return (distance, None);
+        }
+
+        let n = pixels.data1[index];
+        let mut normal = Vector3::new(n[0] as f64, n[1] as f64, n[2] as f64);
+        // renderContext .modelViewMatrix is a Float32Array.
+        let mut mv = self.shapes[id as usize].base_model_view;
+        mv.0 = mv.0.map(|v| v as f32 as f64);
+        mv.mult_right(view);
+        let mut sub = mv.submatrix();
+        sub.inverse();
+        sub.mult_matrix_vec3(&mut normal);
+        (distance, Some((normal, id as usize)))
+    }
+
     /// Closest depth under an orthographic view (l, r, b, t, near, far) of the collision camera.
-    fn depth(&self, view: &Matrix4, (l, r, b, t, near, far): (f64, f64, f64, f64, f64, f64)) -> Option<(f64, Vector3)> {
+    fn depth(&self, view: &Matrix4, (l, r, b, t, near, far): (f64, f64, f64, f64, f64, f64)) -> Option<(f64, Vector3, Option<usize>)> {
+        if let (Some(gpu), Fill::Triangles) = (&self.gpu, self.fill) {
+            let mut ortho = Matrix4::IDENTITY;
+            Camera::ortho(l, r, b, t, near, far, &mut ortho);
+            let (distance, normal) = self.depth_gpu(gpu, view, &ortho);
+            return normal.map(|(n, id)| (distance, n, Some(id)));
+        }
+
         let mut best: Option<(f64, Vector3)> = None;
         let n = DEPTH_BUFFER_SIZE;
 
@@ -245,7 +339,7 @@ impl World {
         // TextureBuffer.readDepth unprojects it again.
         best.map(|(d, n)| {
             let z = ((d - near) / (far - near)) as f32 as f64;
-            (near + z * (far - near), n)
+            (near + z * (far - near), n, None)
         })
     }
 
@@ -269,13 +363,13 @@ impl World {
         Camera::ortho(-radius, radius, bottom.min(-radius), radius, near, far, &mut proj);
 
         match self.depth(&view, (-radius, radius, bottom.min(-radius), radius, near, far)) {
-            Some((d, n)) => {
+            Some((d, n, shape)) => {
                 let mut normal = n;
                 rotation.mult_vec_rot(&mut normal);
                 normal.normalize();
-                Closest { distance: d, normal, hit: true }
+                Closest { shape, distance: d, normal, hit: true }
             }
-            None => Closest { distance: far, normal: Vector3::new(0.0, 0.0, 1.0), hit: false },
+            None => Closest { shape: None, distance: far, normal: Vector3::new(0.0, 0.0, 1.0), hit: false },
         }
     }
 
@@ -344,8 +438,11 @@ impl World {
 
         // X_ITE tests `distance > 0`. Its depth is an f32 read back from the GPU (about 2e-7
         // of noise at this range), which settles a standing avatar just on the ground side; the
-        // CPU depth here is exact, so a standing avatar is treated as grounded within 1e-6.
-        if distance > 1e-6 {
+        // GPU depth here is the same f32, the CPU depth is exact, so a standing avatar is treated
+        // as grounded within 1e-6 there.
+        let gpu = self.gpu.is_some() && self.fill == Fill::Triangles;
+
+        if distance > if gpu { 0.0 } else { 1e-6 } {
             // Gravitate and fall down to the floor.
             let rate = if *speed != 0.0 { frame_rate } else { 1_000_000.0 };
             *speed -= gravity / rate;

@@ -1,0 +1,81 @@
+== created-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== created-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== environment-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== environment-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== events-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== events-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== fields-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== fields-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== parts-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+17 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== parts-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+17 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== textures-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL    64.png  max 128  over 169744 (64.752%)  diff 169744  psnr  12.68  ssim 0.9476
+FAIL    72.png  max 255  over 169744 (64.752%)  diff 169744  psnr   7.90  ssim 0.8645
+FAIL    80.png  max 255  over 169744 (64.752%)  diff 169744  psnr   6.66  ssim 0.8481
+6 within tolerance, 3 over, 0 missing (threshold 8, max 0.5% of pixels)
+FAIL images within tolerance (threshold 8, max 0.5%)
+exit 1
+== textures-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL    64.png  max 128  over 169744 (64.752%)  diff 169744  psnr  12.68  ssim 0.9476
+FAIL    72.png  max 255  over 169744 (64.752%)  diff 169744  psnr   7.90  ssim 0.8645
+FAIL    80.png  max 255  over 169744 (64.752%)  diff 169744  psnr   6.66  ssim 0.8481
+6 within tolerance, 3 over, 0 missing (threshold 8, max 0.5% of pixels)
+FAIL images within tolerance (threshold 8, max 0.5%)
+exit 1
+== xml-basic MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-basic MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-fields MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-fields MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-invalid MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== xml-invalid MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+A case that printed FAIL kept no baseline: record it as a Rust difference in the final report (do not edit baselines).

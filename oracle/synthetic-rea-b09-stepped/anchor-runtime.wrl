@@ -1,0 +1,52 @@
+#X3D V4.0 utf8
+PROFILE Full
+NavigationInfo { type "NONE" headlight FALSE transitionType [ "TELEPORT" ] }
+Background { skyColor 0.2 0.25 0.3 }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+DEF V1 Viewpoint { position 0 0 8 description "home" }
+DEF V2 Viewpoint { position 5 3 6 orientation 0 1 0 0.6 description "there" }
+DEF V3 Viewpoint { position -5 -3 6 orientation 0 1 0 -0.6 description "elsewhere" }
+DEF A1 Anchor { url [ "#V2" ] description "to V2" children Transform { translation -2.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.2 emissiveColor 0.8 0.2 0.2 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A2 Anchor { url [ "#V3" ] description "to V3" load FALSE children Transform { translation 0 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.2 emissiveColor 0.2 0.8 0.2 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A3 Anchor { url [ "#nosuch", "#V3" ] description "fallback" children Transform { translation 2.5 1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.2 0.8 emissiveColor 0.2 0.2 0.8 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A4 Anchor { url [ "#V1" ] description "home" children [ Transform { translation -2.5 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.2 emissiveColor 0.8 0.8 0.2 } } geometry Box { size 1.2 1.2 1.2 } } } DEF TS TouchSensor { } ] }
+DEF A5 Anchor { url [ ] description "no url" children Transform { translation 0 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.2 0.8 0.8 emissiveColor 0.2 0.8 0.8 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF A6 Anchor { url [ "#V2" ] description "hidden" visible FALSE children Transform { translation 2.5 -1.5 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.2 0.8 emissiveColor 0.8 0.2 0.8 } } geometry Box { size 1.2 1.2 1.2 } } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode v1 USE V1
+  initializeOnly SFNode a2 USE A2
+  initializeOnly SFNode a5 USE A5
+  initializeOnly SFNode a6 USE A6
+  inputOnly SFBool on_1
+  inputOnly SFBool on_2
+  inputOnly SFBool on_3
+  inputOnly SFBool on_ov
+  inputOnly SFTime on_tt
+  url "javascript:
+function on_1 (v) { log = log + 'V1:' + v + ' '; }
+function on_2 (v) { log = log + 'V2:' + v + ' '; }
+function on_3 (v) { log = log + 'V3:' + v + ' '; }
+function on_ov (v) { log = log + 'over:' + v + ' '; }
+function on_tt (v) { log = log + 'touch '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') a2 .load = true;
+   if (k == 'b') a5 .url = new MFString ('#V3');
+   if (k == 'c') a6 .visible = true;
+   if (k == 'd') a2 .url = new MFString ('#V1');
+   if (k == 'e') a2 .load = false;
+   if (k == 'z') v1 .set_bind = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE V1.isBound TO R.on_1
+ROUTE V2.isBound TO R.on_2
+ROUTE V3.isBound TO R.on_3
+ROUTE TS.isOver TO R.on_ov
+ROUTE TS.touchTime TO R.on_tt

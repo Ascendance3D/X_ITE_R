@@ -1,0 +1,42 @@
+#X3D V4.0 utf8
+PROFILE Interchange
+Viewpoint { position 0 0 12 }
+
+Background { skyColor 0.12 0.14 0.2 }
+
+Transform { translation -3.300 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture ImageTexture { url "../synthetic-rea-b02/pbr/base.png"  } } geometry Box { size 1.5 1.5 1.5 } }
+] }
+Transform { translation -1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture ImageTexture { url "../synthetic-rea-b02/pbr/base-alpha.png"  } } geometry Box { size 1.5 1.5 1.5 } }
+] }
+Transform { translation 1.100 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" repeatS FALSE repeatT FALSE }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 2 0, 2 2, 0 2 ] } } }
+] }
+Transform { translation 3.300 2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png" repeatS TRUE repeatT TRUE }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 2 0, 2 2, 0 2 ] } } }
+] }
+Transform { translation -3.300 0.000 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture PixelTexture { image 2 2 1 0 255 128 64  }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } }
+] }
+Transform { translation -1.100 0.000 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture PixelTexture { image 2 2 2 255 65408 33023 16576  }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } }
+] }
+Transform { translation 1.100 0.000 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture PixelTexture { image 2 2 3 16711680 65280 255 16776960  }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } }
+] }
+Transform { translation 3.300 0.000 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture PixelTexture { image 2 2 4 -16776961 16711808 65535 -65472  }  } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } }
+] }
+Transform { translation -3.300 -2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png"  } textureTransform TextureTransform { translation 0.25 0.25 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } }
+] }
+Transform { translation -1.100 -2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png"  } textureTransform TextureTransform { rotation 0.5 center 0.5 0.5 scale 1.5 1.5 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } }
+] }
+Transform { translation 1.100 -2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 0.8 0.8 0.8 } texture ImageTexture { url "../synthetic-rea-b03/proj-checker.png"  } textureTransform TextureTransform { scale 0.5 1.5 rotation 0.3 translation 0.1 -0.2 } } geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.9 -0.9 0, 0.9 -0.9 0, 0.9 0.9 0, -0.9 0.9 0 ] } coordIndex [ 0 1 2 3 -1 ] texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } }
+] }
+Transform { translation 3.300 -2.200 0 children [
+Shape { appearance Appearance { material Material { diffuseColor 1 0.5 0.4 } texture ImageTexture { url "../synthetic-rea-b02/pbr/base.png"  } } geometry Sphere { radius 0.9 } }
+] }

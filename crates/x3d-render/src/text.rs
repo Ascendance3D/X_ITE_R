@@ -5,6 +5,7 @@
 
 use crate::geometry::Geometry;
 use crate::sg::Sg;
+use crate::texture::TextureImage;
 use std::rc::Rc;
 use x3d_fields::FieldValue;
 use x3d_fields::NodeId;
@@ -64,17 +65,25 @@ pub fn resolve_font(sg: &Sg, font_style: Option<NodeId>) -> Option<Rc<Font>> {
 fn font_style_params(sg: &Sg, font_style: Option<NodeId>) -> FontStyleParams {
     let Some(f) = font_style else { return FontStyleParams::default() };
 
+    // ScreenFontStyle.getScale: pointSize × PixelsPerPoint × ContentScale, in pixels; getContentScale: ContentScale.
+    let screen = sg.type_name(f) == Some("ScreenFontStyle");
+    let rendering = |name: &str| sg.rt.browser_options.rendering.get(name).map_or(1.0, |v| v.as_f64());
+    let content_scale = if screen { rendering("ContentScale") } else { 1.0 };
+
     FontStyleParams {
-        size: sg.f64(f, "size", 1.0),
+        size: if screen { sg.f64(f, "pointSize", 12.0) * rendering("PixelsPerPoint") * content_scale } else { sg.f64(f, "size", 1.0) },
+        content_scale,
+        screen,
         spacing: sg.f64(f, "spacing", 1.0),
         horizontal: sg.bool(f, "horizontal", true),
         left_to_right: sg.bool(f, "leftToRight", true),
         top_to_bottom: sg.bool(f, "topToBottom", true),
         justify: sg.strings(f, "justify"),
+        cached_alignments: sg.rt.font_style_alignments.get(&f).copied(),
     }
 }
 
-/// Text.build → X3DGeometryNode arrays. `unsupported` receives ScreenFontStyle (ScreenText).
+/// Text.build → X3DGeometryNode arrays (a ScreenFontStyle: ScreenText's quad and canvas).
 pub fn text_geometry(sg: &Sg, n: NodeId, unsupported: &mut std::collections::BTreeSet<String>) -> Option<Geometry> {
     let font_style = match sg.value(n, "fontStyle") {
         Some(FieldValue::SFNode(Some(c))) => sg.inner(*c),
@@ -85,10 +94,7 @@ pub fn text_geometry(sg: &Sg, n: NodeId, unsupported: &mut std::collections::BTr
     let font_style = match font_style {
         Some(f) => match sg.type_name(f) {
             Some("FontStyle") => Some(f),
-            Some("ScreenFontStyle") => {
-                unsupported.insert("ScreenFontStyle".into());
-                return None;
-            }
+            Some("ScreenFontStyle") => Some(f),
             _ => None,
         },
         None => None,
@@ -106,6 +112,8 @@ pub fn text_geometry(sg: &Sg, n: NodeId, unsupported: &mut std::collections::BTr
     };
     let compression = if crate::traverse::text_compression_scaling() { TextCompression::Scaling } else { TextCompression::CharSpacing };
     let layout = x3d_text::layout(font.as_deref(), &text, &fs, quality, compression);
+    // ScreenText: its canvas is the texture, filtered NEAREST_PIXEL and clamped (X3DLayoutContext.getScreenTextureProperties).
+    let texture = layout.texture.as_ref().map(|(width, height, rgba)| Rc::new(TextureImage::screen_text(*width, *height, rgba.clone())));
     let f32s = |v: &[f64]| v.iter().map(|x| *x as f32).collect::<Vec<f32>>();
     let has_vertices = !layout.vertices.is_empty();
 
@@ -117,6 +125,7 @@ pub fn text_geometry(sg: &Sg, n: NodeId, unsupported: &mut std::collections::BTr
         colors: vec![],
         solid: sg.bool(n, "solid", false),
         ccw: true,
+        texture,
         min: if has_vertices { Vector3::new(layout.min[0], layout.min[1], layout.min[2]) } else { Vector3::ZERO },
         max: if has_vertices { Vector3::new(layout.max[0], layout.max[1], layout.max[2]) } else { Vector3::ZERO },
         ..Default::default()

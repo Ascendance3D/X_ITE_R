@@ -1,0 +1,60 @@
+release build exit 0
+workspace exit 101 : 169 ok groups, 2 FAILED lines
+future-gate exit 0 : future-gate: PASS (12 of 12 passed, 0 ignored)
+reload exit 0 : test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.52s 
+items2 exit 0 : 296 files: 296 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared logs: 296 of 296 sorted console logs identical (0 differences unexplained) 
+items exit 0 : 606 files: 606 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared logs: 606 of 606 sorted console logs identical (0 differences unexplained) 
+x0 exit 0 : 50 files: 47 exact match, 0 mismatch (0 unexplained), 3 expected failure reproduced, 0 oracle timeouts not compared logs: 50 of 50 sorted console logs identical (0 differences unexplained) 
+x1 exit 0 : 500 files: 470 exact match, 3 mismatch (0 unexplained), 25 expected failure reproduced, 2 oracle timeouts not compared logs: 497 of 498 sorted console logs identical (0 differences unexplained) 
+sis exit 0 : 18 files: 18 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared logs: 18 of 18 sorted console logs identical (0 differences unexplained) 
+x6 exit 0 : 8 files: 8 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared logs: 7 of 8 sorted console logs identical (0 differences unexplained) 
+ep exit 0 : 12 files: 12 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared logs: 12 of 12 sorted console logs identical (0 differences unexplained) 
+followers exit 0 : PASS order: 649 checks passed, 0 failed, max pose delta 0.00e+00 followers suite: 10 of 10 worlds pass 
+rea parse exit 0 : test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s 
+rea render exit 0 : 20 shots checked test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.73s 
+rea viewer exit 0 : 40 cases checked (images: true) test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.58s 
+gpu msaa0 : 294 within tolerance, 2 over, 0 missing (threshold 8, max 0.5% of pixels)
+gpu msaa4 : 294 within tolerance, 2 over, 0 missing (threshold 8, max 0.5% of pixels)
+memory runtime exit 0 : test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.69s 
+memory viewer exit 0 : test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.60s 
+b02 render exit 0 : 132 shots checked test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.65s 
+b02 viewer exit 0 : 34 cases checked (images: true) test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 18.20s 
+b02 reload/layers/slots exit 0 : test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.81s test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.42s 
+b03 render exit 0 : 152 shots checked test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.05s 
+b03 viewer exit 0 : 24 cases checked (images: true) test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.27s 
+b03 pick vectors exit 0 : 4000 cases, 0 differ (0 known) test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s 
+b03 reload exit 0 : test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.47s test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 31.20s 
+b04 geometry/iso exit 0 : test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s 
+b04 render exit 0 : 14 shots checked test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.50s 
+b04 viewer exit 0 : 20 cases checked (images: true) test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.66s 
+b04 reload exit 0 : test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.68s 
+b05 sound exit 0 : suite rea-b05: 65 pass, 1 known difference, 0 fail, of 66 worlds
+b05 reload exit 0 : test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s 
+b06 physics oracle exit 0 : suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds
+b06 particles oracle exit 0 : suite rea-b06-particles: 37 pass, 0 known, 0 fail, of 37 cases
+b06 engine vs Ammo exit 0 : test result: ok. 66 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s 
+b06 physics scene+lifecycle exit 0 : test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s 
+b06 particles scene+retention exit 0 : test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s 
+stacks r24 exit 0 : suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds
+stacks r30 exit 0 : suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds
+stacks r50 exit 0 : suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds
+stacks r60 exit 0 : suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds
+stacks r75 exit 0 : suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds
+stacks r120 exit 0 : suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds
+stacks r144 exit 0 : suite rea-b06 (RigidBodyPhysics): 11 pass, 0 fail, of 11 worlds
+rates r24 exit 0 : suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds
+rates r30 exit 0 : suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds
+rates r50 exit 0 : suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds
+rates r75 exit 0 : suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds
+rates r120 exit 0 : suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds
+rates r144 exit 0 : suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds
+b07 particles oracle exit 0 : suite rea-b07-ps: 103 pass, 0 known, 0 fail, of 103 cases
+b07 particles tests exit 0 : test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s 
+b07 particles units exit 0 : test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s 
+b07 vol render exit 0 : 290 shots checked test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.21s 
+b07 vol viewer exit 0 : 38 cases checked (images: true) test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.50s 
+b07 vol reload exit 0 : test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.83s 
+b07 mat render exit 0 : 60 shots checked test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.14s 
+b07 mat viewer exit 0 : 8 cases checked (images: true) test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.02s 
+b07 mat reload exit 0 : test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.72s 
+DONE

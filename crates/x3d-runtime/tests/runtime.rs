@@ -88,6 +88,28 @@ fn route_loop_is_broken_once_per_field() {
 }
 
 #[test]
+fn initialized_volume_types_capture_voxels_once() {
+    for (world, url) in [
+        (include_str!("../../../oracle/synthetic-rea-b07-vol/stepped/rt-iso.wrl"), "rt-iso.wrl"),
+        (include_str!("../../../oracle/synthetic-rea-b07-vol/stepped/rt-segmented.wrl"), "rt-segmented.wrl"),
+    ] {
+        let scene = x3d_parse::parse_bytes(world.as_bytes(), &format!("http://oracle/{url}")).unwrap();
+        let mut rt = Runtime::new(scene, Box::new(NoFetch));
+        rt.load_world();
+        let volume = node(&rt, "VD");
+        let initial = node(&rt, "T_LUM");
+
+        assert!(matches!(rt.nrt(volume).map(|n| &n.state), Some(x3d_runtime::nodes::State::Volume { voxels: Some(v) }) if *v == initial), "{url}");
+
+        let field = rt.scene.get_field(volume, "voxels").unwrap();
+        rt.scene.field_mut(volume, field).value = FieldValue::SFNode(None);
+
+        assert!(matches!(rt.value((volume, field)), FieldValue::SFNode(None)), "{url}");
+        assert!(matches!(rt.nrt(volume).map(|n| &n.state), Some(x3d_runtime::nodes::State::Volume { voxels: Some(v) }) if *v == initial), "{url}");
+    }
+}
+
+#[test]
 fn missing_inline_reports_like_file_loader() {
     let rt = run(r#"Inline { url [ "a.wrl" "http://dead.example/b.wrl" ] }"#);
 

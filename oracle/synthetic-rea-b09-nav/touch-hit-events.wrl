@@ -1,0 +1,65 @@
+#X3D V3.3 utf8
+PROFILE Interchange
+COMPONENT PointingDeviceSensor:1
+COMPONENT Scripting:1
+# Synthetic REA oracle world (REA batch 09): TouchSensor reports isOver, isActive, touchTime,
+# hitPoint, hitNormal and hitTexCoord; the event script presses and releases at the same position,
+# which re-sends the hit values (X_ITE: buttonPressEvent / buttonReleaseEvent pick again).
+Viewpoint { position 0 0 10 }
+Transform {
+  translation -1.5 0 0
+  rotation 0 1 0 0.4
+  children [
+    DEF T1 TouchSensor { description "box" }
+    Shape { geometry Box { size 2 2 2 } }
+  ]
+}
+Transform {
+  translation 1.5 0 0
+  scale 1 1.3 1
+  children [
+    DEF T2 TouchSensor { description "sphere" }
+    Shape { geometry Sphere { radius 1.2 } }
+  ]
+}
+DEF LOG Script {
+  inputOutput SFString hist ""
+  inputOnly SFBool over1
+  inputOnly SFBool active1
+  inputOnly SFTime touch1
+  inputOnly SFVec3f point1
+  inputOnly SFVec3f normal1
+  inputOnly SFVec2f tex1
+  inputOnly SFBool over2
+  inputOnly SFBool active2
+  inputOnly SFTime touch2
+  inputOnly SFVec3f point2
+  inputOnly SFVec3f normal2
+  inputOnly SFVec2f tex2
+  url "ecmascript:
+    function over1 (v) { hist = hist + ' o1=' + v; }
+    function active1 (v) { hist = hist + ' a1=' + v; }
+    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }
+    function point1 (v) { hist = hist + ' p1=' + v; }
+    function normal1 (v) { hist = hist + ' n1=' + v; }
+    function tex1 (v) { hist = hist + ' x1=' + v; }
+    function over2 (v) { hist = hist + ' o2=' + v; }
+    function active2 (v) { hist = hist + ' a2=' + v; }
+    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }
+    function point2 (v) { hist = hist + ' p2=' + v; }
+    function normal2 (v) { hist = hist + ' n2=' + v; }
+    function tex2 (v) { hist = hist + ' x2=' + v; }
+  "
+}
+ROUTE T1.isOver TO LOG.over1
+ROUTE T1.isActive TO LOG.active1
+ROUTE T1.touchTime TO LOG.touch1
+ROUTE T1.hitPoint_changed TO LOG.point1
+ROUTE T1.hitNormal_changed TO LOG.normal1
+ROUTE T1.hitTexCoord_changed TO LOG.tex1
+ROUTE T2.isOver TO LOG.over2
+ROUTE T2.isActive TO LOG.active2
+ROUTE T2.touchTime TO LOG.touch2
+ROUTE T2.hitPoint_changed TO LOG.point2
+ROUTE T2.hitNormal_changed TO LOG.normal2
+ROUTE T2.hitTexCoord_changed TO LOG.tex2

@@ -1,0 +1,22 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 4 }
+NavigationInfo { headlight FALSE }
+Shape { appearance Appearance { material Material { diffuseColor 1 0 0 } shaders [ ComposedShader { language "GLSL" parts [
+ ShaderPart { type "VERTEX" url "data:x-shader/x-vertex,
+attribute vec4 x3d_Vertex;
+uniform mat4 x3d_ProjectionMatrix;
+uniform mat4 x3d_ModelViewMatrix;
+attribute vec2 uv2;
+attribute vec4 col4;
+varying vec3 c;
+void main()
+{
+   c = vec3(uv2, 0.0) + col4.rgb * col4.a;
+   gl_Position = x3d_ProjectionMatrix * x3d_ModelViewMatrix * x3d_Vertex;
+}
+" } ShaderPart { type "FRAGMENT" url "data:x-shader/x-fragment,
+precision mediump float;
+varying vec3 c;
+void main() { gl_FragColor = vec4 (c * 0.5, 1.0); }
+" } ] } ] } geometry IndexedFaceSet { coord Coordinate { point [ -1 -1 0 1 -1 0 1 1 0 -1 1 0 ] } coordIndex [ 0 1 2 3 -1 ] attrib [ FloatVertexAttribute { name "uv2" numComponents 2 value [ 0 0 1 0 1 1 0 1 ] } FloatVertexAttribute { name "col4" numComponents 4 value [ 1 0 0 1, 0 1 0 0.5, 0 0 1 0.25, 1 1 1 0.75 ] } ]  } }

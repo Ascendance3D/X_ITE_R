@@ -1,0 +1,493 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "72": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "88": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "96": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "104": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "112": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "128": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "136": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "144": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "259": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "260": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (1.0, 0.3, 0.2, 1.0); }\n\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts USE VA\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb DEF FB ShaderPart {\n    type \"FRAGMENT\"\n    url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n  }\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "72": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            load FALSE\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "88": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          USE FB\n        ]\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "96": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "104": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group { }\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          DEF VA ShaderPart {\n            url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n          }\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa DEF CSA ComposedShader {\n    language \"GLSL\"\n    parts [\n      USE VA\n      DEF FA ShaderPart {\n        type \"FRAGMENT\"\n        url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n      }\n    ]\n  }\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders USE CSA\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "112": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"HLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "128": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "136": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "144": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "259": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "260": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 6\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF G Group {\n  children DEF T1 Transform {\n    translation -1.5 0 0\n    children Shape {\n      appearance DEF AP1 Appearance {\n        material Material {\n          diffuseColor 0.5 0.5 0.5\n        }\n        shaders DEF CSA ComposedShader {\n          language \"GLSL\"\n          parts [\n            DEF VA ShaderPart {\n              url \"data:x-shader/x-vertex,\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n            }\n            DEF FA ShaderPart {\n              type \"FRAGMENT\"\n              url \"data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }\"\n            }\n          ]\n        }\n      }\n      geometry Sphere {\n        radius 0.6\n      }\n    }\n  }\n}\n\nTransform {\n  translation 1.5 0 0\n  children Shape {\n    appearance DEF AP2 Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n      shaders DEF CSB ComposedShader {\n        language \"GLSL\"\n        parts [\n          USE VA\n          DEF FB ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main() { gl_FragColor = vec4 (0.2, 1.0, 0.3, 1.0); }\n\"\n          }\n        ]\n      }\n    }\n    geometry Box {\n      size 1 1 1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.3 0\n  children Shape {\n    appearance DEF AP3 Appearance {\n      material Material {\n        diffuseColor 0.8 0.8 0.2\n      }\n    }\n    geometry Cone {\n      height 1\n      bottomRadius 0.5\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   csa USE CSA\n  initializeOnly SFNode   csb USE CSB\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   ap3 USE AP3\n  initializeOnly SFNode   g USE G\n  initializeOnly SFNode   t1 USE T1\n\n  url \"javascript:\nvar made = null;\nfunction on_key (k)\n{\n   if (k == 'a') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0, 1.0, 0.2, 1.0); }');\n   if (k == 'b') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (1.0) oops; }');\n   if (k == 'c') fa .url = new MFString ('data:x-shader/x-fragment,precision mediump float; void main() { gl_FragColor = vec4 (0.8, 0.2, 1.0, 1.0); }');\n   if (k == 'd') csb .parts = new MFNode (csb .parts [0]);\n   if (k == 'e') csb .parts = new MFNode (csb .parts [0], fb);\n   if (k == 'f') csa .activate = true;\n   if (k == 'g') fb .load = false;\n   if (k == 'h') fb .load = true;\n   if (k == 'i') { made = Browser .currentScene .createNode ('ComposedShader'); made .language = 'GLSL'; made .parts = new MFNode (csb .parts [0], fb); ap3 .shaders = new MFNode (made); }\n   if (k == 'j') ap3 .shaders = new MFNode ();\n   if (k == 'k') g .removeChildren = new MFNode (t1);\n   if (k == 'l') g .addChildren = new MFNode (t1);\n   if (k == 'm') csa .language = 'HLSL';\n   if (k == 'n') csa .language = 'GLSL';\n   if (k == 'o') fa .type = 'VERTEX';\n   if (k == 'p') fa .type = 'FRAGMENT';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [
+    "error: ShaderPart: Couldn't load data URL. Error: Error in ShaderPart 'FA' in URL 'http://oracle/synthetic-rea-b08-shaders/parts-runtime.wrl', line 1, ERROR: 0:1: 'gl_FragColor' : undeclared identifier",
+    "error: ShaderPart: Couldn't load data URL. Error: Error in ShaderPart 'FA' in URL 'http://oracle/synthetic-rea-b08-shaders/parts-runtime.wrl', line 1, ERROR: 0:1: 'oops' : syntax error",
+    "warn: Couldn't initialize ComposedShader 'CSB': The program must contain objects to form both a vertex and fragment shader."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

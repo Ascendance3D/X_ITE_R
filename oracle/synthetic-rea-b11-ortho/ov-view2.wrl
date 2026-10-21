@@ -1,0 +1,46 @@
+#X3D V4.0 utf8
+PROFILE Full
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+DEF TV Transform { translation 1 0 0 rotation 0 1 0 0.2 scale 2 1 1.5 children [ DEF O1 OrthoViewpoint { position 0 0 10 fieldOfView [ -2 -1 2 1 ] viewAll TRUE } ] }
+DEF O2 OrthoViewpoint { position 3 2 10 orientation 0 1 0 0.3 fieldOfView [ -3 -3 3 3 ] retainUserOffsets TRUE }
+DEF P Viewpoint { position 0 0 12 }
+DEF SW Switch { whichChoice 0 children [ DEF GS Transform { scale 1.2 1 1 children [
+  Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 1.5 } } }
+  Transform { translation 1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.9 } } }
+  DEF FAR Transform { translation 0 2.5 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.9 0.4 } } geometry Box { size 1 1 1 } } }
+] } ] }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode o1 USE O1
+  initializeOnly SFNode o2 USE O2
+  initializeOnly SFNode p USE P
+  initializeOnly SFNode gs USE GS
+  initializeOnly SFNode sw USE SW
+  initializeOnly SFNode far USE FAR
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') o1 .viewAll = true;
+   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);
+   if (k == 'c') o1 .viewAll = true;
+   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);
+   if (k == 'e') o1 .viewAll = true;
+   if (k == 'f') o1 .viewAll = false;
+   if (k == 'g') o2 .set_bind = true;
+   if (k == 'h') o2 .viewAll = true;
+   if (k == 'i') p .viewAll = true;
+   if (k == 'j') p .set_bind = true;
+   if (k == 'k') o1 .set_bind = true;
+   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);
+   if (k == 'm') o1 .viewAll = true;
+   if (k == 'n') sw .whichChoice = -1;
+   if (k == 'o') o1 .viewAll = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

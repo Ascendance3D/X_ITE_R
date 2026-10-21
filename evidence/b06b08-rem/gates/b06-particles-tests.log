@@ -1,0 +1,209 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: function `default_unit` is never used
+   --> crates/x3d-render/src/shader_gpu.rs:304:4
+    |
+304 | fn default_unit(dim: SamplerDim) -> u32 {
+    |    ^^^^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 5 warnings
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-viewer)
+    Finished `release` profile [optimized] target(s) in 1.59s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/particles_b06_events.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_events-4089b613baf9f978)
+
+running 4 tests
+MAXERR	events-explosion	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=1.07e-6	position=7.75e-7
+test explosion_fields_change_between_bursts ... ok
+MAXERR	events-maxparticles	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=2.98e-7	position=1.79e-7
+test max_particles_scenario_numbers ... ok
+MAXERR	events-point	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=4.77e-7
+test max_particles_and_enabled_change ... ok
+test emitter_and_system_fields_change_while_particles_fly ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/particles_b06_exact.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_exact-fc2fdb99ce33d996)
+
+running 30 tests
+MAXERR	particles-point-nospeed	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=0.00e0
+MAXERR	particles-bounded-disabled	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=4.77e-7
+MAXERR	particles-point-off	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=0.00e0
+MAXERR	particles-point-spherical	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=8.34e-7	position=5.96e-7
+test point_off ... ok
+MAXERR	particles-point-create-off	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=0.00e0
+MAXERR	particles-cone-basic	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=6.71e-7	position=7.00e-7
+test point_nospeed ... ok
+test bounded_disabled ... ok
+test point_spherical ... ok
+test point_create_off ... ok
+test cone_basic ... ok
+MAXERR	particles-cone-down	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=2.98e-7	position=3.58e-7
+MAXERR	particles-cone-zeroangle	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=0.00e0
+test cone_down ... ok
+test cone_zeroangle ... ok
+MAXERR	particles-bounded-box	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=1.43e-6	position=4.18e-6
+MAXERR	particles-explosion-fixed	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=7.15e-7	position=7.15e-7
+test bounded_box ... ok
+test explosion_fixed ... ok
+MAXERR	particles-point-dir	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=4.77e-7
+MAXERR	particles-point-dirraw	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=2.38e-7
+MAXERR	particles-cone-spherical	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=4.77e-7	position=4.77e-7
+MAXERR	particles-surface-box	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=5.96e-8	position=1.19e-7
+MAXERR	particles-surface-ifs-solid	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=1.19e-7
+MAXERR	particles-bounded-floor-gravity	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=9.54e-7	position=2.15e-6
+MAXERR	particles-bounded-two	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=1.19e-7	position=7.15e-7
+MAXERR	particles-bounded-floor	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=1.19e-7	position=3.58e-7
+test point_dir ... ok
+test point_dirraw ... ok
+test cone_spherical ... ok
+test bounded_two ... ok
+test surface_box ... ok
+test bounded_floor ... ok
+test surface_ifs_solid ... ok
+MAXERR	particles-volume-empty	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=5.96e-8
+test bounded_floor_gravity ... ok
+test volume_empty ... ok
+MAXERR	particles-cone-wide	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=7.15e-7	position=4.77e-7
+MAXERR	particles-surface-nosurface	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=0.00e0
+MAXERR	particles-bounded-floor-damp1	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=2.38e-7	position=9.54e-7
+test cone_wide ... ok
+test surface_nosurface ... ok
+test bounded_floor_damp1 ... ok
+MAXERR	particles-cone-tilt	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=2.38e-6	position=2.86e-6
+test cone_tilt ... ok
+MAXERR	particles-point-fixed	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=2.38e-7
+test point_fixed ... ok
+MAXERR	particles-volume-cube-spherical	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=4.17e-7	position=4.32e-7
+test volume_cube_spherical ... ok
+MAXERR	particles-surface-ifs-twosided	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=1.19e-7	position=4.77e-7
+MAXERR	particles-volume-cube	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=5.07e-7
+test surface_ifs_twosided ... ok
+test volume_cube ... ok
+MAXERR	particles-explosion-basic	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=9.54e-7	position=1.07e-6
+test explosion_basic ... ok
+MAXERR	particles-volume-twocubes	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=0.00e0	position=5.96e-7
+test volume_twocubes ... ok
+test spot_values_from_the_gpu ... ok
+
+test result: ok. 30 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/particles_b06_retention.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_retention-9dce34330157bbee)
+
+running 2 tests
+test a_released_system_has_no_state_and_no_interest ... ok
+MEM	particles-inline-cycle	10	systems=4	buffer_floats=3640	animate_interests=4	live_watchers=4	live_nodes=18	arena=20	nrt=20	frt=181	rss_kib=18580
+MEM	particles-inline-cycle	50	systems=4	buffer_floats=3640	animate_interests=4	live_watchers=4	live_nodes=18	arena=20	nrt=20	frt=181	rss_kib=18580
+MEM	particles-inline-cycle	100	systems=4	buffer_floats=3640	animate_interests=4	live_watchers=4	live_nodes=18	arena=20	nrt=20	frt=181	rss_kib=18580
+test particle_systems_come_and_go_with_their_inline_100_cycles ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/particles_b06_stat.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b06_stat-a6014821d1f7fe8e)
+
+running 8 tests
+WORST	particles-explosion-stat	[2.0973384380340576e-6, 2.086162567138672e-6, 0.0]	[0.0, 0.0, 0.0, 0.0]	inexact 0 of 20000
+KS	particles-explosion-stat	n=18834	crit=0.0258	lifetime=0.00000	speed=0.00005	vx=0.00011	vy=0.00011	vz=0.00000	px=0.00000	py=0.00000	pz=0.00000	velocity_max=2.10e-6	position_max=0.00e0
+test explosion_stat ... ok
+WORST	particles-surface-box-stat	[1.1920928955078125e-7, 1.1920928955078125e-7, 1.1920928955078125e-7]	[1.7881393432617188e-7, 1.7881393432617188e-7, 1.7881393432617188e-7, 1.7881393432617188e-7]	inexact 6131 of 20000
+WORST	particles-point-spherical-stat	[1.043081283569336e-6, 1.341104507446289e-6, 0.0]	[0.0, 0.0, 0.0, 0.0]	inexact 0 of 20000
+WORST	particles-cone-wide-stat	[1.2619420886039734e-5, 8.344650268554688e-7, 1.371186226606369e-5]	[0.0, 0.0, 0.0, 0.0]	inexact 0 of 20000
+WORST	particles-cone-basic-stat	[1.7285346984863281e-6, 1.430511474609375e-6, 1.430511474609375e-6]	[0.0, 0.0, 0.0, 0.0]	inexact 0 of 20000
+WORST	particles-surface-ifs-twosided-stat	[1.1920928955078125e-7, 0.0, 1.1920928955078125e-7]	[7.152557373046875e-7, 1.1920928955078125e-7, 0.0, 1.7881393432617188e-7]	inexact 4733 of 20000
+KS	particles-surface-box-stat	n=20000	crit=0.0250	lifetime=0.00000	speed=0.00005	vx=0.00005	vy=0.00005	vz=0.00005	px=0.00230	py=0.00245	pz=0.00225	velocity_max=1.19e-7	position_max=1.79e-7
+KS	particles-point-spherical-stat	n=20000	crit=0.0250	lifetime=0.00000	speed=0.00010	vx=0.00010	vy=0.00010	vz=0.00000	px=0.00000	py=0.00000	pz=0.00000	velocity_max=1.34e-6	position_max=0.00e0
+KS	particles-cone-wide-stat	n=20000	crit=0.0250	lifetime=0.00000	speed=0.00010	vx=0.00010	vy=0.00010	vz=0.00010	px=0.00000	py=0.00000	pz=0.00000	velocity_max=1.37e-5	position_max=0.00e0
+KS	particles-cone-basic-stat	n=20000	crit=0.0250	lifetime=0.00000	speed=0.00010	vx=0.00010	vy=0.00010	vz=0.00010	px=0.00000	py=0.00000	pz=0.00000	velocity_max=1.73e-6	position_max=0.00e0
+KS	particles-surface-ifs-twosided-stat	n=20000	crit=0.0250	lifetime=0.00000	speed=0.00005	vx=0.00005	vy=0.00000	vz=0.00005	px=0.00205	py=0.00005	pz=0.00000	velocity_max=1.19e-7	position_max=7.15e-7
+test surface_box_stat ... ok
+test surface_ifs_twosided_stat ... ok
+test point_spherical_stat ... ok
+test cone_basic_stat ... ok
+test cone_wide_stat ... ok
+WORST	particles-volume-cube-stat	[0.0, 0.0, 0.0]	[2.117455005645752e-5, 1.1764466762542725e-5, 6.157159805297852e-5, 0.0]	inexact 41663 of 20000
+KS	particles-volume-cube-stat	n=20000	crit=0.0250	lifetime=0.00000	speed=0.00000	vx=0.00000	vy=0.00000	vz=0.00000	px=0.00010	py=0.00010	pz=0.00010	velocity_max=0.00e0	position_max=6.16e-5
+test volume_cube_stat ... ok
+WORST	particles-volume-twocubes-stat	[0.0, 0.0, 0.0]	[5.078315734863281e-5, 1.4990568161010742e-5, 1.0669231414794922e-5, 0.0]	inexact 33345 of 20000
+KS	particles-volume-twocubes-stat	n=20000	crit=0.0250	lifetime=0.00000	speed=0.00000	vx=0.00000	vy=0.00000	vz=0.00000	px=0.00010	py=0.00010	pz=0.00010	velocity_max=0.00e0	position_max=5.08e-5
+test volume_twocubes_stat ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+

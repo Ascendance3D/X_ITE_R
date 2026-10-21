@@ -1,0 +1,407 @@
+{
+  "ok": true,
+  "poses": {
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1.0000000000029525,
+        0,
+        0.011101864392509379
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.17777775923411082,
+        0.17777775923411082,
+        -0.17777775923411082,
+        -0.17777775923411082
+      ]
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.04995839572194438
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.800000011920929,
+        0.800000011920929,
+        -0.800000011920929,
+        -0.800000011920929
+      ]
+    },
+    "61": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.04995839572194438
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.800000011920929,
+        0.800000011920929,
+        -0.800000011920929,
+        -0.800000011920929
+      ]
+    },
+    "78": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.04995839572194438
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.800000011920929,
+        0.800000011920929,
+        -0.800000011920929,
+        -0.800000011920929
+      ]
+    },
+    "87": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1.0000000000001783,
+        0,
+        0.049958392410566765
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.7945064908854391,
+        0.7945064908854391,
+        -0.7945064908854391,
+        -0.7945064908854391
+      ]
+    },
+    "104": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.049958380820783375
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.77527916431427,
+        0.77527916431427,
+        -0.77527916431427,
+        -0.77527916431427
+      ]
+    },
+    "113": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.049958380820783375
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.77527916431427,
+        0.77527916431427,
+        -0.77527916431427,
+        -0.77527916431427
+      ]
+    },
+    "130": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.049958380820783375
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.77527916431427,
+        0.77527916431427,
+        -0.77527916431427,
+        -0.77527916431427
+      ]
+    },
+    "149": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.049958380820783375
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.77527916431427,
+        0.77527916431427,
+        -0.77527916431427,
+        -0.77527916431427
+      ]
+    },
+    "150": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        1,
+        0,
+        0.049958380820783375
+      ],
+      "centerOfRotation": [
+        -0.5,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.77527916431427,
+        0.77527916431427,
+        -0.77527916431427,
+        -0.77527916431427
+      ]
+    }
+  },
+  "vrml": {
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 1\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [ ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 1\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 1\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 1\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 1\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "61": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "78": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "87": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\",\n    \"k3+0 key=d\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "104": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\",\n    \"k3+0 key=d\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "113": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\",\n    \"k3+0 key=d\",\n    \"k4+0 key=e\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "130": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\",\n    \"k3+0 key=d\",\n    \"k4+0 key=e\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "149": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\",\n    \"k3+0 key=d\",\n    \"k4+0 key=e\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n",
+    "150": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nDEF LS LayerSet {\n  activeLayer 2\n  order [\n    1,\n    2\n  ]\n  layers [\n    DEF L1 Layer {\n      children [\n        DEF V1 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.9 0.6 0.2\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n      ]\n    }\n    DEF L2 Layer {\n      children [\n        DEF V2 OrthoViewpoint {\n          fieldOfView -3 -3 3 3\n        }\n        Transform {\n          translation 1 0.5 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Box {\n              size 1 2 1\n            }\n          }\n        }\n        Transform {\n          translation -2 -1 0\n          children Shape {\n            appearance Appearance {\n              material Material {\n                diffuseColor 0.3 0.5 0.9\n              }\n            }\n            geometry Sphere {\n              radius 0.5\n            }\n          }\n        }\n        DEF PS ProximitySensor {\n          size 10000 10000 10000\n        }\n      ]\n    }\n  ]\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString   on_key\n  inputOnly      SFVec3f    pos\n  inputOnly      SFRotation ori\n  inputOnly      SFVec3f    cor\n  inputOnly      SFBool     b_V1\n  inputOnly      SFTime     t_V1\n  inputOnly      SFBool     b_V2\n  inputOnly      SFTime     t_V2\n  initializeOnly SFNode     v1 USE V1\n  initializeOnly SFNode     v2 USE V2\n  initializeOnly SFNode     ls USE LS\n  inputOutput    MFString   out [\n    \"k0+0 key=a\",\n    \"k0+1 orientation=0.000000 1.000000 0.000000 0.000694\",\n    \"k0+1 centerOfRotation=-0.500000 0.000000 0.000000\",\n    \"k0+2 orientation=0.000000 1.000000 0.000000 0.002775\",\n    \"k0+3 orientation=0.000000 1.000000 0.000000 0.006245\",\n    \"k0+4 orientation=0.000000 1.000000 0.000000 0.011102\",\n    \"k0+5 orientation=0.000000 1.000000 0.000000 0.017347\",\n    \"k0+6 orientation=0.000000 1.000000 0.000000 0.024979\",\n    \"k0+7 orientation=0.000000 1.000000 0.000000 0.032612\",\n    \"k0+8 orientation=0.000000 1.000000 0.000000 0.038857\",\n    \"k0+9 orientation=0.000000 1.000000 0.000000 0.043714\",\n    \"k0+10 orientation=0.000000 1.000000 0.000000 0.047183\",\n    \"k0+11 orientation=0.000000 1.000000 0.000000 0.049265\",\n    \"k0+12 orientation=0.000000 1.000000 0.000000 0.049958\",\n    \"k1+0 key=b\",\n    \"k2+0 key=c\",\n    \"k3+0 key=d\",\n    \"k4+0 key=e\"\n  ]\n\n  url \"javascript:\nvar K_ = -1, F_ = 0, R_ = [], L_ = { };\nfunction nums (v) { return String (v) .split (/\\\\s+/) .map (Number); }\nfunction rec (n, v) { if (K_ >= 0) R_ .push ('k' + K_ + '+' + F_ + ' ' + n + '=' + v); }\nfunction prepareEvents () { ++ F_; if (R_ .length !== out .length) out = new MFString (... R_); }\nfunction pose (n, v) { v = nums (v); const l = L_ [n]; if (l && v .every ((x, i) => Math .abs (x - l [i]) <= 1e-6)) return; L_ [n] = v; rec (n, v .map (x => x .toFixed (6)) .join (' ')); }\nfunction pos (v) { pose ('position', v); }\nfunction ori (v) { pose ('orientation', v); }\nfunction cor (v) { pose ('centerOfRotation', v); }\nfunction b_V1 (v) { rec ('V1.isBound', v); }\nfunction t_V1 (v) { rec ('V1.bindTime', 'T'); }\nfunction b_V2 (v) { rec ('V2.isBound', v); }\nfunction t_V2 (v) { rec ('V2.bindTime', 'T'); }\nfunction on_key (k)\n{\n   ++ K_; F_ = 0;\n   rec ('key', k);\n   if (k == 'a') Browser .viewAll (Browser .currentScene .getNamedNode ('L2'), 0.4);\n   if (k == 'b') Browser .viewAll (0.4);\n   if (k == 'c') { ls .activeLayer = 2; }\n   if (k == 'd') Browser .viewAll (0.4);\n   if (k == 'e') Browser .viewAll (Browser .currentScene .getNamedNode ('L1'), 0);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\nROUTE PS.position_changed TO R.pos\nROUTE PS.orientation_changed TO R.ori\nROUTE PS.centerOfRotation_changed TO R.cor\nROUTE V1.isBound TO R.b_V1\nROUTE V1.bindTime TO R.t_V1\nROUTE V2.isBound TO R.b_V2\nROUTE V2.bindTime TO R.t_V2\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

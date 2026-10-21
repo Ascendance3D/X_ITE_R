@@ -1,0 +1,187 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx api"
+DEF T Transform { }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function initialize () {
+  SELF = this;
+  T ('SFBool statics', function () { return Object .getOwnPropertyNames (SFBool) .sort (); });
+  T ('SFBool static values', function () { return [typeof SFBool .type, SFBool .type, SFBool .typeName, typeof SFBool .fromValue, typeof SFBool .fromString, typeof SFBool .fromVRMLString, typeof SFBool .fromXMLString, typeof SFBool .fromJSONString, SFBool .length, SFBool .name]; });
+  T ('SFBool proto chain', function () { return chain (Object .getPrototypeOf (new SFBool ())); });
+  T ('SFColor statics', function () { return Object .getOwnPropertyNames (SFColor) .sort (); });
+  T ('SFColor static values', function () { return [typeof SFColor .type, SFColor .type, SFColor .typeName, typeof SFColor .fromValue, typeof SFColor .fromString, typeof SFColor .fromVRMLString, typeof SFColor .fromXMLString, typeof SFColor .fromJSONString, SFColor .length, SFColor .name]; });
+  T ('SFColor proto chain', function () { return chain (Object .getPrototypeOf (new SFColor ())); });
+  T ('SFColorRGBA statics', function () { return Object .getOwnPropertyNames (SFColorRGBA) .sort (); });
+  T ('SFColorRGBA static values', function () { return [typeof SFColorRGBA .type, SFColorRGBA .type, SFColorRGBA .typeName, typeof SFColorRGBA .fromValue, typeof SFColorRGBA .fromString, typeof SFColorRGBA .fromVRMLString, typeof SFColorRGBA .fromXMLString, typeof SFColorRGBA .fromJSONString, SFColorRGBA .length, SFColorRGBA .name]; });
+  T ('SFColorRGBA proto chain', function () { return chain (Object .getPrototypeOf (new SFColorRGBA ())); });
+  T ('SFDouble statics', function () { return Object .getOwnPropertyNames (SFDouble) .sort (); });
+  T ('SFDouble static values', function () { return [typeof SFDouble .type, SFDouble .type, SFDouble .typeName, typeof SFDouble .fromValue, typeof SFDouble .fromString, typeof SFDouble .fromVRMLString, typeof SFDouble .fromXMLString, typeof SFDouble .fromJSONString, SFDouble .length, SFDouble .name]; });
+  T ('SFDouble proto chain', function () { return chain (Object .getPrototypeOf (new SFDouble ())); });
+  T ('SFFloat statics', function () { return Object .getOwnPropertyNames (SFFloat) .sort (); });
+  T ('SFFloat static values', function () { return [typeof SFFloat .type, SFFloat .type, SFFloat .typeName, typeof SFFloat .fromValue, typeof SFFloat .fromString, typeof SFFloat .fromVRMLString, typeof SFFloat .fromXMLString, typeof SFFloat .fromJSONString, SFFloat .length, SFFloat .name]; });
+  T ('SFFloat proto chain', function () { return chain (Object .getPrototypeOf (new SFFloat ())); });
+  T ('SFImage statics', function () { return Object .getOwnPropertyNames (SFImage) .sort (); });
+  T ('SFImage static values', function () { return [typeof SFImage .type, SFImage .type, SFImage .typeName, typeof SFImage .fromValue, typeof SFImage .fromString, typeof SFImage .fromVRMLString, typeof SFImage .fromXMLString, typeof SFImage .fromJSONString, SFImage .length, SFImage .name]; });
+  T ('SFImage proto chain', function () { return chain (Object .getPrototypeOf (new SFImage ())); });
+  T ('SFInt32 statics', function () { return Object .getOwnPropertyNames (SFInt32) .sort (); });
+  T ('SFInt32 static values', function () { return [typeof SFInt32 .type, SFInt32 .type, SFInt32 .typeName, typeof SFInt32 .fromValue, typeof SFInt32 .fromString, typeof SFInt32 .fromVRMLString, typeof SFInt32 .fromXMLString, typeof SFInt32 .fromJSONString, SFInt32 .length, SFInt32 .name]; });
+  T ('SFInt32 proto chain', function () { return chain (Object .getPrototypeOf (new SFInt32 ())); });
+  T ('SFMatrix3d statics', function () { return Object .getOwnPropertyNames (SFMatrix3d) .sort (); });
+  T ('SFMatrix3d static values', function () { return [typeof SFMatrix3d .type, SFMatrix3d .type, SFMatrix3d .typeName, typeof SFMatrix3d .fromValue, typeof SFMatrix3d .fromString, typeof SFMatrix3d .fromVRMLString, typeof SFMatrix3d .fromXMLString, typeof SFMatrix3d .fromJSONString, SFMatrix3d .length, SFMatrix3d .name]; });
+  T ('SFMatrix3d proto chain', function () { return chain (Object .getPrototypeOf (new SFMatrix3d ())); });
+  T ('SFMatrix3f statics', function () { return Object .getOwnPropertyNames (SFMatrix3f) .sort (); });
+  T ('SFMatrix3f static values', function () { return [typeof SFMatrix3f .type, SFMatrix3f .type, SFMatrix3f .typeName, typeof SFMatrix3f .fromValue, typeof SFMatrix3f .fromString, typeof SFMatrix3f .fromVRMLString, typeof SFMatrix3f .fromXMLString, typeof SFMatrix3f .fromJSONString, SFMatrix3f .length, SFMatrix3f .name]; });
+  T ('SFMatrix3f proto chain', function () { return chain (Object .getPrototypeOf (new SFMatrix3f ())); });
+  T ('SFMatrix4d statics', function () { return Object .getOwnPropertyNames (SFMatrix4d) .sort (); });
+  T ('SFMatrix4d static values', function () { return [typeof SFMatrix4d .type, SFMatrix4d .type, SFMatrix4d .typeName, typeof SFMatrix4d .fromValue, typeof SFMatrix4d .fromString, typeof SFMatrix4d .fromVRMLString, typeof SFMatrix4d .fromXMLString, typeof SFMatrix4d .fromJSONString, SFMatrix4d .length, SFMatrix4d .name]; });
+  T ('SFMatrix4d proto chain', function () { return chain (Object .getPrototypeOf (new SFMatrix4d ())); });
+  T ('SFMatrix4f statics', function () { return Object .getOwnPropertyNames (SFMatrix4f) .sort (); });
+  T ('SFMatrix4f static values', function () { return [typeof SFMatrix4f .type, SFMatrix4f .type, SFMatrix4f .typeName, typeof SFMatrix4f .fromValue, typeof SFMatrix4f .fromString, typeof SFMatrix4f .fromVRMLString, typeof SFMatrix4f .fromXMLString, typeof SFMatrix4f .fromJSONString, SFMatrix4f .length, SFMatrix4f .name]; });
+  T ('SFMatrix4f proto chain', function () { return chain (Object .getPrototypeOf (new SFMatrix4f ())); });
+  T ('SFNode statics', function () { return Object .getOwnPropertyNames (SFNode) .sort (); });
+  T ('SFNode static values', function () { return [typeof SFNode .type, SFNode .type, SFNode .typeName, typeof SFNode .fromValue, typeof SFNode .fromString, typeof SFNode .fromVRMLString, typeof SFNode .fromXMLString, typeof SFNode .fromJSONString, SFNode .length, SFNode .name]; });
+  T ('SFQuaternion statics', function () { return Object .getOwnPropertyNames (SFQuaternion) .sort (); });
+  T ('SFQuaternion static values', function () { return [typeof SFQuaternion .type, SFQuaternion .type, SFQuaternion .typeName, typeof SFQuaternion .fromValue, typeof SFQuaternion .fromString, typeof SFQuaternion .fromVRMLString, typeof SFQuaternion .fromXMLString, typeof SFQuaternion .fromJSONString, SFQuaternion .length, SFQuaternion .name]; });
+  T ('SFQuaternion proto chain', function () { return chain (Object .getPrototypeOf (new SFQuaternion ())); });
+  T ('SFRotation statics', function () { return Object .getOwnPropertyNames (SFRotation) .sort (); });
+  T ('SFRotation static values', function () { return [typeof SFRotation .type, SFRotation .type, SFRotation .typeName, typeof SFRotation .fromValue, typeof SFRotation .fromString, typeof SFRotation .fromVRMLString, typeof SFRotation .fromXMLString, typeof SFRotation .fromJSONString, SFRotation .length, SFRotation .name]; });
+  T ('SFRotation proto chain', function () { return chain (Object .getPrototypeOf (new SFRotation ())); });
+  T ('SFString statics', function () { return Object .getOwnPropertyNames (SFString) .sort (); });
+  T ('SFString static values', function () { return [typeof SFString .type, SFString .type, SFString .typeName, typeof SFString .fromValue, typeof SFString .fromString, typeof SFString .fromVRMLString, typeof SFString .fromXMLString, typeof SFString .fromJSONString, SFString .length, SFString .name]; });
+  T ('SFString proto chain', function () { return chain (Object .getPrototypeOf (new SFString ())); });
+  T ('SFTime statics', function () { return Object .getOwnPropertyNames (SFTime) .sort (); });
+  T ('SFTime static values', function () { return [typeof SFTime .type, SFTime .type, SFTime .typeName, typeof SFTime .fromValue, typeof SFTime .fromString, typeof SFTime .fromVRMLString, typeof SFTime .fromXMLString, typeof SFTime .fromJSONString, SFTime .length, SFTime .name]; });
+  T ('SFTime proto chain', function () { return chain (Object .getPrototypeOf (new SFTime ())); });
+  T ('SFVec2d statics', function () { return Object .getOwnPropertyNames (SFVec2d) .sort (); });
+  T ('SFVec2d static values', function () { return [typeof SFVec2d .type, SFVec2d .type, SFVec2d .typeName, typeof SFVec2d .fromValue, typeof SFVec2d .fromString, typeof SFVec2d .fromVRMLString, typeof SFVec2d .fromXMLString, typeof SFVec2d .fromJSONString, SFVec2d .length, SFVec2d .name]; });
+  T ('SFVec2d proto chain', function () { return chain (Object .getPrototypeOf (new SFVec2d ())); });
+  T ('SFVec2f statics', function () { return Object .getOwnPropertyNames (SFVec2f) .sort (); });
+  T ('SFVec2f static values', function () { return [typeof SFVec2f .type, SFVec2f .type, SFVec2f .typeName, typeof SFVec2f .fromValue, typeof SFVec2f .fromString, typeof SFVec2f .fromVRMLString, typeof SFVec2f .fromXMLString, typeof SFVec2f .fromJSONString, SFVec2f .length, SFVec2f .name]; });
+  T ('SFVec2f proto chain', function () { return chain (Object .getPrototypeOf (new SFVec2f ())); });
+  T ('SFVec3d statics', function () { return Object .getOwnPropertyNames (SFVec3d) .sort (); });
+  T ('SFVec3d static values', function () { return [typeof SFVec3d .type, SFVec3d .type, SFVec3d .typeName, typeof SFVec3d .fromValue, typeof SFVec3d .fromString, typeof SFVec3d .fromVRMLString, typeof SFVec3d .fromXMLString, typeof SFVec3d .fromJSONString, SFVec3d .length, SFVec3d .name]; });
+  T ('SFVec3d proto chain', function () { return chain (Object .getPrototypeOf (new SFVec3d ())); });
+  T ('SFVec3f statics', function () { return Object .getOwnPropertyNames (SFVec3f) .sort (); });
+  T ('SFVec3f static values', function () { return [typeof SFVec3f .type, SFVec3f .type, SFVec3f .typeName, typeof SFVec3f .fromValue, typeof SFVec3f .fromString, typeof SFVec3f .fromVRMLString, typeof SFVec3f .fromXMLString, typeof SFVec3f .fromJSONString, SFVec3f .length, SFVec3f .name]; });
+  T ('SFVec3f proto chain', function () { return chain (Object .getPrototypeOf (new SFVec3f ())); });
+  T ('SFVec4d statics', function () { return Object .getOwnPropertyNames (SFVec4d) .sort (); });
+  T ('SFVec4d static values', function () { return [typeof SFVec4d .type, SFVec4d .type, SFVec4d .typeName, typeof SFVec4d .fromValue, typeof SFVec4d .fromString, typeof SFVec4d .fromVRMLString, typeof SFVec4d .fromXMLString, typeof SFVec4d .fromJSONString, SFVec4d .length, SFVec4d .name]; });
+  T ('SFVec4d proto chain', function () { return chain (Object .getPrototypeOf (new SFVec4d ())); });
+  T ('SFVec4f statics', function () { return Object .getOwnPropertyNames (SFVec4f) .sort (); });
+  T ('SFVec4f static values', function () { return [typeof SFVec4f .type, SFVec4f .type, SFVec4f .typeName, typeof SFVec4f .fromValue, typeof SFVec4f .fromString, typeof SFVec4f .fromVRMLString, typeof SFVec4f .fromXMLString, typeof SFVec4f .fromJSONString, SFVec4f .length, SFVec4f .name]; });
+  T ('SFVec4f proto chain', function () { return chain (Object .getPrototypeOf (new SFVec4f ())); });
+  T ('VrmlMatrix statics', function () { return Object .getOwnPropertyNames (VrmlMatrix) .sort (); });
+  T ('VrmlMatrix static values', function () { return [typeof VrmlMatrix .type, VrmlMatrix .type, VrmlMatrix .typeName, typeof VrmlMatrix .fromValue, typeof VrmlMatrix .fromString, typeof VrmlMatrix .fromVRMLString, typeof VrmlMatrix .fromXMLString, typeof VrmlMatrix .fromJSONString, VrmlMatrix .length, VrmlMatrix .name]; });
+  T ('VrmlMatrix proto chain', function () { return chain (Object .getPrototypeOf (new VrmlMatrix ())); });
+  T ('MFBool statics', function () { return Object .getOwnPropertyNames (MFBool) .sort (); });
+  T ('MFBool static values', function () { return [typeof MFBool .type, MFBool .type, MFBool .typeName, typeof MFBool .fromValue, typeof MFBool .fromString, typeof MFBool .fromVRMLString, typeof MFBool .fromXMLString, typeof MFBool .fromJSONString, MFBool .length, MFBool .name]; });
+  T ('MFBool proto chain', function () { return chain (Object .getPrototypeOf (new MFBool ())); });
+  T ('MFColor statics', function () { return Object .getOwnPropertyNames (MFColor) .sort (); });
+  T ('MFColor static values', function () { return [typeof MFColor .type, MFColor .type, MFColor .typeName, typeof MFColor .fromValue, typeof MFColor .fromString, typeof MFColor .fromVRMLString, typeof MFColor .fromXMLString, typeof MFColor .fromJSONString, MFColor .length, MFColor .name]; });
+  T ('MFColor proto chain', function () { return chain (Object .getPrototypeOf (new MFColor ())); });
+  T ('MFColorRGBA statics', function () { return Object .getOwnPropertyNames (MFColorRGBA) .sort (); });
+  T ('MFColorRGBA static values', function () { return [typeof MFColorRGBA .type, MFColorRGBA .type, MFColorRGBA .typeName, typeof MFColorRGBA .fromValue, typeof MFColorRGBA .fromString, typeof MFColorRGBA .fromVRMLString, typeof MFColorRGBA .fromXMLString, typeof MFColorRGBA .fromJSONString, MFColorRGBA .length, MFColorRGBA .name]; });
+  T ('MFColorRGBA proto chain', function () { return chain (Object .getPrototypeOf (new MFColorRGBA ())); });
+  T ('MFDouble statics', function () { return Object .getOwnPropertyNames (MFDouble) .sort (); });
+  T ('MFDouble static values', function () { return [typeof MFDouble .type, MFDouble .type, MFDouble .typeName, typeof MFDouble .fromValue, typeof MFDouble .fromString, typeof MFDouble .fromVRMLString, typeof MFDouble .fromXMLString, typeof MFDouble .fromJSONString, MFDouble .length, MFDouble .name]; });
+  T ('MFDouble proto chain', function () { return chain (Object .getPrototypeOf (new MFDouble ())); });
+  T ('MFFloat statics', function () { return Object .getOwnPropertyNames (MFFloat) .sort (); });
+  T ('MFFloat static values', function () { return [typeof MFFloat .type, MFFloat .type, MFFloat .typeName, typeof MFFloat .fromValue, typeof MFFloat .fromString, typeof MFFloat .fromVRMLString, typeof MFFloat .fromXMLString, typeof MFFloat .fromJSONString, MFFloat .length, MFFloat .name]; });
+  T ('MFFloat proto chain', function () { return chain (Object .getPrototypeOf (new MFFloat ())); });
+  T ('MFImage statics', function () { return Object .getOwnPropertyNames (MFImage) .sort (); });
+  T ('MFImage static values', function () { return [typeof MFImage .type, MFImage .type, MFImage .typeName, typeof MFImage .fromValue, typeof MFImage .fromString, typeof MFImage .fromVRMLString, typeof MFImage .fromXMLString, typeof MFImage .fromJSONString, MFImage .length, MFImage .name]; });
+  T ('MFImage proto chain', function () { return chain (Object .getPrototypeOf (new MFImage ())); });
+  T ('MFInt32 statics', function () { return Object .getOwnPropertyNames (MFInt32) .sort (); });
+  T ('MFInt32 static values', function () { return [typeof MFInt32 .type, MFInt32 .type, MFInt32 .typeName, typeof MFInt32 .fromValue, typeof MFInt32 .fromString, typeof MFInt32 .fromVRMLString, typeof MFInt32 .fromXMLString, typeof MFInt32 .fromJSONString, MFInt32 .length, MFInt32 .name]; });
+  T ('MFInt32 proto chain', function () { return chain (Object .getPrototypeOf (new MFInt32 ())); });
+  T ('MFMatrix3d statics', function () { return Object .getOwnPropertyNames (MFMatrix3d) .sort (); });
+  T ('MFMatrix3d static values', function () { return [typeof MFMatrix3d .type, MFMatrix3d .type, MFMatrix3d .typeName, typeof MFMatrix3d .fromValue, typeof MFMatrix3d .fromString, typeof MFMatrix3d .fromVRMLString, typeof MFMatrix3d .fromXMLString, typeof MFMatrix3d .fromJSONString, MFMatrix3d .length, MFMatrix3d .name]; });
+  T ('MFMatrix3d proto chain', function () { return chain (Object .getPrototypeOf (new MFMatrix3d ())); });
+  T ('MFMatrix3f statics', function () { return Object .getOwnPropertyNames (MFMatrix3f) .sort (); });
+  T ('MFMatrix3f static values', function () { return [typeof MFMatrix3f .type, MFMatrix3f .type, MFMatrix3f .typeName, typeof MFMatrix3f .fromValue, typeof MFMatrix3f .fromString, typeof MFMatrix3f .fromVRMLString, typeof MFMatrix3f .fromXMLString, typeof MFMatrix3f .fromJSONString, MFMatrix3f .length, MFMatrix3f .name]; });
+  T ('MFMatrix3f proto chain', function () { return chain (Object .getPrototypeOf (new MFMatrix3f ())); });
+  T ('MFMatrix4d statics', function () { return Object .getOwnPropertyNames (MFMatrix4d) .sort (); });
+  T ('MFMatrix4d static values', function () { return [typeof MFMatrix4d .type, MFMatrix4d .type, MFMatrix4d .typeName, typeof MFMatrix4d .fromValue, typeof MFMatrix4d .fromString, typeof MFMatrix4d .fromVRMLString, typeof MFMatrix4d .fromXMLString, typeof MFMatrix4d .fromJSONString, MFMatrix4d .length, MFMatrix4d .name]; });
+  T ('MFMatrix4d proto chain', function () { return chain (Object .getPrototypeOf (new MFMatrix4d ())); });
+  T ('MFMatrix4f statics', function () { return Object .getOwnPropertyNames (MFMatrix4f) .sort (); });
+  T ('MFMatrix4f static values', function () { return [typeof MFMatrix4f .type, MFMatrix4f .type, MFMatrix4f .typeName, typeof MFMatrix4f .fromValue, typeof MFMatrix4f .fromString, typeof MFMatrix4f .fromVRMLString, typeof MFMatrix4f .fromXMLString, typeof MFMatrix4f .fromJSONString, MFMatrix4f .length, MFMatrix4f .name]; });
+  T ('MFMatrix4f proto chain', function () { return chain (Object .getPrototypeOf (new MFMatrix4f ())); });
+  T ('MFNode statics', function () { return Object .getOwnPropertyNames (MFNode) .sort (); });
+  T ('MFNode static values', function () { return [typeof MFNode .type, MFNode .type, MFNode .typeName, typeof MFNode .fromValue, typeof MFNode .fromString, typeof MFNode .fromVRMLString, typeof MFNode .fromXMLString, typeof MFNode .fromJSONString, MFNode .length, MFNode .name]; });
+  T ('MFNode proto chain', function () { return chain (Object .getPrototypeOf (new MFNode ())); });
+  T ('MFQuaternion statics', function () { return Object .getOwnPropertyNames (MFQuaternion) .sort (); });
+  T ('MFQuaternion static values', function () { return [typeof MFQuaternion .type, MFQuaternion .type, MFQuaternion .typeName, typeof MFQuaternion .fromValue, typeof MFQuaternion .fromString, typeof MFQuaternion .fromVRMLString, typeof MFQuaternion .fromXMLString, typeof MFQuaternion .fromJSONString, MFQuaternion .length, MFQuaternion .name]; });
+  T ('MFQuaternion proto chain', function () { return chain (Object .getPrototypeOf (new MFQuaternion ())); });
+  T ('MFRotation statics', function () { return Object .getOwnPropertyNames (MFRotation) .sort (); });
+  T ('MFRotation static values', function () { return [typeof MFRotation .type, MFRotation .type, MFRotation .typeName, typeof MFRotation .fromValue, typeof MFRotation .fromString, typeof MFRotation .fromVRMLString, typeof MFRotation .fromXMLString, typeof MFRotation .fromJSONString, MFRotation .length, MFRotation .name]; });
+  T ('MFRotation proto chain', function () { return chain (Object .getPrototypeOf (new MFRotation ())); });
+  T ('MFString statics', function () { return Object .getOwnPropertyNames (MFString) .sort (); });
+  T ('MFString static values', function () { return [typeof MFString .type, MFString .type, MFString .typeName, typeof MFString .fromValue, typeof MFString .fromString, typeof MFString .fromVRMLString, typeof MFString .fromXMLString, typeof MFString .fromJSONString, MFString .length, MFString .name]; });
+  T ('MFString proto chain', function () { return chain (Object .getPrototypeOf (new MFString ())); });
+  T ('MFTime statics', function () { return Object .getOwnPropertyNames (MFTime) .sort (); });
+  T ('MFTime static values', function () { return [typeof MFTime .type, MFTime .type, MFTime .typeName, typeof MFTime .fromValue, typeof MFTime .fromString, typeof MFTime .fromVRMLString, typeof MFTime .fromXMLString, typeof MFTime .fromJSONString, MFTime .length, MFTime .name]; });
+  T ('MFTime proto chain', function () { return chain (Object .getPrototypeOf (new MFTime ())); });
+  T ('MFVec2d statics', function () { return Object .getOwnPropertyNames (MFVec2d) .sort (); });
+  T ('MFVec2d static values', function () { return [typeof MFVec2d .type, MFVec2d .type, MFVec2d .typeName, typeof MFVec2d .fromValue, typeof MFVec2d .fromString, typeof MFVec2d .fromVRMLString, typeof MFVec2d .fromXMLString, typeof MFVec2d .fromJSONString, MFVec2d .length, MFVec2d .name]; });
+  T ('MFVec2d proto chain', function () { return chain (Object .getPrototypeOf (new MFVec2d ())); });
+  T ('MFVec2f statics', function () { return Object .getOwnPropertyNames (MFVec2f) .sort (); });
+  T ('MFVec2f static values', function () { return [typeof MFVec2f .type, MFVec2f .type, MFVec2f .typeName, typeof MFVec2f .fromValue, typeof MFVec2f .fromString, typeof MFVec2f .fromVRMLString, typeof MFVec2f .fromXMLString, typeof MFVec2f .fromJSONString, MFVec2f .length, MFVec2f .name]; });
+  T ('MFVec2f proto chain', function () { return chain (Object .getPrototypeOf (new MFVec2f ())); });
+  T ('MFVec3d statics', function () { return Object .getOwnPropertyNames (MFVec3d) .sort (); });
+  T ('MFVec3d static values', function () { return [typeof MFVec3d .type, MFVec3d .type, MFVec3d .typeName, typeof MFVec3d .fromValue, typeof MFVec3d .fromString, typeof MFVec3d .fromVRMLString, typeof MFVec3d .fromXMLString, typeof MFVec3d .fromJSONString, MFVec3d .length, MFVec3d .name]; });
+  T ('MFVec3d proto chain', function () { return chain (Object .getPrototypeOf (new MFVec3d ())); });
+  T ('MFVec3f statics', function () { return Object .getOwnPropertyNames (MFVec3f) .sort (); });
+  T ('MFVec3f static values', function () { return [typeof MFVec3f .type, MFVec3f .type, MFVec3f .typeName, typeof MFVec3f .fromValue, typeof MFVec3f .fromString, typeof MFVec3f .fromVRMLString, typeof MFVec3f .fromXMLString, typeof MFVec3f .fromJSONString, MFVec3f .length, MFVec3f .name]; });
+  T ('MFVec3f proto chain', function () { return chain (Object .getPrototypeOf (new MFVec3f ())); });
+  T ('MFVec4d statics', function () { return Object .getOwnPropertyNames (MFVec4d) .sort (); });
+  T ('MFVec4d static values', function () { return [typeof MFVec4d .type, MFVec4d .type, MFVec4d .typeName, typeof MFVec4d .fromValue, typeof MFVec4d .fromString, typeof MFVec4d .fromVRMLString, typeof MFVec4d .fromXMLString, typeof MFVec4d .fromJSONString, MFVec4d .length, MFVec4d .name]; });
+  T ('MFVec4d proto chain', function () { return chain (Object .getPrototypeOf (new MFVec4d ())); });
+  T ('MFVec4f statics', function () { return Object .getOwnPropertyNames (MFVec4f) .sort (); });
+  T ('MFVec4f static values', function () { return [typeof MFVec4f .type, MFVec4f .type, MFVec4f .typeName, typeof MFVec4f .fromValue, typeof MFVec4f .fromString, typeof MFVec4f .fromVRMLString, typeof MFVec4f .fromXMLString, typeof MFVec4f .fromJSONString, MFVec4f .length, MFVec4f .name]; });
+  T ('MFVec4f proto chain', function () { return chain (Object .getPrototypeOf (new MFVec4f ())); });
+  T ('SFNode proto chain', function () { return chain (Object .getPrototypeOf (new SFNode ('Group { }'))); });
+  T ('X3DField proto', function () { return Object .getOwnPropertyNames (X3DField .prototype) .sort (); });
+  T ('X3DArrayField proto', function () { return Object .getOwnPropertyNames (X3DArrayField .prototype) .sort (); });
+  T ('X3DField statics', function () { return Object .getOwnPropertyNames (X3DField) .sort (); });
+  T ('X3DArrayField statics', function () { return Object .getOwnPropertyNames (X3DArrayField) .sort (); });
+  flush_ ();
+}
+
+  "
+}

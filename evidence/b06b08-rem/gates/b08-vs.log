@@ -1,0 +1,136 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: function `default_unit` is never used
+   --> crates/x3d-render/src/shader_gpu.rs:304:4
+    |
+304 | fn default_unit(dim: SamplerDim) -> u32 {
+    |    ^^^^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 5 warnings
+   Compiling x3d-render v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-render)
+    Finished `release` profile [optimized] target(s) in 0.67s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/render_rea_b08_vs.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_vs-2bf46fd92b115d4c)
+
+running 1 test
+MSAA 0 vs-back-ibl.wrl: over 0 (0.000%), max 1
+MSAA 0 vs-backlight.wrl: over 0 (0.000%), max 1
+MSAA 0 vs-clip.wrl: over 0 (0.000%), max 2
+MSAA 0 vs-combined-a.wrl: over 0 (0.000%), max 1
+MSAA 0 vs-combined-b.wrl: over 0 (0.000%), max 1
+MSAA 0 vs-combined-ibl.wrl: over 0 (0.000%), max 3
+MSAA 0 vs-fog.wrl: over 0 (0.000%), max 1
+MSAA 0 vs-geometry-ibl.wrl: over 0 (0.000%), max 2
+MSAA 0 vs-geometry.wrl: over 0 (0.000%), max 1
+MSAA 0 vs-ibl-lights.wrl: over 0 (0.000%), max 2
+MSAA 0 vs-ibl.wrl: over 0 (0.000%), max 2
+MSAA 0 vs-lights.wrl: over 0 (0.000%), max 1
+MSAA 0 vs-missing-ibl.wrl: over 0 (0.000%), max 3
+MSAA 0 vs-point-lines.wrl: over 3 (0.001%), max 205
+MSAA 0 vs-runtime.wrl: over 0 (0.000%), max 7
+MSAA 0 vs-small-ibl.wrl: over 0 (0.000%), max 2
+MSAA 0 vs-textures-a-ibl.wrl: over 0 (0.000%), max 7
+MSAA 0 vs-textures-b-ibl.wrl: over 2 (0.001%), max 13
+MSAA 0 vs-transparent-ibl.wrl: over 145 (0.055%), max 118
+MSAA 4 vs-back-ibl.wrl: over 0 (0.000%), max 8
+MSAA 4 vs-backlight.wrl: over 251 (0.096%), max 23
+MSAA 4 vs-clip.wrl: over 0 (0.000%), max 4
+MSAA 4 vs-combined-a.wrl: over 262 (0.100%), max 19
+MSAA 4 vs-combined-b.wrl: over 336 (0.128%), max 23
+MSAA 4 vs-combined-ibl.wrl: over 0 (0.000%), max 6
+MSAA 4 vs-fog.wrl: over 0 (0.000%), max 1
+MSAA 4 vs-geometry-ibl.wrl: over 0 (0.000%), max 8
+MSAA 4 vs-geometry.wrl: over 403 (0.154%), max 21
+MSAA 4 vs-ibl-lights.wrl: over 0 (0.000%), max 5
+MSAA 4 vs-ibl.wrl: over 0 (0.000%), max 5
+MSAA 4 vs-lights.wrl: over 591 (0.225%), max 23
+MSAA 4 vs-missing-ibl.wrl: over 10 (0.004%), max 10
+MSAA 4 vs-point-lines.wrl: over 0 (0.000%), max 0
+MSAA 4 vs-runtime.wrl: over 0 (0.000%), max 4
+MSAA 4 vs-small-ibl.wrl: over 0 (0.000%), max 4
+MSAA 4 vs-textures-a-ibl.wrl: over 0 (0.000%), max 4
+MSAA 4 vs-textures-b-ibl.wrl: over 0 (0.000%), max 6
+MSAA 4 vs-transparent-ibl.wrl: over 147 (0.056%), max 118
+38 shots checked
+test rea_b08_vs_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.87s
+

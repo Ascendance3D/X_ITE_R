@@ -1,0 +1,119 @@
+{
+  "ok": true,
+  "poses": {
+    "40": {
+      "position": [
+        3.0458388328552246,
+        0.4599999964237213,
+        4.444024562835693
+      ],
+      "orientation": [
+        0.08762586503444678,
+        -0.9961486819805139,
+        0.0030840177762362676,
+        0.07063334497086136
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "70": {
+      "position": [
+        2.072255481001103,
+        -0.1402375425155123,
+        8.00564636940713
+      ],
+      "orientation": [
+        -0.03275462621949008,
+        -0.9994630252564172,
+        0.0008919676695063297,
+        0.06021074728668607
+      ],
+      "centerOfRotation": [
+        2.6265627450783313e-8,
+        -2.1999999737936404,
+        -1.7500915472368206e-7
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "100": {
+      "position": [
+        -0.5749255418777466,
+        -1.7722882747650146,
+        17.689724922180176
+      ],
+      "orientation": [
+        -0.5966995681008113,
+        -0.8024061642385932,
+        -0.009693968244439903,
+        0.040487622616468544
+      ],
+      "centerOfRotation": [
+        2.6265627450783313e-8,
+        -2.1999999737936404,
+        -1.7500915472368206e-7
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        -0.5749255418777466,
+        -1.7722882747650146,
+        17.689724922180176
+      ],
+      "orientation": [
+        -0.5966995681008113,
+        -0.8024061642385932,
+        -0.009693968244439903,
+        0.040487622616468544
+      ],
+      "centerOfRotation": [
+        2.6265627450783313e-8,
+        -2.1999999737936404,
+        -1.7500915472368206e-7
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"LOOKAT\"\n}\n\nViewpoint {\n  description \"main\"\n  position 0.5 0.3 12\n  orientation 0 1 0 0.04\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.2 0.2\n      }\n    }\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 3.5 0.5 -2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.7 0.3\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -0.5 -1\n  rotation 0 1 0 0.6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n    }\n    geometry Cone {\n      height 2.4\n      bottomRadius 1.1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.5 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.7 0.2\n      }\n    }\n    geometry Cylinder {\n      height 1.2\n      radius 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0 -2.2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.5 0.5\n      }\n    }\n    geometry Box {\n      size 12 0.2 8\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+FAIL arrays: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL chasers: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL dampers: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL dampers30: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL edge: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL frames-24: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL frames-coarse: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL frames-quarter: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL initial: 0 checks passed, 0 failed, max pose delta 0.00e+00
+FAIL order: 0 checks passed, 0 failed, max pose delta 0.00e+00
+followers suite: 0 of 10 worlds pass

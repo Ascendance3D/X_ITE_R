@@ -476,6 +476,27 @@ impl Font {
         points
     }
 
+    /// opentype.js `glyph .xMin`, `yMin`, `xMax`, `yMax`: the bounding box of the glyph's `glyf` header in font units (0 where
+    /// opentype.js leaves it undefined: an empty glyph).
+    pub fn glyph_bounds(&self, glyph: u16) -> [f64; 4] {
+        if glyph >= self.num_glyphs {
+            return [0.0; 4];
+        }
+
+        let (start, len) = self.glyf;
+        let glyf = &self.data[start..start + len];
+        let (o, n) = (self.loca[glyph as usize] as usize, self.loca[glyph as usize + 1] as usize);
+
+        if o == n || o + 10 > glyf.len() {
+            return [0.0; 4];
+        }
+
+        let d = &glyf[o..];
+        let v = |i: usize| be16s(d, 2 + i * 2).unwrap_or(0) as f64;
+
+        [v(0), v(1), v(2), v(3)]
+    }
+
     /// opentype.js `getPath (points)` followed by `Glyph.getPath (0, 0, 1)`: the commands with the
     /// coordinates scaled to font size 1 and y up (the double negation of opentype.js and
     /// PolygonText cancels).

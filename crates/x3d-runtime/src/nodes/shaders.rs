@@ -14,7 +14,9 @@
 use super::State;
 use crate::loader::{FileLoader, Loaded};
 use crate::*;
+use std::cell::RefCell;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 /// A compiled part's source and how it was compiled.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
@@ -29,7 +31,9 @@ pub trait ShaderCompiler {
     fn compile_part(&self, fragment: bool, source: &str, options: &[String]) -> Result<(), String>;
     /// `gl.linkProgram` of the attached parts: `Err` is the program info log.
     /// `Ok` carries the deprecation warnings of getDefaultUniformsAndAttributes (text after the node's type and name).
-    fn link(&self, vertex: &[ShaderSource], fragment: &[ShaderSource]) -> Result<Vec<String>, String>;
+    /// `transform_feedback_varyings`: ComposedShader.setTransformFeedbackVaryings, handed to
+    /// `gl.transformFeedbackVaryings` before the link.
+    fn link(&self, vertex: &[ShaderSource], fragment: &[ShaderSource], transform_feedback_varyings: &[String]) -> Result<Vec<String>, String>;
 }
 
 /// What a ShaderPart keeps after a compile (X_ITE: `this .shader`).
@@ -46,6 +50,31 @@ pub struct ComposedState {
     pub valid: bool,
     /// The sources the last successful link used: vertex parts, then fragment parts.
     pub linked: Option<(Vec<ShaderSource>, Vec<ShaderSource>)>,
+    /// The `x3d_ClipPlane` uniforms of the linked program. A GL program keeps a uniform until it is
+    /// written again and X_ITE writes only the enabled planes, so a plane that was switched off
+    /// keeps clipping a custom shader. A new link starts from zero.
+    pub clip_planes: Rc<RefCell<[[f32; 4]; 6]>>,
+    /// The texture state the linked program keeps between draws. A new link starts empty.
+    pub gl: Rc<RefCell<GlResident>>,
+    /// ComposedShader.transformFeedbackVaryings (`setTransformFeedbackVaryings`): X_ITE sets it only for its own
+    /// shaders; the next link passes it to the driver.
+    pub transform_feedback_varyings: Vec<String>,
+}
+
+/// What a GL program remembers about its textures (X3DProgrammableShaderObject.textures and the
+/// sampler uniforms). X_ITE adds a texture field to a Set when it holds a texture node and deletes
+/// it when the field is cleared; the uniform of a cleared field is not written, so it keeps its
+/// unit, and the unit keeps whatever texture was bound there last.
+#[derive(Debug, Default)]
+pub struct GlResident {
+    /// The Set of texture locations in insertion order: `field` or `field[i]`.
+    pub textures: Vec<String>,
+    /// The sampler uniforms written so far: `name` or `name[i]` to the texture unit.
+    pub units: HashMap<String, u32>,
+    /// The light uniforms written so far (`x3d_LightSource[i].field`, or the legacy `x3d_LightColor[i]`
+    /// ...) to their value. X_ITE writes the lights of the shape only, so a light that went away (or was
+    /// switched off) keeps its last values in a program whose `X3D_NUM_LIGHTS` still counts it.
+    pub lights: HashMap<String, Vec<f32>>,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -67,6 +96,13 @@ pub struct ShaderHost {
     /// ShaderPart compiles and ComposedShader links done (for tests and the lifecycle report).
     pub compiles: usize,
     pub links: usize,
+}
+
+impl ShaderHost {
+    /// The private LoadSensor of a ComposedShader (`this .loadSensor .setPrivate (true)`).
+    pub fn is_private_load_sensor(&self, node: NodeId) -> bool {
+        self.composed.values().any(|c| c.load_sensor == Some(node))
+    }
 }
 
 /// Interest callbacks of the Shaders nodes (`Cb::Shader`).
@@ -160,7 +196,8 @@ impl Runtime {
             };
             // `fileURL` is not set for a data URL (FileLoader.loadDocument).
             let file_url = if url.scheme() == "data" { rt.base_url(node) } else { url.to_string() };
-            let source = decode_text(&data);
+            // ShaderCompiler.process, then ShaderSource.getSource.
+            let source = super::shader_include::process(&decode_text(&data));
             let fragment = shader_type == "FRAGMENT";
             let options: Vec<String> = vec![];
 
@@ -215,7 +252,7 @@ impl Runtime {
         let sensor = self.scene.instantiate_builtin(ctx, index);
         self.nrt_mut(sensor);
         self.construct_node(sensor);
-        self.shaders.composed.insert(node, ComposedState { load_sensor: Some(sensor), valid: false, linked: None });
+        self.shaders.composed.insert(node, ComposedState { load_sensor: Some(sensor), valid: false, linked: None, clip_planes: Default::default(), gl: Default::default(), transform_feedback_varyings: vec![] });
     }
 
     /// ComposedShader.initialize.
@@ -308,8 +345,9 @@ impl Runtime {
 
         self.shaders.links += 1;
 
+        let varyings = self.shaders.composed.get(&node).map(|c| c.transform_feedback_varyings.clone()).unwrap_or_default();
         let result = match &self.shaders.compiler {
-            Some(c) => c.link(&vertex, &fragment),
+            Some(c) => c.link(&vertex, &fragment, &varyings),
             None => Err("no shader compiler is installed".to_string()),
         };
 
@@ -317,6 +355,8 @@ impl Runtime {
             Ok(warnings) => {
                 if let Some(c) = self.shaders.composed.get_mut(&node) {
                     c.linked = Some((vertex, fragment));
+                    c.clip_planes = Default::default();
+                    c.gl = Default::default();
                 }
 
                 self.shader_set_valid(node, true);
@@ -454,7 +494,22 @@ impl Runtime {
         self.shaders.appearances.get(&appearance).and_then(|s| s.selected)
     }
 
-    /// The vertex and fragment sources the last link of a ComposedShader used.
+    /// ComposedShader.setTransformFeedbackVaryings: stored, used by the next link (X_ITE's `createShader`
+    /// calls it before `setup`; a later call changes nothing until the shader links again).
+    pub fn composed_set_transform_feedback_varyings(&mut self, node: NodeId, varyings: Vec<String>) {
+        self.shaders.composed.entry(node).or_default().transform_feedback_varyings = varyings;
+    }
+
+    /// The program-resident `x3d_ClipPlane` values of a linked ComposedShader.
+    pub fn composed_clip_planes(&self, node: NodeId) -> Option<Rc<RefCell<[[f32; 4]; 6]>>> {
+        self.shaders.composed.get(&node).map(|c| c.clip_planes.clone())
+    }
+
+    /// The program-resident texture state of a linked ComposedShader.
+    pub fn composed_gl(&self, node: NodeId) -> Option<Rc<RefCell<GlResident>>> {
+        self.shaders.composed.get(&node).map(|c| c.gl.clone())
+    }
+
     pub fn composed_shader_sources(&self, node: NodeId) -> Option<&(Vec<ShaderSource>, Vec<ShaderSource>)> {
         self.shaders.composed.get(&node).and_then(|c| c.linked.as_ref())
     }

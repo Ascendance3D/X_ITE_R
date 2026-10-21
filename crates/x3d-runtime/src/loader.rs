@@ -129,7 +129,7 @@ fn truncate(s: &str) -> String {
 /// FileLoader.loadDocumentAsync, the `dataAsString` branch: `url .match (/^\s*data:(.*?)(?:;charset=(.*?))?(?:;(base64))?,/s)`;
 /// unless the header ends with `;base64`, the text after the first comma is `decodeURIComponent`ed (kept as it is when
 /// that fails) and a leading `ï»¿` (a UTF-8 BOM read as Latin-1) is removed.
-fn data_url_text(candidate: &str) -> Option<String> {
+pub(crate) fn data_url_text(candidate: &str) -> Option<String> {
     let rest = candidate.trim_start().strip_prefix("data:")?;
     let (header, data) = rest.split_once(',')?;
 
@@ -150,6 +150,76 @@ pub enum Loaded {
     Data(Vec<u8>, url::Url),
 }
 
+/// The callbacks of FileLoader.createX3DFromURL (url, parameter, callback, bindViewpoint, foreign).
+#[derive(Default, Clone, Debug)]
+pub struct LoadHooks {
+    /// `bindViewpoint` was given: a URL with only a new fragment names a viewpoint of the referring document.
+    pub bind_viewpoint: bool,
+    /// `foreign` was given: a `target` parameter (not `_self`) or a page URL goes to another window or document.
+    pub foreign: bool,
+    /// The `parameter` field / argument (`target=_blank`, ...).
+    pub parameters: Vec<String>,
+}
+
+/// How a FileLoader run ended.
+#[derive(Clone, Debug, PartialEq)]
+pub enum LoadResult {
+    /// A candidate was accepted.
+    Loaded,
+    /// `bindViewpoint (name)`: the decoded fragment.
+    Fragment(String),
+    /// `foreign (href, target)`.
+    Foreign(String, String),
+    /// Every candidate failed (or there was none).
+    Failed,
+}
+
+/// The decoded fragment of `candidate` if FileLoader's `bindViewpoint` branch takes it: a URL that, resolved against
+/// `base`, differs from the referring document only by a non-empty fragment.
+pub fn viewpoint_fragment(base: &str, candidate: &str, hooks: &LoadHooks) -> Option<String> {
+    if !hooks.bind_viewpoint || candidate.is_empty() {
+        return None;
+    }
+
+    let referer = url::Url::parse(base).ok()?;
+    let r = referer.join(candidate).ok()?;
+
+    if r.scheme() == "data" || r.fragment().is_none_or(str::is_empty) {
+        return None;
+    }
+
+    let same = referer.scheme() == r.scheme() && referer.host_str() == r.host_str() && referer.port() == r.port() && referer.path() == r.path();
+
+    same.then(|| percent_encoding::percent_decode_str(r.fragment().unwrap_or_default()).decode_utf8().map(|d| d.into_owned()).ok()).flatten()
+}
+
+/// FileLoader.getTarget: the value of the first `target=value` parameter.
+pub fn loader_target(parameters: &[String]) -> String {
+    for parameter in parameters {
+        let pair: Vec<&str> = parameter.split('=').collect();
+
+        if pair.len() == 2 && pair[0] == "target" {
+            return pair[1].to_string();
+        }
+    }
+
+    String::new()
+}
+
+/// A fetched BufferAudioSource / AudioClip candidate whose decodeAudioData result is still pending, with what
+/// FileLoader needs to go on if it rejects.
+pub struct PendingAudioDecode {
+    pub node: NodeId,
+    pub bytes: Vec<u8>,
+    /// The candidate as written and as resolved (for the warning).
+    pub candidate: String,
+    pub resolved: url::Url,
+    /// The candidates after this one.
+    pub rest: Vec<String>,
+    /// The candidates before this one, all failed.
+    pub attempts: usize,
+}
+
 /// A FileLoader instance: node type name for messages (`""` for the world) and the attempts.
 pub struct FileLoader {
     pub type_name: String,
@@ -166,12 +236,25 @@ impl Runtime {
     /// FileLoader.loadDocument with its fallback loop. `accept` is the data callback: an `Err`
     /// is a rejection of loadDocumentAsync and moves on to the next URL, like X_ITE.
     /// Returns whether a candidate was accepted.
-    pub fn load_document(&mut self, loader: &FileLoader, urls: &[String], mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> bool {
-        let mut attempts = 0usize;
+    pub fn load_document(&mut self, loader: &FileLoader, urls: &[String], accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> bool {
+        !matches!(self.load_document_hooks(loader, urls, &LoadHooks::default(), accept), LoadResult::Failed)
+    }
+
+    /// [`Runtime::load_document`] with the two callbacks X3DBrowser.loadURL and Anchor hand FileLoader.createX3DFromURL
+    /// (`bindViewpoint` and `foreign`, see [`LoadHooks`]).
+    pub fn load_document_hooks(&mut self, loader: &FileLoader, urls: &[String], hooks: &LoadHooks, mut accept: impl FnMut(&mut Runtime, Loaded) -> Result<(), String>) -> LoadResult {
+        self.load_document_from(loader, urls, hooks, 0, |rt, _, loaded| accept(rt, loaded))
+    }
+
+    /// [`Runtime::load_document_hooks`] from a later point of the fallback chain: `attempts` candidates before
+    /// `urls` have already failed (and were reported). `accept` also gets the candidate's index in `urls`.
+    pub(crate) fn load_document_from(&mut self, loader: &FileLoader, urls: &[String], hooks: &LoadHooks, attempts: usize, mut accept: impl FnMut(&mut Runtime, usize, Loaded) -> Result<(), String>) -> LoadResult {
+        let mut attempts = attempts;
+        let mut special: Option<LoadResult> = None;
 
         if urls.is_empty() {
             // loadDocumentError () without an error prints nothing.
-            return false;
+            return LoadResult::Failed;
         }
 
         for (i, candidate) in urls.iter().enumerate() {
@@ -188,7 +271,7 @@ impl Runtime {
                 for scheme in ["ecmascript:", "javascript:", "vrmlscript:"] {
                     if trimmed.starts_with(scheme) {
                         let source = &trimmed[scheme.len()..];
-                        return accept(self, Loaded::Script(source.to_string()));
+                        return accept(self, i, Loaded::Script(source.to_string()));
                     }
                 }
 
@@ -199,21 +282,51 @@ impl Runtime {
                 // `if (this .dataAsString)`: a data URL that is not base64 is decoded here and handed to the callback as text.
                 if loader.data_as_string {
                     if let Some(text) = data_url_text(candidate) {
-                        return accept(self, Loaded::Data(text.into_bytes(), r));
+                        return accept(self, i, Loaded::Data(text.into_bytes(), r));
                     }
                 }
 
-                if loader.data_as_string && r.scheme() == "data" {
+                // Bind Viewpoint URLs: a URL that only adds a fragment to the referring document names a viewpoint.
+                if hooks.bind_viewpoint && r.scheme() != "data" && r.fragment().is_some_and(|f| !f.is_empty()) {
+                    let same = url::Url::parse(&loader.base).is_ok_and(|referer| {
+                        referer.scheme() == r.scheme() && referer.host_str() == r.host_str() && referer.port() == r.port() && referer.path() == r.path()
+                    });
+
+                    if same {
+                        let fragment = r.fragment().unwrap_or_default();
+                        let name = percent_encoding::percent_decode_str(fragment).decode_utf8().map(|d| d.into_owned()).map_err(|_| "URIError: URI malformed".to_string())?;
+                        special = Some(LoadResult::Fragment(name));
+                        return Ok(());
+                    }
+                }
+
+                // Foreign targets: another window, or foreign content (a page). Never loaded here.
+                if hooks.foreign {
+                    let target = loader_target(&hooks.parameters);
+
+                    if !target.is_empty() && target != "_self" {
+                        special = Some(LoadResult::Foreign(r.as_str().to_string(), target));
+                        return Ok(());
+                    }
+
+                    if r.scheme() != "data" && ["html", "htm", "xhtml"].iter().any(|e| r.as_str().ends_with(&format!(".{e}"))) {
+                        special = Some(LoadResult::Foreign(r.as_str().to_string(), target));
+                        return Ok(());
+                    }
+                }
+
+                // A base64 data URL is fetched like any other (the browser decodes it); one without a comma is no URL fetch can read.
+                if loader.data_as_string && r.scheme() == "data" && !candidate.contains(',') {
                     return Err("TypeError: Failed to fetch".to_string());
                 }
 
                 // fetch (dataURL) of a ShaderPart: the shader text is carried in the URL (nodes/shaders.rs).
                 let data = if loader.type_name == "ShaderPart" && r.scheme() == "data" { nodes::shaders::fetch_data_url(candidate)? } else { self.fetcher.fetch(&r)? };
-                accept(self, Loaded::Data(x3d_parse::gunzip(&data), r))
+                accept(self, i, Loaded::Data(x3d_parse::gunzip(&data), r))
             })();
 
             match result {
-                Ok(()) => return true,
+                Ok(()) => return special.take().unwrap_or(LoadResult::Loaded),
                 Err(error) => {
                     attempts += 1;
                     self.print_load_error(loader, candidate, resolved.as_ref(), &error, attempts, remaining);
@@ -221,7 +334,7 @@ impl Runtime {
             }
         }
 
-        false
+        LoadResult::Failed
     }
 
     /// FileLoader.printError for the candidate that just failed: `attempts` counts it, `remaining`
@@ -267,7 +380,7 @@ impl Runtime {
             return self.movie_load(node);
         }
 
-        if type_name == "BufferAudioSource" {
+        if type_name == "BufferAudioSource" || type_name == "AudioClip" {
             return self.buffer_load(node);
         }
 
@@ -339,53 +452,87 @@ impl Runtime {
         self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
     }
 
-    /// BufferAudioSource.loadData: the FileLoader's ArrayBuffer is decoded (decodeAudioData)
-    /// before COMPLETE_STATE; no URL: `setMediaElement (null)`, FAILED_STATE. A file that does not
-    /// decode rejects the async callback: the state stays IN_PROGRESS.
+    /// BufferAudioSource.loadData and AudioClip.loadData. `await this .setArrayBuffer (data)` (decodeAudioData)
+    /// runs inside the FileLoader callback, so a file that does not decode rejects the candidate like a failed
+    /// fetch: FileLoader reports it and tries the next URL. COMPLETE_STATE after the decode; no URL left:
+    /// unloadData (AudioClip) or `setMediaElement (null)` (BufferAudioSource), FAILED_STATE.
     fn buffer_load(&mut self, node: NodeId) {
-        let loader = FileLoader { type_name: "BufferAudioSource".into(), base: self.base_url(node), data_as_string: false };
         let urls = self.url_strings(node);
-        let mut decoded = None;
+        self.buffer_load_from(node, &urls, 0);
+    }
 
-        let ok = self.load_document(&loader, &urls, |_, loaded| match loaded {
+    /// The fallback chain of [`Runtime::buffer_load`] from `urls`, after `attempts` failed candidates.
+    ///
+    /// decodeAudioData ends on the browser's decoder thread: the result of a fetched candidate waits in
+    /// `pending_audio_decodes`, and the chain goes on from there. It is resolved after the events that are
+    /// pending at the next prepareEvents (like an image decode, [`Runtime::apply_decoded_images`]), or, with
+    /// `defer_audio_decodes`, at the start of the next frame ([`Runtime::flush_audio_decodes`]).
+    fn buffer_load_from(&mut self, node: NodeId, urls: &[String], attempts: usize) {
+        let loader = FileLoader { type_name: self.type_name(node), base: self.base_url(node), data_as_string: false };
+        let mut pending = None;
+
+        let result = self.load_document_from(&loader, urls, &LoadHooks::default(), attempts, |_, i, loaded| match loaded {
             Loaded::Script(_) => Err("Error: No suitable file handler found.".into()),
-            Loaded::Data(data, _) => {
-                decoded = Some(data.to_vec());
+            Loaded::Data(bytes, resolved) => {
+                // Every candidate before `i` failed.
+                pending = Some(PendingAudioDecode { node, bytes, candidate: urls[i].clone(), resolved, rest: urls[i + 1..].to_vec(), attempts: attempts + i });
                 Ok(())
             }
         });
 
-        if !ok {
+        match (pending, result) {
+            (Some(p), _) => self.pending_audio_decodes.push(p),
+            (None, LoadResult::Failed) => self.buffer_load_failed(node),
+            (None, _) => {}
+        }
+    }
+
+    /// `setArrayBuffer (data)` of the node; an error is the rejection of decodeAudioData.
+    fn buffer_set_data(&mut self, node: NodeId, bytes: Vec<u8>) -> Result<(), String> {
+        if self.builtin_name(node) == Some("AudioClip") { self.audio_clip_set_array_buffer(node, bytes) } else { self.buffer_set_array_buffer(node, bytes) }
+    }
+
+    /// The FileLoader callback with `data === null`: every candidate failed.
+    fn buffer_load_failed(&mut self, node: NodeId) {
+        if self.builtin_name(node) == Some("AudioClip") {
+            self.audio_clip_unload_data(node);
+        } else {
             self.buffer_load_start(node);
-            self.set_load_state(node, nodes::LoadState::Failed);
-            return;
         }
 
-        if let Some(bytes) = decoded {
-            if self.defer_audio_decodes {
-                self.pending_audio_decodes.push((node, bytes));
-            } else {
-                self.buffer_decoded(node, bytes);
-            }
-        }
+        self.set_load_state(node, nodes::LoadState::Failed);
     }
 
-    /// The end of `await setArrayBuffer (data)`: COMPLETE_STATE unless decoding rejected.
-    fn buffer_decoded(&mut self, node: NodeId, bytes: Vec<u8>) {
-        if self.buffer_set_array_buffer(node, bytes).is_ok() {
-            self.set_load_state(node, nodes::LoadState::Complete);
-        }
-    }
-
-    /// The decodes held by `defer_audio_decodes`, resolved in request order.
+    /// The decodes held by `defer_audio_decodes`, resolved in request order at the start of a frame, then
+    /// the tasks they queued.
     pub fn flush_audio_decodes(&mut self) {
-        for (node, bytes) in std::mem::take(&mut self.pending_audio_decodes) {
-            if self.sound_has_source(node) {
-                self.buffer_decoded(node, bytes);
+        self.resolve_audio_decodes();
+        self.run_tasks();
+    }
+
+    /// The end of `await this .setArrayBuffer (data)` for every pending decode, in request order: COMPLETE_STATE, or
+    /// a rejection, which is FileLoader.loadDocumentError: the warning, then the next URL (whose decode is pending in
+    /// turn), or FAILED_STATE when none is left.
+    pub(crate) fn resolve_audio_decodes(&mut self) {
+        for p in std::mem::take(&mut self.pending_audio_decodes) {
+            if !self.sound_has_source(p.node) {
+                continue;
+            }
+
+            match self.buffer_set_data(p.node, p.bytes) {
+                Ok(()) => self.set_load_state(p.node, nodes::LoadState::Complete),
+                Err(error) => {
+                    let loader = FileLoader { type_name: self.type_name(p.node), base: self.base_url(p.node), data_as_string: false };
+                    self.print_load_error(&loader, &p.candidate, Some(&p.resolved), &error, p.attempts + 1, p.rest.len());
+
+                    if p.rest.is_empty() {
+                        self.buffer_load_failed(p.node);
+                    } else {
+                        self.buffer_load_from(p.node, &p.rest, p.attempts + 1);
+                    }
+                }
             }
         }
-
-        self.run_tasks();
     }
 
     /// MovieTexture.loadData: one attempt per URL, each with its own FileLoader (GIF/PNG) or a
@@ -441,21 +588,29 @@ impl Runtime {
     pub(crate) fn font_style_initialize(&mut self, node: NodeId) {
         self.interest(node, "family", Cb::FontStyleReload);
         self.interest(node, "style", Cb::FontStyleReload);
-        self.tasks.push_back(Task::UrlLoad(node, 0));
+        self.interest(node, "justify", Cb::FontStyleJustify);
+        self.font_style_set_justify(node);
+        self.font_style_request(node, false);
+    }
+
+    /// X3DFontStyleNode.set_justify__: the alignments are worked out from the fields as they are now and kept until `justify`
+    /// changes again (a later change of `horizontal`, `leftToRight` or `topToBottom` does not call it).
+    pub(crate) fn font_style_set_justify(&mut self, node: NodeId) {
+        let a = self.text_font_style_params_for_alignments(node).compute_alignments();
+
+        self.font_style_alignments.insert(node, a);
     }
 
     /// X3DFontStyleNode.loadData (font selection only): the snapshot of `family` with "SERIF" appended.
     pub(crate) fn font_style_load(&mut self, node: NodeId) {
-        let style = match self.pre_value(node, "style") {
-            Some(FieldValue::SFString(s)) => s.clone(),
-            _ => String::new(),
-        };
-        let mut family = match self.pre_value(node, "family") {
-            Some(FieldValue::MFString(v)) => v.clone(),
-            _ => vec![],
-        };
+        let (family, style) = self.font_style_families(node);
 
-        family.push("SERIF".into());
+        // browser.loadFont caches the default font file this load takes.
+        if let Some(key) = family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &style).map(|(name, _)| name.to_string())) {
+            self.loaded_font_files.insert(key);
+        }
+
+        self.font_style_snapshot.insert(node, (family.clone(), style.clone()));
         self.font_style_continue(node, family, 0, style);
     }
 
@@ -494,7 +649,7 @@ impl Runtime {
             let font_file = [".woff2", ".woff", ".otf", ".ttf"].iter().any(|e| path.ends_with(e));
 
             if file_url.scheme() == "data" || font_file {
-                if self.scene.specification_version.as_str() >= "4.1" {
+                if self.scene.spec_version_of(self.scene.world) >= "4.1" {
                     self.log_warn("Loading a font file via family field is deprecated, please use new FontLibrary node instead.");
                 }
 

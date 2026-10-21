@@ -107,6 +107,34 @@ def quat(r):
     s = math.sin(a / 2) / n
     return (x*s, y*s, z*s, math.cos(a / 2))
 
+# Script key "pickProbes": the pointing-buffer hit at each probe point, compared bit for bit.
+if "pickProbes" in js or "pickProbes" in rs:
+    a, b = js.get("pickProbes") or [], rs.get("pickProbes") or []
+    bad = [i for i in range(max(len(a), len(b))) if i >= len(a) or i >= len(b) or a[i] != b[i]]
+    report(not bad, f"pick probes equal ({len(a)} points, {len(a) - len(bad)} exact)")
+    for i in bad[:6]:
+        print(f"    probe {i} js {a[i] if i < len(a) else None}")
+        print(f"    probe {i} rs {b[i] if i < len(b) else None}")
+
+# Script key "collisionProbes": getClosestObject (direction) of the active layer. Both sides draw the
+# collision shapes into a 16x16 float depth buffer on the same GPU, but the Rust pass is Vulkan and
+# X_ITE's is ANGLE on OpenGL: the rasterizers agree on the covered pixels and the normals, and the
+# window z of a pixel differs by up to a few float32 ulp (distance units: range * 6e-8 per ulp), so
+# the distance is compared within PROBE_TOL (absolute) and the hit flag and normal exactly/within it.
+PROBE_TOL = float(opt("--probe-tol", "1e-6"))
+if "collisionProbes" in js or "collisionProbes" in rs:
+    a, b = js.get("collisionProbes") or [], rs.get("collisionProbes") or []
+    def probe_ok(p, q):
+        if (p["id"] >= 0) != (q["id"] >= 0) or abs(p["distance"] - q["distance"]) > PROBE_TOL:
+            return False
+        return p["id"] < 0 or max(abs(x - y) for x, y in zip(p["normal"], q["normal"])) <= PROBE_TOL
+    bad = [i for i in range(max(len(a), len(b))) if i >= len(a) or i >= len(b) or not probe_ok(a[i], b[i])]
+    worst_probe = max([abs(p["distance"] - q["distance"]) for p, q in zip(a, b)] or [0.0])
+    report(not bad, f"collision probes within {PROBE_TOL:g} ({len(a)} directions, {len(a) - len(bad)} ok, largest distance difference {worst_probe:.2e})")
+    for i in bad[:6]:
+        print(f"    probe {i} js {a[i] if i < len(a) else None}")
+        print(f"    probe {i} rs {b[i] if i < len(b) else None}")
+
 worst = {}
 for k, a in js["poses"].items():
     b = rs["poses"].get(k)

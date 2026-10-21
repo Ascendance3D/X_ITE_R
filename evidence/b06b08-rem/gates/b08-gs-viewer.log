@@ -1,0 +1,115 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: function `default_unit` is never used
+   --> crates/x3d-render/src/shader_gpu.rs:304:4
+    |
+304 | fn default_unit(dim: SamplerDim) -> u32 {
+    |    ^^^^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 5 warnings
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-viewer)
+    Finished `release` profile [optimized] target(s) in 1.30s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/rea_b08_gs_reload.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b08_gs_reload-6e96d848d5f560b3)
+
+running 2 tests
+gs-basic.wrl: splat resources [1, 1, 1, 1] -> [1, 1, 1, 1]
+gs-overlap.wrl: splat resources [2, 2, 1, 2] -> [1, 1, 1, 1]
+gs-sh3.wrl: splat resources [2, 2, 1, 2] -> [1, 1, 1, 1]
+test rea_b08_gs_removal_from_live_group_releases_buffers ... ok
+gs-random-3000.wrl: splat resources [2, 2, 1, 2] -> [1, 1, 1, 1]
+gs-transparent-mix.wrl: splat resources [2, 2, 1, 2] -> [1, 1, 1, 1]
+gs-ply.wrl: splat resources [2, 2, 1, 2] -> [1, 1, 1, 1]
+gs-layers.wrl: splat resources [3, 3, 1, 3] -> [2, 2, 1, 2]
+gs-transmission.wrl: splat resources [3, 3, 2, 3] -> [1, 1, 2, 1]
+gs-fog-linear.wrl: splat resources [2, 2, 2, 2] -> [1, 1, 1, 1]
+test rea_b08_gs_survive_reload_and_are_released ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.03s
+
+     Running tests/rea_batch08_gs.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_batch08_gs-6809aafbf8f15f12)
+
+running 1 test
+4 cases checked (images: true)
+test rea_batch08_gs_cases_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.02s
+

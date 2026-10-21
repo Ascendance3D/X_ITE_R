@@ -787,9 +787,10 @@ fn rapid_unload_and_reload_of_scripted_scenes() {
     });
 }
 
-/// A Script in the world keeps field objects of nodes of a reloaded Inline: the wrappers keep the
+/// A Script in the world keeps field objects of nodes of a reloaded Inline: the objects keep the
 /// value they had (tombstone semantics of R0.3-D) and never read the field of the node that takes
-/// the slot. When the Script lets them go, their slots are released.
+/// the slot. A field object holds its value in JavaScript (prelude/fields.js), so the field's handle
+/// is released with the node, while the Script still holds the object; letting it go adds nothing.
 #[test]
 fn script_wrappers_of_released_nodes_keep_their_value_and_then_go() {
     big_stack(|| {
@@ -800,6 +801,8 @@ fn script_wrappers_of_released_nodes_keep_their_value_and_then_go() {
         let (inl, s) = (named(&rt, ROOT, "Inl"), named(&rt, ROOT, "S"));
 
         let t = named(&rt, scene_of(&rt, inl), "T");
+
+        let start = slot_stats();
 
         set(&mut rt, s, "t", FieldValue::SFNode(Some(t)));
         set(&mut rt, s, "grab", FieldValue::SFBool(true));
@@ -816,6 +819,9 @@ fn script_wrappers_of_released_nodes_keep_their_value_and_then_go() {
 
         let held = slot_stats();
 
+        assert_eq!(held.len - held.free, start.len - start.free, "the released node's field handle went with it: {start:?} → {held:?}");
+        assert_eq!(held.attached, start.attached);
+
         set(&mut rt, s, "drop", FieldValue::SFBool(true));
         frames(&mut rt, 1);
 
@@ -826,7 +832,32 @@ fn script_wrappers_of_released_nodes_keep_their_value_and_then_go() {
 
         let after = slot_stats();
 
-        assert!(after.len - after.free < held.len - held.free, "the dropped wrapper's slot was released: {held:?} → {after:?}");
+        assert_eq!(after.len - after.free, held.len - held.free, "dropping the object leaves no handle behind: {held:?} → {after:?}");
+        assert_eq!(after.len, held.len, "the table did not grow over the reloads");
     });
 }
 
+
+/// A node a Script created and made a root node keeps what X_ITE's node keeps after the Script lets go of every object of it
+/// and the release sweep looked at it: its SFNode object (SFNodeCache, a property the Script set on it), its field objects and
+/// their callbacks. The host is only asked about nodes nothing else keeps (release.rs), so the garbage collector never sees
+/// this one; a node the Script dropped entirely in the same sweep is released.
+#[test]
+fn a_created_node_in_the_scene_keeps_its_objects_after_the_script_lets_go() {
+    big_stack(|| {
+        let main = "#VRML V2.0 utf8\nDEF G Group { }\nDEF S Script {\n  field SFNode g USE G\n  eventIn SFBool poke\n  eventIn SFBool check\n  url \"javascript:\n    function initialize () {\n      var n = Browser .currentScene .createNode ('Transform');\n      n .tag = 'kept';\n      n .translation .addFieldCallback ('k', function (v) { print ('callback ' + v); });\n      Browser .currentScene .addRootNode (n);\n      Browser .currentScene .createNode ('Group');\n    }\n    function poke (v) { Browser .currentScene .rootNodes [2] .translation = new SFVec3f (1, 2, 3); }\n    function check (v) { print ('tag ' + Browser .currentScene .rootNodes [2] .tag); }\n  \"\n}\n";
+        let (mut rt, _) = start(&[], main);
+        let s = named(&rt, ROOT, "S");
+        let groups = |rt: &Runtime| (0..rt.scene.nodes.len() as NodeId).filter(|&n| rt.scene.is_live(n) && rt.scene.type_name(n) == "Group").count();
+
+        frames(&mut rt, 40);
+        assert_eq!(groups(&rt), 1, "the dropped Group was released (the sweep asked the Script host); G stays");
+
+        set(&mut rt, s, "poke", FieldValue::SFBool(true));
+        frames(&mut rt, 2);
+        set(&mut rt, s, "check", FieldValue::SFBool(true));
+        frames(&mut rt, 1);
+
+        assert_eq!(rt.prints, ["callback 1 2 3", "tag kept"], "{:?}", rt.log);
+    });
+}

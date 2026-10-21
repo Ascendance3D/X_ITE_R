@@ -1,0 +1,102 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: `x3d-render` (lib) generated 4 warnings
+   Compiling x3d-viewer v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-viewer)
+    Finished `release` profile [optimized] target(s) in 1.44s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/particles_b07.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/particles_b07-2eae475aaddd7d06)
+
+running 5 tests
+test a_world_system_removed_from_its_group_runs_on_without_growing ... ok
+MAXERR	ps-oracle	103 cases	life=0.00e0	lifetime=0.00e0	elapsed=0.00e0	color=0.00e0	velocity=9.16e-5	position=4.58e-5
+test oracle_cases_match_x_ite ... ok
+MEM	ps-b07-inline-cycle	10	systems=2	buffer_floats=2240	cache_texels=134	animate_interests=2	live_watchers=2	live_nodes=14	arena=15	nrt=14	frt=121	rss_kib=41336
+MEM	ps-b07-inline-cycle	50	systems=2	buffer_floats=2240	cache_texels=134	animate_interests=2	live_watchers=2	live_nodes=14	arena=15	nrt=14	frt=121	rss_kib=41348
+MEM	ps-b07-inline-cycle	100	systems=2	buffer_floats=2240	cache_texels=134	animate_interests=2	live_watchers=2	live_nodes=14	arena=15	nrt=14	frt=121	rss_kib=41348
+test polyline_cache_follows_the_scene_over_100_inline_reloads ... ok
+test polyline_cache_tracks_coord_changes_without_growing ... ok
+MEM	ps-b07-script-cycle	10	systems=0	buffer_floats=0	cache_texels=0	animate_interests=0	live_watchers=0	live_nodes=4	arena=10	nrt=9	frt=29	rss_kib=42520
+MEM	ps-b07-script-cycle	50	systems=0	buffer_floats=0	cache_texels=0	animate_interests=0	live_watchers=0	live_nodes=4	arena=10	nrt=9	frt=29	rss_kib=42552
+MEM	ps-b07-script-cycle	100	systems=0	buffer_floats=0	cache_texels=0	animate_interests=0	live_watchers=0	live_nodes=4	arena=10	nrt=9	frt=29	rss_kib=42564
+test script_created_polyline_systems_are_released_100_cycles ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+

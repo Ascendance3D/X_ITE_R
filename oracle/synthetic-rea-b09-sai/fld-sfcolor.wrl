@@ -1,0 +1,71 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fld sfcolor"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('SFColor new ()', function () { return new SFColor (); });
+  T ('SFColor new (vals)', function () { return new SFColor (0.2, 0.4, 0.6); });
+  T ('SFColor new (out of range)', function () { return new SFColor (2, -1, 1e10, NaN); });
+  T ('SFColor new (strings)', function () { return new SFColor ('0.5', 'x', null, undefined); });
+  T ('SFColor get/set r', function () { var v = new SFColor (0.2, 0.4, 0.6); v .r = 0.9; v [1] = -3; return [v .r, v [0], v]; });
+  T ('SFColor get/set g', function () { var v = new SFColor (0.2, 0.4, 0.6); v .g = 0.9; v [2] = -3; return [v .g, v [1], v]; });
+  T ('SFColor get/set b', function () { var v = new SFColor (0.2, 0.4, 0.6); v .b = 0.9; v [0] = -3; return [v .b, v [2], v]; });
+  T ('SFColor index out', function () { var v = new SFColor (0.2, 0.4, 0.6); return [v [3], v ['r'], v .nope, v .x]; });
+  T ('SFColor keys', function () { var v = new SFColor (0.2, 0.4, 0.6); return [Object .keys (v), JSON .stringify (v), Array .from (v), [... v]]; });
+  T ('SFColor for in', function () { var o = []; for (var k in new SFColor (0.2, 0.4, 0.6)) o .push (k); return o; });
+  T ('SFColor equals/copy', function () { var v = new SFColor (0.2, 0.4, 0.6); var w = v .copy (); return [v .equals (w), v === w, w .constructor .name, v .isDefaultValue (), new SFColor () .isDefaultValue ()]; });
+  T ('SFColor toStrings', function () { var v = new SFColor (0.2, 0.4, 0.6); return [v .toString (), v .toVRMLString (), v .toXMLString (), v .toJSONString ()]; });
+  T ('SFColor getHSV', function () { return [new SFColor (0.2, 0.4, 0.6) .getHSV (), new SFColor (1, 0, 0) .getHSV (), new SFColor (0, 0, 0) .getHSV (), new SFColor (0.5, 0.5, 0.5) .getHSV ()]; });
+  T ('SFColor setHSV', function () { var v = new SFColor (); v .setHSV (1, 0.5, 0.5); return v; });
+  T ('SFColor setHSV edge', function () { var v = new SFColor (); v .setHSV (7, 2, -1); var w = new SFColor (); w .setHSV (0, 0, 0.7); var u = new SFColor (); u .setHSV (NaN, 0.5, 0.5); return [v, w, u]; });
+  T ('SFColor setHSV partial', function () { var v = new SFColor (); v .setHSV (1); return v; });
+  T ('SFColor setHSV roundtrip', function () { var o = []; for (var h = 0; h < 6.3; h += 0.7) { var v = new SFColor (); v .setHSV (h, 0.6, 0.8); o .push (v .toString ()); } return o; });
+  T ('SFColor lerp', function () { return [new SFColor (0.2, 0.4, 0.6) .lerp (new SFColor (0.9, 0.1, 0.5), 0.3), new SFColor (0.2, 0.4, 0.6) .lerp (new SFColor (0.2, 0.4, 0.6), 0.5), new SFColor (0.2, 0.4, 0.6) .lerp (new SFColor (), 1)]; });
+  T ('SFColor lerp missing', function () { return new SFColor (0.2, 0.4, 0.6) .lerp (); });
+  T ('SFColor lerp t range', function () { var b = new SFColor (0.9, 0.1, 0.5); return [new SFColor (0.2, 0.4, 0.6) .lerp (b, -1), new SFColor (0.2, 0.4, 0.6) .lerp (b, 2), new SFColor (0.2, 0.4, 0.6) .lerp (b, NaN)]; });
+  T ('SFColor linearToSRGB', function () { return [new SFColor (0.2, 0.4, 0.6) .linearToSRGB (), new SFColor (0, 1, 2) .linearToSRGB ()]; });
+  T ('SFColor sRGBToLinear', function () { return [new SFColor (0.2, 0.4, 0.6) .sRGBToLinear (), new SFColor (0, 1, 2) .sRGBToLinear ()]; });
+  T ('SFColor setValue', function () { var v = new SFColor (); v .setValue (new SFColor (0.2, 0.4, 0.6)); return v; });
+  T ('SFColor setValue other', function () { var v = new SFColor (); v .setValue (new SFColorRGBA (0.1, 0.2, 0.3, 0.4)); return v; });
+  flush_ ();
+}
+
+  "
+}

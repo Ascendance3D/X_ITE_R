@@ -1,0 +1,34 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+Viewpoint { position 0 0 0 }
+Sound { minFront 20 minBack 20 maxFront 40 maxBack 40 location 0 0 -5 source DEF O AudioClip { url "media/tone48k-stereo.wav" loop TRUE stopTime 1 } }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  inputOnly SFTime set_time
+  outputOnly SFTime start
+  initializeOnly SFInt32 n 0
+  url "javascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
+DEF K Script { directOutput TRUE initializeOnly SFNode o USE O inputOnly SFTime set_time initializeOnly SFInt32 n 0 url "ecmascript:
+function set_time (value) { ++ n;
+   if (n === 20) o.pauseTime = value;
+   if (n === 26) o.resumeTime = value;
+   if (n === 32) o.stopTime = value;
+}
+" }
+ROUTE T.time TO K.set_time
+DEF PO Script { inputOnly SFBool a inputOnly SFTime d inputOnly SFTime e inputOnly SFBool p url "javascript:
+function a (v, t) { print ('O active ' + v + ' ' + t); }
+function d (v, t) { print ('O duration ' + v + ' ' + t); }
+function e (v, t) { print ('O elapsed ' + v + ' ' + t); }
+function p (v, t) { print ('O paused ' + v + ' ' + t); }
+" }
+ROUTE O.isActive TO PO.a
+ROUTE O.duration_changed TO PO.d
+ROUTE O.elapsedTime TO PO.e
+ROUTE O.isPaused TO PO.p

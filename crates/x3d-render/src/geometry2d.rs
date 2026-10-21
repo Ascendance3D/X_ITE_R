@@ -132,7 +132,7 @@ fn circle_vertices() -> Vec<f32> {
         .collect();
     let mut coord_index: Vec<i32> = (0..dimension_2d() as i32).collect();
     coord_index.extend_from_slice(&[0, -1]);
-    crate::geometry::indexed_line_set(Some(&points), &coord_index, None, &[], true).vertices
+    crate::geometry::indexed_line_set(Some(&points), &coord_index, None, &[], true, None, &Default::default()).vertices
 }
 
 fn scaled_circle(radius: f64) -> Vec<f32> {

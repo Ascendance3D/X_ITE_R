@@ -61,6 +61,12 @@ impl Builder<'_> {
         }
 
         let bbox = Self::splats_bbox(sg, n, &data);
+
+        // X3DGroupingNode.set_objects__: the node's bbox node (bboxDisplay) is a visible object of the group.
+        if sg.bool(n, "bboxDisplay", false) {
+            self.bbox_shape(n, bbox, mv);
+        }
+
         // addDisplayShape: distance = the bbox center z in view space.
         let mut center = bbox.center();
         mv.mult_vec_matrix3(&mut center);
@@ -90,6 +96,7 @@ impl Builder<'_> {
             instances: None,
             splats: Some(Rc::new(SplatDraw { node: n, data, model_view: *mv, linear })),
             custom: None,
+            fog: self.local_fogs.last().cloned(),
         });
     }
 }

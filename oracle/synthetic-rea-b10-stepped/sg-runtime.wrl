@@ -1,0 +1,53 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+DEF V1 Viewpoint { position 0 0 8 description "one" }
+DEF V2 Viewpoint { position 3 1 6 orientation 0 1 0 0.3 fieldOfView 0.7 }
+DEF O1 OrthoViewpoint { position 0 0 10 fieldOfView [ -5 -4 5 4 ] }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 1.5 } } }
+Transform { translation 1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.9 } } }
+DEF T1 Transform { translation -2.5 1.5 0 children DEF SG1 ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 0.4 0.1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord DEF C1 Coordinate { point [ -60 -40 0, 60 -40 0, 60 40 0, -60 40 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+DEF T2 Transform { translation 2.5 1.5 0 children DEF SG2 ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 0.2 0.9 0.4 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -50 -30 0, 50 -30 0, 50 30 0, -50 30 0 ] } coordIndex [ 0 1 2 3 -1 ] } } DEF SG3 ScreenGroup { children [ Transform { translation 20 10 0 children Shape { appearance Appearance { material Material { emissiveColor 0.9 0.2 0.9 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -12 -12 0, 12 -12 0, 12 12 0, -12 12 0 ] } coordIndex [ 0 1 2 3 -1 ] } } } ] } ] } }
+DEF T3 Transform { translation -2.5 -2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF TX Text { string [ "Screen" ] fontStyle DEF SFS ScreenFontStyle { pointSize 24 } solid FALSE } } ] } }
+DEF T4 Transform { translation 2.5 -2 0 children DEF SG4 ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 0.9 0.9 0.2 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -30 -20 0, 30 -20 0, 30 20 0, -30 20 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+DEF T5 Transform { translation 0 2.8 -3 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 0.5 0.5 0.5 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -30 -20 0, 30 -20 0, 30 20 0, -30 20 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode t1 USE T1
+  initializeOnly SFNode sg1 USE SG1
+  initializeOnly SFNode c1 USE C1
+  initializeOnly SFNode tx USE TX
+  initializeOnly SFNode sfs USE SFS
+  initializeOnly SFNode sg2 USE SG2
+  initializeOnly SFNode sg3 USE SG3
+  initializeOnly SFNode sg4 USE SG4
+  initializeOnly SFNode v2 USE V2
+  initializeOnly SFNode o1 USE O1
+  initializeOnly SFNode v1 USE V1
+
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') t1 .translation = new SFVec3f (-1, 1.5, 0);
+   if (k == 'b') t1 .rotation = new SFRotation (0, 0, 1, 0.5);
+   if (k == 'c') t1 .scale = new SFVec3f (2, 1, 1);
+   if (k == 'd') c1 .point = new MFVec3f (new SFVec3f (-30, -20, 0), new SFVec3f (30, -20, 0), new SFVec3f (30, 20, 0), new SFVec3f (0, 40, 0));
+   if (k == 'e') tx .string = new MFString ('Changed', 'text');
+   if (k == 'f') sfs .pointSize = 40;
+   if (k == 'g') v2 .set_bind = true;
+   if (k == 'h') o1 .set_bind = true;
+   if (k == 'i') v1 .set_bind = true;
+   if (k == 'j') sg3 .visible = false;
+   if (k == 'k') Browser .setBrowserOption ('ContentScale', 2);
+   if (k == 'l') Browser .setBrowserOption ('ContentScale', 0.5);
+   if (k == 'm') Browser .setBrowserOption ('ContentScale', 1);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

@@ -1,0 +1,16 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Scripting:1
+META "title" "anchor load B"
+DEF VPB Viewpoint { description "vpB" position 0 0 7 }
+DEF VPB2 Viewpoint { description "vpB2" position 2 0 7 }
+DEF BS Script {
+  inputOutput SFString hist ""
+  url "ecmascript:
+function H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }
+function initialize () {
+  hist = 'init get=' + H (Browser .getWorldURL ()) + ' cs=' + H (Browser .currentScene .worldURL) + ' ec=' + H (Browser .getExecutionContext () .worldURL)
+    + ' base=' + H (Browser .baseURL) + ' desc=[' + Browser .description + ']';
+}
+  "
+}

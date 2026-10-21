@@ -1,0 +1,123 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: function `default_unit` is never used
+   --> crates/x3d-render/src/shader_gpu.rs:304:4
+    |
+304 | fn default_unit(dim: SamplerDim) -> u32 {
+    |    ^^^^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 5 warnings
+   Compiling x3d-render v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-render)
+    Finished `release` profile [optimized] target(s) in 1.07s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/rea_b04_geometry.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b04_geometry-b518e6d854a307b3)
+
+running 1 test
+ISO difference (expected): iso_c_closed_seam_weight: vertices[0] 1 != 0.5
+ISO difference (expected): iso_c_weighted: vertices[4] 0.6759099 != 0.3847486972808838
+ISO difference (expected): iso_p_nurbstex_weighted: multiTexCoords[0][4] 0.16101696 != 0.10000000149011612
+ISO difference (expected): iso_p_uclosed_seam_weight: vertices[0] 1 != 0.5
+ISO difference (expected): iso_p_weighted: vertices[4] -1.3131115 != -1.131115436553955
+ISO difference (expected): iso_p_weights_long: vertices[4] -1.6275167 != -1.4450000524520874
+ISO difference (expected): iso_s_weighted_trajectory: vertices[0] -0.118959166 != -0.11242102086544037
+ISO difference (expected): iso_t_cw_square: vertices length 1512 != 1008
+ISO difference (expected): iso_t_weighted_curve: vertices length 1752 != 2028
+ISO difference (expected): iso_w_weighted_profile: vertices[4] 3.125926 != 2.725925922393799
+68 cases checked
+test rea_b04_nurbs_geometry_matches_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+     Running tests/rea_b04_nurbs_iso.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/rea_b04_nurbs_iso-7ede10e29786222f)
+
+running 9 tests
+test iso_nurbs_set_bbox_display_default ... ok
+test iso_rational_curve ... ok
+test iso_nurbs_interpolators ... ok
+test iso_rational_texture_coordinate ... ok
+test iso_closed_ignored_for_seam_weights ... ok
+test iso_rational_trimming_curve ... ok
+test iso_weighted_swept_and_swung_curves ... ok
+test iso_rational_patch_surface ... ok
+test iso_trimming_orientation ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

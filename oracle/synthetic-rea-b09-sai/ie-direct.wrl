@@ -1,0 +1,54 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "ie direct"
+DEF TS TimeSensor { cycleInterval 1 loop TRUE }
+DEF I1 Inline { url "assets/ie-mid.wrl" }
+IMPORT I1.MI AS IMI
+IMPORT I1.MT AS IMT
+IMPORT I1.MGroup AS IMG
+IMPORT I1.MC AS IMC DESCRIPTION "child"
+DEF IL Inline { url "assets/ie-leaf.wrl" }
+IMPORT IL.LI AS TLI
+IMPORT IL.LT AS TLT
+IMPORT IL.LS AS TLS
+IMPORT IL.LI2 AS TLI2
+DEF TOPT Transform { }
+ROUTE TS.fraction_changed TO IMI.set_fraction
+ROUTE TS.fraction_changed TO TLI.set_fraction
+ROUTE TLT.translation_changed TO TOPT.set_translation
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }
+function names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }
+function lines (s, w) { return s .toVRMLString () .split ('\\n') .map (function (l) { return l .replace (/^\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }
+function ex (s, name) { return s .getImportedNode (name); }
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+
+  var ex = function (n) { return s .getImportedNode (n); };
+  if (step == 6) {
+    p ('names', function () { return names (s); });
+    p ('same', function () { return s .importedNodes [4] .exportedNode .getNodeName () + ':' + s .importedNodes [7] .exportedNode .getNodeName () + ':' + (s .importedNodes [4] .exportedNode === s .importedNodes [7] .exportedNode); });
+    p ('routes', function () { return s .routes .length + ':' + lines (s, 'ROUTE'); });
+  }
+  if (step == 8) p ('top', function () { return s .getNamedNode ('TOPT') .translation + ' ' + s .importedNodes [5] .exportedNode .translation + ' ' + s .importedNodes [6] .exportedNode .seen .length; });
+  if (step == 10) p ('write', function () { var li = s .importedNodes [4] .exportedNode; li .set_fraction = 0.5; return li .value_changed + ' ' + s .getNamedNode ('TOPT') .translation; });
+  if (step == 11) p ('writeScript', function () { s .importedNodes [6] .exportedNode .seen = 'x'; return s .importedNodes [6] .exportedNode .seen; });
+  if (step == 12) p ('deleteRoute', function () { s .deleteRoute (s .getNamedNode ('TS'), 'fraction_changed', s .getImportedNode ('TLI'), 'set_fraction'); return s .routes .length; });
+  if (step == 14) p ('after', function () { return s .getNamedNode ('TOPT') .translation; });
+  if (step == 15) p ('removeInline', function () { s .removeImportedNode ('TLT'); return s .routes .length + ' ' + names (s); });
+  if (step == 16) p ('type', function () { return s .getImportedNode ('TLS') .getNodeTypeName () + ':' + s .getImportedNode ('TLI2') .getNodeName () + ':' + s .getImportedNode ('TLI2') .getNodeDisplayName (); });
+  if (step == 17) p ('uniq', function () { return s .getUniqueImportName ('TLI') + ':' + s .getUniqueName ('TOPT') + ':' + s .getUniqueName ('IL'); });
+
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle

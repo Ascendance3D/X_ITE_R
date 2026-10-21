@@ -1,0 +1,2109 @@
+{
+ "particles-bounded-box": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 1.430511474609375e-06,
+    "max_rel": 8.357900186623648e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 4.17511910200119e-06,
+    "max_rel": 0.011544700277226046,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-bounded-disabled": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 4.76837158203125e-07,
+    "max_rel": 1.5834488874009496e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-bounded-floor": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 1.1920928955078125e-07,
+    "max_rel": 1.0504227058531759e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 3.5762786865234375e-07,
+    "max_rel": 6.574090062082218e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-bounded-floor-damp1": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 2.384185791015625e-07,
+    "max_rel": 1.0174534990683687e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 9.5367431640625e-07,
+    "max_rel": 1.0123042348993823e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-bounded-floor-gravity": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 9.5367431640625e-07,
+    "max_rel": 0.6666666740066183,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 2.1457672119140625e-06,
+    "max_rel": 1.1345553194466564e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-bounded-two": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 1.1920928955078125e-07,
+    "max_rel": 9.958389863793127e-08,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 7.152557373046875e-07,
+    "max_rel": 6.098327596310762e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-cone-basic": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 6.705522537231445e-07,
+    "max_rel": 8.482270444996006e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 7.003545761108398e-07,
+    "max_rel": 8.523071694165749e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-cone-basic-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.008900000000000019,
+    "ok": true
+   },
+   "speed": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.006900000000000017,
+    "ok": true
+   },
+   "vx": {
+    "ks": 0.00010000000000001674,
+    "crit": 0.025,
+    "null_ks": 0.006149999999999989,
+    "ok": true
+   },
+   "vy": {
+    "ks": 0.0001000000000000445,
+    "crit": 0.025,
+    "null_ks": 0.008399999999999963,
+    "ok": true
+   },
+   "vz": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.00824999999999998,
+    "ok": true
+   },
+   "px": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "py": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "pz": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "cos_axis": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.014100000000000001,
+    "ok": true
+   },
+   "azimuth": {
+    "ks": 0.0001000000000000445,
+    "crit": 0.025,
+    "null_ks": 0.006399999999999961,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 0.0,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 7.984269800404903e-06,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.0,
+   0.0
+  ]
+ },
+ "particles-cone-down": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 2.980232238769531e-07,
+    "max_rel": 5.4215093440389935e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 3.5762786865234375e-07,
+    "max_rel": 5.4471921111062615e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-cone-spherical": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 4.76837158203125e-07,
+    "max_rel": 3.816653202920302e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 4.76837158203125e-07,
+    "max_rel": 4.0099278174803066e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-cone-tilt": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 2.384185791015625e-06,
+    "max_rel": 1.498216381629628e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 2.86102294921875e-06,
+    "max_rel": 1.5086863223349695e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-cone-wide": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 7.152557373046875e-07,
+    "max_rel": 1.4613627934015793e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 4.76837158203125e-07,
+    "max_rel": 1.4695069739271284e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-cone-wide-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.005249999999999977,
+    "ok": true
+   },
+   "speed": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.007350000000000023,
+    "ok": true
+   },
+   "vx": {
+    "ks": 9.999999999998899e-05,
+    "crit": 0.025,
+    "null_ks": 0.007549999999999946,
+    "ok": true
+   },
+   "vy": {
+    "ks": 0.00010000000000001674,
+    "crit": 0.025,
+    "null_ks": 0.007800000000000029,
+    "ok": true
+   },
+   "vz": {
+    "ks": 9.999999999998899e-05,
+    "crit": 0.025,
+    "null_ks": 0.00539999999999996,
+    "ok": true
+   },
+   "px": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "py": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "pz": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "cos_axis": {
+    "ks": 0.0001000000000000445,
+    "crit": 0.025,
+    "null_ks": 0.008100000000000052,
+    "ok": true
+   },
+   "azimuth": {
+    "ks": 0.00010000000000001674,
+    "crit": 0.025,
+    "null_ks": 0.006500000000000061,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 0.0,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 1.1580380915670221e-05,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.0,
+   0.0
+  ]
+ },
+ "particles-cone-zeroangle": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-explosion-basic": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 9.5367431640625e-07,
+    "max_rel": 4.836927130866957e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 1.0728836059570312e-06,
+    "max_rel": 0.00016475007413753337,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-explosion-fixed": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 7.152557373046875e-07,
+    "max_rel": 4.410885575501942e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 7.152557373046875e-07,
+    "max_rel": 4.4178595847191055e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-explosion-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025762246031555976,
+    "null_ks": 0.0009971686458857543,
+    "ok": true
+   },
+   "speed": {
+    "ks": 5.309546564724599e-05,
+    "crit": 0.025762246031555976,
+    "null_ks": 0.0011838921634617083,
+    "ok": true
+   },
+   "vx": {
+    "ks": 0.00010619093129449197,
+    "crit": 0.025762246031555976,
+    "null_ks": 0.005592789097340067,
+    "ok": true
+   },
+   "vy": {
+    "ks": 0.00010619093129449197,
+    "crit": 0.025762246031555976,
+    "null_ks": 0.0049022013095340045,
+    "ok": true
+   },
+   "vz": {
+    "ks": 0.0,
+    "crit": 0.025762246031555976,
+    "null_ks": 0.00346894791962038,
+    "ok": true
+   },
+   "px": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "py": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "pz": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "cos_axis": {
+    "ks": 5.309546564724599e-05,
+    "crit": 0.025762246031555976,
+    "null_ks": 0.002858469871276137,
+    "ok": true
+   },
+   "azimuth": {
+    "ks": 5.309546564724599e-05,
+    "crit": 0.025762246031555976,
+    "null_ks": 0.0007648819740090906,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 0.0,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 5.900055627308722e-06,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.05830000000000002,
+   0.05830000000000002
+  ]
+ },
+ "particles-point-create-off": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-point-dir": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 4.76837158203125e-07,
+    "max_rel": 2.0968624646940783e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-point-dirraw": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 2.384185791015625e-07,
+    "max_rel": 1.822225502228126e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-point-fixed": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 2.384185791015625e-07,
+    "max_rel": 9.889692838502552e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-point-nospeed": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-point-off": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-point-spherical": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 8.344650268554688e-07,
+    "max_rel": 1.2714536124597831e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 5.960464477539062e-07,
+    "max_rel": 1.3592666303440416e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-point-spherical-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.006650000000000045,
+    "ok": true
+   },
+   "speed": {
+    "ks": 0.0001000000000000445,
+    "crit": 0.025,
+    "null_ks": 0.007850000000000024,
+    "ok": true
+   },
+   "vx": {
+    "ks": 9.999999999998899e-05,
+    "crit": 0.025,
+    "null_ks": 0.00814999999999999,
+    "ok": true
+   },
+   "vy": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.00990000000000002,
+    "ok": true
+   },
+   "vz": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.00605,
+    "ok": true
+   },
+   "px": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "py": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "pz": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "cos_axis": {
+    "ks": 0.00010000000000001674,
+    "crit": 0.025,
+    "null_ks": 0.005249999999999977,
+    "ok": true
+   },
+   "azimuth": {
+    "ks": 9.999999999998899e-05,
+    "crit": 0.025,
+    "null_ks": 0.006350000000000022,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 0.0,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 6.03554822314554e-06,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.0,
+   0.0
+  ]
+ },
+ "particles-surface-box": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 5.960464477539063e-08,
+    "max_rel": 5.960464832810452e-08,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 1.1920928955078125e-07,
+    "max_rel": 2.732257980344956e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-surface-box-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.013600000000000056,
+    "ok": true
+   },
+   "speed": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.012299999999999978,
+    "ok": true
+   },
+   "vx": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.004650000000000001,
+    "ok": true
+   },
+   "vy": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.008750000000000008,
+    "ok": true
+   },
+   "vz": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.004650000000000015,
+    "ok": true
+   },
+   "px": {
+    "ks": 0.0022999999999999965,
+    "crit": 0.025,
+    "null_ks": 0.01200000000000001,
+    "ok": true
+   },
+   "py": {
+    "ks": 0.002449999999999952,
+    "crit": 0.025,
+    "null_ks": 0.010099999999999998,
+    "ok": true
+   },
+   "pz": {
+    "ks": 0.002250000000000002,
+    "crit": 0.025,
+    "null_ks": 0.007750000000000035,
+    "ok": true
+   },
+   "bary0": {
+    "ks": 9.999999999998899e-05,
+    "crit": 0.025,
+    "null_ks": 0.014100000000000001,
+    "ok": true
+   },
+   "bary1": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.010149999999999992,
+    "ok": true
+   },
+   "bary2": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.006099999999999994,
+    "ok": true
+   },
+   "plane_dist": {
+    "constant": 1.2218952178955079e-09,
+    "rust_mean": 6.139278411865234e-10,
+    "ok": true
+   },
+   "tri": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "tri_side": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 1.5030068432192763e-08,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 1.359416379013752e-08,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.0,
+   0.0
+  ]
+ },
+ "particles-surface-ifs-solid": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 1.1920928955078125e-07,
+    "max_rel": 2.3764411035907313e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-surface-ifs-twosided": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 1.1920928955078125e-07,
+    "max_rel": 1.1617773846323108e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 4.76837158203125e-07,
+    "max_rel": 2.5122651927039296e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-surface-ifs-twosided-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.007000000000000006,
+    "ok": true
+   },
+   "speed": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.009249999999999994,
+    "ok": true
+   },
+   "vx": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.004400000000000001,
+    "ok": true
+   },
+   "vy": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "vz": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.006099999999999994,
+    "ok": true
+   },
+   "px": {
+    "ks": 0.0020499999999999963,
+    "crit": 0.025,
+    "null_ks": 0.00770000000000004,
+    "ok": true
+   },
+   "py": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.008050000000000002,
+    "ok": true
+   },
+   "pz": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.0036000000000000476,
+    "ok": true
+   },
+   "bary0": {
+    "ks": 0.00010000000000000286,
+    "crit": 0.025,
+    "null_ks": 0.008199999999999985,
+    "ok": true
+   },
+   "bary1": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.008099999999999996,
+    "ok": true
+   },
+   "bary2": {
+    "ks": 5.0000000000105516e-05,
+    "crit": 0.025,
+    "null_ks": 0.008500000000000008,
+    "ok": true
+   },
+   "plane_dist": {
+    "constant": 4.255771636962891e-09,
+    "rust_mean": 4.875659942626953e-09,
+    "ok": true
+   },
+   "tri": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "tri_side": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 5.326374578170765e-08,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 2.649504827983526e-09,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.0,
+   0.0
+  ]
+ },
+ "particles-surface-nosurface": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-volume-cube": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 5.066394805908203e-07,
+    "max_rel": 2.9872278437750125e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-volume-cube-spherical": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 4.172325134277344e-07,
+    "max_rel": 1.870494998936279e-06,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 4.3213367462158203e-07,
+    "max_rel": 0.0002789605995107,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-volume-cube-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.011150000000000007,
+    "ok": true
+   },
+   "speed": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.0068999999999999895,
+    "ok": true
+   },
+   "vx": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "vy": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.0068999999999999895,
+    "ok": true
+   },
+   "vz": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "px": {
+    "ks": 0.0001000000000000445,
+    "crit": 0.025,
+    "null_ks": 0.009450000000000014,
+    "ok": true
+   },
+   "py": {
+    "ks": 9.999999999999593e-05,
+    "crit": 0.025,
+    "null_ks": 0.00649999999999995,
+    "ok": true
+   },
+   "pz": {
+    "ks": 0.0001000000000000445,
+    "crit": 0.025,
+    "null_ks": 0.007550000000000057,
+    "ok": true
+   },
+   "depth": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.008200000000000013,
+    "ok": true
+   },
+   "cell": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "inside": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "origin": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 1.773168180945336e-06,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 0.0,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.0,
+   0.0
+  ]
+ },
+ "particles-volume-empty": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 5.960464477539063e-08,
+    "max_rel": 1.6100630226968975e-07,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-volume-twocubes": {
+  "status": "PASS",
+  "fails": [],
+  "steps": {
+   "numParticles_bad_frames": [],
+   "createParticles_bad_frames": [],
+   "deltaTime_max_rel": 0.0,
+   "creationTime_max_abs": 0.0
+  },
+  "groups": {
+   "life": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "lifetime": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "elapsed": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "color": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "velocity": {
+    "max_abs": 0.0,
+    "max_rel": 0.0,
+    "n_fail": 0,
+    "frames_bad": []
+   },
+   "position": {
+    "max_abs": 5.960464477539062e-07,
+    "max_rel": 2.6843967001443472e-05,
+    "n_fail": 0,
+    "frames_bad": []
+   }
+  }
+ },
+ "particles-volume-twocubes-stat": {
+  "status": "PASS",
+  "fails": [],
+  "tests": {
+   "lifetime": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.010249999999999981,
+    "ok": true
+   },
+   "speed": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.008849999999999969,
+    "ok": true
+   },
+   "vx": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "vy": {
+    "ks": 0.0,
+    "crit": 0.025,
+    "null_ks": 0.008849999999999969,
+    "ok": true
+   },
+   "vz": {
+    "constant": 0.0,
+    "rust_mean": 0.0,
+    "ok": true
+   },
+   "px": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.013400000000000023,
+    "ok": true
+   },
+   "py": {
+    "ks": 0.00010000000000010001,
+    "crit": 0.025,
+    "null_ks": 0.008399999999999963,
+    "ok": true
+   },
+   "pz": {
+    "ks": 0.0001000000000000445,
+    "crit": 0.025,
+    "null_ks": 0.008349999999999969,
+    "ok": true
+   },
+   "depth": {
+    "ks": 0.00010000000000000286,
+    "crit": 0.025,
+    "null_ks": 0.009550000000000058,
+    "ok": true
+   },
+   "cell": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "inside": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "origin": {
+    "max_z": 0.0,
+    "sigma": 4.0,
+    "ok": true
+   },
+   "position_mean": {
+    "max_z": 1.4992048674660017e-06,
+    "sigma": 4.5,
+    "ok": true
+   },
+   "velocity_mean": {
+    "max_z": 0.0,
+    "sigma": 4.5,
+    "ok": true
+   }
+  },
+  "n": [
+   20000,
+   20000
+  ],
+  "hidden_fraction": [
+   0.0,
+   0.0
+  ]
+ }
+}

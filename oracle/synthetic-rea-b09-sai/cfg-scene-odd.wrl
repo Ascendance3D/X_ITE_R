@@ -1,0 +1,41 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "cfg scene odd"
+DEF OUT Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function U (s) { return String (s) .replace (/^.*?(assets\\/components\\/)/, '$1'); }
+function PI (p) { return p .name + '|' + p .title + '|' + U (p .providerURL) + '|' + p .components .length + '|' + Object .keys (p) .join (','); }
+function CI (c) { return c .name + ':' + c .level + '|' + c .title + '|' + U (c .providerURL) + '|' + c .external + '|' + (c .dependencies ? c .dependencies .join ('+') : c .dependencies) + '|' + Object .keys (c) .join (','); }
+function CL (a) { var r = []; for (var i = 0; i < a .length; ++ i) r .push (a [i] .name + ':' + a [i] .level); return r .join (','); }
+function T (f) { try { return String (f ()); } catch (e) { return 'ERR:' + String (e && e .message) .replace (/http:\\/\\/[^\\/]+/g, 'H'); } }
+function AT (f) { try { return Promise .resolve (f ()) .then (function (v) { return String (v); }, function (e) { return 'REJ:' + String (e && e .message); }); } catch (e) { return 'THROW:' + String (e && e .message); } }
+function VL (s) { var t; try { t = s .toVRMLString (); } catch (e) { return 'PRINT ' + e .message; } return t .split ('\\n') .filter (function (l) { return /^(PROFILE|COMPONENT|UNIT|META|#)/ .test (l); }) .join ('|'); }
+
+var LABELS = ['odd.addComponent.undefined', 'odd.addComponent.null', 'odd.addComponent.string', 'odd.updateComponent.undefined'];
+var PROBES = [
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) { return T (function () { s .addComponent (); return CL (s .components); }); }); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) { return T (function () { s .addComponent (null); return CL (s .components); }); }); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) { return T (function () { s .addComponent ('Core'); return CL (s .components) + ' ' + VL (s); }); }); }); },
+function () { return AT (function () { return Browser .createScene (Browser .getProfile ('Core')) .then (function (s) { return T (function () { s .updateComponent (); return CL (s .components); }); }); }); }
+];
+var res = [];
+var step = 0;
+function put (i, v) { res [i] = LABELS [i] + ' = ' + v; }
+function flush () { var o = []; for (var k = 0; k < LABELS .length; ++ k) o .push (k in res ? res [k] : LABELS [k] + ' = ...'); out = new MFString (... o); }
+function cycle () { step = step + 1; if (step == 12) flush (); }
+function initialize () {
+  PROBES .forEach (function (f, i) {
+    var v;
+    try { v = f (); } catch (e) { v = 'THROW ' + e .message; }
+    if (v && typeof v .then === 'function') v .then (function (x) { put (i, x); }, function (e) { put (i, 'REJECT ' + (e && e .message)); });
+    else put (i, v);
+  });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

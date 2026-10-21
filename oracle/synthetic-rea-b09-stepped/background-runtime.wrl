@@ -1,0 +1,62 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 6 }
+NavigationInfo { type "NONE" headlight FALSE }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+DEF B1 Background { skyColor [ 0.1 0.2 0.8, 0.8 0.8 1 ] skyAngle [ 1.2 ] groundColor [ 0.3 0.2 0.1, 0.1 0.1 0.1 ] groundAngle [ 1.4 ] }
+DEF B2 Background { skyColor [ 0.9 0.3 0.1 ] transparency 0 }
+DEF B3 Background { backUrl "../synthetic-rea-b03/proj-checker.png" frontUrl "../synthetic-rea-b03/proj-checker.png" leftUrl "../synthetic-rea-b03/proj-checker.png" rightUrl "../synthetic-rea-b03/proj-checker.png" topUrl "../synthetic-rea-b03/proj-checker.png" bottomUrl "../synthetic-rea-b03/proj-checker.png" skyColor 0.2 0.8 0.3 }
+DEF TB TextureBackground { frontTexture PixelTexture { image 2 2 3 0xff0000 0x00ff00 0x0000ff 0xffff00 } skyColor 0.5 0.5 0.5 }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 } } geometry Sphere { radius 0.8 } } }
+Transform { translation 1.5 0 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 } } geometry Sphere { radius 0.8 } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode b1 USE B1
+  initializeOnly SFNode b2 USE B2
+  initializeOnly SFNode b3 USE B3
+  initializeOnly SFNode tb USE TB
+  inputOnly SFBool on_1
+  inputOnly SFBool on_2
+  inputOnly SFBool on_3
+  inputOnly SFBool on_4
+  inputOnly SFTime on_t2
+  url "javascript:
+function on_1 (v) { log = log + 'B1:' + v + ' '; }
+function on_2 (v) { log = log + 'B2:' + v + ' '; }
+function on_3 (v) { log = log + 'B3:' + v + ' '; }
+function on_4 (v) { log = log + 'TB:' + v + ' '; }
+function on_t2 (v) { log = log + 'T2 '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') b1 .skyColor = new MFColor (new SFColor (0.9, 0.1, 0.1), new SFColor (0.1, 0.9, 0.1));
+   if (k == 'b') b1 .skyAngle = new MFFloat (0.6);
+   if (k == 'c') b1 .groundColor = new MFColor (new SFColor (0.6, 0.6, 0.1));
+   if (k == 'd') b1 .groundAngle = new MFFloat ();
+   if (k == 'e') b1 .transparency = 0.5;
+   if (k == 'f') b2 .set_bind = true;
+   if (k == 'g') b2 .skyColor = new MFColor (new SFColor (0.1, 0.1, 0.1));
+   if (k == 'h') b3 .set_bind = true;
+   if (k == 'i') b3 .transparency = 0.6;
+   if (k == 'j') b3 .backUrl = new MFString ();
+   if (k == 'k') tb .set_bind = true;
+   if (k == 'l') tb .frontTexture = Browser .currentScene .createNode ('PixelTexture');
+   if (k == 'm') { var t = tb .frontTexture; t .image = new SFImage (1, 2, 3, new MFInt32 (0x00ffff, 0xff00ff)); }
+   if (k == 'n') tb .set_bind = false;
+   if (k == 'o') b3 .set_bind = false;
+   if (k == 'p') b2 .set_bind = false;
+   if (k == 'q') b1 .set_bind = false;
+   if (k == 'r') b1 .set_bind = true;
+   if (k == 's') b1 .skyColor = new MFColor ();
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE B1.isBound TO R.on_1
+ROUTE B2.isBound TO R.on_2
+ROUTE B3.isBound TO R.on_3
+ROUTE TB.isBound TO R.on_4
+ROUTE B2.bindTime TO R.on_t2

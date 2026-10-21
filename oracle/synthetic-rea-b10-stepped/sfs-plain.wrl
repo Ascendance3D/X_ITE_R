@@ -1,0 +1,43 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+DEF V1 Viewpoint { position 0 0 8 }
+DEF V2 Viewpoint { position 2 1 5 orientation 0 1 0 0.4 fieldOfView 0.7 }
+DEF O1 OrthoViewpoint { position 0 0 10 fieldOfView [ -5 -4 5 4 ] }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 1.5 } } }
+Transform { translation 1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.9 } } }
+DEF TA Transform { translation -2.5 2 0  children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF XA Text { string [ "Plain" ] fontStyle DEF FA ScreenFontStyle { pointSize 20 } solid FALSE } } }
+DEF TB Transform { translation 2.5 2 -3  children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF XB Text { string [ "Far" "text" ] fontStyle DEF FB ScreenFontStyle { pointSize 16 } solid FALSE } } }
+DEF TC Transform { translation -2.5 -2 1 rotation 0 1 0 0.8 children Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF XC Text { string [ "Tilted" ] fontStyle DEF FC ScreenFontStyle { pointSize 18 } solid FALSE } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode ta USE TA
+  initializeOnly SFNode fa USE FA
+  initializeOnly SFNode xb USE XB
+  initializeOnly SFNode tb USE TB
+  initializeOnly SFNode v2 USE V2
+  initializeOnly SFNode o1 USE O1
+  initializeOnly SFNode v1 USE V1
+
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') fa .pointSize = 32;
+   if (k == 'b') ta .translation = new SFVec3f (-1, 2, 0);
+   if (k == 'c') v2 .set_bind = true;
+   if (k == 'd') o1 .set_bind = true;
+   if (k == 'e') xb .string = new MFString ('Changed');
+   if (k == 'f') Browser .setBrowserOption ('ContentScale', 2);
+   if (k == 'g') v1 .set_bind = true;
+   if (k == 'h') Browser .setBrowserOption ('ContentScale', 1);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

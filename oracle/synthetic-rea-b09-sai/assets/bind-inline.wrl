@@ -1,0 +1,11 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+DEF IV Viewpoint { description "iv" position 0 0 20 }
+DEF IV2 Viewpoint { description "iv2" position 0 0 21 }
+DEF IB Background { skyColor 1 1 0 }
+DEF IN NavigationInfo { type "FLY" }
+EXPORT IV
+EXPORT IV2
+EXPORT IB
+EXPORT IN

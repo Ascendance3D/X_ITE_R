@@ -1,0 +1,115 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "brx call"
+DEF V1 Viewpoint { description "first" }
+DEF N1 NavigationInfo { type "EXAMINE" }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function desc (o) { if (o === null || typeof o !== 'object' && typeof o !== 'function') return show (o); var n = [], p = o, k = 0; while (p && k ++ < 10) { n .push (p .constructor && Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : '-'); p = Object .getPrototypeOf (p); } return [Object .prototype .toString .call (o), n .join ('>'), Object .keys (o) .sort () .join (',')]; }
+function initialize () {
+  SELF = this;
+  T ('getCurrentViewer length', function () { return Browser .getCurrentViewer .length; });
+  T ('getCurrentViewer ()', function () { return show (Browser .getCurrentViewer ()); });
+  T ('getCurrentViewer () desc', function () { return desc (Browser .getCurrentViewer ()); });
+  T ('getViewer length', function () { return Browser .getViewer .length; });
+  T ('getActiveViewpoint length', function () { return Browser .getActiveViewpoint .length; });
+  T ('getActiveNavigationInfo length', function () { return Browser .getActiveNavigationInfo .length; });
+  T ('getActiveLayer length', function () { return Browser .getActiveLayer .length; });
+  T ('getBrowserOptions length', function () { return Browser .getBrowserOptions .length; });
+  T ('getBrowserOptions ()', function () { return show (Browser .getBrowserOptions ()); });
+  T ('getBrowserProperties length', function () { return Browser .getBrowserProperties .length; });
+  T ('getBrowserProperties ()', function () { return show (Browser .getBrowserProperties ()); });
+  T ('getBrowserProperties () desc', function () { return desc (Browser .getBrowserProperties ()); });
+  T ('getRenderingProperties length', function () { return Browser .getRenderingProperties .length; });
+  T ('getRenderingProperties ()', function () { return show (Browser .getRenderingProperties ()); });
+  T ('getRenderingProperties () desc', function () { return desc (Browser .getRenderingProperties ()); });
+  T ('isContextLost length', function () { return Browser .isContextLost .length; });
+  T ('isContextLost ()', function () { return show (Browser .isContextLost ()); });
+  T ('isContextLost () desc', function () { return desc (Browser .isContextLost ()); });
+  T ('getCanvas length', function () { return Browser .getCanvas .length; });
+  T ('getElement length', function () { return Browser .getElement .length; });
+  T ('getLocalStorage length', function () { return Browser .getLocalStorage .length; });
+  T ('getLocalStorage ()', function () { return show (Browser .getLocalStorage ()); });
+  T ('getLocalStorage () desc', function () { return desc (Browser .getLocalStorage ()); });
+  T ('getNotification length', function () { return Browser .getNotification .length; });
+  T ('getContextMenu length', function () { return Browser .getContextMenu .length; });
+  T ('getBrowserTime length', function () { return Browser .getBrowserTime .length; });
+  T ('getBrowserTimings length', function () { return Browser .getBrowserTimings .length; });
+  T ('toVRMLString length', function () { return Browser .toVRMLString .length; });
+  T ('toVRMLString ()', function () { return show (Browser .toVRMLString ()); });
+  T ('toVRMLString () desc', function () { return desc (Browser .toVRMLString ()); });
+  T ('toXMLString length', function () { return Browser .toXMLString .length; });
+  T ('toXMLString ()', function () { return show (Browser .toXMLString ()); });
+  T ('toXMLString () desc', function () { return desc (Browser .toXMLString ()); });
+  T ('toJSONString length', function () { return Browser .toJSONString .length; });
+  T ('toJSONString ()', function () { return show (Browser .toJSONString ()); });
+  T ('toJSONString () desc', function () { return desc (Browser .toJSONString ()); });
+  T ('getTypeName length', function () { return Browser .getTypeName .length; });
+  T ('getTypeName ()', function () { return show (Browser .getTypeName ()); });
+  T ('getTypeName () desc', function () { return desc (Browser .getTypeName ()); });
+  T ('getType length', function () { return Browser .getType .length; });
+  T ('getType ()', function () { return show (Browser .getType ()); });
+  T ('getType () desc', function () { return desc (Browser .getType ()); });
+  T ('getId length', function () { return Browser .getId .length; });
+  T ('getId ()', function () { return show (typeof Browser .getId ()); });
+  T ('getId () desc', function () { return desc (typeof Browser .getId ()); });
+  T ('getFieldDefinitions length', function () { return Browser .getFieldDefinitions .length; });
+  T ('getFieldDefinitions ()', function () { return show (Array .from (Browser .getFieldDefinitions (), function (d) { return d .name + ':' + d .dataType; })); });
+  T ('getFieldDefinitions () desc', function () { return desc (Array .from (Browser .getFieldDefinitions (), function (d) { return d .name + ':' + d .dataType; })); });
+  T ('getFields length', function () { return Browser .getFields .length; });
+  T ('getFields ()', function () { return show (Array .from (Browser .getFields (), function (f) { return f .getName () + ':' + f .getTypeName (); })); });
+  T ('getFields () desc', function () { return desc (Array .from (Browser .getFields (), function (f) { return f .getName () + ':' + f .getTypeName (); })); });
+  T ('getUserDefinedFields length', function () { return Browser .getUserDefinedFields .length; });
+  T ('getUserDefinedFields ()', function () { return show (Array .from (Browser .getUserDefinedFields (), function (f) { return f .getName (); })); });
+  T ('getUserDefinedFields () desc', function () { return desc (Array .from (Browser .getUserDefinedFields (), function (f) { return f .getName (); })); });
+  T ('getField missing length', function () { return Browser .getField .length; });
+  T ('getField missing ()', function () { return show (Browser .getField ('nothing')); });
+  T ('getField missing () desc', function () { return desc (Browser .getField ('nothing')); });
+  T ('dispose length', function () { return Browser .dispose .length; });
+  T ('dispose owner', function () { var p = Browser; while (p && !Object .prototype .hasOwnProperty .call (p, 'dispose')) p = Object .getPrototypeOf (p); return p && p .constructor .name; });
+  T ('resize length', function () { return Browser .resize .length; });
+  T ('resize owner', function () { var p = Browser; while (p && !Object .prototype .hasOwnProperty .call (p, 'resize')) p = Object .getPrototypeOf (p); return p && p .constructor .name; });
+  T ('addEvent length', function () { return Browser .addEvent .length; });
+  T ('addEvent owner', function () { var p = Browser; while (p && !Object .prototype .hasOwnProperty .call (p, 'addEvent')) p = Object .getPrototypeOf (p); return p && p .constructor .name; });
+  T ('bindViewpoint length', function () { return Browser .bindViewpoint .length; });
+  T ('bindViewpoint owner', function () { var p = Browser; while (p && !Object .prototype .hasOwnProperty .call (p, 'bindViewpoint')) p = Object .getPrototypeOf (p); return p && p .constructor .name; });
+  flush_ ();
+}
+
+  "
+}

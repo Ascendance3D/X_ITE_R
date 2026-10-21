@@ -1,0 +1,1489 @@
+{
+  "adapter": "NVIDIA GeForce RTX 3060 Ti (Vulkan, NVIDIA 595.91.07)",
+  "results": [
+    {
+      "file": "antiques/aeon-cipher-desk/aeon-cipher-desk.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/chronos-orrery/chronos-orrery.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/chronos-orrery-v2/chronos-orrery-v2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/chronos-orrery-v3/chronos-orrery-v3.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/echo-cabinet/echo-cabinet.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/lumen-memory-globe/archive-failed-script-build/lumen-memory-globe.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/lumen-memory-globe/lumen-memory-globe.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/meridian-time-chest/meridian-time-chest.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/starlight-zoetrope/starlight-zoetrope.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "antiques/storm-terrarium/storm-terrarium.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "appliances/autochef-cooking-station/autochef-cooking-station.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "appliances/orbitcool-smart-refrigerator/orbitcool-smart-refrigerator.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "appliances/orbitspin-dryer/orbitspin-dryer.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "appliances/orbitwash-washer/orbitwash-washer.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "appliances/patiochef-e-grill/patiochef-e-grill.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/agora-of-tomorrow/agora-of-tomorrow.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/art-blanks/1x1.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/art-blanks/2x3.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/art-blanks/3x4.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/art-blanks/4x3.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/beam-station-morning/beam-station-morning.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/build-tomorrow/build-tomorrow.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/by-the-sea/by-the-sea.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/city-hall-sunset/city-hall-sunset.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/college-living/college-living.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/community-commons/community-commons.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/crystal-henge/crystal-henge.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/djascendance-live/djascendance-live.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/event-horizon/event-horizon.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/glass-cathedral/glass-cathedral.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/golden-meridian/golden-meridian.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/its-art/4x3.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/its-art/humanity-reshaped.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/lakeside-henge/lakeside-henge.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/mall-promenade/mall-promenade.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/overgrown-tomorrow/overgrown-tomorrow.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/rainbow-room/rainbow-room.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/red-roof-pasture/red-roof-pasture.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/score/16x9.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/score/score.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/the-castle-art/16x9.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/the-castle-art/4x3.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/the-castle-art/the-castle.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/theface-art/3x4.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "art/upscale-living/upscale-living.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "celebration/zero-g-party-fountain/zero-g-party-fountain.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/aurora-kinetic-art/aurora-kinetic-art.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/crypt-bloom-mirror/crypt-bloom-mirror.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/crypt-bloom-mirror/work/crypt-bloom-mirror-body.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/kinetic-aurora-art/kinetic-aurora-art.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/lantern-stag/lantern-stag.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/lantern-stag/work/lantern-stag-body.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/mourning-dial/mourning-dial.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/mourning-dial/work/mourning-dial-body.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "decorative/velvet-thornwing/velvet-thornwing.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/flux-tape-deck/flux-tape-deck.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/ion-garden-speaker/ion-garden-speaker.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/lantern-leviathan/lantern-leviathan.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/orbit-cam-array/orbit-cam-array.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/pixel-forge-printer/pixel-forge-printer.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/plasma-disc-player/plasma-disc-player.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/pocket-drone-port/pocket-drone-port.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/pocket-drone-port-ii/pocket-drone-port-ii.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/pulse-prism-console/pulse-prism-console.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "electronics/signal-storm-globe/signal-storm-globe.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "furniture/advenbed1/advenbed1.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "furniture/advenbed2/advenbed1-original-reference.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "furniture/advenbed2/advenbed2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "furniture/portta-pottee/portta-pottee.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "furniture/velvet-maw/velvet-maw.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "garden/sunflower-planter/sunflower-planter.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "jewelry/aether-crown-display/aether-crown-display.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "jewelry/cipher-heart-locket/cipher-heart-locket.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "kitchens/chefzone-l-kitchen/chefzone-l-kitchen.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "kitchens/chefzone-l-kitchen/chefzone-l-kitchen.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "kitchens/cyberchef-corner-kitchen/cyberchef-corner-kitchen.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "kitchens/galactic-prep-island/galactic-prep-island.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/bloomskull-marker/bloomskull-marker.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/cyber-autumn-lantern/cyber-autumn-lantern.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/halloween-largeitems/fogbound-gathering/fogbound-gathering.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/halloween-largeitems/glowpath-cemetery/glowpath-cemetery.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/halloween-largeitems/neon-boneyard/neon-boneyard.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/halloween-largeitems/undertaker-shift/undertaker-shift.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/hexroot-headstone/hexroot-headstone.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/moonveil-memorial/moonveil-memorial.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "seasonal-items/static-rest-marker/static-rest-marker.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/atomic-quads/atomic-quads-cyan.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/atomic-quads/atomic-quads-lime.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/atomic-quads/atomic-quads-magenta.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/comet-crown-spin-top/preserved/pre-art-polish-2026-08-31/comet-crown-spin-top.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/glen-waterwheel-mill/glen-waterwheel-mill.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/mini-blazing-monster/mini-blazing-monster.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/mini-blue-beauty/mini-blue-beauty.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/mini-wedged-racer/mini-wedged-racer.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-closed.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-closed.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-item.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-opened.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-opened.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at00.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at00.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at06.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at06.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at07.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at07.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at08.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at08.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at09.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at09.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at10.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at10.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at100.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at100.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at17.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at17.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at25.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at25.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at40.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at40.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at45.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at45.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at50.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at50.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at60.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at60.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at75.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at75.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at90.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-at90.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-closed.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-closed.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-opened.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/graybox-v2-opened.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/pre-polish-2026-08-04/morphing-hauler.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/pre-polish-2026-08-04/morphing-hauler.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/prototype-v1-weather-rig/morph-rig-cyclone-hauler.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morph-fails/prototype-v1-weather-rig/morph-rig-cyclone-hauler.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morphing-hauler.src.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/morphing-hauler/morphing-hauler.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/pocket-dino-dig/pocket-dino-dig.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/pocket-mars-outpost/pocket-mars-outpost.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/pocket-moon-playset/pocket-moon-playset.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/pocket-ocean-dome/pocket-ocean-dome.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "toys/pocket-star-carnival/pocket-star-carnival.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/alfalfa-greenero/preserved/alfalfa-greenero.exported.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/alfalfa-greenero/work/ag-exported.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ascended-coupe/ascended-coupe-v2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ascended-coupe/ascended-coupe.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blazing-monster/blazing-monster-blender.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blazing-monster/blazing-monster-blender1.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blazing-monster/blazing-monster.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blazing-monster/meshlabblazing-monster.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-FAILED-r2-20260806-154219.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-pre-r2-20260806-150235.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-r3-fix2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase1-handles.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase2-scoop.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase3-louvers.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-r3-phase5-underbody.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/backups/blue-beauty-retry-start-20260806-154219.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/blue-beauty.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/old/blue-beauty-gz.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/old/red-sport-coupe (copy).wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/blue-beauty-car/old/red-sport-coupe.v97.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/buswagon-van/buswagon-van-ylw.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/buswagon-van/buswagon-van.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/buswagon-van/buswagon-van2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/buswagon-van/pass1/buswagon-van-ylw.pass1.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/buswagon-van/pass2/buswagon-van-ylw.pass2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/buswagon-van/work/raw-export.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/buswagon-van-beach/buswagon-van-beach.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/crabalac-rtv-x-champagne.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/crabalac-rtv-x-claret.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/crabalac-rtv-x-obsidian.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/crabalac-rtv-x-pearl.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/cand-dp3.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/cand-dp4.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/cand-dp6.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/export-raw-champagne.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/export-raw-claret.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/export-raw-obsidian.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/export-raw-pearl.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/crabalac-rtv-x/work/export-raw.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/bass-civic-ct-antique-bronze.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/bass-civic-ct-deep-purple-fern.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/bass-civic-ct-satin-steel.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/bass-civic-ct.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/civic.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/civic_funpark_auction.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/cthonda.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/gzipped/civic.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/gzipped/civic_funpark_auction.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ct-civic/gzipped/cthonda.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/redora-iv.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/work/rd-exported.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/work/redora-iv-final-candidate.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/work/redora-iv-production-candidate.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/work/redora-qa.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/work/x-amb0.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/work/x-ambfix.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ctw-redora-iv/work/x-notex.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/cyclone-black-pearl.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/cyclone-sport-black-cherry.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/cyclone-street-silver.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/cyclone-touring-blue.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/cyclone-vivid-purple.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/cyclone-voltage-violet.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/cyclone.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/failed-baseline-2026-08-18/cyclone-sport-black-cherry.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/failed-baseline-2026-08-18/cyclone-street-silver.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/failed-baseline-2026-08-18/cyclone-touring-blue.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cyclone/preserved/cyclone.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cytoda-ascend/cytoda-ascend-opal.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cytoda-ascend/cytoda-ascend-petrol.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cytoda-ascend/cytoda-ascend.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cytoda-super/cytoda-super-v12/cytoda-super-v12.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cytoda-super/cytoda-super-v6.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/cytoda-super/cytoda-super.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/dondha-r3000/dondha-r3000-dx.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/dondha-r3000/dondha-r3000-rsi.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/dondha-r3000/dondha-r3000.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/dondha-traylude/dondha-traylude.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/emerald-serpent/emerald-serpent.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/fiat-panda/squish-da.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/fiat-panda/work/squishyy-raw.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/jeef-denim/jeef-beach-rider.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/jeef-denim/jeef-denim-cherry.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/jeef-denim/jeef-denim-trail.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/ragnum-red/ragnum-red.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rambo-rt/rambo-rt-1/rambo-rt-1.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rambo-rt/rambo-rt-2/rambo-rt-2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rambo-rt/rambo-rt-3/rambo-rt-3.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rambo-rt/rambo-rt-4/rambo-rt-4.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rambo-rt/rambo-rt-5/rambo-rt-5.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rambo-rt/rambo-rt-6/rambo-rt-6.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rocket-bus/rocket-bus-classic.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rocket-bus/rocket-bus-cosmic.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rocket-bus/rocket-bus-lime.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rocket-bus/rocket-bus-midnight.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rocket-bus/rocket-bus-red.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rocket-bus/rocket-bus-retro.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rubric-cxs/preserved/rubric-cxs.exported-original.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rubric-cxs/rubric-cxs.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rubric-cxs/work/rx-exported-jade.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rubric-cxs/work/rx-exported-red.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rubric-cxs/work/rx-exported-sandstorm.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rubric-cxs/work/rx-exported-voltage.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/rubric-cxs/work/rx-exported.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-32r-clearsky/work/export-raw.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/clearsky-34r-azure.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/clearsky-34r-citron.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/clearsky-34r-frost.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/clearsky-34r-scarlet.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/work/export-raw-azure.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/work/export-raw-citron.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/work/export-raw-frost.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sinsan-34r-clearsky/work/export-raw-scarlet.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/smally-grouper/smally-grouper-blue.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/smally-grouper/smally-grouper-chameleon.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/smally-grouper/smally-grouper-citron.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/smally-grouper/smally-grouper-mint.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/smally-grouper/smally-grouper-red.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/smally-grouper/smally-grouper-tangerine.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/smartcar/smartcar-lite.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/squishyy/preserved/pass1-rejected/squishyy-pass1.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sundat-cloudy/sundat-cloudy.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sundat-cloudy-burnt-orange/sundat-cloudy-burnt-orange.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/sundat-cloudy-ice-blue/sundat-cloudy-ice-blue.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206/the-206.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206/work/export-raw-c30.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206/work/export-raw-c40.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206/work/export-raw-c50.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206/work/export-raw-c60.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206/work/export-raw-norm.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206/work/export-raw-normals.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206-royal-violet/the-206-royal-violet.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206-royal-violet/work/export-raw.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206-white-pearl/the-206-white-pearl.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-206-white-pearl/work/export-raw.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-revolution/the-revolution-clover.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-revolution/the-revolution-garnet.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/the-revolution/the-revolution-vivid.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/topinac-labomba/preserved/topinac-la-bomba.exported-original.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/topinac-labomba/topinac-la-bomba.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/topinac-labomba/work/baseline-export.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/topinac-labomba/work/lb-exported.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/topinac-labomba/work/trial-export.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/transam/transam.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/traylude-deep-rose/traylude-deep-rose.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/traylude-neon-yellow/traylude-neon-yellow.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/vette-blue/corvette-study/corvette-study.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/vette-blue/corvette-study/corvette-study2.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/vette-red/corvette-study/corvette-study.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "vehicles/wedged-racer/wedged-racer.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "weapons-display/nightreaver/nightreaver.wrl",
+      "ok": true,
+      "unsupported": []
+    },
+    {
+      "file": "weapons-display/sunshard/sunshard.wrl",
+      "ok": true,
+      "unsupported": []
+    }
+  ],
+  "size": [
+    512,
+    512
+  ]
+}

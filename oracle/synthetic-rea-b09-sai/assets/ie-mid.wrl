@@ -1,0 +1,15 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+DEF I2 Inline { url "ie-leaf.wrl" }
+IMPORT I2.LI AS MLI
+IMPORT I2.LT AS MLT
+IMPORT I2.LS AS MLS DESCRIPTION "the leaf script"
+DEF MI ScalarInterpolator { key [0 1] keyValue [0 1] }
+DEF MT Transform { }
+DEF MG Group { children [ DEF MC Transform { translation 5 0 0 } ] }
+ROUTE MI.value_changed TO MLI.set_fraction
+ROUTE MLT.translation_changed TO MT.set_translation
+EXPORT MI
+EXPORT MT
+EXPORT MG AS MGroup
+EXPORT MC

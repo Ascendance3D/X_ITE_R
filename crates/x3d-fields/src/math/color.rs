@@ -26,6 +26,11 @@ impl Color3 {
         Self { r: clamp(r, 0.0, 1.0), g: clamp(g, 0.0, 1.0), b: clamp(b, 0.0, 1.0) }
     }
 
+    /// Exactly these components (Color3.assign: a Script's color object holds what it holds, unclamped).
+    pub fn from_raw(r: f64, g: f64, b: f64) -> Self {
+        Self { r, g, b }
+    }
+
     pub fn set(&mut self, r: f64, g: f64, b: f64) -> &mut Self {
         *self = Self::new(r, g, b);
         self
@@ -75,6 +80,16 @@ impl Color3 {
         hsv_from_rgb(self.r, self.g, self.b)
     }
 
+    /// Color3.linearToSRGB: `Math .pow (c, 1 / 2.2)`, assigned without clamping.
+    pub fn linear_to_srgb(&self) -> Self {
+        Self { r: jsmath::pow(self.r, 1.0 / 2.2), g: jsmath::pow(self.g, 1.0 / 2.2), b: jsmath::pow(self.b, 1.0 / 2.2) }
+    }
+
+    /// Color3.sRGBToLinear: `Math .pow (c, 2.2)`.
+    pub fn srgb_to_linear(&self) -> Self {
+        Self { r: jsmath::pow(self.r, 2.2), g: jsmath::pow(self.g, 2.2), b: jsmath::pow(self.b, 2.2) }
+    }
+
     /// Note: setHSV assigns the private components directly, without clamping.
     pub fn set_hsv(&mut self, h: f64, s: f64, v: f64) -> &mut Self {
         let [r, g, b] = rgb_from_hsv(h, s, v);
@@ -88,6 +103,11 @@ impl Color3 {
 impl Color4 {
     pub fn new(r: f64, g: f64, b: f64, a: f64) -> Self {
         Self { r: clamp(r, 0.0, 1.0), g: clamp(g, 0.0, 1.0), b: clamp(b, 0.0, 1.0), a: clamp(a, 0.0, 1.0) }
+    }
+
+    /// Exactly these components (Color4.assign).
+    pub fn from_raw(r: f64, g: f64, b: f64, a: f64) -> Self {
+        Self { r, g, b, a }
     }
 
     pub fn set(&mut self, r: f64, g: f64, b: f64, a: f64) -> &mut Self {
@@ -111,6 +131,14 @@ impl Color4 {
 
     pub fn equals(&self, o: &Self) -> bool {
         self.r == o.r && self.g == o.g && self.b == o.b && self.a == o.a
+    }
+
+    pub fn linear_to_srgb(&self) -> Self {
+        Self { r: jsmath::pow(self.r, 1.0 / 2.2), g: jsmath::pow(self.g, 1.0 / 2.2), b: jsmath::pow(self.b, 1.0 / 2.2), a: self.a }
+    }
+
+    pub fn srgb_to_linear(&self) -> Self {
+        Self { r: jsmath::pow(self.r, 2.2), g: jsmath::pow(self.g, 2.2), b: jsmath::pow(self.b, 2.2), a: self.a }
     }
 
     pub fn get_hsva(&self) -> [f64; 4] {
@@ -177,7 +205,11 @@ fn rgb_from_hsv(h: f64, s: f64, v: f64) -> [f64; 3] {
     let q = v * (1.0 - s * f);
     let t = v * (1.0 - s * (1.0 - f));
 
-    // JS `i % 6` on a float; i is in [0, 6].
+    // JS `i % 6` on a float; i is in [0, 6], or NaN (the switch then takes its default branch).
+    if i.is_nan() {
+        return [v, p, q];
+    }
+
     match (i % 6.0) as i64 {
         0 => [v, t, p],
         1 => [q, v, p],

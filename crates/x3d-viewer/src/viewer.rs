@@ -4,11 +4,11 @@
 //! deterministic.
 
 use crate::collision::{CShape, World};
-use crate::layer::{BBox, DEFAULT, Layer, NavInfo, VpBase, bbox_transform, is_default};
+use crate::layer::{DEFAULT, Layer, NavInfo, VpBase, is_default};
 use crate::lookat::Box3;
 use crate::nav::{Cx, Env, Input, LookAtRequest, Viewer};
 use crate::pointer::{AnchorActivation, Hit, PickCamera, Pointer, pick};
-use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan};
+use crate::walk::{LayerWalk, NodeRef, Scan, ShapeInst, rt_at, rt_at_mut, scan, scan_screens};
 use std::collections::HashMap;
 use std::path::Path;
 use std::rc::Rc;
@@ -101,6 +101,15 @@ struct ProxState {
     layer: LayerKey,
 }
 
+/// What `browser .getActiveViewpoint ()` and `getCurrentViewer ()` answer right after `replaceWorld`: the bindables of
+/// the new world are bound, but the browser's `activeViewpoint` and `viewer` fields follow their stacks by events.
+struct HeldPose {
+    pose: (Vector3, Rotation4, Vector3),
+    /// The name of the viewpoint (`<default>` for the default one): its node may be released by now.
+    viewpoint: String,
+    viewer: String,
+}
+
 /// The state of a layer (X3DLayerNode) other than the one in [`Viewer3d::layer`].
 pub struct LayerSlot {
     pub key: LayerKey,
@@ -116,6 +125,9 @@ pub struct Viewer3d {
     nav_info_node: NodeId,
     /// The bound NavigationInfo's `_viewer` (set_type__) the browser's viewer follows.
     nav_viewer: String,
+    /// The browser's `viewer` field (`browser .getCurrentViewer ()`): whatever was set last, the
+    /// NavigationInfo's choice or a name given to `set_viewer`, even one that falls back to EXAMINE.
+    viewer_field: String,
     pub pointer: Pointer,
     pub width: u32,
     pub height: u32,
@@ -143,7 +155,14 @@ pub struct Viewer3d {
     /// The LogarithmicDepthBuffer rendering property the camera last used.
     camera_log_depth: bool,
     gravity_speed: f64,
+    /// X3DRenderObject.activeCollisions: the Collision nodes whose isActive the last COLLISION traversal set.
+    active_collisions: Vec<x3d_fields::NodeId>,
     geom_cache: HashMap<(Vec<NodeId>, NodeId), Option<Rc<Geometry>>>,
+    /// The pointing buffer on the GPU (float32 hit values like X_ITE's); without it picks use the
+    /// ray cast's double values.
+    pub pointing_gpu: Option<x3d_render::pointing_gpu::PointingGpu>,
+    /// The collision depth buffer on the GPU (X_ITE's rasterization of the 16x16 buffer).
+    pub depth_gpu: Option<std::rc::Rc<std::cell::RefCell<x3d_render::depth_gpu::DepthGpu>>>,
     /// The Ammo state of the pick shapes (X3DPickSensorNode.getPickShape).
     pub pick_shapes: crate::pick_shapes::PickShapes,
     /// Geometry and textures kept between frames (rebuilt only when their nodes change).
@@ -162,6 +181,19 @@ pub struct Viewer3d {
     pub status: String,
     pub anchors: Vec<AnchorActivation>,
     pub frame_count: u64,
+    /// The world the viewer's state is for ([`x3d_runtime::browser_load::WorldState::generation`]).
+    world_gen: u64,
+    /// The browser description that the status line shows.
+    status_description: String,
+    /// Anchors clicked and not yet loading: (Anchor, url, parameter).
+    pending_anchors: Vec<(NodeId, Vec<String>, Vec<String>)>,
+    /// The active viewpoint and viewer of the world that was replaced, until the first events of the new one.
+    held_pose: Option<HeldPose>,
+    /// A Script called Browser.dispose (): the browser stops (EmbeddedViewer unloads the world).
+    pub disposed: bool,
+    /// A Script called Browser.resize (width, height): applied here; a host that owns the canvas size takes it
+    /// (`EmbeddedViewer::take_resize_request`).
+    pub resize_request: Option<(u32, u32)>,
     /// The layer whose state `layer`, `scan_cam` and `scan_display` hold: the active layer
     /// (navigation, viewpoint lists), except while a pass visits the layers one by one.
     current: LayerKey,
@@ -226,9 +258,12 @@ impl Viewer3d {
         let rel = file.strip_prefix(root).unwrap_or(&file).to_string_lossy().replace('\\', "/");
         let url = format!("{ORACLE_PREFIX}{}", encode_path(&rel));
         let data = std::fs::read(&file).map_err(|e| format!("{}: {e}", file.display()))?;
-        let scene = x3d_parse::parse_bytes(&data, &url).map_err(|e| format!("{e:?}"))?;
         let fetcher = Box::new(LocalFetcher { root: root.to_path_buf(), prefix: ORACLE_PREFIX.to_string() });
+        // glTF buffers and images of a top-level world come through the runtime fetcher, as in x3d-render's load.rs.
+        let scene = x3d_runtime::parse_bytes_with_fetcher(&*fetcher, &data, &url).map_err(|e| format!("{e:?}"))?;
         let mut rt = Runtime::new(scene, fetcher);
+        // The oracle page (oracle/x_ite-pin/src/anim.html) is the document the browser lives in.
+        rt.page_url = format!("{ORACLE_PREFIX}x_ite-pin/src/anim.html");
         rt.script_host = Some(Box::new(x3d_script::QuickJsHost::new()));
         x3d_render::shader_gpu::install(&mut rt);
         rt.live = true;
@@ -259,6 +294,7 @@ impl Viewer3d {
             nav: Viewer::None,
             nav_info_node: DEFAULT,
             nav_viewer: String::new(),
+            viewer_field: String::new(),
             pointer: Pointer::new(),
             width,
             height,
@@ -273,7 +309,10 @@ impl Viewer3d {
             advance_only_time: false,
             pinned_frame_rate: None,
             gravity_speed: 0.0,
+            active_collisions: vec![],
             geom_cache: HashMap::new(),
+            pointing_gpu: None,
+            depth_gpu: None,
             pick_shapes: Default::default(),
             render_cache: Default::default(),
             scan_cam: Scan::default(),
@@ -286,6 +325,12 @@ impl Viewer3d {
             status: String::new(),
             anchors: vec![],
             frame_count: 0,
+            world_gen: 0,
+            pending_anchors: vec![],
+            status_description: String::new(),
+            held_pose: None,
+            disposed: false,
+            resize_request: None,
             current: None,
             others: vec![],
             drawn: vec![None],
@@ -296,6 +341,60 @@ impl Viewer3d {
         v.layer.viewport = (width as f64, height as f64);
         v.bind_world();
         v
+    }
+
+    /// X3DBrowser.setExecutionContext: `new X3DWorld (scene)` has layers of its own and `bindBindables ()` binds the first
+    /// viewpoint, navigation info, background and fog of the new world. Everything the viewer remembers of the old world
+    /// (stacks, saved viewpoints, sensors, hits, caches keyed by node) goes.
+    fn hold_pose(&mut self) -> HeldPose {
+        match &self.held_pose {
+            Some(h) => HeldPose { pose: h.pose, viewpoint: h.viewpoint.clone(), viewer: h.viewer.clone() },
+            None => HeldPose { pose: self.user_pose(), viewpoint: self.bound_viewpoint_name(), viewer: self.viewer_field().to_string() },
+        }
+    }
+
+    fn reset_world(&mut self, before: Option<HeldPose>) {
+        self.world_gen = self.rt.world_state.generation;
+
+        // `browser .getActiveViewpoint ()` and the viewer still name the old world's until the events of the new bindables run.
+        self.held_pose = Some(before.unwrap_or_else(|| self.hold_pose()));
+        self.nav.disconnect(self.date_now);
+        self.nav = Viewer::None;
+        self.nav_info_node = DEFAULT;
+        self.nav_viewer = String::new();
+        self.viewer_field = String::new();
+        self.layer = Layer::new();
+        self.layer.viewport = (self.width as f64, self.height as f64);
+        self.others.clear();
+        self.current = None;
+        self.drawn = vec![None];
+        self.active = Some(None);
+        self.pointing_layer = None;
+        self.pointer = Pointer::new();
+        self.geom_cache.clear();
+        self.render_cache = Default::default();
+        self.pick_shapes = Default::default();
+        self.scan_cam = Scan::default();
+        self.scan_display = Scan::default();
+        self.lod_pass = Default::default();
+        self.generated_none.clear();
+        self.prox.clear();
+        self.vis.clear();
+        self.active_collisions.clear();
+        self.gravity_speed = 0.0;
+        self.verify_motion = None;
+        self.bind_world_events(false);
+    }
+
+    fn bound_viewpoint_name(&self) -> String {
+        let bound = self.layer.viewpoint();
+
+        if is_default(bound) { "<default>".to_string() } else { self.rt.scene.node(bound).name.clone() }
+    }
+
+    /// The name of the viewpoint `browser .getActiveViewpoint ()` names (`<default>` for the default one; see [`HeldPose`]).
+    pub fn active_viewpoint_name(&self) -> String {
+        self.held_pose.as_ref().map_or_else(|| self.bound_viewpoint_name(), |h| h.viewpoint.clone())
     }
 
     fn viewport(&self) -> [f64; 4] {
@@ -473,41 +572,44 @@ impl Viewer3d {
         String::new()
     }
 
-    /// The scene bounding box in world space (X3DLayerNode.getBBox), from shape bounding boxes.
-    fn scene_bbox(&mut self) -> Option<BBox> {
-        let s = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
-        let mut min = Vector3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
-        let mut max = Vector3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY);
-        let mut any = false;
+    /// The current layer's bounding box in its space (X3DLayerNode.getBBox: the grouping nodes' boxes nested as X_ITE builds
+    /// them), None when it is empty.
+    fn scene_bbox(&mut self) -> Option<Box3> {
+        let matrix = Builder::new(&self.rt).with_cache_query(&mut self.render_cache).layer_bbox(self.current)?;
 
-        for sh in &s.shapes {
-            if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, sh) {
-                let b = bbox_transform(&BBox { min: g.min, max: g.max }, &sh.model_view);
-                min.min(&b.min);
-                max.max(&b.max);
-                any = true;
-            }
-        }
-
-        any.then_some(BBox { min, max })
+        Some(Box3 { matrix })
     }
 
     /// X3DWorld.bindBindables: layer 0 and every layer of the LayerSet bind their first bindables.
     fn bind_world(&mut self) {
+        self.bind_world_events(true);
+    }
+
+    /// X3DWorld.bindBindables; `process` runs the events it queued at once (the first world) or leaves them for the
+    /// next events of the browser (a world that replaced another: `replaceWorld` runs in a continuation).
+    fn bind_world_events(&mut self, process: bool) {
         self.update_layers();
         let all = layers::all_layers(&x3d_render::sg::Sg::new(&self.rt));
 
+        // X3DWorld.bindBindables: `decodeURIComponent (new URL (worldURL) .hash .substring (1))` names the first viewpoint.
+        let fragment = self.rt.scene.world_url_of(self.rt.scene.world).split_once('#').map(|(_, f)| percent_decode(f));
+        let fragment = fragment.filter(|f| !f.is_empty());
+
         for key in all {
             self.swap_to(key);
-            self.scan_cam = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
+            self.scan_cam = scan_screens(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true, &self.screen_matrices());
             let bbox = self.scene_bbox();
             let scan_cam = std::mem::take(&mut self.scan_cam);
-            self.layer.bind_bindables(&mut self.rt, &scan_cam, None, &move || bbox);
+            self.layer.bind_bindables(&mut self.rt, &scan_cam, fragment.as_deref(), &move || bbox.clone());
             self.scan_cam = scan_cam;
         }
 
         self.swap_to(self.home_layer());
-        self.rt.process_events();
+
+        if process {
+            self.rt.process_events();
+        }
+
         self.set_active_navigation_info(true);
         self.refresh_display_scan();
     }
@@ -522,6 +624,15 @@ impl Viewer3d {
 
     pub fn viewer_kind(&self) -> &'static str {
         self.nav.kind()
+    }
+
+    /// `browser .getCurrentViewer ()`: the browser's `viewer` field.
+    pub fn viewer_field(&self) -> &str {
+        if let Some(h) = &self.held_pose {
+            return &h.viewer;
+        }
+
+        if self.viewer_field.is_empty() { self.nav.kind() } else { &self.viewer_field }
     }
 
     /// X3DNavigationContext.set_activeNavigationInfo__ / set_viewer__.
@@ -540,6 +651,7 @@ impl Viewer3d {
 
     /// Switch the viewer (the context menu's viewer choice).
     pub fn set_viewer(&mut self, kind: &str) {
+        self.viewer_field = kind.to_string();
         let base = self.base();
         let nav = self.nav_info();
         let vp_node = self.layer.viewpoint();
@@ -601,11 +713,23 @@ impl Viewer3d {
     fn phase(&mut self, name: &str) {
         let now = self.time;
         let rate = self.pinned_frame_rate.unwrap_or(self.frame_rate);
+
+        // The Anchors that were clicked since the last frame request their urls when their TouchSensors' events run.
+        if name == "prepareEvents" {
+            for (anchor, urls, parameters) in std::mem::take(&mut self.pending_anchors) {
+                self.rt.anchor_load(anchor, urls, parameters);
+            }
+        }
+
         self.for_each_rt(&mut |rt| {
             rt.now = now;
             rt.frame_rate = rate;
             rt.process_phase(name);
         });
+
+        if name == "prepareEvents" {
+            self.held_pose = None;
+        }
 
         // X3DBrowser.bindViewpoint sets `set_bind` while the Script runs, so the viewpoint is
         // bound in the same frame (at its time), not in the next one.
@@ -615,15 +739,80 @@ impl Viewer3d {
     /// Scripts' requests of the browser: X3DBrowser.nextViewpoint, previousViewpoint,
     /// firstViewpoint, lastViewpoint.
     fn browser_requests(&mut self) {
+        self.sync_browser_active();
+
         for r in std::mem::take(&mut self.rt.browser_requests) {
             match r.as_str() {
                 "nextViewpoint" => self.next_viewpoint(1),
                 "previousViewpoint" => self.next_viewpoint(-1),
                 "firstViewpoint" => self.first_viewpoint(),
                 "lastViewpoint" => self.last_viewpoint(),
+                // Browser.changeViewpoint (name), and loadURL (url) with a fragment of the world's own URL.
+                r if r.starts_with("changeViewpoint:") => self.change_viewpoint(&r["changeViewpoint:".len()..]),
+                // BrowserOptions.set_StraightenHorizon__: TRUE straightens the active layer's view; the ExamineViewer's interest
+                // disconnects it on every set.
+                r if r.starts_with("straightenHorizon:") => {
+                    if r.ends_with("true") {
+                        let home = self.current;
+                        let date_now = self.date_now;
+
+                        self.swap_to(self.home_layer());
+
+                        let vp_node = self.layer.viewpoint();
+                        let base = self.base();
+
+                        self.layer.straighten_view(&mut self.rt, vp_node, &base, date_now);
+                        self.swap_to(home);
+                    }
+
+                    if let Viewer::Examine(e) = &mut self.nav {
+                        e.disconnect(self.date_now);
+                    }
+                }
+                // Browser.viewAll (layerNode, transitionTime): the layer's node id (-1: the active layer) and the time.
+                r if r.starts_with("viewAll:") => {
+                    let (layer, time) = r["viewAll:".len()..].split_once(',').unwrap_or(("-1", "1"));
+                    let layer = layer.parse::<NodeId>().ok().filter(|&n| self.rt.scene.is_live(n));
+                    self.browser_view_all(layer, time.parse().unwrap_or(f64::NAN));
+                }
+                // Browser.bindViewpoint (layerNode, viewpointNode): the Script checked both types.
+                r if r.starts_with("bindViewpoint:") => {
+                    if let Ok(n) = r["bindViewpoint:".len()..].parse::<NodeId>() {
+                        if self.rt.scene.is_live(n) {
+                            self.bind_viewpoint(n);
+                        }
+                    }
+                }
+                // Browser.resize (width, height) and Browser.dispose ().
+                r if r.starts_with("resize:") => {
+                    let mut it = r["resize:".len()..].split(',').map(|v| v.parse::<f64>().unwrap_or(f64::NAN));
+                    let (w, h) = (it.next().unwrap_or(f64::NAN), it.next().unwrap_or(f64::NAN));
+
+                    if w.is_finite() && h.is_finite() {
+                        let size = (w.max(1.0) as u32, h.max(1.0) as u32);
+
+                        self.resize(size.0, size.1);
+                        self.resize_request = Some(size);
+                    }
+                }
+                "dispose" => self.disposed = true,
+                // loadURL with a foreign target (window.open) or a page URL: another window or document, outside the native scope.
                 _ => {}
             }
         }
+    }
+
+    /// X3DBrowserContext.getActiveLayer / getActiveNavigationInfo / getActiveViewpoint / getCurrentViewer for Scripts: the
+    /// active layer and its bound nodes (`None`: layer 0, or the layer's default node).
+    fn sync_browser_active(&mut self) {
+        let real = |n: NodeId| (!is_default(n)).then_some(n);
+
+        self.rt.browser_active = x3d_runtime::BrowserActive {
+            layer: self.current,
+            navigation_info: real(self.layer.navigation_info()),
+            viewpoint: real(self.layer.viewpoint()),
+            viewer: self.viewer_field().to_string(),
+        };
     }
 
     /// Nodes the runtime released since the last call: nothing the viewer remembers of them may
@@ -680,6 +869,10 @@ impl Viewer3d {
     }
 
     pub fn step(&mut self, now: f64) {
+        if self.disposed {
+            return;
+        }
+
         if let Some(last) = self.last_time {
             let dt = now - last;
 
@@ -690,6 +883,8 @@ impl Viewer3d {
 
         self.forget_released();
 
+        let prev_time = self.last_time.unwrap_or(now);
+
         self.last_time = Some(now);
         self.time = now;
         self.date_now = self.date_now.max(now);
@@ -697,7 +892,13 @@ impl Viewer3d {
         self.frame_count += 1;
 
         // Timeouts that fired between frames (setTimeout).
-        self.for_each_rt(&mut |rt| rt.fire_timeouts(now));
+        let date_now = self.date_now;
+
+        self.for_each_rt(&mut |rt| {
+            rt.timer_prev_time = prev_time;
+            rt.timer_date = date_now;
+            rt.fire_timeouts(now);
+        });
 
         // Scripts' requests of the browser made between frames (Browser.nextViewpoint ...).
         self.browser_requests();
@@ -759,7 +960,18 @@ impl Viewer3d {
         self.display_scan();
         self.display_pass();
         self.phase("displayFinishEvents");
+
+        // finishEvents runs the continuation of a pending replaceWorld, and the end of the frame releases the old world's
+        // nodes: what `browser .getActiveViewpoint ()` names is read before.
+        let replacing = !self.rt.world_state.waiters.is_empty();
+        let before = replacing.then(|| self.hold_pose());
+
         self.phase("finishEvents");
+
+        // X3DBrowser.replaceWorld ran in the continuation of this frame: a new X3DWorld binds its bindables.
+        if self.rt.world_state.generation != self.world_gen {
+            self.reset_world(before);
+        }
 
         if let Some((x, y)) = self.verify_motion.take() {
             self.pointer_motion(x, y);
@@ -769,8 +981,9 @@ impl Viewer3d {
             self.status = d;
         }
 
-        if !self.rt.description.is_empty() {
+        if !self.rt.description.is_empty() && self.rt.description != self.status_description {
             self.status = self.rt.description.clone();
+            self.status_description = self.status.clone();
         }
     }
 
@@ -802,7 +1015,7 @@ impl Viewer3d {
         // LayerSet.traverse (CAMERA): each layer drawn, in order.
         for key in self.drawn.clone() {
             self.swap_to(key);
-            self.scan_cam = scan(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true);
+            self.scan_cam = scan_screens(&self.rt, &self.layer_walk(), &Matrix4::IDENTITY, true, &self.screen_matrices());
 
             let bbox = if self.scan_cam.viewpoints.iter().any(|(n, _)| {
                 let b = VpBase::read(&self.rt, n.node);
@@ -814,7 +1027,7 @@ impl Viewer3d {
             };
 
             let scan_cam = std::mem::take(&mut self.scan_cam);
-            self.layer.camera(&mut self.rt, &scan_cam, &move || bbox);
+            self.layer.camera(&mut self.rt, &scan_cam, &move || bbox.clone());
             self.scan_cam = scan_cam;
         }
 
@@ -895,6 +1108,11 @@ impl Viewer3d {
             return None;
         }
 
+        self.collision_world_unconditional()
+    }
+
+    /// The shapes the COLLISION traversal collected, whatever the viewer and the transitions say.
+    fn collision_world_unconditional(&mut self) -> Option<World> {
         let mut shapes = vec![];
 
         for s in &self.scan_display.shapes {
@@ -903,7 +1121,14 @@ impl Viewer3d {
             }
 
             if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
-                shapes.push(CShape { geometry: g, model_view: s.model_view, clip_planes: s.clip_planes.clone() });
+                shapes.push(CShape { geometry: g, model_view: s.model_view, base_model_view: s.shape_model_view, instance: s.instance, clip_planes: s.clip_planes.clone(), collisions: s.collisions.clone() });
+            }
+        }
+
+        // Collision.proxy: the proxy nodes' shapes are collision objects too.
+        for s in &self.scan_display.proxy_shapes {
+            if let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) {
+                shapes.push(CShape { geometry: g, model_view: s.model_view, base_model_view: s.shape_model_view, instance: s.instance, clip_planes: s.clip_planes.clone(), collisions: s.collisions.clone() });
             }
         }
 
@@ -913,10 +1138,79 @@ impl Viewer3d {
             _ => crate::collision::Fill::Triangles,
         };
 
-        Some(World { shapes, fill })
+        Some(World { shapes, fill, gpu: self.depth_gpu.clone() })
+    }
+
+    /// X3DRenderObject.collide: the closest object along each of the six axes within the collision radius
+    /// (times sqrt 2) makes the Collision nodes around it active (isActive, collideTime). It runs for every
+    /// viewer while an enabled Collision exists.
+    fn collide(&mut self) {
+        if self.scan_display.collisions == 0 {
+            return;
+        }
+
+        let Some(world) = self.collision_world() else { return };
+        let base = self.base();
+        let nav = self.nav_info();
+        let vp_node = self.layer.viewpoint();
+        let vp = self.layer.vp(vp_node).clone();
+        let mut active: Vec<x3d_fields::NodeId> = vec![];
+
+        if !world.shapes.is_empty() {
+            let radius = nav.collision_radius() * std::f64::consts::SQRT_2;
+            let mut closest_shapes: Vec<usize> = vec![];
+
+            for axis in [Vector3::new(1.0, 0.0, 0.0), Vector3::new(0.0, 1.0, 0.0), Vector3::new(0.0, 0.0, 1.0), Vector3::new(-1.0, 0.0, 0.0), Vector3::new(0.0, -1.0, 0.0), Vector3::new(0.0, 0.0, -1.0)] {
+                let closest = world.closest_object(&vp, &base, &nav, &axis);
+
+                if let Some(id) = closest.shape.filter(|_| closest.distance <= radius) {
+                    if !closest_shapes.contains(&id) {
+                        closest_shapes.push(id);
+                    }
+                }
+            }
+
+            for id in closest_shapes {
+                active.extend(world.shapes[id].collisions.iter().copied());
+            }
+        }
+
+        // Set isActive to FALSE for affected nodes, then TRUE.
+        for c in std::mem::take(&mut self.active_collisions) {
+            if !active.contains(&c) {
+                self.set_collision_active(c, false);
+            }
+        }
+
+        for c in &active {
+            self.set_collision_active(*c, true);
+        }
+
+        self.active_collisions = active;
+    }
+
+    /// Collision.set_active__.
+    fn set_collision_active(&mut self, node: x3d_fields::NodeId, value: bool) {
+        if self.rt.get_bool(node, "isActive") == value {
+            return;
+        }
+
+        if let Some(k) = self.rt.pre(node, "isActive") {
+            self.rt.set_value(k, FieldValue::SFBool(value));
+        }
+
+        if value {
+            let now = self.rt.now;
+
+            if let Some(k) = self.rt.pre(node, "collideTime") {
+                self.rt.set_value(k, FieldValue::SFTime(now));
+            }
+        }
     }
 
     fn collision_pass(&mut self) {
+        self.collide();
+
         if self.nav.kind() != "WALK" {
             return;
         }
@@ -1011,7 +1305,7 @@ impl Viewer3d {
             self.swap_to(key);
             let vp_node = self.layer.viewpoint();
             let view = self.layer.vp(vp_node).view;
-            self.scan_display = scan(&self.rt, &self.layer_walk(), &view, false);
+            self.scan_display = scan_screens(&self.rt, &self.layer_walk(), &view, false, &self.screen_matrices());
         }
 
         self.clear_undrawn_scans();
@@ -1153,7 +1447,7 @@ impl Viewer3d {
 
             // X3DLayerNode constructor: the layer's group is a PickableGroup when its scene has
             // the Picking component.
-            let ctx = key.map_or(x3d_scene::ROOT, |n| self.rt.scene.node(n).ctx);
+            let ctx = key.map_or(self.rt.scene.world, |n| self.rt.scene.node(n).ctx);
             let pickable_layer = self.rt.scene.has_component_in(ctx, "Picking");
 
             self.swap_to(key);
@@ -1381,7 +1675,7 @@ impl Viewer3d {
             .iter()
             .copied()
             .filter(|n| !is_default(*n) && !self.layer.descriptions(*n).is_empty())
-            .filter(|n| inline_viewpoints || self.rt.scene.scene_root(self.rt.scene.node(*n).ctx) == x3d_scene::ROOT)
+            .filter(|n| inline_viewpoints || self.rt.scene.scene_root(self.rt.scene.node(*n).ctx) == self.rt.scene.world)
             .collect()
     }
 
@@ -1391,6 +1685,20 @@ impl Viewer3d {
         match self.layer.descriptions(n) {
             [] => VpBase::read(&self.rt, n).description,
             d => d.join(" » "),
+        }
+    }
+
+    /// X3DBrowser.changeViewpoint: the first viewpoint of the active layer with the name gets `set_bind`
+    /// (with the VRML transition), the field event is processed by the next frame.
+    pub fn change_viewpoint(&mut self, name: &str) {
+        let found = self.layer.viewpoint_list().iter().copied().find(|n| !is_default(*n) && self.rt.scene.node(*n).name == name);
+
+        if let Some(n) = found {
+            self.layer.vp(n).vrml_transition = true;
+
+            if let Some(k) = self.rt.pre(n, "set_bind") {
+                self.rt.set_value(k, FieldValue::SFBool(true));
+            }
         }
     }
 
@@ -1430,6 +1738,25 @@ impl Viewer3d {
         self.bind_viewpoint(list[target as usize]);
     }
 
+    /// X3DBrowser.viewAll → X3DLayerNode.viewAll ({ transitionTime, straighten: StraightenHorizon }): the layer's viewpoint
+    /// looks at the layer's bounding box (lookAtBBox, factor 1). `layer` None: the active layer.
+    pub fn browser_view_all(&mut self, layer: Option<NodeId>, transition_time: f64) {
+        let home = self.current;
+
+        self.swap_to(layer.map_or(self.home_layer(), Some));
+
+        if let Some(bbox) = self.scene_bbox() {
+            let vp_node = self.layer.viewpoint();
+            let base = self.base();
+            let straighten = self.rt.browser_options.straighten_horizon();
+            let date_now = self.date_now;
+
+            self.layer.look_at_bbox(&mut self.rt, vp_node, &base, &bbox, 1.0, transition_time, straighten, date_now);
+        }
+
+        self.swap_to(home);
+    }
+
     pub fn first_viewpoint(&mut self) {
         if let Some(n) = self.user_viewpoints().first().copied() {
             self.bind_viewpoint(n);
@@ -1444,6 +1771,10 @@ impl Viewer3d {
 
     /// The bound viewpoint's user position and orientation (what the navigation oracle compares).
     pub fn user_pose(&mut self) -> (Vector3, Rotation4, Vector3) {
+        if let Some(h) = &self.held_pose {
+            return h.pose;
+        }
+
         let base = self.base();
         let vp = self.layer.vp(self.layer.viewpoint());
         (vp.user_position(&base), vp.user_orientation(&base), vp.user_center_of_rotation(&base))
@@ -1546,7 +1877,7 @@ impl Viewer3d {
             let camera_space = self.layer.vp(vp_node).camera_space;
             let mut bbox = Box3::from_extents(&min, &max);
             bbox.mult_right(&mv).mult_right(&camera_space);
-            self.layer.look_at_bbox(&mut self.rt, vp_node, &base, &bbox, r.straighten, date_now);
+            self.layer.look_at_bbox(&mut self.rt, vp_node, &base, &bbox, 0.8, 1.0, r.straighten, date_now);
         }
     }
 
@@ -1567,6 +1898,24 @@ impl Viewer3d {
     /// order, into one pointing buffer: each layer clears the depth, so the last layer with a
     /// shape under the pointer wins. A layer takes part with `pointerEvents` TRUE and the pointer
     /// in its viewport, or while it holds the pointer (pointingLayer: only that one).
+    /// `layerNode .getClosestObject (direction)` for the oracle's `collisionProbes`: the collision
+    /// shapes of the last traversal drawn into the depth buffer toward `direction`.
+    pub fn probe_closest(&mut self, direction: Vector3) -> crate::collision::Closest {
+        let base = self.base();
+        let nav = self.nav_info();
+        let vp = self.layer.vp(self.layer.viewpoint()).clone();
+
+        match self.collision_world_unconditional() {
+            Some(w) => w.closest_object(&vp, &base, &nav, &direction),
+            None => crate::collision::Closest { shape: None, distance: 0.0, normal: Vector3::ZERO, hit: false },
+        }
+    }
+
+    /// `browser .touch (x, y)` for the oracle's `pickProbes`: the hit, without any sensor event.
+    pub fn probe_pick(&mut self, x: f64, y: f64) -> Hit {
+        self.do_pick(x, y)
+    }
+
     fn do_pick(&mut self, x: f64, y: f64) -> Hit {
         let home = self.current;
         let mut hit: Option<Hit> = None;
@@ -1588,7 +1937,7 @@ impl Viewer3d {
             let shapes = std::mem::take(&mut self.scan_display.shapes);
             let mut cache = std::mem::take(&mut self.geom_cache);
             let rt = &self.rt;
-            let mut h = pick(&shapes, &mut |s| geom_of(rt, &mut cache, s), &cam, x, y, self.pointing_layer.is_some());
+            let mut h = pick(&shapes, &mut |s| geom_of(rt, &mut cache, s), &cam, x, y, self.pointing_layer.is_some(), self.pointing_gpu.as_mut());
             self.geom_cache = cache;
             self.scan_display.shapes = shapes;
             h.layer = key;
@@ -1616,11 +1965,23 @@ impl Viewer3d {
         let out = std::mem::take(&mut self.pointer.out);
 
         if let Some(d) = out.description {
+            // X3DPointingDeviceSensorNode.set_over__: `getBrowser () .setDescription (this ._description)`.
+            self.rt.description = d.clone();
+            self.status_description = d.clone();
             self.status = d;
         }
 
         for a in out.anchors {
             self.status = format!("Anchor: {} -> {}", if a.description.is_empty() { "(no description)" } else { &a.description }, a.urls.first().cloned().unwrap_or_default());
+
+            // Anchor.requestImmediateLoad: FileLoader.createX3DFromURL (url, parameter, replaceWorld, changeViewpoint,
+            // window.open): a url that only names a viewpoint of this world changes the viewpoint, a scene replaces the
+            // world once it is loaded (`Runtime::anchor_load`), the urls are tried in turn. A foreign target (another
+            // window, a page) is only reported: the viewer opens nothing.
+            // The sensor's events are processed with the next events of the browser, which is where the interest of the
+            // Anchor's TouchSensor (`set_active__`) runs (see [`Viewer3d::phase`]).
+            self.pending_anchors.push((a.node.node, a.urls.clone(), a.parameters.clone()));
+
             self.anchors.push(a);
         }
     }
@@ -1647,6 +2008,9 @@ impl Viewer3d {
         }
 
         self.rt.key_event(down, &e);
+        // The Scripts ran in that processEvents: their requests of the browser (Browser.viewAll ...) run now, at the time of
+        // the event, as X_ITE calls the browser from inside the Script.
+        self.browser_requests();
     }
 
     fn mouse_down(&mut self, button: u8, x: f64, y: f64) {
@@ -1668,6 +2032,7 @@ impl Viewer3d {
             }
 
             self.collect_pointer_output();
+            self.browser_requests();
 
             if pressed {
                 // PointingDevice.mousedown → onverifymotion: motion after the next frame.
@@ -1686,6 +2051,7 @@ impl Viewer3d {
             self.pointing_layer = None;
             self.pointer.button_release(&mut self.rt, &cam, now);
             self.collect_pointer_output();
+            self.browser_requests();
             // PointingDevice.onverifymotion: motion after the next frame.
             self.verify_motion = Some((x, y));
         }
@@ -1708,11 +2074,17 @@ impl Viewer3d {
         let now = if self.advance_only_time { self.date_now } else { self.time };
         self.pointer.motion(&mut self.rt, hit, &cam, now);
         self.collect_pointer_output();
+        self.browser_requests();
     }
 
     // --- rendering ---------------------------------------------------------------------------
 
     /// The frame for the renderer: the bound viewpoint's camera and bindables.
+    /// ScreenGroup.matrix of each ScreenGroup's last DISPLAY traversal (the last `build_frame`).
+    fn screen_matrices(&self) -> std::collections::HashMap<NodeId, Matrix4> {
+        Builder::screen_matrices_of(&self.render_cache, self.rt.uid)
+    }
+
     pub fn build_frame(&mut self) -> Frame {
         let mut cameras = vec![(self.current, self.camera_override(&self.layer, &self.scan_cam, self.current))];
 
@@ -1720,10 +2092,13 @@ impl Viewer3d {
             cameras.push((s.key, self.camera_override(&s.layer, &s.scan_cam, s.key)));
         }
 
+        let (width, height) = self.framebuffer_size();
         let mut b = Builder::new(&self.rt).with_cache(&mut self.render_cache);
         b.camera = cameras.iter().find(|(k, _)| k.is_none()).map(|(_, c)| c.clone());
         b.layer_cameras = cameras.into_iter().filter(|(k, _)| k.is_some()).collect();
-        b.build(self.width, self.height)
+        // X3DRenderingContext.reshape: the viewport, projection and ScreenGroup / ScreenText scale are in drawing-buffer pixels
+        // (the canvas size × ContentScale).
+        b.build(width, height)
     }
 
     /// The bound viewpoint's camera and the bindables of a layer for the renderer.
@@ -1790,4 +2165,23 @@ fn box_in_frustum(size: &Vector3, center: &Vector3, model_view: &Matrix4, proj: 
     }
 
     !outside.iter().any(|o| *o)
+}
+
+
+/// decodeURIComponent: %XX sequences as UTF-8 bytes (an invalid sequence is kept as it is).
+fn percent_decode(s: &str) -> String {
+    let b = s.as_bytes();
+    let (mut out, mut i) = (Vec::with_capacity(b.len()), 0);
+
+    while i < b.len() {
+        if b[i] == b'%' && i + 2 < b.len() && b.get(i + 1).zip(b.get(i + 2)).is_some_and(|(x, y)| x.is_ascii_hexdigit() && y.is_ascii_hexdigit()) {
+            out.push(u8::from_str_radix(&s[i + 1..i + 3], 16).unwrap());
+            i += 3;
+        } else {
+            out.push(b[i]);
+            i += 1;
+        }
+    }
+
+    String::from_utf8(out).unwrap_or_else(|_| s.to_string())
 }

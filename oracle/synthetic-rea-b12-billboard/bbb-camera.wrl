@@ -1,0 +1,25 @@
+#X3D V4.0 utf8
+PROFILE Full
+DEF V1 Viewpoint { position 2 1.5 14 orientation 0 1 0 0.12 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -2 1 0 children Billboard { bboxDisplay TRUE children [ Transform { translation 0.6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.6 0.8 0.2 } } } ] } }
+Transform { translation 2 1 0 children Billboard { bboxDisplay TRUE axisOfRotation 0 0 0 children [ Transform { translation 0.6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Box { size 1.6 0.8 0.2 } } } ] } }
+Transform { translation 0 -2 0 rotation 1 0 0 0.3 children Billboard { bboxDisplay TRUE axisOfRotation 0 0 1 children [ Transform { translation 0.6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.4 0.9 0.4 } } geometry Box { size 1.6 0.8 0.2 } } } ] } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode v1 USE V1
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') { v1 .position = new SFVec3f (-6, 2, 11); v1 .orientation = new SFRotation (0, 1, 0, -0.5); }
+   if (k == 'b') { v1 .position = new SFVec3f (5, -3, 9); v1 .orientation = new SFRotation (1, 1, 0, 0.45); }
+   if (k == 'c') { v1 .position = new SFVec3f (0, 8, 6); v1 .orientation = new SFRotation (1, 0, 0, -0.9); }
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

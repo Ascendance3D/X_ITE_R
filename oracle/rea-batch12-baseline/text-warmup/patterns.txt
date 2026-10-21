@@ -1,0 +1,21 @@
+# REA batch 12: X_ITE 16.5.0 warm-up patterns of oracle/synthetic-rea-b11-text/warm-stamp*.wrl
+# (python3 -I -B oracle/tools/rea_b11_text_warm.py WORLD 6, idle machine, 2026-10-21; the browser clock is not touched).
+# Each line: run count, loadFrames, then frame:field of every origin / textBounds / lineBounds event after f0.
+# Batch 11 recorded 30 more runs (b11-2-text report): the same structure, other frames.
+#
+# Stable in every run (12 here, 42 with Batch 11's): the first build at f1 sends lineBounds [ 0 0, 0 0 ], origin 0 0 0,
+# textBounds 0 0 (no font yet), for the default FontStyle and for FontStyle { family "SANS" }. The font arrives in a later frame;
+# which frame, and whether the Text builds again without a font (origin and textBounds only) or twice with it, follows Chrome's
+# I/O and differs per run.
+warm-stamp.wrl (default FontStyle), 6 runs
+5 loadFrames=3: f1:lineBounds f1:origin f1:textBounds f2:lineBounds f2:textBounds f2:origin f3:lineBounds f3:textBounds f3:origin
+1 loadFrames=4: f1:lineBounds f1:origin f1:textBounds f3:origin f3:textBounds f4:lineBounds f4:textBounds f4:origin
+warm-stamp-fs.wrl (FontStyle { family "SANS" }), 6 runs
+3 loadFrames=3: f1:lineBounds f1:origin f1:textBounds f2:lineBounds f2:textBounds f2:origin f4:lineBounds f4:textBounds f4:origin
+3 loadFrames=3: f1:lineBounds f1:origin f1:textBounds f3:lineBounds f3:textBounds f3:origin f5:lineBounds f5:textBounds f5:origin
+# Values once the font is there: default font lineBounds [ 1.12207 1.052734, 0.453125 1 ], textBounds 1.12207 1.769531,
+# origin 0 0.7597656 0; SANS lineBounds [ 1.06 0.965, 0.445 1 ], textBounds 1.06 1.788, origin 0 0.776 0.
+#
+# Rust after Batch 12 (x3d-drive, deterministic): both worlds f1 empty triple, f2 origin + textBounds without a font (the world
+# goes live), f5 the font's values. Before Batch 12 Rust built with the font in f1 (default FontStyle: its font was ready
+# before the first frame; FontStyle SANS: loaded with the world), which no X_ITE run does.

@@ -1,0 +1,18 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "lu world B inline"
+DEF VPI Viewpoint { description "vpI" position 0 0 6 }
+DEF II Inline { url [ "lu-inl.wrl" ] }
+DEF IS Script {
+  inputOutput SFString hist ""
+  inputOnly SFTime cycle
+  initializeOnly SFNode inl USE II
+  url "ecmascript:
+function H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }
+function initialize () { hist = 'init inl=' + inl .getNodeName () + ' loadstate=' + inl .loadState; }
+function cycle () { if (hist .indexOf ('step') < 0) hist = hist + ' | step loadstate=' + inl .loadState + ' roots=' + Browser .currentScene .rootNodes .length; }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO IS.cycle

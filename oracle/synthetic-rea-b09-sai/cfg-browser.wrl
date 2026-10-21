@@ -1,0 +1,85 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "cfg browser"
+DEF OUT Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function U (s) { return String (s) .replace (/^.*?(assets\\/components\\/)/, '$1'); }
+function PI (p) { return p .name + '|' + p .title + '|' + U (p .providerURL) + '|' + p .components .length + '|' + Object .keys (p) .join (','); }
+function CI (c) { return c .name + ':' + c .level + '|' + c .title + '|' + U (c .providerURL) + '|' + c .external + '|' + (c .dependencies ? c .dependencies .join ('+') : c .dependencies) + '|' + Object .keys (c) .join (','); }
+function CL (a) { var r = []; for (var i = 0; i < a .length; ++ i) r .push (a [i] .name + ':' + a [i] .level); return r .join (','); }
+function T (f) { try { return String (f ()); } catch (e) { return 'ERR:' + String (e && e .message) .replace (/http:\\/\\/[^\\/]+/g, 'H'); } }
+function AT (f) { try { return Promise .resolve (f ()) .then (function (v) { return String (v); }, function (e) { return 'REJ:' + String (e && e .message); }); } catch (e) { return 'THROW:' + String (e && e .message); } }
+function VL (s) { var t; try { t = s .toVRMLString (); } catch (e) { return 'PRINT ' + e .message; } return t .split ('\\n') .filter (function (l) { return /^(PROFILE|COMPONENT|UNIT|META|#)/ .test (l); }) .join ('|'); }
+
+var LABELS = ['sp.length', 'sp.names', 'sc.names', 'same', 'profile.CADInterchange', 'profile.CADInterchange.comp0', 'profile.Core', 'profile.Core.comp0', 'profile.Full', 'profile.Full.comp0', 'profile.Immersive', 'profile.Immersive.comp0', 'profile.Interactive', 'profile.Interactive.comp0', 'profile.Interchange', 'profile.Interchange.comp0', 'profile.MedicalInterchange', 'profile.MedicalInterchange.comp0', 'profile.MPEG4Interactive', 'profile.MPEG4Interactive.comp0', 'profile.alias', 'component.alias', 'profile.err.nope', 'profile.err.empty', 'profile.err.null', 'profile.err.undefined', 'profile.err.number', 'profile.err.case', 'supported.profile.err', 'supported.profile.ok', 'supported.component.err', 'supported.component.ok', 'supported.component.alias', 'sc.all', 'getComponent.levels', 'getComponent.names', 'getComponent.nolevel', 'getComponent.err', 'info.frozen', 'info.string', 'info.xml', 'array.api', 'array.mutate', 'add.supported', 'browser.keys', 'loadComponents', 'loadComponents.err', 'loadComponents.mixed'];
+var PROBES = [
+function () { return Browser .supportedProfiles .length + ':' + Browser .supportedComponents .length + ':' + Browser .supportedProfiles .constructor .typeName + ':' + Browser .supportedComponents .constructor .typeName; },
+function () { var r = []; for (var i = 0; i < Browser .supportedProfiles .length; ++ i) r .push (Browser .supportedProfiles [i] .name); return r .join (','); },
+function () { var r = []; for (var i = 0; i < Browser .supportedComponents .length; ++ i) r .push (Browser .supportedComponents [i] .name); return r .join (','); },
+function () { return (Browser .supportedProfiles === Browser .getSupportedProfiles ()) + ':' + (Browser .supportedComponents === Browser .getSupportedComponents ()) + ':' + (Browser .getProfile ('Core') === Browser .supportedProfiles .get ('Core')); },
+function () { var p = Browser .getProfile ('CADInterchange'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('CADInterchange'); return CI (p .components [0]); },
+function () { var p = Browser .getProfile ('Core'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('Core'); return CI (p .components [0]); },
+function () { var p = Browser .getProfile ('Full'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('Full'); return CI (p .components [0]); },
+function () { var p = Browser .getProfile ('Immersive'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('Immersive'); return CI (p .components [0]); },
+function () { var p = Browser .getProfile ('Interactive'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('Interactive'); return CI (p .components [0]); },
+function () { var p = Browser .getProfile ('Interchange'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('Interchange'); return CI (p .components [0]); },
+function () { var p = Browser .getProfile ('MedicalInterchange'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('MedicalInterchange'); return CI (p .components [0]); },
+function () { var p = Browser .getProfile ('MPEG4Interactive'); return PI (p) + '|' + CL (p .components); },
+function () { var p = Browser .getProfile ('MPEG4Interactive'); return CI (p .components [0]); },
+function () { return T (function () { return Browser .getProfile ('MPEG-4') .name + ':' + (Browser .getProfile ('MPEG-4') === Browser .getProfile ('MPEG4Interactive')) + ':' + Browser .supportedProfiles .has ('MPEG-4') + ':' + Browser .supportedProfiles .length; }); },
+function () { return ['H-Anim', 'TextureProjector', 'ProjectiveTextureMapping'] .map (function (n) { return T (function () { var c = Browser .getComponent (n, 9); return c .name + ':' + c .level + ':' + Browser .supportedComponents .has (n); }); }) .join (' '); },
+function () { return T (function () { return Browser .getProfile ('Nope'); }); },
+function () { return T (function () { return Browser .getProfile (''); }); },
+function () { return T (function () { return Browser .getProfile (null); }); },
+function () { return T (function () { return Browser .getProfile (); }); },
+function () { return T (function () { return Browser .getProfile (42); }); },
+function () { return T (function () { return Browser .getProfile ('full'); }); },
+function () { return T (function () { return Browser .getSupportedProfile ('Nope'); }); },
+function () { return T (function () { return Browser .getSupportedProfile ('Full') .name; }); },
+function () { return T (function () { return Browser .getSupportedComponent ('Nope'); }); },
+function () { return T (function () { return CI (Browser .getSupportedComponent ('Layout')); }); },
+function () { return T (function () { return Browser .getSupportedComponent ('H-Anim') .name + ':' + Browser .supportedComponents .has ('H-Anim') + ':' + Browser .supportedComponents .has ('Nope') + ':' + Browser .supportedComponents .get ('Nope'); }); },
+function () { var r = []; for (var i = 0; i < Browser .supportedComponents .length; ++ i) r .push (CI (Browser .supportedComponents [i])); return r .join (' ;; '); },
+function () { var r = []; [undefined, 0, 1, 2, 3, 4, 5, 6, 99, -1, -99, '2', 'x', 1.7, 2.9, NaN, null, true, [2], {}] .forEach (function (l) { r .push (T (function () { var c = Browser .getComponent ('Geometry3D', l); return c .name + ':' + c .level; })); }); return r .join (' '); },
+function () { var r = []; ['Core', 'Layout', 'H-Anim', 'HAnim', 'core', 'Nope', '', 'Annotation', 'WebXR', 'X_ITE'] .forEach (function (n) { r .push (n + '=' + T (function () { var c = Browser .getComponent (n, 2); return c .name + ':' + c .level; })); }); return r .join (' '); },
+function () { var r = []; ['Core', 'Layout', 'Interpolation', 'Followers'] .forEach (function (n) { r .push (n + '=' + T (function () { return CI (Browser .getComponent (n)); })); }); return r .join (' ;; '); },
+function () { return [T (function () { return Browser .getComponent ('Nope', 3); }), T (function () { return Browser .getComponent (); }), T (function () { return Browser .getComponent (null, 1); }), T (function () { return Browser .getComponent ('Nope', 'x'); })] .join (' | '); },
+function () { var c = Browser .getComponent ('Core', 1); var p = Browser .getProfile ('Core'); var r = []; r .push (Object .isFrozen (c), Object .isFrozen (p), Object .isFrozen (p .components)); c .name = 'x'; c .level = 9; p .name = 'y'; r .push (c .name, c .level, p .name); try { 'use strict'; delete c .name; } catch (e) { r .push ('del'); } return r .join (',') + ' ' + JSON .stringify (c) + ' ' + JSON .stringify (p) .substring (0, 90); },
+function () { var c = Browser .getComponent ('Core', 1); var p = Browser .getProfile ('Core'); return Object .prototype .toString .call (c) + ' ' + Object .prototype .toString .call (p) + ' ' + String (c) + ' ' + String (p) + ' ' + c .providerUrl + ' ' + p .providerUrl + ' ' + (c instanceof Object) + ' ' + typeof c .toVRMLString + ' ' + (typeof c .toVRMLString === 'function' ? c .toVRMLString () : '') + ' ' + (typeof p .toVRMLString === 'function' ? p .toVRMLString () : ''); },
+function () { var c = Browser .getComponent ('Core', 1); return typeof c .toXMLString + ' ' + (typeof c .toXMLString === 'function' ? c .toXMLString () : '') + ' ' + (typeof c .toJSONString === 'function' ? c .toJSONString () : ''); },
+function () { var a = Browser .supportedComponents; return [typeof a .add, typeof a .get, typeof a .has, typeof a .remove, typeof a .update, typeof a .forEach, typeof a .map, typeof a .filter, typeof a .find, a .length, a [0] .name, a [39] .name, a [40], a .get (3) , a .get ('Core') .name].join (','); },
+function () { var a = Browser .supportedComponents; var n = a .length; return T (function () { a .add ('Foo', { name: 'Foo', level: 1 }); return a .length + ':' + a .get ('Foo') .name; }) + ' ' + T (function () { a .remove ('Foo'); return a .length + ':' + (a .length === n); }); },
+function () { return T (function () { Browser .addSupportedComponent (Browser .getComponent ('Core', 1)); return 'added'; }) + ' ' + T (function () { Browser .removeSupportedComponent ('Nope'); return 'rm' + Browser .supportedComponents .length; }) + ' ' + T (function () { Browser .updateSupportedComponent (Browser .getComponent ('Core', 1)); return 'upd' + Browser .supportedComponents .length; }); },
+function () { return ['supportedProfiles', 'supportedComponents', 'getProfile', 'getComponent', 'getSupportedProfile', 'getSupportedProfiles', 'getSupportedComponent', 'getSupportedComponents', 'addSupportedProfile', 'updateSupportedProfile', 'removeSupportedProfile', 'addSupportedComponent', 'updateSupportedComponent', 'removeSupportedComponent', 'loadComponents', 'createScene'] .map (function (k) { return k + ':' + typeof Browser [k]; }) .join (','); },
+function () { return AT (function () { return Browser .loadComponents ('Geospatial') .then (function (v) { return 'ok ' + typeof v + ' ' + Array .isArray (v); }); }) ; },
+function () { return AT (function () { return Browser .loadComponents ('Nope') .then (function (v) { return 'ok'; }); }); },
+function () { return AT (function () { return Browser .loadComponents (Browser .getProfile ('Core'), Browser .getComponent ('Layout', 1), 'Text', 42, null) .then (function (v) { return 'ok'; }); }); }
+];
+var res = [];
+var step = 0;
+function put (i, v) { res [i] = LABELS [i] + ' = ' + v; }
+function flush () { var o = []; for (var k = 0; k < LABELS .length; ++ k) o .push (k in res ? res [k] : LABELS [k] + ' = ...'); out = new MFString (... o); }
+function cycle () { step = step + 1; if (step == 12) flush (); }
+function initialize () {
+  PROBES .forEach (function (f, i) {
+    var v;
+    try { v = f (); } catch (e) { v = 'THROW ' + e .message; }
+    if (v && typeof v .then === 'function') v .then (function (x) { put (i, x); }, function (e) { put (i, 'REJECT ' + (e && e .message)); });
+    else put (i, v);
+  });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

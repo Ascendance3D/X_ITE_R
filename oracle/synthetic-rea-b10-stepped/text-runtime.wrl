@@ -1,0 +1,43 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+DEF V1 Viewpoint { position 0 0 10 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -3 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry DEF TA Text { string [ "Abc" ] fontStyle DEF FTA FontStyle { size 1 }  solid FALSE } } }
+Transform { translation 3 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry DEF TB Text { string [ "Ab" "Cd" ] fontStyle DEF FTB FontStyle { size 0.8 }  solid FALSE } } }
+Transform { translation -3 -1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry DEF TC Text { string [ "Abcdefg" ] fontStyle DEF FTC FontStyle { size 0.8 }  solid FALSE } } }
+Transform { translation 3 -1 0 children Shape { appearance Appearance { material Material { diffuseColor 0.95 0.95 0.95 } } geometry DEF TD Text { string [ "Run" "time" ] fontStyle DEF FTD FontStyle { size 0.9 justify [ "MIDDLE" "MIDDLE" ] }  solid FALSE } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode ta USE TA
+  initializeOnly SFNode fta USE FTA
+  initializeOnly SFNode tb USE TB
+  initializeOnly SFNode ftb USE FTB
+  initializeOnly SFNode tc USE TC
+  initializeOnly SFNode td USE TD
+  initializeOnly SFNode ftd USE FTD
+
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') fta .size = 1.6;
+   if (k == 'b') fta .family = new MFString ('TYPEWRITER');
+   if (k == 'c') fta .style = 'BOLDITALIC';
+   if (k == 'd') ftb .horizontal = false;
+   if (k == 'e') ftb .justify = new MFString ('END', 'END');
+   if (k == 'f') ftb .spacing = 2;
+   if (k == 'g') tc .length = new MFFloat (3);
+   if (k == 'h') tc .maxExtent = 1.5;
+   if (k == 'i') td .string = new MFString ('Changed');
+   if (k == 'j') ftd .family = new MFString ('NoSuchFont', 'SANS');
+   if (k == 'k') ftd .leftToRight = false;
+   if (k == 'l') td .fontStyle = new SFNode (null);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

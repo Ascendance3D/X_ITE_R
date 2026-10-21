@@ -1,0 +1,104 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+   Compiling x3d-runtime v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-runtime)
+   Compiling x3d-script v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-script)
+    Finished `release` profile [optimized] target(s) in 13.69s
+     Running tests/retention_tables.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/retention_tables-baa317a252455b3d)
+
+running 17 tests
+test stale_import_and_export_records_do_not_stay_active ... ok
+MEM	inline-export	10	arena=12/16	live=8	free=4	contexts=3/4	protos=0/0	externprotos=0/0	imported=1/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27332
+test script_wrappers_of_released_nodes_keep_their_value_and_then_go ... ok
+MEM	inline-proto	10	arena=32/32	live=17	free=15	contexts=15/16	protos=4/4	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27324
+test a_stale_context_handle_does_not_reach_the_scene_that_took_its_slot ... ok
+test a_stale_cache_entry_does_not_resolve_to_the_context_that_took_its_slot ... ok
+test a_late_fetch_task_does_not_reach_the_declaration_that_took_its_slot ... ok
+test a_held_proto_instance_keeps_its_declaration_slot ... ok
+MEM	inline-import	10	arena=17/32	live=9	free=8	contexts=5/8	protos=0/0	externprotos=0/0	imported=2/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27364
+MEM	externproto-late	10	arena=14/16	live=4	free=10	contexts=7/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27376
+MEM	externproto-cache	10	arena=12/16	live=10	free=2	contexts=5/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27388
+MEM	inline-script	10	arena=8/8	live=5	free=3	contexts=3/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=17/32	js_attached=7	rss_kib=27392
+MEM	externproto-uncached	10	arena=19/32	live=10	free=9	contexts=9/16	protos=2/4	externprotos=2/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27436
+test a_held_nested_scene_keeps_its_parent_slot ... ok
+MEM	combined	10	arena=27/48	live=24	free=3	contexts=9/16	protos=2/4	externprotos=1/4	imported=2/4	exported=3/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=6/8	js_attached=4	rss_kib=27488
+MEM	inline-proto	100	arena=32/32	live=17	free=15	contexts=15/16	protos=4/4	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27516
+MEM	inline-export	100	arena=12/16	live=8	free=4	contexts=3/4	protos=0/0	externprotos=0/0	imported=1/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27536
+MEM	rapid-script	10	arena=11/16	live=5	free=6	contexts=4/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=22/32	js_attached=6	rss_kib=27536
+MEM	inline-import	100	arena=17/32	live=9	free=8	contexts=5/8	protos=0/0	externprotos=0/0	imported=2/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27568
+MEM	externproto-cache	100	arena=12/16	live=10	free=2	contexts=5/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27664
+MEM	externproto-late	100	arena=14/16	live=4	free=10	contexts=7/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27672
+MEM	externproto-uncached	100	arena=19/32	live=10	free=9	contexts=9/16	protos=2/4	externprotos=2/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27708
+MEM	inline-script	100	arena=8/8	live=5	free=3	contexts=3/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=17/32	js_attached=7	rss_kib=27756
+MEM	inline-proto	500	arena=32/32	live=17	free=15	contexts=15/16	protos=4/4	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27852
+MEM	inline-export	500	arena=12/16	live=8	free=4	contexts=3/4	protos=0/0	externprotos=0/0	imported=1/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27892
+MEM	combined	100	arena=27/48	live=24	free=3	contexts=9/16	protos=2/4	externprotos=1/4	imported=2/4	exported=3/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=6/8	js_attached=4	rss_kib=27904
+MEM	inline-import	500	arena=17/32	live=9	free=8	contexts=5/8	protos=0/0	externprotos=0/0	imported=2/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27920
+test a_script_disposed_during_its_own_event_cascade ... ok
+MEM	externproto-late	500	arena=14/16	live=4	free=10	contexts=7/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27976
+MEM	inline-proto	1000	arena=32/32	live=17	free=15	contexts=15/16	protos=4/4	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27984
+test w3_inline_proto ... ok
+MEM	rapid-script	100	arena=11/16	live=5	free=6	contexts=4/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=22/32	js_attached=6	rss_kib=27316
+MEM	externproto-cache	500	arena=12/16	live=10	free=2	contexts=5/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27316
+MEM	inline-export	1000	arena=12/16	live=8	free=4	contexts=3/4	protos=0/0	externprotos=0/0	imported=1/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27316
+test w1_inline_export_with_world_import ... ok
+MEM	externproto-uncached	500	arena=19/32	live=10	free=9	contexts=9/16	protos=2/4	externprotos=2/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27296
+MEM	inline-import	1000	arena=17/32	live=9	free=8	contexts=5/8	protos=0/0	externprotos=0/0	imported=2/4	exported=2/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=27300
+test w2_inline_import ... ok
+MEM	externproto-late	1000	arena=14/16	live=4	free=10	contexts=7/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=26740
+externproto-late: replaced with EXTERNPROTO work in flight, by frames waited: [0, 250, 250, 0]
+test w5b_late_externproto_delivery ... ok
+MEM	inline-script	500	arena=8/8	live=5	free=3	contexts=3/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=17/32	js_attached=7	rss_kib=26692
+MEM	externproto-cache	1000	arena=12/16	live=10	free=2	contexts=5/8	protos=1/4	externprotos=1/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=26744
+test w5_externproto_cache_reuse ... ok
+MEM	externproto-uncached	1000	arena=19/32	live=10	free=9	contexts=9/16	protos=2/4	externprotos=2/4	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=0/0	js_attached=0	rss_kib=26104
+test uncached_externproto_scenes_are_released_with_their_inline ... ok
+MEM	combined	500	arena=27/48	live=24	free=3	contexts=9/16	protos=2/4	externprotos=1/4	imported=2/4	exported=3/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=6/8	js_attached=4	rss_kib=25392
+MEM	inline-script	1000	arena=8/8	live=5	free=3	contexts=3/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=17/32	js_attached=7	rss_kib=25420
+test w4_inline_script ... ok
+MEM	combined	1000	arena=27/48	live=24	free=3	contexts=9/16	protos=2/4	externprotos=1/4	imported=2/4	exported=3/4	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=6/8	js_attached=4	rss_kib=25400
+test w8_combined ... ok
+MEM	rapid-script	500	arena=11/16	live=5	free=6	contexts=4/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=22/32	js_attached=6	rss_kib=24576
+MEM	rapid-script	1000	arena=11/16	live=5	free=6	contexts=4/4	protos=0/0	externprotos=0/0	imported=0/0	exported=0/0	emptied_ctxs=0	dead_ctxs=0	disposed_scenes=0	js_slots=22/32	js_attached=6	rss_kib=24600
+test rapid_unload_and_reload_of_scripted_scenes ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.66s
+

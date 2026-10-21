@@ -21,7 +21,29 @@ pub struct XmlGenerator<'a> {
 impl Scene {
     /// `scene .toXMLString ()` with X_ITE's default (TIDY) generator options.
     pub fn to_xml_string(&self) -> String {
-        XmlGenerator::new(self).scene_to_xml()
+        XmlGenerator::new(self).scene_to_xml(ROOT)
+    }
+
+    /// X3DScene.toXMLStream of the scene whose root context is `root` (an Inline's or a script-made scene).
+    pub fn to_xml_string_ctx(&self, root: CtxId) -> String {
+        XmlGenerator::new(self).scene_to_xml(root)
+    }
+
+    /// `field .toXMLString ()`: the field's `toXMLStream` outside any execution context.
+    pub fn field_value_to_xml_string(&self, value: &FieldValue) -> String {
+        let mut g = XmlGenerator::new(self);
+
+        g.base.push_ctx(self.first_node_ctx(value));
+        g.base.unit_base = 1;
+
+        match value {
+            FieldValue::SFNode(n) => g.sfnode_to_xml(*n),
+            FieldValue::MFNode(nodes) => g.mfnode_to_xml(nodes),
+            _ => g.value_field_to_xml(value, false),
+        }
+
+        g.base.pop_ctx();
+        g.base.g.string
     }
 }
 
@@ -102,12 +124,19 @@ pub(crate) fn printed_value(scene: &Scene, id: NodeId, i: usize) -> FieldValue {
     let field = &scene.node(id).fields[i];
 
     if let FieldValue::MFFloat(v) = &field.value {
-        if field.name == "fieldOfView" && v.len() == 4 && scene.type_name(id) == "OrthoViewpoint" {
-            return FieldValue::SFVec4f(Vector4::new(v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64));
+        if field.name == "fieldOfView" && scene.type_name(id) == "OrthoViewpoint" {
+            return FieldValue::SFVec4f(field_of_view_vec4(v));
         }
     }
 
     field.value.clone()
+}
+
+/// `new Fields .SFVec4f (... fieldOfView)`: the first four values, the missing ones SFVec4's defaults (0, 0, 0, 1).
+pub(crate) fn field_of_view_vec4(v: &[f32]) -> Vector4 {
+    let at = |i: usize, default: f64| v.get(i).map_or(default, |x| *x as f64);
+
+    Vector4::new(at(0, 0.0), at(1, 0.0), at(2, 0.0), at(3, 1.0))
 }
 
 /// X3DField.references: the interface field of the PROTO a reference points to is initializable.
@@ -256,7 +285,7 @@ impl<'a> XmlGenerator<'a> {
     // --- X3DScene / X3DExecutionContext ----------------------------------------------------
 
     /// X3DScene.toXMLStream, with the toXMLString frame (a `null` execution context below the scene).
-    fn scene_to_xml(mut self) -> String {
+    fn scene_to_xml(mut self, scene_root: CtxId) -> String {
         let scene = self.scene();
 
         self.base.push_ctx(None);
@@ -273,7 +302,7 @@ impl<'a> XmlGenerator<'a> {
         self.g().tidy_break();
 
         self.open_tag("X3D");
-        self.attribute("profile", scene.profile_of(ROOT).unwrap_or("Full"));
+        self.attribute("profile", scene.profile_of(scene_root).unwrap_or("Full"));
         self.attribute("version", LATEST_VERSION);
         self.attribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema-instance");
         self.attribute("xsd:noNamespaceSchemaLocation", &format!("https://www.web3d.org/specifications/x3d-{LATEST_VERSION}.xsd"));
@@ -282,9 +311,9 @@ impl<'a> XmlGenerator<'a> {
 
         // <head>: components, then units whose conversion factor is not 1, then meta.
 
-        let components = scene.components_of(ROOT);
-        let metadata = scene.meta_of(ROOT);
-        let units: Vec<_> = scene.units_of(ROOT).iter().filter(|u| u.conversion_factor != 1.0).collect();
+        let components = scene.components_of(scene_root);
+        let metadata = scene.meta_of(scene_root);
+        let units: Vec<_> = scene.units_of(scene_root).iter().filter(|u| u.conversion_factor != 1.0).collect();
 
         if !components.is_empty() || !units.is_empty() || !metadata.is_empty() {
             self.opening_tag("head");
@@ -294,7 +323,7 @@ impl<'a> XmlGenerator<'a> {
             for (name, level) in components {
                 self.open_tag("component");
                 self.attribute("name", name);
-                self.attribute("level", &level.to_string());
+                self.attribute("level", &scene.component_level_text(scene_root, name, *level));
                 self.close_tag("component");
                 self.g().tidy_break();
             }
@@ -323,15 +352,15 @@ impl<'a> XmlGenerator<'a> {
 
         // <Scene>
 
-        let root = scene.ctx(ROOT);
+        let root = scene.ctx(scene_root);
 
         if !root.externprotos.is_empty() || !root.protos.is_empty() || !root.root_nodes.is_empty() {
             self.opening_tag("Scene");
             self.g().tidy_break();
             self.g().inc_indent();
 
-            self.base.push_ctx(Some(ROOT));
-            self.context_to_xml(ROOT);
+            self.base.push_ctx(Some(scene_root));
+            self.context_to_xml(scene_root);
 
             for &e in root.exported.values() {
                 self.exported_to_xml(e);
@@ -516,6 +545,7 @@ impl<'a> XmlGenerator<'a> {
                             self.g().push(&field.name);
                             self.g().push("='");
                             self.base.unit_field = Some((id, field.name.clone()));
+                            self.base.raw_field = Some((id, FieldLoc::Pre(i)));
                             self.value_field_to_xml(&value, source == Some(i));
                             self.g().push("'");
                         }
@@ -541,7 +571,7 @@ impl<'a> XmlGenerator<'a> {
 
         if node.can_user_defined_fields {
             for (k, field) in node.user_fields.iter().enumerate() {
-                self.user_field_to_xml(scene, k, field, in_ctx, shared, &mut references);
+                self.user_field_to_xml(scene, id, k, field, in_ctx, shared, &mut references);
             }
         }
 
@@ -599,7 +629,7 @@ impl<'a> XmlGenerator<'a> {
 
     /// X3DNode.toXMLStreamUserDefinedField: one `<field>` element of a node with user-defined fields.
     #[allow(clippy::too_many_arguments)]
-    fn user_field_to_xml(&mut self, scene: &'a Scene, k: usize, field: &Field, in_ctx: bool, shared: bool, references: &mut Vec<FieldLoc>) {
+    fn user_field_to_xml(&mut self, scene: &'a Scene, id: NodeId, k: usize, field: &Field, in_ctx: bool, shared: bool, references: &mut Vec<FieldLoc>) {
         self.open_tag("field");
         self.attribute("accessType", access::name(field.access));
         self.attribute("type", field.ty().name());
@@ -612,10 +642,11 @@ impl<'a> XmlGenerator<'a> {
                 references.push(FieldLoc::User(k));
             }
 
-            if !field.is_initializable() || field.value.is_default_value() {
+            if !field.is_initializable() || (field.value.is_default_value() && !scene.raw_tokens.contains_key(&(id, FieldLoc::User(k)))) {
                 self.close_tag("field");
                 self.g().tidy_break();
             } else {
+                self.base.raw_field = Some((id, FieldLoc::User(k)));
                 self.declared_value_to_xml(&field.value);
             }
         } else {
@@ -971,6 +1002,13 @@ impl<'a> XmlGenerator<'a> {
     /// A field value as an attribute value or element content (`toXMLStream` of Fields/*.js): a single
     /// value, or the elements of a multi-valued field, separated by `, `, MFString elements quoted.
     fn value_field_to_xml(&mut self, value: &FieldValue, source_text: bool) {
+        let converted = match self.base.take_raw(value) {
+            Some(crate::vrml::RawOut::Texts(texts)) => return crate::vrml::write_raw(self.g(), &texts, value, false),
+            Some(crate::vrml::RawOut::Value(v)) => Some(v),
+            None => None,
+        };
+        let value = converted.as_ref().unwrap_or(value);
+
         self.base.apply_units();
         self.value_field_to_xml_units(value, source_text);
         self.g().set_unit_factors(1.0, 1.0);
@@ -1015,4 +1053,21 @@ impl<'a> XmlGenerator<'a> {
             _ => value.to_vrml_stream(self.g()),
         }
     }
+}
+
+/// See [`Scene::proto_declaration_string`].
+pub(crate) fn proto_declaration_xml(scene: &Scene, extern_: bool, id: usize) -> String {
+    let mut g = XmlGenerator::new(scene);
+
+    g.base.push_ctx(None);
+    g.base.unit_base = 1;
+
+    if extern_ {
+        g.extern_proto_to_xml(id);
+    } else {
+        g.proto_to_xml(id);
+    }
+
+    g.base.pop_ctx();
+    g.base.g.string
 }

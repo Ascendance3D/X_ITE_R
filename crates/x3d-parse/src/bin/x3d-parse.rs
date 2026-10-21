@@ -28,7 +28,10 @@ fn dump(path: &str, warnings: bool) -> ExitCode {
         Ok(scene) => {
             if warnings {
                 for w in &scene.warnings {
-                    eprintln!("warn: {w}");
+                    match x3d_scene::console_level(w) {
+                        (true, m) => eprintln!("error: {m}"),
+                        (false, m) => eprintln!("warn: {m}"),
+                    }
                 }
             }
 

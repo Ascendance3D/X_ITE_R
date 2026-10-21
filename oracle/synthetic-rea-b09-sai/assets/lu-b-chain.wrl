@@ -1,0 +1,21 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "lu world B chain"
+DEF VPC1 Viewpoint { description "vpBchain" position 0 0 5 }
+DEF CS Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+function H (s) { s = String (s); var i = s .indexOf ('://'); if (i < 0) return s; var j = s .indexOf ('/', i + 3); return 'H' + (j < 0 ? '' : s .substring (j)); }
+function initialize () { hist = 'chain B ' + H (Browser .worldURL); }
+function cycle () {
+  step = step + 1;
+  if (step == 2)
+    Browser .loadURL (new MFString ('lu-c.wrl')) .then (function () { console .log ('B: loadURL C resolved ec=' + H (Browser .getExecutionContext () .worldURL)); });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO CS.cycle

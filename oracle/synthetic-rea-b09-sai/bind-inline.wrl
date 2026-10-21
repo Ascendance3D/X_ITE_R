@@ -1,0 +1,91 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "bind inline"
+DEF A Viewpoint { description "A" position 0 0 10 }
+DEF B Viewpoint { description "B" position 0 0 11 }
+DEF BG Background { skyColor 0 0 0 }
+DEF NI NavigationInfo { type "FLY" speed 2 }
+DEF IL Inline { url "assets/bind-inline.wrl" }
+IMPORT IL.IV AS IV
+IMPORT IL.IV2 AS IV2
+IMPORT IL.IB AS IB
+IMPORT IL.IN AS IN
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool b_A
+  inputOnly SFTime t_A
+  inputOnly SFBool b_B
+  inputOnly SFTime t_B
+  inputOnly SFBool b_IV
+  inputOnly SFTime t_IV
+  inputOnly SFBool b_IV2
+  inputOnly SFTime t_IV2
+  inputOnly SFBool b_BG
+  inputOnly SFTime t_BG
+  inputOnly SFBool b_IB
+  inputOnly SFTime t_IB
+  inputOnly SFBool b_NI
+  inputOnly SFTime t_NI
+  inputOnly SFBool b_IN
+  inputOnly SFTime t_IN
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + '@' + step + ' '; }
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }
+function b_A (v) { rec ('A:' + (v ? 1 : 0)); }
+function t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }
+function b_B (v) { rec ('B:' + (v ? 1 : 0)); }
+function t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }
+function b_IV (v) { rec ('IV:' + (v ? 1 : 0)); }
+function t_IV (v) { rec ('IV:T' + (v > 0 ? '' : '?')); }
+function b_IV2 (v) { rec ('IV2:' + (v ? 1 : 0)); }
+function t_IV2 (v) { rec ('IV2:T' + (v > 0 ? '' : '?')); }
+function b_BG (v) { rec ('BG:' + (v ? 1 : 0)); }
+function t_BG (v) { rec ('BG:T' + (v > 0 ? '' : '?')); }
+function b_IB (v) { rec ('IB:' + (v ? 1 : 0)); }
+function t_IB (v) { rec ('IB:T' + (v > 0 ? '' : '?')); }
+function b_NI (v) { rec ('NI:' + (v ? 1 : 0)); }
+function t_NI (v) { rec ('NI:T' + (v > 0 ? '' : '?')); }
+function b_IN (v) { rec ('IN:' + (v ? 1 : 0)); }
+function t_IN (v) { rec ('IN:T' + (v > 0 ? '' : '?')); }
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+  if (step == 6) p ('state', function () { return s .getImportedNode ('IV') .getNodeTypeName(); });
+  if (step == 7) p ('bindIV', function () { s .getImportedNode ('IV') .set_bind = true; });
+  if (step == 8) p ('bindIV2', function () { s .getImportedNode ('IV2') .set_bind = true; });
+  if (step == 9) p ('bindA', function () { s .getNamedNode ('A') .set_bind = true; });
+  if (step == 10) p ('bindIB', function () { s .getImportedNode ('IB') .set_bind = true; });
+  if (step == 11) p ('bindIN', function () { s .getImportedNode ('IN') .set_bind = true; });
+  if (step == 12) p ('unbindIV2', function () { s .getImportedNode ('IV2') .set_bind = false; });
+  if (step == 13) p ('unload', function () { s .getNamedNode ('IL') .load = false; });
+  if (step == 15) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });
+  if (step == 16) p ('reload', function () { s .getNamedNode ('IL') .load = true; });
+  if (step == 22) p ('bindIV', function () { s .getImportedNode ('IV') .set_bind = true; });
+  if (step == 23) p ('unbindA', function () { s .getNamedNode ('A') .set_bind = false; });
+  if (step == 24) p ('unbindB', function () { s .getNamedNode ('B') .set_bind = false; });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
+ROUTE A.isBound TO P.b_A
+ROUTE A.bindTime TO P.t_A
+ROUTE B.isBound TO P.b_B
+ROUTE B.bindTime TO P.t_B
+ROUTE IV.isBound TO P.b_IV
+ROUTE IV.bindTime TO P.t_IV
+ROUTE IV2.isBound TO P.b_IV2
+ROUTE IV2.bindTime TO P.t_IV2
+ROUTE BG.isBound TO P.b_BG
+ROUTE BG.bindTime TO P.t_BG
+ROUTE IB.isBound TO P.b_IB
+ROUTE IB.bindTime TO P.t_IB
+ROUTE NI.isBound TO P.b_NI
+ROUTE NI.bindTime TO P.t_NI
+ROUTE IN.isBound TO P.b_IN
+ROUTE IN.bindTime TO P.t_IN

@@ -1,0 +1,14 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+Viewpoint { position 0 0 8 }
+Background { skyColor 0.12 0.14 0.2 }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 1.5 } } }
+Transform { translation 1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -2.5 2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 0.4 0.1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -30.0 -20.0 0, 30.0 -20.0 0, 30.0 20.0 0, -30.0 20.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+Transform { translation 2.5 2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 0.2 0.9 0.4 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -30.0 -20.0 0, 30.0 -20.0 0, 30.0 20.0 0, -30.0 20.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+Transform { translation 0 0 2 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 0.9 0.2 0.9 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -15.0 -15.0 0, 15.0 -15.0 0, 15.0 15.0 0, -15.0 15.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+Transform { translation -2.5 -2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Screen" ] fontStyle ScreenFontStyle { pointSize 24 } solid FALSE } } ] } }
+Transform { translation 2.5 -2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Screen" "Text" ] fontStyle ScreenFontStyle { pointSize 12 justify [ "MIDDLE" "MIDDLE" ] spacing 1.5 } solid FALSE } } ] } }
+Transform { translation 0 -2.8 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Bold" ] fontStyle ScreenFontStyle { family "SANS" style "BOLD" pointSize 18 } solid FALSE } } ] } }
+Transform { translation 0 2.8 -3 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 0.5 0.5 0.5 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -30.0 -20.0 0, 30.0 -20.0 0, 30.0 20.0 0, -30.0 20.0 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }

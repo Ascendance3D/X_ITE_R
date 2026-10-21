@@ -2,7 +2,7 @@
 //! url loading, callback wiring (initialize__), set_field__, call__, setError. The ECMAScript
 //! engine is a [`ScriptHost`] (crate x3d-script implements it with QuickJS).
 
-use crate::loader::{FileLoader, Loaded};
+use crate::loader::{self, FileLoader};
 use crate::*;
 
 /// A thrown value, as `String (error)` (what dump.html's console capture prints).
@@ -26,6 +26,38 @@ pub trait ScriptHost {
     /// Script.call__ / set_field__.
     fn call(&mut self, rt: &mut Runtime, node: NodeId, call: ScriptCall) -> Result<(), ScriptError>;
 
+    /// A promise of X3DBrowser.createX3DFromString / createX3DFromURL settles: request `id` made the scene with this
+    /// root context, or was rejected with the message.
+    fn settle(&mut self, _rt: &mut Runtime, _id: u64, _outcome: Result<CtxId, String>) {}
+
+    /// A promise of X3DBrowser.loadURL / replaceWorld settles (it resolves without a value).
+    fn settle_plain(&mut self, _rt: &mut Runtime, _id: u64, _outcome: Result<(), String>) {}
+
+    /// X3DBrowser.callBrowserCallbacks (event): the functions registered with `addBrowserCallback` run.
+    fn browser_event(&mut self, _rt: &mut Runtime, _event: u32) {}
+
+    /// A change field of an execution context fires (`sceneGraph_changed` = 0, `bbox_changed` = 1, `profile_changed` = 2,
+    /// `metadata_changed` = 3): the callbacks Scripts gave `addFieldCallback` run with the field's value.
+    fn ctx_event(&mut self, _rt: &mut Runtime, _ctx: CtxId, _field: u32) {}
+
+    /// X3DField.processEvent of a field in [`Runtime::field_observed`]: the callbacks Scripts gave `addFieldCallback`
+    /// run with the field's value, after the event went on to the routes.
+    fn field_event(&mut self, _rt: &mut Runtime, _k: FKey) {}
+
+    /// The due time (ms) of the earliest `setTimeout` / `setInterval` timer of the Scripts, if it is due at `until_ms`.
+    fn next_timer(&mut self, _rt: &mut Runtime, _until_ms: f64) -> Option<f64> {
+        None
+    }
+
+    /// Run the timer `next_timer` named (it is removed, or rearmed for an interval).
+    fn fire_timer(&mut self, _rt: &mut Runtime) {}
+
+    /// The raw components a print meets, in print order (see [`x3d_scene::RawPrint`]): for each request, `String (component)`
+    /// or its ToNumber, taken now in the host's realm; None when the host does not hold the value.
+    fn raw_coerce(&mut self, _rt: &mut Runtime, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
+        vec![None; requests.len()]
+    }
+
     /// The Script is gone for good (`shutdown ()` has run): forget its global object and callbacks.
     fn destroy_context(&mut self, _node: NodeId) {}
 
@@ -33,15 +65,23 @@ pub trait ScriptHost {
     /// that a Script still holds points to `tombstone` from now on.
     fn release_nodes(&mut self, _rt: &mut Runtime, _nodes: &[NodeId], _tombstone: NodeId) {}
 
-    /// The nodes that JavaScript can still reach: live wrappers (`SFNode`), field objects of node
-    /// fields, and values (`MFNode`, `SFNode`) that live JavaScript objects hold. The host collects
-    /// garbage first, so an object nothing refers to is not counted (X_ITE: WeakRef, `SFNodeCache`).
+    /// Which of `candidates` (nodes only JavaScript could still hold) JavaScript can still reach: through
+    /// an `SFNode` object, an `MFNode` element, a field object of the node. The host collects garbage
+    /// first, so an object nothing refers to does not count (X_ITE: the garbage collector).
     ///
     /// `None` means the host cannot say. The runtime then treats every runtime-created node as held
     /// as long as a Script exists (conservative: nothing is released that a Script might use).
-    fn held_nodes(&mut self, _rt: &mut Runtime) -> Option<Vec<NodeId>> {
+    fn held_nodes(&mut self, _rt: &mut Runtime, _candidates: &[NodeId]) -> Option<Vec<NodeId>> {
         None
     }
+}
+
+/// A Script candidate that failed: what FileLoader.printError reports when the next candidate starts.
+#[derive(Clone, Debug)]
+pub struct CandidateError {
+    pub candidate: String,
+    pub resolved: Option<url::Url>,
+    pub error: String,
 }
 
 #[derive(Debug, Default, Clone)]
@@ -91,21 +131,112 @@ impl Runtime {
         self.tasks.push_back(Task::ScriptLoad(node));
     }
 
-    /// Script.loadData after its first await.
-    pub(crate) fn script_load(&mut self, node: NodeId) {
-        let loader = FileLoader { type_name: "Script".into(), base: self.base_url(node), data_as_string: true };
-        let urls = self.url_strings(node);
+    fn script_loader(&self, node: NodeId) -> FileLoader {
+        FileLoader { type_name: "Script".into(), base: self.base_url(node), data_as_string: true }
+    }
 
-        let ok = self.load_document(&loader, &urls, |rt, loaded| {
-            let source = match loaded {
-                Loaded::Script(s) => s,
-                Loaded::Data(d, _) => x3d_parse::decode_text(&d),
+    /// FileLoader.loadDocumentAsync of Script candidate `index` (Script.loadData's FileLoader), after printing the failure of the
+    /// candidate before it (`failed`, see loadDocumentError). The microtask ticks until the next candidate starts are X_ITE's:
+    ///
+    /// * an empty URL: loadDocumentError at once (`return this .loadDocumentError (...)`), the next candidate in the same tick;
+    /// * a Script URL or a data URL that is not base64: the callback runs `initialize__` now; when it throws, the rejection
+    ///   passes `await this .initialize__`, `await this .dataCallback` and `.catch (loadDocumentError)`: three ticks;
+    /// * a URL `new URL` cannot parse: loadDocumentAsync rejects at once, `.catch` one tick later;
+    /// * a URL `fetch` rejects at once (a scheme it does not load, a data URL without a comma): `await fetch`, `.catch`: two
+    ///   ticks;
+    /// * anything else is fetched (a macrotask, [`Runtime::script_fetch`]).
+    pub(crate) fn script_candidate(&mut self, node: NodeId, index: usize, failed: Option<CandidateError>) {
+        let loader = self.script_loader(node);
+        let urls = self.url_strings(node);
+        let mut index = index;
+        let mut failed = failed;
+
+        loop {
+            if let Some(f) = failed.take() {
+                self.print_load_error(&loader, &f.candidate, f.resolved.as_ref(), &f.error, index, urls.len().saturating_sub(index));
+            }
+
+            let Some(candidate) = urls.get(index).cloned() else {
+                // `this .dataCallback (null)`: no URL could be loaded.
+                if !urls.is_empty() {
+                    self.set_load_state(node, nodes::LoadState::Failed);
+                }
+
+                return;
             };
 
-            rt.script_initialize_source(node, &source)
-        });
+            let fail = |error: String, resolved: Option<url::Url>| Some(Box::new(CandidateError { candidate: candidate.clone(), resolved, error }));
 
-        self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
+            if candidate.is_empty() {
+                failed = fail("Error: Empty URL.".into(), None).map(|b| *b);
+                index += 1;
+                continue;
+            }
+
+            // Script URLs: /^\s*(?:ecmascript|javascript|vrmlscript):/s
+            let trimmed = candidate.trim_start();
+
+            if let Some(scheme) = ["ecmascript:", "javascript:", "vrmlscript:"].iter().find(|s| trimmed.starts_with(**s)) {
+                let source = trimmed[scheme.len()..].to_string();
+
+                return self.script_accept(node, index, &candidate, &source, None);
+            }
+
+            let Some(resolved) = url::Url::parse(&loader.base).ok().and_then(|b| b.join(&candidate).ok()) else {
+                let error = "TypeError: Failed to construct 'URL': Invalid URL".to_string();
+                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 0, fail(error, None)));
+                return;
+            };
+
+            if let Some(text) = loader::data_url_text(&candidate) {
+                return self.script_accept(node, index, &candidate, &text, Some(resolved));
+            }
+
+            let fetched = matches!(resolved.scheme(), "http" | "https" | "file" | "blob") || (resolved.scheme() == "data" && candidate.contains(','));
+
+            if !fetched {
+                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 1, fail("TypeError: Failed to fetch".into(), Some(resolved))));
+                return;
+            }
+
+            self.fetches.push_back(Task::ScriptFetch(node, index));
+            return;
+        }
+    }
+
+    /// The fetch of Script candidate `index` completed (a macrotask): its source, or `checkResponse` threw (two ticks to the
+    /// next candidate).
+    pub(crate) fn script_fetch(&mut self, node: NodeId, index: usize) {
+        let loader = self.script_loader(node);
+        let Some(candidate) = self.url_strings(node).get(index).cloned() else {
+            return;
+        };
+        let Some(resolved) = url::Url::parse(&loader.base).ok().and_then(|b| b.join(&candidate).ok()) else {
+            return;
+        };
+
+        match self.fetcher.fetch(&resolved) {
+            Ok(data) => {
+                let source = x3d_parse::decode_text(&x3d_parse::gunzip(&data));
+                self.script_accept(node, index, &candidate, &source, Some(resolved));
+            }
+            Err(error) => {
+                let failed = CandidateError { candidate, resolved: Some(resolved), error };
+                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 1, Some(Box::new(failed))));
+            }
+        }
+    }
+
+    /// Script.loadData's callback with a candidate's source: `await this .initialize__ (...)`, then COMPLETE; a throw rejects
+    /// three ticks before the next candidate starts.
+    fn script_accept(&mut self, node: NodeId, index: usize, candidate: &str, source: &str, resolved: Option<url::Url>) {
+        match self.script_initialize_source(node, source) {
+            Ok(()) => self.set_load_state(node, nodes::LoadState::Complete),
+            Err(error) => {
+                let failed = CandidateError { candidate: candidate.to_string(), resolved, error };
+                self.tasks.push_back(Task::ScriptCandidate(node, index + 1, 2, Some(Box::new(failed))));
+            }
+        }
     }
 
     /// Script.initialize__ (sourceText).
@@ -236,13 +367,18 @@ impl Runtime {
         self.dynamic_dirty = true;
 
         if let Err(e) = result {
-            let name = self.scene.node(node).name.clone();
-            let world = self.scene.world_url_of(self.scene.node(node).ctx).to_string();
-            let world = if world.starts_with("data:") { "data:".to_string() } else { world };
-
-            self.log_error(format!("JavaScript Error in Script '{name}', in function '{reason_name}'\nworld url is '{world}':"));
-            self.log_error(&e.0);
+            self.report_script_error(node, reason_name, &e.0);
         }
+    }
+
+    /// Script.setError: the header (script name, reason, world url) and the error itself.
+    pub fn report_script_error(&mut self, node: NodeId, reason_name: &str, error: &str) {
+        let name = self.scene.node(node).name.clone();
+        let world = self.scene.world_url_of(self.scene.node(node).ctx).to_string();
+        let world = if world.starts_with("data:") { "data:".to_string() } else { world };
+
+        self.log_error(format!("JavaScript Error in Script '{name}', in function '{reason_name}'\nworld url is '{world}':"));
+        self.log_error(error);
     }
 
     pub(crate) fn script_interest(&mut self, node: NodeId, cb: Cb, _k: FKey) {

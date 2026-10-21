@@ -1,0 +1,52 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr browser open"
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+
+function initialize () {
+  SELF = this;
+  T ('X3DConstants misc', function () { return [X3DConstants .inputOnly, X3DConstants .outputOnly, X3DConstants .initializeOnly, X3DConstants .inputOutput, X3DConstants .SFNode, X3DConstants .MFNode, X3DConstants .SFTime, X3DConstants .X3DNode, X3DConstants .Script, X3DConstants .Transform, X3DConstants .X3DUrlObject]; });
+  T ('X3DConstants keys', function () { return Object .keys (X3DConstants) .length; });
+  T ('X3DConstants states', function () { return [X3DConstants .NOT_STARTED_STATE, X3DConstants .IN_PROGRESS_STATE, X3DConstants .COMPLETE_STATE, X3DConstants .FAILED_STATE, X3DConstants .INITIALIZED_EVENT, X3DConstants .SHUTDOWN_EVENT, X3DConstants .CONNECTION_ERROR, X3DConstants .BROWSER_EVENT, X3DConstants .INITIALIZED_ERROR]; });
+  T ('X3DConstants node types', function () { return [X3DConstants .X3DChildNode, X3DConstants .X3DBindableNode, X3DConstants .X3DSensorNode, X3DConstants .X3DScriptNode, X3DConstants .X3DExecutionContext, X3DConstants .X3DScene, X3DConstants .X3DProtoDeclaration]; });
+  T ('X3DConstants frozen', function () { X3DConstants .foo = 1; return [typeof X3DConstants .foo, Object .isFrozen (X3DConstants)]; });
+  flush_ ();
+}
+
+  "
+}

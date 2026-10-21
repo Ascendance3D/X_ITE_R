@@ -1,0 +1,148 @@
+warning: variable does not need to be mutable
+   --> crates/x3d-parse/src/gltf2/geometry.rs:175:13
+    |
+175 |         let mut take = |me: &mut Self, name: &str, attr: Option<usize>| -> R<Vec<f64>> {
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `j` is never read
+   --> crates/x3d-parse/src/gltf2/mod.rs:139:9
+    |
+138 | pub(super) struct Skin<'j> {
+    |                   ---- field in this struct
+139 |     pub j: V<'j>,
+    |         ^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `bool_` and `numbers` are never used
+   --> crates/x3d-parse/src/gltf2/util.rs:91:12
+    |
+ 22 | impl<'a> V<'a> {
+    | -------------- methods in this implementation
+...
+ 91 |     pub fn bool_(self) -> Option<bool> {
+    |            ^^^^^
+...
+162 |     pub fn numbers(self) -> Option<Vec<f64>> {
+    |            ^^^^^^^
+
+warning: associated constant `IDENTITY` is never used
+   --> crates/x3d-parse/src/svg_canvas.rs:126:11
+    |
+125 | impl SkM {
+    | -------- associated constant in this implementation
+126 |     const IDENTITY: SkM = SkM([1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
+    |           ^^^^^^^^
+
+warning: `x3d-parse` (lib) generated 4 warnings (run `cargo fix --lib -p x3d-parse` to apply 1 suggestion)
+warning: field `es3` is never read
+   --> crates/x3d-render/src/glsl_compat.rs:570:5
+    |
+558 | struct Scan {
+    |        ---- field in this struct
+...
+570 |     es3: bool,
+    |     ^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `glsl_ty_name` is never used
+   --> crates/x3d-render/src/glsl_compat.rs:860:4
+    |
+860 | fn glsl_ty_name(ty: &Ty) -> String {
+    |    ^^^^^^^^^^^^
+
+warning: function `find_word` is never used
+    --> crates/x3d-render/src/glsl_compat.rs:1157:4
+     |
+1157 | fn find_word(s: &str, word: &str) -> bool {
+     |    ^^^^^^^^^
+
+warning: field `1` is never read
+   --> crates/x3d-render/src/gpu.rs:585:19
+    |
+585 |     Custom(usize, bool),
+    |     ------        ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `Source` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+585 -     Custom(usize, bool),
+585 +     Custom(usize, ()),
+    |
+
+warning: function `default_unit` is never used
+   --> crates/x3d-render/src/shader_gpu.rs:304:4
+    |
+304 | fn default_unit(dim: SamplerDim) -> u32 {
+    |    ^^^^^^^^^^^^
+
+warning: `x3d-render` (lib) generated 5 warnings
+   Compiling x3d-render v0.1.0 (/home/ryan/Projects/cybertown/.worktrees/rust-port-private/integration-b06-b08/crates/x3d-render)
+    Finished `release` profile [optimized] target(s) in 0.66s
+warning: the following packages contain code that will be rejected by a future version of Rust: nalgebra v0.26.2
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
+     Running tests/render_rea_b08_svg.rs (/home/ryan/.cache/cargo-build/cybertown/release/deps/render_rea_b08_svg-5104ee502fbd8b69)
+
+running 1 test
+MSAA 0 grad-linear-on-circle.svg: over 0 (0.000%), max 1
+MSAA 0 grad-linear-on-polygon-holes.svg: over 0 (0.000%), max 1
+MSAA 0 grad-linear-on-star-evenodd.svg: over 0 (0.000%), max 0
+MSAA 0 grad-radial-focal.svg: over 0 (0.000%), max 1
+MSAA 0 grad-radial-on-circle.svg: over 0 (0.000%), max 0
+MSAA 0 path-arc-large.svg: over 0 (0.000%), max 0
+MSAA 0 path-cubic.svg: over 123 (0.047%), max 255
+MSAA 0 path-quadratic.svg: over 1 (0.000%), max 255
+MSAA 0 path-star-evenodd.svg: over 306 (0.117%), max 255
+MSAA 0 path-star-nonzero.svg: over 306 (0.117%), max 255
+MSAA 0 root-viewbox-wide.svg: over 0 (0.000%), max 0
+MSAA 0 shape-circle-stroke.svg: over 20 (0.008%), max 255
+MSAA 0 shape-ellipse.svg: over 4 (0.002%), max 255
+MSAA 0 shape-polygon-evenodd.svg: over 0 (0.000%), max 0
+MSAA 0 shape-rect-rounded.svg: over 488 (0.186%), max 255
+MSAA 0 shape-rect-stroke.svg: over 11 (0.004%), max 255
+MSAA 0 struct-use-group.svg: over 0 (0.000%), max 0
+MSAA 0 struct-use-image.svg: over 0 (0.000%), max 0
+MSAA 0 style-colors-hex.svg: over 0 (0.000%), max 0
+MSAA 0 tess-comb.svg: over 0 (0.000%), max 0
+MSAA 0 tess-curves-blob.svg: over 0 (0.000%), max 0
+MSAA 0 tess-multi-00.svg: over 0 (0.000%), max 0
+MSAA 0 tess-random-03.svg: over 251 (0.096%), max 255
+MSAA 0 tess-spiral.svg: over 247 (0.094%), max 255
+MSAA 0 transform-02.svg: over 0 (0.000%), max 0
+MSAA 4 grad-linear-on-circle.svg: over 0 (0.000%), max 1
+MSAA 4 grad-linear-on-polygon-holes.svg: over 0 (0.000%), max 0
+MSAA 4 grad-linear-on-star-evenodd.svg: over 0 (0.000%), max 0
+MSAA 4 grad-radial-focal.svg: over 0 (0.000%), max 1
+MSAA 4 grad-radial-on-circle.svg: over 0 (0.000%), max 0
+MSAA 4 path-arc-large.svg: over 0 (0.000%), max 0
+MSAA 4 path-cubic.svg: over 0 (0.000%), max 0
+MSAA 4 path-quadratic.svg: over 8 (0.003%), max 64
+MSAA 4 path-star-evenodd.svg: over 0 (0.000%), max 0
+MSAA 4 path-star-nonzero.svg: over 0 (0.000%), max 0
+MSAA 4 root-viewbox-wide.svg: over 0 (0.000%), max 0
+MSAA 4 shape-circle-stroke.svg: over 16 (0.006%), max 64
+MSAA 4 shape-ellipse.svg: over 4 (0.002%), max 64
+MSAA 4 shape-polygon-evenodd.svg: over 0 (0.000%), max 0
+MSAA 4 shape-rect-rounded.svg: over 0 (0.000%), max 0
+MSAA 4 shape-rect-stroke.svg: over 0 (0.000%), max 0
+MSAA 4 struct-use-group.svg: over 0 (0.000%), max 0
+MSAA 4 struct-use-image.svg: over 0 (0.000%), max 0
+MSAA 4 style-colors-hex.svg: over 0 (0.000%), max 0
+MSAA 4 tess-comb.svg: over 0 (0.000%), max 0
+MSAA 4 tess-curves-blob.svg: over 9 (0.003%), max 64
+MSAA 4 tess-multi-00.svg: over 0 (0.000%), max 0
+MSAA 4 tess-random-03.svg: over 0 (0.000%), max 0
+MSAA 4 tess-spiral.svg: over 0 (0.000%), max 0
+MSAA 4 transform-02.svg: over 0 (0.000%), max 0
+50 shots checked
+test rea_b08_svg_renders_match_x_ite ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.93s
+

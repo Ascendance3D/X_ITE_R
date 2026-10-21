@@ -1,0 +1,88 @@
+{
+ "settle": false,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 132,
+ "capture": [
+  4,
+  10,
+  18,
+  26,
+  34,
+  42,
+  50,
+  58
+ ],
+ "dump": [
+  4,
+  10,
+  18,
+  26,
+  34,
+  42,
+  50,
+  58,
+  131
+ ],
+ "events": [
+  {
+   "frame": 6,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 14,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 22,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 30,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 38,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 46,
+   "type": "key",
+   "key": "f"
+  },
+  {
+   "frame": 54,
+   "type": "key",
+   "key": "g"
+  },
+  {
+   "frame": 70,
+   "type": "viewer",
+   "name": "LOOKAT"
+  },
+  {
+   "frame": 72,
+   "type": "mousedown",
+   "button": 0,
+   "x": 330,
+   "y": 256
+  },
+  {
+   "frame": 73,
+   "type": "mouseup",
+   "button": 0,
+   "x": 330,
+   "y": 256
+  }
+ ],
+ "buildEachFrame": true
+}

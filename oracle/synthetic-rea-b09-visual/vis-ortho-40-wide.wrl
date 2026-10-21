@@ -1,0 +1,53 @@
+#X3D V4.0 utf8
+PROFILE Full
+OrthoViewpoint { position 0 0 10 fieldOfView [ -8 -4 8 4 ]  }
+Background { skyColor 0.12 0.14 0.2 }
+Transform { translation -6 -6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -6 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -6 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -6 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -6 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -6 6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -4 -6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -4 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -4 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -4 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -4 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -4 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -4 6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -2 -6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -2 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -2 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -2 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -2 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation -2 6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 -6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.2 0.2 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 0 6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 2 -6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 2 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 2 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 2 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 2 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 2 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 2 6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 4 -6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 4 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 4 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 4 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 4 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 4 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 4 6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 6 -6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 6 -4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 6 -2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 6 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 6 2 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 6 4 0 children Shape { appearance Appearance { material Material { diffuseColor 0.7 0.7 0.7 } } geometry Box { size 1.2 1.2 1.2 } } }
+Transform { translation 6 6 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.2 1.2 1.2 } } }

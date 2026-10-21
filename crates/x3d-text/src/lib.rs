@@ -7,6 +7,7 @@ pub mod font;
 pub mod fonts;
 pub mod layout;
 pub mod libtess;
+pub mod raster;
 pub mod timsort;
 
 pub use font::{Font, FontError, PrimitiveQuality};

@@ -1,0 +1,124 @@
+{
+ "ok": true,
+ "poses": {
+  "40": {
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nViewpoint {\n  position 0 0 0\n}\n\nSound {\n  location 0 0 -5\n  minBack 20\n  minFront 20\n  maxBack 40\n  maxFront 40\n  source DEF O AudioClip {\n    url \"media/tone48k-stereo.wav\"\n    pitch 0.5\n    startTime 946684800.048\n  }\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime  set_time\n  outputOnly     SFTime  start\n  initializeOnly SFInt32 n 49\n\n  url \"javascript:\nfunction set_time (value) { if (++ n === 12) start = value; }\n\"\n}\n\nDEF K Script {\n  initializeOnly SFNode  o USE O\n  inputOnly      SFTime  set_time\n  initializeOnly SFInt32 n 49\n\n  url \"javascript:\nfunction set_time (value) { ++ n;\n   if (n === 26) o.pitch = 0.5;\n}\n\"\n  directOutput TRUE\n}\n\nDEF PO Script {\n  inputOnly SFBool a\n  inputOnly SFTime d\n  inputOnly SFTime e\n\n  url \"javascript:\nfunction a (v, t) { print ('O active ' + v + ' ' + t); }\nfunction d (v, t) { print ('O duration ' + v + ' ' + t); }\nfunction e (v, t) { print ('O elapsed ' + v + ' ' + t); }\n\"\n}\n\nROUTE T.time TO S.set_time\nROUTE S.start TO O.set_startTime\nROUTE T.time TO K.set_time\nROUTE O.isActive TO PO.a\nROUTE O.duration_changed TO PO.d\nROUTE O.elapsedTime TO PO.e\n"
+ },
+ "prints": [],
+ "log": [],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "audioSuspend": [
+  768,
+  1536,
+  2304,
+  3072,
+  3840,
+  4608,
+  5376,
+  6144,
+  6912,
+  7680,
+  8448,
+  9216,
+  9984,
+  10752,
+  11520,
+  12288,
+  13056,
+  13824,
+  14592,
+  15360,
+  16128,
+  16896,
+  17664,
+  18432,
+  19200,
+  19968,
+  20736,
+  21504,
+  22272,
+  23040,
+  23808,
+  24576,
+  25344,
+  26112,
+  26880,
+  27648,
+  28416,
+  29184,
+  29952,
+  30720
+ ],
+ "console": [
+  "log: O duration 0.25 946684800",
+  "log: O active true 946684800.048",
+  "log: O elapsed 0 946684800.048",
+  "log: O elapsed 0 946684800.048",
+  "log: O elapsed 0.016000032424926758 946684800.064",
+  "log: O elapsed 0.032000064849853516 946684800.08",
+  "log: O elapsed 0.04799997806549072 946684800.096",
+  "log: O elapsed 0.06400001049041748 946684800.112",
+  "log: O elapsed 0.08000004291534424 946684800.128",
+  "log: O elapsed 0.096000075340271 946684800.144",
+  "log: O elapsed 0.1119999885559082 946684800.16",
+  "log: O elapsed 0.12800002098083496 946684800.176",
+  "log: O elapsed 0.14400005340576172 946684800.192",
+  "log: O elapsed 0.15999996662139893 946684800.208",
+  "log: O elapsed 0.17599999904632568 946684800.224",
+  "log: O elapsed 0.19200003147125244 946684800.24",
+  "log: O elapsed 0.2080000638961792 946684800.256",
+  "log: O elapsed 0.2239999771118164 946684800.272",
+  "log: O elapsed 0.24000000953674316 946684800.288",
+  "log: O elapsed 0.2560000419616699 946684800.304",
+  "log: O active false 946684800.304"
+ ],
+ "audio": {
+  "sampleRate": 48000,
+  "length": 31232,
+  "channels": 2,
+  "file": "js.audio.f32"
+ }
+}

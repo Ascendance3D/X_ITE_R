@@ -1,0 +1,47 @@
+#X3D V4.0 utf8
+PROFILE Full
+Viewpoint { position 0 0 6 }
+NavigationInfo { headlight FALSE }
+Background { skyColor 0.2 0.2 0.25 }
+DirectionalLight { direction 0.4 -0.3 -1 intensity 1 ambientIntensity 0.5 }
+PointLight { location 1 1 2 intensity 0.8 ambientIntensity 0.2 radius 30 }
+Transform { translation -2.4 0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 diffuseTexture PixelTexture { image 4 4 4 0x28c800ff 0x64c81eff 0xa0c83cff 0xdcc85aff 0x28a078ff 0x64a096ff 0xa0a0b4ff 0xdca0d2ff 0x2878f0ff 0x64780eff 0xa0782cff 0xdc784aff 0x285068ff 0x645086ff 0xa050a4ff 0xdc50c2ff } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -1.2 0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 diffuseTexture PixelTexture { image 2 2 4 0xff8040ff 0x40ff80c0 0x8040ffa0 0xffffff60 } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 0.0 0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 ambientTexture PixelTexture { image 4 4 3 0xff5a80 0xef7380 0xdf8c80 0xcfa580 0xbfbe80 0xafd780 0x9ff080 0x8f0980 0x7f2280 0x6f3b80 0x5f5480 0x4f6d80 0x3f8680 0x2f9f80 0x1fb880 0x0fd180 } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 1.1999999999999997 0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 specularTexture PixelTexture { image 4 4 3 0xff5a80 0xef7380 0xdf8c80 0xcfa580 0xbfbe80 0xafd780 0x9ff080 0x8f0980 0x7f2280 0x6f3b80 0x5f5480 0x4f6d80 0x3f8680 0x2f9f80 0x1fb880 0x0fd180 } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 2.4 0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 emissiveTexture PixelTexture { image 4 4 4 0x28c800ff 0x64c81eff 0xa0c83cff 0xdcc85aff 0x28a078ff 0x64a096ff 0xa0a0b4ff 0xdca0d2ff 0x2878f0ff 0x64780eff 0xa0782cff 0xdc784aff 0x285068ff 0x645086ff 0xa050a4ff 0xdc50c2ff } emissiveColor 0.5 0.5 0.5 } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -2.4 -0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 shininessTexture PixelTexture { image 4 4 2 0xff28 0xf336 0xe744 0xdb52 0xcf60 0xc36e 0xb77c 0xab8a 0x9f98 0x93a6 0x87b4 0x7bc2 0x6fd0 0x63de 0x57ec 0x4bfa } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation -1.2 -0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 occlusionTexture PixelTexture { image 4 4 1 0x28 0x36 0x44 0x52 0x60 0x6e 0x7c 0x8a 0x98 0xa6 0xb4 0xc2 0xd0 0xde 0xec 0xfa } occlusionStrength 0.8 } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 0.0 -0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 normalTexture PixelTexture { image 4 4 3 0x0c0cff 0x590cff 0xa50cff 0xf20cff 0x0c59ff 0x5959ff 0xa559ff 0xf259ff 0x0ca5ff 0x59a5ff 0xa5a5ff 0xf2a5ff 0x0cf2ff 0x59f2ff 0xa5f2ff 0xf2f2ff } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 1.1999999999999997 -0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 normalTexture PixelTexture { image 4 4 3 0x0c0cff 0x590cff 0xa50cff 0xf20cff 0x0c59ff 0x5959ff 0xa559ff 0xf259ff 0x0ca5ff 0x59a5ff 0xa5a5ff 0xf2a5ff 0x0cf2ff 0x59f2ff 0xa5f2ff 0xf2f2ff } normalScale 3 } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }
+Transform { translation 2.4 -0.9 0 children Shape {
+  appearance Appearance { material Material { diffuseColor 0.8 0.7 0.6 specularColor 0.8 0.8 0.8 shininess 0.4 ambientIntensity 0.6 diffuseTexture PixelTexture { image 4 4 4 0x28c800ff 0x64c81eff 0xa0c83cff 0xdcc85aff 0x28a078ff 0x64a096ff 0xa0a0b4ff 0xdca0d2ff 0x2878f0ff 0x64780eff 0xa0782cff 0xdc784aff 0x285068ff 0x645086ff 0xa050a4ff 0xdc50c2ff } ambientTexture PixelTexture { image 4 4 3 0xff5a80 0xef7380 0xdf8c80 0xcfa580 0xbfbe80 0xafd780 0x9ff080 0x8f0980 0x7f2280 0x6f3b80 0x5f5480 0x4f6d80 0x3f8680 0x2f9f80 0x1fb880 0x0fd180 } specularTexture PixelTexture { image 4 4 3 0xff5a80 0xef7380 0xdf8c80 0xcfa580 0xbfbe80 0xafd780 0x9ff080 0x8f0980 0x7f2280 0x6f3b80 0x5f5480 0x4f6d80 0x3f8680 0x2f9f80 0x1fb880 0x0fd180 } emissiveTexture PixelTexture { image 4 4 3 0xff5a80 0xef7380 0xdf8c80 0xcfa580 0xbfbe80 0xafd780 0x9ff080 0x8f0980 0x7f2280 0x6f3b80 0x5f5480 0x4f6d80 0x3f8680 0x2f9f80 0x1fb880 0x0fd180 } emissiveColor 0.3 0.3 0.3 shininessTexture PixelTexture { image 4 4 2 0xff28 0xf336 0xe744 0xdb52 0xcf60 0xc36e 0xb77c 0xab8a 0x9f98 0x93a6 0x87b4 0x7bc2 0x6fd0 0x63de 0x57ec 0x4bfa } occlusionTexture PixelTexture { image 4 4 1 0x28 0x36 0x44 0x52 0x60 0x6e 0x7c 0x8a 0x98 0xa6 0xb4 0xc2 0xd0 0xde 0xec 0xfa } normalTexture PixelTexture { image 4 4 3 0x0c0cff 0x590cff 0xa50cff 0xf20cff 0x0c59ff 0x5959ff 0xa559ff 0xf259ff 0x0ca5ff 0x59a5ff 0xa5a5ff 0xf2a5ff 0x0cf2ff 0x59f2ff 0xa5f2ff 0xf2f2ff } } }
+  geometry IndexedFaceSet { solid FALSE coord Coordinate { point [ -0.5 -0.5 0, 0.5 -0.5 0, 0.5 0.5 0, -0.5 0.5 0 ] } coordIndex [ 0 1 2 3 -1 ]
+    normal Normal { vector [ 0 0 1, 0 0 1, 0 0 1, 0 0 1 ] } texCoord TextureCoordinate { point [ 0 0, 1 0, 1 1, 0 1 ] } } } }

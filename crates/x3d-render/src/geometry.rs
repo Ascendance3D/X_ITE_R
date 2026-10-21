@@ -43,6 +43,8 @@ pub struct Geometry {
     pub ccw: bool,
     pub min: Vector3,
     pub max: Vector3,
+    /// Text.display's `renderContext .textureNode`: a ScreenText's canvas, drawn instead of the appearance's texture.
+    pub texture: Option<std::rc::Rc<crate::texture::TextureImage>>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -1062,8 +1064,11 @@ pub fn make_cylinder(height: f64, radius: f64, side: bool, top: bool, bottom: bo
 // Lines and points.
 
 /// IndexedLineSet.build.
-pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Option<Colors>, color_index: &[i32], color_per_vertex: bool) -> Geometry {
+/// `normal`: the Normal node's vectors, indexed by the coord index (IndexedLineSet.build: `normalNode ?.addVector (index, normalArray)`;
+/// normalIndex and normalPerVertex are not read).
+pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Option<Colors>, color_index: &[i32], color_per_vertex: bool, normal: Option<&[f32]>, extras: &crate::extras::Extras) -> Geometry {
     let mut g = Geometry { geometry_type: 1, solid: false, ccw: true, ..Default::default() };
+    extras.init(&mut g);
 
     if let Some(points) = coord.filter(|c| c.len() >= 3) {
         let coord = Coords(points);
@@ -1091,10 +1096,15 @@ pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Optio
                         let index = coord_index[i] as i64;
 
                         g.coord_indices.push(index as u32);
+                        extras.add_attribs_and_fog(index, &mut g);
 
                         if let Some(c) = &color {
                             let ci = if color_per_vertex { at_or(color_index, i, index) } else { at_or(color_index, face, face as i64) };
                             c.add_color(ci, &mut g.colors);
+                        }
+
+                        if let Some(nv) = normal {
+                            add_vector(nv, index, &mut g.normals);
                         }
 
                         coord.add_point(index, &mut g.vertices);
@@ -1110,7 +1120,8 @@ pub fn indexed_line_set(coord: Option<&[f32]>, coord_index: &[i32], color: Optio
 }
 
 /// PointSet.build.
-pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>) -> Geometry {
+/// `normal`: the Normal node's vectors (PointSet.build: `normalNode ?.addVectors (normalArray, numPoints)`).
+pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>, normal: Option<&[f32]>) -> Geometry {
     let mut g = Geometry { geometry_type: 0, solid: false, ccw: true, ..Default::default() };
 
     if let Some(points) = coord.filter(|c| c.len() >= 3) {
@@ -1118,6 +1129,13 @@ pub fn point_set(coord: Option<&[f32]>, color: Option<Colors>) -> Geometry {
 
         if let Some(c) = &color {
             c.add_colors(&mut g.colors, n);
+        }
+
+        // Normal.addVectors: every point's vector, or zeros for an empty Normal node.
+        if let Some(nv) = normal {
+            for i in 0..n {
+                add_vector(nv, if nv.len() >= 3 { i as i64 } else { -1 }, &mut g.normals);
+            }
         }
 
         for (i, p) in points.chunks_exact(3).enumerate() {
@@ -1638,8 +1656,9 @@ pub fn extrusion(e: &ExtrusionInput) -> Geometry {
             let triangles: Vec<usize> = if e.convex {
                 tess::triangulate_convex(&idx)
             } else {
-                let pts: Vec<Vector3> = idx.iter().map(|i| points[*i]).collect();
-                tess::triangulate_polygon(&pts).into_iter().map(|k| idx[k]).collect()
+                // Triangle3.triangulatePolygon (libtess, ODD) of the cap points with their indices, as IndexedFaceSet.
+                let pts: Vec<([f64; 3], usize)> = idx.iter().map(|&i| (points[i].to_array(), i)).collect();
+                x3d_text::libtess::triangulate_indexed(&pts)
             };
 
             if triangles.len() >= 3 {

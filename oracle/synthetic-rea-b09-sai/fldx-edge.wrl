@@ -1,0 +1,53 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx edge"
+DEF T Transform { }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function initialize () {
+  SELF = this;
+  T ('length -1', function () { var a = new MFInt32 (1, 2, 3); try { a .length = -1; return ['no error', a .length, String (a)]; } catch (e) { return [e .name, a .length, String (a)]; } });
+  T ('length 1.5', function () { var a = new MFInt32 (1, 2, 3); try { a .length = 1.5; return ['no error', a .length, String (a), Array .from (a)]; } catch (e) { return [e .name, a .length, String (a)]; } });
+  T ('length 1.5 then push', function () { var a = new MFInt32 (1, 2, 3); a .length = 1.5; try { a .push (7); return [a .length, String (a)]; } catch (e) { return [e .name]; } });
+  T ('vec length 2.5', function () { var v = new MFVec3f (new SFVec3f (1, 2, 3)); try { v .length = 2.5; return ['no error', v .length, String (v)]; } catch (e) { return [e .name, v .length]; } });
+  T ('string length 1.5', function () { var a = new MFString ('a', 'b', 'c'); try { a .length = 1.5; return ['no error', a .length, String (a)]; } catch (e) { return [e .name, a .length]; } });
+  flush_ ();
+}
+
+  "
+}

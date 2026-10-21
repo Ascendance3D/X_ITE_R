@@ -1,0 +1,36 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fcb reentry"
+DEF T Transform { }
+DEF U Transform { }
+DEF D Script {
+  directOutput TRUE
+  mustEvaluate TRUE
+  inputOutput MFString out [ ]
+  url "ecmascript:
+
+var F = 0;
+function L (s) { var a = globalThis .LOG_ = globalThis .LOG_ || []; a .push (F + ':' + s); out = new MFString (... a); }
+function show (v) {
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'number') return Object .is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON .stringify (v);
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (typeof v === 'function') return 'fn';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v);
+}
+function E (e) { return 'ERR ' + (e && e .name) + ': ' + (e && e .message); }
+function S (n) { return Browser .currentScene .getNamedNode (n); }
+
+
+function prepareEvents () {
+  ++ F;
+  if (F === 1) { try { var t = S ('T'), u = S ('U'); t .addFieldCallback ('adder', 'translation', function (v) { L ('adder ' + show (v)); t .addFieldCallback ('late', 'translation', function (w) { L ('late ' + show (w)); }); }); t .addFieldCallback ('self', 'translation', function (v) { L ('self-remove ' + show (v)); t .removeFieldCallback ('self', 'translation'); }); t .addFieldCallback ('setter', 'translation', function (v) { L ('setter ' + show (v)); if (v .x < 2) u .translation = new SFVec3f (v .x + 10, 0, 0); }); u .addFieldCallback ('u', 'translation', function (v) { L ('U ' + show (v)); }); t .translation = new SFVec3f (1, 0, 0); } catch (e) { L ('step 1 ' + E (e)); } }
+  if (F === 2) { try { S ('T') .translation = new SFVec3f (2, 0, 0); } catch (e) { L ('step 2 ' + E (e)); } }
+  if (F === 3) { try { var t = S ('T'); t .addFieldCallback ('loop', 'scale', function (v) { L ('loop ' + show (v)); if (v .x < 4) t .scale = new SFVec3f (v .x + 1, 1, 1); }); t .scale = new SFVec3f (2, 1, 1); } catch (e) { L ('step 3 ' + E (e)); } }
+}
+
+  "
+}

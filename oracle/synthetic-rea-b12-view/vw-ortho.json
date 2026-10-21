@@ -1,0 +1,215 @@
+{
+ "settle": false,
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "frames": 460,
+ "capture": [
+  4,
+  9,
+  26,
+  35,
+  52,
+  61,
+  78,
+  87,
+  104,
+  113,
+  130,
+  139,
+  156,
+  165,
+  182,
+  191,
+  208,
+  217,
+  234,
+  243,
+  260,
+  290,
+  320,
+  350,
+  380,
+  410,
+  440,
+  455
+ ],
+ "dump": [
+  4,
+  9,
+  26,
+  35,
+  52,
+  61,
+  78,
+  87,
+  104,
+  113,
+  130,
+  139,
+  156,
+  165,
+  182,
+  191,
+  208,
+  217,
+  234,
+  243,
+  260,
+  290,
+  320,
+  350,
+  380,
+  410,
+  440,
+  455,
+  459
+ ],
+ "events": [
+  {
+   "frame": 6,
+   "type": "key",
+   "key": "a"
+  },
+  {
+   "frame": 32,
+   "type": "key",
+   "key": "b"
+  },
+  {
+   "frame": 58,
+   "type": "key",
+   "key": "c"
+  },
+  {
+   "frame": 84,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 110,
+   "type": "key",
+   "key": "e"
+  },
+  {
+   "frame": 136,
+   "type": "key",
+   "key": "f"
+  },
+  {
+   "frame": 162,
+   "type": "key",
+   "key": "g"
+  },
+  {
+   "frame": 188,
+   "type": "key",
+   "key": "h"
+  },
+  {
+   "frame": 214,
+   "type": "key",
+   "key": "i"
+  },
+  {
+   "frame": 240,
+   "type": "key",
+   "key": "j"
+  },
+  {
+   "frame": 272,
+   "type": "viewer",
+   "name": "LOOKAT"
+  },
+  {
+   "frame": 274,
+   "type": "mousedown",
+   "button": 0,
+   "x": 300,
+   "y": 260
+  },
+  {
+   "frame": 275,
+   "type": "mouseup",
+   "button": 0,
+   "x": 300,
+   "y": 260
+  },
+  {
+   "frame": 304,
+   "type": "mods",
+   "alt": true
+  },
+  {
+   "frame": 304,
+   "type": "mousedown",
+   "button": 0,
+   "x": 200,
+   "y": 250
+  },
+  {
+   "frame": 305,
+   "type": "mouseup",
+   "button": 0,
+   "x": 200,
+   "y": 250
+  },
+  {
+   "frame": 305,
+   "type": "mods",
+   "alt": false
+  },
+  {
+   "frame": 334,
+   "type": "key",
+   "key": "d"
+  },
+  {
+   "frame": 364,
+   "type": "mousedown",
+   "button": 0,
+   "x": 256,
+   "y": 300
+  },
+  {
+   "frame": 365,
+   "type": "mouseup",
+   "button": 0,
+   "x": 256,
+   "y": 300
+  },
+  {
+   "frame": 394,
+   "type": "mods",
+   "alt": true
+  },
+  {
+   "frame": 394,
+   "type": "mousedown",
+   "button": 0,
+   "x": 330,
+   "y": 240
+  },
+  {
+   "frame": 395,
+   "type": "mouseup",
+   "button": 0,
+   "x": 330,
+   "y": 240
+  },
+  {
+   "frame": 395,
+   "type": "mods",
+   "alt": false
+  },
+  {
+   "frame": 424,
+   "type": "key",
+   "key": "g"
+  }
+ ],
+ "buildEachFrame": true
+}

@@ -1,0 +1,38 @@
+PASS  particles-bounded-box                    life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 1.43e-06 position 4.18e-06 | dt rel 0.0e+00
+PASS  particles-bounded-disabled               life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 4.77e-07 | dt rel 0.0e+00
+PASS  particles-bounded-floor                  life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 1.19e-07 position 3.58e-07 | dt rel 0.0e+00
+PASS  particles-bounded-floor-damp1            life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 2.38e-07 position 9.54e-07 | dt rel 0.0e+00
+PASS  particles-bounded-floor-gravity          life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 9.54e-07 position 2.15e-06 | dt rel 0.0e+00
+PASS  particles-bounded-two                    life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 1.19e-07 position 7.15e-07 | dt rel 0.0e+00
+PASS  particles-cone-basic                     life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 6.71e-07 position 7.00e-07 | dt rel 0.0e+00
+PASS  particles-cone-basic-stat                KS/crit max speed 0.00 over 7 features, max category/mean z 0.00
+PASS  particles-cone-down                      life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 2.98e-07 position 3.58e-07 | dt rel 0.0e+00
+PASS  particles-cone-spherical                 life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 4.77e-07 position 4.77e-07 | dt rel 0.0e+00
+PASS  particles-cone-tilt                      life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 2.38e-06 position 2.86e-06 | dt rel 0.0e+00
+PASS  particles-cone-wide                      life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 7.15e-07 position 4.77e-07 | dt rel 0.0e+00
+PASS  particles-cone-wide-stat                 KS/crit max speed 0.00 over 7 features, max category/mean z 0.00
+PASS  particles-cone-zeroangle                 life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 0.00e+00 | dt rel 0.0e+00
+PASS  particles-explosion-basic                life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 9.54e-07 position 1.07e-06 | dt rel 0.0e+00
+PASS  particles-explosion-fixed                life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 7.15e-07 position 7.15e-07 | dt rel 0.0e+00
+PASS  particles-explosion-stat                 KS/crit max vx 0.00 over 7 features, max category/mean z 0.00
+PASS  particles-point-create-off               life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 0.00e+00 | dt rel 0.0e+00
+PASS  particles-point-dir                      life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 4.77e-07 | dt rel 0.0e+00
+PASS  particles-point-dirraw                   life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 2.38e-07 | dt rel 0.0e+00
+PASS  particles-point-fixed                    life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 2.38e-07 | dt rel 0.0e+00
+PASS  particles-point-nospeed                  life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 0.00e+00 | dt rel 0.0e+00
+PASS  particles-point-off                      life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 0.00e+00 | dt rel 0.0e+00
+PASS  particles-point-spherical                life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 8.34e-07 position 5.96e-07 | dt rel 0.0e+00
+PASS  particles-point-spherical-stat           KS/crit max vy 0.00 over 7 features, max category/mean z 0.00
+PASS  particles-surface-box                    life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 5.96e-08 position 1.19e-07 | dt rel 0.0e+00
+PASS  particles-surface-box-stat               KS/crit max py 0.10 over 11 features, max category/mean z 0.00
+PASS  particles-surface-ifs-solid              life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 1.19e-07 | dt rel 0.0e+00
+PASS  particles-surface-ifs-twosided           life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 1.19e-07 position 4.77e-07 | dt rel 0.0e+00
+PASS  particles-surface-ifs-twosided-stat      KS/crit max px 0.08 over 10 features, max category/mean z 0.00
+PASS  particles-surface-nosurface              life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 0.00e+00 | dt rel 0.0e+00
+PASS  particles-volume-cube                    life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 5.07e-07 | dt rel 0.0e+00
+PASS  particles-volume-cube-spherical          life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 4.17e-07 position 4.32e-07 | dt rel 0.0e+00
+PASS  particles-volume-cube-stat               KS/crit max depth 0.00 over 7 features, max category/mean z 0.00
+PASS  particles-volume-empty                   life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 5.96e-08 | dt rel 0.0e+00
+PASS  particles-volume-twocubes                life 0.00e+00 lifetime 0.00e+00 elapsed 0.00e+00 color 0.00e+00 velocity 0.00e+00 position 5.96e-07 | dt rel 0.0e+00
+PASS  particles-volume-twocubes-stat           KS/crit max px 0.00 over 7 features, max category/mean z 0.00
+suite rea-b06-particles: 37 pass, 0 known, 0 fail, of 37 cases

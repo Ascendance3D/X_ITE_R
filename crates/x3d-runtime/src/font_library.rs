@@ -138,6 +138,8 @@ impl Runtime {
     /// `this .font = font` of X3DFontStyleNode.loadData for a font a FontLibrary registered (`None`: the load ended with a
     /// default font, a font file, or no font, which the renderer finds itself).
     pub(crate) fn font_style_chose(&mut self, node: NodeId, font: Option<Rc<x3d_text::Font>>) {
+        self.font_style_done(node, font.clone());
+
         let same = match (&font, self.font_style_fonts.get(&node)) {
             (Some(a), Some(b)) => Rc::ptr_eq(a, b),
             (None, None) => true,
@@ -153,6 +155,14 @@ impl Runtime {
             None => self.font_style_fonts.remove(&node),
         };
         self.font_epoch += 1;
+    }
+
+    /// The end of X3DFontStyleNode.loadData: `this .font = font`, `this .addNodeEvent ()` (its Texts rebuild).
+    fn font_style_done(&mut self, node: NodeId, library: Option<Rc<x3d_text::Font>>) {
+        let font = library.or_else(|| self.font_style_loaded_font(node));
+
+        self.font_style_font.insert(node, font);
+        self.add_node_event(node);
     }
 
     /// The font a FontStyle's last load took from a FontLibrary.
