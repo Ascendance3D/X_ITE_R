@@ -1,0 +1,32 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 0 0 }
+PROTO MyClip [
+  exposedField SFTime startTime 0
+  exposedField MFString url "media/tone48k-stereo.wav"
+  exposedField SFBool loop TRUE
+  exposedField SFTime stopTime 1
+  eventOut SFBool isActive
+  eventOut SFTime duration_changed
+] {
+  AudioClip { url IS url loop IS loop startTime IS startTime stopTime IS stopTime isActive IS isActive duration_changed IS duration_changed }
+}
+DEF SND Sound { minFront 20 minBack 20 maxFront 40 maxBack 40 location 3 0 0 source DEF O AudioClip { url "media/tone48k-stereo.wav" loop TRUE } }
+DEF Q MyClip { }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  eventIn SFTime set_time
+  eventOut SFTime start
+  field SFInt32 n 0
+  url "javascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
+ROUTE S.start TO Q.startTime
+DEF K Script { directOutput TRUE field SFNode s USE SND field SFNode q USE Q eventIn SFTime set_time field SFInt32 n 0 url "javascript:
+function set_time (value) { ++ n;
+   if (n === 24) s.source = q;
+}
+" }
+ROUTE T.time TO K.set_time

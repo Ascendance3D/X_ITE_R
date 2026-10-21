@@ -1,0 +1,20 @@
+#VRML V2.0 utf8
+Viewpoint { position 0 0 0 }
+Sound { minFront 20 minBack 20 maxFront 40 maxBack 40 location 0 0 -5 source DEF O AudioClip { url "media/bad.mid" loop TRUE stopTime 1 } }
+DEF PO Script { eventIn SFBool a eventIn SFTime d url "javascript:
+function a (v, t) { print ('O active ' + v + ' ' + t); }
+function d (v, t) { print ('O duration ' + v + ' ' + t); }
+" }
+ROUTE O.isActive TO PO.a
+ROUTE O.duration_changed TO PO.d
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  eventIn SFTime set_time
+  eventOut SFTime start
+  field SFInt32 n 0
+  url "javascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
