@@ -150,6 +150,32 @@ cam += script_node(refs(["V1", "O1", "G1"]), """function on_key (k)
 write("sg-camera", cam)
 keyscript("sg-camera", "abcdef", build_each=True)
 
+# ---- ScreenFontStyle Text without a ScreenGroup (ScreenText.traverseBefore scales the shape itself), under each camera, resized ------
+sp = HEAD + "DEF V1 Viewpoint { position 0 0 8 }\nDEF V2 Viewpoint { position 2 1 5 orientation 0 1 0 0.4 fieldOfView 0.7 }\nDEF O1 OrthoViewpoint { position 0 0 10 fieldOfView [ -5 -4 5 4 ] }\n"
+sp += "NavigationInfo { type \"EXAMINE\" transitionType [ \"TELEPORT\" ] }\n" + BG + BASE
+def plain(tr, defs, strings, fs, extra=""):
+    st = " ".join(f'"{x}"' for x in strings)
+    return (f"DEF T{defs} Transform {{ translation {tr} {extra} children Shape {{ appearance {EMIT('1 1 1')} geometry DEF X{defs} Text {{ string [ {st} ] "
+            f"fontStyle DEF F{defs} ScreenFontStyle {{ {fs} }} solid FALSE }} }} }}\n")
+sp += plain("-2.5 2 0", "A", ["Plain"], "pointSize 20")
+sp += plain("2.5 2 -3", "B", ["Far", "text"], "pointSize 16")
+sp += plain("-2.5 -2 1", "C", ["Tilted"], "pointSize 18", "rotation 0 1 0 0.8")
+sp += script_node(refs(["TA", "FA", "XB", "TB", "V2", "O1", "V1"]), """function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') fa .pointSize = 32;
+   if (k == 'b') ta .translation = new SFVec3f (-1, 2, 0);
+   if (k == 'c') v2 .set_bind = true;
+   if (k == 'd') o1 .set_bind = true;
+   if (k == 'e') xb .string = new MFString ('Changed');
+   if (k == 'f') Browser .setBrowserOption ('ContentScale', 2);
+   if (k == 'g') v1 .set_bind = true;
+   if (k == 'h') Browser .setBrowserOption ('ContentScale', 1);
+}""")
+write("sfs-plain", sp)
+spev = [{"frame": 6 + 8 * i, "type": "key", "key": c} for i, c in enumerate("abcdefgh")] + [{"frame": 78, "type": "resize", "width": 640, "height": 360}]
+script("sfs-plain", 90, spev, [4] + [6 + 8 * i + 3 for i in range(8)] + [81], settle=True, build_each=True)
+
 # ---- ScreenFontStyle: run-time font changes ----------------------------------------------------------
 def stext(tr, defs, strings, fs):
     s = " ".join(f'"{x}"' for x in strings)
