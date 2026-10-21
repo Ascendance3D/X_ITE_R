@@ -13,7 +13,7 @@ use std::hash::{Hash, Hasher};
 pub const KEEP_FRAMES: u64 = 120;
 
 /// The fixed part of `VolumeUniforms` (volume.wgsl) in bytes; the value pool follows.
-const FIXED_BYTES: usize = 336;
+const FIXED_BYTES: usize = 416;
 
 /// A volume of the frame being drawn.
 pub struct VolumeInput<'a> {
@@ -21,6 +21,8 @@ pub struct VolumeInput<'a> {
     /// Indices into `Frame::lights` (the draw item's lights).
     pub lights: Vec<u32>,
     pub clip_planes: Vec<[f64; 4]>,
+    /// The fog of the draw: the innermost LocalFog, else the layer's Fog (renderContext .fogNode).
+    pub fog: Option<&'a crate::fog::FogParams>,
 }
 
 struct Module {
@@ -199,6 +201,17 @@ impl VolumeGpu {
             }
 
             bytes.extend_from_slice(bytemuck::cast_slice(&planes));
+            match input.fog {
+                Some(fog) => {
+                    f(&[fog.color[0], fog.color[1], fog.color[2], fog.fog_type as f32], &mut bytes);
+                    f(&[fog.visibility_start, fog.visibility_range, 0.0, 0.0], &mut bytes);
+                    f(&[fog.matrix[0], fog.matrix[1], fog.matrix[2], 0.0], &mut bytes);
+                    f(&[fog.matrix[3], fog.matrix[4], fog.matrix[5], 0.0], &mut bytes);
+                    f(&[fog.matrix[6], fog.matrix[7], fog.matrix[8], 0.0], &mut bytes);
+                }
+                None => bytes.extend_from_slice(&[0u8; 80]),
+            }
+
             debug_assert_eq!(bytes.len(), FIXED_BYTES);
             f(&d.values, &mut bytes);
             bytes.resize(stride as usize, 0);

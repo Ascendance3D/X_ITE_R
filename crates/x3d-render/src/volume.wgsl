@@ -24,6 +24,13 @@ struct VolumeUniforms {
     counts: vec4<u32>,
     light_index: array<vec4<u32>, 2>,
     clip_planes: array<vec4<f32>, 6>,
+    // The volume's fog (renderContext .fogNode: the innermost LocalFog, else the layer's Fog):
+    // color and type, visibilityStart / visibilityRange, matrix columns.
+    fog_color_type: vec4<f32>,
+    fog_range: vec4<f32>,
+    fog_m0: vec4<f32>,
+    fog_m1: vec4<f32>,
+    fog_m2: vec4<f32>,
     v: array<vec4<f32>, //@VEC4S@>,
 }
 
@@ -52,6 +59,19 @@ fn spot_factor_of(cut_off_angle: f32, beam_width: f32, L: vec3<f32>, d: vec3<f32
 }
 
 //@TONE_AND_FOG@
+
+// Fog2.glsl getFogInterpolant of the volume's fog.
+fn get_volume_fog_interpolant(vertex: vec3<f32>) -> f32 {
+    let visibility_start = u.fog_range.x;
+    let visibility_range = u.fog_range.y - visibility_start;
+    let d_v = max(length(mat3x3<f32>(u.fog_m0.xyz, u.fog_m1.xyz, u.fog_m2.xyz) * vertex) - visibility_start, 0.0);
+
+    if (u32(u.fog_color_type.w) == 1u) {
+        return max(visibility_range - d_v, 0.0) / visibility_range;
+    }
+
+    return exp(-d_v / max(visibility_range - d_v, 0.001));
+}
 
 //@PROGRAM@
 
@@ -97,8 +117,8 @@ fn fs_main(in: VOut) -> @location(0) vec4<f32> {
         discard;
     }
 
-    if (u32(frame.fog_color_type.w) != 0u) {
-        final_color = vec4<f32>(mix(frame.fog_color_type.xyz, final_color.rgb, get_fog_interpolant(in.vertex)), final_color.a);
+    if (u32(u.fog_color_type.w) != 0u) {
+        final_color = vec4<f32>(mix(u.fog_color_type.xyz, final_color.rgb, get_volume_fog_interpolant(in.vertex)), final_color.a);
     }
 
     final_color = vec4<f32>(tone_map(final_color.rgb, u.counts.z == 1u), final_color.a);
