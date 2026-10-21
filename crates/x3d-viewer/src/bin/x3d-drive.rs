@@ -7,6 +7,8 @@
 //! Script (JSON): { "size": [512, 512], "t0": 946684800, "dt": 0.016666666666666666, "frames": 60,
 //!   "events": [ { "frame": 1, "type": "mousedown", "button": 0, "x": 256, "y": 256 }, ... ],
 //!   "capture": [10, 60], "dump": [60] }
+//! "buildEachFrame": true builds (but does not render) the frame after every step, like X_ITE's render loop: a ScreenGroup's matrix
+//! (last DISPLAY) feeds the next CAMERA pass.
 //! "physics": { "nodes": { PATH: [ field, ... ] } } (REA batch 06, RigidBodyPhysics): the result gets
 //! `physics.dt` (every `RigidBodyCollection .getTimeStep ()` result with the frame it was made in; frame 0 is
 //! the load and the warm-up) and `physics.frames` (after the warm-up and after each frame, the listed
@@ -15,7 +17,7 @@
 //! (position, contactNormal, depth, geometry1, geometry2, body1, body2 of every Contact). A script with
 //! "physics" pins `currentFrameRate` to 1 / dt, like the oracle page does.
 //! Event types: mousedown, mouseup, mousemove, wheel (deltaY), dblclick, key (Home, End, PageUp,
-//! PageDown), mods (shift, ctrl, alt), viewer (name). Pointer coordinates are pixels with the
+//! PageDown), mods (shift, ctrl, alt), viewer (name), resize (width, height: the canvas CSS size). Pointer coordinates are pixels with the
 //! origin at the bottom left of the canvas. "t" (seconds) offsets the event's Date.now ().
 
 use serde_json::{Value, json};
@@ -77,10 +79,9 @@ fn rot(r: &x3d_fields::math::Rotation4) -> Value {
 
 fn pose(v: &mut Viewer3d) -> Value {
     let (p, o, c) = v.user_pose();
-    let bound = v.layer.viewpoint();
-    let name = if x3d_viewer::layer::is_default(bound) { "<default>".to_string() } else { v.rt.scene.node(bound).name.clone() };
+    let name = v.active_viewpoint_name();
     let (fov_scale, fov_offset) = v.field_of_view_state();
-    let mut j = json!({ "position": vec3(&p), "orientation": rot(&o), "centerOfRotation": vec3(&c), "viewpoint": name, "viewer": v.viewer_kind(), "fieldOfViewScale": fov_scale });
+    let mut j = json!({ "position": vec3(&p), "orientation": rot(&o), "centerOfRotation": vec3(&c), "viewpoint": name, "viewer": v.viewer_field(), "fieldOfViewScale": fov_scale });
     // OrthoViewpoint ._fieldOfViewOffset (the oracle reports it for an OrthoViewpoint only).
     if let Some(o) = fov_offset {
         j["fieldOfViewOffset"] = json!(o);
@@ -146,6 +147,21 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
     // loaded world was current), so frame-count dependent behavior (WALK gravity) lines up.
     let warmup = warmup_override.or(script["warmup"].as_u64()).unwrap_or(8);
 
+    // The pointing buffer on the GPU, like X_ITE's (`--cpu-pointing`: the ray cast's double values).
+    if !std::env::args().any(|a| a == "--cpu-pointing") {
+        v.pointing_gpu = match x3d_render::pointing_gpu::PointingGpu::new_headless() {
+            Ok(g) => {
+                // The collision depth buffer shares the device.
+                v.depth_gpu = Some(std::rc::Rc::new(std::cell::RefCell::new(x3d_render::depth_gpu::DepthGpu::new(g.device().clone(), g.queue().clone()))));
+                Some(g)
+            }
+            Err(e) => {
+                eprintln!("x3d-drive: no pointing GPU ({e}); picks use the ray cast");
+                None
+            }
+        };
+    }
+
     let mut gpu = if png_dir.is_some() { x3d_render::gpu::Gpu::new().ok() } else { None };
     // The RenderingProperties of the page (Multisampling 0 for anim.html, N for `--msaa N`).
     if let Some(g) = gpu.as_mut() {
@@ -195,6 +211,8 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         v.rt.defer_audio_decodes = true;
     }
 
+    let build_each = script["buildEachFrame"].as_bool().unwrap_or(false);
+
     for k in 1..=frames {
         let prev = t0 + (k - 1) as f64 * dt;
 
@@ -216,6 +234,11 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
             physics_frames.push((k, physics_snapshot(&mut v, &physics_spec)));
         }
 
+        // "buildEachFrame": true: X_ITE renders every frame, and a ScreenGroup's matrix of one frame is what the next CAMERA pass uses.
+        if build_each && !capture.contains(&k) {
+            let _ = v.build_frame();
+        }
+
         if let (true, Some(g)) = (live_textures && !capture.contains(&k), gpu.as_mut()) {
             let _ = g.renderer.render_cube_passes(&v.build_frame());
         }
@@ -226,13 +249,17 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
         if dump.contains(&k) || k == frames {
             v.rt.publish_clone_counts();
-            vrml.insert(k.to_string(), json!(v.rt.scene.to_vrml_string()));
+            // `browser .currentScene .toVRMLString ()` in the page: X_ITE makes the SFNodes it reads (Runtime::ctx_streamed).
+            let world = v.rt.scene.world;
+            v.rt.ctx_streamed(world);
+            vrml.insert(k.to_string(), json!(v.rt.print_raw(|s| s.to_vrml_string())));
         }
 
         if dump_inlines && (dump.contains(&k) || k == frames) {
             v.rt.publish_clone_counts();
             let mut out = serde_json::Map::new();
-            inline_scenes(&v.rt, x3d_scene::ROOT, "", &mut out);
+            let world = v.rt.scene.world;
+            inline_scenes(&mut v.rt, world, "", &mut out);
             inlines.insert(k.to_string(), Value::Object(out));
         }
 
@@ -243,10 +270,12 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
                 let frame = v.build_frame();
                 live_textures |= !frame.cube_passes.is_empty() || !frame.rendered_passes.is_empty();
-                let rgba = g.render(&frame, size.0, size.1);
+                // X3DRenderingContext.reshape: the drawing buffer is the canvas size × ContentScale (the oracle's PNG is that buffer).
+                let (fw, fh) = v.framebuffer_size();
+                let rgba = g.render(&frame, fw, fh);
                 let rgba: Vec<u8> = rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
                 std::fs::create_dir_all(dir).ok();
-                let _ = x3d_render::write_png(&dir.join(format!("{k}.png")), size.0, size.1, &rgba);
+                let _ = x3d_render::write_png(&dir.join(format!("{k}.png")), fw, fh, &rgba);
             }
         }
 
@@ -290,6 +319,38 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         result["console"] = json!(v.rt.console);
     }
 
+    // Script key "collisionProbes" (see oracle/x_ite-anim.mjs): getClosestObject of the active layer.
+    if let Some(directions) = script["collisionProbes"].as_array() {
+        let probes: Vec<Value> = directions
+            .iter()
+            .map(|d| {
+                let c = v.probe_closest(x3d_fields::math::Vector3::new(d[0].as_f64().unwrap_or(0.0), d[1].as_f64().unwrap_or(0.0), d[2].as_f64().unwrap_or(0.0)));
+
+                json!({ "distance": c.distance, "id": if c.hit { 0 } else { -1 }, "normal": vec3(&c.normal) })
+            })
+            .collect();
+
+        result["collisionProbes"] = Value::Array(probes);
+    }
+
+    // Script key "pickProbes" (see oracle/x_ite-anim.mjs): the hit at each point, as X_ITE's touch records it.
+    if let Some(points) = script["pickProbes"].as_array() {
+        let probes: Vec<Value> = points
+            .iter()
+            .map(|p| {
+                let h = v.probe_pick(p[0].as_f64().unwrap_or(0.0), p[1].as_f64().unwrap_or(0.0));
+
+                if !h.id {
+                    return json!({ "id": 0 });
+                }
+
+                json!({ "id": 1, "point": vec3(&h.point), "normal": vec3(&h.normal), "texCoord": [h.tex_coord.x, h.tex_coord.y, h.tex_coord.z, h.tex_coord.w] })
+            })
+            .collect();
+
+        result["pickProbes"] = Value::Array(probes);
+    }
+
     if physics {
         let frames: Vec<String> = physics_frames.iter().map(|(k, f)| format!("\"{k}\":{f}")).collect();
 
@@ -311,8 +372,8 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
 /// The scene text of every DEF-named Inline of `ctx` (nested Inlines as `A/B`): `null` while the
 /// Inline has no scene (Inline.getInternalScene () is the empty default scene).
-fn inline_scenes(rt: &x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut serde_json::Map<String, Value>) {
-    for &n in rt.scene.ctx(ctx).named_nodes.values() {
+fn inline_scenes(rt: &mut x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut serde_json::Map<String, Value>) {
+    for n in rt.scene.ctx(ctx).named_nodes.values().to_vec() {
         if rt.builtin_name(n) != Some("Inline") {
             continue;
         }
@@ -321,6 +382,7 @@ fn inline_scenes(rt: &x3d_runtime::Runtime, ctx: usize, prefix: &str, out: &mut 
 
         match rt.inline_scenes.get(&n) {
             Some(&c) => {
+                rt.ctx_streamed(c);
                 out.insert(name.clone(), json!(rt.scene.to_vrml_string_ctx(c)));
                 inline_scenes(rt, c, &format!("{name}/"), out);
             }
@@ -340,7 +402,7 @@ fn take_dt(v: &mut Viewer3d, frame: u64, out: &mut Vec<Value>) {
 
 /// The node a path names: a DEF name, or `Inline/Name`.
 fn physics_resolve(rt: &x3d_runtime::Runtime, path: &str) -> Option<x3d_fields::NodeId> {
-    let mut ctx = x3d_scene::ROOT;
+    let mut ctx = rt.scene.world;
     let mut node = None;
     let parts: Vec<&str> = path.split('/').collect();
 

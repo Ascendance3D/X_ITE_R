@@ -7,7 +7,7 @@ use crate::*;
 impl Runtime {
     /// `executionContext .getSpecificationVersion () <= 3.3` (string compared to a number).
     fn spec_le_33(&self) -> bool {
-        self.scene.specification_version.trim().parse::<f64>().map(|v| v <= 3.3).unwrap_or(false)
+        self.scene.spec_version_of(self.scene.world).trim().parse::<f64>().map(|v| v <= 3.3).unwrap_or(false)
     }
 
     fn seq_index(&mut self, node: NodeId) -> &mut i64 {

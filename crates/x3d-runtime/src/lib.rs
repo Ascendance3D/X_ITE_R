@@ -30,7 +30,9 @@
 //! loading and exactly one frame (FileLoader.set_loadCount__ awaits `browser .nextFrame ()`).
 
 pub mod browser_options;
+pub mod browser_load;
 pub mod bullet;
+pub mod ctx_events;
 pub mod geo;
 pub mod events;
 pub mod extern_proto;
@@ -145,6 +147,11 @@ pub enum Cb {
     FontLibrarySetFamily,
     /// X3DFontStyleNode: `family` or `style` changed (`set_url__`).
     FontStyleReload,
+    FontStyleJustify,
+    /// X3DGeometryNode (Text): requestRebuild (node interest), rebuild (`_rebuild`), Text.set_fontStyle__.
+    TextRequestRebuild,
+    TextRebuild,
+    TextSetFontStyle,
     // Script (X3DScriptNode): field callback index into user-defined fields.
     ScriptField(usize),
     ScriptEventsProcessed,
@@ -177,13 +184,18 @@ pub enum Cb {
     TimeSensorSetTime,
     // X3DBindableNode.set_bind__
     BindableSetBind,
+    // Collision.set_enabled__: disabling ends isActive.
+    CollisionSetEnabled,
     // X3DViewpointNode.set_navigationInfo__: `_isBound .addFieldInterest (navigationInfoNode ._set_bind)`.
     ViewpointIsBound,
+    // X3DViewpointNode.set_viewAll__: a true viewAll on a bound viewpoint sends it `set_bind = true`.
+    ViewpointSetViewAll,
     // GeoLOD.set_rootLoadState__ / set_childLoadState__ (interests on its private Inlines' loadState).
     GeoLodRootLoadState,
     GeoLodChildLoadState,
     // FileLoader.set_loadCount__ of a scene that an Inline loaded (interest on the scene's loadCount).
     SceneLoadCount,
+    WorldLoadCount,
     // X3DRoute.reconnect: interest on the loadState of an Inline that an imported node of the route belongs to.
     RouteReconnect(usize),
     // ComposedCubeMapTexture.set_texture__ (index): the face slot a texture field change fills.
@@ -288,8 +300,30 @@ pub enum Task {
     UrlLoad(NodeId, u64),
     /// X3DExternProtoDeclaration.loadData (declaration, generation): fetch the candidates.
     ExternLoad(ExternId, u64),
-    /// A Script whose source is fetched (a macrotask, requested by the Script's microtask).
-    ScriptFetch(NodeId),
+    /// A Script candidate whose source is fetched (a macrotask, requested by the Script's microtask): node, candidate index.
+    ScriptFetch(NodeId, usize),
+    /// FileLoader.loadDocumentError → loadDocumentAsync of the next Script candidate (node, its index), `hops` more microtask
+    /// ticks from now, printing the failure of the candidate before it when it runs.
+    ScriptCandidate(NodeId, usize, u8, Option<Box<script::CandidateError>>),
+    /// X3DBrowser.createX3DFromURL: the fetch of request `id`.
+    BrowserLoad(u64),
+    /// X3DBrowser.createX3DFromString: the parser's statements run once `browser .loadComponents (scene)` resolved.
+    BrowserParse(u64),
+}
+
+/// X3DBrowserContext's active nodes (getActiveLayer, getActiveNavigationInfo, getActiveViewpoint) and getCurrentViewer.
+#[derive(Clone, Debug)]
+pub struct BrowserActive {
+    pub layer: Option<NodeId>,
+    pub navigation_info: Option<NodeId>,
+    pub viewpoint: Option<NodeId>,
+    pub viewer: String,
+}
+
+impl Default for BrowserActive {
+    fn default() -> Self {
+        BrowserActive { layer: None, navigation_info: None, viewpoint: None, viewer: "EXAMINE".into() }
+    }
 }
 
 pub struct Runtime {
@@ -298,15 +332,32 @@ pub struct Runtime {
     pub nrt: Vec<NodeRt>,
     tainted_fields: Vec<(FKey, Event)>,
     tainted_nodes: Vec<NodeId>,
+    /// A ContentScale change waits for the next processEvents to reach the ScreenFontStyles (see `content_scale_events`).
+    content_scale_armed: bool,
     processing: bool,
     pub parents: HashMap<NodeId, Vec<Holder>>,
     /// console.error / console.warn output, formatted like dump.html (`error: …`, first line).
     pub log: Vec<String>,
     pub now: f64,
+    /// Script timers (oracle page `runTimers`): the browser time of the previous frame and the date (`Date .now ()`) of the frame
+    /// being started, both in seconds. `date_override` is the date a running timer callback sees.
+    pub timer_prev_time: f64,
+    pub timer_date: f64,
+    pub date_override: Option<f64>,
     pub tasks: std::collections::VecDeque<Task>,
     /// The browser's private event fields (prepareEvents, timeEvents, …) live on this node.
     pub browser_node: NodeId,
     pub script_host: Option<Box<dyn ScriptHost>>,
+    /// Events of the change fields of execution contexts and scenes ([`ctx_events`]).
+    pub ctx_events: ctx_events::CtxEvents,
+    /// Fields that a Script gave a callback with X3DField.addFieldCallback: X3DField.processEvent calls the host for them.
+    pub field_observed: std::collections::HashSet<FKey>,
+    /// Field callbacks due while the host was busy; they run when it is back.
+    pub(crate) pending_field_events: Vec<FKey>,
+    /// Node fields a Script holds as JavaScript objects (X_ITE's own field objects, which hold their value), and whether the
+    /// value changed since the objects were last refreshed ([`Runtime::take_js_dirty`]).
+    pub js_mirror: HashMap<FKey, bool>,
+    js_dirty: Vec<FKey>,
     /// The Shaders component: the compiler the renderer installs, parts, links and the Appearance selection.
     pub shaders: nodes::shaders::ShaderHost,
     pub fetcher: Box<dyn Fetcher>,
@@ -324,6 +375,25 @@ pub struct Runtime {
     pub font_style_fonts: HashMap<NodeId, std::rc::Rc<x3d_text::Font>>,
     /// FontStyle load loops that wait for a FontLibrary that is still loading.
     pub pending_font_styles: Vec<font_library::PendingFontStyle>,
+    /// X3DFontStyleNode.font: what each FontStyle's last completed loadData chose (kept while the next one loads).
+    pub font_style_font: HashMap<NodeId, Option<std::rc::Rc<x3d_text::Font>>>,
+    /// The font style node each Text listens to (None: the browser's default FontStyle).
+    pub text_font_styles: HashMap<NodeId, Option<NodeId>>,
+    /// The Texts that use the browser's default FontStyle, in the order they connected.
+    pub default_font_texts: Vec<NodeId>,
+    pub default_font: nodes::text::DefaultFont,
+    /// How far the default FontStyle's loadData got while `default_font` is Loading (its timer, then its font file).
+    pub default_font_stage: nodes::text::LoadStage,
+    /// X3DFontStyleNode.loadData runs waiting for their `await $.sleep (0)` timer or their font file (see nodes/text.rs).
+    pub font_style_loads: Vec<nodes::text::FontStyleLoad>,
+    /// browser.loadFont's cache: the default font files a FontStyle has loaded.
+    pub loaded_font_files: std::collections::HashSet<String>,
+    /// The family and style the running loadData of a FontStyle took when it began.
+    pub font_style_snapshot: HashMap<NodeId, (Vec<String>, String)>,
+    /// X3DFontStyleNode.alignments (major, minor): set by `set_justify__` at setup and when `justify` changes.
+    pub font_style_alignments: HashMap<NodeId, (x3d_text::layout::Alignment, x3d_text::layout::Alignment)>,
+    /// A frame has run (timers run at the start of each): loadData waits for its timer from then on.
+    pub frames_started: bool,
     /// Script nodes in the order their contexts became active, for diagnostics.
     pub scripts: Vec<NodeId>,
     /// Inline.getInternalScene: Inline node → root context of the scene it loaded and attached.
@@ -335,13 +405,27 @@ pub struct Runtime {
     /// Scenes that were parsed and set up but are not attached yet (FileLoader.setScene waits for
     /// their loadCount to reach 0 and then for the next frame).
     pub pending_scenes: Vec<inline::PendingScene>,
-    /// When set (x3d-drive's offline audio frames), a BufferAudioSource's decodeAudioData result
-    /// waits in `pending_audio_decodes` until [`Runtime::flush_audio_decodes`] at the start of
-    /// the next frame, like oracle/x_ite-anim.mjs gates the browser's decoder thread.
+    /// A BufferAudioSource's or AudioClip's decodeAudioData result waits in `pending_audio_decodes` until the
+    /// pending events of the next prepareEvents are processed. When set (x3d-drive's offline audio frames), it
+    /// waits until [`Runtime::flush_audio_decodes`] at the start of the next frame instead, like
+    /// oracle/x_ite-anim.mjs gates the browser's decoder thread.
     pub defer_audio_decodes: bool,
-    pub pending_audio_decodes: Vec<(NodeId, Vec<u8>)>,
+    pub pending_audio_decodes: Vec<loader::PendingAudioDecode>,
     /// `await browser .nextFrame ()` continuations, resolved after the finishEvents of a frame.
     pub frame_waiters: Vec<inline::FrameWaiter>,
+    /// createX3DFromURL requests that have not been fetched (by request id).
+    pub browser_loads: HashMap<u64, browser_load::BrowserLoad>,
+    /// createX3DFromString requests whose statements are not parsed yet.
+    pub browser_strings: HashMap<u64, browser_load::BrowserString>,
+    /// Scenes of createX3DFromString / createX3DFromURL waiting for their loadCount, and then for the next frame.
+    pub pending_browser: Vec<browser_load::PendingBrowserScene>,
+    pub browser_frame_waiters: Vec<browser_load::PendingBrowserScene>,
+    pub browser_request_id: u64,
+    /// The URL of the page the browser element lives in (`location`): the world URL of a new X3DScene and the browser's
+    /// `baseURL`. Empty: the embedder has no page.
+    pub page_url: String,
+    /// X3DBrowser.loadURL / replaceWorld (see `browser_load.rs`).
+    pub world_state: browser_load::WorldState,
     /// EXTERNPROTO scenes that were parsed and set up, waiting like `pending_scenes` (see
     /// `extern_proto.rs`, `extern_scene`).
     pub pending_externs: Vec<PendingExtern>,
@@ -391,6 +475,18 @@ pub struct Runtime {
     pub description: String,
     /// Requests scripts made of the browser (Browser.nextViewpoint …), drained by the viewer.
     pub browser_requests: Vec<String>,
+    /// X3DBrowserContext's active layer, NavigationInfo and Viewpoint and its viewer type, as the viewer last bound them
+    /// (`None`: the layer's default node is bound, or no frame was drawn yet).
+    pub browser_active: BrowserActive,
+    /// The browser's default nodes a Script was handed (getActiveViewpoint … before a world node is bound), by type, in the
+    /// private context (`default_node`).
+    default_nodes: Vec<(String, NodeId)>,
+    private_ctx: Option<CtxId>,
+    /// The loaded world is the browser's execution context (X3DBrowser.replaceWorld: `this .setExecutionContext (scene)`).
+    /// Until then X3DBrowserContext.getExecutionContext () is the page's first, empty world (`first_world`): the Scripts of
+    /// the world being loaded initialize before it is installed.
+    pub world_installed: bool,
+    first_world: Option<CtxId>,
     /// BrowserOptions, BrowserProperties and RenderingProperties (`getBrowserOption` …).
     pub browser_options: browser_options::BrowserOptions,
     /// Background.initialize: the private ImageTexture of each `xxxUrl` field, per Background.
@@ -493,13 +589,22 @@ impl Runtime {
             nrt: vec![],
             tainted_fields: vec![],
             tainted_nodes: vec![],
+            content_scale_armed: false,
             processing: false,
             parents: HashMap::new(),
             log: vec![],
             now: FROZEN_TIME,
+            timer_prev_time: FROZEN_TIME,
+            timer_date: FROZEN_TIME,
+            date_override: None,
             tasks: Default::default(),
             browser_node: 0,
             script_host: None,
+            ctx_events: Default::default(),
+            field_observed: Default::default(),
+            pending_field_events: vec![],
+            js_mirror: HashMap::new(),
+            js_dirty: vec![],
             shaders: Default::default(),
             fetcher,
             extern_loaded: HashMap::new(),
@@ -509,6 +614,16 @@ impl Runtime {
             font_epoch: 0,
             pending_font_styles: vec![],
             font_style_fonts: HashMap::new(),
+            font_style_font: HashMap::new(),
+            text_font_styles: HashMap::new(),
+            default_font_texts: vec![],
+            default_font: Default::default(),
+            default_font_stage: nodes::text::LoadStage::Timer,
+            font_style_loads: vec![],
+            loaded_font_files: Default::default(),
+            font_style_snapshot: HashMap::new(),
+            font_style_alignments: HashMap::new(),
+            frames_started: false,
             scripts: vec![],
             inline_scenes: HashMap::new(),
             inline_geometries: HashMap::new(),
@@ -516,6 +631,13 @@ impl Runtime {
             defer_audio_decodes: false,
             pending_audio_decodes: vec![],
             frame_waiters: vec![],
+            browser_loads: HashMap::new(),
+            browser_strings: HashMap::new(),
+            pending_browser: vec![],
+            browser_frame_waiters: vec![],
+            browser_request_id: 0,
+            page_url: String::new(),
+            world_state: browser_load::WorldState { initialized_time: -1.0, ..Default::default() },
             pending_externs: vec![],
             extern_frame_waiters: vec![],
             extern_states: HashMap::new(),
@@ -537,6 +659,11 @@ impl Runtime {
             prints: vec![],
             description: String::new(),
             browser_requests: vec![],
+            browser_active: BrowserActive::default(),
+            default_nodes: vec![],
+            private_ctx: None,
+            world_installed: false,
+            first_world: None,
             browser_options: browser_options::BrowserOptions::new(512, 512),
             background_textures: HashMap::new(),
             bind_modifications: HashMap::new(),
@@ -607,6 +734,11 @@ impl Runtime {
     }
 
     pub fn log_warn(&mut self, message: impl AsRef<str>) {
+        // Scene::warnings entries marked by Scene::error are console.error (every flush site comes through here).
+        if let (true, m) = x3d_scene::console_level(message.as_ref()) {
+            return self.log_error(m);
+        }
+
         let line = format!("warn: {}", message.as_ref().split('\n').next().unwrap_or(""));
 
         if self.record_console {
@@ -844,11 +976,16 @@ impl Runtime {
         for (n, h) in adds {
             self.add_parent(n, h);
         }
+
     }
 
-    /// X3DNode.getCloneCount: one per non-private holder.
+    /// X3DNode.getCloneCount: one per non-private holder; a field of a private node (`setPrivate (true)`,
+    /// e.g. the LoadSensor of a ComposedShader) is not a holder.
     pub fn clone_count(&self, node: NodeId) -> usize {
-        self.parents.get(&node).map(|l| l.iter().filter(|h| !matches!(h, Holder::Field((_, FieldLoc::Priv(_))))).count()).unwrap_or(0)
+        self.parents
+            .get(&node)
+            .map(|l| l.iter().filter(|h| !matches!(h, Holder::Field((_, FieldLoc::Priv(_)))) && !matches!(h, Holder::Field((owner, _)) if self.shaders.is_private_load_sensor(*owner))).count())
+            .unwrap_or(0)
     }
 
     /// Record a field write on `node` (see [`Runtime::stamps`]).
@@ -870,11 +1007,23 @@ impl Runtime {
 
     /// Set a field's value without an event (X3DField.set), keeping the parent index.
     pub fn set_raw(&mut self, k: FKey, value: FieldValue) {
+        if !self.scene.raw_tokens.is_empty() {
+            self.scene.raw_tokens.remove(&k);
+        }
+
         let old = Self::node_values(self.value(k));
         let new = Self::node_values(&value);
 
         self.scene.field_mut(k.0, k.1).value = value;
         self.touch(k.0);
+
+        // A field a Script holds as a JavaScript object: its object is refreshed before the Script runs again.
+        if let Some(dirty) = self.js_mirror.get_mut(&k) {
+            if !*dirty {
+                *dirty = true;
+                self.js_dirty.push(k);
+            }
+        }
 
         if old.is_empty() && new.is_empty() {
             return;
@@ -882,6 +1031,15 @@ impl Runtime {
 
         // A node reference came or went: a runtime-created node may have become unreachable.
         self.dynamic_dirty = true;
+
+        // X3DBaseNode.parentsChanged: `executionContext ._sceneGraph_changed = time` for every node that gained or lost a parent.
+        if self.ctx_events.observed {
+            let moved: Vec<NodeId> = old.iter().filter(|n| !new.contains(n)).chain(new.iter().filter(|n| !old.contains(n))).copied().collect();
+
+            for n in moved {
+                self.ctx_parents_changed(n);
+            }
+        }
 
         for n in old {
             if !new.contains(&n) {
@@ -896,7 +1054,57 @@ impl Runtime {
         }
     }
 
+    /// The mirrored fields whose value changed since the last call (the Script's objects of them are stale).
+    pub fn take_js_dirty(&mut self) -> Vec<FKey> {
+        let keys = std::mem::take(&mut self.js_dirty);
+
+        keys.into_iter()
+            .filter(|k| match self.js_mirror.get_mut(k) {
+                Some(dirty) => std::mem::replace(dirty, false),
+                None => false,
+            })
+            .collect()
+    }
+
+    /// The Script's object of `k` holds the field's current value (it wrote it): not stale.
+    pub fn js_clean(&mut self, k: FKey) {
+        if let Some(dirty) = self.js_mirror.get_mut(&k) {
+            *dirty = false;
+        }
+    }
+
     /// X3DField.setValue: set and generate an event.
+    /// A print of the scene, or of part of it, with the raw components taken when it prints them: the print runs once to meet
+    /// them, the Script host coerces them in print order, and the print runs again with them (see [`x3d_scene::RawPrint`]).
+    pub fn print_raw<R>(&mut self, print: impl Fn(&Scene) -> R) -> R {
+        if self.scene.raw_tokens.is_empty() {
+            return print(&self.scene);
+        }
+
+        *self.scene.raw_print.borrow_mut() = RawPrint::Log(vec![]);
+        print(&self.scene);
+
+        let requests = match std::mem::take(&mut *self.scene.raw_print.borrow_mut()) {
+            RawPrint::Log(log) => log,
+            _ => vec![],
+        };
+        let supply = match self.script_host.take() {
+            Some(mut host) => {
+                let supply = host.raw_coerce(self, &requests);
+                self.script_host = Some(host);
+                supply
+            }
+            None => vec![None; requests.len()],
+        };
+
+        *self.scene.raw_print.borrow_mut() = RawPrint::Supply(supply.into());
+
+        let result = print(&self.scene);
+
+        *self.scene.raw_print.borrow_mut() = RawPrint::Off;
+        result
+    }
+
     pub fn set_value(&mut self, k: FKey, value: FieldValue) {
         self.set_raw(k, value);
         self.add_event(k);
@@ -938,16 +1146,15 @@ impl Runtime {
         loop {
             if let Some(task) = self.tasks.pop_front() {
                 match task {
-                    Task::ScriptLoad(node) => {
-                        let first = self.url_strings(node).into_iter().find(|u| !u.is_empty()).unwrap_or_default();
-                        let inline = ["ecmascript:", "javascript:", "vrmlscript:"].iter().any(|s| first.trim_start().starts_with(s));
-
-                        if inline || first.is_empty() {
-                            self.script_load(node);
+                    Task::ScriptLoad(node) => self.script_candidate(node, 0, None),
+                    Task::ScriptCandidate(node, index, hops, failed) => {
+                        if hops > 0 {
+                            self.tasks.push_back(Task::ScriptCandidate(node, index, hops - 1, failed));
                         } else {
-                            self.fetches.push_back(Task::ScriptFetch(node));
+                            self.script_candidate(node, index, failed.map(|f| *f));
                         }
                     }
+                    Task::BrowserParse(id) => self.browser_parse(id),
                     other => self.fetches.push_back(other),
                 }
 
@@ -961,8 +1168,9 @@ impl Runtime {
             match task {
                 Task::UrlLoad(node, generation) => self.url_load(node, generation),
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
-                Task::ScriptFetch(node) => self.script_load(node),
-                Task::ScriptLoad(..) | Task::ScriptLoaded(..) => {}
+                Task::ScriptFetch(node, index) => self.script_fetch(node, index),
+                Task::BrowserLoad(id) => self.browser_load(id),
+                Task::ScriptLoad(..) | Task::ScriptCandidate(..) | Task::ScriptLoaded(..) | Task::BrowserParse(..) => {}
             }
         }
     }
@@ -975,6 +1183,7 @@ impl Runtime {
     /// Is a load of an Inline or EXTERNPROTO still in progress (X3DBrowser loadCount > 0)?
     pub fn has_unfinished_loads(&self) -> bool {
         !self.pending_scenes.is_empty()
+            || self.browser_loads_pending()
             || !self.frame_waiters.is_empty()
             || !self.pending_externs.is_empty()
             || !self.extern_frame_waiters.is_empty()
@@ -988,7 +1197,29 @@ impl Runtime {
     /// the frames the loads wait for. Returns the scene ready for `toVRMLString`.
     pub fn load_world(&mut self) {
         self.load_scene();
+        self.world_installed = true;
         self.go_live();
+    }
+
+    /// The page's first, empty world, once something asked for it (see [`Runtime::browser_execution_context`]).
+    pub fn first_world(&self) -> Option<CtxId> {
+        self.first_world
+    }
+
+    /// X3DBrowserContext.getExecutionContext (): the world once it is installed, the page's first, empty world before.
+    pub fn browser_execution_context(&mut self) -> CtxId {
+        if self.world_installed {
+            return self.scene.world;
+        }
+
+        if let Some(c) = self.first_world {
+            return c;
+        }
+
+        let c = self.empty_world_scene();
+
+        self.first_world = Some(c);
+        c
     }
 
     /// X3DBrowser.replaceWorld after the scene is loaded: it awaits one more frame (the events of
@@ -996,7 +1227,14 @@ impl Runtime {
     pub fn replace_world(&mut self) {
         self.frame();
         self.run_tasks();
+
+        // `this .shutdown () .processInterests (); this .callBrowserCallbacks (SHUTDOWN_EVENT)` of the empty first world,
+        // and the browser's loadCount event for the first events of the next frame (checkLoadCount).
+        self.browser_callbacks(browser_load::SHUTDOWN_EVENT);
+        self.world_installed = true;
         self.go_live();
+        self.world_state.init = Some(None);
+        self.world_load_count_event();
     }
 
     /// The loading part of [`Runtime::load_world`], without `go_live`.
@@ -1007,6 +1245,7 @@ impl Runtime {
 
         self.start();
         self.run_tasks();
+        self.ctx_world_started(false);
 
         // FileLoader.set_loadCount__ awaits `browser .nextFrame ()` once the scene's loadCount is
         // 0, and every Inline in it holds the count until its own scene is attached: one frame,
@@ -1083,13 +1322,17 @@ impl Runtime {
     /// scene's world URL; the new scene's root nodes.
     pub fn create_vrml_from_string(&mut self, text: &str, parent: CtxId) -> Result<Vec<Option<NodeId>>, String> {
         let source = format!("#VRML V2.0 utf8\n\n{text}");
-        let world_url = self.scene.world_url.clone();
+        let world_url = self.scene.world_url_of(parent).to_string();
         let scene = match x3d_parse::Parser::new(&source, &world_url).parse() {
             Ok(scene) => scene,
             Err(e) => {
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
+                for w in x3d_parse::take_error_warnings() {
+                    self.log_warn(w);
+                }
+
                 self.log_error(format!("Error: {}", e.message));
-                return Err(format!("Error: \n{e}"));
+                return Err(x3d_parse::take_error_detail().unwrap_or_else(|| format!("Error: \n{e}")));
             }
         };
         let simple = scene.contexts.len() == 1
@@ -1168,6 +1411,85 @@ impl Runtime {
         }
     }
 
+    /// X3DField.fromVRMLString / fromXMLString (value, scene) for a field of type `ty`: with a scene (`ctx`), the nodes of the
+    /// value are made in it and set up, and `unit` converts the values; without one, a value that needs nodes cannot be made
+    /// (X_ITE: the parser has no execution context, a TypeError, `Err(None)`). `Ok(None)`: nothing could be read.
+    pub fn field_from_string(&mut self, ty: x3d_fields::FieldType, text: &str, ctx: Option<CtxId>, xml: bool, unit: Option<String>, name: &str) -> Result<Option<FieldValue>, Option<String>> {
+        let Some(ctx) = ctx else {
+            let (scene, result) = x3d_parse::Parser::parse_field_into(Scene::new(""), 0, ty, text, xml, None, name);
+
+            // Without an execution context, the parser of a node value fails on the first node statement it reads (NULL and
+            // [ ] read none): only a value that needed no node and no warning stands.
+            let node_type = matches!(ty, x3d_fields::FieldType::SFNode | x3d_fields::FieldType::MFNode) && !xml;
+
+            if !scene.nodes.is_empty() || (node_type && (!scene.warnings.is_empty() || !matches!(result, Ok(Some(_))))) {
+                return Err(None);
+            }
+
+            for w in scene.warnings {
+                self.log_warn(w);
+            }
+
+            return result.map_err(|e| Some(e.message));
+        };
+
+        let first_new = self.scene.nodes.len() as NodeId;
+        let first_setup = self.scene.setup_order.len();
+        let mut scene = std::mem::replace(&mut self.scene, Scene::new(""));
+
+        // The nodes it creates are found as the range `first_new..`: none goes into a released slot.
+        scene.append_only = true;
+
+        let (mut scene, result) = x3d_parse::Parser::parse_field_into(scene, ctx, ty, text, xml, unit, name);
+
+        scene.append_only = false;
+        self.scene = scene;
+
+        for w in std::mem::take(&mut self.scene.warnings) {
+            self.log_warn(w);
+        }
+
+        for n in first_new..self.scene.nodes.len() as NodeId {
+            self.nrt_mut(n);
+            self.construct_node(n);
+        }
+
+        self.rebuild_parents();
+
+        let setup: Vec<NodeId> = self.scene.setup_order.drain(first_setup..).collect();
+
+        for n in setup {
+            self.setup_node(n);
+        }
+
+        self.register_dynamic(first_new..self.scene.nodes.len() as NodeId);
+
+        result.map_err(|e| Some(e.message))
+    }
+
+    /// X3DExecutionContext.deleteRoute (route): the route with this id leaves `ctx`; whether there was one.
+    pub fn delete_route_by_id(&mut self, ctx: CtxId, id: usize) -> bool {
+        let Some(i) = self.scene.ctx(ctx).routes.iter().position(|r| r.id == id) else {
+            return false;
+        };
+
+        let r = self.scene.ctx_mut(ctx).routes.remove(i);
+
+        self.dispose_route(r);
+        self.dynamic_dirty = true;
+        true
+    }
+
+    /// Something a Script changed may have dropped the last reference to a node, declaration or record.
+    pub fn dynamic_dirty_mark(&mut self) {
+        self.dynamic_dirty = true;
+    }
+
+    /// X3DExecutionContext `sceneGraph_changed`.
+    pub fn scene_graph_changed(&mut self) {
+        self.dynamic_dirty = true;
+    }
+
     /// X3DExecutionContext.deleteRoute: also removes the field interest.
     pub fn delete_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) {
         self.dynamic_dirty = true;
@@ -1208,6 +1530,29 @@ impl Runtime {
             self.register_dynamic(log);
         }
 
+        Some(n)
+    }
+
+    /// A default node of the browser (X_ITE: the bottom of layer 0's bindable stacks, a node of its private scene), created
+    /// once and set up in the browser's private scene: an X3D scene of the latest version with no parent, so no world's
+    /// disposal reaches it.
+    pub fn default_node(&mut self, type_name: &str) -> Option<NodeId> {
+        if let Some((_, n)) = self.default_nodes.iter().find(|(t, _)| t == type_name) {
+            return Some(*n);
+        }
+
+        let ctx = match self.private_ctx {
+            Some(c) => c,
+            None => {
+                let c = self.empty_world_scene();
+                self.private_ctx = Some(c);
+                c
+            }
+        };
+
+        let n = self.create_node_setup(ctx, type_name)?;
+
+        self.default_nodes.push((type_name.to_string(), n));
         Some(n)
     }
 

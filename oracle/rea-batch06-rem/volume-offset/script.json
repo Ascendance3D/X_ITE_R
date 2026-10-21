@@ -1,0 +1,1 @@
+{"dt": 0.03333333333333333, "t0": 946684800, "frames": 60, "warmup": 8, "seed": 7289, "node": "PS", "checkpoints": [], "dumpAll": true, "events": [], "world": "geom-volume_offset.x3dv", "note": "control of volume-swap-coord: the offset cube is the emitter's coord from the start"}

@@ -90,6 +90,10 @@ impl Runtime {
             // relations require equal types.
             if v.field_type() == self.field(k).ty() {
                 self.set_raw(k, v);
+
+                if let Some(t) = self.scene.raw_tokens.get(&event.origin).cloned() {
+                    self.scene.raw_tokens.insert(k, t);
+                }
             }
         }
 
@@ -109,6 +113,26 @@ impl Runtime {
             }
 
             self.add_event_object(f, event.clone());
+        }
+
+        // Process field callbacks.
+        if self.field_observed.contains(&k) {
+            self.field_callbacks(k);
+        }
+    }
+
+    /// The field callbacks of `k` (X3DField.processEvent: `callback (this .valueOf ())`).
+    fn field_callbacks(&mut self, k: FKey) {
+        match self.script_host.take() {
+            Some(mut host) => {
+                for p in std::mem::take(&mut self.pending_field_events) {
+                    host.field_event(self, p);
+                }
+
+                host.field_event(self, k);
+                self.script_host = Some(host);
+            }
+            None => self.pending_field_events.push(k),
         }
     }
 
@@ -130,41 +154,56 @@ impl Runtime {
         }
 
         self.processing = true;
+        self.deliver_parsed_ctx_events();
 
         loop {
-            // Process field events. The tainted BrowserOptions fields run their interests here too.
             loop {
-                self.browser_options.process_events();
+                // Process field events. The tainted BrowserOptions fields run their interests here too.
+                loop {
+                    self.browser_options.process_events();
+                    self.content_scale_events();
 
-                if self.browser_options.take_sound_intensity_changed() {
-                    self.sound_set_intensity();
+                    // set_StraightenHorizon__ (`getActiveLayer () ?.straightenView ()` when TRUE) and the ExamineViewer's
+                    // `disconnect` interest: the viewer runs them, after the requests the Scripts made before.
+                    if let Some(on) = self.browser_options.straighten_set.take() {
+                        self.browser_requests.push(format!("straightenHorizon:{on}"));
+                    }
+
+                    if self.browser_options.take_sound_intensity_changed() {
+                        self.sound_set_intensity();
+                    }
+
+                    let tainted = std::mem::take(&mut self.tainted_fields);
+
+                    for (k, event) in tainted {
+                        self.process_event(k, event);
+                    }
+
+                    if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events() {
+                        break;
+                    }
                 }
 
-                let tainted = std::mem::take(&mut self.tainted_fields);
+                // Process node events.
+                loop {
+                    let tainted = std::mem::take(&mut self.tainted_nodes);
 
-                for (k, event) in tainted {
-                    self.process_event(k, event);
+                    for node in tainted {
+                        self.process_node_event(node);
+                    }
+
+                    if !(self.tainted_fields.is_empty() && !self.tainted_nodes.is_empty()) {
+                        break;
+                    }
                 }
 
-                if self.tainted_fields.is_empty() && !self.browser_options.has_pending_events() {
+                if self.tainted_fields.is_empty() {
                     break;
                 }
             }
 
-            // Process node events.
-            loop {
-                let tainted = std::mem::take(&mut self.tainted_nodes);
-
-                for node in tainted {
-                    self.process_node_event(node);
-                }
-
-                if !(self.tainted_fields.is_empty() && !self.tainted_nodes.is_empty()) {
-                    break;
-                }
-            }
-
-            if self.tainted_fields.is_empty() {
+            // The callbacks of the execution context change fields (X3DField.processEvent) run after the events that set them.
+            if !self.deliver_ctx_events() {
                 break;
             }
         }
@@ -204,12 +243,28 @@ impl Runtime {
 
         if name == "prepareEvents" {
             self.apply_decoded_images();
+
+            // Audio decodes end after the pending events too, unless x3d-drive gates them to the frame start.
+            if !self.defer_audio_decodes {
+                self.resolve_audio_decodes();
+            }
         }
 
         // The `nextFrame ()` promises resolve on finishEvents; their continuations (Inline.setInternalScene)
         // and the fetches they start run right after the frame, before the next one.
         if name == "finishEvents" {
             self.finish_frame();
+
+            // What the continuations changed (Inline.setInternalScene: `sceneGraph_changed` of the Inline's context) was set
+            // after the frame: its events are processed with the next frame's.
+            let after = std::mem::take(&mut self.ctx_events.pending);
+
+            // The change events of the frame's end run their callbacks with the events that follow.
+            if self.release_deferred_ctx_events() {
+                self.process_events();
+            }
+
+            self.ctx_events_after_frame(after);
         }
     }
 }

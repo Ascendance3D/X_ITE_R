@@ -42,6 +42,7 @@ fn run_stat(name: &str) {
         assert_eq!(ours.len(), theirs.len(), "{name}: samples");
 
         let mut worst = [0.0f64; 13];
+        let mut inexact = 0usize;
 
         for (r, (a, b)) in ours.iter().zip(&theirs).enumerate() {
             for c in 0..13 {
@@ -51,9 +52,15 @@ fn run_stat(name: &str) {
 
                 if !x.is_nan() {
                     worst[c] = worst[c].max((x - y).abs());
+
+                    if c >= 9 && x != y {
+                        inexact += 1;
+                    }
                 }
             }
         }
+
+        eprintln!("WORST\t{name}\t{:?}\t{:?}\tinexact {inexact} of {}", &worst[6..9], &worst[9..13], ours.len());
 
         // frame, lifetime, rgba: exact; velocity, position: the measured bounds.
         assert!(worst[..6].iter().all(|&d| d == 0.0), "{name}: frame / lifetime / color differ: {:?}", &worst[..6]);

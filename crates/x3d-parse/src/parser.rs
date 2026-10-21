@@ -23,6 +23,24 @@ impl std::fmt::Display for ParseError {
 
 type R<T> = Result<T, ParseError>;
 
+thread_local! {
+    /// The warnings (console.warn) the parse that just failed had printed.
+    static ERROR_WARNINGS: std::cell::RefCell<Vec<String>> = const { std::cell::RefCell::new(Vec::new()) };
+    /// VRMLParser.getError of the last parse that failed, see [`take_error_detail`].
+    static ERROR_DETAIL: std::cell::RefCell<Option<String>> = const { std::cell::RefCell::new(None) };
+}
+
+/// The warnings the parse that just failed printed before it failed (the scene is gone, so the caller logs them).
+pub fn take_error_warnings() -> Vec<String> {
+    ERROR_WARNINGS.with(|w| std::mem::take(&mut *w.borrow_mut()))
+}
+
+/// The Error message VRMLParser.parseIntoScene threw for the parse that just failed (the line of the input and a caret),
+/// once; [`ParseError::message`] is the original message the parser logs first.
+pub fn take_error_detail() -> Option<String> {
+    ERROR_DETAIL.with(|d| d.borrow_mut().take())
+}
+
 /// Result of `nodeStatement`/`node`: a node, `null`, or `false` (nothing parsed).
 #[derive(Clone, Copy, Debug, PartialEq)]
 enum Stmt {
@@ -51,6 +69,8 @@ pub struct Parser<'a> {
     pub(crate) placeholders: HashMap<CtxId, Vec<(String, NodeId)>>,
     /// The unit category of the predefined field whose value is being read (X3DField.getUnit).
     pub(crate) field_unit: Option<String>,
+    /// X3DParser.getName: the prefix of Placeholder's warning.
+    pub(crate) name: &'static str,
 }
 
 impl<'a> Parser<'a> {
@@ -69,6 +89,7 @@ impl<'a> Parser<'a> {
             imported_names: HashMap::new(),
             placeholders: HashMap::new(),
             field_unit: None,
+            name: "Parser",
         }
     }
 
@@ -102,6 +123,49 @@ impl<'a> Parser<'a> {
         parser.contexts = vec![ctx];
 
         let result = parser.field_value(FieldType::SFNode, &FieldValue::SFNode(None));
+
+        if result.is_ok() {
+            parser.setup_nodes();
+        }
+
+        (parser.scene, result)
+    }
+
+    /// X3DField.fromVRMLString (value, scene) (VRMLParser.fieldValue) and X3DField.fromXMLString (value, scene)
+    /// (XMLParser.fieldValue, attribute grammar: `xml`) on a field of type `ty`, the nodes of an SFNode or MFNode value
+    /// parsed into `ctx` of `scene`. With a scene the field's `unit` converts the values (`parser .setUnits (!!scene)`).
+    /// Returns the scene back, and `Ok(Some(value))` for a parsed value, `Ok(None)` when nothing could be read (X_ITE:
+    /// "Couldn't read value for field '<name>'."). The XML grammar's MFString warning names the field: `name`.
+    pub fn parse_field_into(scene: Scene, ctx: CtxId, ty: FieldType, text: &str, xml: bool, unit: Option<String>, name: &str) -> (Scene, Result<Option<FieldValue>, ParseError>) {
+        let mut parser = Parser::new(text, "");
+
+        parser.scene = scene;
+        parser.contexts = vec![ctx];
+        parser.field_unit = unit;
+
+        let current = FieldValue::default_for(ty);
+
+        let result = if xml {
+            match ty {
+                FieldType::SFNode => Ok(Some(FieldValue::SFNode(None))),
+                FieldType::MFNode => Ok(Some(FieldValue::MFNode(vec![]))),
+                FieldType::SFString => Ok(Some(FieldValue::SFString(x3d_fields::value::unescape(text)))),
+                FieldType::MFString => {
+                    let v = parser.string_values();
+
+                    if v.is_empty() && !text.is_empty() {
+                        parser.warn(format!("XML Parser: Field '{name}' is an MFString array and can have multiple values, so make sure to separate each individual string with double quotation marks!"));
+                        Ok(Some(FieldValue::MFString(vec![text.to_string()])))
+                    } else {
+                        Ok(Some(FieldValue::MFString(v)))
+                    }
+                }
+                _ if ty.name().starts_with("MF") => parser.sf_values(ty).map(Some),
+                _ => parser.field_value(ty, &current),
+            }
+        } else {
+            parser.field_value(ty, &current)
+        };
 
         if result.is_ok() {
             parser.setup_nodes();
@@ -184,10 +248,86 @@ impl<'a> Parser<'a> {
         self.scene.encoding = "VRML".into();
         self.scene.profile = Some("Full".into());
 
-        self.x3d_scene()?;
+        ERROR_DETAIL.with(|d| d.borrow_mut().take());
+        ERROR_WARNINGS.with(|w| w.borrow_mut().clear());
+
+        if let Err(e) = self.x3d_scene() {
+            let detail = self.get_error(&e.message);
+
+            ERROR_DETAIL.with(|d| *d.borrow_mut() = Some(detail));
+            ERROR_WARNINGS.with(|w| *w.borrow_mut() = std::mem::take(&mut self.scene.warnings));
+            return Err(e);
+        }
+
         self.scene.setup_nodes();
 
         Ok(self.scene)
+    }
+
+    /// VRMLParser.getError: the message of the Error that parseIntoScene throws, with the line of the input where the
+    /// parser stopped and a caret under the column.
+    fn get_error(&self, message: &str) -> String {
+        let text = String::from_utf8_lossy(self.input);
+        let input: Vec<u16> = text.encode_utf16().collect();
+        let len = input.len() as isize;
+        let mut last_index = String::from_utf8_lossy(&self.input[..self.last_index.min(self.input.len())]).encode_utf16().count() as isize;
+        let unexpected = if last_index == len { "Unexpected end of file. " } else { "" };
+        let at = |i: isize| input[i as usize];
+        let newline = |c: u16| c == 10 || c == 13;
+
+        // getLine
+        let mut rest = vec![];
+
+        while last_index < len && !newline(at(last_index)) {
+            rest.push(at(last_index));
+            last_index += 1;
+        }
+
+        // getLastLine (twice)
+        let mut last_line = |last_index: &mut isize| {
+            let mut line: Vec<u16> = vec![];
+
+            *last_index = (*last_index).min(len - 1);
+
+            if *last_index < len {
+                *last_index -= 1;
+            }
+
+            while *last_index >= 0 && !newline(at(*last_index)) {
+                line.insert(0, at(*last_index));
+                *last_index -= 1;
+            }
+
+            line
+        };
+
+        let mut line = last_line(&mut last_index);
+        let mut last = last_line(&mut last_index);
+        let mut line_pos = line.len() as isize - rest.len() as isize + 1;
+
+        if line.len() > 80 {
+            let from = (line_pos - 40).max(0) as usize;
+            let to = ((line_pos + 40).max(0) as usize).min(line.len());
+
+            line = line[from.min(to)..to].to_vec();
+            last = vec![];
+            line_pos = 40;
+        }
+
+        let mut world = self.scene.world_url.clone();
+
+        if world.starts_with("data:") {
+            world = world[..world.find(',').unwrap_or(world.len())].to_string();
+        }
+
+        format!(
+            "\n{rule}\nParser error at line {}:{line_pos}\nin '{world}'\n\n{}\n{}\n{}^\n{unexpected}{message}\n{rule}\n",
+            self.line_number,
+            String::from_utf16_lossy(&last),
+            String::from_utf16_lossy(&line),
+            " ".repeat((line_pos - 1).max(0) as usize),
+            rule = "*".repeat(80),
+        )
     }
 
     fn x3d_scene(&mut self) -> R<()> {
@@ -273,11 +413,12 @@ impl<'a> Parser<'a> {
             if self.id() {
                 let name = self.result.clone();
 
-                if self.scene.table.profile(&name).is_none() {
+                let Some(profile) = self.scene.table.profile(&name).map(|p| p.name.clone()) else {
                     return self.err(format!("Profile '{name}' is not supported."));
-                }
+                };
 
-                self.scene.profile = Some(name);
+                self.scene.profile = Some(profile);
+                self.scene.profile_statement = true;
                 return Ok(());
             }
 
@@ -309,7 +450,8 @@ impl<'a> Parser<'a> {
                 if self.keyword(":") {
                     if self.int32() {
                         let Some(max) = self.scene.table.component(&name).map(|c| c.level) else {
-                            return self.err(format!("Component '{name}' is not supported."));
+                            let at = jsmath::to_int32(self.value_f64);
+                            return self.err(format!("Component '{name}' at level '{at}' is not supported."));
                         };
 
                         // X3DBrowser.getComponent: Algorithm .clamp (level || component .level, 1, component .level).
@@ -377,6 +519,12 @@ impl<'a> Parser<'a> {
 
                 if self.string() {
                     let value = self.value_string.clone();
+
+                    // X3DScene.addMetaData
+                    if key.is_empty() {
+                        return self.err("Couldn't add metadata: name is empty.");
+                    }
+
                     self.scene.meta.push((key, value));
                     return Ok(true);
                 }
@@ -1666,6 +1814,12 @@ impl<'a> Parser<'a> {
             }
         }
 
+        // `field .setValue (array)` (sfcolorValues, sfvecValues, sfmatrixValues): X3DTypedArrayField.set warns and drops an
+        // incomplete last element.
+        if array.len() % components != 0 && !matches!(ty, FieldType::MFRotation | FieldType::MFQuaternion) {
+            self.warn(format!("Array length must be multiple of components size, which is {components}."));
+        }
+
         let array = self.mf_units(ty, colors, array);
         value.set_flat_numbers(&array);
         Ok(value)
@@ -1905,7 +2059,7 @@ impl<'a> Parser<'a> {
             match target {
                 Some(node) => self.replace_node_references(placeholder, node),
                 None => {
-                    self.warn(format!("Parser: Named or imported node '{name}' not found."));
+                    self.warn(format!("{}: Named or imported node '{name}' not found.", self.name));
                     self.dispose_placeholder(placeholder);
                 }
             }

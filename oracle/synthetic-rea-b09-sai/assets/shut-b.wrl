@@ -1,0 +1,9 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+DEF IB Script {
+  url "ecmascript:
+function initialize () { console .log ('IB initialize'); }
+function shutdown () { console .log ('IB shutdown'); }
+"
+}

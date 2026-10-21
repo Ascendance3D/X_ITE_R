@@ -1,0 +1,328 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "64": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "72": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "80": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "88": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "119": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "120": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 12\n}\n\nDEF L1 DirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.9 0.5 0.3\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture DEF TX ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Material>\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 12\n}\n\nDEF L1 DirectionalLight {\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture DEF TX ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Material>\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 12\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture DEF TX ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Material>\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture DEF TX ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Material>\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture DEF TX ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Material>\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture PixelTexture { }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Material>\n\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "64": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture PixelTexture { }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "72": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture PixelTexture { }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  rotation 0 1 0 0.8\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture PixelTexture { }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "88": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  fogType \"EXPONENTIAL\"\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  rotation 0 1 0 0.8\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture PixelTexture { }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "119": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  fogType \"EXPONENTIAL\"\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  rotation 0 1 0 0.8\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture PixelTexture { }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "120": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 5\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nDEF F Fog {\n  fogType \"EXPONENTIAL\"\n  color 0.7 0.8 0.9\n  visibilityRange 7.5\n}\n\nDEF L1 DirectionalLight {\n  intensity 0.2\n  direction -0.4 -0.6 -1\n}\n\nDEF L2 PointLight {\n  on FALSE\n  color 0.3 0.5 1\n  location 2 2 2\n  radius 20\n}\n\nDEF TR Transform {\n  rotation 0 1 0 0.8\n  children Shape {\n    appearance DEF AP Appearance {\n      material DEF M Material {\n        diffuseColor 0.2 0.7 0.4\n        specularColor 0.4 0.4 0.4\n        shininess 0.3\n      }\n      texture PixelTexture { }\n      shaders ComposedShader {\n        language \"GLSL\"\n        parts [\n          ShaderPart {\n            url \"data:x-shader/x-vertex,%23version 300 es\n%23define X3D_COLORSPACE_SRGB\n%23define X3D_NORMALS\n%23define X3D_NUM_TEXTURE_TRANSFORMS 1\n%23define X3D_NUM_TEXTURE_COORDINATES 1\n%23define X3D_GEOMETRY_3D\n%23define X3D_PHONG_MATERIAL\n%23define X3D_LIGHTING\n%23define X3D_NUM_LIGHTS 2\n%23define X3D_FOG\n%23define X3D_FOG_LINEAR\n%23define X3D_TEXTURE\n%23define X3D_NUM_TEXTURES 1\n%23define X3D_TEXTURE_0_2D\n\nprecision highp int;\nprecision highp float;\nprecision highp sampler2D;\nprecision highp sampler3D;\nprecision highp samplerCube;\n%23undef X3D_GEOMETRY_0D\n%23undef X3D_GEOMETRY_1D\n%23undef X3D_GEOMETRY_2D\n%23undef X3D_STYLE_PROPERTIES\n%23undef X3D_UNLIT_MATERIAL\n%23undef X3D_MULTI_TEXTURING\n%23include <Vertex>\n\"\n          }\n          DEF FP ShaderPart {\n            type \"FRAGMENT\"\n            url \"data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A\"\n          }\n        ]\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  initializeOnly SFNode   m USE M\n  initializeOnly SFNode   l1 USE L1\n  initializeOnly SFNode   l2 USE L2\n  initializeOnly SFNode   f USE F\n  initializeOnly SFNode   ap USE AP\n  initializeOnly SFNode   fp USE FP\n  initializeOnly SFNode   tr USE TR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   if (k == 'a') m .diffuseColor = new SFColor (0.2, 0.7, 0.4);\n   if (k == 'b') l1 .intensity = 0.2;\n   if (k == 'c') f .visibilityRange = 7.5;\n   if (k == 'd') l2 .on = false;\n   if (k == 'e') ap .texture = Browser .currentScene .createNode ('PixelTexture');\n   if (k == 'f') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_UNLIT_MATERIAL%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_PHONG_MATERIAL%0A%23undef X3D_LIGHTING%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Unlit>%0A');\n   if (k == 'g') fp .url = new MFString ('data:x-shader/x-fragment,%23version 300 es%0A%23define X3D_COLORSPACE_SRGB%0A%23define X3D_NORMALS%0A%23define X3D_NUM_TEXTURE_TRANSFORMS 1%0A%23define X3D_NUM_TEXTURE_COORDINATES 1%0A%23define X3D_GEOMETRY_3D%0A%23define X3D_PHONG_MATERIAL%0A%23define X3D_LIGHTING%0A%23define X3D_NUM_LIGHTS 2%0A%23define X3D_FOG%0A%23define X3D_FOG_LINEAR%0A%23define X3D_TEXTURE%0A%23define X3D_NUM_TEXTURES 1%0A%23define X3D_TEXTURE_0_2D%0A%0Aprecision highp int;%0Aprecision highp float;%0Aprecision highp sampler2D;%0Aprecision highp sampler3D;%0Aprecision highp samplerCube;%0A%23undef X3D_GEOMETRY_0D%0A%23undef X3D_GEOMETRY_1D%0A%23undef X3D_GEOMETRY_2D%0A%23undef X3D_STYLE_PROPERTIES%0A%23undef X3D_UNLIT_MATERIAL%0A%23undef X3D_MULTI_TEXTURING%0A%23include <Material>%0A');\n   if (k == 'h') tr .rotation = new SFRotation (0, 1, 0, 0.8);\n   if (k == 'i') f .fogType = 'EXPONENTIAL';\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

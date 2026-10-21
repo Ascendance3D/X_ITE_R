@@ -1,0 +1,93 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx call"
+DEF T Transform { }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function initialize () {
+  SELF = this;
+  T ('SFBool call without new', function () { var r = SFBool (); return [typeof r, r === undefined]; });
+  T ('SFColor call without new', function () { var r = SFColor (); return [typeof r, r === undefined]; });
+  T ('SFColorRGBA call without new', function () { var r = SFColorRGBA (); return [typeof r, r === undefined]; });
+  T ('SFDouble call without new', function () { var r = SFDouble (); return [typeof r, r === undefined]; });
+  T ('SFFloat call without new', function () { var r = SFFloat (); return [typeof r, r === undefined]; });
+  T ('SFImage call without new', function () { var r = SFImage (); return [typeof r, r === undefined]; });
+  T ('SFInt32 call without new', function () { var r = SFInt32 (); return [typeof r, r === undefined]; });
+  T ('SFMatrix3d call without new', function () { var r = SFMatrix3d (); return [typeof r, r === undefined]; });
+  T ('SFMatrix3f call without new', function () { var r = SFMatrix3f (); return [typeof r, r === undefined]; });
+  T ('SFMatrix4d call without new', function () { var r = SFMatrix4d (); return [typeof r, r === undefined]; });
+  T ('SFMatrix4f call without new', function () { var r = SFMatrix4f (); return [typeof r, r === undefined]; });
+  T ('SFNode call without new', function () { var r = SFNode ('Group { }'); return [typeof r, r === undefined]; });
+  T ('SFQuaternion call without new', function () { var r = SFQuaternion (); return [typeof r, r === undefined]; });
+  T ('SFRotation call without new', function () { var r = SFRotation (); return [typeof r, r === undefined]; });
+  T ('SFString call without new', function () { var r = SFString (); return [typeof r, r === undefined]; });
+  T ('SFTime call without new', function () { var r = SFTime (); return [typeof r, r === undefined]; });
+  T ('SFVec2d call without new', function () { var r = SFVec2d (); return [typeof r, r === undefined]; });
+  T ('SFVec2f call without new', function () { var r = SFVec2f (); return [typeof r, r === undefined]; });
+  T ('SFVec3d call without new', function () { var r = SFVec3d (); return [typeof r, r === undefined]; });
+  T ('SFVec3f call without new', function () { var r = SFVec3f (); return [typeof r, r === undefined]; });
+  T ('SFVec4d call without new', function () { var r = SFVec4d (); return [typeof r, r === undefined]; });
+  T ('SFVec4f call without new', function () { var r = SFVec4f (); return [typeof r, r === undefined]; });
+  T ('VrmlMatrix call without new', function () { var r = VrmlMatrix (); return [typeof r, r === undefined]; });
+  T ('MFBool call without new', function () { var r = MFBool (); return [typeof r, r === undefined]; });
+  T ('MFColor call without new', function () { var r = MFColor (); return [typeof r, r === undefined]; });
+  T ('MFColorRGBA call without new', function () { var r = MFColorRGBA (); return [typeof r, r === undefined]; });
+  T ('MFDouble call without new', function () { var r = MFDouble (); return [typeof r, r === undefined]; });
+  T ('MFFloat call without new', function () { var r = MFFloat (); return [typeof r, r === undefined]; });
+  T ('MFImage call without new', function () { var r = MFImage (); return [typeof r, r === undefined]; });
+  T ('MFInt32 call without new', function () { var r = MFInt32 (); return [typeof r, r === undefined]; });
+  T ('MFMatrix3d call without new', function () { var r = MFMatrix3d (); return [typeof r, r === undefined]; });
+  T ('MFMatrix3f call without new', function () { var r = MFMatrix3f (); return [typeof r, r === undefined]; });
+  T ('MFMatrix4d call without new', function () { var r = MFMatrix4d (); return [typeof r, r === undefined]; });
+  T ('MFMatrix4f call without new', function () { var r = MFMatrix4f (); return [typeof r, r === undefined]; });
+  T ('MFNode call without new', function () { var r = MFNode (); return [typeof r, r === undefined]; });
+  T ('MFQuaternion call without new', function () { var r = MFQuaternion (); return [typeof r, r === undefined]; });
+  T ('MFRotation call without new', function () { var r = MFRotation (); return [typeof r, r === undefined]; });
+  T ('MFString call without new', function () { var r = MFString (); return [typeof r, r === undefined]; });
+  T ('MFTime call without new', function () { var r = MFTime (); return [typeof r, r === undefined]; });
+  T ('MFVec2d call without new', function () { var r = MFVec2d (); return [typeof r, r === undefined]; });
+  T ('MFVec2f call without new', function () { var r = MFVec2f (); return [typeof r, r === undefined]; });
+  T ('MFVec3d call without new', function () { var r = MFVec3d (); return [typeof r, r === undefined]; });
+  T ('MFVec3f call without new', function () { var r = MFVec3f (); return [typeof r, r === undefined]; });
+  T ('MFVec4d call without new', function () { var r = MFVec4d (); return [typeof r, r === undefined]; });
+  T ('MFVec4f call without new', function () { var r = MFVec4f (); return [typeof r, r === undefined]; });
+  flush_ ();
+}
+
+  "
+}

@@ -73,6 +73,15 @@ impl Box3 {
         (min, max)
     }
 
+    /// Box3.getExtents: the extents of the box in the space it is in (absolute extents + center).
+    pub fn extents(&self) -> (Vector3, Vector3) {
+        let (mut min, mut max) = self.absolute_extents();
+        let c = self.center();
+        min.add(&c);
+        max.add(&c);
+        (min, max)
+    }
+
     /// Box3.size.
     pub fn size(&self) -> Vector3 {
         let (min, mut max) = self.absolute_extents();
@@ -114,13 +123,14 @@ impl Layer {
         inv_model.inverse();
         inv_model.mult_vec_matrix3(&mut p);
 
-        self.look_at(rt, n, base, &p, 0.5, 0.5, straighten, date_now);
+        self.look_at(rt, n, base, &p, 0.5, 0.5, 1.0, straighten, date_now);
     }
 
-    /// X3DViewer.lookAtBBox → X3DViewpointNode.lookAtBBox (+ OrthoViewpoint.lookAtBBox); `bbox` is
-    /// the hit shape's box in world space (`shape .getBBox () .multRight (modelView) .multRight (cameraSpace)`).
-    pub fn look_at_bbox(&mut self, rt: &mut Runtime, n: NodeId, base: &VpBase, bbox: &Box3, straighten: bool, date_now: f64) {
-        let factor = 0.8;
+    /// X3DViewpointNode.lookAtBBox (+ OrthoViewpoint.lookAtBBox); `bbox` is in world space: the hit shape's box of
+    /// X3DViewer.lookAtBBox (`shape .getBBox () .multRight (modelView) .multRight (cameraSpace)`, factor 0.8, transitionTime 1)
+    /// or the layer's of X3DLayerNode.viewAll (factor 1, the time X3DBrowser.viewAll got).
+    #[allow(clippy::too_many_arguments)]
+    pub fn look_at_bbox(&mut self, rt: &mut Runtime, n: NodeId, base: &VpBase, bbox: &Box3, factor: f64, transition_time: f64, straighten: bool, date_now: f64) {
         let (model, view, saved_offset, saved_scale) = {
             let vp = self.vp(n);
             (vp.model, vp.view, vp.field_of_view_offset, vp.field_of_view_scale)
@@ -141,7 +151,7 @@ impl Layer {
         let vp = self.vp(n).clone();
         let distance = self.look_at_distance(base, &vp, self.viewport, &local.size());
 
-        self.look_at(rt, n, base, &point, distance, factor, straighten, date_now);
+        self.look_at(rt, n, base, &point, distance, factor, transition_time, straighten, date_now);
 
         if base.is_ortho {
             // OrthoViewpoint.lookAtBBox: the interpolators go to the view-all scale of the local box.
@@ -153,9 +163,61 @@ impl Layer {
         }
     }
 
-    /// X3DViewpointNode.lookAt (OrthoViewpoint.lookAt calls it with `factor: 0`).
+    /// X3DViewpointNode.straightenView: unless a straightenView transition runs, a one-second transition from the
+    /// orientation offset to the one that straightens the user orientation (the other offsets stay).
+    pub fn straighten_view(&mut self, rt: &mut Runtime, n: NodeId, base: &VpBase, date_now: f64) {
+        let nav_node = self.navigation_info();
+        let was_active = self.vp(n).transition.is_some();
+
+        // checkTransition ("straightenView")
+        if was_active && self.vp(n).transition_description == "straightenView" {
+            return;
+        }
+
+        let vp = self.vp(n);
+
+        vp.transition_description = "straightenView".into();
+
+        let straight = base.straighten_horizon(vp, &vp.user_orientation(base));
+        let mut rotation = base.orientation;
+        rotation.inverse();
+        rotation.mult_right(&straight);
+
+        let mut t = Transition {
+            start: date_now,
+            interval: 1.0,
+            ease_out: 1.0,
+            ease_in: 1.0,
+            position: (f32v(&vp.position_offset), f32v(&vp.position_offset)),
+            orientation: (f32r(&vp.orientation_offset), f32r(&rotation)),
+            scale: (f32v(&vp.scale_offset), f32v(&vp.scale_offset)),
+            scale_orientation: (f32r(&vp.scale_orientation_offset), f32r(&vp.scale_orientation_offset)),
+            fov_scale: (1.0, 1.0),
+            fov_offset: None,
+            nav_info: nav_node,
+            notify: !was_active,
+            lazy_start: true,
+        };
+
+        // this .setInterpolators (this, this .getRelativeTransformation (this))
+        let from = FromState {
+            same: true,
+            user_fov: vp.user_fov(base),
+            user_extent: std::array::from_fn(|i| vp.user_extent(base, i)),
+            fov_scale: vp.field_of_view_scale,
+        };
+        let (scale, offsets) = vp.set_interpolators(base, &from);
+        t.fov_scale = (f32s(scale.0), f32s(scale.1));
+        t.fov_offset = offsets.map(|(a, b)| (a.map(f32s), b.map(f32s)));
+
+        vp.transition = Some(t);
+        self.nav_start(rt, nav_node);
+    }
+
+    /// X3DViewpointNode.lookAt (OrthoViewpoint.lookAt calls it with `factor: 0`); `transition_time` is the TimeSensor's
+    /// cycleInterval.
     #[allow(clippy::too_many_arguments)]
-    pub fn look_at(&mut self, rt: &mut Runtime, n: NodeId, base: &VpBase, point: &Vector3, distance: f64, factor: f64, straighten_horizon: bool, date_now: f64) {
+    pub fn look_at(&mut self, rt: &mut Runtime, n: NodeId, base: &VpBase, point: &Vector3, distance: f64, factor: f64, transition_time: f64, straighten_horizon: bool, date_now: f64) {
         let nav_node = self.navigation_info();
 
         // OrthoViewpoint.lookAt: remember the offsets before and compute where they go.
@@ -204,7 +266,7 @@ impl Layer {
         // layerNode .getNavigationInfo () ._transitionStart = true
         let mut t = Transition {
             start: date_now,
-            interval: 1.0,
+            interval: transition_time,
             ease_out: 1.0,
             ease_in: 1.0,
             position: (f32v(&vp.position_offset), f32v(&translation)),

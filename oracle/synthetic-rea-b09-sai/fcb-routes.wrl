@@ -1,0 +1,47 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fcb routes"
+DEF T1 Transform { }
+DEF T2 Transform { }
+DEF T3 Transform { }
+DEF R Script {
+  inputOnly SFVec3f set_v
+  outputOnly SFVec3f v_changed
+  url "ecmascript:
+function set_v (v) { v_changed = v; }
+  "
+}
+DEF D Script {
+  directOutput TRUE
+  mustEvaluate TRUE
+  inputOutput MFString out [ ]
+  url "ecmascript:
+
+var F = 0;
+function L (s) { var a = globalThis .LOG_ = globalThis .LOG_ || []; a .push (F + ':' + s); out = new MFString (... a); }
+function show (v) {
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'number') return Object .is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON .stringify (v);
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (typeof v === 'function') return 'fn';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v);
+}
+function E (e) { return 'ERR ' + (e && e .name) + ': ' + (e && e .message); }
+function S (n) { return Browser .currentScene .getNamedNode (n); }
+
+
+function prepareEvents () {
+  ++ F;
+  if (F === 1) { try { S ('T2') .addFieldCallback ('a', 'translation', function (v) { L ('T2.translation ' + show (v)); }); S ('T3') .addFieldCallback ('a', 'translation', function (v) { L ('T3.translation ' + show (v)); }); S ('T1') .addFieldCallback ('a', 'translation', function (v) { L ('T1.translation ' + show (v)); }); S ('T1') .addFieldCallback ('b', 'translation_changed', function (v) { L ('T1.translation_changed ' + show (v)); }); S ('R') .addFieldCallback ('a', 'v_changed', function (v) { L ('R.v_changed ' + show (v)); }); S ('R') .addFieldCallback ('b', 'set_v', function (v) { L ('R.set_v ' + show (v)); }); S ('T1') .translation = new SFVec3f (1, 0, 0); L ('set T1'); } catch (e) { L ('step 1 ' + E (e)); } }
+  if (F === 2) { try { S ('T1') .translation = new SFVec3f (2, 0, 0); S ('T1') .translation = new SFVec3f (3, 0, 0); L ('set T1 twice'); } catch (e) { L ('step 2 ' + E (e)); } }
+  if (F === 3) { try { Browser .currentScene .deleteRoute (Browser .currentScene .routes [0]); S ('T1') .translation = new SFVec3f (4, 0, 0); L ('route 0 deleted'); } catch (e) { L ('step 3 ' + E (e)); } }
+}
+
+  "
+}
+ROUTE T1.translation_changed TO T2.set_translation
+ROUTE T1.translation_changed TO R.set_v
+ROUTE R.v_changed TO T3.set_translation

@@ -1,0 +1,142 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nShape {\n  appearance Appearance {\n    shaders DEF CS ComposedShader {\n      inputOutput SFFloat f 0.4\n      inputOutput SFVec3f v3 0.1 0.5 0.9\n      inputOutput SFNode  map ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      inputOutput MFFloat arr [\n        0.1,\n        0.2,\n        0.3\n      ]\n\n      language \"GLSL\"\n      parts [\n        ShaderPart {\n          url \"data:x-shader/x-vertex,%0Aattribute%20vec4%20x3d_Vertex;%0Aattribute%20vec3%20x3d_Normal;%0Aattribute%20vec4%20x3d_TexCoord0;%0Aattribute%20vec4%20x3d_Color;%0Auniform%20mat4%20x3d_ProjectionMatrix;%0Auniform%20mat4%20x3d_ModelViewMatrix;%0Auniform%20mat3%20x3d_NormalMatrix;%0Avarying%20vec3%20vN;%0Avarying%20vec3%20vP;%0Avarying%20vec2%20vT;%0Avarying%20vec4%20vC;%0Avoid%20main()%0A{%0A%20%20%20vec4%20p%20=%20x3d_ModelViewMatrix%20*%20x3d_Vertex;%0A%20%20%20vP%20=%20p.xyz;%0A%20%20%20vN%20=%20normalize%20(x3d_NormalMatrix%20*%20x3d_Normal);%0A%20%20%20vT%20=%20x3d_TexCoord0.st;%0A%20%20%20vC%20=%20x3d_Color;%0A%20%20%20gl_Position%20=%20x3d_ProjectionMatrix%20*%20p;%0A}%0A\"\n        }\n        ShaderPart {\n          type \"FRAGMENT\"\n          url \"\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nuniform float f;\nuniform vec3 v3;\nuniform sampler2D map;\nuniform float arr [3];\nvoid main() { gl_FragColor = vec4 (v3 * f + texture2D (map, vT).rgb * 0.5 + vec3 (arr [0], arr [1], arr [2]) * 0.3, 1.0); }\n\"\n        }\n      ]\n    }\n  }\n  geometry Box { }\n}\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nShape {\n  appearance Appearance {\n    shaders DEF CS ComposedShader {\n      inputOutput SFFloat f 0.4\n      inputOutput SFVec3f v3 0.1 0.5 0.9\n      inputOutput SFNode  map ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      inputOutput MFFloat arr [\n        0.1,\n        0.2,\n        0.3\n      ]\n\n      language \"GLSL\"\n      parts [\n        ShaderPart {\n          url \"data:x-shader/x-vertex,%0Aattribute%20vec4%20x3d_Vertex;%0Aattribute%20vec3%20x3d_Normal;%0Aattribute%20vec4%20x3d_TexCoord0;%0Aattribute%20vec4%20x3d_Color;%0Auniform%20mat4%20x3d_ProjectionMatrix;%0Auniform%20mat4%20x3d_ModelViewMatrix;%0Auniform%20mat3%20x3d_NormalMatrix;%0Avarying%20vec3%20vN;%0Avarying%20vec3%20vP;%0Avarying%20vec2%20vT;%0Avarying%20vec4%20vC;%0Avoid%20main()%0A{%0A%20%20%20vec4%20p%20=%20x3d_ModelViewMatrix%20*%20x3d_Vertex;%0A%20%20%20vP%20=%20p.xyz;%0A%20%20%20vN%20=%20normalize%20(x3d_NormalMatrix%20*%20x3d_Normal);%0A%20%20%20vT%20=%20x3d_TexCoord0.st;%0A%20%20%20vC%20=%20x3d_Color;%0A%20%20%20gl_Position%20=%20x3d_ProjectionMatrix%20*%20p;%0A}%0A\"\n        }\n        ShaderPart {\n          type \"FRAGMENT\"\n          url \"\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nuniform float f;\nuniform vec3 v3;\nuniform sampler2D map;\nuniform float arr [3];\nvoid main() { gl_FragColor = vec4 (v3 * f + texture2D (map, vT).rgb * 0.5 + vec3 (arr [0], arr [1], arr [2]) * 0.3, 1.0); }\n\"\n        }\n      ]\n    }\n  }\n  geometry Box { }\n}\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nShape {\n  appearance Appearance {\n    shaders DEF CS ComposedShader {\n      inputOutput SFFloat f 0.4\n      inputOutput SFVec3f v3 0.1 0.5 0.9\n      inputOutput SFNode  map ImageTexture {\n        url \"../synthetic-rea-b03/proj-checker.png\"\n      }\n      inputOutput MFFloat arr [\n        0.1,\n        0.2,\n        0.3\n      ]\n\n      language \"GLSL\"\n      parts [\n        ShaderPart {\n          url \"data:x-shader/x-vertex,%0Aattribute%20vec4%20x3d_Vertex;%0Aattribute%20vec3%20x3d_Normal;%0Aattribute%20vec4%20x3d_TexCoord0;%0Aattribute%20vec4%20x3d_Color;%0Auniform%20mat4%20x3d_ProjectionMatrix;%0Auniform%20mat4%20x3d_ModelViewMatrix;%0Auniform%20mat3%20x3d_NormalMatrix;%0Avarying%20vec3%20vN;%0Avarying%20vec3%20vP;%0Avarying%20vec2%20vT;%0Avarying%20vec4%20vC;%0Avoid%20main()%0A{%0A%20%20%20vec4%20p%20=%20x3d_ModelViewMatrix%20*%20x3d_Vertex;%0A%20%20%20vP%20=%20p.xyz;%0A%20%20%20vN%20=%20normalize%20(x3d_NormalMatrix%20*%20x3d_Normal);%0A%20%20%20vT%20=%20x3d_TexCoord0.st;%0A%20%20%20vC%20=%20x3d_Color;%0A%20%20%20gl_Position%20=%20x3d_ProjectionMatrix%20*%20p;%0A}%0A\"\n        }\n        ShaderPart {\n          type \"FRAGMENT\"\n          url \"\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nuniform float f;\nuniform vec3 v3;\nuniform sampler2D map;\nuniform float arr [3];\nvoid main() { gl_FragColor = vec4 (v3 * f + texture2D (map, vT).rgb * 0.5 + vec3 (arr [0], arr [1], arr [2]) * 0.3, 1.0); }\n\"\n        }\n      ]\n    }\n  }\n  geometry Box { }\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "error: ShaderPart: Couldn't load URL 'http://oracle/synthetic-rea-b08-shaders/precision mediump float;varying vec3 vN;varying vec3 vP;varying vec2 vT;varying vec4 vC;uniform float f;uniform vec3 v3;uniform sampler2D map;uniform float arr [3];void main() { gl_FragColor = vec4 (v3 * f + texture2D (map, vT).rgb * 0.5 + vec3 (arr [0], arr [1], arr [2]) * 0.3, 1.0); }'. Error: Not Found"
+  ],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

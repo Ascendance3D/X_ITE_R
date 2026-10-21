@@ -1,0 +1,1410 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10.016666650772095
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10.016666650772095
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10.016388873524136
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10.016111096276177
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10.016111075878143
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10.032509208975014
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10.048907342071885
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10.065305592457456
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10.081703725554327
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10.098101858651198
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10.114499991748069
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10.13089812484494
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10.147296257941811
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10.163694391038682
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10.180092641424253
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10.196490774521124
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10.212888907617995
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10.229287040714865
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10.245685173811736
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10.262083306908607
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10.278481440005478
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10.29487957310235
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10.31127782348792
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        10.327675956584791
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        10.344074089681662
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10.360472222778533
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10.376870355875404
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10.393268488972275
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10.409666622069146
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10.426064872454717
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10.442463005551588
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10.458861138648459
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10.47525927174533
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10.4916574048422
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        10.508055537939072
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10.524453671035943
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10.540851804132814
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10.557250054518384
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        10.573648187615255
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10.590046320712126
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10.606444453808997
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        10.622842586905868
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10.63924072000274
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10.65563885309961
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10.67203710348518
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        10.688435236582052
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        10.704833369678923
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10.721231502775794
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        10.737629635872665
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        10.754027768969536
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10.770425902066407
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        10.786824035163278
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10.803222285548848
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10.81962041864572
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10.83601855174259
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10.852416684839461
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle { }\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle { }\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle { }\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle { }\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle { }\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle { }\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 19\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 19\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 19\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 20\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 20\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 20\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind route\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF C Viewpoint {\n  description \"C\"\n  position 0 0 12\n}\n\nDEF BV BooleanToggle {\n  toggle TRUE\n}\n\nDEF P Script {\n  inputOutput SFString hist \"A:1@1 A:T@1 [toggle]@2 A:0@2 B:1@2 B:T@2 [toggle]@3 B:0@3 A:1@3 A:T@3 [toggle]@4 A:0@4 B:1@4 B:T@4 \"\n  inputOutput SFInt32  step 21\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_C\n  inputOnly   SFTime   t_C\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_C (v) { rec ('C:' + (v ? 1 : 0)); }\nfunction t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 3) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n  if (step == 4) p ('toggle', function () { s .getNamedNode ('BV') .set_boolean = true; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nDEF TRUEB BooleanFilter { }\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE C.isBound TO P.b_C\nROUTE C.bindTime TO P.t_C\nROUTE BV.toggle_changed TO B.set_bind\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

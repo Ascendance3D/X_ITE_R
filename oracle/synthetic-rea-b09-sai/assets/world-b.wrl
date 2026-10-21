@@ -1,0 +1,17 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "world B"
+DEF WB WorldInfo { title "B" }
+DEF VPB Viewpoint { description "vpB" position 0 0 7 }
+DEF BS Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    function initialize () { console .log ('B: initialize'); hist = 'init leak=' + (typeof leak === 'undefined' ? 'undef' : leak) + ' vp=' + Browser .currentScene .getNamedNode ('VPB') .getNodeName () + ' name=' + Browser .name; }
+    function cycle () { step = step + 1; }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO BS.cycle

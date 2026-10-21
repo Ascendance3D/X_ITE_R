@@ -347,7 +347,7 @@ impl Runtime {
             let mut root = self.scene.scene_root(ctx);
 
             for _ in 0..64 {
-                if root == ROOT {
+                if root == ROOT || root == self.scene.world {
                     return true;
                 }
 
@@ -582,7 +582,7 @@ impl Runtime {
         // (X3DExternProtoDeclaration.setInternalScene) and never disposes it with a user's scene.
         // Here that is the world: an Inline that declared it first may go, the next one finds it.
         // An uncached scene (a URL with a query) is the declaration's own and goes with it.
-        let parent = if key.is_some() { ROOT } else { self.scene.externprotos[e].ctx };
+        let parent = if key.is_some() { self.scene.world } else { self.scene.externprotos[e].ctx };
         let m = self.scene.merge_extern(scene, parent);
 
         let (scene_node, count) = self.new_load_count_scene();

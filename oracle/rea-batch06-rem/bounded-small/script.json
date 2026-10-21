@@ -1,0 +1,1 @@
+{"dt": 0.03333333333333333, "t0": 946684800, "frames": 90, "warmup": 8, "seed": 7425, "node": "PS", "checkpoints": [], "dumpAll": true, "events": [], "world": "geom-bounded_small.x3dv", "note": "control of bounded-size-pre-first: Box 1 1 1 from the start"}

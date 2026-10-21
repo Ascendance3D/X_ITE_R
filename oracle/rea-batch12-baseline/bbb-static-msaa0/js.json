@@ -1,0 +1,122 @@
+{
+  "ok": true,
+  "poses": {
+    "2": {
+      "position": [
+        2,
+        1.5,
+        14
+      ],
+      "orientation": [
+        0,
+        1.0000000000000067,
+        0,
+        0.11999999999999919
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        2,
+        1.5,
+        14
+      ],
+      "orientation": [
+        0,
+        1.0000000000000067,
+        0,
+        0.11999999999999919
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        2,
+        1.5,
+        14
+      ],
+      "orientation": [
+        0,
+        1.0000000000000067,
+        0,
+        0.11999999999999919
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        2,
+        1.5,
+        14
+      ],
+      "orientation": [
+        0,
+        1.0000000000000067,
+        0,
+        0.11999999999999919
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF V1 Viewpoint {\n  position 2 1.5 14\n  orientation 0 1 0 0.12\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -4 3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.5 0.9\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 3 0\n  children Billboard {\n    axisOfRotation 0 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 3 0\n  children Billboard {\n    axisOfRotation 1 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0 0.5 0.3\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.4 0.9 0.4\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -4 0 0\n  rotation 0 0 1 0.4\n  scale 1.5 0.8 1\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.3 0.3\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  children Billboard {\n    bboxDisplay TRUE\n  }\n}\n\nTransform {\n  translation 4 0 0\n  children Billboard {\n    bboxDisplay TRUE\n    bboxSize 2 1 0.5\n    bboxCenter 0.3 0.2 0\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.7 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3 -3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children [\n      Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.5 0.3 0.8\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Billboard {\n          axisOfRotation 0 0 0\n          bboxDisplay TRUE\n          children Transform {\n            translation 0 0.6 0\n            children Shape {\n              appearance Appearance {\n                material Material {\n                  diffuseColor 0.2 0.8 0.8\n                }\n              }\n              geometry Box {\n                size 1.6 0.8 0.2\n              }\n            }\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 3 -3 0\n  children Group {\n    bboxDisplay TRUE\n    children Billboard {\n      children Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.5 0.5\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n    }\n  }\n}\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF V1 Viewpoint {\n  position 2 1.5 14\n  orientation 0 1 0 0.12\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -4 3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.5 0.9\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 3 0\n  children Billboard {\n    axisOfRotation 0 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 3 0\n  children Billboard {\n    axisOfRotation 1 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0 0.5 0.3\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.4 0.9 0.4\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -4 0 0\n  rotation 0 0 1 0.4\n  scale 1.5 0.8 1\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.3 0.3\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  children Billboard {\n    bboxDisplay TRUE\n  }\n}\n\nTransform {\n  translation 4 0 0\n  children Billboard {\n    bboxDisplay TRUE\n    bboxSize 2 1 0.5\n    bboxCenter 0.3 0.2 0\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.7 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3 -3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children [\n      Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.5 0.3 0.8\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Billboard {\n          axisOfRotation 0 0 0\n          bboxDisplay TRUE\n          children Transform {\n            translation 0 0.6 0\n            children Shape {\n              appearance Appearance {\n                material Material {\n                  diffuseColor 0.2 0.8 0.8\n                }\n              }\n              geometry Box {\n                size 1.6 0.8 0.2\n              }\n            }\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 3 -3 0\n  children Group {\n    bboxDisplay TRUE\n    children Billboard {\n      children Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.5 0.5\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n    }\n  }\n}\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF V1 Viewpoint {\n  position 2 1.5 14\n  orientation 0 1 0 0.12\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -4 3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.5 0.9\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 3 0\n  children Billboard {\n    axisOfRotation 0 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 3 0\n  children Billboard {\n    axisOfRotation 1 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0 0.5 0.3\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.4 0.9 0.4\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -4 0 0\n  rotation 0 0 1 0.4\n  scale 1.5 0.8 1\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.3 0.3\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  children Billboard {\n    bboxDisplay TRUE\n  }\n}\n\nTransform {\n  translation 4 0 0\n  children Billboard {\n    bboxDisplay TRUE\n    bboxSize 2 1 0.5\n    bboxCenter 0.3 0.2 0\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.7 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3 -3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children [\n      Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.5 0.3 0.8\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Billboard {\n          axisOfRotation 0 0 0\n          bboxDisplay TRUE\n          children Transform {\n            translation 0 0.6 0\n            children Shape {\n              appearance Appearance {\n                material Material {\n                  diffuseColor 0.2 0.8 0.8\n                }\n              }\n              geometry Box {\n                size 1.6 0.8 0.2\n              }\n            }\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 3 -3 0\n  children Group {\n    bboxDisplay TRUE\n    children Billboard {\n      children Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.5 0.5\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n    }\n  }\n}\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nDEF V1 Viewpoint {\n  position 2 1.5 14\n  orientation 0 1 0 0.12\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -4 3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.3 0.5 0.9\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 0 3 0\n  children Billboard {\n    axisOfRotation 0 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.6 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 4 3 0\n  children Billboard {\n    axisOfRotation 1 0 0\n    bboxDisplay TRUE\n    children Transform {\n      translation 0 0.5 0.3\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.4 0.9 0.4\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -4 0 0\n  rotation 0 0 1 0.4\n  scale 1.5 0.8 1\n  children Billboard {\n    bboxDisplay TRUE\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.9 0.3 0.3\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  children Billboard {\n    bboxDisplay TRUE\n  }\n}\n\nTransform {\n  translation 4 0 0\n  children Billboard {\n    bboxDisplay TRUE\n    bboxSize 2 1 0.5\n    bboxCenter 0.3 0.2 0\n    children Transform {\n      translation 0.6 0 0\n      children Shape {\n        appearance Appearance {\n          material Material {\n            diffuseColor 0.7 0.7 0.2\n          }\n        }\n        geometry Box {\n          size 1.6 0.8 0.2\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -3 -3 0\n  children Billboard {\n    bboxDisplay TRUE\n    children [\n      Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.5 0.3 0.8\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Billboard {\n          axisOfRotation 0 0 0\n          bboxDisplay TRUE\n          children Transform {\n            translation 0 0.6 0\n            children Shape {\n              appearance Appearance {\n                material Material {\n                  diffuseColor 0.2 0.8 0.8\n                }\n              }\n              geometry Box {\n                size 1.6 0.8 0.2\n              }\n            }\n          }\n        }\n      }\n    ]\n  }\n}\n\nTransform {\n  translation 3 -3 0\n  children Group {\n    bboxDisplay TRUE\n    children Billboard {\n      children Transform {\n        translation 0.6 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.8 0.5 0.5\n            }\n          }\n          geometry Box {\n            size 1.6 0.8 0.2\n          }\n        }\n      }\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

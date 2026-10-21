@@ -1,0 +1,1429 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \"\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\n\nViewpoint { }\n\nTransform {\n  translation -1.5 0 0\n  rotation 0 1 0 0.4\n  children [\n    DEF T1 TouchSensor {\n      description \"box\"\n    }\n    Shape {\n      geometry Box { }\n    }\n  ]\n}\n\nTransform {\n  translation 1.5 0 0\n  scale 1 1.3 1\n  children [\n    DEF T2 TouchSensor {\n      description \"sphere\"\n    }\n    Shape {\n      geometry Sphere {\n        radius 1.2\n      }\n    }\n  ]\n}\n\nDEF LOG Script {\n  inputOutput SFString hist \" o1=true x1=0.5007726 0.5036767 n1=-2.165928e-9 0 1 p1=0.001544937 0.00735355 1 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=true x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 a1=false t1=0.3833 x1=0.5771022 0.3854022 n1=-2.165928e-9 0 1 p1=0.1542044 -0.2291954 1.000001 x1=0.6544381 0.6079168 n1=-2.165928e-9 0 1 p1=0.3088762 0.2158337 1 o1=false o2=true x2=0.46079 0.5014717 n2=-0.2436886 0.00460446 0.9698426 p2=-0.2912115 0.005501763 1.158976 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=true x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 a2=false t2=0.7167 x2=0.4798849 0.4246732 n2=-0.1230981 -0.2353649 0.96408 p2=-0.1469139 -0.2808672 1.1506 o2=false\"\n  inputOnly   SFBool   over1\n  inputOnly   SFBool   active1\n  inputOnly   SFTime   touch1\n  inputOnly   SFVec3f  point1\n  inputOnly   SFVec3f  normal1\n  inputOnly   SFVec2f  tex1\n  inputOnly   SFBool   over2\n  inputOnly   SFBool   active2\n  inputOnly   SFTime   touch2\n  inputOnly   SFVec3f  point2\n  inputOnly   SFVec3f  normal2\n  inputOnly   SFVec2f  tex2\n\n  url \"ecmascript:\n    function over1 (v) { hist = hist + ' o1=' + v; }\n    function active1 (v) { hist = hist + ' a1=' + v; }\n    function touch1 (v) { hist = hist + ' t1=' + (v - 946684800) .toFixed (4); }\n    function point1 (v) { hist = hist + ' p1=' + v; }\n    function normal1 (v) { hist = hist + ' n1=' + v; }\n    function tex1 (v) { hist = hist + ' x1=' + v; }\n    function over2 (v) { hist = hist + ' o2=' + v; }\n    function active2 (v) { hist = hist + ' a2=' + v; }\n    function touch2 (v) { hist = hist + ' t2=' + (v - 946684800) .toFixed (4); }\n    function point2 (v) { hist = hist + ' p2=' + v; }\n    function normal2 (v) { hist = hist + ' n2=' + v; }\n    function tex2 (v) { hist = hist + ' x2=' + v; }\n  \"\n}\n\nROUTE T1.isOver TO LOG.over1\nROUTE T1.isActive TO LOG.active1\nROUTE T1.touchTime TO LOG.touch1\nROUTE T1.hitPoint_changed TO LOG.point1\nROUTE T1.hitNormal_changed TO LOG.normal1\nROUTE T1.hitTexCoord_changed TO LOG.tex1\nROUTE T2.isOver TO LOG.over2\nROUTE T2.isActive TO LOG.active2\nROUTE T2.touchTime TO LOG.touch2\nROUTE T2.hitPoint_changed TO LOG.point2\nROUTE T2.hitNormal_changed TO LOG.normal2\nROUTE T2.hitTexCoord_changed TO LOG.tex2\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

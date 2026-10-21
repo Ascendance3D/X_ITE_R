@@ -1,0 +1,197 @@
+== created-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 56
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== created-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 56
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== environment-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 72
+FAIL scene text equal at frame 80
+FAIL scene text equal at frame 159
+FAIL scene text equal at frame 160
+FAIL    64.png  max 140  over  52068 (19.862%)  diff  52070  psnr  16.89  ssim 0.7841
+FAIL    72.png  max 133  over  52068 (19.862%)  diff  52068  psnr  18.26  ssim 0.7843
+FAIL    80.png  max  66  over  52068 (19.862%)  diff  52068  psnr  24.33  ssim 0.7884
+6 within tolerance, 3 over, 0 missing (threshold 8, max 0.5% of pixels)
+FAIL images within tolerance (threshold 8, max 0.5%)
+exit 1
+== environment-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 72
+FAIL scene text equal at frame 80
+FAIL scene text equal at frame 159
+FAIL scene text equal at frame 160
+FAIL    64.png  max 139  over  52283 (19.944%)  diff  52283  psnr  16.90  ssim 0.7841
+FAIL    72.png  max 131  over  52283 (19.944%)  diff  52283  psnr  18.27  ssim 0.7843
+FAIL    80.png  max  65  over  52283 (19.944%)  diff  52319  psnr  24.34  ssim 0.7885
+6 within tolerance, 3 over, 0 missing (threshold 8, max 0.5% of pixels)
+FAIL images within tolerance (threshold 8, max 0.5%)
+exit 1
+== events-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 119
+FAIL scene text equal at frame 120
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== events-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 119
+FAIL scene text equal at frame 120
+7 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== fields-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 72
+FAIL scene text equal at frame 80
+FAIL scene text equal at frame 199
+FAIL scene text equal at frame 200
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== fields-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 72
+FAIL scene text equal at frame 80
+FAIL scene text equal at frame 199
+FAIL scene text equal at frame 200
+9 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== parts-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+17 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== parts-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+17 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 0
+== textures-runtime MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 72
+FAIL scene text equal at frame 80
+FAIL scene text equal at frame 159
+FAIL scene text equal at frame 160
+FAIL    64.png  max 128  over 169744 (64.752%)  diff 169744  psnr  12.68  ssim 0.9476
+FAIL    72.png  max 255  over 169744 (64.752%)  diff 169744  psnr   7.90  ssim 0.8645
+FAIL    80.png  max 255  over 169744 (64.752%)  diff 169744  psnr   6.66  ssim 0.8481
+6 within tolerance, 3 over, 0 missing (threshold 8, max 0.5% of pixels)
+FAIL images within tolerance (threshold 8, max 0.5%)
+exit 1
+== textures-runtime MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 24
+FAIL scene text equal at frame 32
+FAIL scene text equal at frame 40
+FAIL scene text equal at frame 48
+FAIL scene text equal at frame 56
+FAIL scene text equal at frame 64
+FAIL scene text equal at frame 72
+FAIL scene text equal at frame 80
+FAIL scene text equal at frame 159
+FAIL scene text equal at frame 160
+FAIL    64.png  max 128  over 169744 (64.752%)  diff 169744  psnr  12.68  ssim 0.9476
+FAIL    72.png  max 255  over 169744 (64.752%)  diff 169744  psnr   7.90  ssim 0.8645
+FAIL    80.png  max 255  over 169744 (64.752%)  diff 169744  psnr   6.66  ssim 0.8481
+6 within tolerance, 3 over, 0 missing (threshold 8, max 0.5% of pixels)
+FAIL images within tolerance (threshold 8, max 0.5%)
+exit 1
+== xml-basic MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 19
+FAIL scene text equal at frame 20
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== xml-basic MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 19
+FAIL scene text equal at frame 20
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== xml-fields MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 19
+FAIL scene text equal at frame 20
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== xml-fields MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 19
+FAIL scene text equal at frame 20
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== xml-invalid MSAA 0
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 19
+FAIL scene text equal at frame 20
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+== xml-invalid MSAA 4
+PASS both ran (js ok=True , rs ok=True ) warmup frames 8
+FAIL scene text equal at frame 10
+FAIL scene text equal at frame 19
+FAIL scene text equal at frame 20
+1 within tolerance, 0 over, 0 missing (threshold 8, max 0.5% of pixels)
+exit 1
+A case that printed FAIL kept no baseline: record it as a Rust difference in the final report (do not edit baselines).

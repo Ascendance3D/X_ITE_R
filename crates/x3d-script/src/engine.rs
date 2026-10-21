@@ -17,10 +17,22 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use x3d_fields::math::*;
 use x3d_fields::{FieldType, FieldValue, Generator, Image, NodeId, access, jsmath};
+use x3d_runtime::ctx_events::CtxField;
 use x3d_runtime::*;
 use x3d_scene::*;
 
-const PRELUDE: &str = include_str!("prelude.js");
+mod ctx_api;
+
+/// prelude/head.js lists the parts; math.js, fields.js, config.js and node_types.js are generated (tools/gen_prelude_xite.py).
+const PRELUDE: &str = concat!(
+    include_str!("prelude/head.js"),
+    include_str!("prelude/math.js"),
+    include_str!("prelude/fields.js"),
+    include_str!("prelude/config.js"),
+    include_str!("prelude/node_types.js"),
+    include_str!("prelude/bridge.js"),
+    include_str!("prelude/rest.js"),
+);
 const NOFIELD: &str = "\u{0}nofield";
 
 #[derive(Clone, Debug)]
@@ -289,6 +301,20 @@ impl Drop for QuickJsHost {
     }
 }
 
+/// prelude/bridge.js: the node fields a Script holds as objects are refreshed before its code runs (`__enter`), and what it
+/// changed in place goes to the runtime after it and its promise jobs ran (`__leave`).
+fn js_enter(ctx: &Ctx<'_>) {
+    if let Ok(f) = ctx.globals().get::<_, Function>("__enter") {
+        let _ = f.call::<_, ()>(());
+    }
+}
+
+fn js_leave(ctx: &Ctx<'_>) {
+    if let Ok(f) = ctx.globals().get::<_, Function>("__leave") {
+        let _ = f.call::<_, ()>(());
+    }
+}
+
 /// `String (error)` of the pending exception.
 fn describe(ctx: &Ctx<'_>, e: rquickjs::Error) -> String {
     if let rquickjs::Error::Exception = e {
@@ -304,22 +330,25 @@ impl ScriptHost for QuickJsHost {
     fn create_context(&mut self, rt: &mut Runtime, node: NodeId, source: &str, callbacks: &[String]) -> Result<Vec<bool>, ScriptError> {
         self.enter(rt);
 
-        let fields: Vec<(String, u8, f64)> = (0..rt.scene.node(node).user_fields.len())
+        let fields: Vec<(String, u8, f64, &'static str)> = (0..rt.scene.node(node).user_fields.len())
             .map(|i| {
                 let f = &rt.scene.node(node).user_fields[i];
-                (f.name.clone(), f.access, encode(attach((node, FieldLoc::User(i)))))
+                (f.name.clone(), f.access, encode(attach((node, FieldLoc::User(i)))), f.ty().name())
             })
             .collect();
 
         self.context.with(|ctx| {
+            js_enter(&ctx);
+
             let create: Function = ctx.globals().get("__create").unwrap();
             let list = Array::new(ctx.clone()).unwrap();
 
-            for (i, (name, a, h)) in fields.iter().enumerate() {
+            for (i, (name, a, h, ty)) in fields.iter().enumerate() {
                 let entry = Array::new(ctx.clone()).unwrap();
                 entry.set(0, name.as_str()).unwrap();
                 entry.set(1, *a as i32).unwrap();
                 entry.set(2, *h).unwrap();
+                entry.set(3, *ty).unwrap();
                 list.set(i, entry).unwrap();
             }
 
@@ -331,6 +360,7 @@ impl ScriptHost for QuickJsHost {
             };
 
             while ctx.execute_pending_job() {}
+            js_leave(&ctx);
             with_state(State::release_fresh);
             result
         })
@@ -342,19 +372,30 @@ impl ScriptHost for QuickJsHost {
         let time = rt.now;
 
         self.context.with(|ctx| {
+            js_enter(&ctx);
+
             let f: Function = ctx.globals().get("__call").unwrap();
 
             let result: rquickjs::Result<Value> = match call {
-                ScriptCall::Plain(name) => f.call((node, name, Value::new_undefined(ctx.clone()), time, false)),
+                ScriptCall::Plain(name) => {
+                    let reason = name.clone();
+                    f.call((node, name, Value::new_undefined(ctx.clone()), time, false, reason))
+                }
                 ScriptCall::Field(name, value) => {
+                    // The header of an error names the field, not `set_<field>`.
+                    let reason = match name.strip_prefix("set_") {
+                        Some(field) if rt.scene.node(node).user_fields.iter().any(|f| f.name == field && f.access == access::INPUT_OUTPUT) => field.to_string(),
+                        _ => name.clone(),
+                    };
                     let h = detached(value);
                     let v = field_value_js(&ctx, h);
-                    f.call((node, name, v, time, true))
+                    f.call((node, name, v, time, true, reason))
                 }
             };
 
             // Run pending promise jobs (async callbacks continue as microtasks).
             while ctx.execute_pending_job() {}
+            js_leave(&ctx);
 
             with_state(State::release_fresh);
 
@@ -366,37 +407,155 @@ impl ScriptHost for QuickJsHost {
         })
     }
 
+    fn settle(&mut self, rt: &mut Runtime, id: u64, outcome: Result<x3d_scene::CtxId, String>) {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            js_enter(&ctx);
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__settle") {
+                let _ = match outcome {
+                    Ok(c) => f.call::<_, ()>((id as f64, true, c as f64)),
+                    Err(m) => f.call::<_, ()>((id as f64, false, m)),
+                };
+            }
+
+            while ctx.execute_pending_job() {}
+            js_leave(&ctx);
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__endSettle") {
+                let _ = f.call::<_, ()>(());
+            }
+
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn settle_plain(&mut self, rt: &mut Runtime, id: u64, outcome: Result<(), String>) {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            js_enter(&ctx);
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__settle") {
+                let _ = match outcome {
+                    Ok(()) => f.call::<_, ()>((id as f64, true, 0.0)),
+                    Err(m) => f.call::<_, ()>((id as f64, false, m)),
+                };
+            }
+
+            while ctx.execute_pending_job() {}
+            js_leave(&ctx);
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__endSettle") {
+                let _ = f.call::<_, ()>(());
+            }
+
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn next_timer(&mut self, rt: &mut Runtime, until_ms: f64) -> Option<f64> {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            let f: Function = ctx.globals().get("__nextTimer").ok()?;
+
+            f.call::<_, Option<f64>>((until_ms,)).ok().flatten()
+        })
+    }
+
+    fn fire_timer(&mut self, rt: &mut Runtime) {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            js_enter(&ctx);
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__fireTimer") {
+                let _ = f.call::<_, ()>(());
+            }
+
+            while ctx.execute_pending_job() {}
+            js_leave(&ctx);
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn browser_event(&mut self, rt: &mut Runtime, event: u32) {
+        self.enter(rt);
+
+        self.context.with(|ctx| {
+            js_enter(&ctx);
+
+            if let Ok(f) = ctx.globals().get::<_, Function>("__browserEvent") {
+                let _ = f.call::<_, ()>((event as f64,));
+            }
+
+            while ctx.execute_pending_job() {}
+            js_leave(&ctx);
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn ctx_event(&mut self, rt: &mut Runtime, ctx: CtxId, field: u32) {
+        self.enter(rt);
+
+        self.context.with(|js| {
+            js_enter(&js);
+
+            if let Ok(f) = js.globals().get::<_, Function>("__ctxEvent") {
+                let _ = f.call::<_, ()>((ctx as f64, field as f64));
+            }
+
+            while js.execute_pending_job() {}
+            js_leave(&js);
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn field_event(&mut self, rt: &mut Runtime, k: FKey) {
+        self.enter(rt);
+
+        // X3DField.processEvent calls the callbacks synchronously, inside the event cascade: the promises they make run
+        // with the jobs of the next host call, as in X_ITE they run after processEvents.
+        self.context.with(|js| {
+            if let Ok(f) = js.globals().get::<_, Function>("__fieldEvent") {
+                let value = field_value_js(&js, attach(k));
+                let _ = f.call::<_, ()>((fkey_id(k), value));
+            }
+
+            with_state(State::release_fresh);
+        });
+    }
+
+    fn raw_coerce(&mut self, rt: &mut Runtime, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
+        self.enter(rt);
+
+        let supply = self.context.with(|ctx| raw_coerce_js(&ctx, requests));
+
+        self.context.with(|ctx| while ctx.execute_pending_job() {});
+        supply
+    }
+
     fn destroy_context(&mut self, node: NodeId) {
         self.select();
         self.destroy(node);
         self.collect();
     }
 
-    fn held_nodes(&mut self, rt: &mut Runtime) -> Option<Vec<NodeId>> {
+    fn held_nodes(&mut self, rt: &mut Runtime, candidates: &[NodeId]) -> Option<Vec<NodeId>> {
         self.enter(rt);
+
+        // prelude/rest.js: the candidates' objects are unpinned, garbage is collected, and the objects left are held.
+        let ids: Vec<f64> = candidates.iter().map(|n| *n as f64).collect();
+
+        self.context.with(|ctx| ctx.globals().get::<_, Function>("__unpin").and_then(|f| f.call::<_, ()>((ids.clone(),)))).ok()?;
         self.collect();
 
-        let mut held: Vec<NodeId> = self.context.with(|ctx| match ctx.globals().get::<_, Function>("__heldNodes") {
-            Ok(f) => f.call::<_, Vec<f64>>(()).ok().map(|ids| ids.into_iter().map(|i| i as NodeId).collect()),
+        let held = self.context.with(|ctx| match ctx.globals().get::<_, Function>("__heldNodes") {
+            Ok(f) => f.call::<_, Vec<f64>>((ids,)).ok().map(|ids| ids.into_iter().map(|i| i as NodeId).collect()),
             Err(_) => None,
         })?;
-
-        // Values that live JavaScript objects hold (`new MFNode (a, b)`, an SFNode field object), and the
-        // node whose field a live field object is.
-        with_state(|s| {
-            for (i, slot) in s.slots.iter().enumerate() {
-                if s.owners[i] == 0 && s.children[i] == 0 {
-                    continue;
-                }
-
-                match slot {
-                    Slot::Value(FieldValue::SFNode(Some(n))) => held.push(*n),
-                    Slot::Value(FieldValue::MFNode(list)) => held.extend(list.iter().flatten().copied()),
-                    Slot::Field(k) => held.push(k.0),
-                    _ => {}
-                }
-            }
-        });
 
         self.context.with(|ctx| while ctx.execute_pending_job() {});
         Some(held)
@@ -505,6 +664,185 @@ fn write(h: u32, v: FieldValue) {
     }
 }
 
+// --- X_ITE field objects (prelude/bridge.js) ------------------------------------------------
+//
+// A Script's field objects are X_ITE's own (prelude/fields.js) and hold their value in JavaScript. Values cross the boundary as
+// plain data: a primitive for SFBool/SFInt32/SFFloat/SFDouble/SFTime/SFString, a node id (or null) for SFNode, an array of numbers
+// for the other SF types (SFRotation: x y z angle, tainted, then its quaternion; SFImage: width height comp, then the pixels),
+// and a flat array for MF types (MFImage: an array of SFImage data, MFNode: ids).
+
+fn data_number<'js>(ctx: &Ctx<'js>, x: f64) -> Value<'js> {
+    if jsmath::is_js_undefined(x) {
+        return Value::new_undefined(ctx.clone());
+    }
+
+    if jsmath::is_js_null(x) {
+        return Value::new_null(ctx.clone());
+    }
+
+    // Value::new_number makes every integral value an int, and -0 with it.
+    if x == 0.0 && x.is_sign_negative() {
+        return Value::new_float(ctx.clone(), x);
+    }
+
+    Value::new_number(ctx.clone(), x)
+}
+
+fn data_array<'js>(ctx: &Ctx<'js>, items: impl IntoIterator<Item = Value<'js>>) -> rquickjs::Result<Value<'js>> {
+    let a = Array::new(ctx.clone())?;
+
+    for (i, v) in items.into_iter().enumerate() {
+        a.set(i, v)?;
+    }
+
+    Ok(a.into_value())
+}
+
+fn image_data<'js>(ctx: &Ctx<'js>, img: &Image) -> rquickjs::Result<Value<'js>> {
+    let pixels = data_array(ctx, img.array.iter().map(|p| Value::new_int(ctx.clone(), *p)))?;
+    data_array(ctx, [Value::new_int(ctx.clone(), img.width), Value::new_int(ctx.clone(), img.height), Value::new_int(ctx.clone(), img.comp), pixels])
+}
+
+fn node_data<'js>(ctx: &Ctx<'js>, n: &Option<NodeId>) -> Value<'js> {
+    match n {
+        Some(n) => Value::new_number(ctx.clone(), *n as f64),
+        None => Value::new_null(ctx.clone()),
+    }
+}
+
+/// FieldValue -> the plain data of a field object.
+fn value_data<'js>(ctx: &Ctx<'js>, v: &FieldValue) -> rquickjs::Result<Value<'js>> {
+    let nums = |xs: &mut dyn Iterator<Item = f64>| data_array(ctx, xs.map(|x| data_number(ctx, x)).collect::<Vec<_>>());
+
+    Ok(match v {
+        FieldValue::SFBool(b) => Value::new_bool(ctx.clone(), *b),
+        FieldValue::SFInt32(x) => Value::new_int(ctx.clone(), *x),
+        FieldValue::SFFloat(x) | FieldValue::SFDouble(x) | FieldValue::SFTime(x) => data_number(ctx, *x),
+        FieldValue::SFString(s) => rquickjs::String::from_str(ctx.clone(), s)?.into_value(),
+        FieldValue::SFNode(n) => node_data(ctx, n),
+        FieldValue::SFImage(img) => image_data(ctx, img)?,
+        FieldValue::SFRotation(r) => {
+            let (aa, tainted, q) = r.state();
+            nums(&mut aa.into_iter().chain([if tainted { 1.0 } else { 0.0 }, q.x, q.y, q.z, q.w]))?
+        }
+        FieldValue::SFColor(_) | FieldValue::SFColorRGBA(_) | FieldValue::SFVec2d(_) | FieldValue::SFVec2f(_) | FieldValue::SFVec3d(_)
+        | FieldValue::SFVec3f(_) | FieldValue::SFVec4d(_) | FieldValue::SFVec4f(_) | FieldValue::SFQuaternion(_) | FieldValue::SFMatrix3d(_)
+        | FieldValue::SFMatrix3f(_) | FieldValue::SFMatrix4d(_) | FieldValue::SFMatrix4f(_) => nums(&mut sf_numbers(v).into_iter())?,
+        FieldValue::MFBool(a) => data_array(ctx, a.iter().map(|b| Value::new_bool(ctx.clone(), *b)))?,
+        FieldValue::MFInt32(a) => nums(&mut a.iter().map(|x| *x as f64))?,
+        FieldValue::MFColor(a) | FieldValue::MFColorRGBA(a) | FieldValue::MFFloat(a) | FieldValue::MFMatrix3f(a) | FieldValue::MFMatrix4f(a)
+        | FieldValue::MFVec2f(a) | FieldValue::MFVec3f(a) | FieldValue::MFVec4f(a) => nums(&mut a.iter().map(|x| *x as f64))?,
+        FieldValue::MFDouble(a) | FieldValue::MFMatrix3d(a) | FieldValue::MFMatrix4d(a) | FieldValue::MFQuaternion(a) | FieldValue::MFRotation(a)
+        | FieldValue::MFTime(a) | FieldValue::MFVec2d(a) | FieldValue::MFVec3d(a) | FieldValue::MFVec4d(a) => nums(&mut a.iter().copied())?,
+        FieldValue::MFString(a) => data_array(ctx, a.iter().map(|s| rquickjs::String::from_str(ctx.clone(), s).unwrap().into_value()))?,
+        FieldValue::MFNode(a) => data_array(ctx, a.iter().map(|n| node_data(ctx, n)))?,
+        FieldValue::MFImage(a) => {
+            let items = a.iter().map(|img| image_data(ctx, img)).collect::<rquickjs::Result<Vec<_>>>()?;
+            data_array(ctx, items)?
+        }
+    })
+}
+
+fn data_numbers(v: &Value<'_>) -> Vec<f64> {
+    let Some(a) = v.as_array() else { return vec![] };
+
+    (0..a.len())
+        // The number the engine uses is the component's ToNumber (X_ITE's generator and renderer read `+ value`); a component that
+        // is not a number stays as it is in the Script's objects (bridge.js raw values). An object is not converted here: its
+        // valueOf / toString may have effects, and X_ITE calls them only where it uses the value (a print takes it then).
+        .map(|i| match a.get::<Value>(i) {
+            Ok(x) if x.is_object() => f64::NAN,
+            Ok(x) => x.as_number().unwrap_or_else(|| {
+                x.get::<Coerced<f64>>().map(|c| c.0).unwrap_or_else(|_| {
+                    let _ = x.ctx().catch();
+                    f64::NAN
+                })
+            }),
+            Err(_) => f64::NAN,
+        })
+        .collect()
+}
+
+fn data_image(v: &Value<'_>) -> Image {
+    let Some(a) = v.as_array() else { return Image::default() };
+    let n = |i: usize| a.get::<Value>(i).ok().and_then(|x| x.as_number()).unwrap_or(0.0);
+    let pixels = a.get::<Value>(3).map(|p| data_numbers(&p)).unwrap_or_default();
+
+    Image { width: n(0) as i32, height: n(1) as i32, comp: n(2) as i32, array: pixels.into_iter().map(|p| p as i32).collect() }
+}
+
+fn data_node(v: &Value<'_>) -> Option<NodeId> {
+    v.as_number().map(|n| n as NodeId)
+}
+
+/// The plain data of a field object -> FieldValue of type `ty`.
+fn data_value(ty: FieldType, v: &Value<'_>) -> FieldValue {
+    use FieldType as T;
+
+    let list = |f: &dyn Fn(Value) -> FieldValue| -> Vec<FieldValue> {
+        v.as_array().map(|a| (0..a.len()).filter_map(|i| a.get::<Value>(i).ok()).map(f).collect()).unwrap_or_default()
+    };
+    let f32s = || data_numbers(v).into_iter().map(|x| x as f32).collect::<Vec<f32>>();
+
+    match ty {
+        T::SFBool => FieldValue::SFBool(v.as_bool().unwrap_or(false)),
+        T::SFInt32 => FieldValue::SFInt32(v.as_number().map(jsmath::to_int32).unwrap_or(0)),
+        T::SFFloat => FieldValue::SFFloat(v.as_number().unwrap_or(0.0)),
+        T::SFDouble => FieldValue::SFDouble(v.as_number().unwrap_or(0.0)),
+        T::SFTime => FieldValue::SFTime(v.as_number().unwrap_or(0.0)),
+        T::SFString => FieldValue::SFString(v.as_string().and_then(|s| s.to_string().ok()).unwrap_or_default()),
+        T::SFNode => FieldValue::SFNode(data_node(v)),
+        T::SFImage => FieldValue::SFImage(data_image(v)),
+        T::SFRotation => {
+            let n = data_numbers(v);
+            let g = |i: usize| n.get(i).copied().unwrap_or(0.0);
+            FieldValue::SFRotation(Rotation4::from_state([g(0), g(1), g(2), g(3)], g(4) != 0.0, Quaternion::new(g(5), g(6), g(7), g(8))))
+        }
+        T::SFColor => {
+            let n = data_numbers(v);
+            let g = |i: usize| n.get(i).copied().unwrap_or(0.0);
+            FieldValue::SFColor(Color3::from_raw(g(0), g(1), g(2)))
+        }
+        T::SFColorRGBA => {
+            let n = data_numbers(v);
+            let g = |i: usize| n.get(i).copied().unwrap_or(0.0);
+            FieldValue::SFColorRGBA(Color4::from_raw(g(0), g(1), g(2), g(3)))
+        }
+        T::MFBool => FieldValue::MFBool(list(&|x| FieldValue::SFBool(x.as_bool().unwrap_or(false))).into_iter().map(|x| matches!(x, FieldValue::SFBool(true))).collect()),
+        T::MFInt32 => FieldValue::MFInt32(data_numbers(v).into_iter().map(jsmath::to_int32).collect()),
+        T::MFColor => FieldValue::MFColor(f32s()),
+        T::MFColorRGBA => FieldValue::MFColorRGBA(f32s()),
+        T::MFFloat => FieldValue::MFFloat(f32s()),
+        T::MFMatrix3f => FieldValue::MFMatrix3f(f32s()),
+        T::MFMatrix4f => FieldValue::MFMatrix4f(f32s()),
+        T::MFVec2f => FieldValue::MFVec2f(f32s()),
+        T::MFVec3f => FieldValue::MFVec3f(f32s()),
+        T::MFVec4f => FieldValue::MFVec4f(f32s()),
+        T::MFDouble => FieldValue::MFDouble(data_numbers(v)),
+        T::MFMatrix3d => FieldValue::MFMatrix3d(data_numbers(v)),
+        T::MFMatrix4d => FieldValue::MFMatrix4d(data_numbers(v)),
+        T::MFQuaternion => FieldValue::MFQuaternion(data_numbers(v)),
+        T::MFRotation => FieldValue::MFRotation(data_numbers(v)),
+        T::MFTime => FieldValue::MFTime(data_numbers(v)),
+        T::MFVec2d => FieldValue::MFVec2d(data_numbers(v)),
+        T::MFVec3d => FieldValue::MFVec3d(data_numbers(v)),
+        T::MFVec4d => FieldValue::MFVec4d(data_numbers(v)),
+        T::MFString => FieldValue::MFString(v.as_array().map(|a| (0..a.len()).map(|i| a.get::<Coerced<String>>(i).map(|c| c.0).unwrap_or_default()).collect()).unwrap_or_default()),
+        T::MFNode => FieldValue::MFNode(v.as_array().map(|a| (0..a.len()).map(|i| a.get::<Value>(i).ok().and_then(|x| data_node(&x))).collect()).unwrap_or_default()),
+        T::MFImage => FieldValue::MFImage(v.as_array().map(|a| (0..a.len()).filter_map(|i| a.get::<Value>(i).ok()).map(|x| data_image(&x)).collect()).unwrap_or_default()),
+        t => sf_from_numbers(t, &data_numbers(v)),
+    }
+}
+
+/// The name prelude.js keeps the callbacks of a node field under (a handle can be released while the field lives on).
+fn fkey_id(k: FKey) -> String {
+    match k.1 {
+        FieldLoc::Pre(i) => format!("{}:p{i}", k.0),
+        FieldLoc::User(i) => format!("{}:u{i}", k.0),
+        FieldLoc::Priv(i) => format!("{}:x{i}", k.0),
+    }
+}
+
 fn slot_key(h: u32) -> Option<FKey> {
     match slot(h) {
         Slot::Field(k) => Some(k),
@@ -577,10 +915,10 @@ fn sf_from_numbers(ty: FieldType, n: &[f64]) -> FieldValue {
         FieldType::SFVec2f => FieldValue::SFVec2f(Vector2::new(g(0, 0.0), g(1, 0.0))),
         FieldType::SFVec3d => FieldValue::SFVec3d(Vector3::new(g(0, 0.0), g(1, 0.0), g(2, 0.0))),
         FieldType::SFVec3f => FieldValue::SFVec3f(Vector3::new(g(0, 0.0), g(1, 0.0), g(2, 0.0))),
-        FieldType::SFVec4d => FieldValue::SFVec4d(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 0.0))),
-        FieldType::SFVec4f => FieldValue::SFVec4f(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 0.0))),
+        FieldType::SFVec4d => FieldValue::SFVec4d(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 1.0))),
+        FieldType::SFVec4f => FieldValue::SFVec4f(Vector4::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 1.0))),
         FieldType::SFRotation => FieldValue::SFRotation(Rotation4::new(g(0, 0.0), g(1, 0.0), g(2, 1.0), g(3, 0.0))),
-        FieldType::SFQuaternion => FieldValue::SFQuaternion(Quaternion::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 1.0))),
+        FieldType::SFQuaternion => FieldValue::SFQuaternion(Quaternion::new(g(0, 0.0), g(1, 0.0), g(2, 0.0), g(3, 0.0))),
         FieldType::SFMatrix3d | FieldType::SFMatrix3f => {
             let mut m = Matrix3::default();
             if n.len() >= 9 {
@@ -646,11 +984,19 @@ fn mf_numbers_of(sf: &FieldValue, c: usize) -> Vec<f64> {
 }
 
 /// Set element `i` (growing with default elements like `resize`).
+/// The element a script-grown MF array is padded with: the single value of the type (`getSingleValue`); an SFVec4 starts at w = 1.
+fn padding_for(st: FieldType) -> FieldValue {
+    match st {
+        FieldType::SFVec4f | FieldType::SFVec4d => sf_from_numbers(st, &[]),
+        _ => FieldValue::default_for(st),
+    }
+}
+
 pub fn mf_set(mf: &mut FieldValue, i: usize, sf: &FieldValue) {
     let st = sf_type_of(mf.field_type());
 
     while mf.len() <= i {
-        mf_push(mf, &FieldValue::default_for(st));
+        mf_push(mf, &padding_for(st));
     }
 
     let c = mf.field_type().components();
@@ -712,25 +1058,85 @@ fn mf_push(mf: &mut FieldValue, sf: &FieldValue) {
     mf_set(mf, i, sf);
 }
 
-fn mf_truncate(mf: &mut FieldValue, n: usize) {
-    let c = mf.field_type().components();
-
-    match mf {
-        FieldValue::MFBool(v) => v.truncate(n),
-        FieldValue::MFInt32(v) => v.truncate(n),
-        FieldValue::MFString(v) => v.truncate(n),
-        FieldValue::MFNode(v) => v.truncate(n),
-        FieldValue::MFImage(v) => v.truncate(n),
-        FieldValue::MFFloat(v) | FieldValue::MFColor(v) | FieldValue::MFColorRGBA(v) | FieldValue::MFVec2f(v) | FieldValue::MFVec3f(v)
-        | FieldValue::MFVec4f(v) | FieldValue::MFMatrix3f(v) | FieldValue::MFMatrix4f(v) => v.truncate(n * c),
-        FieldValue::MFDouble(v) | FieldValue::MFTime(v) | FieldValue::MFVec2d(v) | FieldValue::MFVec3d(v) | FieldValue::MFVec4d(v)
-        | FieldValue::MFMatrix3d(v) | FieldValue::MFMatrix4d(v) | FieldValue::MFQuaternion(v) | FieldValue::MFRotation(v) => v.truncate(n * c),
-        _ => {}
-    }
-}
-
 fn is_scalar(t: FieldType) -> bool {
     matches!(t, FieldType::SFBool | FieldType::SFInt32 | FieldType::SFFloat | FieldType::SFDouble | FieldType::SFTime | FieldType::SFString)
+}
+
+/// A Script prints with each node's clone count as it is now (X3DGenerator.NeedsName: X3DNode.getCloneCount); what the host
+/// published for its own dumps is kept.
+fn with_live_clone_counts<T>(f: impl FnOnce() -> T) -> T {
+    let saved = rt().scene.clone_counts.take();
+    rt().publish_clone_counts();
+    let r = f();
+    rt().scene.clone_counts = saved;
+    r
+}
+
+/// Runtime::print_raw for a print a Script asks for: the raw components are coerced in this realm directly.
+fn print_raw_js<R>(ctx: &Ctx<'_>, print: impl Fn(&Scene) -> R) -> R {
+    if rt().scene.raw_tokens.is_empty() {
+        return print(&rt().scene);
+    }
+
+    *rt().scene.raw_print.borrow_mut() = RawPrint::Log(vec![]);
+    print(&rt().scene);
+
+    let requests = match std::mem::take(&mut *rt().scene.raw_print.borrow_mut()) {
+        RawPrint::Log(log) => log,
+        _ => vec![],
+    };
+    let supply = raw_coerce_js(ctx, &requests);
+
+    *rt().scene.raw_print.borrow_mut() = RawPrint::Supply(supply.into());
+
+    let result = print(&rt().scene);
+
+    *rt().scene.raw_print.borrow_mut() = RawPrint::Off;
+    result
+}
+
+/// prelude/bridge.js `__rawCoerce`: for each request of this host, `String (component)` or `+ component` of its raw components.
+fn raw_coerce_js(ctx: &Ctx<'_>, requests: &[RawRequest]) -> Vec<Option<Vec<Option<RawComponent>>>> {
+    let cur = CURRENT.get();
+    let none = || vec![None; requests.len()];
+    let Ok(f) = ctx.globals().get::<_, Function>("__rawCoerce") else { return none() };
+    let Ok(list) = Array::new(ctx.clone()) else { return none() };
+
+    for (i, r) in requests.iter().enumerate() {
+        let token = if r.host == cur { r.token as f64 } else { -1.0 };
+        let _ = list.set(i * 2, token);
+        let _ = list.set(i * 2 + 1, r.number);
+    }
+
+    let result: Array = match f.call((list,)) {
+        Ok(a) => a,
+        Err(_) => {
+            let _ = ctx.catch();
+            return none();
+        }
+    };
+
+    (0..requests.len())
+        .map(|i| {
+            let entry = result.get::<Value>(i).ok()?;
+            let components = entry.as_array()?;
+
+            Some(
+                components
+                    .iter::<Value>()
+                    .map(|c| {
+                        let c = c.ok()?;
+
+                        if let Some(t) = c.as_string() {
+                            return t.to_string().ok().map(RawComponent::Text);
+                        }
+
+                        c.as_number().map(RawComponent::Number)
+                    })
+                    .collect(),
+            )
+        })
+        .collect()
 }
 
 /// `field .toString ()` (X3DObject.toString with the default generator).
@@ -738,8 +1144,7 @@ fn to_vrml(v: &FieldValue) -> String {
     let mut g = Generator::default();
 
     match v {
-        FieldValue::SFNode(Some(n)) => rt().scene.node_to_vrml_string(*n),
-        FieldValue::SFNode(None) => "NULL".into(),
+        FieldValue::SFNode(_) | FieldValue::MFNode(_) => with_live_clone_counts(|| rt().scene.node_value_to_vrml_string(v)),
         _ => {
             v.to_vrml_stream(&mut g);
             g.string
@@ -751,7 +1156,14 @@ fn to_vrml(v: &FieldValue) -> String {
 
 fn obj_num<'js>(v: &Value<'js>, key: &str) -> Option<f64> {
     let o = v.as_object()?;
-    let x: Value = o.get(key).ok()?;
+    // A getter that throws (the Script's global object, a Proxy) must not leave its exception pending.
+    let x: Value = match o.get(key) {
+        Ok(x) => x,
+        Err(_) => {
+            let _ = v.ctx().catch();
+            return None;
+        }
+    };
 
     if x.is_null() {
         return Some(f64::NAN);
@@ -782,16 +1194,29 @@ fn arg_node(v: &Value<'_>) -> Option<Option<NodeId>> {
     let o = v.as_object()?;
 
     if !o.contains_key("__n").unwrap_or(false) {
+        let _ = v.ctx().catch();
         return None;
     }
 
-    let x: Value = o.get("__n").ok()?;
+    let x: Value = match o.get("__n") {
+        Ok(x) => x,
+        Err(_) => {
+            let _ = v.ctx().catch();
+            return None;
+        }
+    };
     Some(x.as_number().map(|n| n as NodeId))
 }
 
 fn coerce_f64(ctx: &Ctx<'_>, v: &Value<'_>) -> f64 {
     if let Some(h) = arg_handle(v) {
-        return sf_numbers(&read(h)).first().copied().unwrap_or(f64::NAN);
+        // `+field`: a scalar field converts through valueOf; every other field object becomes NaN.
+        return match read(h) {
+            FieldValue::SFBool(b) => f64::from(u8::from(b)),
+            FieldValue::SFInt32(n) => f64::from(n),
+            FieldValue::SFFloat(n) | FieldValue::SFDouble(n) | FieldValue::SFTime(n) => n,
+            _ => f64::NAN,
+        };
     }
 
     v.get::<Coerced<f64>>().map(|c| c.0).unwrap_or_else(|_| {
@@ -891,7 +1316,7 @@ fn primitive_or_handle<'js>(ctx: &Ctx<'js>, v: &FieldValue, h: u32, attached: bo
     match v {
         FieldValue::SFBool(b) => Value::new_bool(ctx.clone(), *b),
         FieldValue::SFInt32(x) => Value::new_int(ctx.clone(), *x),
-        FieldValue::SFFloat(x) | FieldValue::SFDouble(x) | FieldValue::SFTime(x) => Value::new_number(ctx.clone(), *x),
+        FieldValue::SFFloat(x) | FieldValue::SFDouble(x) | FieldValue::SFTime(x) => data_number(ctx, *x),
         FieldValue::SFString(s) => rquickjs::String::from_str(ctx.clone(), s).unwrap().into_value(),
         FieldValue::SFNode(n) => node_js(ctx, *n),
         _ => handle_js(ctx, h, v.field_type().name(), attached),
@@ -933,12 +1358,216 @@ fn throw<T>(ctx: &Ctx<'_>, msg: &str) -> rquickjs::Result<T> {
     Err(Exception::throw_message(ctx, msg))
 }
 
+fn throw_type<T>(ctx: &Ctx<'_>, msg: &str) -> rquickjs::Result<T> {
+    Err(Exception::throw_type(ctx, msg))
+}
+
+/// The elements of an array-like JS value, as `X3DTypedArrayField.set` and `X3DObjectArrayField.set` read it
+/// (`value .length`, `value [i]`): arrays and strings (one element per UTF-16 unit). Other values have none.
+fn array_like<'js>(ctx: &Ctx<'js>, v: &Value<'js>) -> Option<Vec<Value<'js>>> {
+    if let Some(arr) = v.as_array() {
+        return Some((0..arr.len()).map(|i| arr.get::<Value>(i).unwrap_or_else(|_| Value::new_undefined(ctx.clone()))).collect());
+    }
+
+    if let Some(s) = v.as_string() {
+        let text = s.to_string().ok()?;
+        let units: Vec<u16> = text.encode_utf16().collect();
+
+        return Some(units.iter().map(|u| rquickjs::String::from_str(ctx.clone(), &String::from_utf16_lossy(&[*u])).map(|s| s.into_value()).unwrap_or_else(|_| Value::new_undefined(ctx.clone()))).collect());
+    }
+
+    None
+}
+
+/// The vector families `SFVecNf` / `SFVecNd` and `SFMatrixNf` / `SFMatrixNd`: each assigns the other's components.
+fn same_family(a: FieldType, b: FieldType) -> bool {
+    use FieldType::*;
+
+    matches!(
+        (a, b),
+        (SFVec2f | SFVec2d, SFVec2f | SFVec2d)
+            | (SFVec3f | SFVec3d, SFVec3f | SFVec3d)
+            | (SFVec4f | SFVec4d, SFVec4f | SFVec4d)
+            | (SFMatrix3f | SFMatrix3d, SFMatrix3f | SFMatrix3d)
+            | (SFMatrix4f | SFMatrix4d, SFMatrix4f | SFMatrix4d)
+    )
+}
+
+/// `X3DField.setValue (value)`: `set (value instanceof this .constructor ? value .getValue () : value)`, then the type's own `set`.
+/// `Ok (None)` leaves the field alone. X_ITE stores JavaScript `undefined` for a value of the wrong shape; a number cannot hold
+/// that, so those assignments (an array to an SFVec3f, a number to an MFFloat) are not modeled.
+fn set_convert<'js>(ctx: &Ctx<'js>, ty: FieldType, v: &Value<'js>) -> rquickjs::Result<Option<FieldValue>> {
+    use FieldType::*;
+
+    if matches!(ty, SFBool | SFInt32 | SFFloat | SFDouble | SFTime | SFString) {
+        return Ok(convert(ctx, ty, v));
+    }
+
+    if ty == SFNode {
+        if let Some(n) = arg_node(v) {
+            return Ok(Some(FieldValue::SFNode(n)));
+        }
+
+        if let Some(h) = arg_handle(v) {
+            if let FieldValue::SFNode(n) = read(h) {
+                return Ok(Some(FieldValue::SFNode(n)));
+            }
+        }
+
+        // `node ?.getType ()`: not a function.
+        return throw_type(ctx, "node?.getType is not a function");
+    }
+
+    if v.is_null() || v.is_undefined() {
+        return throw_type(ctx, "Cannot read properties of null or undefined");
+    }
+
+    if !ty.is_multi() {
+        if let Some(h) = arg_handle(v) {
+            let value = read(h);
+
+            if value.field_type() == ty {
+                return Ok(Some(value));
+            }
+
+            if same_family(ty, value.field_type()) {
+                return Ok(Some(sf_from_numbers(ty, &sf_numbers(&value))));
+            }
+
+            if ty == SFRotation || ty == SFQuaternion {
+                return throw_type(ctx, "Cannot destructure property of undefined");
+            }
+
+            return Ok(None);
+        }
+
+        // Rotation4 .assign (rotation) reads the quaternion of whatever it is given.
+        if ty == SFRotation || ty == SFQuaternion {
+            return throw_type(ctx, "Cannot destructure property of undefined");
+        }
+
+        // A plain object with x, y, z, w (Vector3 .assign ({ x, y, z })).
+        if matches!(ty, SFVec2f | SFVec2d | SFVec3f | SFVec3d | SFVec4f | SFVec4d) {
+            if let Some(o) = v.as_object() {
+                let n = ty.components();
+                let mut nums = vec![];
+
+                for key in ["x", "y", "z", "w"].iter().take(n) {
+                    let e: Value = o.get(*key).unwrap_or_else(|_| Value::new_undefined(ctx.clone()));
+                    nums.push(coerce_f64(ctx, &e));
+                }
+
+                return Ok(Some(sf_from_numbers(ty, &nums)));
+            }
+        }
+
+        return Ok(convert(ctx, ty, v));
+    }
+
+    // Multi-valued fields.
+    if let Some(h) = arg_handle(v) {
+        let value = read(h);
+
+        if value.field_type() == ty {
+            return Ok(Some(value));
+        }
+
+        // Another MF type: element by element through `value [i]` (one number per element for scalar types).
+        if value.field_type().is_multi() && ty.components() == 1 && value.field_type().components() == 1 && !matches!(ty, MFString | MFNode | MFImage) && !matches!(value.field_type(), MFString | MFNode | MFImage) {
+            let mut mf = FieldValue::default_for(ty);
+            let nums: Vec<f64> = (0..value.len()).map(|i| mf_get(&value, i).map(|e| sf_numbers(&e).first().copied().unwrap_or(f64::NAN)).unwrap_or(f64::NAN)).collect();
+
+            mf.set_flat_numbers(&nums);
+            return Ok(Some(mf));
+        }
+
+        return Ok(None);
+    }
+
+    let Some(elements) = array_like(ctx, v) else {
+        return Ok(None);
+    };
+
+    match ty {
+        MFString => {
+            let mut mf = FieldValue::default_for(ty);
+
+            for e in &elements {
+                mf_push(&mut mf, &FieldValue::SFString(coerce_string(ctx, e)));
+            }
+
+            Ok(Some(mf))
+        }
+        MFNode => {
+            let mut nodes = vec![];
+
+            for e in &elements {
+                match arg_node(e) {
+                    Some(n) => nodes.push(n),
+                    None => match arg_handle(e).map(read) {
+                        Some(FieldValue::SFNode(n)) => nodes.push(n),
+                        _ => return throw_type(ctx, "node?.getType is not a function"),
+                    },
+                }
+            }
+
+            Ok(Some(FieldValue::MFNode(nodes)))
+        }
+        MFImage => Ok(convert(ctx, ty, v)),
+        _ => {
+            let components = ty.components();
+            let mut nums: Vec<f64> = elements.iter().map(|e| if arg_handle(e).is_some() { f64::NAN } else { coerce_f64(ctx, e) }).collect();
+            let rest = nums.len() % components;
+
+            if rest != 0 {
+                let keep = nums.len() - rest;
+
+                nums.truncate(keep);
+                rt().log_warn(format!("Array length must be multiple of components size, which is {components}."));
+            }
+
+            let mut mf = FieldValue::default_for(ty);
+
+            mf.set_flat_numbers(&nums);
+            Ok(Some(mf))
+        }
+    }
+}
+
 fn str_arg(ctx: &Ctx<'_>, args: &[Value<'_>], i: usize) -> String {
     args.get(i).map(|v| coerce_string(ctx, v)).unwrap_or_default()
 }
 
 fn num_arg(ctx: &Ctx<'_>, args: &[Value<'_>], i: usize) -> f64 {
     args.get(i).map(|v| coerce_f64(ctx, v)).unwrap_or(f64::NAN)
+}
+
+/// The execution context a script-side `script` argument names: a Script node's id (its context), -1 (the world, whichever
+/// scene it is now), or `-(context + 2)` (a scene made by createX3DFromString / createX3DFromURL, or a world that was replaced).
+fn ctx_of_script(x: f64) -> x3d_scene::CtxId {
+    if x >= 0.0 {
+        rt().scene.node(x as NodeId).ctx
+    } else if x == -1.0 {
+        rt().browser_execution_context()
+    } else {
+        (-(x + 2.0)) as x3d_scene::CtxId
+    }
+}
+
+/// X3DImportedNodeInstance delegates getTypeName / getField / getFieldDefinitions … to the node its Inline exports,
+/// as long as the Inline provides it (`$.try (() => importedNode .getExportedNode ())`).
+fn inner_node(id: NodeId) -> NodeId {
+    if let NodeKind::Imported(i) = rt().scene.node(id).kind {
+        let rec = &rt().scene.imported[i];
+
+        if let Some(&scene) = rt().inline_scenes.get(&rec.inline) {
+            if let Some(n) = rt().scene.get_exported_node(scene, &rec.exported_name) {
+                return n;
+            }
+        }
+    }
+
+    id
 }
 
 fn handle_arg(args: &[Value<'_>], i: usize) -> Option<u32> {
@@ -974,34 +1603,18 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             Ok(undefined)
         }
+        "console" => {
+            let text = str_arg(ctx, a, 1);
+
+            match str_arg(ctx, a, 0).as_str() {
+                "warn" => rt().log_warn(text),
+                "error" => rt().log_error(text),
+                _ => rt().print(text),
+            }
+
+            Ok(undefined)
+        }
         "mathfn" => math_fn(ctx, &str_arg(ctx, a, 0)),
-        "new" => {
-            let ty_name = str_arg(ctx, a, 0);
-            let v = construct(ctx, &ty_name, &a[1.min(a.len())..])?;
-            Ok(Value::new_number(ctx.clone(), encode(detached(v))))
-        }
-        // prelude.js: a JavaScript object took the handle, or one that held it was freed.
-        "own" => {
-            if let Some(h) = a.first().and_then(|v| v.as_number()).and_then(decode) {
-                with_state(|s| s.owners[h as usize] += 1);
-            }
-
-            Ok(undefined)
-        }
-        "disown" => {
-            if let Some(h) = a.first().and_then(|v| v.as_number()).and_then(decode) {
-                with_state(|s| {
-                    s.owners[h as usize] = s.owners[h as usize].saturating_sub(1);
-                    s.try_free(h);
-                });
-            }
-
-            Ok(undefined)
-        }
-        "fv" => {
-            let h = handle_at(ctx, a, 0)?;
-            Ok(field_value_js(ctx, h))
-        }
         "fname" => {
             let h = handle_at(ctx, a, 0)?;
             let n = slot_key(h).map(|k| rt().field(k).name.clone()).unwrap_or_default();
@@ -1009,70 +1622,25 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "faccess" => {
             let h = handle_at(ctx, a, 0)?;
-            let n = slot_key(h).map(|k| rt().field(k).access).unwrap_or(access::INPUT_OUTPUT);
+            let n = slot_key(h).map(|k| rt().field(k).access).unwrap_or(access::INITIALIZE_ONLY);
             Ok(Value::new_int(ctx.clone(), n as i32))
         }
         "set" => {
             let h = handle_at(ctx, a, 0)?;
             let ty = read(h).field_type();
 
-            if let Some(v) = a.get(1).and_then(|v| convert(ctx, ty, v)) {
+            if let Some(v) = match a.get(1) {
+                Some(v) => set_convert(ctx, ty, v)?,
+                None => None,
+            } {
                 write(h, v);
             }
 
             Ok(undefined)
         }
-        "copy" => {
-            let h = handle_at(ctx, a, 0)?;
-            Ok(new_value_js(ctx, read(h)))
-        }
-        "eq" => {
-            let h = handle_at(ctx, a, 0)?;
-            let other = value_arg(a, 1);
-            Ok(Value::new_bool(ctx.clone(), other.is_some_and(|o| read(h).equals(&o))))
-        }
-        "isdef" => {
-            let h = handle_at(ctx, a, 0)?;
-            Ok(Value::new_bool(ctx.clone(), read(h).is_default_value()))
-        }
         "str" => {
             let h = handle_at(ctx, a, 0)?;
             Ok(rquickjs::String::from_str(ctx.clone(), &to_vrml(&read(h)))?.into_value())
-        }
-        "g" => {
-            let h = handle_at(ctx, a, 0)?;
-            component_get(ctx, h, a.get(1))
-        }
-        "s" => {
-            let h = handle_at(ctx, a, 0)?;
-            component_set(ctx, h, a.get(1), a.get(2));
-            Ok(undefined)
-        }
-        "m" => {
-            let h = handle_at(ctx, a, 0)?;
-            let m = str_arg(ctx, a, 1);
-            method(ctx, h, &m, &a[2.min(a.len())..])
-        }
-        "len" => {
-            let h = handle_at(ctx, a, 0)?;
-            Ok(Value::new_int(ctx.clone(), read(h).len() as i32))
-        }
-        "setlen" => {
-            let h = handle_at(ctx, a, 0)?;
-            let n = num_arg(ctx, a, 1) as usize;
-            let mut v = read(h);
-            let st = sf_type_of(v.field_type());
-
-            if n < v.len() {
-                mf_truncate(&mut v, n);
-            } else {
-                while v.len() < n {
-                    mf_push(&mut v, &FieldValue::default_for(st));
-                }
-            }
-
-            write(h, v);
-            Ok(undefined)
         }
         "at" => {
             let h = handle_at(ctx, a, 0)?;
@@ -1085,91 +1653,94 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 Some(sf) => Ok(handle_js(ctx, element(h, i), sf.field_type().name(), false)),
             }
         }
-        "put" => {
-            let h = handle_at(ctx, a, 0)?;
-            let i = num_arg(ctx, a, 1) as usize;
-            let mut v = read(h);
-            let st = sf_type_of(v.field_type());
-
-            if let Some(sf) = a.get(2).and_then(|x| convert(ctx, st, x)) {
-                mf_set(&mut v, i, &sf);
-                write(h, v);
-            }
-
-            Ok(undefined)
-        }
         // --- nodes
-        "nget" | "nfield" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+        "nfield" => {
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             let field = str_arg(ctx, a, 1);
 
             match rt().get_field(id, &field) {
                 Some(k) => {
-                    if name == "nget" && rt().field(k).access == access::INPUT_ONLY {
-                        return Ok(undefined);
-                    }
-
                     let h = attach(k);
-
-                    if name == "nfield" {
-                        return Ok(handle_js(ctx, h, rt().field(k).ty().name(), true));
-                    }
-
-                    Ok(field_value_js(ctx, h))
+                    Ok(handle_js(ctx, h, rt().field(k).ty().name(), true))
                 }
                 None => Ok(rquickjs::String::from_str(ctx.clone(), NOFIELD)?.into_value()),
             }
         }
-        "nset" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
-            let field = str_arg(ctx, a, 1);
-
-            match rt().get_field(id, &field) {
-                Some(k) => {
-                    if rt().field(k).access == access::OUTPUT_ONLY {
-                        return Ok(Value::new_int(ctx.clone(), 2));
-                    }
-
-                    let h = attach(k);
-                    let ty = rt().field(k).ty();
-
-                    if let Some(v) = a.get(2).and_then(|x| convert(ctx, ty, x)) {
-                        write(h, v);
-                    }
-
-                    Ok(Value::new_int(ctx.clone(), 1))
-                }
-                None => Ok(Value::new_int(ctx.clone(), 0)),
-            }
-        }
-        "nhas" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
-            let field = str_arg(ctx, a, 1);
-            Ok(Value::new_bool(ctx.clone(), rt().get_field(id, &field).is_some()))
-        }
         "ntype" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             Ok(rquickjs::String::from_str(ctx.clone(), &rt().type_name(id))?.into_value())
         }
         "nname" => {
             let id = num_arg(ctx, a, 0) as NodeId;
             Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.node(id).name)?.into_value())
         }
+        "fprint" => {
+            let h = handle_at(ctx, a, 0)?;
+            let v = read(h);
+            let json = str_arg(ctx, a, 1) == "json";
+            let text = print_raw_js(ctx, |s| if json { s.field_value_to_json_string(&v) } else { s.field_value_to_xml_string(&v) });
+            Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
+        }
+        "strn" => {
+            let h = handle_at(ctx, a, 0)?;
+            let v = read(h);
+            let text = if matches!(v, FieldValue::SFNode(_) | FieldValue::MFNode(_)) { rt().scene.node_value_to_string(&v) } else { to_vrml(&v) };
+            Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
+        }
+        "nprint" => {
+            let id = num_arg(ctx, a, 0) as NodeId;
+            let v = FieldValue::SFNode(Some(id));
+            let json = str_arg(ctx, a, 1) == "json";
+            let text = print_raw_js(ctx, |s| if json { s.field_value_to_json_string(&v) } else { s.field_value_to_xml_string(&v) });
+            Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
+        }
+        "nstream" => {
+            let id = num_arg(ctx, a, 0) as NodeId;
+            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| rt().scene.node_value_to_string(&FieldValue::SFNode(Some(id)))))?.into_value())
+        }
         "nstr" => {
             let id = num_arg(ctx, a, 0) as NodeId;
-            Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.node_to_vrml_string(id))?.into_value())
+            Ok(rquickjs::String::from_str(ctx.clone(), &with_live_clone_counts(|| print_raw_js(ctx, |s| s.node_to_vrml_string(id))))?.into_value())
         }
         "nfields" => {
-            let id = num_arg(ctx, a, 0) as NodeId;
+            let id = inner_node(num_arg(ctx, a, 0) as NodeId);
             let arr = Array::new(ctx.clone())?;
             let n = rt().scene.node(id);
 
-            for (i, f) in n.fields.iter().chain(n.user_fields.iter()).enumerate() {
+            // X3DBaseNode.getFieldDefinitions: a predefined field's definition holds the class's default value (`value`), a
+            // user-defined field's the field itself (`handle`).
+            let defs = match &n.kind {
+                NodeKind::Builtin(t) => Some(&rt().scene.table.types[*t].variant(rt().scene.spec_version_of(n.ctx)).fields),
+                _ => None,
+            };
+
+            for (i, f) in n.fields.iter().enumerate() {
                 let o = Object::new(ctx.clone())?;
                 o.set("name", f.name.as_str())?;
                 o.set("accessType", f.access as i32)?;
                 o.set("dataType", f.ty().name())?;
+
+                match defs.and_then(|d| d.iter().find(|d| d.name == f.name)) {
+                    Some(d) => {
+                        o.set("value", value_data(ctx, &d.default)?)?;
+
+                        if let Some(u) = &d.unit {
+                            o.set("unit", u.as_str())?;
+                        }
+                    }
+                    None => o.set("handle", encode(attach((id, FieldLoc::Pre(i)))))?,
+                }
+
                 arr.set(i, o)?;
+            }
+
+            for (i, f) in n.user_fields.iter().enumerate() {
+                let o = Object::new(ctx.clone())?;
+                o.set("name", f.name.as_str())?;
+                o.set("accessType", f.access as i32)?;
+                o.set("dataType", f.ty().name())?;
+                o.set("handle", encode(attach((id, FieldLoc::User(i)))))?;
+                arr.set(n.fields.len() + i, o)?;
             }
 
             Ok(arr.into_value())
@@ -1177,7 +1748,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         // --- browser
         "bname" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.table.browser_name)?.into_value()),
         "bversion" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().scene.table.browser_version)?.into_value()),
-        "bdescription" => Ok(rquickjs::String::from_str(ctx.clone(), &with_state(|s| s.description.clone()))?.into_value()),
+        "bdescription" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().description)?.into_value()),
         "bsetdescription" => {
             let d = str_arg(ctx, a, 0);
             rt().description = d.clone();
@@ -1206,6 +1777,42 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 Some(OptionValue::String(v)) => rquickjs::String::from_str(ctx.clone(), v)?.into_value(),
             })
         }
+        // X3DBrowserContext.getBrowserOptions () … .getFieldDefinitions (): name, type, initial value.
+        "browserDefs" => {
+            use x3d_runtime::browser_options::OptionValue;
+
+            let list = Array::new(ctx.clone())?;
+
+            for (i, (name, v)) in x3d_runtime::browser_options::default_fields(&str_arg(ctx, a, 0)).entries().enumerate() {
+                let value = match v {
+                    OptionValue::Bool(b) => Value::new_bool(ctx.clone(), *b),
+                    OptionValue::Int32(x) => Value::new_int(ctx.clone(), *x),
+                    OptionValue::Float(x) | OptionValue::Double(x) => data_number(ctx, *x),
+                    OptionValue::String(s) => rquickjs::String::from_str(ctx.clone(), s)?.into_value(),
+                };
+                let entry = data_array(ctx, [rquickjs::String::from_str(ctx.clone(), name)?.into_value(), rquickjs::String::from_str(ctx.clone(), v.type_name())?.into_value(), value])?;
+
+                list.set(i, entry)?;
+            }
+
+            Ok(list.into_value())
+        }
+        // X3DBrowserContext.getActiveLayer … (`None`: the default node), getCurrentViewer, and the default nodes.
+        "bactive" => {
+            let active = &rt().browser_active;
+            let n = match str_arg(ctx, a, 0).as_str() {
+                "layer" => active.layer,
+                "navigationInfo" => active.navigation_info,
+                _ => active.viewpoint,
+            };
+
+            Ok(node_data(ctx, &n))
+        }
+        "bdefault" => {
+            let n = rt().default_node(&str_arg(ctx, a, 0));
+            Ok(node_data(ctx, &n))
+        }
+        "bviewer" => Ok(rquickjs::String::from_str(ctx.clone(), &rt().browser_active.viewer)?.into_value()),
         "optionType" => {
             let name = str_arg(ctx, a, 0);
 
@@ -1232,6 +1839,18 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(undefined)
         }
         "time" => Ok(Value::new_number(ctx.clone(), rt().now)),
+        "asyncError" => {
+            // A callback returned a promise that rejected: `await callback .call (…)` throws into call__'s catch.
+            let node = num_arg(ctx, a, 0) as NodeId;
+            let name = str_arg(ctx, a, 1);
+            let text = str_arg(ctx, a, 2);
+
+            rt().report_script_error(node, &name, &text);
+            Ok(undefined)
+        }
+        "datenow" => Ok(Value::new_number(ctx.clone(), rt().date_override.unwrap_or(rt().now) * 1000.0)),
+        "framerate" => Ok(Value::new_number(ctx.clone(), rt().frame_rate)),
+        "browserTime" => Ok(Value::new_number(ctx.clone(), rt().world_state.initialized_time)),
         // Browser.nextViewpoint () and friends: queued for the viewer (X3DBrowser viewpoint API).
         "brequest" => {
             let r = str_arg(ctx, a, 0);
@@ -1240,18 +1859,26 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "specVersion" => {
             let script = num_arg(ctx, a, 0);
-            let c = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let c = ctx_of_script(script);
             Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.spec_version_of(c))?.into_value())
+        }
+        // X3DBrowser.getBaseURL: the page's URL (an embedder without a page: the URL of the caller's scene).
+        "baseURL" => {
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
+            let page = rt().page_url.clone();
+            let url = if page.is_empty() { rt().scene.world_url_of(c).to_string() } else { page };
+            Ok(rquickjs::String::from_str(ctx.clone(), &url)?.into_value())
         }
         "worldURL" => {
             let script = num_arg(ctx, a, 0);
-            let c = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let c = ctx_of_script(script);
             Ok(rquickjs::String::from_str(ctx.clone(), rt().scene.world_url_of(c))?.into_value())
         }
         "createVrml" => {
             let text = str_arg(ctx, a, 0);
             let script = num_arg(ctx, a, 1);
-            let parent = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let parent = ctx_of_script(script);
 
             match rt().create_vrml_from_string(&text, parent) {
                 Ok(roots) => {
@@ -1269,11 +1896,77 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 Err(e) => throw(ctx, e.strip_prefix("Error: ").unwrap_or(&e)),
             }
         }
-        "createVrmlFromURL" => Ok(undefined),
+        "cx" => ctx_api::op(ctx, a),
+        "ctxOf" => Ok(Value::new_number(ctx.clone(), ctx_of_script(num_arg(ctx, a, 0)) as f64)),
+        // X3DBrowser.createX3DFromString / createX3DFromURL: the request, or the message of the rejection.
+        "browserScene" => {
+            let script = num_arg(ctx, a, 0);
+            let parent = ctx_of_script(script);
+            let node = (script >= 0.0).then_some(script as NodeId);
+            let o = Object::new(ctx.clone())?;
+
+            let kind = str_arg(ctx, a, 1);
+
+            if kind == "create" {
+                // createScene (profile, ... components): the scene is there at once.
+                let profile = a.get(2).filter(|v| !v.is_undefined() && !v.is_null()).map(|v| coerce_string(ctx, v));
+                let components: Vec<(String, i32)> = a
+                    .get(3)
+                    .and_then(|v| v.as_array())
+                    .map(|arr| arr.iter::<Value>().filter_map(Result::ok).filter_map(|e| e.as_array().and_then(|p| Some((p.get::<Coerced<String>>(0).ok()?.0, p.get::<Coerced<f64>>(1).ok()?.0 as i32)))).collect())
+                    .unwrap_or_default();
+
+                o.set("ctx", rt().browser_create_scene(profile, components, parent) as f64)?;
+            } else if kind == "load" {
+                // Browser.loadURL (url, parameter): `id` is absent when the url only names a viewpoint of the world.
+                let strings = |i: usize| -> Vec<String> { a.get(i).and_then(|v| v.as_array()).map(|arr| arr.iter::<Coerced<String>>().filter_map(Result::ok).map(|c| c.0).collect()).unwrap_or_default() };
+
+                match rt().browser_load_url(strings(2), strings(3), parent, node) {
+                    Ok(id) => o.set("id", id as f64)?,
+                    Err(Some(message)) => o.set("error", message)?,
+                    Err(None) => {}
+                }
+            } else if kind == "string" || kind == "json" {
+                let text = str_arg(ctx, a, 2);
+                let made = if kind == "string" { rt().browser_create_from_string(&text, parent, node) } else { rt().browser_import_json(&text, parent, node) };
+
+                match made {
+                    Ok(id) => o.set("id", id as f64)?,
+                    Err(e) => o.set("error", e)?,
+                }
+            } else {
+                let urls: Vec<String> = a
+                    .get(2)
+                    .and_then(|v| v.as_array())
+                    .map(|arr| arr.iter::<Coerced<String>>().filter_map(Result::ok).map(|c| c.0).collect())
+                    .unwrap_or_default();
+
+                o.set("id", rt().browser_create_from_url(urls, parent, node) as f64)?;
+            }
+
+            Ok(o.into_value())
+        }
+        // Browser.replaceWorld (scene)
+        "replaceWorld" => {
+            use x3d_runtime::browser_load::WorldScene;
+
+            let scene = match str_arg(ctx, a, 1).as_str() {
+                "scene" => WorldScene::Ctx(num_arg(ctx, a, 2) as x3d_scene::CtxId),
+                "nodes" => match value_arg(a, 2) {
+                    Some(FieldValue::MFNode(list)) => WorldScene::Roots(list),
+                    _ => WorldScene::Empty,
+                },
+                _ => WorldScene::Empty,
+            };
+            let o = Object::new(ctx.clone())?;
+
+            o.set("id", rt().browser_replace_world(scene) as f64)?;
+            Ok(o.into_value())
+        }
         "sfnodeFromString" => {
             let text = str_arg(ctx, a, 0);
             let script = num_arg(ctx, a, 1);
-            let parent = if script >= 0.0 { rt().scene.node(script as NodeId).ctx } else { ROOT };
+            let parent = ctx_of_script(script);
 
             match rt().sfnode_from_string(&text, parent) {
                 Ok(Some(n)) => Ok(Value::new_number(ctx.clone(), n as f64)),
@@ -1282,8 +1975,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "addRoute" | "deleteRoute" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let ctx_id = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let ctx_id = ctx_of_script(script);
             let (src, dst) = (a.get(1).and_then(arg_node).flatten(), a.get(3).and_then(arg_node).flatten());
             let (sf, df) = (str_arg(ctx, a, 2), str_arg(ctx, a, 4));
 
@@ -1303,8 +1996,8 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         // --- X3DScene / X3DExecutionContext (the script's own execution context)
         "sceneInfo" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let s = &rt().scene;
             let o = Object::new(ctx.clone())?;
             let root = s.scene_root(c);
@@ -1312,13 +2005,17 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
 
             o.set("isScene", s.is_scene_root(c))?;
             o.set("encoding", encoding)?;
-            o.set("profile", s.profile_of(c).map(|p| p.to_string()))?;
+            match s.profile_of(c) {
+                Some(p) => o.set("profile", p)?,
+                None => o.set("profile", Value::new_null(ctx.clone()))?,
+            }
 
             let comps = Array::new(ctx.clone())?;
             for (i, (n, l)) in s.components_of(c).iter().enumerate() {
                 let e = Array::new(ctx.clone())?;
                 e.set(0, n.as_str())?;
                 e.set(1, *l)?;
+                e.set(2, s.component_level_text(c, n, *l))?;
                 comps.set(i, e)?;
             }
             o.set("components", comps)?;
@@ -1343,61 +2040,287 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             o.set("meta", meta)?;
             Ok(o.into_value())
         }
-        "profileComponents" => {
-            // ProfileInfo.components of a named profile (`[name, level]` pairs), null if unknown.
-            let name = str_arg(ctx, a, 0);
-            let Some(p) = rt().scene.table.profile(&name) else {
-                return Ok(Value::new_null(ctx.clone()));
-            };
-            let arr = Array::new(ctx.clone())?;
-            for (i, (n, l)) in p.components.iter().enumerate() {
+        "configTable" => {
+            // The supported components and profiles (Configuration/SupportedComponents.js, SupportedProfiles.js) and the URL of the
+            // script X_ITE runs from (Browser/Networking/URLs.js getScriptURL: the page).
+            let t = rt().scene.table;
+            let o = Object::new(ctx.clone())?;
+            let comps = Array::new(ctx.clone())?;
+
+            for (i, c) in t.components.iter().enumerate() {
                 let e = Array::new(ctx.clone())?;
-                e.set(0, n.as_str())?;
-                e.set(1, *l)?;
-                arr.set(i, e)?;
-            }
-            Ok(arr.into_value())
-        }
-        "hasComponent" => {
-            // X3DScene.hasComponent: the profile's (Full without one) or the scene's own components.
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
-            let c = rt().scene.node(script).ctx;
-            let s = &rt().scene;
-            let profile = s.profile_of(c).unwrap_or("Full");
-            let in_profile = s.table.profile(profile).is_some_and(|p| p.components.iter().any(|(n, l)| *n == name && level <= *l));
-            let in_scene = s.components_of(c).iter().any(|(n, l)| *n == name && level <= *l);
-            Ok(Value::new_bool(ctx.clone(), in_profile || in_scene))
-        }
-        "browserComponent" => {
-            // X3DBrowser.getComponent: the supported component, its level clamped to 1 … supported.
-            let (name, level) = (str_arg(ctx, a, 0), num_arg(ctx, a, 1) as i32);
-            match rt().scene.supported_component_level(&name) {
-                Some(max) => {
-                    let e = Array::new(ctx.clone())?;
-                    e.set(0, name.as_str())?;
-                    e.set(1, if level == 0 { max } else { level.clamp(1, max) })?;
-                    Ok(e.into_value())
+                let deps = Array::new(ctx.clone())?;
+
+                for (j, d) in c.dependencies.iter().enumerate() {
+                    deps.set(j, d.as_str())?;
                 }
-                None => throw(ctx, &format!("Component '{name}' at level '{level}' is not supported.")),
+
+                e.set(0, c.name.as_str())?;
+                e.set(1, c.title.as_str())?;
+                e.set(2, c.level)?;
+                e.set(3, c.external)?;
+                e.set(4, deps)?;
+                comps.set(i, e)?;
             }
+
+            let profiles = Array::new(ctx.clone())?;
+
+            for (i, p) in t.profiles.iter().enumerate() {
+                let e = Array::new(ctx.clone())?;
+                let list = Array::new(ctx.clone())?;
+
+                for (j, (n, l)) in p.components.iter().enumerate() {
+                    let pair = Array::new(ctx.clone())?;
+                    pair.set(0, n.as_str())?;
+                    pair.set(1, *l)?;
+                    list.set(j, pair)?;
+                }
+
+                e.set(0, p.name.as_str())?;
+                e.set(1, p.title.as_str())?;
+                e.set(2, list)?;
+                profiles.set(i, e)?;
+            }
+
+            o.set("components", comps)?;
+            o.set("profiles", profiles)?;
+            o.set("scriptURL", rt().page_url.as_str())?;
+            Ok(o.into_value())
         }
+        // X3DScene.addComponent / updateComponent: `level` is the number the scene keeps, `text` is `String (level)` of the
+        // ComponentInfo the Script gave (any value; the printers write it).
         "addComponent" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let (name, level) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32);
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let script = num_arg(ctx, a, 0);
+            let (name, level, text) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32, str_arg(ctx, a, 3));
+            let root = rt().scene.scene_root(ctx_of_script(script));
             let comps = scene_components_mut(&mut rt().scene, root);
 
             if comps.iter().any(|(n, _)| *n == name) {
                 return throw(ctx, &format!("Couldn't add component. Component '{name}' already exists."));
             }
 
-            comps.push((name, level));
+            comps.push((name.clone(), level));
+            set_component_level_text(&mut rt().scene, root, name, level, text);
+            Ok(undefined)
+        }
+        "updateComponent" => {
+            // X3DScene.updateComponent: a component of that name is replaced where it stands, else added.
+            let script = num_arg(ctx, a, 0);
+            let (name, level, text) = (str_arg(ctx, a, 1), num_arg(ctx, a, 2) as i32, str_arg(ctx, a, 3));
+            let root = rt().scene.scene_root(ctx_of_script(script));
+            let comps = scene_components_mut(&mut rt().scene, root);
+
+            match comps.iter_mut().find(|(n, _)| *n == name) {
+                Some(c) => c.1 = level,
+                None => comps.push((name.clone(), level)),
+            }
+
+            set_component_level_text(&mut rt().scene, root, name, level, text);
+            Ok(undefined)
+        }
+        "removeComponent" => {
+            let script = num_arg(ctx, a, 0);
+            let name = str_arg(ctx, a, 1);
+            let root = rt().scene.scene_root(ctx_of_script(script));
+
+            scene_components_mut(&mut rt().scene, root).retain(|(n, _)| *n != name);
+            set_component_level_text(&mut rt().scene, root, name, 0, "0".into());
+            Ok(undefined)
+        }
+        "fobserve" => {
+            let h = handle_at(ctx, a, 0)?;
+            let on = a.get(1).and_then(|v| v.as_bool()).unwrap_or(false);
+
+            if let Some(k) = slot_key(h) {
+                if on {
+                    rt().field_observed.insert(k);
+                } else {
+                    rt().field_observed.remove(&k);
+                }
+            }
+
+            Ok(undefined)
+        }
+        // prelude/bridge.js: field data in and out, node fields mirrored by the Script's objects.
+        // The raw-value token of a node field's current value (see "fpush"), or undefined.
+        "frawtok" => {
+            let h = handle_at(ctx, a, 0)?;
+
+            match slot_key(h).and_then(|k| rt().scene.raw_tokens.get(&k).filter(|r| r.host == CURRENT.get()).map(|r| r.token)) {
+                Some(t) => Ok(Value::new_number(ctx.clone(), t as f64)),
+                None => Ok(undefined),
+            }
+        }
+        // The raw-value tokens of this host's realm that a field still holds (the bridge forgets the others).
+        "frawlive" => {
+            let arr = Array::new(ctx.clone())?;
+            let cur = CURRENT.get();
+            let mut live: Vec<u32> = rt().scene.raw_tokens.values().filter(|r| r.host == cur).map(|r| r.token).collect();
+
+            live.sort_unstable();
+            live.dedup();
+
+            for (i, t) in live.into_iter().enumerate() {
+                arr.set(i, t as f64)?;
+            }
+
+            Ok(arr.into_value())
+        }
+        "fexport" => {
+            let h = handle_at(ctx, a, 0)?;
+            value_data(ctx, &read(h))
+        }
+        "fimport" => {
+            let ty_name = str_arg(ctx, a, 0);
+            let ty = if ty_name == "VrmlMatrix" { FieldType::SFMatrix4f } else { FieldType::from_name(&ty_name).unwrap_or(FieldType::SFBool) };
+            let v = data_value(ty, a.get(1).unwrap_or(&undefined));
+            Ok(Value::new_number(ctx.clone(), encode(detached(v))))
+        }
+        // The Script's object of a node field changed it: with an event (X3DField.addEvent) or without (a value set in place).
+        "fpush" => {
+            let h = handle_at(ctx, a, 0)?;
+            let event = a.get(2).and_then(|v| v.as_bool()).unwrap_or(true);
+            let raw = a.get(3).and_then(|v| v.as_number()).map(|t| {
+                let texts: Vec<Option<String>> = a
+                    .get(4)
+                    .and_then(|v| v.as_array().cloned())
+                    .map(|arr| arr.iter::<Value>().map(|x| x.ok().and_then(|x| x.as_string().and_then(|s| s.to_string().ok()))).collect())
+                    .unwrap_or_default();
+                x3d_scene::scene::RawValue { host: CURRENT.get(), token: t as u32, texts: texts.into() }
+            });
+
+            if let Some(k) = slot_key(h) {
+                let v = data_value(rt().field(k).ty(), a.get(1).unwrap_or(&undefined));
+
+                if event {
+                    rt().set_value(k, v);
+                } else {
+                    rt().set_raw(k, v);
+                }
+
+                // The Script's value held components that are not numbers: their token goes with the value (Scene::raw_tokens).
+                if let Some(r) = raw {
+                    rt().scene.raw_tokens.insert(k, r);
+                }
+
+                rt().js_clean(k);
+            }
+
+            Ok(undefined)
+        }
+        "fmirror" => {
+            let h = handle_at(ctx, a, 0)?;
+
+            match slot_key(h) {
+                Some(k) => {
+                    rt().js_mirror.entry(k).or_insert(false);
+                    Ok(rquickjs::String::from_str(ctx.clone(), &fkey_id(k))?.into_value())
+                }
+                None => Ok(Value::new_null(ctx.clone())),
+            }
+        }
+        // The ids and data of the mirrored fields whose value changed since the last call.
+        "fdirty" => {
+            let dirty = rt().take_js_dirty();
+            let mut items = vec![];
+
+            for k in dirty {
+                items.push(rquickjs::String::from_str(ctx.clone(), &fkey_id(k))?.into_value());
+                items.push(value_data(ctx, rt().value(k))?);
+            }
+
+            data_array(ctx, items)
+        }
+        // X3DField.fromVRMLString / fromXMLString (value, scene): the data of the parsed value. `script` names the scene (the
+        // Script's execution context) or is null; a value that cannot be read throws X_ITE's error.
+        "parsefield" => {
+            let ty_name = str_arg(ctx, a, 0);
+            let ty = if ty_name == "VrmlMatrix" { FieldType::SFMatrix4f } else { FieldType::from_name(&ty_name).unwrap_or(FieldType::SFBool) };
+            let text = str_arg(ctx, a, 1);
+            let xml = str_arg(ctx, a, 2) == "xml";
+            let name = str_arg(ctx, a, 3);
+            let scene = a.get(4).and_then(|v| v.as_number()).map(ctx_of_script);
+            let unit = a.get(5).and_then(|v| v.as_string()).and_then(|s| s.to_string().ok());
+
+            match rt().field_from_string(ty, &text, scene, xml, unit, &name) {
+                Ok(Some(v)) => value_data(ctx, &v),
+                Ok(None) => throw(ctx, &format!("Couldn't read value for field '{name}'.")),
+                Err(Some(message)) => throw(ctx, &message),
+                // VRMLParser without an execution context: `executionContext .createNode (…)` of null.
+                Err(None) => throw_type(ctx, "Cannot read properties of null (reading 'createNode')"),
+            }
+        }
+        "funit" => {
+            let h = handle_at(ctx, a, 0)?;
+
+            // X3DField.getUnit: the unit category a node class gives a predefined field (setUnit in its constructor).
+            let unit = slot_key(h).and_then(|k| {
+                let scene = &rt().scene;
+                let node = scene.node(k.0);
+
+                match (node.kind.clone(), k.1) {
+                    (NodeKind::Builtin(t), FieldLoc::Pre(_)) => {
+                        let name = &rt().field(k).name;
+                        let spec = scene.spec_version_of(node.ctx);
+                        scene.table.types[t].variant(spec).fields.iter().find(|d| &d.name == name).and_then(|d| d.unit.clone())
+                    }
+                    _ => None,
+                }
+            });
+
+            match unit {
+                Some(u) => Ok(rquickjs::String::from_str(ctx.clone(), &u)?.into_value()),
+                None => Ok(undefined),
+            }
+        }
+        // X3DGenerator createFloatFormat / createFloatExponentialFormat: Intl.NumberFormat ("en", { notation, maximumSignificantDigits }).
+        "intlfmt" => {
+            let scientific = a.first().and_then(|v| v.as_bool()).unwrap_or(false);
+            let precision = num_arg(ctx, a, 1) as usize;
+            let value = num_arg(ctx, a, 2);
+            let text = if scientific { x3d_fields::format::intl_scientific_lower(value, precision) } else { x3d_fields::format::intl_standard(value, precision) };
+            Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
+        }
+        "ctxObserve" => {
+            rt().ctx_events.observed = true;
+            rt().ctx_events.watched.insert(num_arg(ctx, a, 0) as usize);
+
+            Ok(undefined)
+        }
+        "updateUnit" => {
+            // X3DScene.updateUnit (category, name, conversionFactor): only a category the scene has; the name is a string, the factor a number.
+            let script = num_arg(ctx, a, 0);
+            let (category, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
+            let factor = num_arg(ctx, a, 3);
+            let root = rt().scene.scene_root(ctx_of_script(script));
+            let units = match rt().scene.scene_infos.get_mut(&root) {
+                Some(i) => &mut i.units,
+                None => &mut rt().scene.units,
+            };
+
+            if let Some(u) = units.iter_mut().find(|u| u.category == category) {
+                u.name = name;
+                u.conversion_factor = factor;
+            }
+
+            Ok(undefined)
+        }
+        "setProfile" => {
+            let script = num_arg(ctx, a, 0);
+            let profile = a.get(1).filter(|v| v.is_string()).map(|_| str_arg(ctx, a, 1));
+            let root = rt().scene.scene_root(ctx_of_script(script));
+
+            match rt().scene.scene_infos.get_mut(&root) {
+                Some(i) => i.profile = profile,
+                None => rt().scene.profile = profile,
+            }
+
+            rt().ctx_event(root, CtxField::Profile, 1);
             Ok(undefined)
         }
         "metaData" => {
             // X3DScene.setMetaData / addMetaData / removeMetaData.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
             let values: Vec<String> = match a.get(3).and_then(|v| v.as_array()) {
                 Some(arr) => arr.iter::<Value>().filter_map(|v| v.ok()).map(|v| coerce_string(ctx, &v)).collect(),
@@ -1408,7 +2331,7 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 return throw(ctx, "Couldn't add metadata: name is empty.");
             }
 
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let root = rt().scene.scene_root(ctx_of_script(script));
             let meta = scene_meta_mut(&mut rt().scene, root);
 
             match mode.as_str() {
@@ -1425,64 +2348,12 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                 _ => meta.retain(|(k, _)| *k != name),
             }
 
+            rt().ctx_event(root, CtxField::Metadata, 1);
             Ok(undefined)
         }
-        "protoDecls" => {
-            // protos / externprotos: name, isExternProto, fields (FieldDefinitionArray), urls.
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let extern_ = a.get(1).is_some_and(coerce_bool);
-            let c = rt().scene.node(script).ctx;
-            let arr = Array::new(ctx.clone())?;
-            let s = &rt().scene;
-            let decls: Vec<(String, Vec<x3d_scene::Field>, bool, Option<Vec<String>>)> = if extern_ {
-                s.ctx(c).externprotos.values().iter().map(|&e| {
-                    let d = &s.externprotos[e];
-                    (d.name.clone(), d.fields.clone(), d.has_metadata, Some(d.url.clone()))
-                }).collect()
-            } else {
-                s.ctx(c).protos.values().iter().map(|&p| {
-                    let d = &s.protos[p];
-                    (d.name.clone(), d.fields.clone(), d.has_metadata, None)
-                }).collect()
-            };
-
-            for (i, (name, fields, has_metadata, urls)) in decls.into_iter().enumerate() {
-                let o = Object::new(ctx.clone())?;
-                o.set("name", name.as_str())?;
-                o.set("isExternProto", urls.is_some())?;
-
-                let fa = Array::new(ctx.clone())?;
-                let mut defs: Vec<(String, i32, &'static str, FieldValue)> = vec![];
-
-                if has_metadata {
-                    defs.push(("metadata".into(), access::INPUT_OUTPUT as i32, "SFNode", FieldValue::SFNode(None)));
-                }
-
-                defs.extend(fields.iter().map(|f| (f.name.clone(), f.access as i32, f.ty().name(), f.value.clone())));
-
-                for (j, (fname, access, ty, value)) in defs.into_iter().enumerate() {
-                    let fo = Object::new(ctx.clone())?;
-                    fo.set("name", fname.as_str())?;
-                    fo.set("accessType", access)?;
-                    fo.set("dataType", ty)?;
-                    fo.set("value", new_value_js(ctx, value))?;
-                    fa.set(j, fo)?;
-                }
-
-                o.set("fields", fa)?;
-
-                if let Some(urls) = urls {
-                    o.set("urls", new_value_js(ctx, FieldValue::MFString(urls)))?;
-                }
-
-                arr.set(i, o)?;
-            }
-
-            Ok(arr.into_value())
-        }
         "routeList" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let routes: Vec<_> = rt().scene.ctx(c).routes.iter().map(|r| (r.source_node, r.source_field.clone(), r.destination_node, r.destination_field.clone())).collect();
             let arr = Array::new(ctx.clone())?;
 
@@ -1499,10 +2370,10 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "rootNode" => {
             // X3DScene.addRootNode / removeRootNode.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let add = str_arg(ctx, a, 1) == "add";
             let node = a.get(2).and_then(arg_node).flatten();
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
             let roots = &mut rt().scene.ctx_mut(c).root_nodes;
 
             if add {
@@ -1516,48 +2387,18 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
 
             rt().rebuild_parents();
-            Ok(undefined)
-        }
-        "namedNodeOp" => {
-            // X3DExecutionContext.addNamedNode / removeNamedNode.
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
-            let c = rt().scene.node(script).ctx;
 
-            if mode == "remove" {
-                rt().scene.remove_named_node(c, &name);
-                return Ok(undefined);
-            }
-
-            let Some(node) = a.get(3).and_then(arg_node).flatten() else {
-                return throw(ctx, "Couldn't add named node: node must be of type X3DNode.");
-            };
-
-            if rt().scene.get_named_node(c, &name).is_some() {
-                return throw(ctx, &format!("Couldn't add named node: node name '{name}' is already in use."));
-            }
-
-            // X3DExecutionContext.updateNamedNode checks.
-            if rt().scene.is_imported(node) {
-                return throw(ctx, "Couldn't add named node: node cannot be of type X3DImportedNodeInstance.");
-            }
-
-            if rt().scene.node(node).ctx != c {
-                return throw(ctx, "Couldn't update named node: node does not belong to this execution context.");
-            }
-
-            if name.is_empty() {
-                return throw(ctx, "Couldn't update named node: node name is empty.");
-            }
-
-            rt().scene.update_named_node(c, &name, node);
+            // rootNodes .push (node) / .assign (...): the rootNodes field fires.
+            let rounds = rt().root_nodes_rounds(c);
+            rt().ctx_event(c, CtxField::SceneGraph, rounds);
+            rt().ctx_event(c, CtxField::BBox, rounds);
             Ok(undefined)
         }
         "exportedNode" => {
             // X3DScene.addExportedNode / getExportedNode.
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let (mode, name) = (str_arg(ctx, a, 1), str_arg(ctx, a, 2));
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
+            let root = rt().scene.scene_root(ctx_of_script(script));
 
             if mode == "get" {
                 return match rt().scene.get_exported_node(root, &name) {
@@ -1581,9 +2422,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
         }
         "nodeArrays" => {
             // namedNodes (SFNode), importedNodes (X3DImportedNode), exportedNodes (X3DExportedNode).
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let which = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
             let s = &rt().scene;
             let arr = Array::new(ctx.clone())?;
 
@@ -1597,9 +2438,11 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     for (i, &id) in s.ctx(c).imported.values().iter().enumerate() {
                         let m = &s.imported[id];
                         let o = Object::new(ctx.clone())?;
+                        o.set("id", id as f64)?;
                         o.set("inlineNode", node_js(ctx, Some(m.inline)))?;
                         o.set("exportedName", m.exported_name.as_str())?;
                         o.set("importedName", m.imported_name.as_str())?;
+                        o.set("description", m.description.as_str())?;
                         arr.set(i, o)?;
                     }
                 }
@@ -1608,7 +2451,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
                     for (i, &id) in s.ctx(root).exported.values().iter().enumerate() {
                         let m = &s.exported[id];
                         let o = Object::new(ctx.clone())?;
+                        o.set("id", id as f64)?;
                         o.set("exportedName", m.exported_name.as_str())?;
+                        o.set("description", m.description.as_str())?;
                         o.set("localNode", node_js(ctx, Some(m.local)))?;
                         arr.set(i, o)?;
                     }
@@ -1618,41 +2463,52 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             Ok(arr.into_value())
         }
         "sceneString" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let root = rt().scene.scene_root(rt().scene.node(script).ctx);
-            let text = match str_arg(ctx, a, 1).as_str() {
-                "xml" if root == x3d_scene::ROOT => rt().scene.to_xml_string(),
-                "json" if root == x3d_scene::ROOT => rt().scene.to_json_string(),
-                _ => rt().scene.to_vrml_string_ctx(root),
-            };
+            let script = num_arg(ctx, a, 0);
+            let root = rt().scene.scene_root(ctx_of_script(script));
+            let format = str_arg(ctx, a, 1);
+            if format != "xml" {
+                rt().ctx_streamed(root);
+            }
+            let text = with_live_clone_counts(|| {
+                print_raw_js(ctx, |s| match format.as_str() {
+                    "xml" => s.to_xml_string_ctx(root),
+                    "json" => s.to_json_string_ctx(root),
+                    _ => s.to_vrml_string_ctx(root),
+                })
+            });
             Ok(rquickjs::String::from_str(ctx.clone(), &text)?.into_value())
         }
         "worldInfos" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let list: Vec<Option<NodeId>> = rt().world_infos.get(&c).map(|l| l.iter().map(|n| Some(*n)).collect()).unwrap_or_default();
             Ok(new_value_js(ctx, FieldValue::MFNode(list)))
         }
         "rootNodes" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
-            let c = rt().scene.node(script).ctx;
+            let script = num_arg(ctx, a, 0);
+            let c = ctx_of_script(script);
             let roots = rt().scene.ctx(c).root_nodes.clone();
             Ok(new_value_js(ctx, FieldValue::MFNode(roots)))
         }
         "createNode" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let ty = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
 
             match rt().create_node_script(c, &ty) {
-                Some(n) => Ok(node_js(ctx, Some(n))),
+                Some(n) => {
+                    // The new node's parents change (X3DBaseNode.parentsChanged): its context's sceneGraph_changed.
+                    rt().ctx_event(c, CtxField::SceneGraph, 1);
+                    rt().ctx_event(c, CtxField::BBox, 1);
+                    Ok(node_js(ctx, Some(n)))
+                }
                 None => throw(ctx, &format!("Unknown node type '{ty}'.")),
             }
         }
         "createProto" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let ty = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
 
             match rt().create_proto_setup(c, &ty) {
                 Some(n) => Ok(node_js(ctx, Some(n))),
@@ -1660,9 +2516,9 @@ fn op<'js>(ctx: &Ctx<'js>, args: Vec<Value<'js>>) -> rquickjs::Result<Value<'js>
             }
         }
         "namedNode" => {
-            let script = num_arg(ctx, a, 0) as NodeId;
+            let script = num_arg(ctx, a, 0);
             let nn = str_arg(ctx, a, 1);
-            let c = rt().scene.node(script).ctx;
+            let c = ctx_of_script(script);
 
             match rt().scene.get_named_node(c, &nn) {
                 Some(n) => Ok(node_js(ctx, Some(n))),
@@ -1691,6 +2547,20 @@ fn scene_components_mut(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId) -> &mu
     }
 }
 
+/// The level text of a component (see `Scene::component_level_texts`); none when it is the number's own.
+fn set_component_level_text(s: &mut x3d_scene::Scene, root: x3d_scene::CtxId, name: String, level: i32, text: String) {
+    let texts = match s.scene_infos.get_mut(&root) {
+        Some(i) => &mut i.component_level_texts,
+        None => &mut s.component_level_texts,
+    };
+
+    if text == level.to_string() {
+        texts.remove(&name);
+    } else {
+        texts.insert(name, text);
+    }
+}
+
 fn math_fn<'js>(ctx: &Ctx<'js>, name: &str) -> rquickjs::Result<Value<'js>> {
     macro_rules! f1 {
         ($f:path) => {
@@ -1707,345 +2577,14 @@ fn math_fn<'js>(ctx: &Ctx<'js>, name: &str) -> rquickjs::Result<Value<'js>> {
         "acos" => f1!(jsmath::acos),
         "asin" => f1!(jsmath::asin),
         "log10" => f1!(jsmath::log10),
+        "atan" => f1!(jsmath::atan),
+        "sqrt" => f1!(jsmath::sqrt),
+        "pow" => Function::new(ctx.clone(), |x: Coerced<f64>, y: Coerced<f64>| jsmath::pow(x.0, y.0))?.into_value(),
+        // V8 MathHypot: every argument is converted with ToNumber first.
+        "hypot" => Function::new(ctx.clone(), |a: Rest<Coerced<f64>>| jsmath::hypot(&a.0.iter().map(|x| x.0).collect::<Vec<_>>()))?.into_value(),
         "atan2" => Function::new(ctx.clone(), |y: Coerced<f64>, x: Coerced<f64>| jsmath::atan2(y.0, x.0))?.into_value(),
         _ => Value::new_null(ctx.clone()),
     })
-}
-
-/// Field constructors (`new SFVec3f (1, 2, 3)` …).
-fn construct<'js>(ctx: &Ctx<'js>, ty_name: &str, a: &[Value<'js>]) -> rquickjs::Result<FieldValue> {
-    let ty = if ty_name == "VrmlMatrix" { FieldType::SFMatrix4f } else { FieldType::from_name(ty_name).unwrap_or(FieldType::SFBool) };
-    let nums = |n: usize| -> Vec<f64> { (0..n.min(a.len())).map(|i| coerce_f64(ctx, &a[i])).collect() };
-
-    Ok(match ty {
-        FieldType::SFBool => FieldValue::SFBool(a.first().map(coerce_bool).unwrap_or(false)),
-        FieldType::SFString => FieldValue::SFString(a.first().map(|v| coerce_string(ctx, v)).unwrap_or_default()),
-        FieldType::SFNode => FieldValue::SFNode(a.first().and_then(arg_node).flatten()),
-        FieldType::SFRotation => {
-            let first = value_arg(a, 0);
-            let second = value_arg(a, 1);
-
-            match (first, second) {
-                (Some(FieldValue::SFVec3f(from) | FieldValue::SFVec3d(from)), Some(FieldValue::SFVec3f(to) | FieldValue::SFVec3d(to))) => {
-                    let mut r = Rotation4::identity();
-                    r.set_vectors(&from, &to);
-                    FieldValue::SFRotation(r)
-                }
-                (Some(FieldValue::SFVec3f(axis) | FieldValue::SFVec3d(axis)), _) => {
-                    FieldValue::SFRotation(Rotation4::new(axis.x, axis.y, axis.z, num_arg(ctx, a, 1)))
-                }
-                (Some(FieldValue::SFMatrix3f(m) | FieldValue::SFMatrix3d(m)), _) => {
-                    let mut r = Rotation4::identity();
-                    r.set_matrix(&m);
-                    FieldValue::SFRotation(r)
-                }
-                _ => {
-                    // function SFRotation (x = 0, y = 0, z = 1, angle = 0): +undefined is a default.
-                    let g = |i: usize, d: f64| if i < a.len() && !a[i].is_undefined() { coerce_f64(ctx, &a[i]) } else { d };
-                    FieldValue::SFRotation(Rotation4::new(g(0, 0.0), g(1, 0.0), g(2, 1.0), g(3, 0.0)))
-                }
-            }
-        }
-        FieldType::SFImage => {
-            let (w, h, c) = (num_arg(ctx, a, 0), num_arg(ctx, a, 1), num_arg(ctx, a, 2));
-            let arr = match value_arg(a, 3) {
-                Some(FieldValue::MFInt32(v)) => v,
-                _ => vec![],
-            };
-            let (w, h, c) = (if w.is_nan() { 0.0 } else { w }, if h.is_nan() { 0.0 } else { h }, if c.is_nan() { 0.0 } else { c });
-            FieldValue::SFImage(Image::new(w, h, c, arr))
-        }
-        t if t.is_multi() => {
-            let st = sf_type_of(t);
-            let mut mf = FieldValue::default_for(t);
-
-            for v in a {
-                let sf = convert(ctx, st, v).unwrap_or_else(|| FieldValue::default_for(st));
-                mf_push(&mut mf, &sf);
-            }
-
-            mf
-        }
-        t => {
-            // Missing arguments take the constructor defaults (x = 0 …); present ones are +value.
-            let n = nums(16);
-
-            if matches!(t, FieldType::SFMatrix3d | FieldType::SFMatrix3f | FieldType::SFMatrix4d | FieldType::SFMatrix4f) && n.len() < 9 {
-                FieldValue::default_for(t)
-            } else {
-                sf_from_numbers(t, &n)
-            }
-        }
-    })
-}
-
-const COMPONENTS: &[&str] = &["x", "y", "z", "w"];
-
-fn component_index(v: &FieldValue, key: &str) -> Option<usize> {
-    if let Ok(i) = key.parse::<usize>() {
-        return Some(i);
-    }
-
-    match v {
-        FieldValue::SFColor(_) | FieldValue::SFColorRGBA(_) => ["r", "g", "b", "a"].iter().position(|k| *k == key),
-        FieldValue::SFRotation(_) => ["x", "y", "z", "angle"].iter().position(|k| *k == key),
-        _ => COMPONENTS.iter().position(|k| *k == key),
-    }
-}
-
-fn component_get<'js>(ctx: &Ctx<'js>, h: u32, key: Option<&Value<'js>>) -> rquickjs::Result<Value<'js>> {
-    let key = key.map(|k| coerce_string(ctx, k)).unwrap_or_default();
-    let v = read(h);
-
-    if let FieldValue::SFImage(img) = &v {
-        return Ok(match key.as_str() {
-            "width" => Value::new_int(ctx.clone(), img.width),
-            "height" => Value::new_int(ctx.clone(), img.height),
-            "comp" => Value::new_int(ctx.clone(), img.comp),
-            "array" => new_value_js(ctx, FieldValue::MFInt32(img.array.clone())),
-            _ => Value::new_undefined(ctx.clone()),
-        });
-    }
-
-    let nums = sf_numbers(&v);
-
-    Ok(match component_index(&v, &key).and_then(|i| nums.get(i)) {
-        Some(x) => Value::new_number(ctx.clone(), *x),
-        None => Value::new_undefined(ctx.clone()),
-    })
-}
-
-fn component_set<'js>(ctx: &Ctx<'js>, h: u32, key: Option<&Value<'js>>, value: Option<&Value<'js>>) {
-    let key = key.map(|k| coerce_string(ctx, k)).unwrap_or_default();
-    let mut v = read(h);
-
-    if let FieldValue::SFImage(img) = &mut v {
-        let x = value.map(|x| coerce_f64(ctx, x)).unwrap_or(f64::NAN);
-
-        let (mut w, mut hh, mut c, mut arr) = (img.width as f64, img.height as f64, img.comp as f64, img.array.clone());
-
-        match key.as_str() {
-            "width" => w = x,
-            "height" => hh = x,
-            "comp" => c = x,
-            "array" => {
-                if let Some(FieldValue::MFInt32(a)) = value.and_then(|x| convert(ctx, FieldType::MFInt32, x)) {
-                    arr = a;
-                }
-            }
-            _ => return,
-        }
-
-        write(h, FieldValue::SFImage(Image::new(w, hh, c, arr)));
-        return;
-    }
-
-    let Some(i) = component_index(&v, &key) else {
-        return;
-    };
-    let x = value.map(|x| coerce_f64(ctx, x)).unwrap_or(f64::NAN);
-
-    match &mut v {
-        FieldValue::SFColor(c) => c.set_index(i, x),
-        FieldValue::SFColorRGBA(c) => c.set_index(i, x),
-        FieldValue::SFVec2d(a) | FieldValue::SFVec2f(a) => a.set_index(i, x),
-        FieldValue::SFVec3d(a) | FieldValue::SFVec3f(a) => a.set_index(i, x),
-        FieldValue::SFVec4d(a) | FieldValue::SFVec4f(a) => a.set_index(i, x),
-        FieldValue::SFRotation(r) => r.set_index(i, x),
-        FieldValue::SFQuaternion(q) => q.set_index(i, x),
-        FieldValue::SFMatrix3d(m) | FieldValue::SFMatrix3f(m) => {
-            if i < 9 {
-                m.0[i] = x
-            }
-        }
-        FieldValue::SFMatrix4d(m) | FieldValue::SFMatrix4f(m) => {
-            if i < 16 {
-                m.0[i] = x
-            }
-        }
-        _ => return,
-    }
-
-    write(h, v);
-}
-
-fn vec3_of(v: &FieldValue) -> Option<Vector3> {
-    match v {
-        FieldValue::SFVec3f(a) | FieldValue::SFVec3d(a) => Some(*a),
-        _ => None,
-    }
-}
-
-fn rot_of(v: &FieldValue) -> Option<Rotation4> {
-    match v {
-        FieldValue::SFRotation(r) => Some(*r),
-        _ => None,
-    }
-}
-
-/// Methods of the SF field classes.
-fn method<'js>(ctx: &Ctx<'js>, h: u32, m: &str, a: &[Value<'js>]) -> rquickjs::Result<Value<'js>> {
-    let v = read(h);
-    let num = |x: f64| Value::new_number(ctx.clone(), x);
-    let other = value_arg(a, 0);
-    let undefined = Value::new_undefined(ctx.clone());
-
-    macro_rules! vec_ops {
-        ($ctor:path, $val:expr) => {{
-            let s = $val;
-            let o = match &other {
-                Some($ctor(x)) => Some(*x),
-                _ => None,
-            };
-            let mut r = s;
-            let result: Option<Value> = match m {
-                "abs" => Some(new_value_js(ctx, $ctor(*r.abs()))),
-                "add" => o.map(|o| new_value_js(ctx, $ctor(*r.add(&o)))),
-                "subtract" => o.map(|o| new_value_js(ctx, $ctor(*r.subtract(&o)))),
-                "multiply" => Some(new_value_js(ctx, $ctor(*r.multiply(num_arg(ctx, a, 0))))),
-                "divide" => Some(new_value_js(ctx, $ctor(*r.divide(num_arg(ctx, a, 0))))),
-                "multVec" => o.map(|o| new_value_js(ctx, $ctor(*r.mult_vec(&o)))),
-                "divVec" => o.map(|o| new_value_js(ctx, $ctor(*r.div_vec(&o)))),
-                "dot" => o.map(|o| num(s.dot(&o))),
-                "distance" => o.map(|o| num(s.distance(&o))),
-                "length" => Some(num(s.norm())),
-                "normalize" => Some(new_value_js(ctx, $ctor(*r.normalize()))),
-                "negate" => Some(new_value_js(ctx, $ctor(*r.negate()))),
-                "inverse" => Some(new_value_js(ctx, $ctor(*r.inverse()))),
-                "max" => o.map(|o| new_value_js(ctx, $ctor(*r.max(&o)))),
-                "min" => o.map(|o| new_value_js(ctx, $ctor(*r.min(&o)))),
-                "lerp" => o.map(|o| new_value_js(ctx, $ctor(*r.lerp(&o, num_arg(ctx, a, 1))))),
-                "reflect" => o.map(|o| new_value_js(ctx, $ctor(*r.reflect(&o)))),
-                "clamp" => match (&other, value_arg(a, 1)) {
-                    (Some($ctor(lo)), Some($ctor(hi))) => Some(new_value_js(ctx, $ctor(*r.clamp(lo, &hi)))),
-                    _ => None,
-                },
-                _ => None,
-            };
-            result
-        }};
-    }
-
-    let result: Option<Value> = match &v {
-        FieldValue::SFVec2f(x) => vec_ops!(FieldValue::SFVec2f, *x),
-        FieldValue::SFVec2d(x) => vec_ops!(FieldValue::SFVec2d, *x),
-        FieldValue::SFVec3f(x) if m == "cross" => other.as_ref().and_then(vec3_of).map(|o| new_value_js(ctx, FieldValue::SFVec3f(*x.clone().cross(&o)))),
-        FieldValue::SFVec3d(x) if m == "cross" => other.as_ref().and_then(vec3_of).map(|o| new_value_js(ctx, FieldValue::SFVec3d(*x.clone().cross(&o)))),
-        FieldValue::SFVec3f(x) => vec_ops!(FieldValue::SFVec3f, *x),
-        FieldValue::SFVec3d(x) => vec_ops!(FieldValue::SFVec3d, *x),
-        FieldValue::SFVec4f(x) => vec_ops!(FieldValue::SFVec4f, *x),
-        FieldValue::SFVec4d(x) => vec_ops!(FieldValue::SFVec4d, *x),
-        FieldValue::SFColor(c) => match m {
-            "getHSV" => {
-                let arr = Array::new(ctx.clone())?;
-                for (i, x) in c.get_hsv().iter().enumerate() {
-                    arr.set(i, *x)?;
-                }
-                Some(arr.into_value())
-            }
-            "setHSV" => {
-                let mut c = *c;
-                c.set_hsv(num_arg(ctx, a, 0), num_arg(ctx, a, 1), num_arg(ctx, a, 2));
-                write(h, FieldValue::SFColor(c));
-                Some(undefined.clone())
-            }
-            "lerp" => match other {
-                Some(FieldValue::SFColor(d)) => {
-                    let [h0, s0, v0] = x3d_runtime::nodes::interp::hsv_lerp(c.get_hsv(), d.get_hsv(), num_arg(ctx, a, 1));
-                    let mut r = Color3::default();
-                    r.set_hsv(h0, s0, v0);
-                    Some(new_value_js(ctx, FieldValue::SFColor(r)))
-                }
-                _ => None,
-            },
-            _ => None,
-        },
-        FieldValue::SFRotation(r) => match m {
-            "getAxis" => Some(new_value_js(ctx, FieldValue::SFVec3f(r.clone().get_axis()))),
-            "getMatrix" => Some(new_value_js(ctx, FieldValue::SFMatrix3f(r.get_matrix()))),
-            "inverse" => Some(new_value_js(ctx, FieldValue::SFRotation(*r.clone().inverse()))),
-            "multiply" => other.as_ref().and_then(rot_of).map(|o| new_value_js(ctx, FieldValue::SFRotation(*r.clone().mult_right(&o)))),
-            "multVec" => other.clone().and_then(|o| {
-                let mut x = vec3_of(&o)?;
-                r.mult_vec_rot(&mut x);
-                Some(new_value_js(ctx, if matches!(o, FieldValue::SFVec3d(_)) { FieldValue::SFVec3d(x) } else { FieldValue::SFVec3f(x) }))
-            }),
-            "slerp" => other.as_ref().and_then(rot_of).map(|o| new_value_js(ctx, FieldValue::SFRotation(*r.clone().slerp(&o, num_arg(ctx, a, 1))))),
-            "setAxis" => other.as_ref().and_then(vec3_of).map(|axis| {
-                let mut x = *r;
-                let angle = x.angle();
-                x.set(axis.x, axis.y, axis.z, angle);
-                write(h, FieldValue::SFRotation(x));
-                undefined.clone()
-            }),
-            "setMatrix" => match other {
-                Some(FieldValue::SFMatrix3f(mm) | FieldValue::SFMatrix3d(mm)) => {
-                    let mut x = *r;
-                    x.set_matrix(&mm);
-                    write(h, FieldValue::SFRotation(x));
-                    Some(undefined.clone())
-                }
-                _ => None,
-            },
-            _ => None,
-        },
-        FieldValue::SFMatrix4f(mm) | FieldValue::SFMatrix4d(mm) => {
-            let wrapm = |x: Matrix4| if matches!(v, FieldValue::SFMatrix4d(_)) { FieldValue::SFMatrix4d(x) } else { FieldValue::SFMatrix4f(x) };
-            let other_m = match &other {
-                Some(FieldValue::SFMatrix4f(o) | FieldValue::SFMatrix4d(o)) => Some(*o),
-                _ => None,
-            };
-
-            match m {
-                "setTransform" => {
-                    let t = value_arg(a, 0).as_ref().and_then(vec3_of);
-                    let r = value_arg(a, 1).as_ref().and_then(rot_of);
-                    let s = value_arg(a, 2).as_ref().and_then(vec3_of);
-                    let so = value_arg(a, 3).as_ref().and_then(rot_of);
-                    let c = value_arg(a, 4).as_ref().and_then(vec3_of);
-                    let mut x = *mm;
-                    x.set_transform(t.as_ref(), r.as_ref(), s.as_ref(), so.as_ref(), c.as_ref());
-                    // SFMatrix.setTransform modifies the value without an event.
-                    match slot(h) {
-                        Slot::Field(k) => rt().set_raw(k, wrapm(x)),
-                        _ => write(h, wrapm(x)),
-                    }
-                    Some(undefined.clone())
-                }
-                "multLeft" => other_m.map(|o| new_value_js(ctx, wrapm(*mm.clone().mult_left(&o)))),
-                "multRight" => other_m.map(|o| new_value_js(ctx, wrapm(*mm.clone().mult_right(&o)))),
-                "inverse" => Some(new_value_js(ctx, wrapm(*mm.clone().inverse()))),
-                "transpose" => Some(new_value_js(ctx, wrapm(*mm.clone().transpose()))),
-                "determinant" => Some(num(mm.determinant())),
-                "multVecMatrix" | "multMatrixVec" | "multDirMatrix" | "multMatrixDir" => other.clone().and_then(|o| {
-                    let mut x = vec3_of(&o)?;
-                    match m {
-                        "multVecMatrix" => mm.mult_vec_matrix3(&mut x),
-                        "multMatrixVec" => mm.mult_matrix_vec3(&mut x),
-                        "multDirMatrix" => mm.mult_dir_matrix(&mut x),
-                        _ => mm.mult_matrix_dir(&mut x),
-                    }
-                    Some(new_value_js(ctx, if matches!(o, FieldValue::SFVec3d(_)) { FieldValue::SFVec3d(x) } else { FieldValue::SFVec3f(x) }))
-                }),
-                "translate" => other.as_ref().and_then(vec3_of).map(|t| new_value_js(ctx, wrapm(*mm.clone().translate(&t)))),
-                "rotate" => other.as_ref().and_then(rot_of).map(|r| new_value_js(ctx, wrapm(*mm.clone().rotate(&r)))),
-                "scale" => other.as_ref().and_then(vec3_of).map(|s| new_value_js(ctx, wrapm(*mm.clone().scale(&s)))),
-                _ => None,
-            }
-        }
-        _ => None,
-    };
-
-    match result {
-        Some(v) => Ok(v),
-        None => {
-            if m == "length" || m == "dot" {
-                return Ok(num(f64::NAN));
-            }
-
-            throw(ctx, &format!("{}.{m} is not supported by the Rust port with these arguments", v.field_type().name()))
-        }
-    }
 }
 
 #[cfg(test)]

@@ -1,0 +1,104 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr self events"
+DEF T1 Transform { }
+DEF T2 Transform { translation 1 0 0 }
+DEF A Script {
+  inputOnly SFTime tick
+  inputOutput SFInt32 io 0
+  inputOutput SFFloat f 0
+  inputOutput MFFloat mf [ ]
+  inputOutput SFVec3f v 0 0 0
+  inputOutput SFNode nd NULL
+  outputOnly SFInt32 outI
+  outputOnly SFBool outB
+  inputOnly SFInt32 inI
+  inputOnly MFString inMS
+  inputOnly SFVec3f inV
+  inputOnly SFRotation inR
+  inputOnly SFNode inN
+  inputOnly MFNode inMN
+  url "ecmascript:
+var NAME = 'A';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function initialize () { log ('initialize'); }
+function set_io (v, t) { log ('set_io ' + v + ' (' + typeof v + ')'); if (v == 1) { io = 2; log ('set_io reassign'); } }
+function set_f (v) { log ('set_f ' + v); }
+function set_mf (v) { log ('set_mf ' + v .length + ' ' + (v === mf)); }
+function set_v (v) { log ('set_v ' + v + ' ' + (v === this .v) + ' ' + v .constructor .name); }
+function set_nd (v) { log ('set_nd ' + (v ? v .getNodeTypeName () : v)); }
+function inI (v) { log ('inI ' + v); }
+function inMS (v) { log ('inMS ' + v .length + ' ' + v .constructor .name); }
+function inV (v) { log ('inV ' + v + ' ' + v .constructor .name); v .x = 99; log ('inV after write ' + v); }
+function inR (v) { log ('inR ' + v); }
+function inN (v) { log ('inN ' + (v ? v .getNodeTypeName () + ' ' + v .getNodeName () : v)); }
+function inMN (v) { log ('inMN ' + v .length + ' ' + v .constructor .name); }
+function tick (v, t) {
+  n++;
+  if (n == 2) { io = 1; log ('assigned io=1'); }
+  if (n == 3) { io = 5; io = 6; io = 7; log ('assigned io 5 6 7'); }
+  if (n == 4) { f = 1.5; f = 2.5; log ('assigned f'); }
+  if (n == 5) { mf = [1, 2, 3]; log ('assigned mf'); }
+  if (n == 6) { v = new SFVec3f (1, 2, 3); log ('assigned v'); }
+  if (n == 7) { nd = Browser .currentScene .getNamedNode ('T1'); log ('assigned nd'); }
+  if (n == 8) { outI = 1; outB = true; log ('assigned outs'); }
+  if (n == 9) { mf .push (4); mf [0] = 9; log ('mf push + index'); }
+  if (n == 10) { v .x = 5; log ('v.x = 5'); }
+  if (n == 11) { io = io; log ('io = io'); }
+}
+
+  "
+}
+DEF D Script {
+  inputOnly SFTime tick
+  outputOnly SFInt32 outI
+  outputOnly MFString outMS
+  outputOnly SFVec3f outV
+  outputOnly SFRotation outR
+  outputOnly SFNode outN
+  outputOnly MFNode outMN
+  url "ecmascript:
+var NAME = 'D';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function tick () {
+  n++;
+  if (n == 2) { outI = 7.9; log ('outI'); }
+  if (n == 3) { outMS = ['a', 'b']; log ('outMS'); }
+  if (n == 4) { outV = new SFVec3f (1, 2, 3); log ('outV'); }
+  if (n == 5) { outR = new SFRotation (0, 1, 0, 1); log ('outR'); }
+  if (n == 6) { outN = Browser .currentScene .getNamedNode ('T1'); log ('outN'); }
+  if (n == 7) { outMN = [Browser .currentScene .getNamedNode ('T1'), Browser .currentScene .getNamedNode ('T2')]; log ('outMN'); }
+  if (n == 9) { outI = 8; outI = 9; log ('outI twice'); }
+}
+
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE D.outI TO A.inI
+ROUTE D.outMS TO A.inMS
+ROUTE D.outV TO A.inV
+ROUTE D.outR TO A.inR
+ROUTE D.outN TO A.inN
+ROUTE D.outMN TO A.inMN
+ROUTE STEP.cycleTime TO A.tick
+ROUTE STEP.cycleTime TO D.tick
+ROUTE STEP.cycleTime TO R.tick

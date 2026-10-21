@@ -1,0 +1,42 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr image events"
+DEF D Script {
+  outputOnly SFImage outImg
+  inputOnly SFTime tick
+  url "ecmascript:
+var NAME = 'D';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function tick () { n++; if (n == 2) { outImg = new SFImage (2, 1, 3, new MFInt32 (1, 2)); log ('outImg'); } }
+
+  "
+}
+DEF P Script {
+  inputOnly SFImage inImg
+  url "ecmascript:
+var NAME = 'P';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+function inImg (v) { log ('inImg ' + v .width + ' ' + v .array .length); }
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO D.tick
+ROUTE D.outImg TO P.inImg
+ROUTE STEP.cycleTime TO R.tick

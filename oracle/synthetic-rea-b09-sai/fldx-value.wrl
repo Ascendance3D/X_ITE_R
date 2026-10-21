@@ -1,0 +1,104 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "fldx value"
+DEF T Transform { }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function initialize () {
+  SELF = this;
+  T ('SFVec2f getValue type', function () { var f = new SFVec2f (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFVec2f getValue chain', function () { var g = new SFVec2f () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFVec2d getValue type', function () { var f = new SFVec2d (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFVec2d getValue chain', function () { var g = new SFVec2d () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFVec3f getValue type', function () { var f = new SFVec3f (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFVec3f getValue chain', function () { var g = new SFVec3f () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFVec3d getValue type', function () { var f = new SFVec3d (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFVec3d getValue chain', function () { var g = new SFVec3d () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFVec4f getValue type', function () { var f = new SFVec4f (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFVec4f getValue chain', function () { var g = new SFVec4f () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFVec4d getValue type', function () { var f = new SFVec4d (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFVec4d getValue chain', function () { var g = new SFVec4d () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFColor getValue type', function () { var f = new SFColor (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFColor getValue chain', function () { var g = new SFColor () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFColorRGBA getValue type', function () { var f = new SFColorRGBA (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFColorRGBA getValue chain', function () { var g = new SFColorRGBA () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFRotation getValue type', function () { var f = new SFRotation (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFRotation getValue chain', function () { var g = new SFRotation () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFQuaternion getValue type', function () { var f = new SFQuaternion (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFQuaternion getValue chain', function () { var g = new SFQuaternion () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFMatrix3f getValue type', function () { var f = new SFMatrix3f (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFMatrix3f getValue chain', function () { var g = new SFMatrix3f () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFMatrix3d getValue type', function () { var f = new SFMatrix3d (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFMatrix3d getValue chain', function () { var g = new SFMatrix3d () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFMatrix4f getValue type', function () { var f = new SFMatrix4f (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFMatrix4f getValue chain', function () { var g = new SFMatrix4f () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFMatrix4d getValue type', function () { var f = new SFMatrix4d (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFMatrix4d getValue chain', function () { var g = new SFMatrix4d () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('VrmlMatrix getValue type', function () { var f = new VrmlMatrix (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('VrmlMatrix getValue chain', function () { var g = new VrmlMatrix () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFImage getValue type', function () { var f = new SFImage (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFImage getValue chain', function () { var g = new SFImage () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFBool getValue type', function () { var f = new SFBool (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFBool getValue chain', function () { var g = new SFBool () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFDouble getValue type', function () { var f = new SFDouble (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFDouble getValue chain', function () { var g = new SFDouble () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFFloat getValue type', function () { var f = new SFFloat (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFFloat getValue chain', function () { var g = new SFFloat () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFInt32 getValue type', function () { var f = new SFInt32 (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFInt32 getValue chain', function () { var g = new SFInt32 () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFString getValue type', function () { var f = new SFString (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFString getValue chain', function () { var g = new SFString () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('SFTime getValue type', function () { var f = new SFTime (); var g = f .getValue (); return [typeof g, g === f, g === f .getValue (), g && g .constructor && g .constructor .name, g && Object .getPrototypeOf (g) === Object .getPrototypeOf (f)]; });
+  T ('SFTime getValue chain', function () { var g = new SFTime () .getValue (); return g !== null && typeof g === 'object' ? chain (g) : typeof g; });
+  T ('Vector2 statics', function () { var C = new SFVec2f (1, 2) .getValue () .constructor; return Object .getOwnPropertyNames (C) .sort (); });
+  T ('Vector2 static values', function () { var C = new SFVec2f (1, 2) .getValue () .constructor; return Object .getOwnPropertyNames (C) .sort () .map (function (k) { var v = C [k]; return k + '=' + (typeof v === 'object' && v ? String (v) : typeof v); }); });
+  T ('Vector2 own keys', function () { var g = new SFVec2f (1, 2) .getValue (); return [Object .keys (g), JSON .stringify (g), String (g), g .length, Array .from (g), g [0], g .x]; });
+  T ('Vector2 live', function () { var f = new SFVec2f (1, 2); var g = f .getValue (); g .x = 9; return [f .x, String (f)]; });
+  T ('Vector3 statics', function () { var C = new SFVec3f (1, 2, 3) .getValue () .constructor; return Object .getOwnPropertyNames (C) .sort (); });
+  T ('Vector3 static values', function () { var C = new SFVec3f (1, 2, 3) .getValue () .constructor; return Object .getOwnPropertyNames (C) .sort () .map (function (k) { var v = C [k]; return k + '=' + (typeof v === 'object' && v ? String (v) : typeof v); }); });
+  T ('Vector3 own keys', function () { var g = new SFVec3f (1, 2, 3) .getValue (); return [Object .keys (g), JSON .stringify (g), String (g), g .length, Array .from (g), g [0], g .x]; });
+  T ('Vector3 live', function () { var f = new SFVec3f (1, 2, 3); var g = f .getValue (); g .x = 9; return [f .x, String (f)]; });
+  T ('Vector4 statics', function () { var C = new SFVec4f (1, 2, 3, 4) .getValue () .constructor; return Object .getOwnPropertyNames (C) .sort (); });
+  T ('Vector4 static values', function () { var C = new SFVec4f (1, 2, 3, 4) .getValue () .constructor; return Object .getOwnPropertyNames (C) .sort () .map (function (k) { var v = C [k]; return k + '=' + (typeof v === 'object' && v ? String (v) : typeof v); }); });
+  T ('Vector4 own keys', function () { var g = new SFVec4f (1, 2, 3, 4) .getValue (); return [Object .keys (g), JSON .stringify (g), String (g), g .length, Array .from (g), g [0], g .x]; });
+  T ('Vector4 live', function () { var f = new SFVec4f (1, 2, 3, 4); var g = f .getValue (); g .x = 9; return [f .x, String (f)]; });
+  flush_ ();
+}
+
+  "
+}

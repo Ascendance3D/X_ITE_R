@@ -1,0 +1,31 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "ie err load failed"
+DEF TS TimeSensor { cycleInterval 1 loop TRUE }
+DEF I1 Inline { url "assets/ie-missing-file.wrl" }
+IMPORT I1.LI AS X
+ROUTE TS.fraction_changed TO X.set_fraction
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }
+function names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }
+function lines (s, w) { return s .toVRMLString () .split ('\\n') .map (function (l) { return l .replace (/^\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }
+function ex (s, name) { return s .getImportedNode (name); }
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+
+  if (step == 8) { p ('names', function () { return names (s); }); p ('routes', function () { return s .routes .length; });
+    p ('ex', function () { return s .importedNodes .length ? s .importedNodes [0] .exportedNode .getNodeName () : 'none'; }); }
+
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle

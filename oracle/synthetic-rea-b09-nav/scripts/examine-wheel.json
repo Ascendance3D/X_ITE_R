@@ -1,0 +1,165 @@
+{
+ "size": [
+  512,
+  512
+ ],
+ "t0": 946684800,
+ "dt": 0.03333333333333333,
+ "capture": [
+  6,
+  20,
+  45,
+  70
+ ],
+ "dump": [],
+ "frames": 70,
+ "events": [
+  {
+   "frame": 2,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 3,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 4,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 5,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 6,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 7,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 8,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 9,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 30,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 31,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 32,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 33,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 34,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 35,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 36,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 37,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 38,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 39,
+   "type": "wheel",
+   "deltaY": 100,
+   "x": 256,
+   "y": 256
+  },
+  {
+   "frame": 50,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 100,
+   "y": 400
+  },
+  {
+   "frame": 51,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 100,
+   "y": 400
+  },
+  {
+   "frame": 52,
+   "type": "wheel",
+   "deltaY": -100,
+   "x": 100,
+   "y": 400
+  }
+ ]
+}

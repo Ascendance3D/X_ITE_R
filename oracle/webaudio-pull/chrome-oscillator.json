@@ -1,0 +1,16 @@
+{
+ "chrome": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+ "lateConnect94": {
+  "silentBefore": true,
+  "vsRunning": 1.980904221534729,
+  "vsFrozen": 0.0000012740492820739746
+ },
+ "reconnect188": {
+  "silentGap": true,
+  "vsRunning": 1.9809210300445557,
+  "vsFrozen": 0
+ },
+ "stoppedWhileUnpulled": {
+  "silentAfterConnect": true
+ }
+}

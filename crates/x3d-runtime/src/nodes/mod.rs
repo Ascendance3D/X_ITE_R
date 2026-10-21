@@ -20,6 +20,8 @@ pub mod rigid_body_physics;
 pub mod sound;
 pub mod image_texture_3d;
 pub mod shaders;
+pub mod shader_include;
+pub mod text;
 
 use crate::*;
 
@@ -45,6 +47,8 @@ pub enum State {
     Projector { texture: Option<NodeId> },
     /// ComposedTexture3D.textureNodes.
     Composed3D(Vec<NodeId>),
+    /// IsoSurfaceVolumeData and SegmentedVolumeData capture `voxels` during initialize ().
+    Volume { voxels: Option<NodeId> },
     /// RenderedTexture: checkUpdate, lastUpdate (Date.now () ms), the time of the first
     /// renderTexture (`None` before), and the headlights depth map passes left in the
     /// DependentRenderer's global lights (`leaks`; `display_leaks`: those of this frame's pass).
@@ -160,6 +164,7 @@ impl Runtime {
                 self.nrt_mut(node).state = State::UrlObject(UrlState { start_ms: now_ms, complete_ms: now_ms, ..Default::default() });
             }
             "ComposedCubeMapTexture" => self.nrt_mut(node).state = State::ComposedCube([None; 6]),
+            "Text" => self.text_construct(node),
             "HAnimHumanoid" => self.hanim_humanoid_construct(node),
             n if sound::is_sound_node(n) => self.sound_construct(node, n),
             "RenderedTexture" => self.nrt_mut(node).state = State::Rendered { check_update: false, last_update_ms: -1.0, first_ms: None, leaks: 0, display_leaks: 0 },
@@ -177,7 +182,7 @@ impl Runtime {
             // The SpecularGlossinessMaterial constructor.
             "SpecularGlossinessMaterial" => self.log_warn("SpecularGlossinessMaterial is deprecated, please use PhysicalMaterial instead."),
             "ComposedShader" => self.composed_shader_construct(node),
-            "ImageTexture" | "MovieTexture" | "AudioClip" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" | "ShaderPart" => {
+            "ImageTexture" | "MovieTexture" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" | "ShaderPart" => {
                 self.add_private_field(node, "loadState", access::OUTPUT_ONLY, FieldValue::SFInt32(0));
                 self.nrt_mut(node).state = State::UrlObject(Default::default())
             }
@@ -216,6 +221,11 @@ impl Runtime {
 
         self.initialize_node(node);
         self.nrt_mut(node).initialized = true;
+
+        // X3DGeometryNode.setup: X3DNode.setup (initialize), then `this .rebuild ()`.
+        if self.builtin_name(node) == Some("Text") {
+            self.text_rebuild(node);
+        }
     }
 
     fn initialize_node(&mut self, node: NodeId) {
@@ -229,6 +239,13 @@ impl Runtime {
         };
 
         match name {
+            "IsoSurfaceVolumeData" | "SegmentedVolumeData" => {
+                let voxels = self.pre_value(node, "voxels").and_then(|v| match v {
+                    FieldValue::SFNode(n) => *n,
+                    _ => None,
+                });
+                self.nrt_mut(node).state = State::Volume { voxels };
+            }
             "TimeSensor" => self.time_sensor_initialize(node),
             n if is_interpolator(n) => self.interp_initialize(node, n),
             "BooleanFilter" => self.interest(node, "set_boolean", Cb::BooleanFilterSetBoolean),
@@ -268,7 +285,7 @@ impl Runtime {
                 self.set_texture_2d_size(node, 1, 1);
                 self.inline_initialize(node)
             }
-            "Inline" | "InlineGeometry" | "AudioClip" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" => self.inline_initialize(node),
+            "Inline" | "InlineGeometry" | "ImageCubeMapTexture" | "ImageTextureAtlas" | "ImageTexture3D" => self.inline_initialize(node),
             "FontLibrary" => self.font_library_initialize(node),
             "ShaderPart" => self.shader_part_initialize(node),
             "ComposedShader" => self.composed_shader_initialize(node),
@@ -302,12 +319,22 @@ impl Runtime {
             "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint" => {
                 self.interest(node, "set_bind", Cb::BindableSetBind);
                 self.interest(node, "isBound", Cb::ViewpointIsBound);
+                self.interest(node, "viewAll", Cb::ViewpointSetViewAll);
 
                 if name == "GeoViewpoint" {
                     self.geo_viewpoint_initialize(node);
                 }
             }
-            "NavigationInfo" | "Fog" | "LocalFog" => self.interest(node, "set_bind", Cb::BindableSetBind),
+            // TextureBackground: X3DBindableNode only (its textures are plain child nodes).
+            "NavigationInfo" | "Fog" | "LocalFog" | "TextureBackground" => self.interest(node, "set_bind", Cb::BindableSetBind),
+            "Collision" => {
+                self.interest(node, "enabled", Cb::CollisionSetEnabled);
+                // X3DGroupingNode.initialize
+                if self.pre(node, "addChildren").is_some() && self.pre(node, "removeChildren").is_some() && self.pre(node, "children").is_some() {
+                    self.interest(node, "addChildren", Cb::GroupAddChildren);
+                    self.interest(node, "removeChildren", Cb::GroupRemoveChildren);
+                }
+            }
             "GeoLOD" => self.geo_lod_initialize(node),
             "ViewpointGroup" => self.viewpoint_group_initialize(node),
             "HAnimHumanoid" => self.hanim_humanoid_initialize(node),
@@ -319,6 +346,7 @@ impl Runtime {
             "HAnimPose" => self.hanim_pose_initialize(node),
             "HAnimMotion" => self.hanim_motion_initialize(node),
             "FontStyle" | "ScreenFontStyle" => self.font_style_initialize(node),
+            "Text" => self.text_initialize(node),
             "Contour2D" | "NurbsSet" | "NurbsTrimmedSurface" | "NurbsPositionInterpolator" | "NurbsOrientationInterpolator" | "NurbsSurfaceInterpolator" => self.nurbs_initialize(node, name),
             _ if !GEOMETRY_FIELD_INTERESTS.iter().any(|(t, _)| *t == name) => {
                 // X3DGroupingNode.initialize
@@ -484,8 +512,15 @@ impl Runtime {
             Cb::InlineGeometrySolid => self.inline_geometry_set_solid(node),
             Cb::InlineGeometrySmooth => self.inline_geometry_set_smooth(node),
             Cb::FontLibrarySetFamily => self.font_library_set_family(node),
-            Cb::FontStyleReload => self.tasks.push_back(Task::UrlLoad(node, 0)),
+            // set_url__ → requestImmediateLoad: `this ._loadData = time`, a field event, so family and style changed together
+            // load once.
+            Cb::TextRequestRebuild => self.text_request_rebuild(node),
+            Cb::TextRebuild => self.text_rebuild(node),
+            Cb::TextSetFontStyle => self.text_set_font_style(node),
+            Cb::FontStyleReload => self.font_style_request(node, true),
+            Cb::FontStyleJustify => self.font_style_set_justify(node),
             Cb::SceneLoadCount => self.scene_load_count(node),
+            Cb::WorldLoadCount => self.world_check_load_count(),
             Cb::RouteReconnect(id) => self.reconnect_route(id),
             Cb::ScriptField(_) | Cb::ScriptEventsProcessed | Cb::ScriptPrepareEvents => self.script_interest(node, i.cb, k),
             Cb::LoadSensorSetEnabled | Cb::LoadSensorSetTimeOut | Cb::LoadSensorSetChildren | Cb::LoadSensorLoadState => self.load_sensor_interest(node, i.cb, k),
@@ -566,13 +601,36 @@ impl Runtime {
                 self.bind_counter += 1;
                 self.bind_modifications.insert(node, self.bind_counter);
             }
+            Cb::CollisionSetEnabled => {
+                // Collision.set_enabled__: `set_active__ (false)`.
+                if !self.get_bool(node, "enabled") && self.get_bool(node, "isActive") {
+                    if let Some(k) = self.pre(node, "isActive") {
+                        self.set_value(k, FieldValue::SFBool(false));
+                    }
+                }
+            }
             Cb::GeoLodRootLoadState => self.geo_lod_set_root_load_state(node),
             Cb::GeoLodChildLoadState => self.geo_lod_set_child_load_state(node),
             Cb::Sound(cb) => self.sound_interest_call(node, cb),
             Cb::Particle(cb) => self.particle_interest(node, cb),
             Cb::Physics(cb) => self.physics_interest(node, cb),
             Cb::Shader(cb) => self.shader_interest(node, cb),
+            Cb::ViewpointSetViewAll => {
+                // X3DViewpointNode.set_viewAll__: only a true viewAll of a bound viewpoint, `this ._set_bind = true`.
+                if self.get_bool(node, "viewAll") && self.get_bool(node, "isBound") {
+                    if let Some(k) = self.pre(node, "set_bind") {
+                        self.set_value(k, FieldValue::SFBool(true));
+                    }
+                }
+            }
             Cb::ViewpointIsBound => {
+                // X3DViewpointNode.set_bound__: `getBrowser () .setDescription (this ._description)`.
+                if self.get_bool(node, "isBound") {
+                    if let Some(FieldValue::SFString(d)) = self.pre_value(node, "description") {
+                        self.description = d.clone();
+                    }
+                }
+
                 if let (Some(nav), Some(bound)) = (self.viewpoint_navigation_info(node), self.pre(node, "isBound")) {
                     let value = self.value(bound).clone();
 

@@ -1,0 +1,143 @@
+{
+  "ok": true,
+  "poses": {
+    "11": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        0.19218529937901707,
+        -0.9811474271604362,
+        0.02036017871669675,
+        0.016101204081617727
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.8062823946354192,
+        0.8062823946354192,
+        -0.8062823946354192,
+        -0.8062823946354192
+      ]
+    },
+    "20": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.33685252667848264,
+        -0.9394890888270884,
+        0.062374892881472105,
+        0.005810496639551018
+      ],
+      "centerOfRotation": [
+        3.2775932190531876e-8,
+        -1.1651403342138877e-8,
+        -4.0890751940025893e-7
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        1.3599881200136021,
+        1.3599881200136021,
+        -1.3599881200136021,
+        -1.3599881200136021
+      ]
+    },
+    "45": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.5142433086370884,
+        0.857577484593676,
+        0.010708755310948588,
+        0.04855585801867425
+      ],
+      "centerOfRotation": [
+        3.2775932190531876e-8,
+        -1.1651403342138877e-8,
+        -4.0890751940025893e-7
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        3.8824262619018555,
+        3.8824262619018555,
+        -3.8824262619018555,
+        -3.8824262619018555
+      ]
+    },
+    "80": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.5142433086370884,
+        0.857577484593676,
+        0.010708755310948588,
+        0.04855585801867425
+      ],
+      "centerOfRotation": [
+        3.2775932190531876e-8,
+        -1.1651403342138877e-8,
+        -4.0890751940025893e-7
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        3.8824262619018555,
+        3.8824262619018555,
+        -3.8824262619018555,
+        -3.8824262619018555
+      ]
+    }
+  },
+  "vrml": {
+    "80": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Navigation : 3\n\nNavigationInfo {\n  type \"LOOKAT\"\n}\n\nOrthoViewpoint {\n  description \"ortho\"\n  position 0.5 0.3 12\n  orientation 0 1 0 0.04\n  fieldOfView -5 -5 5 5\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.2 0.2\n      }\n    }\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 3.5 0.5 -2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.7 0.3\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -0.5 -1\n  rotation 0 1 0 0.6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n    }\n    geometry Cone {\n      height 2.4\n      bottomRadius 1.1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.5 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.7 0.2\n      }\n    }\n    geometry Cylinder {\n      height 1.2\n      radius 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0 -2.2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.5 0.5\n      }\n    }\n    geometry Box {\n      size 12 0.2 8\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+MATCH      lib-logger.wrl
+MATCH      lib-nested.wrl
+MATCH      lib-two.wrl
+MATCH      lib-widget.wrl
+MATCH      main-basic.wrl
+MATCH      main-dead.wrl
+MATCH      main-fallback.wrl
+MATCH      main-fragmentless.wrl
+MATCH      main-logger.wrl
+MATCH      main-missing-fragment.wrl
+MATCH      main-nested.wrl
+MATCH      main-zero.wrl
+
+12 files: 12 exact match, 0 mismatch (0 unexplained), 0 expected failure reproduced, 0 oracle timeouts not compared
+logs: 12 of 12 sorted console logs identical (0 differences unexplained)

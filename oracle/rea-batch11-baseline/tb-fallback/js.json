@@ -1,0 +1,60 @@
+{
+  "ok": true,
+  "poses": {
+    "46": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"tb fallback\"\n\nShape {\n  geometry DEF T1 Text {\n    string [\n      \"ab\",\n      \"c\"\n    ]\n    fontStyle FontStyle {\n      style \"ITALIC\"\n    }\n  }\n}\n\nDEF P Script {\n  inputOutput MFString out \"000 log = A[s:\\\"F12 T1.fontStyle=FontStyle { }\\\",s:\\\"F12 T1.origin=0 0 0\\\",s:\\\"F12 T1.textBounds=0 0\\\",s:\\\"F14 T1.lineBounds=[\\\\n  1.12207 1.052734,\\\\n  0.453125 1\\\\n]\\\",s:\\\"F14 T1.textBounds=1.12207 1.769531\\\",s:\\\"F14 T1.origin=0 0.7597656 0\\\",s:\\\"F16 T1.lineBounds=[\\\\n  1.12207 1.052734,\\\\n  0.453125 1\\\\n]\\\",s:\\\"F16 T1.textBounds=1.12207 1.769531\\\",s:\\\"F16 T1.origin=0 0.7597656 0\\\",s:\\\"F19 T1.lineBounds=[\\\\n  1.06 0.965,\\\\n  0.445 1\\\\n]\\\",s:\\\"F19 T1.textBounds=1.06 1.788\\\",s:\\\"F19 T1.origin=0 0.776 0\\\",s:\\\"F20 T1.lineBounds=[\\\\n  1.06 0.965,\\\\n  0.445 1\\\\n]\\\",s:\\\"F20 T1.textBounds=1.06 1.788\\\",s:\\\"F20 T1.origin=0 0.776 0\\\",s:\\\"F23 T1.lineBounds=[\\\\n  0.97 0.864,\\\\n  0.466 1\\\\n]\\\",s:\\\"F23 T1.textBounds=0.97 1.705\\\",s:\\\"F23 T1.origin=0 0.694 0\\\",s:\\\"F24 T1.lineBounds=[\\\\n  0.97 0.864,\\\\n  0.466 1\\\\n]\\\",s:\\\"F24 T1.textBounds=0.97 1.705\\\",s:\\\"F24 T1.origin=0 0.694 0\\\",s:\\\"F27 T1.lineBounds=[\\\\n  1.201172 1.052734,\\\\n  0.4902344 1\\\\n]\\\",s:\\\"F27 T1.textBounds=1.201172 1.769531\\\",s:\\\"F27 T1.origin=0 0.7597656 0\\\",s:\\\"F28 T1.lineBounds=[\\\\n  1.201172 1.052734,\\\\n  0.4902344 1\\\\n]\\\",s:\\\"F28 T1.textBounds=1.201172 1.769531\\\",s:\\\"F28 T1.origin=0 0.7597656 0\\\",s:\\\"F30 T1.lineBounds=[\\\\n  1.201172 1.052734,\\\\n  0.4902344 1\\\\n]\\\",s:\\\"F30 T1.textBounds=1.201172 1.769531\\\",s:\\\"F30 T1.origin=0 0.7597656 0\\\",s:\\\"F32 T1.lineBounds=[\\\\n  1.201172 1.052734,\\\\n  0.4902344 1\\\\n]\\\",s:\\\"F32 T1.textBounds=1.201172 1.769531\\\",s:\\\"F32 T1.origin=0 0.7597656 0\\\",s:\\\"F34 T1.lineBounds=[\\\\n  1.12207 1.052734,\\\\n  0.453125 1\\\\n]\\\",s:\\\"F34 T1.textBounds=1.12207 1.769531\\\",s:\\\"F34 T1.origin=0 0.7597656 0\\\",s:\\\"F36 T1.lineBounds=[\\\\n  1.12207 1.052734,\\\\n  0.453125 1\\\\n]\\\",s:\\\"F36 T1.textBounds=1.12207 1.769531\\\",s:\\\"F36 T1.origin=0 0.7597656 0\\\",s:\\\"F39 T1.lineBounds=[\\\\n  1.098145 1.052734,\\\\n  0.4868164 1\\\\n]\\\",s:\\\"F39 T1.textBounds=1.098145 1.769531\\\",s:\\\"F39 T1.origin=0 0.7597656 0\\\"]\"\n\n  url \"ecmascript:\n\nvar R_ = [];\nfunction strip (s) { return String (s) .replace (/https?:\\\\/\\\\/[^\\\\/]+\\\\//g, ''); }\nfunction show (v, d) {\n  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;\n  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));\n  if (v === null || v === undefined) return String (v);\n  if (typeof v === 'function') return 'fn';\n  if (typeof v === 'boolean') return 'b:' + v;\n  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';\n  var c = v .constructor;\n  return (c && c .name || '?') + ':' + String (v) + raw (v);\n}\n// The components of a field object at full double precision (String () rounds floats).\nfunction raw (v) {\n  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';\n  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }\n}\nfunction errText (e) {\n  var n = e && e .name;\n  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';\n  return 'ERR ' + n + ': ' + strip (e && e .message);\n}\nfunction T (n, f) {\n  var r;\n  try { r = show (f ()); } catch (e) { r = errText (e); }\n  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);\n}\nfunction flush_ () { out = new MFString (... R_); }\n\nvar SELF;\n\nvar F_ = 0, LOG = [];\nfunction watch (name, n) {\n  [\\\"origin\\\", \\\"textBounds\\\", \\\"lineBounds\\\", \\\"string\\\", \\\"length\\\", \\\"maxExtent\\\", \\\"fontStyle\\\"] .forEach (function (f) { n .addFieldCallback ('w', f, function (v) { LOG .push ('F' + F_ + ' ' + name + '.' + f + '=' + String (v) .replace (/\\\\\\\\s+/g, ' ')); }); });\n}\n\nfunction initialize () {\n  SELF = this;\n\n  flush_ ();\n}\nfunction prepareEvents () {\n  ++ F_;\n  if (F_ === 10) { watch ('T1', Browser .currentScene .getNamedNode ('T1')); }\n  if (F_ === 12) { var t = Browser .currentScene .getNamedNode ('T1'); var f = Browser .currentScene .createNode ('FontStyle'); f .family = new MFString ('NOSUCH'); t .fontStyle = f; }\n  if (F_ === 16) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .family = new MFString ('NOSUCH', 'SANS'); }\n  if (F_ === 20) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .family = new MFString ('NOSUCH2', 'TYPEWRITER'); t .fontStyle .style = 'BOLD'; }\n  if (F_ === 24) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .family = new MFString (); }\n  if (F_ === 28) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .family = new MFString ('sans'); }\n  if (F_ === 32) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .family = new MFString ('NOSUCH', 'ALSO_MISSING'); t .fontStyle .style = 'NOSUCHSTYLE'; }\n  if (F_ === 36) { var t = Browser .currentScene .getNamedNode ('T1'); t .fontStyle .style = 'ITALIC'; t .fontStyle .family = new MFString ('SERIF'); }\n  if (F_ === 42) { T ('log', function () { return LOG; }); flush_ (); }\n}\n\n  \"\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Couldn't find font family 'ALSO_MISSING' with style 'NOSUCHSTYLE'.",
+    "warn: Couldn't find font family 'NOSUCH' with style 'NOSUCHSTYLE'.",
+    "warn: Couldn't find font family 'NOSUCH' with style 'PLAIN'.",
+    "warn: Couldn't find font family 'NOSUCH' with style 'PLAIN'.",
+    "warn: Couldn't find font family 'NOSUCH2' with style 'BOLD'.",
+    "warn: Couldn't find font family 'sans' with style 'BOLD'."
+  ],
+  "anchors": [],
+  "loadFrames": 4,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

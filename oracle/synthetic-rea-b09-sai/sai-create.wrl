@@ -1,0 +1,93 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+# Synthetic REA oracle world: Browser.createX3DFromString / createX3DFromURL / createVrmlFromString results (new scene, profile,
+# encoding, rejections). Every probe is wrapped so a missing member records ERR instead of stopping the script. Authored.
+DEF HOLD Group { }
+DEF OUT Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+    // Results are listed in the order the probes were started, so the text does not depend on the order in which
+    // concurrent promises settle inside one frame; the frame on which a result appears still does.
+    var slots = [], vals = { };
+    function show () { hist = slots .map (function (n) { return n + '=' + (n in vals ? vals [n] : '...'); }) .join (' '); }
+    function rec (name, v) { vals [name] = v; show (); }
+    function p (name, f) {
+      var v;
+      slots .push (name);
+      try { v = f (); } catch (e) { v = 'ERR:' + e .message; }
+      if (v && typeof v .then === 'function')
+        v .then (function (r) { rec (name, 'ok:' + r); }, function (e) { rec (name, 'REJ:' + (e && e .message .replace (/https?:\/\/[^\/]+\//g, ''))); });
+      else
+        rec (name, v);
+    }
+    function desc (s) {
+      return [s .isScene, s .getTypeName (), s .encoding, s .profile && s .profile .name, s .specificationVersion, s .rootNodes .length,
+              s === Browser .currentScene, s .worldURL === Browser .currentScene .worldURL, s .components .length].join ('/');
+    }
+    var made = null;
+    function cycle (v) {
+      step = step + 1;
+      if (step == 1) {
+        p ('retType', function () { var r = Browser .createX3DFromString ('Group { }'); return typeof r + ':' + (r instanceof Promise); });
+        p ('x3dClassic', function () { return Browser .createX3DFromString ('#X3D V3.3 utf8\nPROFILE Interchange\nCOMPONENT Scripting:1\nMETA \"a\" \"b\"\nDEF A Transform { }\nGroup { }').then (function (s) { made = s; return desc (s); }); });
+        p ('vrml97', function () { return Browser .createX3DFromString ('#VRML V2.0 utf8\nDEF G Group { }\nShape { }') .then (desc); });
+        p ('xml', function () { return Browser .createX3DFromString ('<X3D profile=\"Immersive\" version=\"4.0\"><head><meta name=\"m\" content=\"c\"/></head><Scene><Group DEF=\"X\"/></Scene></X3D>') .then (desc); });
+        p ('json', function () { return Browser .createX3DFromString ('{\"X3D\":{\"@profile\":\"Core\",\"@version\":\"4.0\",\"Scene\":{\"-children\":[{\"Group\":{}}]}}}') .then (desc); });
+        p ('bare', function () { return Browser .createX3DFromString ('Group { } Transform { }') .then (desc); });
+        p ('empty', function () { return Browser .createX3DFromString ('') .then (desc); });
+        p ('garbage', function () { return Browser .createX3DFromString ('this is not x3d') .then (desc); });
+        p ('badNode', function () { return Browser .createX3DFromString ('#X3D V3.3 utf8\nPROFILE Interchange\nNoSuchNode { }') .then (desc); });
+        p ('number', function () { return Browser .createX3DFromString (42) .then (desc); });
+        p ('vrmlFS', function () { var n = Browser .createVrmlFromString ('Group { } Transform { }'); return n .length + ':' + n .constructor .name; });
+        p ('vrmlFSbad', function () { return Browser .createVrmlFromString ('NoSuchNode { }') .length; });
+        p ('vrmlFSempty', function () { return Browser .createVrmlFromString ('') .length; });
+      }
+      if (step == 4) {
+        p ('madeNodes', function () { return made .rootNodes [0] .getNodeName () + ':' + made .rootNodes [1] .getNodeTypeName () + ':' + made .getNamedNode ('A') .getNodeTypeName (); });
+        p ('madeMeta', function () { return made .getMetaData ('a'); });
+        p ('madeStr', function () { return made .toVRMLString () .split ('\n') .length; });
+        p ('sameScene', function () { return Browser .currentScene === Browser .currentScene; });
+        p ('moveToCurrent', function () { var s = Browser .currentScene; s .addRootNode (made .rootNodes [1]); return s .rootNodes .length; });
+        p ('liveField', function () { made .getNamedNode ('A') .translation = new SFVec3f (1, 2, 3); return made .getNamedNode ('A') .translation; });
+        p ('addRootMade', function () { var g = made .createNode ('Group'); made .addRootNode (g); return made .rootNodes .length; });
+        p ('madeRemove', function () { made .removeRootNode (made .getNamedNode ('A')); return made .rootNodes .length; });
+        p ('madeNamed', function () { made .addNamedNode ('N1', made .createNode ('Transform')); return made .namedNodes .length; });
+        p ('madeProfile', function () { return made .profile .name + ':' + made .profile .components .length; });
+      }
+      if (step == 6) {
+        p ('url_ok', function () { return Browser .createX3DFromURL (new MFString ('assets/simple.wrl')) .then (desc); });
+        p ('url_x3d', function () { return Browser .createX3DFromURL (new MFString ('assets/simple.x3d')) .then (desc); });
+        p ('url_second', function () { return Browser .createX3DFromURL (new MFString ('assets/nonexistent.wrl', 'assets/simple.wrl')) .then (desc); });
+        p ('url_missing', function () { return Browser .createX3DFromURL (new MFString ('assets/nonexistent.wrl')) .then (desc); });
+        p ('url_empty', function () { return Browser .createX3DFromURL (new MFString ()) .then (desc); });
+        p ('url_badtype', function () { return Browser .createX3DFromURL ('assets/simple.wrl') .then (desc); });
+        p ('url_hash', function () { return Browser .createX3DFromURL (new MFString ('assets/simple.wrl#VP')) .then (desc); });
+        p ('url_data', function () { return Browser .createX3DFromURL (new MFString ('data:model/vrml,%23VRML%20V2.0%20utf8%0AGroup%20%7B%7D')) .then (desc); });
+        p ('url_data64', function () { return Browser .createX3DFromURL (new MFString ('data:model/x3d+vrml;base64,I1gzRCBWMy4zIHV0ZjgKUFJPRklMRSBJbnRlcmNoYW5nZQpHcm91cCB7IH0=')) .then (desc); });
+        p ('url_dataxml', function () { return Browser .createX3DFromURL (new MFString ('data:model/x3d+xml,%3CX3D%20profile%3D%22Core%22%20version%3D%224.0%22%3E%3CScene%3E%3CGroup%2F%3E%3C%2FScene%3E%3C%2FX3D%3E')) .then (desc); });
+        p ('url_js', function () { return Browser .createX3DFromURL (new MFString ('assets/simple.json')) .then (desc); });
+        p ('url_gz', function () { return Browser .createX3DFromURL (new MFString ('assets/simple.wrz')) .then (desc); });
+        p ('url_obj', function () { return Browser .createX3DFromURL (new MFString ('assets/tri.obj')) .then (desc); });
+        p ('url_stl', function () { return Browser .createX3DFromURL (new MFString ('assets/tri.stl')) .then (desc); });
+        p ('url_svg', function () { return Browser .createX3DFromURL (new MFString ('assets/tri.svg')) .then (desc); });
+        p ('url_ply', function () { return Browser .createX3DFromURL (new MFString ('assets/tri.ply')) .then (desc); });
+        p ('url_gltf', function () { return Browser .createX3DFromURL (new MFString ('assets/tri.gltf')) .then (desc); });
+      }
+      if (step == 9) {
+        p ('nodeFromUrl', function () { return Browser .createVrmlFromURL (new MFString ('assets/simple.wrl'), Browser .currentScene .getNamedNode ('HOLD'), 'addChildren'); });
+        p ('nodeFromUrlBadEvent', function () { return Browser .createVrmlFromURL (new MFString ('assets/simple.wrl'), Browser .currentScene .getNamedNode ('HOLD'), 'nope'); });
+        p ('nodeFromUrlNotInput', function () { return Browser .createVrmlFromURL (new MFString ('assets/simple.wrl'), Browser .currentScene .getNamedNode ('HOLD'), 'children_changed'); });
+        p ('nodeFromUrlWrongType', function () { return Browser .createVrmlFromURL (new MFString ('assets/simple.wrl'), Browser .currentScene .getNamedNode ('HOLD'), 'bboxSize'); });
+        p ('nodeFromUrlBadUrl', function () { return Browser .createVrmlFromURL ('assets/simple.wrl', Browser .currentScene .getNamedNode ('HOLD'), 'addChildren'); });
+      }
+      if (step == 12) {
+        p ('holdKids', function () { return Browser .currentScene .getNamedNode ('HOLD') .children .length; });
+      }
+    }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO OUT.cycle

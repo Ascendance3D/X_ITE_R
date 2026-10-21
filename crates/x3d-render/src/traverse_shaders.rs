@@ -150,6 +150,9 @@ impl Builder<'_> {
         let mut user = program.new_buffer();
         let mut user_textures: Vec<Option<Rc<TextureImage>>> = vec![None; program.samplers.len()];
         let node = sg.rt.scene.node(shader);
+        let gl = sg.rt.composed_gl(shader).unwrap_or_default();
+        // The texture locations that hold a texture node now, in field order (the Set's members).
+        let mut present: Vec<String> = vec![];
 
         for f in node.user_fields.iter().filter(|f| f.access != access::OUTPUT_ONLY) {
             match &f.value {
@@ -158,6 +161,10 @@ impl Builder<'_> {
                         let tex = self.shader_texture(sg, *t);
 
                         if let Some(k) = program.samplers.iter().position(|s| s.name == f.name && s.index.is_none()) {
+                            if tex.is_some() {
+                                present.push(f.name.clone());
+                            }
+
                             user_textures[k] = tex;
                         }
                     }
@@ -168,6 +175,10 @@ impl Builder<'_> {
                         let tex = self.shader_texture(sg, *t);
 
                         if let Some(k) = program.samplers.iter().position(|s| s.name == f.name && s.index == Some(i as u32)) {
+                            if tex.is_some() {
+                                present.push(format!("{}[{i}]", f.name));
+                            }
+
                             user_textures[k] = tex;
                         }
                     }
@@ -176,10 +187,23 @@ impl Builder<'_> {
             }
         }
 
+        // set_field__: a field that holds a texture node joins the Set (at the end), one that does
+        // not leaves it. The traversal sees the fields once per frame.
+        {
+            let mut g = gl.borrow_mut();
+            g.textures.retain(|k| present.contains(k));
+
+            for k in present {
+                if !g.textures.contains(&k) {
+                    g.textures.push(k);
+                }
+            }
+        }
+
         // Appearance.getAlphaCutoff () (x3d_AlphaCutoff).
         program.set(&mut user, "x3d_AlphaCutoff", &[sg.f64(a, "alphaCutoff", 0.5) as f32]);
 
-        Some(Rc::new(CustomDraw { program, user, user_textures }))
+        Some(Rc::new(CustomDraw { program, user, user_textures, clip_planes: sg.rt.composed_clip_planes(shader).unwrap_or_default(), gl }))
     }
 
     /// X3DCast (X3DTextureNode, field): the texture a field names; one that has not loaded binds the

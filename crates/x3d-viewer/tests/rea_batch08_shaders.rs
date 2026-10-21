@@ -1,7 +1,10 @@
 //! REA batch 08 shaders lane (ComposedShader, ShaderPart) stepped cases against pinned X_ITE (oracle/rea-batch08-shaders-baseline, made by
-//! `oracle/tools/rea_b08_shaders.py case`): run-time field changes, Group removal and Script-created
-//! nodes of DispersionMaterialExtension, RetroreflectionMaterialExtension, ImageTexture3D and
-//! InstancedShape (worlds: oracle/synthetic-rea-b08-shaders/*-runtime.wrl).
+//! `oracle/tools/rea_b08_shaders.py case`): run-time changes of shader user fields, parts, textures,
+//! `activate` and events, Group removal and Script-created ComposedShader / ShaderPart nodes
+//! (worlds: oracle/synthetic-rea-b08-shaders/*-runtime.wrl with their .json event scripts).
+//!
+//! The baseline directory is written only by X_ITE runs on the owner's machine. Until it exists this
+//! test fails with "baseline missing": the comparison has not run.
 //!
 //! Each case of oracle/rea-batch08-shaders-baseline/cases.txt (`name world script msaa [text_tol]`) runs
 //! `x3d-drive` on the world and its event script and compares the result with the oracle's
@@ -177,9 +180,10 @@ fn compare_case(root: &Path, name: &str, world: &str, script: &str, msaa: u32, t
 }
 
 #[test]
-fn rea_batch08_mat_cases_match_x_ite() {
+fn rea_batch08_shader_cases_match_x_ite() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
-    let cases = std::fs::read_to_string(root.join("oracle/rea-batch08-shaders-baseline/cases.txt")).unwrap();
+    let cases = std::fs::read_to_string(root.join("oracle/rea-batch08-shaders-baseline/cases.txt"))
+        .expect("baseline missing: oracle/rea-batch08-shaders-baseline/cases.txt (make it with oracle/tools/rea_b08_shaders.py case on a machine with X_ITE and a GPU); comparison NOT RUN");
     let only = std::env::var("REA_ONLY").ok();
     // One GPU at a time: the cases run in order in this test.
     let gpu = x3d_render::gpu::Gpu::new().is_ok();

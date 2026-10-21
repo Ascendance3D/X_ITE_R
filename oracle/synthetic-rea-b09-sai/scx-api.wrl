@@ -1,0 +1,112 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scx api"
+DEF V1 Viewpoint { description "first" }
+DEF N1 NavigationInfo { type "EXAMINE" }
+DEF P Script {
+  inputOutput MFString out [ ]
+
+  url "ecmascript:
+
+var R_ = [];
+function strip (s) { return String (s) .replace (/https?:\\/\\/[^\\/]+\\//g, ''); }
+function show (v, d) {
+  if (typeof v === 'number') return Object.is (v, -0) ? 'n:-0' : 'n:' + v;
+  if (typeof v === 'string') return 's:' + JSON.stringify (strip (v));
+  if (v === null || v === undefined) return String (v);
+  if (typeof v === 'function') return 'fn';
+  if (typeof v === 'boolean') return 'b:' + v;
+  if (Array.isArray (v)) return 'A[' + v .map (function (x) { return show (x); }) .join (',') + ']';
+  var c = v .constructor;
+  return (c && c .name || '?') + ':' + String (v) + raw (v);
+}
+// The components of a field object at full double precision (String () rounds floats).
+function raw (v) {
+  if (typeof v .getTypeName !== 'function' || !v [Symbol .iterator] || v .getTypeName () .indexOf ('MF') === 0 && !v .length) return '';
+  try { var a = Array .from (v, function (x) { return typeof x === 'object' && x && x [Symbol .iterator] ? '(' + Array .from (x, function (y) { return typeof y === 'object' && y && y [Symbol .iterator] ? '(' + Array .from (y) .join (' ') + ')' : y; }) .join (' ') + ')' : x; }); return ' raw=' + a .join (' '); } catch (e) { return ' raw=ERR'; }
+}
+function errText (e) {
+  var n = e && e .name;
+  if (n === 'TypeError' || n === 'ReferenceError' || n === 'SyntaxError') return 'ERR ' + n + ' (engine wording)';
+  return 'ERR ' + n + ': ' + strip (e && e .message);
+}
+function T (n, f) {
+  var r;
+  try { r = show (f ()); } catch (e) { r = errText (e); }
+  R_ .push ((R_ .length < 10 ? '00' : R_ .length < 100 ? '0' : '') + R_ .length + ' ' + n + ' = ' + r);
+}
+function flush_ () { out = new MFString (... R_); }
+
+var SELF;
+function chain (o) { var r = []; var seen = 0; while (o && o !== Object .prototype && o !== Function .prototype && seen ++ < 8) { r .push (Object .getOwnPropertyNames (o) .concat (Object .getOwnPropertySymbols (o) .map (String)) .sort () .join (',')); o = Object .getPrototypeOf (o); } return r; }
+function desc (o) { if (o === null || typeof o !== 'object' && typeof o !== 'function') return show (o); var n = [], p = o, k = 0; while (p && k ++ < 10) { n .push (p .constructor && Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : '-'); p = Object .getPrototypeOf (p); } return [Object .prototype .toString .call (o), n .join ('>'), Object .keys (o) .sort () .join (',')]; }
+var SCX_NAMES = ['addComponent', 'addExportedNode', 'addExternProtoDeclaration', 'addImportedNode', 'addMetaData', 'addNamedNode', 'addProtoDeclaration', 'addRootNode', 'addRoute', 'baseURL', 'bbox_changed', 'components', 'createNode', 'createProto', 'deleteRoute', 'encoding', 'exportedNodes', 'externprotos', 'fromUnit', 'getBaseURL', 'getComponents', 'getEncoding', 'getExportedNode', 'getExportedNodes', 'getExternProtoDeclaration', 'getExternProtoDeclarations', 'getField', 'getFieldDefinitions', 'getImportedNode', 'getImportedNodes', 'getLocalNode', 'getMetaData', 'getMetaDatas', 'getNamedNode', 'getNamedNodes', 'getNodeOrImportedNode', 'getProfile', 'getProtoDeclaration', 'getProtoDeclarations', 'getRootNodes', 'getRoute', 'getRoutes', 'getSpecificationVersion', 'getTypeName', 'getUniqueExportName', 'getUniqueExternProtoName', 'getUniqueImportName', 'getUniqueName', 'getUniqueProtoName', 'getUnit', 'getUnits', 'getWorldInfos', 'getWorldURL', 'hasComponent', 'importedNodes', 'isScene', 'metadata_changed', 'namedNodes', 'profile', 'profile_changed', 'protos', 'removeComponent', 'removeExportedNode', 'removeExternProtoDeclaration', 'removeImportedNode', 'removeMetaData', 'removeNamedNode', 'removeProtoDeclaration', 'removeRootNode', 'renameImportedNode', 'rootNodes', 'routes', 'sceneGraph_changed', 'setMetaData', 'setProfile', 'setRootNodes', 'specificationVersion', 'toJSONString', 'toUnit', 'toVRMLString', 'toXMLString', 'units', 'updateComponent', 'updateExportedNode', 'updateExternProtoDeclaration', 'updateImportedNode', 'updateNamedNode', 'updateProtoDeclaration', 'updateUnit', 'worldURL', 'getType', 'getName', 'getId', 'getUserData', 'setUserData', 'removeUserData', 'addInterest', 'removeInterest', 'getExecutionContext', 'getBrowser', 'isLive', 'getLive', 'toString', 'toVRMLStream', 'toXMLStream', 'toJSONStream', 'dispose', 'getFields', 'getUserDefinedFields', 'getPredefinedFields', 'addEvent', 'isInitialized', 'setup', 'initialize', 'getMainScene', 'getLocalScene', 'getOuterNode', 'isRootContext', 'getComponentName', 'getContainerField', 'addChildObjects', 'getUnitInfo'];
+function owner (o, n) { var p = o, k = 0; while (p && k ++ < 10) { var d = Object .getOwnPropertyDescriptor (p, n); if (d) return (p === o ? 'OWN' : p .constructor && Object .prototype .hasOwnProperty .call (p, 'constructor') ? p .constructor .name : '-') + ':' + ('value' in d ? (typeof d .value === 'function' ? 'm' : 'v') : (d .get ? 'g' : '') + (d .set ? 's' : '')) + (d .enumerable ? '+' : ''); p = Object .getPrototypeOf (p); } return 'none'; }
+function owners (o) { return SCX_NAMES .map (function (n) { return n + '=' + owner (o, n); }); }
+var MADE = null, STR = null;
+var MADE_ERR = '';
+Browser .createScene (Browser .getProfile ('Core'), Browser .getComponent ('Grouping', 1)) .then (function (s) { MADE = s; }, function (e) { MADE_ERR = String (e && e .message); });
+Browser .createX3DFromString ('#X3D V3.3 utf8\\nPROFILE Core\\nDEF T Transform { }') .then (function (s) { STR = s; });
+
+function initialize () {
+  SELF = this;
+  T ('world desc', function () { return desc (Browser .currentScene); });
+  T ('world owners', function () { return owners (Browser .currentScene); });
+  T ('first desc', function () { return desc (Browser .getExecutionContext ()); });
+  T ('first owners', function () { return owners (Browser .getExecutionContext ()); });
+  flush_ ();
+}
+var F_ = 0;
+function prepareEvents () {
+  if (++ F_ !== 5) return;
+  T ('later world desc', function () { return desc (Browser .currentScene); });
+  T ('later made error', function () { return MADE_ERR; });
+  T ('later made desc', function () { return desc (MADE); });
+  T ('later made owners', function () { return owners (MADE); });
+  T ('later string desc', function () { return desc (STR); });
+  T ('later string owners', function () { return owners (STR); });
+  T ('later made === string', function () { return [MADE === STR, MADE .constructor === STR .constructor, Object .getPrototypeOf (MADE) === Object .getPrototypeOf (Browser .currentScene)]; });
+  T ('later typeof globals', function () { return [typeof X3DScene, typeof X3DExecutionContext, typeof X3DBaseNode]; });
+  T ('later string desc after DEF', function () { STR .addNamedNode ('Q', STR .createNode ('Group')); return desc (STR); });
+  T ('later made desc after comp', function () { MADE .removeComponent ('Nope'); return desc (MADE); });
+  T ('Browser .currentScene names', function () { var o = Browser .currentScene; return [o .getTypeName (), String (o), o .toString (), Object .prototype .toString .call (o), o .getName (), typeof o .getId ()]; });
+  T ('Browser .currentScene getType', function () { return Array .from (Browser .currentScene .getType ()); });
+  T ('Browser .currentScene getExecutionContext', function () { var c = Browser .currentScene .getExecutionContext (); return c === null ? 'null' : [c === Browser .currentScene, c .getTypeName ()]; });
+  T ('Browser .currentScene getLocalScene', function () { return Browser .currentScene .getLocalScene () === Browser .currentScene; });
+  T ('Browser .currentScene getOuterNode', function () { return String (Browser .currentScene .getOuterNode ()); });
+  T ('Browser .currentScene getField', function () { try { return Browser .currentScene .getField ('rootNodes'); } catch (e) { return e .message; } });
+  T ('Browser .currentScene getFieldDefinitions', function () { return Browser .currentScene .getFieldDefinitions () .length; });
+  T ('Browser .currentScene fields', function () { return [Browser .currentScene .getFields () .length, Browser .currentScene .getUserDefinedFields () .length, Browser .currentScene .getPredefinedFields () .length]; });
+  T ('Browser .currentScene toVRMLString', function () { return Browser .currentScene .toVRMLString () .split ('\\n') .length; });
+  T ('Browser .currentScene instanceof', function () { var o = Browser .currentScene; return [o instanceof X3DScene, o instanceof X3DExecutionContext, o instanceof X3DBaseNode, o instanceof X3DObject]; });
+  T ('Browser .currentScene isScene', function () { return [Browser .currentScene .isScene, Object .prototype .hasOwnProperty .call (Browser .currentScene, 'isScene')]; });
+  T ('STR names', function () { var o = STR; return [o .getTypeName (), String (o), o .toString (), Object .prototype .toString .call (o), o .getName (), typeof o .getId ()]; });
+  T ('STR getType', function () { return Array .from (STR .getType ()); });
+  T ('STR getExecutionContext', function () { var c = STR .getExecutionContext (); return c === null ? 'null' : [c === Browser .currentScene, c .getTypeName ()]; });
+  T ('STR getLocalScene', function () { return STR .getLocalScene () === STR; });
+  T ('STR getOuterNode', function () { return String (STR .getOuterNode ()); });
+  T ('STR getField', function () { try { return STR .getField ('rootNodes'); } catch (e) { return e .message; } });
+  T ('STR getFieldDefinitions', function () { return STR .getFieldDefinitions () .length; });
+  T ('STR fields', function () { return [STR .getFields () .length, STR .getUserDefinedFields () .length, STR .getPredefinedFields () .length]; });
+  T ('STR toVRMLString', function () { return STR .toVRMLString () .split ('\\n') .length; });
+  T ('STR instanceof', function () { var o = STR; return [o instanceof X3DScene, o instanceof X3DExecutionContext, o instanceof X3DBaseNode, o instanceof X3DObject]; });
+  T ('STR isScene', function () { return [STR .isScene, Object .prototype .hasOwnProperty .call (STR, 'isScene')]; });
+  T ('MADE names', function () { var o = MADE; return [o .getTypeName (), String (o), o .toString (), Object .prototype .toString .call (o), o .getName (), typeof o .getId ()]; });
+  T ('MADE getType', function () { return Array .from (MADE .getType ()); });
+  T ('MADE getExecutionContext', function () { var c = MADE .getExecutionContext (); return c === null ? 'null' : [c === Browser .currentScene, c .getTypeName ()]; });
+  T ('MADE getLocalScene', function () { return MADE .getLocalScene () === MADE; });
+  T ('MADE getOuterNode', function () { return String (MADE .getOuterNode ()); });
+  T ('MADE getField', function () { try { return MADE .getField ('rootNodes'); } catch (e) { return e .message; } });
+  T ('MADE getFieldDefinitions', function () { return MADE .getFieldDefinitions () .length; });
+  T ('MADE fields', function () { return [MADE .getFields () .length, MADE .getUserDefinedFields () .length, MADE .getPredefinedFields () .length]; });
+  T ('MADE toVRMLString', function () { return MADE .toVRMLString () .split ('\\n') .length; });
+  T ('MADE instanceof', function () { var o = MADE; return [o instanceof X3DScene, o instanceof X3DExecutionContext, o instanceof X3DBaseNode, o instanceof X3DObject]; });
+  T ('MADE isScene', function () { return [MADE .isScene, Object .prototype .hasOwnProperty .call (MADE, 'isScene')]; });
+  T ('classes', function () { return [X3DScene .length, X3DScene .typeName, X3DExecutionContext .length, X3DExecutionContext .typeName, X3DScene .name, Object .getPrototypeOf (X3DScene .prototype) === X3DExecutionContext .prototype]; });
+  T ('method lengths', function () { var p = X3DScene .prototype, q = X3DExecutionContext .prototype; return ['addComponent', 'setProfile', 'fromUnit', 'updateUnit', 'addMetaData', 'addRootNode', 'toVRMLStream'] .map (function (n) { return n + p [n] .length; }) .concat (['addRoute', 'deleteRoute', 'getRoute', 'addImportedNode', 'updateImportedNode', 'createNode', 'getUniqueName'] .map (function (n) { return n + q [n] .length; })); });
+  flush_ ();
+}
+
+  "
+}

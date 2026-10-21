@@ -71,8 +71,11 @@ fn run(dir: &str, baseline: &str, html: bool) -> (usize, Vec<String>) {
         // the message only (the existing log model of the XML parser, Scene::warnings), without the
         // level, without the `Error: ` the catch blocks of the loaders add, and once per distinct
         // message. The levels and X_ITE's duplicate logging of one failure are therefore not
-        // compared; the message text and the set of distinct messages are.
+        // compared; the message text and the set of distinct messages are. (Scene::error entries carry a level
+        // mark, removed here; the level of the XML unknown-node error is compared by the rea_batch09_sai case
+        // parse-xml-unknown. This corpus still has other DEVELOPMENT double logs and an `Invalid XML.` level gap.)
         let norm = |l: &str| -> String {
+            let l = x3d_scene::console_level(l).1;
             let l = l.strip_prefix("warn: ").or_else(|| l.strip_prefix("error: ")).unwrap_or(l);
             let l = l.strip_prefix("Error: ").unwrap_or(l);
 

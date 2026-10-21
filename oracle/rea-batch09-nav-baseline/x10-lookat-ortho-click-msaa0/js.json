@@ -1,0 +1,199 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.005546652789855982,
+        0.9999846105321902,
+        0.00011550515607733438,
+        0.040015215616506096
+      ],
+      "centerOfRotation": [
+        -1.3624710248905103e-9,
+        -1.1920928966180355e-8,
+        -5.6688953975481127e-8
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.03428353839080109,
+        0.03428353839080109,
+        -0.03428353839080109,
+        -0.03428353839080109
+      ]
+    },
+    "6": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.034580120745627274,
+        0.9994016693480582,
+        0.000720106773440285,
+        0.0401152454985018
+      ],
+      "centerOfRotation": [
+        -1.3624710248905103e-9,
+        -1.1920928966180355e-8,
+        -5.6688953975481127e-8
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0.21427196168330254,
+        0.21427196168330254,
+        -0.21427196168330254,
+        -0.21427196168330254
+      ]
+    },
+    "12": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.1637750297739831,
+        0.9864918185728202,
+        0.0034105001867450906,
+        0.04099526953709291
+      ],
+      "centerOfRotation": [
+        -1.3624710248905103e-9,
+        -1.1920928966180355e-8,
+        -5.6688953975481127e-8
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        1.0370753504708696,
+        1.0370753504708696,
+        -1.0370753504708696,
+        -1.0370753504708696
+      ]
+    },
+    "20": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.4050949254886359,
+        0.9142357126697093,
+        0.008435817846805575,
+        0.04506467368962593
+      ],
+      "centerOfRotation": [
+        -1.3624710248905103e-9,
+        -1.1920928966180355e-8,
+        -5.6688953975481127e-8
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        2.8198162816092083,
+        2.8198162816092083,
+        -2.8198162816092083,
+        -2.8198162816092083
+      ]
+    },
+    "40": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.5142432831117894,
+        0.857577499892466,
+        0.010708755879974656,
+        0.048555861887295
+      ],
+      "centerOfRotation": [
+        -1.3624710248905103e-9,
+        -1.1920928966180355e-8,
+        -5.6688953975481127e-8
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        3.856891632080078,
+        3.856891632080078,
+        -3.856891632080078,
+        -3.856891632080078
+      ]
+    },
+    "50": {
+      "position": [
+        0.5,
+        0.3,
+        12
+      ],
+      "orientation": [
+        -0.5142432831117894,
+        0.857577499892466,
+        0.010708755879974656,
+        0.048555861887295
+      ],
+      "centerOfRotation": [
+        -1.3624710248905103e-9,
+        -1.1920928966180355e-8,
+        -5.6688953975481127e-8
+      ],
+      "viewpoint": "",
+      "description": "ortho",
+      "viewer": "LOOKAT",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        3.856891632080078,
+        3.856891632080078,
+        -3.856891632080078,
+        -3.856891632080078
+      ]
+    }
+  },
+  "vrml": {
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Navigation : 3\n\nNavigationInfo {\n  type \"LOOKAT\"\n}\n\nOrthoViewpoint {\n  description \"ortho\"\n  position 0.5 0.3 12\n  orientation 0 1 0 0.04\n  fieldOfView -5 -5 5 5\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.2 0.2\n      }\n    }\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 3.5 0.5 -2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.7 0.3\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -0.5 -1\n  rotation 0 1 0 0.6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n    }\n    geometry Cone {\n      height 2.4\n      bottomRadius 1.1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.5 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.7 0.2\n      }\n    }\n    geometry Cylinder {\n      height 1.2\n      radius 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0 -2.2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.5 0.5\n      }\n    }\n    geometry Box {\n      size 12 0.2 8\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

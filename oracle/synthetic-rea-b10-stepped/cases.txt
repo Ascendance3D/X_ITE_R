@@ -1,0 +1,9 @@
+sg-runtime oracle/synthetic-rea-b10-stepped/sg-runtime.wrl oracle/synthetic-rea-b10-stepped/sg-runtime.json
+sg-bbox oracle/synthetic-rea-b10-stepped/sg-bbox.wrl oracle/synthetic-rea-b10-stepped/sg-bbox.json
+sg-viewpoint oracle/synthetic-rea-b10-stepped/sg-viewpoint.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint.json
+sg-viewpoint-degenerate oracle/synthetic-rea-b10-stepped/sg-viewpoint-degenerate.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint-degenerate.json
+sg-resize oracle/synthetic-rea-b10-stepped/sg-resize.wrl oracle/synthetic-rea-b10-stepped/sg-resize.json
+sg-camera oracle/synthetic-rea-b10-stepped/sg-camera.wrl oracle/synthetic-rea-b10-stepped/sg-camera.json
+sfs-plain oracle/synthetic-rea-b10-stepped/sfs-plain.wrl oracle/synthetic-rea-b10-stepped/sfs-plain.json
+sfs-runtime oracle/synthetic-rea-b10-stepped/sfs-runtime.wrl oracle/synthetic-rea-b10-stepped/sfs-runtime.json
+text-runtime oracle/synthetic-rea-b10-stepped/text-runtime.wrl oracle/synthetic-rea-b10-stepped/text-runtime.json

@@ -1,0 +1,4 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+PROTO P [ inputOutput SFVec3f t 1 2 3 ] { Transform { translation IS t } }
+Group { }

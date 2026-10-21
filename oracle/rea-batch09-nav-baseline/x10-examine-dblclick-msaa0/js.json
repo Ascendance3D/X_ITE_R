@@ -1,0 +1,163 @@
+{
+  "ok": true,
+  "poses": {
+    "3": {
+      "position": [
+        0.522629716281635,
+        0.3014222245640234,
+        11.93283566179943
+      ],
+      "orientation": [
+        0.0014104963879813441,
+        0.9999990040174574,
+        0.000049642830140866255,
+        0.039019048898597655
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0.6414356255976063,
+        0.3088888971673136,
+        11.580223186494125
+      ],
+      "orientation": [
+        0.010155433339360878,
+        0.9999483683781605,
+        0.0003574234266521569,
+        0.033870565572837165
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        1.1845478047309743,
+        0.3430222231255637,
+        9.968282072156555
+      ],
+      "orientation": [
+        0.1591690287952125,
+        0.987235452088421,
+        0.0056020002089306265,
+        0.010458592094072827
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        2.842171871900847,
+        0.44720000586509523,
+        5.048502165452533
+      ],
+      "orientation": [
+        0.09214776808404564,
+        -0.9957400618142674,
+        0.003243167467733153,
+        0.06179565097183473
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        3.0458388328552246,
+        0.4599999964237213,
+        4.444024562835693
+      ],
+      "orientation": [
+        0.08762586503444678,
+        -0.9961486819805139,
+        0.0030840177762362676,
+        0.07063334497086136
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        3.0458388328552246,
+        0.4599999964237213,
+        4.444024562835693
+      ],
+      "orientation": [
+        0.08762586503444678,
+        -0.9961486819805139,
+        0.0030840177762362676,
+        0.07063334497086136
+      ],
+      "centerOfRotation": [
+        3.500000009099124,
+        0.5000000029802323,
+        -2.0000000515814556
+      ],
+      "viewpoint": "",
+      "description": "main",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nNavigationInfo {\n  type \"EXAMINE\"\n}\n\nViewpoint {\n  description \"main\"\n  position 0.5 0.3 12\n  orientation 0 1 0 0.04\n}\n\nTransform {\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.2 0.2\n      }\n    }\n    geometry Box { }\n  }\n}\n\nTransform {\n  translation 3.5 0.5 -2\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.7 0.3\n      }\n    }\n    geometry Sphere {\n      radius 1.2\n    }\n  }\n}\n\nTransform {\n  translation -3.5 -0.5 -1\n  rotation 0 1 0 0.6\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.2 0.3 0.8\n      }\n    }\n    geometry Cone {\n      height 2.4\n      bottomRadius 1.1\n    }\n  }\n}\n\nTransform {\n  translation 0 -1.5 -3\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.8 0.7 0.2\n      }\n    }\n    geometry Cylinder {\n      height 1.2\n      radius 0.8\n    }\n  }\n}\n\nTransform {\n  translation 0 -2.2 0\n  children Shape {\n    appearance Appearance {\n      material Material {\n        diffuseColor 0.5 0.5 0.5\n      }\n    }\n    geometry Box {\n      size 12 0.2 8\n    }\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,87 @@
+PASS center-of-mass
+PASS collidable-offset
+PASS collider-bounce
+PASS collider-friction
+PASS collision-space
+PASS damping
+PASS fall-masses
+PASS fall-sphere
+PASS fields-roundtrip
+PASS finite-rotation
+PASS forces-torques
+PASS gravity-flags
+PASS inertia-ignored
+PASS joint-ball-offaxis
+PASS joint-ball
+PASS joint-chain
+PASS joint-hinge-double-rate
+PASS joint-hinge-double
+PASS joint-hinge-single-all
+PASS joint-hinge-single
+PASS joint-motor
+PASS joint-slider-gravity
+PASS joint-slider
+PASS joint-universal
+PASS prefer-accuracy
+PASS reload-inline
+PASS rt-body
+PASS rt-collection
+PASS rt-collider
+PASS rt-joint
+PASS rt-sensor
+PASS sensor-partial
+PASS shape-box-box
+PASS shape-box
+PASS shape-cone-open
+PASS shape-cone
+PASS shape-cylinder-open
+PASS shape-cylinder
+PASS shape-elevation-origin
+PASS shape-elevation
+PASS shape-ifs-dynamic
+PASS shape-ifs-floor
+PASS shape-sphere
+PASS shape-thickness
+PASS sleep-rest
+PASS sleep-wake
+PASS velocities
+max abs error per quantity over all cases (tolerance default 0):
+  BallJoint.body1AnchorPoint                   0.000000e+00
+  BallJoint.body2AnchorPoint                   0.000000e+00
+  CollidableOffset.rotation                    0.000000e+00
+  CollidableOffset.translation                 0.000000e+00
+  CollidableShape.rotation                     0.000000e+00
+  CollidableShape.translation                  0.000000e+00
+  CollisionSensor.contacts.contactNormal       0.000000e+00
+  CollisionSensor.contacts.depth               0.000000e+00
+  CollisionSensor.contacts.position            0.000000e+00
+  DoubleAxisHingeJoint.body1AnchorPoint        0.000000e+00
+  DoubleAxisHingeJoint.body1Axis               0.000000e+00
+  DoubleAxisHingeJoint.body2AnchorPoint        0.000000e+00
+  DoubleAxisHingeJoint.body2Axis               0.000000e+00
+  DoubleAxisHingeJoint.hinge1Angle             0.000000e+00
+  DoubleAxisHingeJoint.hinge1AngleRate         0.000000e+00
+  DoubleAxisHingeJoint.hinge2Angle             0.000000e+00
+  DoubleAxisHingeJoint.hinge2AngleRate         0.000000e+00
+  MotorJoint.motor1Angle                       0.000000e+00
+  MotorJoint.motor1AngleRate                   0.000000e+00
+  MotorJoint.motor2Angle                       0.000000e+00
+  MotorJoint.motor2AngleRate                   0.000000e+00
+  MotorJoint.motor3Angle                       0.000000e+00
+  MotorJoint.motor3AngleRate                   0.000000e+00
+  RigidBody.angularVelocity                    0.000000e+00
+  RigidBody.linearVelocity                     0.000000e+00
+  RigidBody.orientation                        0.000000e+00
+  RigidBody.position                           0.000000e+00
+  SingleAxisHingeJoint.angle                   0.000000e+00
+  SingleAxisHingeJoint.angleRate               0.000000e+00
+  SingleAxisHingeJoint.body1AnchorPoint        0.000000e+00
+  SingleAxisHingeJoint.body2AnchorPoint        0.000000e+00
+  SliderJoint.separation                       0.000000e+00
+  SliderJoint.separationRate                   0.000000e+00
+  UniversalJoint.body1AnchorPoint              0.000000e+00
+  UniversalJoint.body1Axis                     0.000000e+00
+  UniversalJoint.body2AnchorPoint              0.000000e+00
+  UniversalJoint.body2Axis                     0.000000e+00
+  dt                                           0.000000e+00
+suite rea-b06 (RigidBodyPhysics): 47 pass, 0 fail, of 47 worlds

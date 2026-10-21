@@ -1,0 +1,112 @@
+{
+ "ok": true,
+ "poses": {
+  "40": {
+   "position": [
+    0,
+    0,
+    10
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Sound : 2\n\nAudioDestination {\n  children DEF O BufferAudioSource {\n    url [\n      \"media/bad.mid\",\n      \"media/bad2.mid\"\n    ]\n    startTime 946684800.048\n  }\n}\n\nDEF P Script {\n  inputOnly SFBool  a\n  inputOnly SFInt32 nc\n  inputOnly SFTime  bd\n\n  url \"ecmascript:\nfunction a (v, t) { print ('active ' + v + ' ' + t); }\nfunction nc (v, t) { print ('channels ' + v + ' ' + t); }\nfunction bd (v, t) { print ('duration ' + v + ' ' + t); }\n\"\n}\n\nDEF L LoadSensor {\n  children USE O\n}\n\nDEF PL Script {\n  inputOnly SFBool  a\n  inputOnly SFBool  l\n  inputOnly SFFloat p\n  inputOnly SFTime  t\n\n  url \"ecmascript:\nfunction a (v, t) { print ('L isActive ' + v + ' ' + t); }\nfunction l (v, t) { print ('L isLoaded ' + v + ' ' + t); }\nfunction p (v, t) { print ('L progress ' + v + ' ' + t); }\nfunction t (v, t) { print ('L loadTime ' + v + ' ' + t); }\n\"\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime  set_time\n  outputOnly     SFTime  start\n  initializeOnly SFInt32 n 49\n\n  url \"javascript:\nfunction set_time (value) { if (++ n === 12) start = value; }\n\"\n}\n\nROUTE O.isActive TO P.a\nROUTE O.numberOfChannels_changed TO P.nc\nROUTE O.bufferDuration TO P.bd\nROUTE L.isActive TO PL.a\nROUTE L.isLoaded TO PL.l\nROUTE L.progress TO PL.p\nROUTE L.loadTime TO PL.t\nROUTE T.time TO S.set_time\nROUTE S.start TO O.set_startTime\n"
+ },
+ "prints": [],
+ "log": [
+  "error: BufferAudioSource: Couldn't load any of the 2 URLs, tried in this order:",
+  "warn: BufferAudioSource: Couldn't load URL 'http://oracle/synthetic-rea-b05/media/bad.mid', trying URL 2 of 2. EncodingError: Unable to decode audio data"
+ ],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "audioSuspend": [
+  768,
+  1536,
+  2304,
+  3072,
+  3840,
+  4608,
+  5376,
+  6144,
+  6912,
+  7680,
+  8448,
+  9216,
+  9984,
+  10752,
+  11520,
+  12288,
+  13056,
+  13824,
+  14592,
+  15360,
+  16128,
+  16896,
+  17664,
+  18432,
+  19200,
+  19968,
+  20736,
+  21504,
+  22272,
+  23040,
+  23808,
+  24576,
+  25344,
+  26112,
+  26880,
+  27648,
+  28416,
+  29184,
+  29952,
+  30720
+ ],
+ "console": [
+  "log: L isActive true 946684800",
+  "log: L progress 0 946684800",
+  "log: L isActive false 946684800",
+  "log: L isLoaded false 946684800",
+  "log: L progress 0 946684800",
+  "log: active true 946684800.048"
+ ],
+ "audio": {
+  "sampleRate": 48000,
+  "length": 31232,
+  "channels": 2,
+  "file": "js.audio.f32"
+ }
+}

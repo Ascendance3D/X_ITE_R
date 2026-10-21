@@ -101,6 +101,15 @@ impl Runtime {
     /// X3DUrlObject.setLoadState for the nodes that fetch: updates the state, sends the
     /// `loadState` event of an Inline and keeps the loadCount of its scene.
     pub(crate) fn set_load_state(&mut self, node: NodeId, state: LoadState) {
+        self.set_load_state_node(node, state);
+
+        // X3DUrlObject.setLoadState: every url object (a Script, a texture) is a loading object of its scene while it loads.
+        if !self.is_scene_loader(node) && self.nrt(node).is_some_and(|n| matches!(n.state, nodes::State::UrlObject(_) | nodes::State::Script(_))) {
+            self.update_load_count(self.scene.scene_root(self.scene.node(node).ctx));
+        }
+    }
+
+    fn set_load_state_node(&mut self, node: NodeId, state: LoadState) {
         match &mut self.nrt_mut(node).state {
             nodes::State::UrlObject(s) => s.load_state = state,
             nodes::State::Script(s) => s.load_state = state,
@@ -119,9 +128,9 @@ impl Runtime {
             self.set_value(k, FieldValue::SFInt32(value));
         }
 
-        // BufferAudioSource: X3DUrlObject.setLoadState restarts the auto refresh timer after
+        // BufferAudioSource, AudioClip: X3DUrlObject.setLoadState restarts the auto refresh timer after
         // COMPLETE and after FAILED.
-        if self.builtin_name(node) == Some("BufferAudioSource") {
+        if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
             if matches!(state, LoadState::Complete | LoadState::Failed) {
                 self.inline_auto_refresh_complete(node);
             }
@@ -158,6 +167,7 @@ impl Runtime {
             .iter()
             .find(|p| p.ctx == root)
             .map(|p| p.scene_node)
+            .or_else(|| self.pending_browser.iter().find(|p| p.ctx == root).map(|p| p.scene_node))
             .or_else(|| self.pending_externs.iter().find(|p| p.ctx == root).map(|p| p.scene_node));
 
         let Some(scene_node) = scene_node else {
@@ -166,7 +176,7 @@ impl Runtime {
 
         let inlines = (0..self.scene.nodes.len() as NodeId)
             .filter(|&n| {
-                self.is_scene_loader(n)
+                self.nrt(n).is_some_and(|r| matches!(r.state, nodes::State::UrlObject(_) | nodes::State::Script(_)))
                     && self.url_load_state(n) == LoadState::InProgress
                     && self.scene.scene_root(self.scene.node(n).ctx) == root
             })
@@ -247,7 +257,7 @@ impl Runtime {
 
         // `if (this .isInitialized ()) this ._loadData = time; else this .loadData ()`: the field
         // event is the buffer that makes several requests before it is processed one load.
-        if matches!(self.builtin_name(node), Some("Inline" | "InlineGeometry" | "FontLibrary" | "Script" | "BufferAudioSource")) && self.nrt(node).is_some_and(|n| n.initialized) {
+        if matches!(self.builtin_name(node), Some("Inline" | "InlineGeometry" | "FontLibrary" | "Script" | "BufferAudioSource" | "AudioClip")) && self.nrt(node).is_some_and(|n| n.initialized) {
             if let Some(k) = self.private_field(node, "loadData") {
                 let t = self.now;
                 self.set_value(k, FieldValue::SFTime(t));
@@ -274,8 +284,8 @@ impl Runtime {
     fn url_start_load(&mut self, node: NodeId) {
         let generation = if self.is_scene_loader(node) { self.inline_abort(node) } else { 0 };
 
-        // BufferAudioSource.loadData: `this .setMediaElement (null)`, then the FileLoader.
-        if self.builtin_name(node) == Some("BufferAudioSource") {
+        // BufferAudioSource.loadData, AudioClip.loadData: `this .setMediaElement (null)`, then the FileLoader.
+        if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
             self.buffer_load_start(node);
         }
 
@@ -339,6 +349,7 @@ impl Runtime {
             }
             Some("Script") => self.script_unload_data(node),
             Some("BufferAudioSource") => self.buffer_unload_data(node),
+            Some("AudioClip") => self.audio_clip_unload_data(node),
             // ImageTexture.unloadData: clearTexture (an image still decoding is dropped).
             Some("ImageTexture") => {
                 self.decoded_images.retain(|(n, ..)| *n != node);
@@ -442,6 +453,10 @@ impl Runtime {
                 return Err(e.message);
             }
             Err(x3d_parse::LoadError::Parse(e)) => {
+                for w in x3d_parse::take_error_warnings() {
+                    self.log_warn(w);
+                }
+
                 // VRMLParser (DEVELOPMENT) prints the original error before it is rethrown.
                 self.log_error(format!("Error: {}", e.message));
                 return Err(format!("Error: \n{e}"));
@@ -573,6 +588,10 @@ impl Runtime {
 
     /// FileLoader.set_loadCount__ (interest on the scene's loadCount).
     pub(crate) fn scene_load_count(&mut self, scene_node: NodeId) {
+        if self.browser_scene_loaded(scene_node) {
+            return;
+        }
+
         let inline = self.pending_scenes.iter().position(|p| p.scene_node == scene_node);
         let ext = self.pending_externs.iter().position(|p| p.scene_node == scene_node);
 
@@ -622,6 +641,9 @@ impl Runtime {
             self.extern_attach(p);
         }
 
+        self.browser_finish_frame();
+        self.font_style_continuations();
+
         self.run_tasks();
 
         // The end of a frame: nothing is being processed, and the scenes disposed during it are over.
@@ -667,6 +689,12 @@ impl Runtime {
                 self.inline_live.insert(ctx, true);
                 self.refresh_live();
                 self.set_load_state(node, LoadState::Complete);
+
+                // The scene joins the graph: parentsChanged, `sceneGraph_changed` of the Inline's context.
+                let home = self.scene.node(node).ctx;
+
+                self.ctx_event(home, ctx_events::CtxField::SceneGraph, 1);
+                self.ctx_event(home, ctx_events::CtxField::BBox, 1);
             }
             // unloadData passes the browser's default scene, which is truthy: the same branch
             // with an empty scene (the default scene is shared, nothing of it is observable).
@@ -688,7 +716,7 @@ impl Runtime {
 
         let root = self.scene.scene_root(ctx);
 
-        if root == ROOT {
+        if root == self.scene.world {
             return self.live && self.scene_live;
         }
 
@@ -738,17 +766,19 @@ impl Runtime {
                     self.transform_sensor_set_enabled(node);
                 } else if matches!(self.builtin_name(node), Some("LinePickSensor" | "PointPickSensor" | "PrimitivePickSensor" | "VolumePickSensor")) {
                     self.pick_sensor_set_live(node);
-                } else if matches!(self.builtin_name(node), Some("AudioDestination" | "StreamAudioDestination" | "SpatialSound")) {
+                } else if matches!(self.builtin_name(node), Some("AudioDestination" | "StreamAudioDestination" | "SpatialSound" | "Sound")) {
                     self.sound_set_live(node);
                 } else if self.builtin_name(node) == Some("ParticleSystem") {
                     self.particle_system_set_live(node);
                 } else if self.physics_watches_live(node) {
                     self.physics_set_live(node);
+                } else if self.builtin_name(node) == Some("Text") {
+                    self.text_set_live(node);
                 } else {
                     self.time_set_live(node, now);
 
-                    // BufferAudioSource.set_live__: X3DUrlObject.set_live__ too.
-                    if self.builtin_name(node) == Some("BufferAudioSource") {
+                    // BufferAudioSource.set_live__, AudioClip.set_live__: X3DUrlObject.set_live__ too.
+                    if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
                         self.buffer_url_set_live(node, now);
                     }
                 }
@@ -856,7 +886,7 @@ impl Runtime {
     /// (ISO/IEC 14772-1 4.12.3) and the world stops. Events the Scripts queued are left for the
     /// caller's next event processing.
     pub fn unload_world(&mut self) {
-        self.dispose_scene(ROOT);
+        self.dispose_scene(self.scene.world);
 
         // The cached EXTERNPROTO scenes belong to the world (see `extern_scene`) and went with it.
         self.extern_cache.clear();
@@ -963,7 +993,7 @@ impl Runtime {
     pub(crate) fn inline_next_timer(&self, now: f64) -> Option<(f64, NodeId)> {
         (0..self.scene.nodes.len() as NodeId)
             .filter_map(|n| match self.nrt(n).map(|r| &r.state) {
-                Some(nodes::State::UrlObject(s)) if matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry" | "BufferAudioSource")) => s.timer.map(|due| (due, n)),
+                Some(nodes::State::UrlObject(s)) if matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry" | "BufferAudioSource" | "AudioClip")) => s.timer.map(|due| (due, n)),
                 _ => None,
             })
             .filter(|(due, _)| *due <= now * 1000.0)
@@ -1096,6 +1126,46 @@ impl Runtime {
         }
     }
 
+    /// X3DExecutionContext.getRoute / addRoute with an imported end: `$.try (() => node .getField (name))` resolves the field of
+    /// the exported node when its Inline is loaded, then `X3DRoute.checkFields` runs on the ends that resolved.
+    pub fn check_imported_route_ends(&self, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(), String> {
+        if !self.scene.is_imported(source) && !self.scene.is_imported(destination) {
+            return Ok(());
+        }
+
+        let end = |n: NodeId, name: &str| self.route_end(n, name).ok();
+        let (src, dst) = (end(source, source_field), end(destination, destination_field));
+
+        if let (Some(s), Some(d)) = (src, dst) {
+            let (sf, df) = (self.scene.field(s.0, s.1), self.scene.field(d.0, d.1));
+
+            if sf.ty() != df.ty() {
+                return Err(format!(
+                    "Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
+                    sf.name, df.name
+                ));
+            }
+        }
+
+        if let Some(s) = src {
+            let sf = self.scene.field(s.0, s.1);
+
+            if !x3d_fields::access::is_output(sf.access) {
+                return Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name));
+            }
+        }
+
+        if let Some(d) = dst {
+            let df = self.scene.field(d.0, d.1);
+
+            if !x3d_fields::access::is_input(df.access) {
+                return Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name));
+            }
+        }
+
+        Ok(())
+    }
+
     /// X3DRoute.reconnect: disconnect, then connect to the fields of the exported nodes.
     pub(crate) fn reconnect_route(&mut self, id: usize) {
         let Some((ctx, i)) = self.scene.find_route(id) else {
@@ -1128,18 +1198,18 @@ impl Runtime {
 
                 if sf.ty() != df.ty() {
                     Err(format!(
-                        "Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
+                        "Error: Bad ROUTE specification: source field type must match destination field type of fields named \"{}\" and \"{}\".",
                         sf.name, df.name
                     ))
                 } else if !x3d_fields::access::is_output(sf.access) {
-                    Err(format!("Bad ROUTE specification: source field \"{}\" must be an output.", sf.name))
+                    Err(format!("Error: Bad ROUTE specification: source field \"{}\" must be an output.", sf.name))
                 } else if !x3d_fields::access::is_input(df.access) {
-                    Err(format!("Bad ROUTE specification: destination field \"{}\" must be an input.", df.name))
+                    Err(format!("Error: Bad ROUTE specification: destination field \"{}\" must be an input.", df.name))
                 } else {
                     Ok(())
                 }
             }
-            _ => Err("Couldn't connect route.".to_string()),
+            _ => Err("AggregateError: Couldn't connect route.".to_string()),
         };
 
         match result {
@@ -1163,7 +1233,7 @@ impl Runtime {
                 let all_complete = self.route_inlines(&r).into_iter().all(|n| self.url_load_state(n) == LoadState::Complete);
 
                 if all_complete {
-                    self.log_warn(format!("Error: {e}"));
+                    self.log_warn(e);
                 }
             }
         }

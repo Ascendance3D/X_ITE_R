@@ -1,0 +1,423 @@
+{
+  "ok": true,
+  "poses": {
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "65": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "73": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "81": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "89": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "97": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "105": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "113": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "123": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "124": {
+      "position": [
+        0,
+        0,
+        6
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "V2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          pointSize 16\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"\"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          horizontal FALSE\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "65": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string [\n          \"Run\",\n          \"time\"\n        ]\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "73": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "81": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          family [\n            \"NoSuchFont\",\n            \"SANS\"\n          ]\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "89": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          family [\n            \"NoSuchFont\",\n            \"SANS\"\n          ]\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "97": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n          pointSize 32\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          family [\n            \"NoSuchFont\",\n            \"SANS\"\n          ]\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "105": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          family [\n            \"NoSuchFont\",\n            \"SANS\"\n          ]\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "113": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          family [\n            \"NoSuchFont\",\n            \"SANS\"\n          ]\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "123": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          family [\n            \"NoSuchFont\",\n            \"SANS\"\n          ]\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "124": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nCOMPONENT Layout : 2\n\nDEF V1 Viewpoint { }\n\nDEF V2 Viewpoint {\n  position 0 0 6\n  orientation 0 0 1 0.2\n}\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nTransform {\n  translation -2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TA Text {\n        string \"Abc\"\n        fontStyle DEF FA ScreenFontStyle {\n          family \"TYPEWRITER\"\n          style \"BOLDITALIC\"\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 2 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TB Text {\n        string [\n          \"Ab\",\n          \"Cd\"\n        ]\n        fontStyle DEF FB ScreenFontStyle {\n          pointSize 14\n          spacing 2\n          horizontal FALSE\n          justify [\n            \"END\",\n            \"END\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation -2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TC Text {\n        string \"Abcdefg\"\n        length 100\n        maxExtent 60\n        fontStyle DEF FC ScreenFontStyle {\n          pointSize 14\n        }\n      }\n    }\n  }\n}\n\nTransform {\n  translation 2.5 -1 0\n  children ScreenGroup {\n    children Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0 0 0\n          emissiveColor 1 1 1\n        }\n      }\n      geometry DEF TD Text {\n        string \"Changed\"\n        fontStyle DEF FD ScreenFontStyle {\n          family [\n            \"NoSuchFont\",\n            \"SANS\"\n          ]\n          pointSize 18\n          justify [\n            \"MIDDLE\",\n            \"MIDDLE\"\n          ]\n        }\n      }\n    }\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn \"\n  initializeOnly SFNode   ta USE TA\n  initializeOnly SFNode   fa USE FA\n  initializeOnly SFNode   tb USE TB\n  initializeOnly SFNode   fb USE FB\n  initializeOnly SFNode   tc USE TC\n  initializeOnly SFNode   fc USE FC\n  initializeOnly SFNode   td USE TD\n  initializeOnly SFNode   fd USE FD\n  initializeOnly SFNode   v2 USE V2\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') fa .pointSize = 32;\n   if (k == 'b') fa .family = new MFString ('TYPEWRITER');\n   if (k == 'c') fa .style = 'BOLDITALIC';\n   if (k == 'd') fb .horizontal = false;\n   if (k == 'e') fb .justify = new MFString ('END', 'END');\n   if (k == 'f') fb .spacing = 2;\n   if (k == 'g') tc .length = new MFFloat (100);\n   if (k == 'h') tc .maxExtent = 60;\n   if (k == 'i') td .string = new MFString ('Changed');\n   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');\n   if (k == 'k') v2 .set_bind = true;\n   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);\n   if (k == 'm') fa .pointSize = 12;\n   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Couldn't find font family 'NoSuchFont' with style 'PLAIN'."
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

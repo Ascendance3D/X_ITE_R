@@ -1,0 +1,5 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+DEF I Inline { url "ie-leaf.wrl" }
+IMPORT I.LI AS A
+EXPORT A

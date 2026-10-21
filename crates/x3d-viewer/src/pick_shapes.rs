@@ -324,7 +324,7 @@ impl PickShapes {
     pub fn manifold(&self, sensor: NodeId, a: &Placed, b: &Placed) -> Option<bullet::Manifold> {
         let (ba, bb) = (a.body(), b.body());
 
-        if !bullet::aabb_overlap(&ba.aabb(), &bb.aabb()) {
+        if !bullet::aabb_overlap(&ba.aabb(), &bb.aabb()) || !a.trees_overlap(b) {
             return None;
         }
 
@@ -381,6 +381,24 @@ impl Placed {
             Kind::Mesh(m) => Body::Mesh(m, self.t),
             Kind::Height(h) => Body::Height(h, self.t),
         }
+    }
+
+    /// btCompoundCompoundCollisionAlgorithm's dbvt walks: the outer compounds' leaves (the inner
+    /// compounds at their frames, in the identity bodies' space), then the inner compounds' leaves
+    /// (the shape's AABB in the inner space, `b`'s transformed by `a.frame^-1 * b.frame` with
+    /// btTransformAabb). A non-uniformly scaled cylinder's AABB keeps its scaled z extent while
+    /// its support function uses the x radius, so this walk can drop a pair whose shapes overlap.
+    fn trees_overlap(&self, other: &Placed) -> bool {
+        let (oa, ob) = (self.outer_aabb(), other.outer_aabb());
+
+        if !bullet::aabb_overlap(&oa, &ob) {
+            return false;
+        }
+
+        let xform = self.frame.inverse_times(&other.frame);
+        let xform = Transform { basis: xform.basis.map(bullet::fv), origin: bullet::fv(xform.origin) };
+        let (lo, hi) = xform.transform_aabb(other.inner.0, other.inner.1, 0.0);
+        bullet::aabb_overlap(&self.inner, &(bullet::fv(lo), bullet::fv(hi)))
     }
 
     /// btCompoundShape.getAabb of the inner compound at the outer child transform (what

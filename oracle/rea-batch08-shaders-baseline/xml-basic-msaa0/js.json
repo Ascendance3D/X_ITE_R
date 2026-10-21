@@ -1,0 +1,124 @@
+{
+  "ok": true,
+  "poses": {
+    "10": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 1 0 0\n    }\n    shaders ComposedShader {\n      inputOutput SFColor tint 0.9 0.5 0.2\n\n      language \"GLSL\"\n      parts [\n        ShaderPart {\n          url \"\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n        }\n        ShaderPart {\n          type \"FRAGMENT\"\n          url \"\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nuniform vec3 tint;\n#define SCALE 0.7\nvoid main() { gl_FragColor = vec4 (tint * (0.3 + SCALE * abs (vN.z)), 1.0); }\n\"\n        }\n      ]\n    }\n  }\n  geometry Sphere {\n    radius 1.2\n  }\n}\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 1 0 0\n    }\n    shaders ComposedShader {\n      inputOutput SFColor tint 0.9 0.5 0.2\n\n      language \"GLSL\"\n      parts [\n        ShaderPart {\n          url \"\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n        }\n        ShaderPart {\n          type \"FRAGMENT\"\n          url \"\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nuniform vec3 tint;\n#define SCALE 0.7\nvoid main() { gl_FragColor = vec4 (tint * (0.3 + SCALE * abs (vN.z)), 1.0); }\n\"\n        }\n      ]\n    }\n  }\n  geometry Sphere {\n    radius 1.2\n  }\n}\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nViewpoint {\n  position 0 0 4\n}\n\nNavigationInfo {\n  headlight FALSE\n}\n\nShape {\n  appearance Appearance {\n    material Material {\n      diffuseColor 1 0 0\n    }\n    shaders ComposedShader {\n      inputOutput SFColor tint 0.9 0.5 0.2\n\n      language \"GLSL\"\n      parts [\n        ShaderPart {\n          url \"\nattribute vec4 x3d_Vertex;\nattribute vec3 x3d_Normal;\nattribute vec4 x3d_TexCoord0;\nattribute vec4 x3d_Color;\nuniform mat4 x3d_ProjectionMatrix;\nuniform mat4 x3d_ModelViewMatrix;\nuniform mat3 x3d_NormalMatrix;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nvoid main()\n{\n   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;\n   vP = p.xyz;\n   vN = normalize (x3d_NormalMatrix * x3d_Normal);\n   vT = x3d_TexCoord0.st;\n   vC = x3d_Color;\n   gl_Position = x3d_ProjectionMatrix * p;\n}\n\"\n        }\n        ShaderPart {\n          type \"FRAGMENT\"\n          url \"\nprecision mediump float;\nvarying vec3 vN;\nvarying vec3 vP;\nvarying vec2 vT;\nvarying vec4 vC;\nuniform vec3 tint;\n#define SCALE 0.7\nvoid main() { gl_FragColor = vec4 (tint * (0.3 + SCALE * abs (vN.z)), 1.0); }\n\"\n        }\n      ]\n    }\n  }\n  geometry Sphere {\n    radius 1.2\n  }\n}\n"
+  },
+  "prints": [],
+  "log": [
+    "error: ShaderPart: Couldn't load URL 'http://oracle/synthetic-rea-b08-shaders/attribute vec4 x3d_Vertex;attribute vec3 x3d_Normal;attribute vec4 x3d_TexCoord0;attribute vec4 x3d_Color;uniform mat4 x3d_ProjectionMatrix;uniform mat4 x3d_ModelViewMatrix;uniform mat3 x3d_NormalMatrix;varying vec3 vN;varying vec3 vP;varying vec2 vT;varying vec4 vC;void main(){   vec4 p = x3d_ModelViewMatrix * x3d_Vertex;   vP = p.xyz;   vN = normalize (x3d_NormalMatrix * x3d_Normal);   vT = x3d_TexCoord0.st;   vC = x3d_Color;   gl_Position = x3d_ProjectionMatrix * p;}'. Error: Not Found",
+    "error: ShaderPart: Couldn't load URL 'http://oracle/synthetic-rea-b08-shaders/precision mediump float;varying vec3 vN;varying vec3 vP;varying vec2 vT;varying vec4 vC;uniform vec3 tint;#define SCALE 0.7void main() { gl_FragColor = vec4 (tint * (0.3 + SCALE * abs (vN.z)), 1.0); }'. Error: Not Found"
+  ],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

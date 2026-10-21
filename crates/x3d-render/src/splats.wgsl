@@ -23,6 +23,12 @@ struct SplatUniforms {
     // x: number of clip planes, y: textureWidth, z: spherical harmonics width, w: spherical harmonics layers
     counts: vec4<u32>,
     clip_planes: array<vec4<f32>, 6>,
+    // The splats' fog (renderContext .fogNode, else the layer's): color and type, visibilityStart / visibilityRange, matrix columns.
+    fog_color_type: vec4<f32>,
+    fog_range: vec4<f32>,
+    fog_m0: vec4<f32>,
+    fog_m1: vec4<f32>,
+    fog_m2: vec4<f32>,
 }
 
 @group(1) @binding(0) var<uniform> u: SplatUniforms;
@@ -317,8 +323,17 @@ fn fs_main(in: VOut) -> @location(0) vec4<f32> {
 
     var final_color = vec4<f32>(in.color.rgb, alpha);
 
-    if (u32(frame.fog_color_type.w) != 0u) {
-        final_color = vec4<f32>(mix(frame.fog_color_type.xyz, final_color.rgb, get_fog_interpolant(in.vertex)), final_color.a);
+    if (u32(u.fog_color_type.w) != 0u) {
+        let visibility_start = u.fog_range.x;
+        let visibility_range = u.fog_range.y - visibility_start;
+        let d_v = max(length(mat3x3<f32>(u.fog_m0.xyz, u.fog_m1.xyz, u.fog_m2.xyz) * in.vertex) - visibility_start, 0.0);
+        var interpolant = exp(-d_v / max(visibility_range - d_v, 0.001));
+
+        if (u32(u.fog_color_type.w) == 1u) {
+            interpolant = max(visibility_range - d_v, 0.0) / visibility_range;
+        }
+
+        final_color = vec4<f32>(mix(u.fog_color_type.xyz, final_color.rgb, interpolant), final_color.a);
     }
 
     final_color = vec4<f32>(tone_map(final_color.rgb, u.mode.z == 1u), final_color.a);

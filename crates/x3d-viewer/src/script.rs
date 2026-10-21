@@ -4,12 +4,27 @@
 //! identical input. Event types: mousedown, mouseup, mousemove, wheel (deltaY), dblclick, key (a press:
 //! keydown + keyup of a Playwright key name), keydown, keyup, mods (shift, ctrl, alt), viewer (name). Pointer coordinates are pixels with
 //! the origin at the bottom left of the canvas.
+//!
+//! X_ITE reads the pointer from MouseEvent pageX / pageY (getPointerFromEvent), and Chrome gives a mouse event whole CSS
+//! pixels, cut toward zero (`page .mouse .move (132.593, 181.836)` fires mousemove with pageX 132, pageY 181; only
+//! PointerEvent keeps the fraction). A fractional event position therefore reaches X_ITE as (floor (x), H - floor (H - y))
+//! with y measured from the bottom, and the viewer gets the same.
 
 use crate::viewer::{UiEvent, Viewer3d};
 use serde_json::Value;
 
 pub fn apply(v: &mut Viewer3d, e: &Value) {
-    let f = |k: &str| e.get(k).and_then(Value::as_f64).unwrap_or(0.0);
+    let height = v.height as f64;
+    let f = |k: &str| {
+        let value = e.get(k).and_then(Value::as_f64).unwrap_or(0.0);
+
+        // The whole page pixel of a Chrome mouse event (the canvas is at the page origin).
+        match k {
+            "x" => value.floor(),
+            "y" => height - (height - value).floor(),
+            _ => value,
+        }
+    };
     let b = |k: &str| e.get(k).and_then(Value::as_bool).unwrap_or(false);
 
     match e["type"].as_str().unwrap_or("") {
@@ -25,6 +40,8 @@ pub fn apply(v: &mut Viewer3d, e: &Value) {
             v.input(UiEvent::MouseUp { button: f("button") as u8, x: f("x"), y: f("y") })
         }
         "mousemove" => v.input(UiEvent::MouseMove { x: f("x"), y: f("y") }),
+        // REA batch 10: the canvas changes size (the oracle changes the canvas element's CSS size; reshape () follows).
+        "resize" => v.resize(f("width") as u32, f("height") as u32),
         "wheel" => {
             v.input(UiEvent::MouseMove { x: f("x"), y: f("y") });
             v.input(UiEvent::Wheel { delta_y: f("deltaY"), x: f("x"), y: f("y") })

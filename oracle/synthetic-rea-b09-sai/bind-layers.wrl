@@ -1,0 +1,85 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+COMPONENT Layering:1
+META "title" "bind layers"
+DEF LS LayerSet { activeLayer 1 order [ 0 1 2 ] layers [
+  DEF L1 Layer { children [ DEF A Viewpoint { description "a" } DEF B Viewpoint { description "b" position 0 0 12 } DEF NA NavigationInfo { type "FLY" } ] }
+  DEF L2 Layer { children [ DEF C Viewpoint { description "c" position 0 0 13 } DEF D Viewpoint { description "d" position 0 0 14 } DEF NB NavigationInfo { type "EXAMINE" } ] }
+] }
+DEF W Viewpoint { description "w" position 0 0 5 }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  inputOnly SFBool b_A
+  inputOnly SFTime t_A
+  inputOnly SFBool b_B
+  inputOnly SFTime t_B
+  inputOnly SFBool b_C
+  inputOnly SFTime t_C
+  inputOnly SFBool b_D
+  inputOnly SFTime t_D
+  inputOnly SFBool b_W
+  inputOnly SFTime t_W
+  inputOnly SFBool b_NA
+  inputOnly SFTime t_NA
+  inputOnly SFBool b_NB
+  inputOnly SFTime t_NB
+  url "ecmascript:
+
+function rec (s) { hist = hist + s + '@' + step + ' '; }
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }
+function b_A (v) { rec ('A:' + (v ? 1 : 0)); }
+function t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }
+function b_B (v) { rec ('B:' + (v ? 1 : 0)); }
+function t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }
+function b_C (v) { rec ('C:' + (v ? 1 : 0)); }
+function t_C (v) { rec ('C:T' + (v > 0 ? '' : '?')); }
+function b_D (v) { rec ('D:' + (v ? 1 : 0)); }
+function t_D (v) { rec ('D:T' + (v > 0 ? '' : '?')); }
+function b_W (v) { rec ('W:' + (v ? 1 : 0)); }
+function t_W (v) { rec ('W:T' + (v > 0 ? '' : '?')); }
+function b_NA (v) { rec ('NA:' + (v ? 1 : 0)); }
+function t_NA (v) { rec ('NA:T' + (v > 0 ? '' : '?')); }
+function b_NB (v) { rec ('NB:' + (v ? 1 : 0)); }
+function t_NB (v) { rec ('NB:T' + (v > 0 ? '' : '?')); }
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });
+  if (step == 3) p ('bindD', function () { s .getNamedNode ('D') .set_bind = true; });
+  if (step == 4) p ('bindW', function () { s .getNamedNode ('W') .set_bind = true; });
+  if (step == 5) p ('active2', function () { s .getNamedNode ('LS') .activeLayer = 2; });
+  if (step == 6) p ('bindA', function () { s .getNamedNode ('A') .set_bind = true; });
+  if (step == 7) p ('bindC', function () { s .getNamedNode ('C') .set_bind = true; });
+  if (step == 8) p ('next', function () { Browser .nextViewpoint (); });
+  if (step == 9) p ('active0', function () { s .getNamedNode ('LS') .activeLayer = 0; });
+  if (step == 10) p ('next', function () { Browser .nextViewpoint (); });
+  if (step == 11) p ('unbindW', function () { s .getNamedNode ('W') .set_bind = false; });
+  if (step == 12) p ('bindNA', function () { s .getNamedNode ('NA') .set_bind = true; });
+  if (step == 13) p ('bindNB', function () { s .getNamedNode ('NB') .set_bind = true; });
+  if (step == 14) p ('unbindNA', function () { s .getNamedNode ('NA') .set_bind = false; });
+  if (step == 15) p ('removeLayer', function () { var ls = s .getNamedNode ('LS'); ls .layers = new MFNode (s .getNamedNode ('L1')); });
+  if (step == 16) p ('addBack', function () { var ls = s .getNamedNode ('LS'); ls .layers = new MFNode (s .getNamedNode ('L1'), s .getNamedNode ('L2')); });
+  if (step == 17) p ('bindD', function () { s .getNamedNode ('D') .set_bind = true; });
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
+ROUTE A.isBound TO P.b_A
+ROUTE A.bindTime TO P.t_A
+ROUTE B.isBound TO P.b_B
+ROUTE B.bindTime TO P.t_B
+ROUTE C.isBound TO P.b_C
+ROUTE C.bindTime TO P.t_C
+ROUTE D.isBound TO P.b_D
+ROUTE D.bindTime TO P.t_D
+ROUTE W.isBound TO P.b_W
+ROUTE W.bindTime TO P.t_W
+ROUTE NA.isBound TO P.b_NA
+ROUTE NA.bindTime TO P.t_NA
+ROUTE NB.isBound TO P.b_NB
+ROUTE NB.bindTime TO P.t_NB

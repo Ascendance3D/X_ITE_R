@@ -1,0 +1,102 @@
+{
+ "ok": true,
+ "poses": {
+  "40": {
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "orientation": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "centerOfRotation": [
+    0,
+    0,
+    0
+   ],
+   "viewpoint": "",
+   "description": "",
+   "viewer": "EXAMINE",
+   "fieldOfViewScale": 1
+  }
+ },
+ "vrml": {
+  "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nViewpoint {\n  position 0 0 0\n}\n\nSound {\n  intensity 0.25\n  location 0 0 -5\n  minBack 20\n  minFront 20\n  maxBack 40\n  maxFront 40\n  source DEF O AudioClip {\n    url \"media/tone48k-stereo.wav\"\n    loop TRUE\n    startTime 946684800.048\n  }\n}\n\nSound {\n  intensity 2\n  location 3 0 0\n  minBack 20\n  minFront 20\n  maxBack 40\n  maxFront 40\n  source DEF O2 AudioClip {\n    url \"media/tone48k-stereo.wav\"\n    loop TRUE\n    startTime 946684800.048\n  }\n}\n\nDEF T TimeSensor {\n  cycleInterval 0.5\n  loop TRUE\n}\n\nDEF S Script {\n  inputOnly      SFTime  set_time\n  outputOnly     SFTime  start\n  initializeOnly SFInt32 n 49\n\n  url \"javascript:\nfunction set_time (value) { if (++ n === 12) start = value; }\n\"\n}\n\nROUTE T.time TO S.set_time\nROUTE S.start TO O.set_startTime\nROUTE S.start TO O2.set_startTime\n"
+ },
+ "prints": [],
+ "log": [],
+ "anchors": [],
+ "loadFrames": 3,
+ "warmupFrames": 8,
+ "geometry": {
+  "rect": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "viewport": [
+   0,
+   0,
+   512,
+   512
+  ],
+  "scroll": [
+   0,
+   0
+  ]
+ },
+ "audioSuspend": [
+  768,
+  1536,
+  2304,
+  3072,
+  3840,
+  4608,
+  5376,
+  6144,
+  6912,
+  7680,
+  8448,
+  9216,
+  9984,
+  10752,
+  11520,
+  12288,
+  13056,
+  13824,
+  14592,
+  15360,
+  16128,
+  16896,
+  17664,
+  18432,
+  19200,
+  19968,
+  20736,
+  21504,
+  22272,
+  23040,
+  23808,
+  24576,
+  25344,
+  26112,
+  26880,
+  27648,
+  28416,
+  29184,
+  29952,
+  30720
+ ],
+ "console": [],
+ "audio": {
+  "sampleRate": 48000,
+  "length": 31232,
+  "channels": 2,
+  "file": "js.audio.f32"
+ }
+}

@@ -21,6 +21,8 @@ pub struct SplatInput<'a> {
     pub clip_planes: Vec<[f64; 4]>,
     /// gl.viewport of the draw: x, y, width, height.
     pub viewport: [f64; 4],
+    /// The fog of the draw: the innermost LocalFog, else the layer's Fog.
+    pub fog: Option<&'a crate::fog::FogParams>,
 }
 
 struct DataGpu {
@@ -56,7 +58,7 @@ struct Prepared {
     instances: u32,
 }
 
-const UNIFORM_BYTES: usize = 64 + 64 + 16 + 16 + 16 + 16 + 6 * 16;
+const UNIFORM_BYTES: usize = 64 + 64 + 16 + 16 + 16 + 16 + 6 * 16 + 5 * 16;
 
 #[derive(Default)]
 pub struct SplatGpu {
@@ -260,6 +262,18 @@ impl SplatGpu {
             }
 
             bytes.extend_from_slice(bytemuck::cast_slice(&planes));
+
+            match input.fog {
+                Some(fog) => {
+                    f(&[fog.color[0], fog.color[1], fog.color[2], fog.fog_type as f32], &mut bytes);
+                    f(&[fog.visibility_start, fog.visibility_range, 0.0, 0.0], &mut bytes);
+                    f(&[fog.matrix[0], fog.matrix[1], fog.matrix[2], 0.0], &mut bytes);
+                    f(&[fog.matrix[3], fog.matrix[4], fog.matrix[5], 0.0], &mut bytes);
+                    f(&[fog.matrix[6], fog.matrix[7], fog.matrix[8], 0.0], &mut bytes);
+                }
+                None => bytes.extend_from_slice(&[0u8; 5 * 16]),
+            }
+
             debug_assert_eq!(bytes.len(), UNIFORM_BYTES);
             bytes.resize(stride as usize, 0);
             blobs.push(bytes);

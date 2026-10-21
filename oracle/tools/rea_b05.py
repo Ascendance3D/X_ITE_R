@@ -11,7 +11,8 @@
 
 Audio tolerance: 0. Every compared world matched sample for sample when the tolerance was set
 (REA batch 05 report), so any difference fails. KNOWN lists measured differences that stay open;
-they are reported as KNOWN, with their numbers, and do not fail the run.
+they are reported as KNOWN, with their numbers, and do not fail the run. BLOCKED lists cases
+without a reliable X_ITE reference: they are compared and printed but neither pass nor fail.
 """
 import array, json, math, os, shutil, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
@@ -23,6 +24,14 @@ baseline_dir = os.path.join(root, "oracle", "rea-batch05-baseline")
 # Open differences (not approved as DIFFERENT): name -> reason.
 KNOWN = {
     "spatial-hrtf": "PannerNode HRTF: web-audio-api's HRIR set, not Chromium's IRCAM Composite data (not ported)",
+    # Finding C (sound-lifecycle, sound-source-change) is repaired: an unpulled buffer source keeps its
+    # position (crates/x3d-runtime/tests/audio_pull.rs).
+}
+
+# Cases whose X_ITE reference is not reliable: compared and printed, reported as BLOCKED, never PASS or FAIL.
+BLOCKED = {
+    "clip-url-change": "the url changes while the frames run; X_ITE delivered the fallback clip at 946684800.224 (two runs) and .24 (under CPU load): its frame depends on real time",
+    "race-url-next-frame": "X_ITE printed 'O duration 0.25' then '0.272…' (parallel and serial runs), but only '0.272…' under CPU load: both decodes resolved in one frame and the route carries the last value; the newer clip wins in every run",
 }
 
 args = sys.argv[1:]
@@ -106,6 +115,8 @@ def check(name):
     exact = info["audio_shape_equal"] and all(c["max_abs_diff"] == 0 for c in channels)
     others = all(info[k] for k in ("text_equal", "log_equal", "prints_equal", "suspend_equal"))
     status = "PASS" if exact and others else ("KNOWN" if name in KNOWN and others and info["audio_shape_equal"] else "FAIL")
+    if name in BLOCKED:
+        status = "BLOCKED"
     return name, status, info
 
 
@@ -120,16 +131,16 @@ if args[:1] == ["baseline"]:
 elif args[:1] == ["check"]:
     with ThreadPoolExecutor(jobs) as ex:
         results = list(ex.map(check, names))
-    counts = {"PASS": 0, "KNOWN": 0, "FAIL": 0}
+    counts = {"PASS": 0, "KNOWN": 0, "BLOCKED": 0, "FAIL": 0}
     for n, status, info in results:
         counts[status] += 1
         ch = info.get("channels") or []
         audio = " ".join(f"ch{i} peak {c['peak']:.4f} max {c['max_abs_diff']:.3e}" for i, c in enumerate(ch))
         flags = " ".join(k for k in ("text_equal", "log_equal", "prints_equal", "suspend_equal", "audio_shape_equal") if info.get(k) is False)
-        print(f"{status:5} {n}: {audio}" + (f" [not equal: {flags}]" if flags else "") + (f" ({KNOWN[n]})" if status == "KNOWN" else "") + (f" {info['error']}" if "error" in info else ""))
+        print(f"{status:5} {n}: {audio}" + (f" [not equal: {flags}]" if flags else "") + (f" ({KNOWN[n]})" if status == "KNOWN" else "") + (f" ({BLOCKED[n]})" if status == "BLOCKED" else "") + (f" {info['error']}" if "error" in info else ""))
     if opt("--json"):
         json.dump({n: {"status": s, **i} for n, s, i in results}, open(opt("--json"), "w"), indent=1)
-    print(f"suite rea-b05: {counts['PASS']} pass, {counts['KNOWN']} known difference, {counts['FAIL']} fail, of {len(results)} worlds")
+    print(f"suite rea-b05: {counts['PASS']} pass, {counts['KNOWN']} known difference, {counts['BLOCKED']} blocked, {counts['FAIL']} fail, of {len(results)} worlds")
     sys.exit(1 if counts["FAIL"] else 0)
 else:
     print(__doc__)

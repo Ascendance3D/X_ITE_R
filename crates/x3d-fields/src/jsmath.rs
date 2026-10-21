@@ -219,7 +219,29 @@ pub fn fround(value: f64) -> f64 {
 
 /// `String (number)` for the cases X_ITE prints without a formatter (integers, and the
 /// non-finite fallbacks of FloatFormat/DoubleFormat).
+/// A component of an SF value that a Script left `undefined` (X_ITE's Vector3 etc. hold any JavaScript value; `vector .x` of an
+/// array is undefined). Carried as a NaN with this payload, so the value prints as X_ITE prints it (`String (value)`).
+pub const JS_UNDEFINED: f64 = f64::from_bits(0x7FF8_0000_0000_0A11);
+/// The same for `null`.
+pub const JS_NULL: f64 = f64::from_bits(0x7FF8_0000_0000_0B11);
+
+pub fn is_js_undefined(value: f64) -> bool {
+    value.to_bits() == JS_UNDEFINED.to_bits()
+}
+
+pub fn is_js_null(value: f64) -> bool {
+    value.to_bits() == JS_NULL.to_bits()
+}
+
 pub fn number_to_string(value: f64) -> String {
+    if is_js_undefined(value) {
+        return "undefined".into();
+    }
+
+    if is_js_null(value) {
+        return "null".into();
+    }
+
     if value.is_nan() {
         return "NaN".into();
     }

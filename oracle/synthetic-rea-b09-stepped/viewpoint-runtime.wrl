@@ -1,0 +1,71 @@
+#X3D V4.0 utf8
+PROFILE Full
+NavigationInfo { type "NONE" headlight FALSE transitionType [ "LINEAR" ] transitionTime 0.3 }
+Background { skyColor 0.2 0.25 0.3 }
+DirectionalLight { direction -0.3 -0.4 -1 intensity 0.9 ambientIntensity 0.3 }
+DEF V1 Viewpoint { position 0 0 8 description "first" }
+DEF V2 Viewpoint { position 4 2 6 orientation 0 1 0 0.5 description "second" fieldOfView 1.2 }
+DEF V3 Viewpoint { position -4 3 6 orientation 0 1 0 -0.4 description "third" jump FALSE centerOfRotation 1 0 0 }
+DEF V4 Viewpoint { position 0 0 10 description "fourth" retainUserOffsets TRUE }
+DEF OV OrthoViewpoint { position 0 0 8 fieldOfView [ -3 -3 3 3 ] description "ortho" }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 } } geometry Sphere { radius 0.8 } } }
+Transform { translation 1.5 0.5 -2 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 } } geometry Sphere { radius 0.8 } } }
+Transform { translation 0 -1 -5 children Shape { appearance Appearance { material Material { diffuseColor 0.8 0.6 0.4 specularColor 0.4 0.3 0.2 shininess 0.3 } } geometry Sphere { radius 1.2 } } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode v1 USE V1
+  initializeOnly SFNode v2 USE V2
+  initializeOnly SFNode v3 USE V3
+  initializeOnly SFNode v4 USE V4
+  initializeOnly SFNode ov USE OV
+  inputOnly SFBool on_1
+  inputOnly SFBool on_2
+  inputOnly SFBool on_3
+  inputOnly SFBool on_4
+  inputOnly SFBool on_o
+  inputOnly SFTime on_t3
+  inputOnly SFVec3f on_c
+  url "javascript:
+function on_1 (v) { log = log + 'V1:' + v + ' '; }
+function on_2 (v) { log = log + 'V2:' + v + ' '; }
+function on_3 (v) { log = log + 'V3:' + v + ' '; }
+function on_4 (v) { log = log + 'V4:' + v + ' '; }
+function on_o (v) { log = log + 'OV:' + v + ' '; }
+function on_t3 (v) { log = log + 'T3 '; }
+function on_c (v) { log = log + 'C' + v + ' '; }
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') v2 .set_bind = true;
+   if (k == 'b') v3 .set_bind = true;
+   if (k == 'c') v3 .position = new SFVec3f (-2, 4, 5);
+   if (k == 'd') v3 .orientation = new SFRotation (1, 0, 0, -0.3);
+   if (k == 'e') v3 .centerOfRotation = new SFVec3f (0, 1, 0);
+   if (k == 'f') v3 .fieldOfView = 0.6;
+   if (k == 'g') v3 .set_bind = false;
+   if (k == 'h') v1 .set_bind = true;
+   if (k == 'i') v4 .set_bind = true;
+   if (k == 'j') v4 .position = new SFVec3f (2, 1, 9);
+   if (k == 'k') ov .set_bind = true;
+   if (k == 'l') ov .fieldOfView = new MFFloat (-1.5, -1.5, 1.5, 1.5);
+   if (k == 'm') ov .position = new SFVec3f (1, 0, 8);
+   if (k == 'n') ov .set_bind = false;
+   if (k == 'o') v2 .jump = false;
+   if (k == 'p') v2 .set_bind = true;
+   if (k == 'q') v1 .description = 'renamed';
+   if (k == 'r') v1 .set_bind = false;
+   if (k == 's') v4 .set_bind = false;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
+ROUTE V1.isBound TO R.on_1
+ROUTE V2.isBound TO R.on_2
+ROUTE V3.isBound TO R.on_3
+ROUTE V4.isBound TO R.on_4
+ROUTE OV.isBound TO R.on_o
+ROUTE V2.bindTime TO R.on_t3
+ROUTE V3.centerOfRotation_changed TO R.on_c

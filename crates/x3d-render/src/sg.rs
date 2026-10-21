@@ -49,7 +49,7 @@ impl<'a> Sg<'a> {
 
     /// Root nodes of the runtime's scene (inner nodes of PROTO instances).
     pub fn roots(&self) -> Vec<NodeId> {
-        self.roots_of(x3d_scene::ROOT)
+        self.roots_of(self.rt.scene.world)
     }
 
     /// Root nodes of the scene whose root context is `ctx` (the world's, or the one an Inline
@@ -121,6 +121,16 @@ impl<'a> Sg<'a> {
         match self.value(n, name) {
             Some(FieldValue::SFVec4f(v) | FieldValue::SFVec4d(v)) => *v,
             _ => default,
+        }
+    }
+
+    /// OrthoViewpoint.fieldOfView: an SFVec4f in an X3D 4.1 scene, an MFFloat of four values up to 4.0.
+    /// Anything else (including an MFFloat of another length) is the default extents.
+    pub fn ortho_field_of_view(&self, n: NodeId) -> [f64; 4] {
+        match self.value(n, "fieldOfView") {
+            Some(FieldValue::SFVec4f(v) | FieldValue::SFVec4d(v)) => [v.x, v.y, v.z, v.w],
+            Some(FieldValue::MFFloat(v)) if v.len() == 4 => [v[0] as f64, v[1] as f64, v[2] as f64, v[3] as f64],
+            _ => [-1.0, -1.0, 1.0, 1.0],
         }
     }
 
@@ -330,7 +340,8 @@ impl<'a> Sg<'a> {
 
     pub fn coord_points(&self, c: NodeId) -> Option<Vec<f32>> {
         match self.type_name(c)? {
-            "Coordinate" | "CoordinateDouble" => Some(self.f32s(c, "point").to_vec()),
+            "Coordinate" => Some(self.f32s(c, "point").to_vec()),
+            "CoordinateDouble" => Some(self.f64s(c, "point").iter().map(|v| *v as f32).collect()),
             "GeoCoordinate" => Some(self.geo_coord_points(c)?.iter().flat_map(|g| [g.x as f32, g.y as f32, g.z as f32]).collect()),
             _ => None,
         }

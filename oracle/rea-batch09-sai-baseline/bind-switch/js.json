@@ -1,0 +1,1424 @@
+{
+  "ok": true,
+  "poses": {
+    "1": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "2": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "3": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "A",
+      "description": "A",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "4": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        10.016666650772095
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "6": {
+      "position": [
+        0,
+        0,
+        10.03333330154419
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "7": {
+      "position": [
+        0,
+        0,
+        10.049999952316284
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "8": {
+      "position": [
+        0,
+        0,
+        10.066666603088379
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "B",
+      "description": "B",
+      "viewer": "FLY",
+      "fieldOfViewScale": 1
+    },
+    "9": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BA",
+      "description": "ba",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "10": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BA",
+      "description": "ba",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "11": {
+      "position": [
+        0,
+        0,
+        7
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        7.016666769981384
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "13": {
+      "position": [
+        0,
+        0,
+        7.033333420753479
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "14": {
+      "position": [
+        0,
+        0,
+        7.050000071525574
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "15": {
+      "position": [
+        0,
+        0,
+        7.0666667222976685
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "16": {
+      "position": [
+        0,
+        0,
+        7.083333373069763
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "17": {
+      "position": [
+        0,
+        0,
+        7.100000023841858
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "18": {
+      "position": [
+        0,
+        0,
+        7.116666674613953
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "19": {
+      "position": [
+        0,
+        0,
+        7.133333444595337
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        7.150000095367432
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "21": {
+      "position": [
+        0,
+        0,
+        7.166666746139526
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "22": {
+      "position": [
+        0,
+        0,
+        7.183333396911621
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "23": {
+      "position": [
+        0,
+        0,
+        7.200000047683716
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "24": {
+      "position": [
+        0,
+        0,
+        7.2166666984558105
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "25": {
+      "position": [
+        0,
+        0,
+        7.233333349227905
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "26": {
+      "position": [
+        0,
+        0,
+        7.25
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "27": {
+      "position": [
+        0,
+        0,
+        7.266666769981384
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        7.283333420753479
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "29": {
+      "position": [
+        0,
+        0,
+        7.300000071525574
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "30": {
+      "position": [
+        0,
+        0,
+        7.3166667222976685
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "31": {
+      "position": [
+        0,
+        0,
+        7.333333373069763
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "32": {
+      "position": [
+        0,
+        0,
+        7.350000023841858
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "33": {
+      "position": [
+        0,
+        0,
+        7.366666674613953
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "34": {
+      "position": [
+        0,
+        0,
+        7.383333444595337
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "35": {
+      "position": [
+        0,
+        0,
+        7.400000095367432
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "36": {
+      "position": [
+        0,
+        0,
+        7.416666746139526
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "37": {
+      "position": [
+        0,
+        0,
+        7.433333396911621
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "38": {
+      "position": [
+        0,
+        0,
+        7.450000047683716
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "39": {
+      "position": [
+        0,
+        0,
+        7.4666666984558105
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        7.483333349227905
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "41": {
+      "position": [
+        0,
+        0,
+        7.5
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "42": {
+      "position": [
+        0,
+        0,
+        7.516666769981384
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "43": {
+      "position": [
+        0,
+        0,
+        7.533333420753479
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "44": {
+      "position": [
+        0,
+        0,
+        7.550000071525574
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "45": {
+      "position": [
+        0,
+        0,
+        7.5666667222976685
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "46": {
+      "position": [
+        0,
+        0,
+        7.583333373069763
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "47": {
+      "position": [
+        0,
+        0,
+        7.600000023841858
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "48": {
+      "position": [
+        0,
+        0,
+        7.616666674613953
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "49": {
+      "position": [
+        0,
+        0,
+        7.633333444595337
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "50": {
+      "position": [
+        0,
+        0,
+        7.650000095367432
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "51": {
+      "position": [
+        0,
+        0,
+        7.666666746139526
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "52": {
+      "position": [
+        0,
+        0,
+        7.683333396911621
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "53": {
+      "position": [
+        0,
+        0,
+        7.700000047683716
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "54": {
+      "position": [
+        0,
+        0,
+        7.7166666984558105
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "55": {
+      "position": [
+        0,
+        0,
+        7.733333349227905
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "56": {
+      "position": [
+        0,
+        0,
+        7.75
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "57": {
+      "position": [
+        0,
+        0,
+        7.766666769981384
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "58": {
+      "position": [
+        0,
+        0,
+        7.783333420753479
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "59": {
+      "position": [
+        0,
+        0,
+        7.800000071525574
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "60": {
+      "position": [
+        0,
+        0,
+        7.8166667222976685
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "BB",
+      "description": "bb",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "1": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind switch\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF AG Background {\n  skyColor 1 0 0\n}\n\nDEF AN NavigationInfo {\n  type \"FLY\"\n}\n\nDEF AF Fog {\n  color 1 0 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"AN:1@1 AN:T@1 AG:1@1 AG:T@1 AF:1@1 AF:T@1 A:1@1 A:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_AG\n  inputOnly   SFTime   t_AG\n  inputOnly   SFBool   b_AN\n  inputOnly   SFTime   t_AN\n  inputOnly   SFBool   b_AF\n  inputOnly   SFTime   t_AF\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }\nfunction t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }\nfunction b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }\nfunction t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }\nfunction b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }\nfunction t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });\n  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE AG.isBound TO P.b_AG\nROUTE AG.bindTime TO P.t_AG\nROUTE AN.isBound TO P.b_AN\nROUTE AN.bindTime TO P.t_AN\nROUTE AF.isBound TO P.b_AF\nROUTE AF.bindTime TO P.t_AF\n",
+    "2": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind switch\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF AG Background {\n  skyColor 1 0 0\n}\n\nDEF AN NavigationInfo {\n  type \"FLY\"\n}\n\nDEF AF Fog {\n  color 1 0 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"AN:1@1 AN:T@1 AG:1@1 AG:T@1 AF:1@1 AF:T@1 A:1@1 A:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_AG\n  inputOnly   SFTime   t_AG\n  inputOnly   SFBool   b_AN\n  inputOnly   SFTime   t_AN\n  inputOnly   SFBool   b_AF\n  inputOnly   SFTime   t_AF\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }\nfunction t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }\nfunction b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }\nfunction t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }\nfunction b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }\nfunction t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });\n  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE AG.isBound TO P.b_AG\nROUTE AG.bindTime TO P.t_AG\nROUTE AN.isBound TO P.b_AN\nROUTE AN.bindTime TO P.t_AN\nROUTE AF.isBound TO P.b_AF\nROUTE AF.bindTime TO P.t_AF\n",
+    "3": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind switch\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF AG Background {\n  skyColor 1 0 0\n}\n\nDEF AN NavigationInfo {\n  type \"FLY\"\n}\n\nDEF AF Fog {\n  color 1 0 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"AN:1@1 AN:T@1 AG:1@1 AG:T@1 AF:1@1 AF:T@1 A:1@1 A:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_AG\n  inputOnly   SFTime   t_AG\n  inputOnly   SFBool   b_AN\n  inputOnly   SFTime   t_AN\n  inputOnly   SFBool   b_AF\n  inputOnly   SFTime   t_AF\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }\nfunction t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }\nfunction b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }\nfunction t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }\nfunction b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }\nfunction t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });\n  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE AG.isBound TO P.b_AG\nROUTE AG.bindTime TO P.t_AG\nROUTE AN.isBound TO P.b_AN\nROUTE AN.bindTime TO P.t_AN\nROUTE AF.isBound TO P.b_AF\nROUTE AF.bindTime TO P.t_AF\n",
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind switch\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF AG Background {\n  skyColor 1 0 0\n}\n\nDEF AN NavigationInfo {\n  type \"FLY\"\n}\n\nDEF AF Fog {\n  color 1 0 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"AN:1@1 AN:T@1 AG:1@1 AG:T@1 AF:1@1 AF:T@1 A:1@1 A:T@1 [bindB]@2 A:0@2 B:1@2 B:T@2 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_AG\n  inputOnly   SFTime   t_AG\n  inputOnly   SFBool   b_AN\n  inputOnly   SFTime   t_AN\n  inputOnly   SFBool   b_AF\n  inputOnly   SFTime   t_AF\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }\nfunction t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }\nfunction b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }\nfunction t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }\nfunction b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }\nfunction t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });\n  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE AG.isBound TO P.b_AG\nROUTE AG.bindTime TO P.t_AG\nROUTE AN.isBound TO P.b_AN\nROUTE AN.bindTime TO P.t_AN\nROUTE AF.isBound TO P.b_AF\nROUTE AF.bindTime TO P.t_AF\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind switch\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF AG Background {\n  skyColor 1 0 0\n}\n\nDEF AN NavigationInfo {\n  type \"FLY\"\n}\n\nDEF AF Fog {\n  color 1 0 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"AN:1@1 AN:T@1 AG:1@1 AG:T@1 AF:1@1 AF:T@1 A:1@1 A:T@1 [bindB]@2 A:0@2 B:1@2 B:T@2 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_AG\n  inputOnly   SFTime   t_AG\n  inputOnly   SFBool   b_AN\n  inputOnly   SFTime   t_AN\n  inputOnly   SFBool   b_AF\n  inputOnly   SFTime   t_AF\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }\nfunction t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }\nfunction b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }\nfunction t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }\nfunction b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }\nfunction t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });\n  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE AG.isBound TO P.b_AG\nROUTE AG.bindTime TO P.t_AG\nROUTE AN.isBound TO P.b_AN\nROUTE AN.bindTime TO P.t_AN\nROUTE AF.isBound TO P.b_AF\nROUTE AF.bindTime TO P.t_AF\n",
+    "6": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind switch\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF AG Background {\n  skyColor 1 0 0\n}\n\nDEF AN NavigationInfo {\n  type \"FLY\"\n}\n\nDEF AF Fog {\n  color 1 0 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"AN:1@1 AN:T@1 AG:1@1 AG:T@1 AF:1@1 AF:T@1 A:1@1 A:T@1 [bindB]@2 A:0@2 B:1@2 B:T@2 [load=x]@3 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_AG\n  inputOnly   SFTime   t_AG\n  inputOnly   SFBool   b_AN\n  inputOnly   SFTime   t_AN\n  inputOnly   SFBool   b_AF\n  inputOnly   SFTime   t_AF\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }\nfunction t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }\nfunction b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }\nfunction t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }\nfunction b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }\nfunction t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });\n  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE AG.isBound TO P.b_AG\nROUTE AG.bindTime TO P.t_AG\nROUTE AN.isBound TO P.b_AN\nROUTE AN.bindTime TO P.t_AN\nROUTE AF.isBound TO P.b_AF\nROUTE AF.bindTime TO P.t_AF\n",
+    "7": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nMETA \"title\" \"bind switch\"\n\nDEF A Viewpoint {\n  description \"A\"\n}\n\nDEF B Viewpoint {\n  description \"B\"\n  position 0 0 11\n}\n\nDEF AG Background {\n  skyColor 1 0 0\n}\n\nDEF AN NavigationInfo {\n  type \"FLY\"\n}\n\nDEF AF Fog {\n  color 1 0 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"AN:1@1 AN:T@1 AG:1@1 AG:T@1 AF:1@1 AF:T@1 A:1@1 A:T@1 [bindB]@2 A:0@2 B:1@2 B:T@2 [load=x]@3 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_A\n  inputOnly   SFTime   t_A\n  inputOnly   SFBool   b_B\n  inputOnly   SFTime   t_B\n  inputOnly   SFBool   b_AG\n  inputOnly   SFTime   t_AG\n  inputOnly   SFBool   b_AN\n  inputOnly   SFTime   t_AN\n  inputOnly   SFBool   b_AF\n  inputOnly   SFTime   t_AF\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; console .log ('A: ' + s + '@' + step); }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_A (v) { rec ('A:' + (v ? 1 : 0)); }\nfunction t_A (v) { rec ('A:T' + (v > 0 ? '' : '?')); }\nfunction b_B (v) { rec ('B:' + (v ? 1 : 0)); }\nfunction t_B (v) { rec ('B:T' + (v > 0 ? '' : '?')); }\nfunction b_AG (v) { rec ('AG:' + (v ? 1 : 0)); }\nfunction t_AG (v) { rec ('AG:T' + (v > 0 ? '' : '?')); }\nfunction b_AN (v) { rec ('AN:' + (v ? 1 : 0)); }\nfunction t_AN (v) { rec ('AN:T' + (v > 0 ? '' : '?')); }\nfunction b_AF (v) { rec ('AF:' + (v ? 1 : 0)); }\nfunction t_AF (v) { rec ('AF:T' + (v > 0 ? '' : '?')); }\n\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindB', function () { s .getNamedNode ('B') .set_bind = true; });\n  if (step == 3) p ('load', function () { Browser .loadURL (new MFString ('assets/bind-b.wrl')); console .log ('A: loadURL called'); return 'x'; });\n}\n  \"\n}\n\nDEF STEP TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEP.cycleTime TO P.cycle\nROUTE A.isBound TO P.b_A\nROUTE A.bindTime TO P.t_A\nROUTE B.isBound TO P.b_B\nROUTE B.bindTime TO P.t_B\nROUTE AG.isBound TO P.b_AG\nROUTE AG.bindTime TO P.t_AG\nROUTE AN.isBound TO P.b_AN\nROUTE AN.bindTime TO P.t_AN\nROUTE AF.isBound TO P.b_AF\nROUTE AF.bindTime TO P.t_AF\n",
+    "8": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "10": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 \"\n  inputOutput SFInt32  step 1\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "11": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 2\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "13": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "14": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "15": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 3\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "16": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "18": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 4\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "19": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "21": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 5\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "22": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "23": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "24": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 6\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "26": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "27": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 7\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "29": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "30": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 8\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "31": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "32": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 9\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "34": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "35": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "36": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 10\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "37": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "38": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "39": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 11\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "42": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 12\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "43": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "44": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "45": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 13\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "46": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "47": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "48": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 14\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "50": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "51": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 15\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "52": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "53": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "54": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 16\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "55": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "56": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 17\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "58": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "59": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n",
+    "60": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Immersive\n\nCOMPONENT Scripting : 1\n\nDEF BA Viewpoint {\n  description \"ba\"\n  position 0 0 7\n}\n\nDEF BB Viewpoint {\n  description \"bb\"\n  position 0 0 8\n}\n\nDEF BG1 Background {\n  skyColor 0 1 0\n}\n\nDEF BN1 NavigationInfo {\n  type \"EXAMINE\"\n}\n\nDEF BF1 Fog {\n  color 0 1 0\n}\n\nDEF P Script {\n  inputOutput SFString hist \"init@0 BN1:1@1 BN1:T@1 BG1:1@1 BG1:T@1 BF1:1@1 BF1:T@1 BA:1@1 BA:T@1 [bindBB]@2 BA:0@2 BB:1@2 BB:T@2 \"\n  inputOutput SFInt32  step 18\n  inputOnly   SFTime   cycle\n  inputOnly   SFBool   b_BA\n  inputOnly   SFTime   t_BA\n  inputOnly   SFBool   b_BB\n  inputOnly   SFTime   t_BB\n  inputOnly   SFBool   b_BG1\n  inputOnly   SFTime   t_BG1\n  inputOnly   SFBool   b_BN1\n  inputOnly   SFTime   t_BN1\n  inputOnly   SFBool   b_BF1\n  inputOnly   SFTime   t_BF1\n\n  url \"ecmascript:\n\nfunction rec (s) { hist = hist + s + '@' + step + ' '; }\nfunction p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + '[' + name + (v === undefined ? '' : '=' + v) + ']@' + step + ' '; }\nfunction b_BA (v) { rec ('BA:' + (v ? 1 : 0)); }\nfunction t_BA (v) { rec ('BA:T' + (v > 0 ? '' : '?')); }\nfunction b_BB (v) { rec ('BB:' + (v ? 1 : 0)); }\nfunction t_BB (v) { rec ('BB:T' + (v > 0 ? '' : '?')); }\nfunction b_BG1 (v) { rec ('BG1:' + (v ? 1 : 0)); }\nfunction t_BG1 (v) { rec ('BG1:T' + (v > 0 ? '' : '?')); }\nfunction b_BN1 (v) { rec ('BN1:' + (v ? 1 : 0)); }\nfunction t_BN1 (v) { rec ('BN1:T' + (v > 0 ? '' : '?')); }\nfunction b_BF1 (v) { rec ('BF1:' + (v ? 1 : 0)); }\nfunction t_BF1 (v) { rec ('BF1:T' + (v > 0 ? '' : '?')); }\n\nfunction initialize () { rec ('init'); }\nfunction cycle () {\n  step = step + 1;\n  var s = Browser .currentScene;\n  if (step == 2) p ('bindBB', function () { Browser .currentScene .getNamedNode ('BB') .set_bind = true; });\n}\n  \"\n}\n\nDEF STEPB TimeSensor {\n  cycleInterval 0.05\n  loop TRUE\n}\n\nROUTE STEPB.cycleTime TO P.cycle\nROUTE BA.isBound TO P.b_BA\nROUTE BA.bindTime TO P.t_BA\nROUTE BB.isBound TO P.b_BB\nROUTE BB.bindTime TO P.t_BB\nROUTE BG1.isBound TO P.b_BG1\nROUTE BG1.bindTime TO P.t_BG1\nROUTE BN1.isBound TO P.b_BN1\nROUTE BN1.bindTime TO P.t_BN1\nROUTE BF1.isBound TO P.b_BF1\nROUTE BF1.bindTime TO P.t_BF1\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  },
+  "console": [
+    "log: A: AN:1@1",
+    "log: A: AN:T@1",
+    "log: A: AG:1@1",
+    "log: A: AG:T@1",
+    "log: A: AF:1@1",
+    "log: A: AF:T@1",
+    "log: A: A:1@1",
+    "log: A: A:T@1",
+    "log: A: A:0@2",
+    "log: A: B:1@2",
+    "log: A: B:T@2",
+    "log: A: loadURL called"
+  ]
+}

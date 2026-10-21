@@ -79,6 +79,21 @@ impl Fields {
     pub fn names(&self) -> impl Iterator<Item = &'static str> + '_ {
         self.fields.iter().map(|(n, _)| *n)
     }
+
+    /// Name and value of each field, in X_ITE's order.
+    pub fn entries(&self) -> impl Iterator<Item = (&'static str, &OptionValue)> + '_ {
+        self.fields.iter().map(|(n, v)| (*n, v))
+    }
+}
+
+/// The fields of BrowserOptions ("options"), BrowserProperties ("properties") or RenderingProperties (any other name) with
+/// X_ITE's initial values: the values of their field definitions.
+pub fn default_fields(set: &str) -> Fields {
+    match set {
+        "options" => option_fields(),
+        "properties" => property_fields(),
+        _ => rendering_fields(),
+    }
 }
 
 /// Shading (Browser/Core/Shading.js), by key: set_Shading__ maps the option string with
@@ -160,6 +175,11 @@ pub struct BrowserOptions {
     pub canvas: (f64, f64),
     /// The frame buffer size reshape () computed (canvas.width, canvas.height).
     pub framebuffer: (u32, u32),
+    /// The ContentScale rendering property changed since the runtime last took this flag.
+    pub content_scale_changed: bool,
+    /// The StraightenHorizon option was set since the runtime last took this flag (its value then): set_StraightenHorizon__
+    /// straightens the active layer's view when it is TRUE, and the ExamineViewer disconnects on every set.
+    pub straighten_set: Option<bool>,
     /// BrowserOptions.shading (getShading ()).
     pub shading: ShadingMode,
     /// Options set since the last [`BrowserOptions::process_events`], in order, without repeats
@@ -313,6 +333,8 @@ impl BrowserOptions {
             limits: RenderingLimits::default(),
             canvas: (width as f64, height as f64),
             framebuffer: (width.max(1), height.max(1)),
+            content_scale_changed: false,
+            straighten_set: None,
             shading: ShadingMode::Gouraud,
             tainted: vec![],
             sound_intensity_changed: false,
@@ -421,8 +443,15 @@ impl BrowserOptions {
 
     /// The browser processes the tainted option fields: their interests, in order.
     pub fn process_events(&mut self) {
+        let before = self.rendering.get("ContentScale").map(|v| v.as_f64());
+
         for name in std::mem::take(&mut self.tainted) {
             self.interest(name);
+        }
+
+        // RenderingProperties ._ContentScale changed (ScreenFontStyle.initialize has an interest on it).
+        if self.rendering.get("ContentScale").map(|v| v.as_f64()) != before {
+            self.content_scale_changed = true;
         }
     }
 
@@ -455,6 +484,7 @@ impl BrowserOptions {
             }
             "OrderIndependentTransparency" => self.reshape(),
             "Mute" | "SoundIntensity" => self.sound_intensity_changed = true,
+            "StraightenHorizon" => self.straighten_set = Some(self.option("StraightenHorizon").as_bool()),
             _ => {}
         }
     }

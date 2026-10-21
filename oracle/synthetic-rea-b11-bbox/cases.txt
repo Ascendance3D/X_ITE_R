@@ -1,0 +1,4 @@
+bb-static oracle/synthetic-rea-b11-bbox/bb-static.wrl oracle/synthetic-rea-b11-bbox/bb-static.json
+bb-others oracle/synthetic-rea-b11-bbox/bb-others.wrl oracle/synthetic-rea-b11-bbox/bb-others.json
+bb-screen oracle/synthetic-rea-b11-bbox/bb-screen.wrl oracle/synthetic-rea-b11-bbox/bb-screen.json
+bb-dynamic oracle/synthetic-rea-b11-bbox/bb-dynamic.wrl oracle/synthetic-rea-b11-bbox/bb-dynamic.json

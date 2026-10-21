@@ -1,0 +1,233 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "scr errors"
+DEF E01 Script {
+
+  url "ecmascript:
+function initialize () { throw new Error ('boom 1'); }
+  "
+}
+DEF E02 Script {
+
+  url "ecmascript:
+function initialize () { throw 'a string'; }
+  "
+}
+DEF E03 Script {
+
+  url "ecmascript:
+function initialize () { throw 42; }
+  "
+}
+DEF E04 Script {
+
+  url "ecmascript:
+function initialize () { throw { a: 1 }; }
+  "
+}
+DEF E05 Script {
+
+  url "ecmascript:
+function initialize () { throw null; }
+  "
+}
+DEF E06 Script {
+
+  url "ecmascript:
+function initialize () { throw undefined; }
+  "
+}
+DEF E07 Script {
+
+  url "ecmascript:
+function initialize () { var e = new Error ('named'); e .name = 'CustomError'; throw e; }
+  "
+}
+DEF E08 Script {
+
+  url "ecmascript:
+function initialize () { throw new RangeError ('rng'); }
+  "
+}
+DEF E09 Script {
+
+  url "ecmascript:
+function initialize () { undefinedFunction (); }
+  "
+}
+DEF E10 Script {
+
+  url "ecmascript:
+function initialize () { var x = undefinedVariable + 1; }
+  "
+}
+DEF E11 Script {
+
+  url "ecmascript:
+function initialize () { var o = null; o .x; }
+  "
+}
+DEF E12 Script {
+
+  url "ecmascript:
+function initialize () { var o; o .x = 1; }
+  "
+}
+DEF E13 Script {
+
+  url "ecmascript:
+function initialize () { var o = {}; o .f (); }
+  "
+}
+DEF E14 Script {
+
+  url "ecmascript:
+function initialize () { new SFVec3f (1, 2, 3) .nope (); }
+  "
+}
+DEF E15 Script {
+
+  url "ecmascript:
+function initialize () { Browser .nope (); }
+  "
+}
+DEF E16 Script {
+
+  url "ecmascript:
+function initialize () { JSON .parse ('{bad'); }
+  "
+}
+DEF E17 Script {
+
+  url "ecmascript:
+function initialize () { new Array (-1); }
+  "
+}
+DEF E18 Script {
+
+  url "ecmascript:
+function initialize () { decodeURIComponent ('%'); }
+  "
+}
+DEF E19 Script {
+
+  url "ecmascript:
+function initialize () { x = 1; throw new Error ('after leak'); }
+  "
+}
+DEF E20 Script {
+
+  url "ecmascript:
+function initialize () { log ('before'); throw new Error ('with log'); }
+function log (s) { (globalThis .LOG = globalThis .LOG || []) .push ('E20.' + s); }
+  "
+}
+DEF E21 Script {
+  inputOnly SFInt32 evIn
+  inputOnly SFTime tick
+  url "ecmascript:
+
+var n = 0;
+function evIn (v) { n++; (globalThis .LOG = globalThis .LOG || []) .push ('E21.evIn ' + v); if (v == 1) throw new Error ('handler ' + v); }
+function tick () { n++; if (n == 2) throw new Error ('tick handler'); }
+  "
+}
+DEF E22 Script {
+
+  url "ecmascript:
+
+var n = 0;
+function prepareEvents () { n++; if (n == 3) throw new Error ('prepareEvents 3'); }
+function eventsProcessed () { n++; if (n == 4) throw new Error ('eventsProcessed 4'); }
+  "
+}
+DEF E23 Script {
+
+  url "ecmascript:
+function initialize () { return Promise .reject (new Error ('rejected')); }
+  "
+}
+DEF E24 Script {
+
+  url "ecmascript:
+function initialize () { return Promise .resolve (1) .then (function () { throw new Error ('late'); }); }
+  "
+}
+DEF E25 Script {
+
+  url "ecmascript:
+var a = ;
+  "
+}
+DEF E26 Script {
+
+  url "ecmascript:
+function initialize () { }
+function (
+  "
+}
+DEF E27 Script {
+
+  url "ecmascript:
+throw new Error ('top level');
+  "
+}
+DEF E28 Script {
+
+  url "ecmascript:
+var x = notDefinedAtTop;
+  "
+}
+DEF E29 Script {
+
+  url "ecmascript:
+function initialize () { console .error (new Error ('console error object')); console .warn ('a', 1, true, null, undefined); console .error ('multi\\nline'); console .log ('plain log'); }
+  "
+}
+DEF E30 Script {
+
+  url "ecmascript:
+function initialize () { console .info ('info'); console .debug ('debug'); console .assert (false, 'assert'); console .trace ('trace'); console .dir ({}); console .table ([1]); }
+  "
+}
+DEF E31 Script {
+
+  url "ecmascript:
+function initialize () { print ('p1'); trace ('t1'); Browser .print ('b1', 2); Browser .println ('b2', 3); }
+  "
+}
+DEF E32 Script {
+
+  url "ecmascript:
+function initialize () { setTimeout; }
+  "
+}
+DEF DRV Script {
+  inputOnly SFTime tick
+  outputOnly SFInt32 outI
+  url "ecmascript:
+var NAME = 'DRV';
+
+function log (s) { var L = globalThis .LOG = globalThis .LOG || []; L .push (NAME + '.' + s); }
+function first (key, n) { var C = globalThis .CNT = globalThis .CNT || {}; C [NAME + key] = (C [NAME + key] || 0) + 1; return C [NAME + key] <= n; }
+
+
+var n = 0;
+function tick () { n++; if (n == 3) { outI = 1; log ('sent 1'); } if (n == 4) { outI = 2; log ('sent 2'); } }
+
+  "
+}
+
+DEF R Script {
+  inputOutput MFString out [ ]
+  inputOnly SFTime tick
+  url "ecmascript:
+    function tick (v, t) { var L = globalThis .LOG || []; out = new MFString (... L .map (function (s, i) { return i + ' ' + s; })); }
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO E21.tick
+ROUTE DRV.outI TO E21.evIn
+ROUTE STEP.cycleTime TO DRV.tick
+ROUTE STEP.cycleTime TO R.tick

@@ -196,6 +196,43 @@ pub enum FieldLoc {
     Priv(usize),
 }
 
+/// A field value a Script gave with components that are not all numbers (see [`Scene::raw_tokens`]): the token of the Script
+/// realm's copy and, per component, `String (component)` of each one that is not a number. A field without a unit category
+/// prints these (X3DGenerator.FloatFormat: `String (value)` for a value that is not a finite number).
+#[derive(Clone, Debug)]
+pub struct RawValue {
+    /// The script host (one QuickJS realm per world, shared by its Scripts as X_ITE's page realm is) whose realm holds the
+    /// components: tokens are numbered per realm.
+    pub host: u64,
+    pub token: u32,
+    pub texts: std::sync::Arc<[Option<String>]>,
+}
+
+/// A print of raw components in two passes (X3DGenerator calls `String (value)` or ToUnit's division on each raw component it
+/// prints, when it prints it): the first pass logs, in print order, the raw values it meets; the Script realm takes each
+/// component's text or number; the second pass prints them.
+#[derive(Debug, Default)]
+pub enum RawPrint {
+    #[default]
+    Off,
+    Log(Vec<RawRequest>),
+    Supply(std::collections::VecDeque<Option<Vec<Option<RawComponent>>>>),
+}
+
+/// A raw value met by a print: its host and token, and whether ToUnit converts it (a number is taken, else a text).
+#[derive(Debug, Clone, Copy)]
+pub struct RawRequest {
+    pub host: u64,
+    pub token: u32,
+    pub number: bool,
+}
+
+#[derive(Debug, Clone)]
+pub enum RawComponent {
+    Text(String),
+    Number(f64),
+}
+
 /// Scene-level data of a scene merged into another (an Inline's scene): what X3DScene keeps
 /// apart from its execution context.
 #[derive(Clone, Debug)]
@@ -204,7 +241,11 @@ pub struct SceneInfo {
     pub encoding: String,
     pub world_url: String,
     pub profile: Option<String>,
+    /// The source had a PROFILE statement (the parser then set the scene's profile, an event on `profile_changed`).
+    pub profile_statement: bool,
     pub components: Vec<(String, i32)>,
+    /// See [`Scene::component_level_texts`].
+    pub component_level_texts: std::collections::HashMap<String, String>,
     pub meta: Vec<(String, String)>,
     pub units: Vec<UnitInfo>,
 }
@@ -241,6 +282,18 @@ pub fn unit_factor(units: &[UnitInfo], category: &str) -> f64 {
     }
 }
 
+/// Prefix of a `Scene::warnings` entry that is a console.error rather than a console.warn. The entries share one
+/// list so the print order of warnings and errors is kept; a control character cannot start a real message.
+pub const ERROR_LEVEL_MARK: &str = "\u{1}error\u{1}";
+
+/// Split a `Scene::warnings` entry into (is_error, message without the level mark).
+pub fn console_level(entry: &str) -> (bool, &str) {
+    match entry.strip_prefix(ERROR_LEVEL_MARK) {
+        Some(m) => (true, m),
+        None => (false, entry),
+    }
+}
+
 #[derive(Debug)]
 pub struct Scene {
     pub table: &'static NodeTable,
@@ -248,8 +301,13 @@ pub struct Scene {
     pub encoding: String,
     pub world_url: String,
     pub profile: Option<String>,
+    /// The source had a PROFILE statement (the parser then set the scene's profile, an event on `profile_changed`).
+    pub profile_statement: bool,
     /// Ordered like X_ITE's ComponentInfoArray (update keeps the position).
     pub components: Vec<(String, i32)>,
+    /// The level of a component a Script gave (X3DScene.addComponent / updateComponent keep the ComponentInfo as given: its
+    /// level may be any value), as `String (level)`, by component name; printed in place of the number.
+    pub component_level_texts: std::collections::HashMap<String, String>,
     pub meta: Vec<(String, String)>,
     /// X3DScene units (UNIT statements update the four default entries in place).
     pub units: Vec<UnitInfo>,
@@ -257,13 +315,20 @@ pub struct Scene {
     pub nodes: Vec<Node>,
     pub protos: Vec<ProtoDecl>,
     pub externprotos: Vec<ExternProtoDecl>,
-    /// Console output X_ITE would have produced (warnings), for diagnostics.
+    /// Console output X_ITE would have produced, for diagnostics, in print order. Entries are console.warn
+    /// messages unless they carry [`ERROR_LEVEL_MARK`] (added by [`Scene::error`]), which makes them console.error.
+    /// Use [`console_level`] to read an entry; `Runtime::log_warn` does so for every flush site.
     pub warnings: Vec<String>,
     /// Nodes parsed outside PROTO declarations, in the order X3DParser.getNodes () collects
     /// them (when the node body closes). X3DParser.setupNodes sets them up in this order.
     pub setup_order: Vec<NodeId>,
     /// Clone counts > 1 (X3DNode.getCloneCount), filled in by the runtime before printing.
     pub clone_counts: Option<std::collections::HashMap<NodeId, usize>>,
+    /// Fields whose value a Script gave with components that are not all numbers (X_ITE's Vector3 holds any JavaScript value): the
+    /// token of the Script realm's copy. Such a value is never the field's default (X_ITE compares the components with `===`).
+    pub raw_tokens: std::collections::HashMap<(NodeId, FieldLoc), RawValue>,
+    /// The print of raw components in progress (see [`RawPrint`]).
+    pub raw_print: std::cell::RefCell<RawPrint>,
     /// Scene data of the Inline scenes merged into this one, by root context (see [`Scene::merge_inline`]).
     pub scene_infos: std::collections::HashMap<CtxId, SceneInfo>,
     pub imported: Vec<ImportedNode>,
@@ -275,6 +340,10 @@ pub struct Scene {
     /// New nodes go to the end of the arena, never into a released slot: whoever sets this
     /// finds the nodes it creates as the range `len..` (SFNode.fromString).
     pub append_only: bool,
+    /// The root context of the world: [`ROOT`] until a `Browser.loadURL` / `replaceWorld` installs a scene that was
+    /// merged as a child of [`ROOT`] (X3DBrowser.replaceWorld). [`ROOT`] then stays as the browser's own context
+    /// (the default scene, the cached EXTERNPROTO scenes); its old contents are disposed.
+    pub world: CtxId,
     /// While `Some`, the id of every node that [`Scene::alloc_node`] and the `create_…` functions
     /// hand out is recorded here (the runtime uses it to find the nodes a Script creates).
     pub alloc_log: Option<Vec<NodeId>>,
@@ -405,7 +474,9 @@ impl Scene {
             encoding: "SCRIPTED".to_string(),
             world_url: world_url.to_string(),
             profile: None,
+            profile_statement: false,
             components: vec![],
+            component_level_texts: Default::default(),
             units: default_units(),
             meta: vec![],
             contexts: vec![ExecutionContext {
@@ -426,11 +497,14 @@ impl Scene {
             setup_order: vec![],
             clone_counts: None,
             scene_infos: Default::default(),
+            raw_tokens: Default::default(),
+            raw_print: Default::default(),
             imported: vec![],
             exported: vec![],
             route_counter: 0,
             free_nodes: Default::default(),
             append_only: false,
+            world: ROOT,
             alloc_log: None,
             ctx_slots: Default::default(),
             proto_slots: Default::default(),
@@ -489,6 +563,16 @@ impl Scene {
         }
     }
 
+    /// What the printers write as the level of the component `name` (`String (level)` of the ComponentInfo).
+    pub fn component_level_text(&self, ctx: CtxId, name: &str, level: i32) -> String {
+        let texts = match self.scene_infos.get(&self.scene_root(ctx)) {
+            Some(i) => &i.component_level_texts,
+            None => &self.component_level_texts,
+        };
+
+        texts.get(name).cloned().unwrap_or_else(|| level.to_string())
+    }
+
     pub fn units_of(&self, ctx: CtxId) -> &[UnitInfo] {
         match self.scene_infos.get(&self.scene_root(ctx)) {
             Some(i) => &i.units,
@@ -509,6 +593,19 @@ impl Scene {
         });
 
         (unit.map(|u| unit_factor(units, &u)).unwrap_or(1.0), unit_factor(units, "angle"))
+    }
+
+    /// Has predefined field `field_name` of `node` a unit category X3DScene.toUnit converts (the categories of
+    /// [`unit_factor`]; its switch spells "acceleration:", so an acceleration field prints as it is)?
+    pub fn field_has_unit(&self, node: NodeId, field_name: &str) -> bool {
+        match self.node(node).kind {
+            NodeKind::Builtin(t) => {
+                let spec = self.spec_version_of(self.node(node).ctx);
+                self.table.types[t].variant(spec).fields.iter().find(|d| d.name == field_name).and_then(|d| d.unit.as_deref())
+                    .is_some_and(|u| matches!(u, "angle" | "force" | "length" | "mass" | "angularRate" | "area" | "speed" | "volume"))
+            }
+            _ => false,
+        }
     }
 
     /// X3DScene.updateUnit: only the four known categories, position kept.
@@ -535,9 +632,18 @@ impl Scene {
         self.warnings.push(message);
     }
 
+    /// A console.error message, kept in order with the warnings (same list, marked entry).
+    pub fn error(&mut self, message: String) {
+        self.warnings.push(format!("{ERROR_LEVEL_MARK}{message}"));
+    }
+
     // --- profile / components -------------------------------------------------------------
 
     pub fn update_component(&mut self, name: &str, level: i32) {
+        // getComponent (name, level) names the component by its own name, not by an alias.
+        let name = self.table.component(name).map_or(name, |c| c.name.as_str()).to_string();
+        let name = name.as_str();
+
         match self.components.iter_mut().find(|c| c.0 == name) {
             Some(c) => c.1 = level,
             None => self.components.push((name.to_string(), level)),
@@ -551,12 +657,13 @@ impl Scene {
 
     /// X3DScene.hasComponent: profile components or scene components.
     pub fn has_component(&self, name: &str) -> bool {
-        self.has_component_in(ROOT, name)
+        self.has_component_in(self.world, name)
     }
 
     /// X3DExecutionContext.hasComponent of the scene that holds `ctx`.
     pub fn has_component_in(&self, ctx: CtxId, name: &str) -> bool {
-        if let Some(p) = self.profile_of(ctx).and_then(|p| self.table.profile(p)) {
+        // `this [_profile] ?? browser .getProfile ("Full")`.
+        if let Some(p) = self.table.profile(self.profile_of(ctx).unwrap_or("Full")) {
             if p.components.iter().any(|c| c.0 == name) {
                 return true;
             }
@@ -1037,6 +1144,10 @@ impl Scene {
 
     /// X3DBaseNode.isDefaultValue (node-level: compares with the field definition).
     pub fn is_default_value(&self, id: NodeId, loc: FieldLoc) -> bool {
+        if self.raw_tokens.contains_key(&(id, loc)) {
+            return false;
+        }
+
         let node = self.node(id);
         let field = self.field(id, loc);
 
@@ -1201,13 +1312,11 @@ impl Scene {
         matches!(self.node(id).kind, NodeKind::Imported(_))
     }
 
-    /// X3DExecutionContext.addRoute (with X3DRoute.checkFields). Returns an error message for
-    /// the cases where X_ITE throws. A route that ends at an imported node is created
-    /// unconnected; the runtime connects it once the Inline provides the exported node.
-    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<Option<usize>, String> {
+    /// X3DExecutionContext.getRoute up to the search: the fields of ordinary nodes must exist (`Unknown field`) and
+    /// X3DRoute.checkFields must accept them. An imported node has no fields to check.
+    pub fn route_ends(&self, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<(Option<FieldLoc>, Option<FieldLoc>), String> {
         let (src_imp, dst_imp) = (self.is_imported(source), self.is_imported(destination));
 
-        // X3DExecutionContext.getRoute: the fields of ordinary nodes must exist.
         let src = if src_imp {
             None
         } else {
@@ -1247,8 +1356,16 @@ impl Scene {
             }
         }
 
-        // The existing route with the same ends.
-        let duplicate = self.contexts[ctx].routes.iter().any(|r| {
+        Ok((src, dst))
+    }
+
+    /// The route of `ctx` with these ends (X3DExecutionContext.getRoute's search), by index.
+    pub fn find_route_index(&self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Option<usize> {
+        let (src_imp, dst_imp) = (self.is_imported(source), self.is_imported(destination));
+        let src = if src_imp { None } else { self.get_field(source, source_field) };
+        let dst = if dst_imp { None } else { self.get_field(destination, destination_field) };
+
+        self.contexts[ctx].routes.iter().position(|r| {
             r.source_node == source
                 && r.destination_node == destination
                 && match (src, r.conn) {
@@ -1259,9 +1376,24 @@ impl Scene {
                     (Some(loc), _) if !dst_imp => r.destination_loc == loc,
                     _ => r.raw_destination_field == destination_field,
                 }
-        });
+        })
+    }
 
-        if duplicate {
+    /// X3DExecutionContext.removeImportedNode: the record leaves the context (the runtime releases it once nothing names it).
+    pub fn remove_imported_node(&mut self, ctx: CtxId, imported_name: &str) -> Option<ImportedId> {
+        let id = self.contexts[ctx].imported.get(imported_name)?;
+
+        self.contexts[ctx].imported.remove(imported_name);
+        Some(id)
+    }
+
+    /// X3DExecutionContext.addRoute (with X3DRoute.checkFields). Returns an error message for
+    /// the cases where X_ITE throws. A route that ends at an imported node is created
+    /// unconnected; the runtime connects it once the Inline provides the exported node.
+    pub fn add_route(&mut self, ctx: CtxId, source: NodeId, source_field: &str, destination: NodeId, destination_field: &str) -> Result<Option<usize>, String> {
+        let (src, dst) = self.route_ends(source, source_field, destination, destination_field)?;
+
+        if self.find_route_index(ctx, source, source_field, destination, destination_field).is_some() {
             return Ok(None);
         }
 
@@ -1398,7 +1530,13 @@ impl Scene {
     }
 
     pub fn get_unique_export_name(&self, name: &str) -> String {
-        let exported = &self.contexts[ROOT].exported;
+        let exported = &self.contexts[self.world].exported;
+        get_unique_name(|n| exported.has(n), name)
+    }
+
+    /// X3DScene.getUniqueExportName of the scene whose root context is `root`.
+    pub fn get_unique_export_name_of(&self, root: CtxId, name: &str) -> String {
+        let exported = &self.contexts[root].exported;
         get_unique_name(|n| exported.has(n), name)
     }
 
@@ -1557,7 +1695,9 @@ impl Scene {
             encoding: other.encoding.clone(),
             world_url: other.world_url.clone(),
             profile: other.profile.clone(),
+            profile_statement: other.profile_statement,
             components: other.components.clone(),
+            component_level_texts: other.component_level_texts.clone(),
             meta: other.meta.clone(),
             units: other.units.clone(),
         };

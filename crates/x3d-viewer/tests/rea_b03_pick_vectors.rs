@@ -45,6 +45,18 @@ fn contacts_match_ammo() {
     // PICK_VECTORS=<file> runs other cases (investigation); the known list then does not apply.
     let custom = std::env::var("PICK_VECTORS").ok();
     let path = custom.clone().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/pick-vectors/ammo-contacts.json"));
+    contacts_match(path, custom.is_some());
+}
+
+/// Three seed-20261018 cases (4697 cylinder/mesh, 5480 cylinder/cylinder, 11878 cylinder/height
+/// field) where Ammo reports no contact: the inner compounds' dbvt walk drops the pair because
+/// a non-uniformly scaled cylinder's AABB is narrower than its support function.
+#[test]
+fn nested_compound_tree_culls_like_ammo() {
+    contacts_match(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/pick-vectors/ammo-nested-tree.json"), true);
+}
+
+fn contacts_match(path: PathBuf, custom: bool) {
     let data: Value = serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
     let cases = data["cases"].as_array().unwrap();
     let mut wrong = vec![];
@@ -95,7 +107,7 @@ fn contacts_match_ammo() {
     }
 
     let known_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/pick-vectors/ammo-known.tsv");
-    let known: Vec<usize> = if custom.is_some() { String::new() } else { std::fs::read_to_string(known_path).unwrap() }.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()).map(|l| l.split('\t').next().unwrap().parse().unwrap()).collect();
+    let known: Vec<usize> = if custom { String::new() } else { std::fs::read_to_string(known_path).unwrap() }.lines().filter(|l| !l.starts_with('#') && !l.trim().is_empty()).map(|l| l.split('\t').next().unwrap().parse().unwrap()).collect();
     let unexpected: Vec<&String> = wrong.iter().filter(|w| !known.iter().any(|k| w.starts_with(&format!("case {k} ")))).collect();
     let fixed: Vec<&usize> = known.iter().filter(|k| only.is_none_or(|o| o == **k) && !wrong.iter().any(|w| w.starts_with(&format!("case {k} ")))).collect();
 

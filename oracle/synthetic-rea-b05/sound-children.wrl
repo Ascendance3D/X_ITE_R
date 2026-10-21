@@ -1,0 +1,17 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+Viewpoint { position 0 0 0 }
+Sound { minFront 20 minBack 20 maxFront 40 maxBack 40 location 3 0 0 source DEF O AudioClip { url "media/tone48k-stereo.wav" loop TRUE } children Gain { gain 0.5 children DEF O2 OscillatorSource { frequency 220 } } }
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF S Script {
+  inputOnly SFTime set_time
+  outputOnly SFTime start
+  initializeOnly SFInt32 n 0
+  url "javascript:
+function set_time (value) { if (++ n === 12) start = value; }
+"
+}
+ROUTE T.time TO S.set_time
+ROUTE S.start TO O.startTime
+ROUTE S.start TO O2.startTime

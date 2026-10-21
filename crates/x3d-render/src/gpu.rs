@@ -26,10 +26,10 @@ use x3d_fields::math::{Matrix3, Matrix4, Vector4};
 use x3d_fields::NodeId;
 
 /// position 3, normal 3, texCoord0 4, color 4, texCoord1..3 12, tangent 4.
-const FLOATS_PER_VERTEX: usize = 30;
+const FLOATS_PER_VERTEX: usize = 31;
 
-/// texCoord1..3 (0 0 0 1) and the tangent (1 0 0 1) of vertices without them.
-const VERTEX_EXTRAS: [f32; 16] = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0];
+/// texCoord1..3 (0 0 0 1), the tangent (1 0 0 1) and the fog depth (0) of vertices without them.
+const VERTEX_EXTRAS: [f32; 17] = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0];
 
 /// X3DTexturingContext maxTextures: MultiTexture units.
 const MAX_TEXTURES: usize = 4;
@@ -340,6 +340,14 @@ struct DrawU {
     inst_n0: [f32; 4],
     inst_n1: [f32; 4],
     inst_n2: [f32; 4],
+    /// x3d_Fog of the draw: color rgb + type, visibilityStart / visibilityRange, matrix columns.
+    fog_color_type: [f32; 4],
+    fog_range: [f32; 4],
+    fog_m0: [f32; 4],
+    fog_m1: [f32; 4],
+    fog_m2: [f32; 4],
+    /// x: X3D_FOG_COORDS.
+    fog_flags: [u32; 4],
 }
 
 /// The material texture kinds: five of the materials, sixteen of the extensions.
@@ -1324,8 +1332,8 @@ impl Renderer {
     }
 
     fn make_pipeline(&self, key: PipelineKey, format: wgpu::TextureFormat, samples: u32, flip: bool) -> wgpu::RenderPipeline {
-        let attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4];
-        let stipple_attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4, 4 => Float32x4];
+        let attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4, 9 => Float32];
+        let stipple_attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4, 9 => Float32, 4 => Float32x4];
         let (entry, stride, attributes): (&str, usize, &[wgpu::VertexAttribute]) =
             if key.stipple { ("vs_stipple", STIPPLE_FLOATS_PER_VERTEX, &stipple_attributes) } else { ("vs_main", FLOATS_PER_VERTEX, &attributes) };
         let float_blend = format != wgpu::TextureFormat::Rgba32Float || self.device.features().contains(wgpu::Features::FLOAT32_BLENDABLE);
@@ -2727,6 +2735,7 @@ impl Renderer {
         let mut volume_inputs: Vec<crate::volume_gpu::VolumeInput> = vec![];
         // ComposedShader: the custom draws of the frame, in draw order (crate::shader_gpu).
         let mut custom_inputs: Vec<crate::shader_gpu::CustomInput> = vec![];
+        let mut builtin_draws: Vec<(usize, Vec<Rc<TextureImage>>)> = vec![];
 
         // GaussianSplats: the splat draws of the frame, in draw order (crate::splats_gpu).
         let mut splat_inputs: Vec<crate::splats_gpu::SplatInput> = vec![];
@@ -2738,7 +2747,7 @@ impl Renderer {
             let is_transparent = k >= n_opaque;
 
             if let Some(s) = &item.splats {
-                splat_inputs.push(crate::splats_gpu::SplatInput { draw: s, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), viewport: item.viewport.unwrap_or(layer_rect) });
+                splat_inputs.push(crate::splats_gpu::SplatInput { draw: s, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), viewport: item.viewport.unwrap_or(layer_rect), fog: item.fog.as_ref().or(frame.fog.as_ref()) });
                 calls.push(Call {
                     key: PipelineKey::new(Topology::Triangles, Cull::Back, true, true, false, true),
                     blend_constant: None,
@@ -2756,7 +2765,7 @@ impl Renderer {
             if let Some(v) = &item.volume {
                 used_textures.extend(v.textures.iter().cloned());
                 let lights = item.lights.iter().copied().filter(|l| (*l as usize) < MAX_FRAME_LIGHTS).take(MAX_LIGHTS).collect();
-                volume_inputs.push(crate::volume_gpu::VolumeInput { draw: v, lights, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect() });
+                volume_inputs.push(crate::volume_gpu::VolumeInput { draw: v, lights, clip_planes: item.clip_planes.iter().take(MAX_CLIP_PLANES).copied().collect(), fog: item.fog.as_ref().or(frame.fog.as_ref()) });
                 calls.push(Call {
                     key: PipelineKey::new(Topology::Triangles, Cull::Back, true, true, false, true),
                     blend_constant: None,
@@ -2855,7 +2864,17 @@ impl Renderer {
             }
 
             d.multi_color = item.multi_texture.as_ref().map(|m| m.color.map(|v| v as f32)).unwrap_or([1.0; 4]);
-            d.tex_counts = [item.textures.len().min(MAX_TEXTURES) as u32, item.multi_texture.is_some() as u32, g.tex_channels.len().clamp(1, 4) as u32, item.texture_matrices.len().clamp(1, 4) as u32];
+            // X3D_NUM_TEXTURE_COORDINATES: geometryContext .textureCoordinateMapping .size, a Map keyed by the channel's
+            // mapping name or else its number (X3DSingleTextureCoordinateNode.getTextureCoordinateMapping).
+            let mut coordinate_keys: Vec<(bool, String)> = vec![];
+            for (i, c) in g.tex_channels.iter().take(4).enumerate() {
+                let key = if c.mapping.is_empty() { (false, i.to_string()) } else { (true, c.mapping.clone()) };
+
+                if !coordinate_keys.contains(&key) {
+                    coordinate_keys.push(key);
+                }
+            }
+            d.tex_counts = [item.textures.len().min(MAX_TEXTURES) as u32, item.multi_texture.is_some() as u32, coordinate_keys.len().clamp(1, 4) as u32, item.texture_matrices.len().clamp(1, 4) as u32];
             d.n0 = [normal[0], normal[1], normal[2], 0.0];
             d.n1 = [normal[3], normal[4], normal[5], 0.0];
             d.n2 = [normal[6], normal[7], normal[8], 0.0];
@@ -2889,6 +2908,18 @@ impl Renderer {
                 d.flags3[1] = 1;
                 d.depth_range = [dm.range[0] as f32, dm.range[1] as f32, 0.0, 0.0];
             }
+
+            // FogContainer.setShaderUniforms: the draw's fog is the innermost LocalFog, else the bound Fog;
+            // X3D_FOG_COORDS when the geometry has fog depths.
+            if let Some(f) = item.fog.as_ref().or(frame.fog.as_ref()) {
+                d.fog_color_type = [f.color[0], f.color[1], f.color[2], f.fog_type as f32];
+                d.fog_range = [f.visibility_start, f.visibility_range, 0.0, 0.0];
+                d.fog_m0 = [f.matrix[0], f.matrix[1], f.matrix[2], 0.0];
+                d.fog_m1 = [f.matrix[3], f.matrix[4], f.matrix[5], 0.0];
+                d.fog_m2 = [f.matrix[6], f.matrix[7], f.matrix[8], 0.0];
+            }
+
+            d.fog_flags[0] = (!g.fog_depths.is_empty()) as u32;
 
             let set_material = |d: &mut DrawU, m: &MaterialParams| {
                 d.diffuse_ambient = [m.diffuse[0] as f32, m.diffuse[1] as f32, m.diffuse[2] as f32, m.ambient_intensity as f32];
@@ -3148,6 +3179,8 @@ impl Renderer {
                     });
                     c.source = Source::Custom(custom_inputs.len() - 1, back);
                 }
+            } else if calls.len() > calls_before && !item.textures.is_empty() {
+                builtin_draws.push((custom_inputs.len(), item.textures.clone()));
             }
         }
 
@@ -3299,6 +3332,7 @@ impl Renderer {
                 samples,
                 frame_no,
                 &custom_inputs,
+                &builtin_draws,
                 &|p| textures.get(&p).map(|e| (&e.view, &e.sampler)),
                 [(&white_2d.0, &white_2d.1), (&white_3d.0, &white_3d.1), (&white_cube.0, &white_cube.1)],
             );
@@ -3518,7 +3552,7 @@ const STIPPLE_FLOATS_PER_VERTEX: usize = FLOATS_PER_VERTEX + 4;
 
 /// ALIASED_LINE_WIDTH_RANGE [1] of the oracle GPU (ANGLE on OpenGL, NVIDIA): wider lines are
 /// transformed into triangles (LineProperties.transformLines), narrower ones use gl.lineWidth.
-const MAX_LINE_WIDTH: f64 = 10.0;
+pub const MAX_LINE_WIDTH: f64 = 10.0;
 
 /// The vertices of a line geometry with LineProperties, in the stipple layout. `projection` is the
 /// GL projection, window coordinates have their origin at the lower left (gl_FragCoord).
@@ -3639,6 +3673,15 @@ fn line_style_vertices(g: &crate::geometry::Geometry, model_view: &Matrix4, proj
     (out, triangles)
 }
 
+/// LineProperties.getTransformLines (a width above ALIASED_LINE_WIDTH_RANGE [1]): the triangles X3DLineGeometryNode
+/// draws instead of gl.LINES, also in the pointing pass (displaySimpleThick), as object-space positions, three per
+/// triangle, two triangles per segment. `viewport` and `projection` are those of the DISPLAY pass that made them.
+pub fn transformed_line_positions(g: &crate::geometry::Geometry, model_view: &Matrix4, projection: &Matrix4, viewport: [f64; 4], l: &LineParams) -> Vec<[f32; 4]> {
+    let (verts, _) = line_style_vertices(g, model_view, projection, viewport, l, 1);
+
+    verts.chunks_exact(STIPPLE_FLOATS_PER_VERTEX).map(|v| [v[0], v[1], v[2], 1.0]).collect()
+}
+
 trait IntoCorners {
     fn into_corners(self, p1: [f64; 3], ox: f64, oy: f64) -> [([f64; 2], [f64; 2]); 2];
 }
@@ -3693,6 +3736,9 @@ fn geometry_vertices(g: &crate::geometry::Geometry) -> Vec<f32> {
             Some(tangent) => out.extend_from_slice(tangent),
             None => out.extend_from_slice(&[1.0, 0.0, 0.0, 1.0]),
         }
+
+        // x3d_FogDepth (FogCoordinate; zero without).
+        out.push(g.fog_depths.get(i).copied().unwrap_or(0.0));
     }
 
     out

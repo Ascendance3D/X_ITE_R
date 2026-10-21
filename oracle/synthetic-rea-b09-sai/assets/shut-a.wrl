@@ -1,0 +1,9 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+DEF IA Script {
+  url "ecmascript:
+function initialize () { console .log ('IA initialize'); }
+function shutdown () { console .log ('IA shutdown'); }
+"
+}

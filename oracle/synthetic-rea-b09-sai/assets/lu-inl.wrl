@@ -1,0 +1,4 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+DEF IL Transform { translation 1 2 3 }

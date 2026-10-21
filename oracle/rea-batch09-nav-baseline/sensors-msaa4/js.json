@@ -1,0 +1,189 @@
+{
+  "ok": true,
+  "poses": {
+    "4": {
+      "position": [
+        0,
+        0,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "front",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "5": {
+      "position": [
+        0,
+        0,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "front",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "12": {
+      "position": [
+        0,
+        0,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "front",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "20": {
+      "position": [
+        0,
+        0,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "front",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "28": {
+      "position": [
+        0,
+        0,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "front",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    },
+    "40": {
+      "position": [
+        0,
+        0,
+        12
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "",
+      "description": "front",
+      "viewer": "NONE",
+      "fieldOfViewScale": 1
+    }
+  },
+  "vrml": {
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"x10 sensors\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nViewpoint {\n  description \"front\"\n  position 0 0 12\n}\n\nTransform {\n  translation -3 1.5 0\n  children [\n    DEF TOUCH_TS TouchSensor {\n      description \"touch me\"\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.2 0.2\n        }\n      }\n      geometry Box {\n        size 1.6 1.6 1.6\n      }\n    }\n  ]\n}\n\nDEF MARKER Transform {\n  translation 0.2001951 -0.09556687 0.8000002\n  children Shape {\n    appearance Appearance {\n      material DEF MARKER_MAT Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Sphere {\n      radius 0.15\n    }\n  }\n}\n\nDEF TOUCH_CLOCK TimeSensor {\n  cycleInterval 2\n  startTime 946684800.1\n}\n\nDEF PLANE_BOX Transform {\n  children [\n    DEF PLANE_PS PlaneSensor {\n      minPosition -2 -2\n      maxPosition 2 2\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.2\n        }\n      }\n      geometry Box {\n        size 1.4 1.4 0.6\n      }\n    }\n  ]\n}\n\nDEF CYL_BOX Transform {\n  translation 3 1.5 0\n  children [\n    DEF CYL_CS CylinderSensor {\n      minAngle -6\n      maxAngle 6\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.3 0.9\n        }\n      }\n      geometry Cylinder {\n        height 1.6\n        radius 0.9\n      }\n    }\n  ]\n}\n\nDEF SPH_BOX Transform {\n  translation 3 -2.5 0\n  children [\n    DEF SPH_SS SphereSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.8 0.2\n        }\n      }\n      geometry Sphere { }\n    }\n  ]\n}\n\nROUTE TOUCH_TS.hitPoint_changed TO MARKER.set_translation\nROUTE TOUCH_TS.touchTime TO TOUCH_CLOCK.set_startTime\nROUTE PLANE_PS.translation_changed TO PLANE_BOX.set_translation\nROUTE CYL_CS.rotation_changed TO CYL_BOX.set_rotation\nROUTE SPH_SS.rotation_changed TO SPH_BOX.set_rotation\n",
+    "5": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"x10 sensors\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nViewpoint {\n  description \"front\"\n  position 0 0 12\n}\n\nTransform {\n  translation -3 1.5 0\n  children [\n    DEF TOUCH_TS TouchSensor {\n      description \"touch me\"\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.2 0.2\n        }\n      }\n      geometry Box {\n        size 1.6 1.6 1.6\n      }\n    }\n  ]\n}\n\nDEF MARKER Transform {\n  translation 0.2001951 -0.09556687 0.8000002\n  children Shape {\n    appearance Appearance {\n      material DEF MARKER_MAT Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Sphere {\n      radius 0.15\n    }\n  }\n}\n\nDEF TOUCH_CLOCK TimeSensor {\n  cycleInterval 2\n  startTime 946684800.1\n}\n\nDEF PLANE_BOX Transform {\n  children [\n    DEF PLANE_PS PlaneSensor {\n      minPosition -2 -2\n      maxPosition 2 2\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.2\n        }\n      }\n      geometry Box {\n        size 1.4 1.4 0.6\n      }\n    }\n  ]\n}\n\nDEF CYL_BOX Transform {\n  translation 3 1.5 0\n  children [\n    DEF CYL_CS CylinderSensor {\n      minAngle -6\n      maxAngle 6\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.3 0.9\n        }\n      }\n      geometry Cylinder {\n        height 1.6\n        radius 0.9\n      }\n    }\n  ]\n}\n\nDEF SPH_BOX Transform {\n  translation 3 -2.5 0\n  children [\n    DEF SPH_SS SphereSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.8 0.2\n        }\n      }\n      geometry Sphere { }\n    }\n  ]\n}\n\nROUTE TOUCH_TS.hitPoint_changed TO MARKER.set_translation\nROUTE TOUCH_TS.touchTime TO TOUCH_CLOCK.set_startTime\nROUTE PLANE_PS.translation_changed TO PLANE_BOX.set_translation\nROUTE CYL_CS.rotation_changed TO CYL_BOX.set_rotation\nROUTE SPH_SS.rotation_changed TO SPH_BOX.set_rotation\n",
+    "12": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"x10 sensors\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nViewpoint {\n  description \"front\"\n  position 0 0 12\n}\n\nTransform {\n  translation -3 1.5 0\n  children [\n    DEF TOUCH_TS TouchSensor {\n      description \"touch me\"\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.2 0.2\n        }\n      }\n      geometry Box {\n        size 1.6 1.6 1.6\n      }\n    }\n  ]\n}\n\nDEF MARKER Transform {\n  translation 0.2001951 -0.09556687 0.8000002\n  children Shape {\n    appearance Appearance {\n      material DEF MARKER_MAT Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Sphere {\n      radius 0.15\n    }\n  }\n}\n\nDEF TOUCH_CLOCK TimeSensor {\n  cycleInterval 2\n  startTime 946684800.1\n}\n\nDEF PLANE_BOX Transform {\n  translation 1.703776 0.8518882 0\n  children [\n    DEF PLANE_PS PlaneSensor {\n      offset 1.703776 0.8518882 0\n      minPosition -2 -2\n      maxPosition 2 2\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.2\n        }\n      }\n      geometry Box {\n        size 1.4 1.4 0.6\n      }\n    }\n  ]\n}\n\nDEF CYL_BOX Transform {\n  translation 3 1.5 0\n  children [\n    DEF CYL_CS CylinderSensor {\n      minAngle -6\n      maxAngle 6\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.3 0.9\n        }\n      }\n      geometry Cylinder {\n        height 1.6\n        radius 0.9\n      }\n    }\n  ]\n}\n\nDEF SPH_BOX Transform {\n  translation 3 -2.5 0\n  children [\n    DEF SPH_SS SphereSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.8 0.2\n        }\n      }\n      geometry Sphere { }\n    }\n  ]\n}\n\nROUTE TOUCH_TS.hitPoint_changed TO MARKER.set_translation\nROUTE TOUCH_TS.touchTime TO TOUCH_CLOCK.set_startTime\nROUTE PLANE_PS.translation_changed TO PLANE_BOX.set_translation\nROUTE CYL_CS.rotation_changed TO CYL_BOX.set_rotation\nROUTE SPH_SS.rotation_changed TO SPH_BOX.set_rotation\n",
+    "20": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"x10 sensors\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nViewpoint {\n  description \"front\"\n  position 0 0 12\n}\n\nTransform {\n  translation -3 1.5 0\n  children [\n    DEF TOUCH_TS TouchSensor {\n      description \"touch me\"\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.2 0.2\n        }\n      }\n      geometry Box {\n        size 1.6 1.6 1.6\n      }\n    }\n  ]\n}\n\nDEF MARKER Transform {\n  translation 0.2001951 -0.09556687 0.8000002\n  children Shape {\n    appearance Appearance {\n      material DEF MARKER_MAT Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Sphere {\n      radius 0.15\n    }\n  }\n}\n\nDEF TOUCH_CLOCK TimeSensor {\n  cycleInterval 2\n  startTime 946684800.1\n}\n\nDEF PLANE_BOX Transform {\n  translation 1.703776 0.8518882 0\n  children [\n    DEF PLANE_PS PlaneSensor {\n      offset 1.703776 0.8518882 0\n      minPosition -2 -2\n      maxPosition 2 2\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.2\n        }\n      }\n      geometry Box {\n        size 1.4 1.4 0.6\n      }\n    }\n  ]\n}\n\nDEF CYL_BOX Transform {\n  translation 3 1.5 0\n  rotation 0 1 0 1.0388718865047\n  children [\n    DEF CYL_CS CylinderSensor {\n      minAngle -6\n      maxAngle 6\n      offset 1.038872\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.3 0.9\n        }\n      }\n      geometry Cylinder {\n        height 1.6\n        radius 0.9\n      }\n    }\n  ]\n}\n\nDEF SPH_BOX Transform {\n  translation 3 -2.5 0\n  children [\n    DEF SPH_SS SphereSensor { }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.8 0.2\n        }\n      }\n      geometry Sphere { }\n    }\n  ]\n}\n\nROUTE TOUCH_TS.hitPoint_changed TO MARKER.set_translation\nROUTE TOUCH_TS.touchTime TO TOUCH_CLOCK.set_startTime\nROUTE PLANE_PS.translation_changed TO PLANE_BOX.set_translation\nROUTE CYL_CS.rotation_changed TO CYL_BOX.set_rotation\nROUTE SPH_SS.rotation_changed TO SPH_BOX.set_rotation\n",
+    "28": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"x10 sensors\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nViewpoint {\n  description \"front\"\n  position 0 0 12\n}\n\nTransform {\n  translation -3 1.5 0\n  children [\n    DEF TOUCH_TS TouchSensor {\n      description \"touch me\"\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.2 0.2\n        }\n      }\n      geometry Box {\n        size 1.6 1.6 1.6\n      }\n    }\n  ]\n}\n\nDEF MARKER Transform {\n  translation 0.2001951 -0.09556687 0.8000002\n  children Shape {\n    appearance Appearance {\n      material DEF MARKER_MAT Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Sphere {\n      radius 0.15\n    }\n  }\n}\n\nDEF TOUCH_CLOCK TimeSensor {\n  cycleInterval 2\n  startTime 946684800.1\n}\n\nDEF PLANE_BOX Transform {\n  translation 1.703776 0.8518882 0\n  children [\n    DEF PLANE_PS PlaneSensor {\n      offset 1.703776 0.8518882 0\n      minPosition -2 -2\n      maxPosition 2 2\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.2\n        }\n      }\n      geometry Box {\n        size 1.4 1.4 0.6\n      }\n    }\n  ]\n}\n\nDEF CYL_BOX Transform {\n  translation 3 1.5 0\n  rotation 0 1 0 1.0388718865047\n  children [\n    DEF CYL_CS CylinderSensor {\n      minAngle -6\n      maxAngle 6\n      offset 1.038872\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.3 0.9\n        }\n      }\n      geometry Cylinder {\n        height 1.6\n        radius 0.9\n      }\n    }\n  ]\n}\n\nDEF SPH_BOX Transform {\n  translation 3 -2.5 0\n  rotation 0.00817530967256205 0.920154335534638 -0.391470513715359 0.837543123964507\n  children [\n    DEF SPH_SS SphereSensor {\n      offset 0.00817530967256205 0.920154335534638 -0.391470513715359 0.837543123964507\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.8 0.2\n        }\n      }\n      geometry Sphere { }\n    }\n  ]\n}\n\nROUTE TOUCH_TS.hitPoint_changed TO MARKER.set_translation\nROUTE TOUCH_TS.touchTime TO TOUCH_CLOCK.set_startTime\nROUTE PLANE_PS.translation_changed TO PLANE_BOX.set_translation\nROUTE CYL_CS.rotation_changed TO CYL_BOX.set_rotation\nROUTE SPH_SS.rotation_changed TO SPH_BOX.set_rotation\n",
+    "40": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Interchange\n\nCOMPONENT EnvironmentalSensor : 3\nCOMPONENT PointingDeviceSensor : 1\nCOMPONENT Scripting : 1\nCOMPONENT Sound : 3\nCOMPONENT Text : 2\n\nWorldInfo {\n  title \"x10 sensors\"\n}\n\nNavigationInfo {\n  type \"NONE\"\n}\n\nViewpoint {\n  description \"front\"\n  position 0 0 12\n}\n\nTransform {\n  translation -3 1.5 0\n  children [\n    DEF TOUCH_TS TouchSensor {\n      description \"touch me\"\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.8 0.2 0.2\n        }\n      }\n      geometry Box {\n        size 1.6 1.6 1.6\n      }\n    }\n  ]\n}\n\nDEF MARKER Transform {\n  translation 0.2001951 -0.09556687 0.8000002\n  children Shape {\n    appearance Appearance {\n      material DEF MARKER_MAT Material {\n        diffuseColor 1 1 1\n      }\n    }\n    geometry Sphere {\n      radius 0.15\n    }\n  }\n}\n\nDEF TOUCH_CLOCK TimeSensor {\n  cycleInterval 2\n  startTime 946684800.1\n}\n\nDEF PLANE_BOX Transform {\n  translation 1.703776 0.8518882 0\n  children [\n    DEF PLANE_PS PlaneSensor {\n      offset 1.703776 0.8518882 0\n      minPosition -2 -2\n      maxPosition 2 2\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.8 0.2\n        }\n      }\n      geometry Box {\n        size 1.4 1.4 0.6\n      }\n    }\n  ]\n}\n\nDEF CYL_BOX Transform {\n  translation 3 1.5 0\n  rotation 0 1 0 1.0388718865047\n  children [\n    DEF CYL_CS CylinderSensor {\n      minAngle -6\n      maxAngle 6\n      offset 1.038872\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.2 0.3 0.9\n        }\n      }\n      geometry Cylinder {\n        height 1.6\n        radius 0.9\n      }\n    }\n  ]\n}\n\nDEF SPH_BOX Transform {\n  translation 3 -2.5 0\n  rotation 0.00817530967256205 0.920154335534638 -0.391470513715359 0.837543123964507\n  children [\n    DEF SPH_SS SphereSensor {\n      offset 0.00817530967256205 0.920154335534638 -0.391470513715359 0.837543123964507\n    }\n    Shape {\n      appearance Appearance {\n        material Material {\n          diffuseColor 0.9 0.8 0.2\n        }\n      }\n      geometry Sphere { }\n    }\n  ]\n}\n\nROUTE TOUCH_TS.hitPoint_changed TO MARKER.set_translation\nROUTE TOUCH_TS.touchTime TO TOUCH_CLOCK.set_startTime\nROUTE PLANE_PS.translation_changed TO PLANE_BOX.set_translation\nROUTE CYL_CS.rotation_changed TO CYL_BOX.set_rotation\nROUTE SPH_SS.rotation_changed TO SPH_BOX.set_rotation\n"
+  },
+  "prints": [],
+  "log": [
+    "warn: Parser error at line 21. Error: Bad ROUTE specification: source field type must match destination field type of fields named \"hitNormal_changed\" and \"diffuseColor\"."
+  ],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

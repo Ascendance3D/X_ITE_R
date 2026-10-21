@@ -1,0 +1,36 @@
+#X3D V3.3 utf8
+PROFILE Immersive
+COMPONENT Scripting:1
+META "title" "ie err string"
+DEF TS TimeSensor { cycleInterval 1 loop TRUE }
+DEF P Script {
+  inputOutput SFString hist ""
+  inputOutput SFInt32 step 0
+  inputOnly SFTime cycle
+  url "ecmascript:
+
+function p (name, f) { var v; try { v = f (); } catch (e) { v = 'ERR:' + e .message; } hist = hist + step + ':' + name + '=' + v + ' '; }
+function names (s) { var r = []; for (var i = 0; i < s .importedNodes .length; ++ i) r .push (s .importedNodes [i] .importedName + '<' + s .importedNodes [i] .exportedName); return r .join (','); }
+function lines (s, w) { return s .toVRMLString () .split ('\\n') .map (function (l) { return l .replace (/^\\s+/, ''); }) .filter (function (l) { return l .indexOf (w) === 0; }) .join ('|'); }
+function ex (s, name) { return s .getImportedNode (name); }
+var TEXTS = [\"DEF T Transform { }\\nIMPORT T.LI AS X\\n\", \"IMPORT NOSUCH.LI AS X\\n\", \"DEF I Inline { }\\nIMPORT I.A AS X\\nIMPORT I.B AS X\\n\", \"DEF I Inline { }\\nEXPORT NOSUCH\\n\", \"DEF T Transform { }\\nEXPORT T\\nEXPORT T AS T\\n\", \"DEF T Transform { }\\nDEF U Transform { }\\nEXPORT T AS Q\\nEXPORT U AS Q\\n\", \"DEF I Inline { }\\nIMPORT I.A AS X\\nEXPORT X\\n\", \"DEF I Inline { }\\nIMPORT I.A\\nIMPORT I.A AS B\\n\", \"DEF I Inline { }\\nIMPORT I\\n\", \"DEF I Inline { }\\nIMPORT I.\\n\", \"DEF I Inline { }\\nIMPORT .A\\n\", \"DEF I Inline { }\\nIMPORT I.A AS\\n\", \"EXPORT\\n\", \"DEF T Transform { }\\nEXPORT T AS\\n\", \"DEF T Transform { }\\nEXPORT T\\nROUTE T.translation_changed TO T.set_translation\\n\"];
+var results = [];
+
+function cycle () {
+  step = step + 1;
+  var s = Browser .currentScene;
+
+  // The promises settle a frame apart in the two browsers (see REPORT), so the results are collected and shown at the end.
+  if (step >= 3 && step <= TEXTS .length + 2) {
+    var i = step - 3;
+    Browser .createX3DFromString (TEXTS [i]) .then (
+      function (sc) { results [i] = i + ':ok ' + sc .importedNodes .length + '/' + sc .exportedNodes .length; },
+      function (e) { results [i] = i + ':ERR ' + String (e && e .message) .replace (/http:\\/\\/[^\\/]+/g, 'H') .split ('\\n') .join ('|'); });
+  }
+  if (step == TEXTS .length + 6) hist = results .join (' ');
+
+}
+  "
+}
+DEF STEP TimeSensor { cycleInterval 0.05 loop TRUE }
+ROUTE STEP.cycleTime TO P.cycle
