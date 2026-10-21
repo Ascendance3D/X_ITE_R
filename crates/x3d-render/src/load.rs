@@ -34,5 +34,13 @@ pub fn load_world(oracle_root: &Path, file: &Path, scripts: bool) -> Result<Runt
         rt.run_tasks();
     }
 
+    // Font loads take a few frames (a `sleep (0)` timer, then the fetch); x_ite-shot.mjs waits for them in its settle time, so
+    // the still has the fonts. One more frame processes the rebuild they end with.
+    if rt.fonts_loading() {
+        rt.finish_font_loads();
+        rt.frame();
+        rt.run_tasks();
+    }
+
     Ok(rt)
 }

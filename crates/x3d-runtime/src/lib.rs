@@ -309,8 +309,6 @@ pub enum Task {
     BrowserLoad(u64),
     /// X3DBrowser.createX3DFromString: the parser's statements run once `browser .loadComponents (scene)` resolved.
     BrowserParse(u64),
-    /// The browser's default FontStyle loaded its font (`await $.sleep (0)`, then the fetch): a macrotask.
-    DefaultFontLoad,
 }
 
 /// X3DBrowserContext's active nodes (getActiveLayer, getActiveNavigationInfo, getActiveViewpoint) and getCurrentViewer.
@@ -384,6 +382,8 @@ pub struct Runtime {
     /// The Texts that use the browser's default FontStyle, in the order they connected.
     pub default_font_texts: Vec<NodeId>,
     pub default_font: nodes::text::DefaultFont,
+    /// How far the default FontStyle's loadData got while `default_font` is Loading (its timer, then its font file).
+    pub default_font_stage: nodes::text::LoadStage,
     /// X3DFontStyleNode.loadData runs waiting for their `await $.sleep (0)` timer or their font file (see nodes/text.rs).
     pub font_style_loads: Vec<nodes::text::FontStyleLoad>,
     /// browser.loadFont's cache: the default font files a FontStyle has loaded.
@@ -617,6 +617,7 @@ impl Runtime {
             text_font_styles: HashMap::new(),
             default_font_texts: vec![],
             default_font: Default::default(),
+            default_font_stage: nodes::text::LoadStage::Timer,
             font_style_loads: vec![],
             loaded_font_files: Default::default(),
             font_style_snapshot: HashMap::new(),
@@ -1168,7 +1169,6 @@ impl Runtime {
                 Task::ExternLoad(e, request) => self.extern_run(e, request),
                 Task::ScriptFetch(node, index) => self.script_fetch(node, index),
                 Task::BrowserLoad(id) => self.browser_load(id),
-                Task::DefaultFontLoad => self.default_font_loaded(),
                 Task::ScriptLoad(..) | Task::ScriptCandidate(..) | Task::ScriptLoaded(..) | Task::BrowserParse(..) => {}
             }
         }

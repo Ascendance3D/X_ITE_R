@@ -68,6 +68,7 @@ pub fn run_world_as(oracle_root: &Path, file: &Path, scripts: bool, format: Dump
     }
 
     rt.load_world();
+    rt.finish_font_loads();
 
     let vrml = match format {
         DumpFormat::Vrml => rt.print_raw(|s| s.to_vrml_string()),
