@@ -1,0 +1,95 @@
+[
+ {
+  "chrome": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+ },
+ {
+  "name": "connected-whole-time",
+  "probes": [
+   {
+    "event": 0,
+    "firstNonZero": 0,
+    "bufferIndex": 0
+   }
+  ]
+ },
+ {
+  "name": "late-connect-0.25",
+  "probes": [
+   {
+    "event": 0,
+    "firstNonZero": 12032,
+    "bufferIndex": 0
+   },
+   {
+    "event": 12000,
+    "firstNonZero": 12032,
+    "bufferIndex": 0
+   }
+  ]
+ },
+ {
+  "name": "analyser-unconnected-pulls-then-out-at-0.5",
+  "probes": [
+   {
+    "event": 0,
+    "firstNonZero": 24064,
+    "bufferIndex": 24064
+   },
+   {
+    "event": 24000,
+    "firstNonZero": 24064,
+    "bufferIndex": 24064
+   }
+  ]
+ },
+ {
+  "name": "noloop-late-connect-1.5",
+  "probes": [
+   {
+    "event": 0,
+    "firstNonZero": 96000,
+    "bufferIndex": null
+   },
+   {
+    "event": 72000,
+    "firstNonZero": 96000,
+    "bufferIndex": null
+   }
+  ]
+ },
+ {
+  "name": "loop-late-connect-1.5",
+  "probes": [
+   {
+    "event": 0,
+    "firstNonZero": 72064,
+    "bufferIndex": 0
+   },
+   {
+    "event": 72000,
+    "firstNonZero": 72064,
+    "bufferIndex": 0
+   }
+  ]
+ },
+ {
+  "name": "disconnect-0.25-reconnect-0.5",
+  "probes": [
+   {
+    "event": 0,
+    "firstNonZero": 0,
+    "bufferIndex": 0
+   },
+   {
+    "event": 12000,
+    "firstNonZero": 12000,
+    "bufferIndex": 12000
+   },
+   {
+    "event": 24000,
+    "firstNonZero": 24064,
+    "bufferIndex": 12032
+   }
+  ]
+ }
+]
