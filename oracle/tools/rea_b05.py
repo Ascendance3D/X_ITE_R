@@ -23,6 +23,9 @@ baseline_dir = os.path.join(root, "oracle", "rea-batch05-baseline")
 # Open differences (not approved as DIFFERENT): name -> reason.
 KNOWN = {
     "spatial-hrtf": "PannerNode HRTF: web-audio-api's HRIR set, not Chromium's IRCAM Composite data (not ported)",
+    # Audio repair lane (XITE_R_AUDIO_ORACLE_REPAIR_01), open finding C.
+    "sound-lifecycle": "a clip connected to a Sound late (sound-source-change) or again (sound-lifecycle): in X_ITE its output goes on from the position where it was last connected, or from 0; in Rust from its running position. Plausible cause (from the sample positions, not proven): Chromium does not advance an AudioBufferSourceNode that has no path to the destination; the Rust audio engine does",
+    "sound-source-change": "a clip connected to a Sound late (sound-source-change) or again (sound-lifecycle): in X_ITE its output goes on from the position where it was last connected, or from 0; in Rust from its running position. Plausible cause (from the sample positions, not proven): Chromium does not advance an AudioBufferSourceNode that has no path to the destination; the Rust audio engine does",
 }
 
 args = sys.argv[1:]
