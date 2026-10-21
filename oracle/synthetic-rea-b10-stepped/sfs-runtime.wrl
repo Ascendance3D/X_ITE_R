@@ -1,0 +1,48 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+DEF V1 Viewpoint { position 0 0 10 }
+DEF V2 Viewpoint { position 0 0 6 orientation 0 0 1 0.2 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -2.5 2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF TA Text { string [ "Abc" ] fontStyle DEF FA ScreenFontStyle { pointSize 16 } solid FALSE } } ] } }
+Transform { translation 2.5 2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF TB Text { string [ "Ab" "Cd" ] fontStyle DEF FB ScreenFontStyle { pointSize 14 } solid FALSE } } ] } }
+Transform { translation -2.5 -1 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF TC Text { string [ "Abcdefg" ] fontStyle DEF FC ScreenFontStyle { pointSize 14 } solid FALSE } } ] } }
+Transform { translation 2.5 -1 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry DEF TD Text { string [ "Run" "time" ] fontStyle DEF FD ScreenFontStyle { pointSize 18 justify [ "MIDDLE" "MIDDLE" ] } solid FALSE } } ] } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode ta USE TA
+  initializeOnly SFNode fa USE FA
+  initializeOnly SFNode tb USE TB
+  initializeOnly SFNode fb USE FB
+  initializeOnly SFNode tc USE TC
+  initializeOnly SFNode fc USE FC
+  initializeOnly SFNode td USE TD
+  initializeOnly SFNode fd USE FD
+  initializeOnly SFNode v2 USE V2
+
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') fa .pointSize = 32;
+   if (k == 'b') fa .family = new MFString ('TYPEWRITER');
+   if (k == 'c') fa .style = 'BOLDITALIC';
+   if (k == 'd') fb .horizontal = false;
+   if (k == 'e') fb .justify = new MFString ('END', 'END');
+   if (k == 'f') fb .spacing = 2;
+   if (k == 'g') tc .length = new MFFloat (100);
+   if (k == 'h') tc .maxExtent = 60;
+   if (k == 'i') td .string = new MFString ('Changed');
+   if (k == 'j') fd .family = new MFString ('NoSuchFont', 'SANS');
+   if (k == 'k') v2 .set_bind = true;
+   if (k == 'l') Browser .setBrowserOption ('ContentScale', 2);
+   if (k == 'm') fa .pointSize = 12;
+   if (k == 'n') Browser .setBrowserOption ('ContentScale', 1);
+}
+"
+}
+ROUTE K.keyPress TO R.on_key
