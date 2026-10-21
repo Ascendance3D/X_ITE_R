@@ -177,6 +177,9 @@ pub struct BrowserOptions {
     pub framebuffer: (u32, u32),
     /// The ContentScale rendering property changed since the runtime last took this flag.
     pub content_scale_changed: bool,
+    /// The StraightenHorizon option was set since the runtime last took this flag (its value then): set_StraightenHorizon__
+    /// straightens the active layer's view when it is TRUE, and the ExamineViewer disconnects on every set.
+    pub straighten_set: Option<bool>,
     /// BrowserOptions.shading (getShading ()).
     pub shading: ShadingMode,
     /// Options set since the last [`BrowserOptions::process_events`], in order, without repeats
@@ -331,6 +334,7 @@ impl BrowserOptions {
             canvas: (width as f64, height as f64),
             framebuffer: (width.max(1), height.max(1)),
             content_scale_changed: false,
+            straighten_set: None,
             shading: ShadingMode::Gouraud,
             tainted: vec![],
             sound_intensity_changed: false,
@@ -480,6 +484,7 @@ impl BrowserOptions {
             }
             "OrderIndependentTransparency" => self.reshape(),
             "Mute" | "SoundIntensity" => self.sound_intensity_changed = true,
+            "StraightenHorizon" => self.straighten_set = Some(self.option("StraightenHorizon").as_bool()),
             _ => {}
         }
     }
