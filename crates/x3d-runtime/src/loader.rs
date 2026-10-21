@@ -360,7 +360,7 @@ impl Runtime {
             return self.movie_load(node);
         }
 
-        if type_name == "BufferAudioSource" {
+        if type_name == "BufferAudioSource" || type_name == "AudioClip" {
             return self.buffer_load(node);
         }
 
@@ -432,11 +432,12 @@ impl Runtime {
         self.set_load_state(node, if ok { nodes::LoadState::Complete } else { nodes::LoadState::Failed });
     }
 
-    /// BufferAudioSource.loadData: the FileLoader's ArrayBuffer is decoded (decodeAudioData)
-    /// before COMPLETE_STATE; no URL: `setMediaElement (null)`, FAILED_STATE. A file that does not
+    /// BufferAudioSource.loadData and AudioClip.loadData: the FileLoader's ArrayBuffer is decoded
+    /// (decodeAudioData) before COMPLETE_STATE; no URL: unloadData, FAILED_STATE. A file that does not
     /// decode rejects the async callback: the state stays IN_PROGRESS.
     fn buffer_load(&mut self, node: NodeId) {
-        let loader = FileLoader { type_name: "BufferAudioSource".into(), base: self.base_url(node), data_as_string: false };
+        let clip = self.builtin_name(node) == Some("AudioClip");
+        let loader = FileLoader { type_name: self.type_name(node), base: self.base_url(node), data_as_string: false };
         let urls = self.url_strings(node);
         let mut decoded = None;
 
@@ -449,7 +450,11 @@ impl Runtime {
         });
 
         if !ok {
-            self.buffer_load_start(node);
+            if clip {
+                self.audio_clip_unload_data(node);
+            } else {
+                self.buffer_load_start(node);
+            }
             self.set_load_state(node, nodes::LoadState::Failed);
             return;
         }
@@ -465,7 +470,9 @@ impl Runtime {
 
     /// The end of `await setArrayBuffer (data)`: COMPLETE_STATE unless decoding rejected.
     fn buffer_decoded(&mut self, node: NodeId, bytes: Vec<u8>) {
-        if self.buffer_set_array_buffer(node, bytes).is_ok() {
+        let set = if self.builtin_name(node) == Some("AudioClip") { self.audio_clip_set_array_buffer(node, bytes) } else { self.buffer_set_array_buffer(node, bytes) };
+
+        if set.is_ok() {
             self.set_load_state(node, nodes::LoadState::Complete);
         }
     }

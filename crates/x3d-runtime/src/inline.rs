@@ -128,9 +128,9 @@ impl Runtime {
             self.set_value(k, FieldValue::SFInt32(value));
         }
 
-        // BufferAudioSource: X3DUrlObject.setLoadState restarts the auto refresh timer after
+        // BufferAudioSource, AudioClip: X3DUrlObject.setLoadState restarts the auto refresh timer after
         // COMPLETE and after FAILED.
-        if self.builtin_name(node) == Some("BufferAudioSource") {
+        if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
             if matches!(state, LoadState::Complete | LoadState::Failed) {
                 self.inline_auto_refresh_complete(node);
             }
@@ -257,7 +257,7 @@ impl Runtime {
 
         // `if (this .isInitialized ()) this ._loadData = time; else this .loadData ()`: the field
         // event is the buffer that makes several requests before it is processed one load.
-        if matches!(self.builtin_name(node), Some("Inline" | "InlineGeometry" | "FontLibrary" | "Script" | "BufferAudioSource")) && self.nrt(node).is_some_and(|n| n.initialized) {
+        if matches!(self.builtin_name(node), Some("Inline" | "InlineGeometry" | "FontLibrary" | "Script" | "BufferAudioSource" | "AudioClip")) && self.nrt(node).is_some_and(|n| n.initialized) {
             if let Some(k) = self.private_field(node, "loadData") {
                 let t = self.now;
                 self.set_value(k, FieldValue::SFTime(t));
@@ -284,8 +284,8 @@ impl Runtime {
     fn url_start_load(&mut self, node: NodeId) {
         let generation = if self.is_scene_loader(node) { self.inline_abort(node) } else { 0 };
 
-        // BufferAudioSource.loadData: `this .setMediaElement (null)`, then the FileLoader.
-        if self.builtin_name(node) == Some("BufferAudioSource") {
+        // BufferAudioSource.loadData, AudioClip.loadData: `this .setMediaElement (null)`, then the FileLoader.
+        if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
             self.buffer_load_start(node);
         }
 
@@ -349,6 +349,7 @@ impl Runtime {
             }
             Some("Script") => self.script_unload_data(node),
             Some("BufferAudioSource") => self.buffer_unload_data(node),
+            Some("AudioClip") => self.audio_clip_unload_data(node),
             // ImageTexture.unloadData: clearTexture (an image still decoding is dropped).
             Some("ImageTexture") => {
                 self.decoded_images.retain(|(n, ..)| *n != node);
@@ -765,7 +766,7 @@ impl Runtime {
                     self.transform_sensor_set_enabled(node);
                 } else if matches!(self.builtin_name(node), Some("LinePickSensor" | "PointPickSensor" | "PrimitivePickSensor" | "VolumePickSensor")) {
                     self.pick_sensor_set_live(node);
-                } else if matches!(self.builtin_name(node), Some("AudioDestination" | "StreamAudioDestination" | "SpatialSound")) {
+                } else if matches!(self.builtin_name(node), Some("AudioDestination" | "StreamAudioDestination" | "SpatialSound" | "Sound")) {
                     self.sound_set_live(node);
                 } else if self.builtin_name(node) == Some("ParticleSystem") {
                     self.particle_system_set_live(node);
@@ -776,8 +777,8 @@ impl Runtime {
                 } else {
                     self.time_set_live(node, now);
 
-                    // BufferAudioSource.set_live__: X3DUrlObject.set_live__ too.
-                    if self.builtin_name(node) == Some("BufferAudioSource") {
+                    // BufferAudioSource.set_live__, AudioClip.set_live__: X3DUrlObject.set_live__ too.
+                    if matches!(self.builtin_name(node), Some("BufferAudioSource" | "AudioClip")) {
                         self.buffer_url_set_live(node, now);
                     }
                 }
@@ -992,7 +993,7 @@ impl Runtime {
     pub(crate) fn inline_next_timer(&self, now: f64) -> Option<(f64, NodeId)> {
         (0..self.scene.nodes.len() as NodeId)
             .filter_map(|n| match self.nrt(n).map(|r| &r.state) {
-                Some(nodes::State::UrlObject(s)) if matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry" | "BufferAudioSource")) => s.timer.map(|due| (due, n)),
+                Some(nodes::State::UrlObject(s)) if matches!(self.builtin_name(n), Some("Inline" | "InlineGeometry" | "BufferAudioSource" | "AudioClip")) => s.timer.map(|due| (due, n)),
                 _ => None,
             })
             .filter(|(due, _)| *due <= now * 1000.0)

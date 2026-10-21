@@ -382,9 +382,8 @@ fn visible_object(sg: &Sg, n: NodeId, memo: &mut std::collections::HashMap<NodeI
         "LOD" | "GeoLOD" | "HAnimJoint" | "Background" | "TextureBackground" | "ListenerPointSource" => true,
         "DirectionalLight" | "PointLight" | "SpotLight" => sg.bool(n, "global", false),
         "ProximitySensor" | "VisibilitySensor" => sg.bool(n, "enabled", true),
-        "Sound" => sg.node(n, "source").is_some(),
-        // SpatialSound: setVisibleObject (this .childNodes .length).
-        "SpatialSound" => sg.rt.spatial_sound_visible(n),
+        // SpatialSound, Sound: setVisibleObject (this .childNodes .length).
+        "SpatialSound" | "Sound" => sg.rt.spatial_sound_visible(n),
         "Inline" => sg.bool(n, "load", true) && sg.inline_scene(n).is_some_and(|ctx| any(sg.roots_of(ctx), memo)),
         "StaticGroup" => any(sg.nodes(n, "children"), memo),
         _ if GROUPS.contains(&ty) || matches!(ty, "Viewport" | "LayoutGroup") => any(children_of(sg, n, ty), memo),
@@ -711,7 +710,7 @@ impl<'a> Walker<'a> {
             "Fog" => self.scan.fogs.push(me()),
             "ProximitySensor" | "GeoProximitySensor" => self.scan.proximity.push(EnvInst { node: me(), model_view: *mv }),
             "VisibilitySensor" => self.scan.visibility.push(EnvInst { node: me(), model_view: *mv }),
-            "SpatialSound" | "ListenerPointSource" => self.scan.sounds.push(EnvInst { node: me(), model_view: *mv }),
+            "SpatialSound" | "Sound" | "ListenerPointSource" => self.scan.sounds.push(EnvInst { node: me(), model_view: *mv }),
             "TransformSensor" if self.picking.is_some() => self.scan.transform_sensors.push(EnvInst { node: me(), model_view: *mv }),
             _ if PICK_SENSORS.contains(&ty) => {
                 if self.pick.as_ref().is_some_and(|p| p.input.sensors.iter().any(|s| s.node == n)) {
