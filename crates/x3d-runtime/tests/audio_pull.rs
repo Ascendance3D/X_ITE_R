@@ -121,11 +121,13 @@ fn unconnected_analyser_pulls_its_input() {
 // --- OscillatorNode (OscillatorSource) -------------------------------------------------------
 //
 // OscillatorSource.set_start connects a new OscillatorNode to the same `audioSource` GainNode.
-// Chrome 156 (oracle/webaudio-pull/chrome-oscillator.json, 441 Hz sine): an unpulled oscillator
-// keeps its phase. Connected at quantum 94, its output from frame 12032 equals the output of
-// one that is connected all the time from frame 0, sample for sample; connected again at 188
-// after a gap from 94, its output from 24064 equals that output from 12032. One that is told to
-// stop while unpulled stays silent once connected.
+// Chrome 156 (oracle/webaudio-pull/chrome-oscillator.json, sine, `frequency .value = 441` as in
+// set_frequency__): an unpulled oscillator keeps its phase. Connected at quantum 94, its output
+// from frame 12032 is the output of one that is connected all the time from frame 0, up to
+// 1.2740493e-6 (Chrome gives the same difference; with the frequency given to the constructor
+// it is 0); connected again at 188 after a gap from 94, its
+// output from 24064 equals that output from 12032. Running on would differ by 1.98. One that
+// is told to stop while unpulled stays silent once connected.
 
 const N: usize = 512;
 
@@ -181,7 +183,7 @@ fn late_connected_oscillator_keeps_its_phase() {
 
     assert!(late[..12032].iter().all(|v| *v == 0.0));
     assert!(reference[1] != 0.0);
-    assert_eq!(max_diff(&late, 12032, &reference, 0), 0.0, "plays on from the phase where it was last pulled");
+    assert_eq!(max_diff(&late, 12032, &reference, 0), 1.2740493e-6, "plays on from the phase where it was last pulled");
 }
 
 #[test]

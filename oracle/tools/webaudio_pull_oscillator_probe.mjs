@@ -18,7 +18,8 @@ const result = await page .evaluate (async () =>
    async function render (plan)
    {
       const ctx  = new OfflineAudioContext ({ numberOfChannels: 1, length: LEN, sampleRate: SR });
-      const osc  = new OscillatorNode (ctx, { type: plan .type ?? "sine", frequency: 441 });
+      const osc  = new OscillatorNode (ctx, { type: plan .type ?? "sine" });
+      osc .frequency .value = 441; // OscillatorSource.set_frequency__
       const gain = new GainNode (ctx);
       const sink = new GainNode (ctx);
       osc .connect (gain);
