@@ -1,0 +1,28 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Sound:2
+Viewpoint { position 0 0 0 }
+# race-url-twice with a LoadSensor: the load-state events and their order.
+Sound { minFront 20 minBack 20 maxFront 40 maxBack 40 location 0 0 -5 source DEF O AudioClip { url "media/tone22k-mono.wav" } }
+DEF L LoadSensor { children USE O }
+DEF PL Script { inputOnly SFBool a inputOnly SFBool l inputOnly SFFloat p url "ecmascript:
+function a (v) { print ('L isActive ' + v); }
+function l (v) { print ('L isLoaded ' + v); }
+function p (v) { print ('L progress ' + v); }
+" }
+ROUTE L.isActive TO PL.a
+ROUTE L.isLoaded TO PL.l
+ROUTE L.progress TO PL.p
+DEF T TimeSensor { loop TRUE cycleInterval 0.5 }
+DEF K Script { directOutput TRUE initializeOnly SFNode o USE O inputOnly SFTime set_time initializeOnly SFInt32 n 0 url "javascript:
+function set_time (value) { ++ n;
+   if (n === 20) { o.url = new MFString ('media/tone48k-stereo.wav'); o.url = new MFString ('media/tone22k-mono.wav'); }
+}
+" }
+ROUTE T.time TO K.set_time
+DEF PO Script { inputOnly SFBool a inputOnly SFTime d url "javascript:
+function a (v) { print ('O active ' + v); }
+function d (v) { print ('O duration ' + v); }
+" }
+ROUTE O.isActive TO PO.a
+ROUTE O.duration_changed TO PO.d
