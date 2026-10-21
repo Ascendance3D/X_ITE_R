@@ -79,6 +79,7 @@ fn font_style_params(sg: &Sg, font_style: Option<NodeId>) -> FontStyleParams {
         left_to_right: sg.bool(f, "leftToRight", true),
         top_to_bottom: sg.bool(f, "topToBottom", true),
         justify: sg.strings(f, "justify"),
+        cached_alignments: sg.rt.font_style_alignments.get(&f).copied(),
     }
 }
 

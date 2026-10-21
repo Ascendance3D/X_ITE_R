@@ -37,11 +37,14 @@ pub struct FontStyleParams {
     /// A ScreenFontStyle: `size` is its `getScale ()` (pointSize × PixelsPerPoint × ContentScale, in pixels), the glyph extents
     /// are the font's own (ScreenText.getGlyphExtents).
     pub screen: bool,
+    /// X3DFontStyleNode.alignments as the node holds them: computed by `set_justify__`, which runs when the node is set up and when
+    /// `justify` changes (not when `horizontal`, `leftToRight` or `topToBottom` change). None: derive them from the fields now.
+    pub cached_alignments: Option<(Alignment, Alignment)>,
 }
 
 impl Default for FontStyleParams {
     fn default() -> Self {
-        FontStyleParams { size: 1.0, spacing: 1.0, horizontal: true, left_to_right: true, top_to_bottom: true, justify: vec!["BEGIN".into()], content_scale: 1.0, screen: false }
+        FontStyleParams { size: 1.0, spacing: 1.0, horizontal: true, left_to_right: true, top_to_bottom: true, justify: vec!["BEGIN".into()], content_scale: 1.0, screen: false, cached_alignments: None }
     }
 }
 
@@ -70,8 +73,13 @@ impl FontStyleParams {
         if index != 0 { Alignment::First } else { Alignment::Begin }
     }
 
-    /// X3DFontStyleNode.set_justify__: (major, minor).
+    /// X3DFontStyleNode.alignments: what `set_justify__` last computed (see `cached_alignments`).
     pub fn alignments(&self) -> (Alignment, Alignment) {
+        self.cached_alignments.unwrap_or_else(|| self.compute_alignments())
+    }
+
+    /// X3DFontStyleNode.set_justify__: (major, minor).
+    pub fn compute_alignments(&self) -> (Alignment, Alignment) {
         let major_normal = if self.horizontal { self.left_to_right } else { self.top_to_bottom };
         let major = if !self.justify.is_empty() { self.get_alignment(0, major_normal) } else if major_normal { Alignment::Begin } else { Alignment::End };
         let minor_normal = if self.horizontal { self.top_to_bottom } else { self.left_to_right };

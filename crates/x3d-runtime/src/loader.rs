@@ -534,7 +534,17 @@ impl Runtime {
     pub(crate) fn font_style_initialize(&mut self, node: NodeId) {
         self.interest(node, "family", Cb::FontStyleReload);
         self.interest(node, "style", Cb::FontStyleReload);
+        self.interest(node, "justify", Cb::FontStyleJustify);
+        self.font_style_set_justify(node);
         self.font_style_request(node, false);
+    }
+
+    /// X3DFontStyleNode.set_justify__: the alignments are worked out from the fields as they are now and kept until `justify`
+    /// changes again (a later change of `horizontal`, `leftToRight` or `topToBottom` does not call it).
+    pub(crate) fn font_style_set_justify(&mut self, node: NodeId) {
+        let a = self.text_font_style_params_for_alignments(node).compute_alignments();
+
+        self.font_style_alignments.insert(node, a);
     }
 
     /// X3DFontStyleNode.loadData (font selection only): the snapshot of `family` with "SERIF" appended.
@@ -542,7 +552,7 @@ impl Runtime {
         let (family, style) = self.font_style_families(node);
 
         // browser.loadFont caches the default font file this load takes.
-        if let Some(key) = family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &style).map(|_| format!("{f}/{style}"))) {
+        if let Some(key) = family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &style).map(|(name, _)| name.to_string())) {
             self.loaded_font_files.insert(key);
         }
 

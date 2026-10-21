@@ -105,7 +105,7 @@ impl Runtime {
             match l.stage {
                 LoadStage::Timer => keep.push(l),
                 LoadStage::Fired => {
-                    let file = l.family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &l.style).map(|_| format!("{f}/{}", l.style)));
+                    let file = l.family.iter().find_map(|f| x3d_text::fonts::default_font_file(f, &l.style).map(|(name, _)| name.to_string()));
 
                     match file {
                         Some(key) if !self.loaded_font_files.contains(&key) => {
@@ -231,7 +231,7 @@ impl Runtime {
     /// The default FontStyle's loadData completed: `this .addNodeEvent ()`, so its Texts ask for a rebuild.
     pub(crate) fn default_font_loaded(&mut self) {
         self.default_font = DefaultFont::Loaded;
-        self.loaded_font_files.insert("SERIF/PLAIN".into());
+        self.loaded_font_files.insert("Droid/DroidSerif-Regular.woff2".into());
 
         for node in self.default_font_texts.clone() {
             self.text_request_rebuild(node);
@@ -276,6 +276,13 @@ impl Runtime {
         }
     }
 
+    pub(crate) fn text_font_style_params_for_alignments(&self, f: NodeId) -> FontStyleParams {
+        let mut p = self.text_font_style_params(Some(f));
+
+        p.cached_alignments = None;
+        p
+    }
+
     fn text_font_style_params(&self, fs: Option<NodeId>) -> FontStyleParams {
         let Some(f) = fs else { return FontStyleParams::default() };
         let num = |name: &str, default: f64| match self.pre_value(f, name) {
@@ -302,6 +309,7 @@ impl Runtime {
             justify,
             content_scale,
             screen,
+            cached_alignments: self.font_style_alignments.get(&f).copied(),
         }
     }
 
