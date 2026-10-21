@@ -147,6 +147,7 @@ pub enum Cb {
     FontLibrarySetFamily,
     /// X3DFontStyleNode: `family` or `style` changed (`set_url__`).
     FontStyleReload,
+    FontStyleJustify,
     /// X3DGeometryNode (Text): requestRebuild (node interest), rebuild (`_rebuild`), Text.set_fontStyle__.
     TextRequestRebuild,
     TextRebuild,
@@ -387,6 +388,8 @@ pub struct Runtime {
     pub loaded_font_files: std::collections::HashSet<String>,
     /// The family and style the running loadData of a FontStyle took when it began.
     pub font_style_snapshot: HashMap<NodeId, (Vec<String>, String)>,
+    /// X3DFontStyleNode.alignments (major, minor): set by `set_justify__` at setup and when `justify` changes.
+    pub font_style_alignments: HashMap<NodeId, (x3d_text::layout::Alignment, x3d_text::layout::Alignment)>,
     /// A frame has run (timers run at the start of each): loadData waits for its timer from then on.
     pub frames_started: bool,
     /// Script nodes in the order their contexts became active, for diagnostics.
@@ -615,6 +618,7 @@ impl Runtime {
             font_style_loads: vec![],
             loaded_font_files: Default::default(),
             font_style_snapshot: HashMap::new(),
+            font_style_alignments: HashMap::new(),
             frames_started: false,
             scripts: vec![],
             inline_scenes: HashMap::new(),

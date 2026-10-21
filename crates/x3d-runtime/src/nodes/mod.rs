@@ -517,6 +517,7 @@ impl Runtime {
             Cb::TextRebuild => self.text_rebuild(node),
             Cb::TextSetFontStyle => self.text_set_font_style(node),
             Cb::FontStyleReload => self.font_style_request(node, true),
+            Cb::FontStyleJustify => self.font_style_set_justify(node),
             Cb::SceneLoadCount => self.scene_load_count(node),
             Cb::WorldLoadCount => self.world_check_load_count(),
             Cb::RouteReconnect(id) => self.reconnect_route(id),
