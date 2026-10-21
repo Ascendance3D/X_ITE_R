@@ -359,6 +359,39 @@
    "pngSha256": "0280c7e34c56350484d5cafa8bdb1b97391616a0127a7f06f748f112ba0b9b0f",
    "splashVisible": false,
    "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-colorrgba.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "dd8b160867231137f8150ea3c61dace8f2a7861378a8b423f96d5406477b8cb9",
+   "pngSha256": "b7a6960912436d878da5770a061ad480a90613166fe03e8d32f2935ad582d63d",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-linecolor.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "e2a53b86b473f3e013f38c8025ceb916ef8d9d8fcbaf5cb49deafb707867df65",
+   "pngSha256": "c7cc2993ab799ebb9b663c62541e530735b43567ff39a050889ec1277b8eb898",
+   "splashVisible": false,
+   "canvasDisplay": "block"
+  },
+  {
+   "file": "vis-material-ambient.wrl",
+   "ok": true,
+   "log": [],
+   "width": 512,
+   "height": 512,
+   "rgbaSha256": "1f0122b55d8d9c996ac07792b98135d554934bdf226b8f980674dfc7e9cc4c9e",
+   "pngSha256": "f2eba2107c461af500d479ae8e495b0ab04425f668406dcc91d80c56ab433766",
+   "splashVisible": false,
+   "canvasDisplay": "block"
   }
  ]
 }
