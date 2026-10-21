@@ -319,6 +319,7 @@ impl Runtime {
             "Viewpoint" | "OrthoViewpoint" | "GeoViewpoint" => {
                 self.interest(node, "set_bind", Cb::BindableSetBind);
                 self.interest(node, "isBound", Cb::ViewpointIsBound);
+                self.interest(node, "viewAll", Cb::ViewpointSetViewAll);
 
                 if name == "GeoViewpoint" {
                     self.geo_viewpoint_initialize(node);
@@ -614,6 +615,14 @@ impl Runtime {
             Cb::Particle(cb) => self.particle_interest(node, cb),
             Cb::Physics(cb) => self.physics_interest(node, cb),
             Cb::Shader(cb) => self.shader_interest(node, cb),
+            Cb::ViewpointSetViewAll => {
+                // X3DViewpointNode.set_viewAll__: only a true viewAll of a bound viewpoint, `this ._set_bind = true`.
+                if self.get_bool(node, "viewAll") && self.get_bool(node, "isBound") {
+                    if let Some(k) = self.pre(node, "set_bind") {
+                        self.set_value(k, FieldValue::SFBool(true));
+                    }
+                }
+            }
             Cb::ViewpointIsBound => {
                 // X3DViewpointNode.set_bound__: `getBrowser () .setDescription (this ._description)`.
                 if self.get_bool(node, "isBound") {

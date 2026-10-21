@@ -188,6 +188,8 @@ pub enum Cb {
     CollisionSetEnabled,
     // X3DViewpointNode.set_navigationInfo__: `_isBound .addFieldInterest (navigationInfoNode ._set_bind)`.
     ViewpointIsBound,
+    // X3DViewpointNode.set_viewAll__: a true viewAll on a bound viewpoint sends it `set_bind = true`.
+    ViewpointSetViewAll,
     // GeoLOD.set_rootLoadState__ / set_childLoadState__ (interests on its private Inlines' loadState).
     GeoLodRootLoadState,
     GeoLodChildLoadState,
