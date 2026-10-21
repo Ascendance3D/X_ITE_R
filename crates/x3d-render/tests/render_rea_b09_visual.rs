@@ -52,6 +52,14 @@ fn rea_b09_visual_renders_match_x_ite() {
 
             let over = s.pixels_over * 1000 > (w * h) as usize * 5;
 
+            // X_ITE logged no warning for these worlds (the "log" of their index.json entries is empty), not even for
+            // the invalid indexes of vis-linecolor-invalid: Rust must stay silent too and draw everything.
+            if world.starts_with("vis-linecolor") || world.starts_with("vis-material-ambient") || world.starts_with("vis-colorrgba") {
+                if !shot.log.is_empty() || !shot.unsupported.is_empty() {
+                    failures.push(format!("{name} MSAA {samples}: X_ITE logged nothing, Rust logged {:?} / unsupported {:?}", shot.log, shot.unsupported));
+                }
+            }
+
             if let Some((_, why)) = KNOWN_GAPS.iter().find(|(gap, _)| name.starts_with(gap)) {
                 if over {
                     eprintln!("  known gap: {why}");
