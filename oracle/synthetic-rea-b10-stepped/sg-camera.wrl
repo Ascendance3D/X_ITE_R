@@ -1,0 +1,38 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT Layout:2
+COMPONENT Geospatial:1
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+DEF V1 Viewpoint { position 0 0 8 fieldOfView 0.9 }
+DEF O1 OrthoViewpoint { position 0 0 10 fieldOfView [ -5 -4 5 4 ] }
+DEF G1 GeoViewpoint { position 0 0 8 fieldOfView 0.9 }
+Background { skyColor 0.12 0.14 0.2 }
+NavigationInfo { type "EXAMINE" transitionType [ "TELEPORT" ] }
+Transform { translation -1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.3 0.5 0.9 } } geometry Box { size 1.5 1.5 1.5 } } }
+Transform { translation 1.5 0 0 children Shape { appearance Appearance { material Material { diffuseColor 0.9 0.6 0.2 } } geometry Sphere { radius 0.9 } } }
+Transform { translation -2.5 1.5 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 0.4 0.1 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -60 -40 0, 60 -40 0, 60 40 0, -60 40 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+Transform { translation 2.5 1.5 -3 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 0.2 0.9 0.4 diffuseColor 0 0 0 } } geometry IndexedFaceSet { coord Coordinate { point [ -30 -30 0, 30 -30 0, 30 30 0, -30 30 0 ] } coordIndex [ 0 1 2 3 -1 ] } } ] } }
+Transform { translation -2.5 -2 0 children ScreenGroup { children [ Shape { appearance Appearance { material Material { emissiveColor 1 1 1 diffuseColor 0 0 0 } } geometry Text { string [ "Camera" ] fontStyle ScreenFontStyle { pointSize 20 } solid FALSE } } ] } }
+DEF K KeySensor { }
+DEF R Script {
+  directOutput TRUE
+  inputOnly SFString on_key
+  inputOutput SFString log ""
+  initializeOnly SFNode v1 USE V1
+  initializeOnly SFNode o1 USE O1
+  initializeOnly SFNode g1 USE G1
+
+  url "javascript:
+function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') o1 .set_bind = true;
+   if (k == 'b') g1 .set_bind = true;
+   if (k == 'c') o1 .fieldOfView = new MFFloat (-3, -3, 3, 3);
+   if (k == 'd') v1 .set_bind = true;
+   if (k == 'e') v1 .fieldOfView = 0.4;
+   if (k == 'f') o1 .set_bind = true;
+}
+"
+}
+ROUTE K.keyPress TO R.on_key

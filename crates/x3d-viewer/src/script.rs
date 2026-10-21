@@ -25,6 +25,8 @@ pub fn apply(v: &mut Viewer3d, e: &Value) {
             v.input(UiEvent::MouseUp { button: f("button") as u8, x: f("x"), y: f("y") })
         }
         "mousemove" => v.input(UiEvent::MouseMove { x: f("x"), y: f("y") }),
+        // REA batch 10: the canvas changes size (the oracle changes the canvas element's CSS size; reshape () follows).
+        "resize" => v.resize(f("width") as u32, f("height") as u32),
         "wheel" => {
             v.input(UiEvent::MouseMove { x: f("x"), y: f("y") });
             v.input(UiEvent::Wheel { delta_y: f("deltaY"), x: f("x"), y: f("y") })

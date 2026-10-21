@@ -11,6 +11,9 @@ SUITE is `stepped` (oracle/synthetic-rea-b10-stepped, made by gen_rea_b10_screen
       the X_ITE side only (x_ite-anim.mjs / x_ite-anim-msaa.mjs), into /tmp/rea-b10-SUITE-xite/NAME-msaaMSAA
       (to check that a stepped X_ITE run repeats).
 
+  python3 -I oracle/tools/rea_b10.py stepped record-sai NAME WORLD SCRIPT
+      event cases (oracle/synthetic-rea-b10-sai, rea_batch10_sai.rs): X_ITE three times, identical js.json, kept in
+      oracle/rea-batch10-sai-baseline/NAME.
   python3 -I oracle/tools/rea_b10.py stepped record NAME WORLD SCRIPT MSAA
       X_ITE side only, run twice; the two runs (js.json and every PNG) must be identical, then the first is kept as
       oracle/rea-batch10-baseline/NAME-msaaMSAA and the case line is added to cases.txt (so a Rust defect can be
@@ -45,6 +48,33 @@ elif mode == "xite-case":
     if msaa != "0":
         cmd += ["--ms", msaa]
     subprocess.run(cmd, check=True, cwd=root, timeout=300)
+elif mode == "record-sai":
+    # Event cases (no images): X_ITE three times, every js.json identical, kept in oracle/rea-batch10-sai-baseline/NAME.
+    name, world, script = args[:3]
+    runs = []
+    for i in (1, 2, 3):
+        out = f"/tmp/rea-b10-sai-record/{name}-{i}"
+        shutil.rmtree(out, ignore_errors=True)
+        os.makedirs(out)
+        subprocess.run(["node", os.path.join(root, "oracle", "x_ite-anim.mjs"), world, script, "--out", os.path.join(out, "js.json")], check=True, cwd=root, timeout=300)
+        runs.append(os.path.join(out, "js.json"))
+    import json
+    # What the test compares: scene text at every dumped frame, poses, log, console. (`loadFrames`, the frame a load finished in, is
+    # load-time metadata that varies with Chrome's I/O and is not compared.)
+    keys = ("vrml", "poses", "log", "console", "ok", "warmupFrames")
+    view = lambda f: {k: v for k, v in json.load(open(f)).items() if k in keys}
+    same = all(view(runs[0]) == view(r) for r in runs[1:])
+    print(f"{name}: three X_ITE runs {'identical' if same else 'DIFFER'}")
+    if not same:
+        sys.exit(1)
+    dest = os.path.join(root, "oracle", "rea-batch10-sai-baseline", name)
+    shutil.rmtree(dest, ignore_errors=True)
+    os.makedirs(dest)
+    shutil.copy(runs[0], dest)
+    cases = os.path.join(root, "oracle", "rea-batch10-sai-baseline", "cases.txt")
+    lines = open(cases).read().splitlines() if os.path.exists(cases) else []
+    lines = [l for l in lines if l.split()[:1] != [name]] + [" ".join([name, world, script])]
+    open(cases, "w").write("\n".join(lines) + "\n")
 elif mode == "record":
     import filecmp
     name, world, script, msaa = args[:4]

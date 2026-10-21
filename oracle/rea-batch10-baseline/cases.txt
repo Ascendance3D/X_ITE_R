@@ -9,3 +9,7 @@ sg-viewpoint oracle/synthetic-rea-b10-stepped/sg-viewpoint.wrl oracle/synthetic-
 sg-viewpoint oracle/synthetic-rea-b10-stepped/sg-viewpoint.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint.json 4
 sg-viewpoint-degenerate oracle/synthetic-rea-b10-stepped/sg-viewpoint-degenerate.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint-degenerate.json 0
 sg-viewpoint-degenerate oracle/synthetic-rea-b10-stepped/sg-viewpoint-degenerate.wrl oracle/synthetic-rea-b10-stepped/sg-viewpoint-degenerate.json 4
+sg-resize oracle/synthetic-rea-b10-stepped/sg-resize.wrl oracle/synthetic-rea-b10-stepped/sg-resize.json 0
+sg-resize oracle/synthetic-rea-b10-stepped/sg-resize.wrl oracle/synthetic-rea-b10-stepped/sg-resize.json 4
+sg-camera oracle/synthetic-rea-b10-stepped/sg-camera.wrl oracle/synthetic-rea-b10-stepped/sg-camera.json 0
+sg-camera oracle/synthetic-rea-b10-stepped/sg-camera.wrl oracle/synthetic-rea-b10-stepped/sg-camera.json 4
