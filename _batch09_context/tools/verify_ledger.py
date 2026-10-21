@@ -3,7 +3,7 @@
 
 Reads the authoritative ledger (default _batch09_context/ledger/ledger.json) and checks, without changing anything:
   - 346 unique IDs, every status one of the five allowed values
-  - totals equal to EXPECTED (edit EXPECTED when a ledger commit changes them)
+  - totals equal to EXPECTED (the Batch 09 ledger; one more COMPLETE and one fewer PARTIAL once node:ScreenFontStyle is promoted in Batch 10)
   - the 25 DIFFERENT entries equal the Batch 09 snapshot (ledger/before-cloud) byte for byte
   - the recorded promotion history: every entry of ledger_b09_promote.P is COMPLETE and its notes keep the pre-promotion notes
   - every file path named in an entry's tests / rust fields exists (missing ones are reported, never fixed)
@@ -30,6 +30,10 @@ cur = {i["id"]: i for i in items}
 for i in items:
     if i["status"] not in ALLOWED: bad.append(f"{i['id']}: status {i['status']!r} not allowed")
 c = collections.Counter(i["status"] for i in items)
+# Batch 10 (ledger_b10.py): node:ScreenFontStyle COMPLETE moves one entry from PARTIAL to COMPLETE; its history is checked too.
+if cur.get("node:ScreenFontStyle", {}).get("status") == "COMPLETE":
+    EXPECTED = dict(EXPECTED, COMPLETE=EXPECTED["COMPLETE"] + 1, PARTIAL=EXPECTED["PARTIAL"] - 1)
+    if "Batch 10 review" not in cur["node:ScreenFontStyle"]["notes"]: bad.append("node:ScreenFontStyle: no Batch 10 note")
 for s in ALLOWED:
     if c.get(s, 0) != EXPECTED[s]: bad.append(f"total {s}: {c.get(s, 0)} != {EXPECTED[s]}")
 snap = {i["id"]: i for i in load(SNAP)}
