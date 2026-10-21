@@ -14,7 +14,7 @@ use x3d_render::gpu::Gpu;
 
 /// (world, why the renderer differs). The renderer reports ScreenGroup and ScreenFontStyle as unsupported
 /// (`x3d-shot`: "not rendered: ScreenGroup"; text.rs: ScreenFontStyle), so their children and text are not drawn.
-const KNOWN_GAPS: &[(&str, &str)] = &[("vis-screen.wrl", "ScreenGroup and ScreenFontStyle are not rendered")];
+const KNOWN_GAPS: &[(&str, &str)] = &[("vis-screen.wrl", "ScreenFontStyle text is not rendered (ScreenGroup is)")];
 
 #[test]
 fn rea_b09_visual_renders_match_x_ite() {
