@@ -4346,22 +4346,12 @@ fn fog_params(sg: &Sg, f: NodeId, model: Option<&Matrix4>, view: &Matrix4) -> Op
     Some(FogParams { fog_type, color: [c[0] as f32, c[1] as f32, c[2] as f32], visibility_start: start as f32, visibility_range: range as f32, matrix: inv.0.map(|v| v as f32) })
 }
 
-/// Matrix4.getTransform (null, rotation): the rotation part of a matrix (polar decomposition
-/// via X_ITE's Matrix3 factor). Uses the normalized rows for an orthogonal-ish matrix.
+/// Matrix4.getTransform (null, rotation): the rotation part of a matrix (polar decomposition via X_ITE's Matrix3 factor).
 fn rotation_of(m: &Matrix4) -> Rotation4 {
+    // modelViewMatrix .getTransform (null, rotation): the polar decomposition of Matrix4.factor, so a singular matrix (the
+    // zero matrix X_ITE's ScreenGroup feedback can end in) gives a NaN rotation and a NaN background matrix, not the identity.
     let mut r = Rotation4::identity();
-    let mut m3 = m.submatrix();
-    // Normalize rows to remove scale (exact for the rigid view matrices used here).
-    for row in 0..3 {
-        let v = Vector3::new(m3.0[row * 3], m3.0[row * 3 + 1], m3.0[row * 3 + 2]);
-        let n = v.norm();
-        if n != 0.0 {
-            for k in 0..3 {
-                m3.0[row * 3 + k] /= n;
-            }
-        }
-    }
-    r.set_matrix(&m3);
+    m.get_transform(None, Some(&mut r), None, None, None);
     r
 }
 
@@ -4592,5 +4582,43 @@ fn style_params(sg: &Sg, appearance: NodeId, geometry_type: u8) -> Option<StyleP
                 hatch_color: sg.color(f, "hatchColor", [1.0, 1.0, 1.0]),
             }))
         }
+    }
+}
+
+#[cfg(test)]
+mod background_rotation_tests {
+    use super::*;
+
+    fn sphere_matrix(view: &Matrix4) -> [f64; 16] {
+        let sky = [[0.1f32, 0.2, 0.3]];
+        let p = background_build(&sky, &[], &[], &[], 0.0, vec![], &Matrix4::IDENTITY, view, 100.0).unwrap();
+        p.model_view.0
+    }
+
+    /// X3DBackgroundNode.display with the camera of a ScreenGroup feedback that ended in the zero matrix (Matrix4.inverse of
+    /// a singular matrix is ZERO): the rotation of Matrix4.factor is NaN, so the background matrix is NaN (not the identity) and
+    /// nothing is drawn over the clear color.
+    #[test]
+    fn zero_view_matrix_gives_a_nan_background_matrix() {
+        let m = sphere_matrix(&Matrix4::ZERO);
+        assert!(m[..12].iter().all(|v| v.is_nan()), "{m:?}");
+        assert_eq!(m[15], 1.0);
+    }
+
+    #[test]
+    fn rigid_and_scaled_view_matrices_keep_their_rotation() {
+        let mut view = Matrix4::IDENTITY;
+        view.rotate(&Rotation4::new(0.0, 1.0, 0.0, 0.7));
+        view.translate(&Vector3::new(3.0, -2.0, 5.0));
+        let a = sphere_matrix(&view);
+        let mut scaled = view;
+        scaled.scale(&Vector3::new(2.0, 2.0, 2.0));
+        let b = sphere_matrix(&scaled);
+
+        for i in 0..16 {
+            assert!(a[i].is_finite() && (a[i] - b[i]).abs() < 1e-9, "{i}: {a:?} {b:?}");
+        }
+
+        assert!((a[0] - 100.0 * 0.7f64.cos()).abs() < 1e-9, "{a:?}");
     }
 }
