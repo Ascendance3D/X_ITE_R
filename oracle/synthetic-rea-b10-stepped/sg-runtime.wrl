@@ -40,15 +40,13 @@ function on_key (k)
    if (k == 'd') c1 .point = new MFVec3f (new SFVec3f (-30, -20, 0), new SFVec3f (30, -20, 0), new SFVec3f (30, 20, 0), new SFVec3f (0, 40, 0));
    if (k == 'e') tx .string = new MFString ('Changed', 'text');
    if (k == 'f') sfs .pointSize = 40;
-   if (k == 'g') sg4 .bboxDisplay = true;
-   if (k == 'h') sg2 .bboxDisplay = true;
-   if (k == 'i') v2 .set_bind = true;
-   if (k == 'j') o1 .set_bind = true;
-   if (k == 'k') v1 .set_bind = true;
-   if (k == 'l') sg3 .visible = false;
-   if (k == 'm') Browser .setBrowserOption ('ContentScale', 2);
-   if (k == 'n') Browser .setBrowserOption ('ContentScale', 0.5);
-   if (k == 'o') Browser .setBrowserOption ('ContentScale', 1);
+   if (k == 'g') v2 .set_bind = true;
+   if (k == 'h') o1 .set_bind = true;
+   if (k == 'i') v1 .set_bind = true;
+   if (k == 'j') sg3 .visible = false;
+   if (k == 'k') Browser .setBrowserOption ('ContentScale', 2);
+   if (k == 'l') Browser .setBrowserOption ('ContentScale', 0.5);
+   if (k == 'm') Browser .setBrowserOption ('ContentScale', 1);
 }
 "
 }

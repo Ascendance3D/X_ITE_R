@@ -20,18 +20,20 @@ EMIT = lambda c: f"Appearance {{ material Material {{ emissiveColor {c} diffuseC
 def write(name, text):
     open(os.path.join(root, name + ".wrl"), "w").write(text)
 
-def script(name, frames, events, capture, settle=False):
+def script(name, frames, events, capture, settle=False, build_each=False):
     ev = sorted(events, key=lambda e: e["frame"])
     d = {"settle": settle, "size": [512, 512], "t0": 946684800, "dt": 1 / 30, "frames": frames, "capture": capture,
          "dump": sorted(set(capture + [frames - 1])), "events": ev}
+    if build_each:
+        d["buildEachFrame"] = True  # read by x3d-drive only (X_ITE renders every frame anyway)
     json.dump(d, open(os.path.join(root, name + ".json"), "w"), indent=1)
     cases.append(name)
 
-def keyscript(name, letters, step=8, start=6, tail=6, after=3, settle=False):
+def keyscript(name, letters, step=8, start=6, tail=6, after=3, settle=False, build_each=False):
     """Press `letters` every `step` frames; capture one frame before the first and `after` frames after each press (`settle` makes a font file a
     FontStyle change fetches arrive between two frames in X_ITE and Rust alike; see x_ite-anim.mjs)."""
     ev = [{"frame": start + step * i, "type": "key", "key": c} for i, c in enumerate(letters)]
-    script(name, start + step * len(letters) + tail, ev, [start - 2] + [start + step * i + after for i in range(len(letters))], settle)
+    script(name, start + step * len(letters) + tail, ev, [start - 2] + [start + step * i + after for i in range(len(letters))], settle, build_each)
 
 def rect(w, h, color, defs=""):
     pts = f"-{w} -{h} 0, {w} -{h} 0, {w} {h} 0, -{w} {h} 0"
@@ -66,18 +68,35 @@ sg += script_node(refs(["T1", "SG1", "C1", "TX", "SFS", "SG2", "SG3", "SG4", "V2
    if (k == 'd') c1 .point = new MFVec3f (new SFVec3f (-30, -20, 0), new SFVec3f (30, -20, 0), new SFVec3f (30, 20, 0), new SFVec3f (0, 40, 0));
    if (k == 'e') tx .string = new MFString ('Changed', 'text');
    if (k == 'f') sfs .pointSize = 40;
-   if (k == 'g') sg4 .bboxDisplay = true;
-   if (k == 'h') sg2 .bboxDisplay = true;
-   if (k == 'i') v2 .set_bind = true;
-   if (k == 'j') o1 .set_bind = true;
-   if (k == 'k') v1 .set_bind = true;
-   if (k == 'l') sg3 .visible = false;
-   if (k == 'm') Browser .setBrowserOption ('ContentScale', 2);
-   if (k == 'n') Browser .setBrowserOption ('ContentScale', 0.5);
-   if (k == 'o') Browser .setBrowserOption ('ContentScale', 1);
+   if (k == 'g') v2 .set_bind = true;
+   if (k == 'h') o1 .set_bind = true;
+   if (k == 'i') v1 .set_bind = true;
+   if (k == 'j') sg3 .visible = false;
+   if (k == 'k') Browser .setBrowserOption ('ContentScale', 2);
+   if (k == 'l') Browser .setBrowserOption ('ContentScale', 0.5);
+   if (k == 'm') Browser .setBrowserOption ('ContentScale', 1);
 }""")
 write("sg-runtime", sg)
-keyscript("sg-runtime", "abcdefghijklmno")
+keyscript("sg-runtime", "abcdefghijklm")
+
+# ---- ScreenGroup bboxDisplay (a known gap: the Rust renderer draws bboxDisplay only for the DIS PDU nodes) ---------
+bb = HEAD + "DEF V1 Viewpoint { position 0 0 8 }\n" + BG + BASE
+bb += "DEF T1 Transform { translation -2.5 1.5 0 children DEF SG1 ScreenGroup { children [ " + rect(60, 40, "1 0.4 0.1") + " ] } }\n"
+bb += ("DEF T2 Transform { translation 2.5 1.5 0 children DEF SG2 ScreenGroup { bboxDisplay TRUE children [ " + rect(50, 30, "0.2 0.9 0.4")
+       + " DEF SG3 ScreenGroup { children [ Transform { translation 20 10 0 children " + rect(12, 12, "0.9 0.2 0.9") + " } ] } ] } }\n")
+bb += ("DEF T3 Transform { translation -2.5 -2 0 children DEF SG4 ScreenGroup { children [ Shape { appearance " + EMIT("1 1 1")
+       + " geometry Text { string [ \"Box\" \"Text\" ] fontStyle ScreenFontStyle { pointSize 20 } solid FALSE } } ] } }\n")
+bb += script_node(refs(["T1", "SG1", "SG2", "SG3", "SG4"]), """function on_key (k)
+{
+   log = log + 'K' + k + ' ';
+   if (k == 'a') sg1 .bboxDisplay = true;
+   if (k == 'b') sg4 .bboxDisplay = true;
+   if (k == 'c') sg3 .bboxDisplay = true;
+   if (k == 'd') t1 .translation = new SFVec3f (-1, 1.5, 0);
+   if (k == 'e') sg2 .bboxDisplay = false;
+}""")
+write("sg-bbox", bb)
+keyscript("sg-bbox", "abcde")
 
 # ---- Viewpoints inside ScreenGroup (also nested), TELEPORT, one pose per step ----------------------------
 vw = HEAD + "DEF V1 Viewpoint { position 0 0 8 description \"one\" }\n" + BG + BASE
@@ -94,7 +113,12 @@ vw += script_node(refs(["V1", "VI1", "VI2"]), """function on_key (k)
    if (k == 'e') vi1 .set_bind = true;
 }""")
 write("sg-viewpoint", vw)
-keyscript("sg-viewpoint", "abcde")
+keyscript("sg-viewpoint", "abc", build_each=True)
+# The same world, one step further (a field change and a re-bind while VI2 is bound): X_ITE's matrix feedback is degenerate there. The
+# viewpoint sits at the ScreenGroup's origin, getScreenScale gets depth 0, the screen matrix is singular and X_ITE draws black frames
+# (even the Background). Poses match; the pictures are a known gap (the Rust renderer draws the Background).
+write("sg-viewpoint-degenerate", vw)
+keyscript("sg-viewpoint-degenerate", "abcde", build_each=True)
 
 # ---- ScreenFontStyle: run-time font changes ----------------------------------------------------------
 def stext(tr, defs, strings, fs):
