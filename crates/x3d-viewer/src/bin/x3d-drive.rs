@@ -7,6 +7,8 @@
 //! Script (JSON): { "size": [512, 512], "t0": 946684800, "dt": 0.016666666666666666, "frames": 60,
 //!   "events": [ { "frame": 1, "type": "mousedown", "button": 0, "x": 256, "y": 256 }, ... ],
 //!   "capture": [10, 60], "dump": [60] }
+//! "buildEachFrame": true builds (but does not render) the frame after every step, like X_ITE's render loop: a ScreenGroup's matrix
+//! (last DISPLAY) feeds the next CAMERA pass.
 //! "physics": { "nodes": { PATH: [ field, ... ] } } (REA batch 06, RigidBodyPhysics): the result gets
 //! `physics.dt` (every `RigidBodyCollection .getTimeStep ()` result with the frame it was made in; frame 0 is
 //! the load and the warm-up) and `physics.frames` (after the warm-up and after each frame, the listed
@@ -209,6 +211,8 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         v.rt.defer_audio_decodes = true;
     }
 
+    let build_each = script["buildEachFrame"].as_bool().unwrap_or(false);
+
     for k in 1..=frames {
         let prev = t0 + (k - 1) as f64 * dt;
 
@@ -228,6 +232,11 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
         if physics {
             take_dt(&mut v, k, &mut physics_dt);
             physics_frames.push((k, physics_snapshot(&mut v, &physics_spec)));
+        }
+
+        // "buildEachFrame": true: X_ITE renders every frame, and a ScreenGroup's matrix of one frame is what the next CAMERA pass uses.
+        if build_each && !capture.contains(&k) {
+            let _ = v.build_frame();
         }
 
         if let (true, Some(g)) = (live_textures && !capture.contains(&k), gpu.as_mut()) {
@@ -261,10 +270,12 @@ fn run(file: &Path, script: &Value, oracle: Option<&Path>, png_dir: Option<&Path
 
                 let frame = v.build_frame();
                 live_textures |= !frame.cube_passes.is_empty() || !frame.rendered_passes.is_empty();
-                let rgba = g.render(&frame, size.0, size.1);
+                // X3DRenderingContext.reshape: the drawing buffer is the canvas size × ContentScale (the oracle's PNG is that buffer).
+                let (fw, fh) = v.framebuffer_size();
+                let rgba = g.render(&frame, fw, fh);
                 let rgba: Vec<u8> = rgba.chunks_exact(4).flat_map(|p| [p[0], p[1], p[2], 255]).collect();
                 std::fs::create_dir_all(dir).ok();
-                let _ = x3d_render::write_png(&dir.join(format!("{k}.png")), size.0, size.1, &rgba);
+                let _ = x3d_render::write_png(&dir.join(format!("{k}.png")), fw, fh, &rgba);
             }
         }
 
