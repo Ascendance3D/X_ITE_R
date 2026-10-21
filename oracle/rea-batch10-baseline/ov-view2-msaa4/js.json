@@ -1,0 +1,565 @@
+{
+  "ok": true,
+  "poses": {
+    "4": {
+      "position": [
+        0.07496294354480831,
+        -0.21478617240798847,
+        12.177160242642222
+      ],
+      "orientation": [
+        0.943745057936174,
+        0.33027480576097135,
+        -0.01624248443322856,
+        0.10412611771032243
+      ],
+      "centerOfRotation": [
+        -0.36646256059974036,
+        1.05,
+        -0.6432282355309994
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -0.14500000000000002,
+        -0.07250000000000001,
+        0.14500000000000002,
+        0.07250000000000001
+      ]
+    },
+    "9": {
+      "position": [
+        0.07496294354480831,
+        -0.21478617240798847,
+        12.177160242642222
+      ],
+      "orientation": [
+        0.943745057936174,
+        0.33027480576097135,
+        -0.01624248443322856,
+        0.10412611771032243
+      ],
+      "centerOfRotation": [
+        -0.36646256059974036,
+        1.05,
+        -0.6432282355309994
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -0.14500000000000002,
+        -0.07250000000000001,
+        0.14500000000000002,
+        0.07250000000000001
+      ]
+    },
+    "17": {
+      "position": [
+        0.07496294354480831,
+        -0.21478617240798847,
+        12.177160242642222
+      ],
+      "orientation": [
+        0.943745057936174,
+        0.33027480576097135,
+        -0.01624248443322856,
+        0.10412611771032243
+      ],
+      "centerOfRotation": [
+        -0.36646256059974036,
+        1.05,
+        -0.6432282355309994
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -0.14500000000000002,
+        -0.07250000000000001,
+        0.14500000000000002,
+        0.07250000000000001
+      ]
+    },
+    "25": {
+      "position": [
+        0.7220805960770709,
+        -0.5202919177525887,
+        13.242970647991713
+      ],
+      "orientation": [
+        0.5764682033908706,
+        0.8146561258417021,
+        -0.06340194877040325,
+        0.2683891505260497
+      ],
+      "centerOfRotation": [
+        -2.4981073674044407,
+        1.8,
+        -1.2193692948366768
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -3.280000000000001,
+        -1.6400000000000006,
+        3.280000000000001,
+        1.6400000000000006
+      ]
+    },
+    "33": {
+      "position": [
+        0.7220805960770709,
+        -0.5202919177525887,
+        13.242970647991713
+      ],
+      "orientation": [
+        0.5764682033908706,
+        0.8146561258417021,
+        -0.06340194877040325,
+        0.2683891505260497
+      ],
+      "centerOfRotation": [
+        -2.4981073674044407,
+        1.8,
+        -1.2193692948366768
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -3.280000000000001,
+        -1.6400000000000006,
+        3.280000000000001,
+        1.6400000000000006
+      ]
+    },
+    "41": {
+      "position": [
+        0.7220805960770709,
+        -0.5202919177525887,
+        13.242970647991713
+      ],
+      "orientation": [
+        0.5764682033908706,
+        0.8146561258417021,
+        -0.06340194877040325,
+        0.2683891505260497
+      ],
+      "centerOfRotation": [
+        -2.4981073674044407,
+        1.8,
+        -1.2193692948366768
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -1.2800000000000011,
+        -0.6400000000000006,
+        1.2800000000000011,
+        0.6400000000000006
+      ]
+    },
+    "49": {
+      "position": [
+        0.7220805960770709,
+        -0.5202919177525887,
+        13.242970647991713
+      ],
+      "orientation": [
+        0.5764682033908706,
+        0.8146561258417021,
+        -0.06340194877040325,
+        0.2683891505260497
+      ],
+      "centerOfRotation": [
+        -2.4981073674044407,
+        1.8,
+        -1.2193692948366768
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -1.2800000000000011,
+        -0.6400000000000006,
+        1.2800000000000011,
+        0.6400000000000006
+      ]
+    },
+    "57": {
+      "position": [
+        3,
+        2,
+        10
+      ],
+      "orientation": [
+        0,
+        0.999999999999998,
+        0,
+        0.3000000000000006
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "O2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "65": {
+      "position": [
+        6.144814646418006,
+        2.086634012298017,
+        14.678236664092902
+      ],
+      "orientation": [
+        -0.0251952240412293,
+        0.9996530390488205,
+        0.007681289342860752,
+        0.5920325287160593
+      ],
+      "centerOfRotation": [
+        -4.26,
+        1.8,
+        -0.8
+      ],
+      "viewpoint": "O2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -5.055835572049215,
+        -5.055835572049215,
+        5.055835572049215,
+        5.055835572049215
+      ]
+    },
+    "73": {
+      "position": [
+        6.144814646418006,
+        2.086634012298017,
+        14.678236664092902
+      ],
+      "orientation": [
+        -0.0251952240412293,
+        0.9996530390488205,
+        0.007681289342860752,
+        0.5920325287160593
+      ],
+      "centerOfRotation": [
+        -4.26,
+        1.8,
+        -0.8
+      ],
+      "viewpoint": "O2",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        -5.055835572049215,
+        -5.055835572049215,
+        5.055835572049215,
+        5.055835572049215
+      ]
+    },
+    "81": {
+      "position": [
+        2.207152223175364,
+        -0.9325995309191677,
+        18.631818886536305
+      ],
+      "orientation": [
+        0.3785665928954736,
+        0.9235391247771997,
+        -0.06134182707808538,
+        0.34736902964387445
+      ],
+      "centerOfRotation": [
+        -4.26,
+        1.8,
+        -0.8
+      ],
+      "viewpoint": "P",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1
+    },
+    "89": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "97": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "105": {
+      "position": [
+        0.12935419674668847,
+        -0.08069972179928964,
+        11.180188679241537
+      ],
+      "orientation": [
+        0.5275132456900448,
+        0.8490577307900918,
+        -0.0288226544085999,
+        0.1285271722315639
+      ],
+      "centerOfRotation": [
+        -1.1540934662606925,
+        0.7200000000000001,
+        -0.5296007236221637
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        2.642790519888462,
+        1.321395259944231,
+        -2.642790519888462,
+        -1.321395259944231
+      ]
+    },
+    "113": {
+      "position": [
+        0.12935419674668847,
+        -0.08069972179928964,
+        11.180188679241537
+      ],
+      "orientation": [
+        0.5275132456900448,
+        0.8490577307900918,
+        -0.0288226544085999,
+        0.1285271722315639
+      ],
+      "centerOfRotation": [
+        -1.1540934662606925,
+        0.7200000000000001,
+        -0.5296007236221637
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        2.642790519888462,
+        1.321395259944231,
+        -2.642790519888462,
+        -1.321395259944231
+      ]
+    },
+    "121": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "135": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "136": {
+      "position": [
+        0,
+        0,
+        10
+      ],
+      "orientation": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "centerOfRotation": [
+        0,
+        0,
+        0
+      ],
+      "viewpoint": "O1",
+      "description": "",
+      "viewer": "EXAMINE",
+      "fieldOfViewScale": 1,
+      "fieldOfViewOffset": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "vrml": {
+    "4": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -2 -1 2 1\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation 0 2.5 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"\"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "9": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -2 -1 2 1\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation 0 2.5 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "17": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -2 -1 2 1\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "25": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -2 -1 2 1\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "33": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "41": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "49": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "57": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "65": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "73": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "81": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "89": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 1.2 1 1\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "97": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 0.4 0.4 0.4\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "105": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  whichChoice 0\n  children DEF GS Transform {\n    scale 0.4 0.4 0.4\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "113": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  children DEF GS Transform {\n    scale 0.4 0.4 0.4\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "121": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  children DEF GS Transform {\n    scale 0.4 0.4 0.4\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "135": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  children DEF GS Transform {\n    scale 0.4 0.4 0.4\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n",
+    "136": "#X3D V4.1 utf8 X_ITE V16.5.0\n\nPROFILE Full\n\nBackground {\n  skyColor 0.12 0.14 0.2\n}\n\nNavigationInfo {\n  type \"EXAMINE\"\n  transitionType \"TELEPORT\"\n}\n\nDEF TV Transform {\n  translation 1 0 0\n  rotation 0 1 0 0.2\n  scale 2 1 1.5\n  children DEF O1 OrthoViewpoint {\n    fieldOfView -4 -2 4 2\n    viewAll TRUE\n  }\n}\n\nDEF O2 OrthoViewpoint {\n  position 3 2 10\n  orientation 0 1 0 0.3\n  fieldOfView -3 -3 3 3\n  viewAll TRUE\n  retainUserOffsets TRUE\n}\n\nDEF P Viewpoint {\n  position 0 0 12\n  viewAll TRUE\n}\n\nDEF SW Switch {\n  children DEF GS Transform {\n    scale 0.4 0.4 0.4\n    children [\n      Transform {\n        translation -1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.3 0.5 0.9\n            }\n          }\n          geometry Box {\n            size 1.5 1.5 1.5\n          }\n        }\n      }\n      Transform {\n        translation 1.5 0 0\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.9 0.6 0.2\n            }\n          }\n          geometry Sphere {\n            radius 0.9\n          }\n        }\n      }\n      DEF FAR Transform {\n        translation -9 4 -2\n        children Shape {\n          appearance Appearance {\n            material Material {\n              diffuseColor 0.4 0.9 0.4\n            }\n          }\n          geometry Box {\n            size 1 1 1\n          }\n        }\n      }\n    ]\n  }\n}\n\nDEF K KeySensor { }\n\nDEF R Script {\n  inputOnly      SFString on_key\n  inputOutput    SFString log \"Ka Kb Kc Kd Ke Kf Kg Kh Ki Kj Kk Kl Km Kn Ko \"\n  initializeOnly SFNode   o1 USE O1\n  initializeOnly SFNode   o2 USE O2\n  initializeOnly SFNode   p USE P\n  initializeOnly SFNode   gs USE GS\n  initializeOnly SFNode   sw USE SW\n  initializeOnly SFNode   far USE FAR\n\n  url \"javascript:\nfunction on_key (k)\n{\n   log = log + 'K' + k + ' ';\n   if (k == 'a') o1 .viewAll = true;\n   if (k == 'b') far .translation = new SFVec3f (-9, 4, -2);\n   if (k == 'c') o1 .viewAll = true;\n   if (k == 'd') o1 .fieldOfView = new MFFloat (-4, -2, 4, 2);\n   if (k == 'e') o1 .viewAll = true;\n   if (k == 'f') o1 .viewAll = false;\n   if (k == 'g') o2 .set_bind = true;\n   if (k == 'h') o2 .viewAll = true;\n   if (k == 'i') p .viewAll = true;\n   if (k == 'j') p .set_bind = true;\n   if (k == 'k') o1 .set_bind = true;\n   if (k == 'l') gs .scale = new SFVec3f (0.4, 0.4, 0.4);\n   if (k == 'm') o1 .viewAll = true;\n   if (k == 'n') sw .whichChoice = -1;\n   if (k == 'o') o1 .viewAll = true;\n}\n\"\n  directOutput TRUE\n}\n\nROUTE K.keyPress TO R.on_key\n"
+  },
+  "prints": [],
+  "log": [],
+  "anchors": [],
+  "info": {
+    "renderer": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2, OpenGL 4.5.0)",
+    "x_ite": "16.5.0",
+    "multisampling": 4,
+    "antialiased": true,
+    "maxSamples": 8,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": false,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "loadFrames": 3,
+  "warmupFrames": 8,
+  "geometry": {
+    "rect": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "viewport": [
+      0,
+      0,
+      512,
+      512
+    ],
+    "scroll": [
+      0,
+      0
+    ]
+  }
+}

@@ -22,3 +22,7 @@ ov-view oracle/synthetic-rea-b10-secondary/ov-view.wrl oracle/synthetic-rea-b10-
 ov-view oracle/synthetic-rea-b10-secondary/ov-view.wrl oracle/synthetic-rea-b10-secondary/ov-view.json 4
 lf-volume oracle/synthetic-rea-b10-secondary/lf-volume.wrl oracle/synthetic-rea-b10-secondary/lf-volume.json 0
 lf-volume oracle/synthetic-rea-b10-secondary/lf-volume.wrl oracle/synthetic-rea-b10-secondary/lf-volume.json 4
+ov-view2 oracle/synthetic-rea-b11-ortho/ov-view2.wrl oracle/synthetic-rea-b11-ortho/ov-view2.json 0
+ov-view2 oracle/synthetic-rea-b11-ortho/ov-view2.wrl oracle/synthetic-rea-b11-ortho/ov-view2.json 4
+ov-lookat oracle/synthetic-rea-b11-ortho/ov-lookat.wrl oracle/synthetic-rea-b11-ortho/ov-lookat.json 0
+ov-lookat oracle/synthetic-rea-b11-ortho/ov-lookat.wrl oracle/synthetic-rea-b11-ortho/ov-lookat.json 4
