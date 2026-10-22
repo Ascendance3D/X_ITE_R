@@ -1,5 +1,8 @@
 //! OrthoViewpoint rendering support.
 
+mod common;
+
+use common::gpu::gpu;
 use std::path::PathBuf;
 use x3d_render::gpu::Gpu;
 use x3d_render::traverse::{ortho, ortho_projection};
@@ -23,7 +26,7 @@ fn ortho_projection_matches_camera_bounds() {
 
 #[test]
 fn ortho_viewpoint_renders_without_unsupported_warning() {
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
     let root = oracle();
     let file = root.join("x10-scripts/plane-ortho.wrl");
     let shot = x3d_render::render_file(&mut g, &root, &file, 512, 512).unwrap();
@@ -35,9 +38,9 @@ fn ortho_viewpoint_renders_without_unsupported_warning() {
 /// Both give the same extents: the picture is the same, and not the one of the default extents.
 #[test]
 fn ortho_field_of_view_reads_sfvec4f_and_mffloat() {
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
     let root = oracle();
-    let dir = std::env::temp_dir().join("x3d-render-ortho-fov");
+    let dir = std::env::temp_dir().join(format!("x3d-render-ortho-fov-{}", std::process::id()));
     std::fs::create_dir_all(&dir).unwrap();
 
     let render = |g: &mut Gpu, version: &str, fov: &str| {
