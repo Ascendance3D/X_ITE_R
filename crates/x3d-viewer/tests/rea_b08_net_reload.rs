@@ -5,6 +5,8 @@
 //! adds it back, creates an InlineGeometry by Script and removes it again, and does the same with the DIS nodes.
 
 use std::path::PathBuf;
+use std::sync::OnceLock;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use x3d_viewer::embed::{EmbeddedViewer, LoadOptions, spawn_big_stack};
 use x3d_viewer::viewer::UiEvent;
 
@@ -12,10 +14,36 @@ const T0: f64 = 946684800.0;
 const W: u32 = 128;
 const H: u32 = 128;
 
+static INSTANCES: AtomicUsize = AtomicUsize::new(0);
+
+/// One device for the whole binary, made once. The tests run in parallel, and each used to start its own wgpu instance
+/// at the same moment. One local suite run hung for 53 minutes with every thread waiting on a lock and the third device
+/// never made, and on the same RTX machine a stress run of parallel instance starts faults inside libvulkan's
+/// vkCreateInstance / vkEnumerateInstanceExtensionProperties. Each viewer still has its own renderer and resource counts.
 fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
-    pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
+    static DEVICE: OnceLock<Option<(wgpu::Device, wgpu::Queue)>> = OnceLock::new();
+    DEVICE
+        .get_or_init(|| {
+            INSTANCES.fetch_add(1, Ordering::SeqCst);
+            let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
+            let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
+            pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
+        })
+        .clone()
+}
+
+/// The tests start together; parallel callers must not start wgpu instances side by side.
+#[test]
+fn rea_b08_net_tests_start_one_instance() {
+    let (tx, rx) = std::sync::mpsc::channel();
+    for _ in 0..3 {
+        let tx = tx.clone();
+        std::thread::spawn(move || tx.send(device().is_some()).unwrap());
+    }
+    for _ in 0..3 {
+        rx.recv_timeout(std::time::Duration::from_secs(60)).expect("device creation did not finish in 60 s");
+    }
+    assert_eq!(INSTANCES.load(Ordering::SeqCst), 1, "parallel callers started more than one wgpu instance");
 }
 
 fn worlds() -> Vec<PathBuf> {
