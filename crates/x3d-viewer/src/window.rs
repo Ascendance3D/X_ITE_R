@@ -542,12 +542,20 @@ impl ApplicationHandler for ViewerWindow {
 
 /// Run the window on the calling thread (a large-stack thread: QuickJS needs it).
 pub fn run(opts: Options) -> Result<u64, String> {
-    use winit::platform::wayland::EventLoopBuilderExtWayland;
-    use winit::platform::x11::EventLoopBuilderExtX11;
-
     let mut builder = EventLoop::builder();
-    EventLoopBuilderExtX11::with_any_thread(&mut builder, true);
-    EventLoopBuilderExtWayland::with_any_thread(&mut builder, true);
+
+    #[cfg(all(unix, not(target_os = "macos")))]
+    {
+        use winit::platform::wayland::EventLoopBuilderExtWayland;
+        use winit::platform::x11::EventLoopBuilderExtX11;
+
+        EventLoopBuilderExtX11::with_any_thread(&mut builder, true);
+        EventLoopBuilderExtWayland::with_any_thread(&mut builder, true);
+    }
+
+    #[cfg(windows)]
+    winit::platform::windows::EventLoopBuilderExtWindows::with_any_thread(&mut builder, true);
+
     let event_loop = builder.build().map_err(|e| format!("event loop: {e}"))?;
     event_loop.set_control_flow(ControlFlow::Poll);
     let mut app = ViewerWindow::new(opts);

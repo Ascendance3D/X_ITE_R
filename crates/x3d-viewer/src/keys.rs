@@ -154,7 +154,7 @@ pub fn dom_event(logical: &Key, physical: &PhysicalKey) -> (String, u32) {
 /// Whose shortcut modifier the viewer uses.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Platform {
-    /// Ctrl.
+    /// Ctrl. Linux, and Windows too.
     Linux,
     /// Command (winit's Super).
     MacOs,
