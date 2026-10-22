@@ -4,18 +4,15 @@
 //! value buffer) and the other renderer resources stay bounded over reloads and are released
 //! (KEEP_FRAMES retention) once no world draws them.
 
+mod common;
+
+use common::gpu::device;
 use std::path::PathBuf;
 use x3d_viewer::embed::{EmbeddedViewer, LoadOptions, spawn_big_stack};
 
 const T0: f64 = 946684800.0;
 const W: u32 = 128;
 const H: u32 = 128;
-
-fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
-    pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
-}
 
 fn worlds() -> Vec<PathBuf> {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-b03");
