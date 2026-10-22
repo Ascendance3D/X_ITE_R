@@ -2,16 +2,13 @@
 //! standard buffer, the modes cycle, and a scene without near-coplanar surfaces looks the same in
 //! all of them. Skipped when no Vulkan adapter exists.
 
+mod common;
+
+use common::gpu::device;
 use std::path::PathBuf;
 use x3d_viewer::embed::{DepthMode, EmbeddedViewer, LoadOptions, spawn_big_stack};
 
 const T0: f64 = 946684800.0;
-
-fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
-    pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
-}
 
 fn world(name: &str, text: &str) -> PathBuf {
     let dir = std::env::temp_dir().join(format!("x3d-embed-tests-{}", std::process::id()));

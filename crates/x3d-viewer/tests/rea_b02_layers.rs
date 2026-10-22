@@ -5,6 +5,9 @@
 //! bounded number of objects, and a press held in a layer never drives the node that takes a
 //! released sensor's slot (R0.3-E generation-safe ids).
 
+mod common;
+
+use common::gpu::device;
 use std::path::{Path, PathBuf};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_scene::{CtxId, ROOT};
@@ -14,12 +17,6 @@ use x3d_viewer::viewer::{UiEvent, Viewer3d};
 const T0: f64 = 946684800.0;
 const W: u32 = 128;
 const H: u32 = 128;
-
-fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
-    pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
-}
 
 fn shot(v: &mut EmbeddedViewer, device: &wgpu::Device, queue: &wgpu::Queue, now: f64) -> Vec<u8> {
     let texture = device.create_texture(&wgpu::TextureDescriptor {

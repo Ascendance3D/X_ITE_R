@@ -3,6 +3,9 @@
 //! under the pointer, and an EmbeddedViewer loads and unloads scripted worlds. Newly authored worlds
 //! in a temp directory; time is virtual. `MEM` lines at cycles 10, 100, 500 and 1,000.
 
+#[cfg(feature = "gpu")]
+mod common;
+
 use std::path::{Path, PathBuf};
 use x3d_fields::{FieldValue, NodeId};
 use x3d_runtime::Runtime;
@@ -155,15 +158,10 @@ fn w6_viewer_pointer_slot_reuse() {
 #[cfg(feature = "gpu")]
 mod embedded {
     use super::*;
+    use crate::common::gpu::device;
     use x3d_viewer::embed::{EmbeddedViewer, LoadOptions, spawn_big_stack};
 
     const T0: f64 = 946684800.0;
-
-    fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
-        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
-        pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
-    }
 
     /// 7. EmbeddedViewer load and unload: each world's Scripts shut down once; the script host's
     /// handle table and the process stay flat.
