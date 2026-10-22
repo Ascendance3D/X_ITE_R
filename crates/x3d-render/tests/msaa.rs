@@ -6,8 +6,10 @@
 //! same NVIDIA GPU; on other GPUs the sample positions may differ, so the comparison allows a
 //! few one-sample edge pixels (see oracle/README.md).
 
+mod common;
+
+use common::gpu::gpu;
 use std::path::PathBuf;
-use x3d_render::gpu::Gpu;
 
 fn oracle() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle")
@@ -19,7 +21,7 @@ fn decode(p: &std::path::Path) -> Option<Vec<u8>> {
 
 #[test]
 fn sample_count_clamps_like_max_samples() {
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
     let r = &mut g.renderer;
     let supported = r.supported_samples().to_vec();
     assert_eq!(supported[0], 1);
@@ -44,7 +46,7 @@ fn sample_count_clamps_like_max_samples() {
 
 #[test]
 fn edge_scenes_match_the_x_ite_resolve() {
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
     let root = oracle().canonicalize().unwrap();
     let mut checked = 0;
 
@@ -73,7 +75,7 @@ fn edge_scenes_match_the_x_ite_resolve() {
 
 #[test]
 fn multisampling_changes_edges_only() {
-    let Ok(mut g) = Gpu::new() else { return eprintln!("no adapter") };
+    let Ok(mut g) = gpu() else { return eprintln!("no adapter") };
     let root = oracle().canonicalize().unwrap();
     let file = root.join("synthetic-msaa/edge-quad.wrl");
     g.renderer.set_sample_count(1);
