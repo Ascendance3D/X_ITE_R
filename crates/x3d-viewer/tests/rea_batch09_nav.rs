@@ -13,6 +13,9 @@
 //!
 //! `REA_ONLY=<substring>` restricts the cases.
 
+mod common;
+
+use common::gpu::renderer_available;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -227,7 +230,7 @@ fn run_shard(shard: usize) {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").canonicalize().unwrap();
     let cases = std::fs::read_to_string(root.join("oracle/rea-batch09-nav-baseline/cases.txt")).unwrap();
     let only = std::env::var("REA_ONLY").ok();
-    let gpu = x3d_render::gpu::Gpu::new().is_ok();
+    let gpu = renderer_available();
     assert!(gpu, "the pointing and collision passes need a Vulkan adapter");
     let mut failures = vec![];
     let mut checked = 0;
