@@ -5,9 +5,11 @@
 //! Scripts, routes, navigation (EXAMINE / WALK / FLY / NONE) and the pointing device sensors.
 //! Anchor activations are reported in the title bar, never opened.
 //!
-//! Mouse and keys: see the README section in the report; `1` EXAMINE, `2` WALK, `3` FLY,
-//! `4` NONE, Home/End first/last viewpoint, PageUp/PageDown previous/next viewpoint, `l` list
-//! viewpoints, `m` cycle multisampling (default 4, like X_ITE), `z` cycle the depth buffer (standard = X_ITE, reversed, log), `s` save /tmp/x3d-view-N.png, Esc or `q` quit.
+//! Keys go to the world (KeySensor, StringSensor; Home/End first/last viewpoint, PageUp/PageDown
+//! previous/next viewpoint, as in X_ITE). The viewer's own shortcuts take Ctrl (Linux) or Command
+//! (macOS): `1` EXAMINE, `2` WALK, `3` FLY, `4` NONE, `l` list viewpoints, `m` cycle multisampling
+//! (default 4, like X_ITE), `z` cycle the depth buffer (standard = X_ITE, reversed, log), `s` save
+//! /tmp/x3d-view-N.png, `q` quit. Escape is a world key; close the window to quit.
 
 use std::path::PathBuf;
 use x3d_viewer::window::{Options, run};
