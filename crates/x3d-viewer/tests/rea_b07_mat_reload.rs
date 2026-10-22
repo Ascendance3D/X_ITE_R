@@ -6,6 +6,9 @@
 //! InstancedShape from a live Group by Script and adds it (and a Script-created one) back: its
 //! geometry buffer is released after the removal and drawn again after the add.
 
+mod common;
+
+use common::gpu::device;
 use std::path::PathBuf;
 use x3d_viewer::embed::{EmbeddedViewer, LoadOptions, spawn_big_stack};
 use x3d_viewer::viewer::UiEvent;
@@ -13,12 +16,6 @@ use x3d_viewer::viewer::UiEvent;
 const T0: f64 = 946684800.0;
 const W: u32 = 128;
 const H: u32 = 128;
-
-fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
-    pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
-}
 
 fn worlds() -> Vec<PathBuf> {
     let dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../oracle/synthetic-rea-b07-mat");
