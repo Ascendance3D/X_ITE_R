@@ -6,6 +6,9 @@
 //! and 4, and check reload, drop, resources and the process/thread globals one by one.
 //! Skipped (with a message) when no wgpu adapter exists.
 
+mod common;
+
+use common::gpu::device;
 use std::path::PathBuf;
 use x3d_runtime::particles;
 use x3d_viewer::embed::{EmbeddedViewer, LoadOptions, spawn_big_stack};
@@ -15,12 +18,6 @@ const DT: f64 = 1.0 / 60.0;
 const W: u32 = 96;
 const H: u32 = 72;
 const FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Rgba8Unorm;
-
-fn device() -> Option<(wgpu::Device, wgpu::Queue)> {
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions::default())).ok()?;
-    pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor { required_features: EmbeddedViewer::wanted_features(&adapter), ..Default::default() })).ok()
-}
 
 fn dir(tag: &str) -> PathBuf {
     let d = std::env::temp_dir().join(format!("x3d-multiview-b08-{}-{tag}", std::process::id()));
