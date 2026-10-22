@@ -101,11 +101,13 @@ non-sRGB format, `frame()`, then present. `x3d-view` is exactly that (`src/windo
 ## x3d-view
 
 `x3d-view <file.wrl> [--oracle <dir>] [--size WxH] [--msaa 0|1|2|4|8|16] [--script script.json --png out.png]`.
-`--msaa` defaults to X_ITE's 4 (clamped to what the adapter supports); `m` cycles 1, 2, 4, 8 live.
-`--depth standard|log|reversed` picks the depth buffer (default standard, X_ITE's); `z` cycles it live.
-Keys: `1` EXAMINE, `2` WALK, `3` FLY, `4` NONE, Home / End first / last viewpoint, PageUp /
-PageDown previous / next, `l` list viewpoints, `r` reload, `s` screenshot to `/tmp/x3d-view-N.png`,
-Esc / `q` quit. Mouse: left drag rotates (EXAMINE), middle drag pans, wheel zooms; WALK / FLY as in
+`--msaa` defaults to X_ITE's 4 (clamped to what the adapter supports); Ctrl/Command + `m` cycles 1, 2, 4, 8 live.
+`--depth standard|log|reversed` picks the depth buffer (default standard, X_ITE's); Ctrl/Command + `z` cycles it live.
+Keys go to the world as DOM keydown / keyup (KeySensor, StringSensor; repeats too); Home / End
+first / last viewpoint, PageUp / PageDown previous / next, as in X_ITE. Viewer shortcuts take Ctrl
+(Linux) or Command (macOS): `1` EXAMINE, `2` WALK, `3` FLY, `4` NONE, `l` list viewpoints, `m`
+multisampling, `z` depth buffer, `r` reload, `s` screenshot to `/tmp/x3d-view-N.png`, `q` quit.
+Esc is a world key and never quits. Mouse: left drag rotates (EXAMINE), middle drag pans, wheel zooms; WALK / FLY as in
 X_ITE. Environment: `X3D_VIEW_NOVSYNC=1` (do not wait for vsync), `X3D_VIEW_STATS=1` (adapter, surface
 format, alpha mode, and per-frame CPU/GPU averages on exit).
 

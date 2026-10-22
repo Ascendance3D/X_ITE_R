@@ -89,6 +89,9 @@ pub enum UiEvent {
     /// A DOM keydown / keyup of the browser element: `key` is `event .key`.
     KeyDown { key: String },
     KeyUp { key: String },
+    /// A native keydown / keyup: as `KeyDown` / `KeyUp`, with the host's `event .keyCode` (the
+    /// window derives it from the physical key when the key name has none, e.g. other layouts).
+    NativeKey { down: bool, key: String, code: u32 },
 }
 
 #[derive(Default)]
@@ -1800,8 +1803,9 @@ impl Viewer3d {
                 self.ctrl = ctrl;
                 self.alt = alt;
             }
-            UiEvent::KeyDown { key } => self.key_event(true, &key),
-            UiEvent::KeyUp { key } => self.key_event(false, &key),
+            UiEvent::KeyDown { key } => self.key_event(true, &key, x3d_runtime::nodes::key_sensor::key_code(&key)),
+            UiEvent::KeyUp { key } => self.key_event(false, &key, x3d_runtime::nodes::key_sensor::key_code(&key)),
+            UiEvent::NativeKey { down, key, code } => self.key_event(down, &key, code),
             UiEvent::Key(k) => match k {
                 Key::Home => self.first_viewpoint(),
                 Key::End => self.last_viewpoint(),
@@ -1988,8 +1992,8 @@ impl Viewer3d {
 
     /// The element's keydown / keyup listeners: X3DCoreContext (modifier state, viewpoint keys) and
     /// X3DKeyDeviceSensorContext (the key device sensors, then processEvents).
-    fn key_event(&mut self, down: bool, key: &str) {
-        let e = x3d_runtime::nodes::key_sensor::KeyEvent { key: key.to_string(), code: x3d_runtime::nodes::key_sensor::key_code(key) };
+    fn key_event(&mut self, down: bool, key: &str, code: u32) {
+        let e = x3d_runtime::nodes::key_sensor::KeyEvent { key: key.to_string(), code };
 
         match (e.code, down) {
             (16, d) => self.shift = d,
