@@ -1,3 +1,5 @@
+#[cfg(feature = "gpu")]
+pub mod backend;
 pub mod chaser;
 pub mod collision;
 #[cfg(feature = "embed")]
