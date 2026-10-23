@@ -796,23 +796,25 @@ fn intersects_box(min: V3, max: V3, line: Line) -> bool {
     false
 }
 
-/// `getIntersections`: the infinite `line` against every triangle, in BVH traversal order. With
-/// `want_normals` the interpolated normal of each hit is returned too.
+/// `getIntersections`: the infinite `line` against every triangle, in BVH traversal order, and the number of
+/// hits. With `want_normals` the interpolated normal of each hit is returned too.
 ///
-/// The bounded version (`want_normals`, BoundedPhysicsModel `bounce`) writes `points [count]` and
-/// `normals [count]` without checking ARRAY_SIZE; WebGL clamps the index, so every hit after the 31st
-/// lands in the last entry and the last one in traversal order stays there (measured against X_ITE on the
-/// GPU: oracle/synthetic-rea-b16-bounded bp-hits-64-below, bp-hits-64-floor-last). `min_index` takes the
-/// first of equal distances, so the entries past ARRAY_SIZE it reads add nothing. The volume version keeps
-/// the first ARRAY_SIZE hits, as before (not measured past ARRAY_SIZE).
+/// Both GLSL versions write `points [count]` (and the bounded one `normals [count]`) without checking
+/// ARRAY_SIZE; WebGL clamps the index, so every hit after the 31st lands in the last entry, the last one in
+/// traversal order stays there, and the count keeps going. Measured against X_ITE on the GPU for the bounded
+/// version (BoundedPhysicsModel `bounce`: oracle/synthetic-rea-b16-bounded bp-hits-64-below, bp-hits-64-floor-last;
+/// `min_index` takes the first of equal distances, so the entries past ARRAY_SIZE it reads add nothing) and for
+/// the volume version (VolumeEmitter `getRandomPosition`: oracle/synthetic-rea-b17-emitter-hits, which sorts and
+/// picks among the whole count).
 fn get_intersections(
     tex: &GeometryTexture,
     line: Line,
     want_normals: bool,
-) -> (Vec<[f32; 4]>, Vec<V3>) {
+) -> (Vec<[f32; 4]>, Vec<V3>, usize) {
     let hierarchy_index = tex.hierarchy_index as i64;
     let mut points = vec![];
     let mut normals = vec![];
+    let mut count = 0;
     let mut stack: Vec<i64> = Vec::with_capacity(BVH_STACK_SIZE);
     let mut current = tex.fetch(tex.hierarchy_root as i64)[0] as i32 as i64 + hierarchy_index;
 
@@ -836,23 +838,25 @@ fn get_intersections(
                 let (a, b, c) = (tex.fetch3(v), tex.fetch3(v + 1), tex.fetch3(v + 2));
 
                 if let Some(r) = intersects_triangle(line, a, b, c) {
-                    if points.len() < ARRAY_SIZE || want_normals {
-                        let p = add(add(scale(a, r[2]), scale(b, r[0])), scale(c, r[1]));
-                        let point = [p[0], p[1], p[2], 1.0];
-                        let normal = want_normals.then(|| {
-                            let n = tex.normals_index as i64 + t;
-                            let (n0, n1, n2) =
-                                (tex.fetch3(n), tex.fetch3(n + 1), tex.fetch3(n + 2));
+                    let p = add(add(scale(a, r[2]), scale(b, r[0])), scale(c, r[1]));
+                    let point = [p[0], p[1], p[2], 1.0];
+                    let normal = want_normals.then(|| {
+                        let n = tex.normals_index as i64 + t;
+                        let (n0, n1, n2) = (tex.fetch3(n), tex.fetch3(n + 1), tex.fetch3(n + 2));
 
-                            add(add(scale(n0, r[2]), scale(n1, r[0])), scale(n2, r[1]))
-                        });
+                        add(add(scale(n0, r[2]), scale(n1, r[0])), scale(n2, r[1]))
+                    });
 
-                        if points.len() < ARRAY_SIZE {
-                            points.push(point);
-                            normals.extend(normal);
-                        } else {
-                            points[ARRAY_SIZE - 1] = point;
-                            normals[ARRAY_SIZE - 1] = normal.unwrap();
+                    count += 1;
+
+                    if points.len() < ARRAY_SIZE {
+                        points.push(point);
+                        normals.extend(normal);
+                    } else {
+                        points[ARRAY_SIZE - 1] = point;
+
+                        if let Some(normal) = normal {
+                            normals[ARRAY_SIZE - 1] = normal;
                         }
                     }
                 }
@@ -866,14 +870,20 @@ fn get_intersections(
         }
     }
 
-    (points, normals)
+    (points, normals, count)
 }
 
-/// `sort (points, count, plane3 (line .point, line .direction))`: the comb sort by plane distance.
-fn comb_sort(points: &mut [[f32; 4]], line: Line) {
+/// The index WebGL accesses for `points [i]` of an `ARRAY_SIZE` array: out-of-range indices are clamped.
+fn clamped(i: usize) -> usize {
+    i.min(ARRAY_SIZE - 1)
+}
+
+/// `sort (points, count, plane3 (line .point, line .direction))`: the comb sort by plane distance. A `count` past
+/// ARRAY_SIZE reads and swaps the clamped entries.
+fn comb_sort(points: &mut [[f32; 4]], count: usize, line: Line) {
     let distance =
         |p: &[f32; 4]| dot([p[0], p[1], p[2]], line.direction) - dot(line.direction, line.point);
-    let count = points.len() as i32;
+    let count = count as i32;
     let shrink = 1.0f32 / 1.3f32;
     let mut gap = count;
     let mut exchanged = true;
@@ -887,7 +897,7 @@ fn comb_sort(points: &mut [[f32; 4]], line: Line) {
         }
 
         for i in 0..count - gap {
-            let (i, j) = (i as usize, (gap + i) as usize);
+            let (i, j) = (clamped(i as usize), clamped((gap + i) as usize));
 
             if distance(&points[i]) > distance(&points[j]) {
                 points.swap(i, j);
@@ -1164,22 +1174,20 @@ impl Shader<'_> {
             point: [point[0], point[1], point[2]],
             direction: self.random_surface_normal(normal),
         };
-        let (mut points, _) = get_intersections(tex, line, false);
+        let (mut points, _, count) = get_intersections(tex, line, false);
 
         // An even count is needed: the last point in traversal order is dropped when odd.
-        let n = points.len() - points.len() % 2;
-
-        points.truncate(n);
+        let n = count - count % 2;
 
         match n {
             0 => return [0.0; 4],
             2 => {}
-            _ => comb_sort(&mut points, line),
+            _ => comb_sort(&mut points, n, line),
         }
 
         let index = ((self.rng.random() % 1.0) * (n / 2) as f32) as usize * 2;
         let a = self.rng.random();
-        let (p, q) = (points[index], points[index + 1]);
+        let (p, q) = (points[clamped(index)], points[clamped(index + 1)]);
         let mut out = [0.0f32; 4];
 
         for c in 0..4 {
@@ -1196,7 +1204,7 @@ fn bounce(tex: &GeometryTexture, from: [f32; 4], to: &mut [f32; 4], velocity: &m
         point: [from[0], from[1], from[2]],
         direction: normalize(*velocity),
     };
-    let (points, normals) = get_intersections(tex, line, true);
+    let (points, normals, _) = get_intersections(tex, line, true);
 
     if points.is_empty() {
         return;
