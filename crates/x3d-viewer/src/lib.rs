@@ -4,6 +4,8 @@ pub mod collision;
 pub mod embed;
 pub mod geom;
 pub mod geom2;
+#[cfg(feature = "gpu")]
+pub mod keys;
 pub mod layer;
 pub mod lookat;
 pub mod nav;

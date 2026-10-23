@@ -4,6 +4,10 @@
 //! texture (no CPU readback, no second device). Pointer, wheel and keys become `UiEvent`s for
 //! the viewer (y flipped: the viewer uses a bottom-left origin like the oracle).
 //!
+//! Keys: every key goes to X3D as a DOM keydown / keyup (repeats included, as in the browser);
+//! only the application shortcuts in [`crate::keys`] (Ctrl on Linux, Command on macOS, + 1-4, Q,
+//! M, Z, R, L, S) stay with the window. Escape is an X3D key; closing is the window manager's.
+//!
 //! Status (load errors, Browser.print, sensor descriptions, Anchor activations) is shown in the
 //! title bar and logged to stderr; there is no in-window text.
 //!
@@ -13,7 +17,8 @@
 
 use crate::embed::{EmbeddedViewer, FrameInfo, LoadOptions, realtime_now};
 use crate::script::apply;
-use crate::viewer::{Key as VKey, UiEvent};
+use crate::keys::{KeyAction, KeyTracker, Platform, Shortcut};
+use crate::viewer::UiEvent;
 use serde_json::Value;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -22,7 +27,8 @@ use winit::application::ApplicationHandler;
 use winit::dpi::LogicalSize;
 use winit::event::{ElementState, MouseButton, MouseScrollDelta, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
-use winit::keyboard::{Key, ModifiersState, NamedKey};
+use winit::keyboard::ModifiersState;
+use winit::platform::modifier_supplement::KeyEventExtModifierSupplement;
 use winit::window::{Window, WindowId};
 
 pub struct Options {
@@ -67,6 +73,7 @@ pub struct ViewerWindow {
     opts: Options,
     gfx: Option<Gfx>,
     mods: ModifiersState,
+    keys: KeyTracker,
     cursor: (f64, f64),
     /// Time and position of the previous left button release (the browser's click count for "dblclick").
     last_left_up: Option<(std::time::Instant, f64, f64)>,
@@ -86,6 +93,7 @@ impl ViewerWindow {
             opts,
             gfx: None,
             mods: ModifiersState::empty(),
+            keys: KeyTracker::default(),
             cursor: (0.0, 0.0),
             last_left_up: None,
             frame: 0,
@@ -152,58 +160,54 @@ impl ViewerWindow {
         self.last_prints = prints.len();
     }
 
-    fn keyboard(&mut self, event_loop: &ActiveEventLoop, key: &Key) {
-        match key {
-            Key::Named(NamedKey::Home) => self.input(UiEvent::Key(VKey::Home)),
-            Key::Named(NamedKey::End) => self.input(UiEvent::Key(VKey::End)),
-            Key::Named(NamedKey::PageUp) => self.input(UiEvent::Key(VKey::PageUp)),
-            Key::Named(NamedKey::PageDown) => self.input(UiEvent::Key(VKey::PageDown)),
-            Key::Named(NamedKey::Escape) => event_loop.exit(),
-            Key::Character(c) => match c.as_str() {
-                "1" => self.set_viewer("EXAMINE"),
-                "2" => self.set_viewer("WALK"),
-                "3" => self.set_viewer("FLY"),
-                "4" => self.set_viewer("NONE"),
-                "q" | "Q" => event_loop.exit(),
-                "m" | "M" => {
-                    if let Some(g) = &mut self.gfx {
-                        let n = g.viewer.cycle_multisampling();
-                        eprintln!("multisampling {n}x");
-                    }
-                    self.update_title();
+    fn key_action(&mut self, event_loop: &ActiveEventLoop, action: KeyAction) {
+        match action {
+            KeyAction::Dom { down, key, code } => self.input(UiEvent::NativeKey { down, key, code }),
+            KeyAction::Shortcut(s) => self.shortcut(event_loop, s),
+            KeyAction::None => {}
+        }
+    }
+
+    fn shortcut(&mut self, event_loop: &ActiveEventLoop, s: Shortcut) {
+        match s {
+            Shortcut::Viewer(kind) => self.set_viewer(kind),
+            Shortcut::Quit => event_loop.exit(),
+            Shortcut::Multisampling => {
+                if let Some(g) = &mut self.gfx {
+                    let n = g.viewer.cycle_multisampling();
+                    eprintln!("multisampling {n}x");
                 }
-                "z" | "Z" => {
-                    if let Some(g) = &mut self.gfx {
-                        let m = g.viewer.cycle_depth_mode();
-                        eprintln!("depth buffer {m:?}");
-                    }
+                self.update_title();
+            }
+            Shortcut::DepthMode => {
+                if let Some(g) = &mut self.gfx {
+                    let m = g.viewer.cycle_depth_mode();
+                    eprintln!("depth buffer {m:?}");
                 }
-                "r" | "R" => {
-                    if let Some(g) = &mut self.gfx {
-                        if let Err(e) = g.viewer.reload() {
-                            eprintln!("reload: {e}");
-                        }
+            }
+            Shortcut::Reload => {
+                if let Some(g) = &mut self.gfx {
+                    if let Err(e) = g.viewer.reload() {
+                        eprintln!("reload: {e}");
                     }
                 }
-                "l" | "L" => {
-                    if let Some(g) = &self.gfx {
-                        for v in g.viewer.viewpoints() {
-                            eprintln!("viewpoint {}: {}", v.index, v.description);
-                        }
+            }
+            Shortcut::ListViewpoints => {
+                if let Some(g) = &self.gfx {
+                    for v in g.viewer.viewpoints() {
+                        eprintln!("viewpoint {}: {}", v.index, v.description);
                     }
                 }
-                "s" | "S" => {
-                    self.shots += 1;
-                    let p = PathBuf::from(format!("/tmp/x3d-view-{}.png", self.shots));
-                    if let Err(e) = self.screenshot(&p) {
-                        eprintln!("screenshot: {e}");
-                    } else {
-                        eprintln!("saved {}", p.display());
-                    }
+            }
+            Shortcut::Screenshot => {
+                self.shots += 1;
+                let p = PathBuf::from(format!("/tmp/x3d-view-{}.png", self.shots));
+                if let Err(e) = self.screenshot(&p) {
+                    eprintln!("screenshot: {e}");
+                } else {
+                    eprintln!("saved {}", p.display());
                 }
-                _ => {}
-            },
-            _ => {}
+            }
         }
     }
 
@@ -519,8 +523,16 @@ impl ApplicationHandler for ViewerWindow {
                 let (x, y) = self.cursor;
                 self.input(UiEvent::Wheel { delta_y: dy, x, y });
             }
-            WindowEvent::KeyboardInput { event, .. } if event.state == ElementState::Pressed && !event.repeat => {
-                self.keyboard(event_loop, &event.logical_key);
+            WindowEvent::KeyboardInput { event, is_synthetic, .. } => {
+                let pressed = event.state == ElementState::Pressed;
+                let action = self.keys.event(Platform::current(), pressed, event.repeat, is_synthetic, &event.logical_key, &event.key_without_modifiers(), &event.physical_key, self.mods);
+                self.key_action(event_loop, action);
+            }
+            WindowEvent::Focused(false) => {
+                // The browser element would keep a held key down forever; the window releases it.
+                for action in self.keys.release_all() {
+                    self.key_action(event_loop, action);
+                }
             }
             WindowEvent::RedrawRequested => self.redraw(event_loop),
             _ => {}
@@ -530,12 +542,20 @@ impl ApplicationHandler for ViewerWindow {
 
 /// Run the window on the calling thread (a large-stack thread: QuickJS needs it).
 pub fn run(opts: Options) -> Result<u64, String> {
-    use winit::platform::wayland::EventLoopBuilderExtWayland;
-    use winit::platform::x11::EventLoopBuilderExtX11;
-
     let mut builder = EventLoop::builder();
-    EventLoopBuilderExtX11::with_any_thread(&mut builder, true);
-    EventLoopBuilderExtWayland::with_any_thread(&mut builder, true);
+
+    #[cfg(all(unix, not(target_os = "macos")))]
+    {
+        use winit::platform::wayland::EventLoopBuilderExtWayland;
+        use winit::platform::x11::EventLoopBuilderExtX11;
+
+        EventLoopBuilderExtX11::with_any_thread(&mut builder, true);
+        EventLoopBuilderExtWayland::with_any_thread(&mut builder, true);
+    }
+
+    #[cfg(windows)]
+    winit::platform::windows::EventLoopBuilderExtWindows::with_any_thread(&mut builder, true);
+
     let event_loop = builder.build().map_err(|e| format!("event loop: {e}"))?;
     event_loop.set_control_flow(ControlFlow::Poll);
     let mut app = ViewerWindow::new(opts);
