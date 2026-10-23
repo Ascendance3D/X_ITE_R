@@ -14,8 +14,9 @@
 //! KNOWN_GAPS lists image passes the renderer cannot match yet (the particle records of those cases are still compared);
 //! the test requires them to keep failing.
 //!
-//! Without a GPU adapter the image part is skipped. A case without a baseline is listed and skipped; the test fails
-//! when no case has one, so a missing baseline directory is not a silent pass. `REA_ONLY=<substring>` restricts the cases.
+//! Without a GPU adapter the image part is skipped. Every world needs its baseline: a missing `js.json`, `png/` or
+//! `msaa4/` directory, or a missing image of a dump frame, is a failure, not a skipped comparison. `REA_ONLY=<substring>`
+//! restricts the cases.
 
 mod common;
 
@@ -139,6 +140,10 @@ fn compare_images(
         );
 
         if !js.exists() {
+            failures.push(format!(
+                "{name}: baseline image {} is missing",
+                js.display()
+            ));
             continue;
         }
 
@@ -195,7 +200,15 @@ fn run_case(root: &Path, name: &str, gpu: bool, failures: &mut Vec<String>) -> b
     let _ = std::fs::remove_dir_all(&out);
 
     for (pass, msaa) in [("png", None), ("msaa4", Some("4"))] {
-        if pass == "msaa4" && !(gpu && base.join("msaa4").is_dir()) {
+        if pass == "msaa4" && !gpu {
+            continue;
+        }
+
+        if gpu && !base.join(pass).is_dir() {
+            failures.push(format!(
+                "{name}: baseline directory {} is missing",
+                base.join(pass).display()
+            ));
             continue;
         }
 
@@ -335,10 +348,14 @@ fn rea_b18_particle_line_cases_match_x_ite() {
         checked.len(),
         without.join(", ")
     );
-    assert!(
-        !checked.is_empty(),
-        "no case has a baseline in oracle/rea-batch18-particle-lines-baseline"
-    );
+    if !without.is_empty() {
+        failures.push(format!(
+            "worlds without a baseline in oracle/rea-batch18-particle-lines-baseline: {}",
+            without.join(", ")
+        ));
+    }
+
+    assert!(!names.is_empty(), "no case selected");
     assert!(
         failures.is_empty(),
         "{} failures:\n{}",
