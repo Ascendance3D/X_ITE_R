@@ -1,0 +1,11 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:4
+COMPONENT X_ITE:1
+Viewpoint { position 0 1.2 4 orientation 1 0 0 -0.15 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF PS ParticleSystem { enabled FALSE geometryType "LINE" }
+InstancedShape { translations [ -0.6 0.2 0, 0.6 0.9 -0.5, 0 1.5 0.3 ] rotations [ 0 1 0 0.6, 1 0 0 -0.9, 0.3 0.5 1 1.2 ] scales [ 0.6 0.6 0.6, 1.5 0.5 1, 1 2 1 ]
+  appearance Appearance { material Material { emissiveColor 1 0.6 0.2 } lineProperties LineProperties { linewidthScaleFactor 6 } }
+  geometry IndexedLineSet { coord Coordinate { point [ -0.4 -0.3 0, 0.4 -0.3 0, 0 0.4 0.2 ] } coordIndex [ 0 1 2 0 -1 ] } }
