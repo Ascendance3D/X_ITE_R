@@ -150,6 +150,102 @@ impl PipelineKey {
     }
 }
 
+/// The main pipeline's shaders, layouts and options: handles that can go to another thread.
+struct PipelineSource {
+    device: wgpu::Device,
+    shader: wgpu::ShaderModule,
+    shader_3d: wgpu::ShaderModule,
+    layout: wgpu::PipelineLayout,
+    layout_3d: wgpu::PipelineLayout,
+    depth_mode: DepthMode,
+    debug_ids: bool,
+}
+
+impl PipelineSource {
+    fn make(&self, key: PipelineKey, format: wgpu::TextureFormat, samples: u32, flip: bool) -> wgpu::RenderPipeline {
+        let attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4, 9 => Float32];
+        let stipple_attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4, 9 => Float32, 4 => Float32x4];
+        let (entry, stride, attributes): (&str, usize, &[wgpu::VertexAttribute]) =
+            if key.stipple { ("vs_stipple", STIPPLE_FLOATS_PER_VERTEX, &stipple_attributes) } else { ("vs_main", FLOATS_PER_VERTEX, &attributes) };
+        let float_blend = format != wgpu::TextureFormat::Rgba32Float || self.device.features().contains(wgpu::Features::FLOAT32_BLENDABLE);
+        let blend = (key.blend && !self.debug_ids && float_blend).then_some(key.blend_mode.unwrap_or(wgpu::BlendState {
+            // gl.blendFuncSeparate (SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ONE_MINUS_SRC_ALPHA)
+            color: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::SrcAlpha, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
+            alpha: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::One, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
+        }));
+        let shader = if key.volume { &self.shader_3d } else { &self.shader };
+        self.device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+            label: Some("x3d"),
+            layout: Some(if key.volume { &self.layout_3d } else { &self.layout }),
+            vertex: wgpu::VertexState {
+                module: shader,
+                entry_point: Some(entry),
+                compilation_options: Default::default(),
+                buffers: &[Some(wgpu::VertexBufferLayout { array_stride: (stride * 4) as u64, step_mode: wgpu::VertexStepMode::Vertex, attributes })],
+            },
+            primitive: wgpu::PrimitiveState {
+                topology: match key.topology {
+                    Topology::Triangles => wgpu::PrimitiveTopology::TriangleList,
+                    Topology::Lines => wgpu::PrimitiveTopology::LineList,
+                    Topology::Points => wgpu::PrimitiveTopology::PointList,
+                },
+                front_face: if key.ccw != flip { wgpu::FrontFace::Ccw } else { wgpu::FrontFace::Cw },
+                cull_mode: match key.cull {
+                    _ if key.topology != Topology::Triangles => None,
+                    Cull::None => None,
+                    Cull::Front => Some(wgpu::Face::Front),
+                    Cull::Back => Some(wgpu::Face::Back),
+                },
+                polygon_mode: if key.polygon_line && self.device.features().contains(wgpu::Features::POLYGON_MODE_LINE) { wgpu::PolygonMode::Line } else { wgpu::PolygonMode::Fill },
+                ..Default::default()
+            },
+            depth_stencil: Some(wgpu::DepthStencilState {
+                format: self.depth_mode.depth_format(),
+                depth_write_enabled: Some(key.depth_write),
+                depth_compare: Some(if !key.depth_test {
+                    wgpu::CompareFunction::Always
+                } else if let Some(f) = key.depth_func {
+                    f
+                } else if self.depth_mode == DepthMode::Reversed {
+                    wgpu::CompareFunction::GreaterEqual
+                } else {
+                    wgpu::CompareFunction::LessEqual
+                }),
+                stencil: Default::default(),
+                bias: wgpu::DepthBiasState { constant: key.bias.0, slope_scale: f32::from_bits(key.bias.1), clamp: 0.0 },
+            }),
+            multisample: wgpu::MultisampleState { count: samples, mask: !0, alpha_to_coverage_enabled: key.alpha_to_coverage && samples > 1 && !self.debug_ids },
+            fragment: Some(wgpu::FragmentState {
+                module: shader,
+                entry_point: Some(if self.debug_ids { "fs_id" } else { "fs_main" }),
+                compilation_options: Default::default(),
+                targets: &[Some(wgpu::ColorTargetState { format, blend, write_mask: wgpu::ColorWrites::ALL })],
+            }),
+            multiview_mask: None,
+            cache: None,
+        })
+    }
+}
+
+/// A main pipeline created on another thread, for the key (pipeline key, format, samples, flip).
+struct PreparedPipeline {
+    key: (PipelineKey, wgpu::TextureFormat, u32, bool),
+    job: std::thread::JoinHandle<wgpu::RenderPipeline>,
+}
+
+impl PreparedPipeline {
+    /// Start creating it; `None` when no thread can be started (the frame creates it instead).
+    fn start(source: PipelineSource, key: (PipelineKey, wgpu::TextureFormat, u32, bool)) -> Option<PreparedPipeline> {
+        let job = std::thread::Builder::new().name("x3d pipeline".to_string()).spawn(move || source.make(key.0, key.1, key.2, key.3)).ok()?;
+        Some(PreparedPipeline { key, job })
+    }
+
+    /// Wait for it; `None` when its thread panicked (the frame creates it instead).
+    fn finish(self) -> Option<wgpu::RenderPipeline> {
+        self.job.join().ok()
+    }
+}
+
 /// BlendMode.enable as a WebGPU blend state and constant. WebGPU's constant factor uses the
 /// constant's own channel, so CONSTANT_ALPHA in the color factors is the constant (a, a, a, a);
 /// a color equation using both CONSTANT_COLOR and CONSTANT_ALPHA cannot be expressed and uses the
@@ -681,6 +777,8 @@ pub struct Renderer {
     /// Bind group 3: the style texture.
     texture_layout: wgpu::BindGroupLayout,
     pipelines: HashMap<(PipelineKey, wgpu::TextureFormat, u32, bool), wgpu::RenderPipeline>,
+    /// A main pipeline being created on another thread ([`Renderer::new_preparing`]).
+    prepared: Option<PreparedPipeline>,
     frame_buffer: wgpu::Buffer,
     frame_group: wgpu::BindGroup,
     /// The frame group without an EnvironmentLight (default white cube maps).
@@ -879,6 +977,8 @@ impl Renderer {
 
     fn rebuild_shader_variant(&mut self) {
         self.pipelines.clear();
+        // Made with the previous variant; its thread finishes on its own.
+        self.prepared = None;
         self.alt_shader = None;
         self.alt_shader_3d = None;
 
@@ -952,6 +1052,19 @@ impl Renderer {
 
     /// A renderer on the host's device and queue. Cheap resources only; nothing is drawn.
     pub fn new(device: wgpu::Device, queue: wgpu::Queue) -> Renderer {
+        Self::with_prepared(device, queue, None)
+    }
+
+    /// [`Renderer::new`], and start creating the main pipeline of the most common draw (opaque
+    /// solid triangles) for a target of `format` and `samples` (the window's surface) on another
+    /// thread. The first main pipeline compiles the whole x3d.wgsl; on DX12 that is seconds (DXC,
+    /// then the driver), which this overlaps with the rest of the setup and the world's loading.
+    /// The first frame that draws with it waits for it; other draws do not.
+    pub fn new_preparing(device: wgpu::Device, queue: wgpu::Queue, format: wgpu::TextureFormat, samples: u32) -> Renderer {
+        Self::with_prepared(device, queue, Some((format, samples)))
+    }
+
+    fn with_prepared(device: wgpu::Device, queue: wgpu::Queue, target: Option<(wgpu::TextureFormat, u32)>) -> Renderer {
         let shader = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("x3d.wgsl"), source: wgpu::ShaderSource::Wgsl(include_str!("x3d.wgsl").into()) });
         let shader_3d = device.create_shader_module(wgpu::ShaderModuleDescriptor { label: Some("x3d.wgsl (3D)"), source: wgpu::ShaderSource::Wgsl(volume_shader(include_str!("x3d.wgsl")).into()) });
 
@@ -1046,6 +1159,10 @@ impl Renderer {
             label: Some("x3d (3D)"),
             bind_group_layouts: &[Some(&frame_layout), Some(&draw_layout), Some(&slots_layout_3d), Some(&texture_layout)],
             ..Default::default()
+        });
+        let prepared = target.and_then(|(format, samples)| {
+            let source = PipelineSource { device: device.clone(), shader: shader.clone(), shader_3d: shader_3d.clone(), layout: layout.clone(), layout_3d: layout_3d.clone(), depth_mode: DepthMode::Standard, debug_ids: false };
+            PreparedPipeline::start(source, (PipelineKey::new(Topology::Triangles, Cull::Back, true, false, true, true), format, samples, false))
         });
 
         let frame_buffer = device.create_buffer(&wgpu::BufferDescriptor {
@@ -1206,6 +1323,7 @@ impl Renderer {
             slots_layout,
             texture_layout,
             pipelines: HashMap::new(),
+            prepared,
             frame_buffer,
             frame_group,
             frame_group_default,
@@ -1332,67 +1450,44 @@ impl Renderer {
     }
 
     fn make_pipeline(&self, key: PipelineKey, format: wgpu::TextureFormat, samples: u32, flip: bool) -> wgpu::RenderPipeline {
-        let attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4, 9 => Float32];
-        let stipple_attributes = wgpu::vertex_attr_array![0 => Float32x3, 1 => Float32x3, 2 => Float32x4, 3 => Float32x4, 5 => Float32x4, 6 => Float32x4, 7 => Float32x4, 8 => Float32x4, 9 => Float32, 4 => Float32x4];
-        let (entry, stride, attributes): (&str, usize, &[wgpu::VertexAttribute]) =
-            if key.stipple { ("vs_stipple", STIPPLE_FLOATS_PER_VERTEX, &stipple_attributes) } else { ("vs_main", FLOATS_PER_VERTEX, &attributes) };
-        let float_blend = format != wgpu::TextureFormat::Rgba32Float || self.device.features().contains(wgpu::Features::FLOAT32_BLENDABLE);
-        let blend = (key.blend && !self.debug_ids && float_blend).then_some(key.blend_mode.unwrap_or(wgpu::BlendState {
-            // gl.blendFuncSeparate (SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ONE_MINUS_SRC_ALPHA)
-            color: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::SrcAlpha, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
-            alpha: wgpu::BlendComponent { src_factor: wgpu::BlendFactor::One, dst_factor: wgpu::BlendFactor::OneMinusSrcAlpha, operation: wgpu::BlendOperation::Add },
-        }));
-        let shader = if key.volume { self.alt_shader_3d.as_ref().unwrap_or(&self.shader_3d) } else { self.alt_shader.as_ref().unwrap_or(&self.shader) };
-        self.device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-            label: Some("x3d"),
-            layout: Some(if key.volume { &self.layout_3d } else { &self.layout }),
-            vertex: wgpu::VertexState {
-                module: shader,
-                entry_point: Some(entry),
-                compilation_options: Default::default(),
-                buffers: &[Some(wgpu::VertexBufferLayout { array_stride: (stride * 4) as u64, step_mode: wgpu::VertexStepMode::Vertex, attributes })],
-            },
-            primitive: wgpu::PrimitiveState {
-                topology: match key.topology {
-                    Topology::Triangles => wgpu::PrimitiveTopology::TriangleList,
-                    Topology::Lines => wgpu::PrimitiveTopology::LineList,
-                    Topology::Points => wgpu::PrimitiveTopology::PointList,
-                },
-                front_face: if key.ccw != flip { wgpu::FrontFace::Ccw } else { wgpu::FrontFace::Cw },
-                cull_mode: match key.cull {
-                    _ if key.topology != Topology::Triangles => None,
-                    Cull::None => None,
-                    Cull::Front => Some(wgpu::Face::Front),
-                    Cull::Back => Some(wgpu::Face::Back),
-                },
-                polygon_mode: if key.polygon_line && self.device.features().contains(wgpu::Features::POLYGON_MODE_LINE) { wgpu::PolygonMode::Line } else { wgpu::PolygonMode::Fill },
-                ..Default::default()
-            },
-            depth_stencil: Some(wgpu::DepthStencilState {
-                format: self.depth_mode.depth_format(),
-                depth_write_enabled: Some(key.depth_write),
-                depth_compare: Some(if !key.depth_test {
-                    wgpu::CompareFunction::Always
-                } else if let Some(f) = key.depth_func {
-                    f
-                } else if self.depth_mode == DepthMode::Reversed {
-                    wgpu::CompareFunction::GreaterEqual
-                } else {
-                    wgpu::CompareFunction::LessEqual
-                }),
-                stencil: Default::default(),
-                bias: wgpu::DepthBiasState { constant: key.bias.0, slope_scale: f32::from_bits(key.bias.1), clamp: 0.0 },
-            }),
-            multisample: wgpu::MultisampleState { count: samples, mask: !0, alpha_to_coverage_enabled: key.alpha_to_coverage && samples > 1 && !self.debug_ids },
-            fragment: Some(wgpu::FragmentState {
-                module: shader,
-                entry_point: Some(if self.debug_ids { "fs_id" } else { "fs_main" }),
-                compilation_options: Default::default(),
-                targets: &[Some(wgpu::ColorTargetState { format, blend, write_mask: wgpu::ColorWrites::ALL })],
-            }),
-            multiview_mask: None,
-            cache: None,
-        })
+        self.pipeline_source().make(key, format, samples, flip)
+    }
+
+    /// Wait for the pipeline [`Renderer::new_preparing`] started and keep it. When the sample
+    /// count has changed since, it does not wait: frames at this count cannot use it. A host that
+    /// shows its window only when the first frame can be drawn at once calls this before.
+    pub fn finish_prepared(&mut self) {
+        let samples = self.sample_count();
+        let Some(p) = self.prepared.take_if(|p| p.key.2 == samples) else { return };
+        let key = p.key;
+
+        if let Some(pipeline) = p.finish() {
+            self.pipelines.entry(key).or_insert(pipeline);
+        }
+    }
+
+    /// The main pipeline of `key` for this frame's target: the prepared one when it is that, else a new one.
+    fn take_or_make_pipeline(&mut self, key: (PipelineKey, wgpu::TextureFormat, u32, bool)) -> wgpu::RenderPipeline {
+        if self.prepared.as_ref().is_some_and(|p| p.key == key) {
+            if let Some(p) = self.prepared.take().and_then(PreparedPipeline::finish) {
+                return p;
+            }
+        }
+
+        self.make_pipeline(key.0, key.1, key.2, key.3)
+    }
+
+    /// What [`PipelineSource::make`] needs, with the current shader variant and options.
+    fn pipeline_source(&self) -> PipelineSource {
+        PipelineSource {
+            device: self.device.clone(),
+            shader: self.alt_shader.clone().unwrap_or_else(|| self.shader.clone()),
+            shader_3d: self.alt_shader_3d.clone().unwrap_or_else(|| self.shader_3d.clone()),
+            layout: self.layout.clone(),
+            layout_3d: self.layout_3d.clone(),
+            depth_mode: self.depth_mode,
+            debug_ids: self.debug_ids,
+        }
     }
 
     /// A shadow map depth texture of `size`² and its view.
@@ -3289,7 +3384,7 @@ impl Renderer {
         // Pipelines for the formats and states of this frame.
         for c in calls.iter().filter(|c| !matches!(c.source, Source::Volume(_) | Source::Splats(_) | Source::Custom(..))) {
             if !self.pipelines.contains_key(&(c.key, format, samples, flip)) {
-                let p = self.make_pipeline(c.key, format, samples, flip);
+                let p = self.take_or_make_pipeline((c.key, format, samples, flip));
                 self.pipelines.insert((c.key, format, samples, flip), p);
                 self.stats.pipelines_created += 1;
             }
