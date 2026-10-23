@@ -25,6 +25,7 @@ pub mod hanim;
 pub mod layer;
 pub mod load;
 pub mod nurbs;
+pub mod particles;
 pub mod pointing_gpu;
 pub mod sg;
 pub mod splats;
