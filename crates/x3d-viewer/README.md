@@ -111,6 +111,11 @@ Esc is a world key and never quits. Mouse: left drag rotates (EXAMINE), middle d
 X_ITE. Environment: `X3D_VIEW_NOVSYNC=1` (do not wait for vsync), `X3D_VIEW_STATS=1` (adapter, surface
 format, alpha mode, and per-frame CPU/GPU averages on exit).
 
+A `--script` run counts a frame only once its world step is drawn and presented; a surface that is
+not ready delays the frame (its events and its step), it does not skip it. The run exits with an
+error (status 1) when the surface is not ready for 120 redraws in a row, a frame fails to render, or
+the window closes before the last frame.
+
 Desktop use: `tools/x3d-view-launch.sh [world] [options]` finds the release binary and opens the
 world (no world: `samples/desktop-demo/demo.wrl`, a small world written for this repository with a
 texture, lights, three viewpoints, an animation, a TouchSensor + Script and a looping Sound).
