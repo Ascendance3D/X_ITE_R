@@ -4577,6 +4577,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "x3d-oracle"
+version = "0.1.0"
+dependencies = [
+ "libc",
+ "serde_json",
+ "zlib-rs",
+]
+
+[[package]]
 name = "x3d-parse"
 version = "0.1.0"
 dependencies = [

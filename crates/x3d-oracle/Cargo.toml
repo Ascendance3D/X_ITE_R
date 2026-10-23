@@ -1,0 +1,23 @@
+[package]
+name = "x3d-oracle"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "Drives the pinned X_ITE reference page in headless Chrome over the DevTools protocol (no Node.js); replaces oracle/x_ite-anim*.mjs."
+
+[[bin]]
+name = "x3d-oracle"
+path = "src/main.rs"
+
+[dependencies]
+# CDP messages. float_roundtrip parses script numbers exactly as JavaScript does (other workspace crates
+# already enable it, so feature unification changes nothing for them).
+serde_json = { version = "1", features = ["float_roundtrip"] }
+# PNG IDAT: zlib-rs level 9 reproduces the bytes of Node's zlib.deflateSync (level 9) that the Node tools
+# wrote; used directly (not through flate2) so the workspace's flate2 backend is not switched.
+zlib-rs = { version = "0.6", default-features = false, features = ["rust-allocator"] }
+
+[target.'cfg(unix)'.dependencies]
+# fd 3 / fd 4 for --remote-debugging-pipe, process group kill, parent-death signal.
+libc = "0.2"
