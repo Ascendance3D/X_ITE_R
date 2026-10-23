@@ -406,15 +406,34 @@ A known difference is not an exact match. A blocked comparison is not a passing 
 | Platform | Status |
 |---|---|
 | Linux x86-64 | Working native viewer; tested on Ubuntu 24.04 |
-| macOS 15+ | Approved development target; native package not yet verified |
-| Windows | Outside current development scope |
-| Mobile | Outside current development scope |
+| macOS 15+ | Development target; native package not yet verified |
+| Windows x86-64 | Development target; DX12 viewer tested on one Intel UHD PC; no package yet |
+| Mobile | Development target; not yet started |
 
-Linux is the current development and verification platform.
+eXciteR targets every platform that X_ITE supports.
 
-The next platform goal is a native macOS 15+ viewer.
+Linux is the main development and verification platform today. macOS and Windows builds are
+tested on dedicated test machines. Mobile work has not started.
 
-Windows and mobile development are not part of the approved roadmap.
+### Windows graphics backend (test builds)
+
+On Windows, `x3d-view` uses DX12 by default and compiles shaders with Microsoft's DXC
+compiler, loaded from `dxcompiler.dll` beside `x3d-view.exe`. `tools/fetch-dxc.sh <dir>`
+downloads the pinned official release (v1.8.2505.1) and checks its SHA-256 values.
+
+- `WGPU_BACKEND` replaces the default (`dx12`, `vulkan`, `gl`, comma-separated). An unknown
+  name is an error.
+- `WGPU_DX12_COMPILER=fxc` selects the built-in FXC compiler. It works, but the first frame
+  can take minutes on a small CPU.
+- A missing `dxcompiler.dll` stops startup with an error. There is no automatic fallback.
+- GL cannot run this renderer (the scatter-depth pass reads a depth texture). It reports an
+  error instead of crashing.
+- Accepted limitation: the first start of a new build compiles the shader pipelines on the
+  first frame. On the tested Intel UHD PC that took 13.3 s to the first frame (2.9 s on later
+  starts), and the window can look unresponsive meanwhile.
+- `dxcompiler.dll` is not redistributed by this project until its license terms are approved.
+
+Builds come from Linux with `cargo xwin build --release --target x86_64-pc-windows-msvc`.
 
 ## Known Limitations
 
@@ -432,6 +451,7 @@ Current limitations and open work include:
 - GPU picking precision still needs additional compatibility work.
 - Some diagnostics can contain internal reference paths.
 - macOS packaging and testing are not yet complete.
+- Windows has no package yet, and the first start of a new build is slow (see the Windows section).
 
 The full compatibility ledger and regression tests provide more detailed records.
 

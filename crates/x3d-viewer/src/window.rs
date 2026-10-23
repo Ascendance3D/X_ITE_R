@@ -13,8 +13,10 @@
 //!
 //! Environment: `X3D_VIEW_PRESENT=fifo|fiforelaxed|mailbox|immediate` picks the present mode
 //! (default `fifo`: strict vertical sync, never tears); `X3D_VIEW_NOVSYNC=1` is `immediate`;
-//! `X3D_VIEW_STATS=1` prints frame statistics on exit and when the window closes.
+//! `X3D_VIEW_STATS=1` prints frame statistics on exit and when the window closes. Backend and
+//! DX12 shader compiler selection (`WGPU_BACKEND`, `WGPU_DX12_COMPILER`): see [`crate::backend`].
 
+use crate::backend::{self, GpuErrors};
 use crate::embed::{EmbeddedViewer, FrameInfo, LoadOptions, realtime_now};
 use crate::script::apply;
 use crate::keys::{KeyAction, KeyTracker, Platform, Shortcut};
@@ -54,6 +56,8 @@ struct Gfx {
     device: wgpu::Device,
     queue: wgpu::Queue,
     adapter_info: wgpu::AdapterInfo,
+    /// GPU errors outside an error scope; the first one ends the run.
+    gpu_errors: GpuErrors,
     viewer: EmbeddedViewer,
 }
 
@@ -189,7 +193,8 @@ impl ScriptedHost for WindowHost<'_> {
 
     fn step_and_present(&mut self, (frame, acquire): Self::Frame, now: f64) -> Result<(), String> {
         let g = self.gfx.as_deref_mut().ok_or("no window")?;
-        render_present(g, self.stats, self.presented, frame, acquire, now).map(|_| ())
+        render_present(g, self.stats, self.presented, frame, acquire, now)?;
+        g.gpu_errors.take().map_or(Ok(()), |e| Err(format!("GPU error: {e}")))
     }
 }
 
@@ -442,6 +447,11 @@ impl ViewerWindow {
         }
 
         self.draw(realtime_now());
+
+        if let Some(e) = self.gfx.as_ref().and_then(|g| g.gpu_errors.take()) {
+            return self.fail(event_loop, format!("GPU error: {e}"));
+        }
+
         self.update_title();
 
         if let Some(g) = &self.gfx {
@@ -493,7 +503,9 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
     let attrs = Window::default_attributes().with_inner_size(LogicalSize::new(w as f64, h as f64)).with_resizable(opts.script.is_none()).with_title("x3d-view");
     let window = Arc::new(event_loop.create_window(attrs).map_err(|e| format!("create_window: {e}"))?);
 
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_with_display_handle_from_env(Box::new(event_loop.owned_display_handle())));
+    let desc = backend::instance_descriptor()?;
+    let backends = desc.backends;
+    let instance = wgpu::Instance::new(desc.with_display_handle(Box::new(event_loop.owned_display_handle())));
     let surface = instance.create_surface(window.clone()).map_err(|e| format!("create_surface: {e}"))?;
     let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
         power_preference: wgpu::PowerPreference::HighPerformance,
@@ -501,7 +513,7 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         compatible_surface: Some(&surface),
         ..Default::default()
     }))
-    .map_err(|e| format!("no adapter for the surface: {e}"))?;
+    .map_err(|e| backend::adapter_error(backends, &e))?;
     let adapter_info = adapter.get_info();
     let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
         label: Some("x3d-view"),
@@ -509,6 +521,7 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         ..Default::default()
     }))
     .map_err(|e| format!("request_device: {e}"))?;
+    let gpu_errors = GpuErrors::install(&device);
 
     let caps = surface.get_capabilities(&adapter);
     // The viewer writes display-encoded values: draw through a non-sRGB view. Prefer a non-sRGB
@@ -552,9 +565,8 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         eprintln!("adapter {} ({:?}, {:?}); surface {:?} -> view {:?}; present {:?} of {:?}; alpha {:?} of {:?}", adapter_info.name, adapter_info.backend, adapter_info.device_type, surface_format, view_format, present_mode, caps.present_modes, alpha_mode, caps.alpha_modes);
     }
 
-    let mut viewer = EmbeddedViewer::new(device.clone(), queue.clone(), (config.width, config.height));
+    let mut viewer = backend::create_viewer(&device, &queue, (config.width, config.height), &adapter, view_format)?;
     viewer.renderer().clear_color = [0.0, 0.0, 0.0, 1.0];
-    viewer.configure_samples(&adapter, view_format);
 
     if let Some(n) = opts.msaa {
         viewer.set_multisampling(n);
@@ -568,7 +580,7 @@ fn create_gfx(event_loop: &ActiveEventLoop, opts: &Options) -> Result<Gfx, Strin
         eprintln!("multisampling {} (supported {:?})", viewer.multisampling(), viewer.supported_multisampling());
     }
 
-    Ok(Gfx { window, surface, config, view_format, device, queue, adapter_info, viewer })
+    Ok(Gfx { window, surface, config, view_format, device, queue, adapter_info, gpu_errors, viewer })
 }
 
 impl ApplicationHandler for ViewerWindow {
@@ -692,8 +704,9 @@ pub fn run(opts: Options) -> Result<u64, String> {
     let mut app = ViewerWindow::new(opts);
     event_loop.run_app(&mut app).map_err(|e| format!("run: {e}"))?;
     app.print_stats();
+    let pending = app.gfx.as_ref().and_then(|g| g.gpu_errors.take());
 
-    match (app.exit_error, &app.scripted) {
+    match (first_error(app.exit_error, pending), &app.scripted) {
         (Some(e), _) => Err(e),
         // Closed (window manager, Quit) before the last frame: the run did not happen.
         (None, Some(s)) if !s.complete() => Err(format!("scripted run: the event loop ended after {} of {} frames", s.done, s.frames)),
@@ -701,10 +714,23 @@ pub fn run(opts: Options) -> Result<u64, String> {
     }
 }
 
+/// The error that ends the run: the one it stopped for, else a GPU error raised after the last
+/// checked frame (the final screenshot, or just before the window closed).
+fn first_error(exit_error: Option<String>, pending_gpu_error: Option<String>) -> Option<String> {
+    exit_error.or_else(|| pending_gpu_error.map(|e| format!("GPU error: {e}")))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn a_gpu_error_after_the_last_frame_fails_the_run() {
+        assert_eq!(first_error(None, None), None);
+        assert_eq!(first_error(None, Some("lost".into())).as_deref(), Some("GPU error: lost"));
+        assert_eq!(first_error(Some("screenshot: x".into()), Some("lost".into())).as_deref(), Some("screenshot: x"));
+    }
 
     /// A window whose surface is not ready on the listed acquire attempts (1-based), or never.
     #[derive(Default)]
