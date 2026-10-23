@@ -8,7 +8,10 @@
 //! Additive (not in the Node tools): `--png-dir DIR` writes the WebGL drawing buffer at every dump frame as
 //! DIR/<frame>.png (the PNG method of x_ite-anim.mjs), after the particle readback. `--aa` / `--ms N` load
 //! anim-msaa.html (X_ITE antialiased, Multisampling N) instead of anim.html; `--png-size WxH` sets that page's
-//! canvas size (default 512x512, the size of anim.html's canvas).
+//! canvas size (default 512x512, the size of anim.html's canvas). Script key `pickProbes`
+//! (`{ "frames": [k, ...], "points": [[x, y], ...] }`, pointer coordinates, y up) records `browser .touch` at each point
+//! after each listed frame's step, dump and PNG, as `result .pickProbes ["k"]` (id, DEF name of the hit shape, point,
+//! normal, texCoord at full precision); x3d-particles-drive does the same with its pointing pass.
 
 use crate::anim::{Argv, relative, resolve};
 use crate::json::{self, J, js_number};
@@ -115,6 +118,8 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
             None => vec![frames],
         }
     };
+    let probe_frames: Vec<f64> = script.pointer("/pickProbes/frames").and_then(Value::as_array).map(|a| a.iter().filter_map(Value::as_f64).collect()).unwrap_or_default();
+    let probe_points = script.pointer("/pickProbes/points").map(Value::to_string).unwrap_or_else(|| "[]".into());
     let born = script.get("filter").and_then(Value::as_str) == Some("born");
     let png_dir = argv.opt("--png-dir").unwrap_or_default();
     let ms = argv.opt("--ms").unwrap_or_default();
@@ -269,6 +274,13 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
                     let path = Path::new(&png_dir).join(format!("{}.png", js_number(k)));
                     std::fs::write(&path, png).map_err(|e| format!("{}: {e}", path.display()))?;
                 }
+            }
+            if probe_frames.contains(&k) {
+                let probes = parse(page.evaluate(pj::PICK_PROBES_NAMED, Some(&probe_points))?)?;
+                if !matches!(result.member("pickProbes"), J::Obj(_)) {
+                    result.set("pickProbes", J::obj());
+                }
+                result.get_mut("pickProbes").unwrap().set(&js_number(k), probes);
             }
             k += 1.0;
         }

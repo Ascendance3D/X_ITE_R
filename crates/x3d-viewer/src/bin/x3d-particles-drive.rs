@@ -26,6 +26,14 @@
 //! `--png-dir <dir>` renders the frame after each dump frame's step into `<dir>/<frame>.png` (`x3d-oracle particles
 //! --png-dir`: anim.html's 512 x 512 canvas, `antialiased="false"`; `--png-size WxH` for another size); `--msaa N`
 //! renders it like the MSAA page (`antialiased="true" multisampling="N"`). The simulation is the same with or without them.
+//!
+//! Script key `pickProbes` (`{ "frames": [k, ...], "points": [[x, y], ...] }`, see `x3d-oracle particles`): after each
+//! listed frame's step, dump and PNG, `browser .touch` at each point through the GPU pointing pass, as
+//! `pickProbes ["k"]`: id, the DEF name of the hit shape node, point, normal, texCoord. Without a GPU the ray cast
+//! picks (its double values are not X_ITE's) and `pointingGpu` is false; `--cpu-pointing` picks that way on purpose. `--records-from <baseline js.json>` also picks
+//! each listed frame with the baseline's particle records of that frame (its `.f32` dump) in place of the run's own,
+//! as `pickProbesReference`, then puts the run's records back: the pointing pass apart from the simulation's float32
+//! differences (REA batch 06R: within 1e-5 + 1e-5 * |reference|).
 
 use serde_json::{Value, json};
 use std::path::{Path, PathBuf};
@@ -123,6 +131,20 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
 
     v.frame_rate = 1.0 / dt;
 
+    let probe_frames: Vec<u64> = script.pointer("/pickProbes/frames").and_then(Value::as_array).map(|a| a.iter().filter_map(Value::as_u64).collect()).unwrap_or_default();
+    let probe_points: Vec<(f64, f64)> = script.pointer("/pickProbes/points").and_then(Value::as_array).map(|a| a.iter().map(|p| (p[0].as_f64().unwrap_or(0.0), p[1].as_f64().unwrap_or(0.0))).collect()).unwrap_or_default();
+    let mut probes = serde_json::Map::new();
+    let mut reference_probes = serde_json::Map::new();
+    let reference = opt_records_from(script).map_err(fail)?;
+
+    // `--cpu-pointing`: the ray cast's double values, like x3d-drive (the interactive viewer picks this way).
+    if !probe_frames.is_empty() && !std::env::args().any(|a| a == "--cpu-pointing") {
+        match x3d_render::pointing_gpu::PointingGpu::new_headless() {
+            Ok(g) => v.pointing_gpu = Some(g),
+            Err(e) => eprintln!("x3d-particles-drive: no pointing GPU ({e}); picks use the ray cast"),
+        }
+    }
+
     for _ in 0..warmup {
         v.step(t0);
     }
@@ -214,6 +236,35 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
                 x3d_render::write_png(&dir.join(format!("{k}.png")), fw, fh, &rgba).map_err(|e| fail(format!("png: {e}")))?;
             }
         }
+
+        if probe_frames.contains(&k) {
+            let hits: Vec<Value> = probe_points.iter().map(|&(x, y)| probe(&mut v, x, y)).collect();
+
+            probes.insert(k.to_string(), Value::Array(hits));
+
+            if let Some((meta, records)) = &reference {
+                let dump = &meta["dumps"][k.to_string()];
+                let (n, offset) = (dump["numParticles"].as_u64().unwrap_or(0) as usize, dump["offset"].as_u64().unwrap_or(0) as usize);
+                let own_n = v.rt.particle_sim(ps).map_or(0, |s| s.num_particles);
+
+                if dump.is_null() || n != own_n || offset + n * STRIDE > records.len() {
+                    return Err(fail(format!("frame {k}: the reference dump has {n} particles at offset {offset}, the run {own_n}")));
+                }
+
+                let own: Vec<particles::Particle> = v.rt.particle_records_mut(ps).map(|r| r[..n].to_vec()).unwrap_or_default();
+
+                for (i, p) in v.rt.particle_records_mut(ps).unwrap()[..n].iter_mut().enumerate() {
+                    p.copy_from_slice(&records[offset + i * STRIDE..offset + (i + 1) * STRIDE]);
+                }
+
+                v.refresh_pointer_scan();
+                let hits: Vec<Value> = probe_points.iter().map(|&(x, y)| probe(&mut v, x, y)).collect();
+                reference_probes.insert(k.to_string(), Value::Array(hits));
+
+                v.rt.particle_records_mut(ps).unwrap()[..n].copy_from_slice(&own);
+                v.refresh_pointer_scan();
+            }
+        }
     }
 
     if particles::seed_list_exhausted() {
@@ -242,7 +293,49 @@ fn run(world: &Path, script: &Value, seeds: Option<Vec<f64>>, force_draws: Optio
     let file = out.with_extension("f32");
     let rel = file.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_else(|| "rs.f32".into());
 
-    Ok((json!({ "ok": true, "stride": STRIDE, "fileF32": rel, "steps": steps, "dumps": dumps, "geometry": geometry, "vrmlLoad": vrml_load, "vrmlEnd": v.rt.scene.to_vrml_string(), "console": console, "driver": "x3d-particles-drive" }), data, out.to_path_buf()))
+    let mut result = json!({ "ok": true, "stride": STRIDE, "fileF32": rel, "steps": steps, "dumps": dumps, "geometry": geometry, "vrmlLoad": vrml_load, "vrmlEnd": v.rt.scene.to_vrml_string(), "console": console, "driver": "x3d-particles-drive" });
+
+    if !probe_frames.is_empty() {
+        result["pickProbes"] = Value::Object(probes);
+        // false: the ray cast picked (no pointing GPU), whose double values are not X_ITE's.
+        result["pointingGpu"] = Value::Bool(v.pointing_gpu.is_some());
+
+        if reference.is_some() {
+            result["pickProbesReference"] = Value::Object(reference_probes);
+        }
+    }
+
+    Ok((result, data, out.to_path_buf()))
+}
+
+/// `--records-from <js.json>`: the baseline result and its `.f32` records (`fileF32` beside it). The dumps must hold
+/// every particle (no `filter`).
+fn opt_records_from(script: &Value) -> Result<Option<(Value, Vec<f32>)>, String> {
+    let args: Vec<String> = std::env::args().collect();
+    let Some(path) = args.iter().position(|a| a == "--records-from").and_then(|i| args.get(i + 1)).map(PathBuf::from) else { return Ok(None) };
+
+    if script["filter"].is_string() {
+        return Err("--records-from needs dumps of every particle (no filter)".into());
+    }
+
+    let meta: Value = serde_json::from_str(&std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?).map_err(|e| format!("{}: {e}", path.display()))?;
+    let f32_path = path.with_file_name(meta["fileF32"].as_str().unwrap_or("js.f32"));
+    let bytes = std::fs::read(&f32_path).map_err(|e| format!("{}: {e}", f32_path.display()))?;
+
+    Ok(Some((meta, bytes.chunks_exact(4).map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]])).collect())))
+}
+
+/// One `pickProbes` entry: the hit at (x, y) as `x3d-oracle particles` records it (`hit .shapeNode .getName ()`).
+fn probe(v: &mut Viewer3d, x: f64, y: f64) -> Value {
+    let h = v.probe_pick(x, y);
+
+    if !h.id {
+        return json!({ "id": 0 });
+    }
+
+    let name = h.shape.as_ref().and_then(|s| x3d_viewer::walk::rt_at(&v.rt, &s.path).and_then(|rt| rt.scene.nodes.get(s.node as usize)).map(|n| n.name.clone())).unwrap_or_default();
+
+    json!({ "id": 1, "shape": name, "point": [h.point.x, h.point.y, h.point.z], "normal": [h.normal.x, h.normal.y, h.normal.z], "texCoord": [h.tex_coord.x, h.tex_coord.y, h.tex_coord.z, h.tex_coord.w] })
 }
 
 /// Set the field of an `events` entry like `x_ite_particles_b07.mjs` does (SAI-less: straight into the field).

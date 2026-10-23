@@ -1,0 +1,16 @@
+#X3D V4.0 utf8
+PROFILE Full
+COMPONENT ParticleSystems:3
+COMPONENT Shape:5
+Viewpoint { position 0 0 3 }
+Background { skyColor 0.1 0.1 0.2 }
+DEF PS ParticleSystem {
+  geometryType "GEOMETRY"
+  maxParticles 40
+  particleLifetime 2
+  lifetimeVariation 0.25
+  particleSize 0.2 0.2
+  geometry Box { size 0.12 0.12 0.12 }
+  emitter ConeEmitter { position 0 -0.2 -1 direction 0 0.3 1 angle 0.6 speed 0.6 variation 0.3 }
+  appearance Appearance { material Material { diffuseColor 1 1 1 } }
+}
