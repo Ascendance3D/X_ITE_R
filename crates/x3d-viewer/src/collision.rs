@@ -38,10 +38,10 @@ pub struct CShape {
     pub base_model_view: Matrix4,
     pub instance: Option<Matrix4>,
     /// The ClipPlanes in scope, in the same view space (renderContext .clipPlanes).
-    pub clip_planes: Vec<[f64; 4]>,
+    pub clip_planes: Rc<[[f64; 4]]>,
     /// The Collision nodes the COLLISION traversal was inside of when it reached the shape
     /// (renderContext .collisions), outermost first.
-    pub collisions: Vec<x3d_fields::NodeId>,
+    pub collisions: Rc<[x3d_fields::NodeId]>,
 }
 
 pub struct Closest {
