@@ -74,8 +74,9 @@ pub struct ShapeInst {
     /// X3D_TEXTURE and X3D_MATERIAL_TEXTURES of the pointing shader (appearance and material texture nodes).
     pub textures: (bool, bool),
     /// One drawn particle of a ParticleSystem (`shape`): `instance` is its x3d_InstanceMatrix, which does not turn
-    /// normals (no X3D_INSTANCE_NORMAL); it is a pointing object only (no collision, the ParticleSystem's bbox in
-    /// `explicit_bbox` is addPointingShape's view volume test).
+    /// normals (no X3D_INSTANCE_NORMAL). In [`Scan::shapes`] it is a pointing object (collidable FALSE), in
+    /// [`Scan::particle_collisions`] a collision object; the ParticleSystem's bbox in `explicit_bbox` is
+    /// addPointingShape's and addCollisionShape's view volume test.
     pub particle: bool,
     /// The particle's own geometry (POINT, LINE, TRIANGLE, QUAD, SPRITE); `None` draws `geometry`.
     pub particle_geometry: Option<Rc<x3d_render::geometry::Geometry>>,
@@ -124,6 +125,9 @@ pub struct Scan {
     /// The shapes of enabled Collision nodes' `proxy` nodes: collision objects only (Collision.set_collisionObjects__),
     /// never drawn, picked or measured.
     pub proxy_shapes: Vec<ShapeInst>,
+    /// The drawn particles of the active ParticleSystems outside disabled Collision nodes (X3DShapeNode.traverse
+    /// COLLISION: set_collisionObject__ is isEnabled (), pointerEvents does not matter), collision objects only.
+    pub particle_collisions: Vec<ShapeInst>,
     pub proximity: Vec<EnvInst>,
     pub visibility: Vec<EnvInst>,
     /// Enabled Collision nodes seen (browser.getCollisionCount).
@@ -944,7 +948,13 @@ impl<'a> Walker<'a> {
             let saved = std::mem::take(&mut *self.scan);
             self.node(sg, path, p, m, &[], &[], true, depth + 1);
             let walked = std::mem::replace(&mut *self.scan, saved);
-            self.scan.proxy_shapes.extend(walked.shapes);
+            // A ParticleSystem in the proxy is a collision shape through its collision entries.
+            self.scan
+                .proxy_shapes
+                .extend(walked.shapes.into_iter().filter(|s| !s.particle));
+            self.scan
+                .particle_collisions
+                .extend(walked.particle_collisions);
         }
 
         if collision {
@@ -1295,10 +1305,11 @@ impl<'a> Walker<'a> {
             }
             // ParticleSystem.traverse POINTER (X3DShapeNode.traverse → addPointingShape): one instanced draw of the
             // particles in the pointing pass, so each drawn particle is a hit candidate in buffer order under its
-            // instance matrix. The pointer and display walks (not the CAMERA one) collect it; it is no collision shape (particle
-            // collision is not ported) and the PICKING walk keeps X3DShapeNode.picking's own rules.
+            // instance matrix. COLLISION (addCollisionShape): the same draw into the collision depth buffer, so each
+            // drawn particle is a collision shape too, apart from the pointing list. The pointer and display walks (not
+            // the CAMERA one) collect them; the PICKING walk keeps X3DShapeNode.picking's own rules.
             "ParticleSystem" if !self.camera && self.pick.is_none() && self.picking.is_none() => {
-                let Some(p) = x3d_render::traverse::particle_pointing(sg, n, mv) else {
+                let Some(p) = x3d_render::traverse::particle_collision(sg, n, mv) else {
                     return;
                 };
                 let (geometry, geometry_type) = match &p.geometry {
@@ -1311,12 +1322,13 @@ impl<'a> Walker<'a> {
                     }
                 };
                 let (style, textures) = pointing_appearance(sg, n, geometry_type);
+                let pointing = sg.bool(n, "pointerEvents", true);
 
                 for m in &p.matrices {
                     let mut model_view = *m;
                     model_view.mult_right(mv);
 
-                    self.scan.shapes.push(ShapeInst {
+                    let inst = ShapeInst {
                         shape: me(),
                         geometry,
                         model_view,
@@ -1335,7 +1347,19 @@ impl<'a> Walker<'a> {
                         textures,
                         particle: true,
                         particle_geometry: p.geometry.clone(),
-                    });
+                    };
+
+                    if collidable {
+                        self.scan.particle_collisions.push(ShapeInst {
+                            collidable: true,
+                            collisions: self.collision_stack.clone(),
+                            ..inst.clone()
+                        });
+                    }
+
+                    if pointing {
+                        self.scan.shapes.push(inst);
+                    }
                 }
             }
             // ViewpointGroup.traverse: its private ProximitySensor in every pass; CAMERA the

@@ -11,7 +11,11 @@
 //! canvas size (default 512x512, the size of anim.html's canvas). Script key `pickProbes`
 //! (`{ "frames": [k, ...], "points": [[x, y], ...] }`, pointer coordinates, y up) records `browser .touch` at each point
 //! after each listed frame's step, dump and PNG, as `result .pickProbes ["k"]` (id, DEF name of the hit shape, point,
-//! normal, texCoord at full precision); x3d-particles-drive does the same with its pointing pass.
+//! normal, texCoord at full precision); x3d-particles-drive does the same with its pointing pass. Script key
+//! `collisionProbes` (`{ "frames": [k, ...], "directions": [[x, y, z], ...], "translations": [[x, y, z], ...],
+//! "nodes": [DEF, ...] }`) records, after the pick probes of each listed frame, the frame's collision shapes, the closest
+//! object along each direction, each translation constrained, the user pose and the named Collision nodes' isActive and
+//! collideTime as `result .collisionProbes ["k"]`; x3d-particles-drive does the same with its collision pass.
 
 use crate::anim::{Argv, relative, resolve};
 use crate::json::{self, J, js_number};
@@ -160,6 +164,26 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
         .pointer("/pickProbes/points")
         .map(Value::to_string)
         .unwrap_or_else(|| "[]".into());
+    let collision_frames: Vec<f64> = script
+        .pointer("/collisionProbes/frames")
+        .and_then(Value::as_array)
+        .map(|a| a.iter().filter_map(Value::as_f64).collect())
+        .unwrap_or_default();
+    let collision_arg = {
+        let part = |k: &str| {
+            script
+                .pointer(&format!("/collisionProbes/{k}"))
+                .map(Value::to_string)
+                .unwrap_or_else(|| "[]".into())
+        };
+
+        format!(
+            "{{\"directions\":{},\"translations\":{},\"nodes\":{}}}",
+            part("directions"),
+            part("translations"),
+            part("nodes")
+        )
+    };
     let born = script.get("filter").and_then(Value::as_str) == Some("born");
     let png_dir = argv.opt("--png-dir").unwrap_or_default();
     let ms = argv.opt("--ms").unwrap_or_default();
@@ -412,6 +436,17 @@ pub fn run(argv: &Argv, common: &Common) -> Result<(String, bool, String), Strin
                 }
                 result
                     .get_mut("pickProbes")
+                    .unwrap()
+                    .set(&js_number(k), probes);
+            }
+            if collision_frames.contains(&k) {
+                let probes =
+                    parse(page.evaluate(pj::COLLISION_PROBES_NAMED, Some(&collision_arg))?)?;
+                if !matches!(result.member("collisionProbes"), J::Obj(_)) {
+                    result.set("collisionProbes", J::obj());
+                }
+                result
+                    .get_mut("collisionProbes")
                     .unwrap()
                     .set(&js_number(k), probes);
             }

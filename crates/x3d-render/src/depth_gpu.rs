@@ -2,7 +2,9 @@
 //! Depth2.fs with X3D_NORMAL_BUFFER, TextureBuffer 16x16 with two RGBA32F color textures and a
 //! 24 bit depth texture). The collision shapes are drawn through the same pipeline so the
 //! rasterizer's clipping and vertex snapping decide the depth, as they do in X_ITE; the caller
-//! reads the closest pixel back like TextureBuffer.readDepth.
+//! reads the closest pixel back like TextureBuffer.readDepth. A geometry of `geometry_type` 0 is drawn as gl.POINTS
+//! (1 px, Depth2.vs `gl_PointSize = 1.0`) through a point list pipeline. Lines are not drawn here: a WebGPU line list
+//! does not cover GL's pixels (the diamond-exit rule), so the caller rasterizes them and passes them as `empty`.
 
 use crate::geometry::Geometry;
 use bytemuck::{Pod, Zeroable};
@@ -45,7 +47,7 @@ pub struct DepthShape<'a> {
     /// The geometry; its vertex buffer is kept under the pointer, and the buffer keeps the
     /// geometry alive so that the address is not reused by another one.
     pub geometry: &'a Rc<Geometry>,
-    /// Draw nothing (points and lines are not drawn here).
+    /// Draw nothing (the caller decides which shapes take part with their points and lines).
     pub empty: bool,
     /// x3d_ModelViewMatrix (Float32Array of the shape's model-view matrix).
     pub model_view: [f32; 16],
@@ -73,7 +75,8 @@ struct Buffer {
 pub struct DepthGpu {
     device: wgpu::Device,
     queue: wgpu::Queue,
-    pipeline: wgpu::RenderPipeline,
+    /// Triangle and point list (geometryType 2 and 3, 0).
+    pipelines: [wgpu::RenderPipeline; 2],
     layout: wgpu::BindGroupLayout,
     targets: [wgpu::Texture; 2],
     views: [wgpu::TextureView; 2],
@@ -134,39 +137,45 @@ impl DepthGpu {
                 write_mask: wgpu::ColorWrites::ALL,
             })
         };
-        let pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-            label: Some("depth"),
-            layout: Some(&pipeline_layout),
-            vertex: wgpu::VertexState {
-                module: &module,
-                entry_point: Some("vs_main"),
-                compilation_options: Default::default(),
-                buffers: &buffers,
-            },
-            // gl .disable (gl .CULL_FACE)
-            primitive: wgpu::PrimitiveState {
-                topology: wgpu::PrimitiveTopology::TriangleList,
-                cull_mode: None,
-                ..Default::default()
-            },
-            // X3DRenderingContext: gl .enable (gl .DEPTH_TEST), gl .depthFunc (gl .LEQUAL)
-            depth_stencil: Some(wgpu::DepthStencilState {
-                format: wgpu::TextureFormat::Depth24Plus,
-                depth_write_enabled: Some(true),
-                depth_compare: Some(wgpu::CompareFunction::LessEqual),
-                stencil: Default::default(),
-                bias: Default::default(),
-            }),
-            multisample: wgpu::MultisampleState::default(),
-            fragment: Some(wgpu::FragmentState {
-                module: &module,
-                entry_point: Some("fs_main"),
-                compilation_options: Default::default(),
-                targets: &[target(), target()],
-            }),
-            multiview_mask: None,
-            cache: None,
-        });
+        let pipeline = |topology| {
+            device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+                label: Some("depth"),
+                layout: Some(&pipeline_layout),
+                vertex: wgpu::VertexState {
+                    module: &module,
+                    entry_point: Some("vs_main"),
+                    compilation_options: Default::default(),
+                    buffers: &buffers,
+                },
+                // gl .disable (gl .CULL_FACE)
+                primitive: wgpu::PrimitiveState {
+                    topology,
+                    cull_mode: None,
+                    ..Default::default()
+                },
+                // X3DRenderingContext: gl .enable (gl .DEPTH_TEST), gl .depthFunc (gl .LEQUAL)
+                depth_stencil: Some(wgpu::DepthStencilState {
+                    format: wgpu::TextureFormat::Depth24Plus,
+                    depth_write_enabled: Some(true),
+                    depth_compare: Some(wgpu::CompareFunction::LessEqual),
+                    stencil: Default::default(),
+                    bias: Default::default(),
+                }),
+                multisample: wgpu::MultisampleState::default(),
+                fragment: Some(wgpu::FragmentState {
+                    module: &module,
+                    entry_point: Some("fs_main"),
+                    compilation_options: Default::default(),
+                    targets: &[target(), target()],
+                }),
+                multiview_mask: None,
+                cache: None,
+            })
+        };
+        let pipelines = [
+            pipeline(wgpu::PrimitiveTopology::TriangleList),
+            pipeline(wgpu::PrimitiveTopology::PointList),
+        ];
         let make = |i: u32| {
             device.create_texture(&wgpu::TextureDescriptor {
                 label: Some(&format!("depth buffer {i}")),
@@ -213,7 +222,7 @@ impl DepthGpu {
         DepthGpu {
             device,
             queue,
-            pipeline,
+            pipelines,
             layout,
             targets,
             views,
@@ -391,14 +400,25 @@ impl DepthGpu {
                 }),
                 ..Default::default()
             });
-            pass.set_pipeline(&self.pipeline);
             pass.set_viewport(0.0, 0.0, SIZE as f32, SIZE as f32, 0.0, 1.0);
+            let mut bound = usize::MAX;
 
             for (i, s) in shapes.iter().enumerate() {
                 let b = &self.buffers[&(Rc::as_ptr(s.geometry) as usize)];
 
                 if b.count == 0 {
                     continue;
+                }
+
+                debug_assert!(
+                    s.geometry.geometry_type != 1,
+                    "lines are drawn by the caller"
+                );
+                let pipeline = usize::from(s.geometry.geometry_type == 0);
+
+                if pipeline != bound {
+                    pass.set_pipeline(&self.pipelines[pipeline]);
+                    bound = pipeline;
                 }
 
                 pass.set_bind_group(0, group, &[(i as u64 * STRIDE) as u32]);
