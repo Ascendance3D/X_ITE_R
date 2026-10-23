@@ -124,10 +124,18 @@ pub fn adapter_error(backends: wgpu::Backends, e: &wgpu::RequestAdapterError) ->
 
 /// The viewer on `device`, with its renderer's shaders and pipelines checked: a backend that
 /// cannot create them is an error naming the backend.
+///
+/// On DX12 the renderer starts compiling its main pipeline for `format` at once, on another
+/// thread ([`EmbeddedViewer::new_preparing`]): DXC and the driver need seconds for it, which
+/// would otherwise all fall into the first frame.
 pub fn create_viewer(device: &wgpu::Device, queue: &wgpu::Queue, size: (u32, u32), adapter: &wgpu::Adapter, format: wgpu::TextureFormat) -> Result<EmbeddedViewer, String> {
     let validation = device.push_error_scope(wgpu::ErrorFilter::Validation);
     let internal = device.push_error_scope(wgpu::ErrorFilter::Internal);
-    let mut viewer = EmbeddedViewer::new(device.clone(), queue.clone(), size);
+    let mut viewer = if adapter.get_info().backend == wgpu::Backend::Dx12 {
+        EmbeddedViewer::new_preparing(device.clone(), queue.clone(), size, format)
+    } else {
+        EmbeddedViewer::new(device.clone(), queue.clone(), size)
+    };
     viewer.configure_samples(adapter, format);
     let internal = pollster::block_on(internal.pop());
     let validation = pollster::block_on(validation.pop());
