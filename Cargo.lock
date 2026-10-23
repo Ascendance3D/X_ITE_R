@@ -538,24 +538,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "core-math"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6454166c441d8fcd5a3f9aa6abd46e2df728849426849733b8c0b4781edc54d6"
-dependencies = [
- "core-math-sys",
-]
-
-[[package]]
-name = "core-math-sys"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07fcc675783e2866181bf63060b7983973bd6e93f042fb0f8ba544e84c26c3d4"
-dependencies = [
- "cc",
-]
-
-[[package]]
 name = "core_maths"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4548,8 +4530,8 @@ dependencies = [
 name = "x3d-fields"
 version = "0.1.0"
 dependencies = [
- "core-math",
  "libm",
+ "pxfm",
  "serde_json",
 ]
 
