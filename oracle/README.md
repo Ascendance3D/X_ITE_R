@@ -525,6 +525,12 @@ nodes. The ParticleSystem avatar collision baselines `rea-batch15-particle-colli
 (`tools/gen_rea_b15_particle_collision.py`), and `crates/x3d-viewer/tests/rea_b15_particle_collision.rs` compares
 against them.
 
+The BoundedPhysicsModel replay baselines `rea-batch16-bounded-baseline/` (every frame's transform feedback buffer)
+come from `tools/rea_b16_bounded.py record` (three identical runs). Their worlds are `synthetic-rea-b16-bounded/`
+(`tools/gen_rea_b16_bounded.py`), and `crates/x3d-viewer/tests/rea_b16_bounded_physics.rs` replays them through
+particles_b06_common with the batch 06R tolerances. A Script there is run by a field event on its input: one started
+by a TimeSensor (startTime between two frames) did not run under this protocol, in X_ITE or in Rust.
+
 Fields that differ between two Node runs as well, so they differ between tools too:
 
 * `loadFrames`: the real frames the load took.
