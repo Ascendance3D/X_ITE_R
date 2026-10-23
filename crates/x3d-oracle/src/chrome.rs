@@ -213,6 +213,7 @@ fn reader_loop(mut input: impl Read, conn: Conn, mut on_event: EventHandler) {
 impl Chrome {
     /// Launches `exe` with Playwright's switches followed by `args` (the Node tools' launch args).
     pub fn launch(exe: &str, args: &[&str], trace: Option<PathBuf>, on_event: EventHandler) -> Result<Chrome, String> {
+        remove_stale_profiles();
         let profile = std::env::temp_dir().join(format!(
             "x3d-oracle-profile-{}-{}",
             std::process::id(),
@@ -314,6 +315,31 @@ impl Drop for Chrome {
         }
         let _ = std::fs::remove_dir_all(&self.profile);
     }
+}
+
+/// Profile directories left by a run that was killed (SIGKILL cannot run Drop): removed when their owner is gone.
+fn remove_stale_profiles() {
+    let Ok(dir) = std::fs::read_dir(std::env::temp_dir()) else { return };
+    for e in dir.flatten() {
+        let name = e.file_name().to_string_lossy().into_owned();
+        let Some(pid) = name.strip_prefix("x3d-oracle-profile-").and_then(|r| r.split('-').next()).and_then(|p| p.parse::<u32>().ok()) else {
+            continue;
+        };
+        if pid != std::process::id() && !process_alive(pid) {
+            let _ = std::fs::remove_dir_all(e.path());
+        }
+    }
+}
+
+#[cfg(unix)]
+fn process_alive(pid: u32) -> bool {
+    // SAFETY: signal 0 only checks existence.
+    unsafe { libc::kill(pid as libc::pid_t, 0) == 0 || std::io::Error::last_os_error().raw_os_error() == Some(libc::EPERM) }
+}
+
+#[cfg(not(unix))]
+fn process_alive(_pid: u32) -> bool {
+    true
 }
 
 #[cfg(unix)]
