@@ -1384,8 +1384,8 @@ impl Viewer3d {
                     model_view: s.model_view,
                     base_model_view: s.shape_model_view,
                     instance: s.instance,
-                    clip_planes: s.clip_planes.clone(),
-                    collisions: s.collisions.clone(),
+                    clip_planes: s.clip_planes.as_slice().into(),
+                    collisions: s.collisions.as_slice().into(),
                 });
             }
         }
@@ -1400,28 +1400,46 @@ impl Viewer3d {
                     model_view: s.model_view,
                     base_model_view: s.shape_model_view,
                     instance: s.instance,
-                    clip_planes: s.clip_planes.clone(),
-                    collisions: s.collisions.clone(),
+                    clip_planes: s.clip_planes.as_slice().into(),
+                    collisions: s.collisions.as_slice().into(),
                 });
             }
         }
 
         // The drawn particles (ParticleSystem.displaySimple) of the systems the last COLLISION traversal collected.
+        // A system's entries are pushed together, one per particle, with one geometry, clip-plane and Collision
+        // stack: a run of them is resolved once and shares those, while every particle keeps its own entry (its
+        // instance matrix) in traversal order. A system reached twice (USE) gives two runs.
         let mut seen: Vec<(Vec<NodeId>, NodeId)> = vec![];
         let members = self.layer.collision_particle_systems.clone();
+        let entries = self.collision_particles();
+        let mut i = 0;
 
-        for i in self.collision_particles() {
-            let s = &self.scan_display.particle_collisions[i];
+        while i < entries.len() {
+            let first = &self.scan_display.particle_collisions[entries[i]];
+            let run = entries[i..]
+                .iter()
+                .take_while(|&&k| {
+                    let s = &self.scan_display.particle_collisions[k];
 
-            if members.as_ref().is_some_and(|m| !m.contains(&s.shape)) {
+                    s.shape == first.shape
+                        && s.shape_model_view == first.shape_model_view
+                        && s.clip_planes == first.clip_planes
+                        && s.collisions == first.collisions
+                })
+                .count();
+            let run_entries = &entries[i..i + run];
+            i += run;
+
+            if members.as_ref().is_some_and(|m| !m.contains(&first.shape)) {
                 continue;
             }
 
-            let Some(g) = geom_of(&self.rt, &mut self.geom_cache, s) else {
+            let Some(g) = geom_of(&self.rt, &mut self.geom_cache, first) else {
                 continue;
             };
             // All particles of a system draw the same geometry: it is compared once per world.
-            let key = (s.shape.path.to_vec(), s.shape.node);
+            let key = (first.shape.path.to_vec(), first.shape.node);
             let g = match self.particle_depth_geometry.get(&key) {
                 Some(kept)
                     if seen.contains(&key)
@@ -1442,16 +1460,23 @@ impl Viewer3d {
                 seen.push(key);
             }
 
-            shapes.push(CShape {
-                node: s.shape.clone(),
-                geometry: g,
-                particle: true,
-                model_view: s.model_view,
-                base_model_view: s.shape_model_view,
-                instance: s.instance,
-                clip_planes: s.clip_planes.clone(),
-                collisions: s.collisions.clone(),
-            });
+            let clip_planes: Rc<[[f64; 4]]> = first.clip_planes.as_slice().into();
+            let collisions: Rc<[NodeId]> = first.collisions.as_slice().into();
+
+            for &k in run_entries {
+                let s = &self.scan_display.particle_collisions[k];
+
+                shapes.push(CShape {
+                    node: s.shape.clone(),
+                    geometry: g.clone(),
+                    particle: true,
+                    model_view: s.model_view,
+                    base_model_view: s.shape_model_view,
+                    instance: s.instance,
+                    clip_planes: clip_planes.clone(),
+                    collisions: collisions.clone(),
+                });
+            }
         }
 
         self.particle_depth_geometry.retain(|k, _| seen.contains(k));
